@@ -73,7 +73,7 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
     function getDataRow($recordId){
     	$db = $this->getAdapter();
     	$this->_name='st_stockout';
-    	$sql=" SELECT id,
+    	$sql=" SELECT id,so.projectId,
 				(SELECT project_name FROM `ln_project` WHERE br_id=so.projectId LIMIT 1) AS projectName,
 				so.requestNo,
 				so.reqOutNo,
@@ -516,7 +516,7 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
 	function getTransferRow($recordId){
     	$db = $this->getAdapter();
     	$this->_name='st_transferstock';
-    	$sql="SELECT id,
+    	$sql="SELECT id,tr.fromProjectID,
 		(SELECT project_name FROM `ln_project` WHERE br_id=tr.fromProjectID LIMIT 1) AS projectName,
 		(SELECT project_name FROM `ln_project` WHERE br_id=tr.toProjectID LIMIT 1) AS ReceiveBranch,				
 		tr.transferNo, tr.ReceiverId,
@@ -588,14 +588,12 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	if ($data['monthlytype']==1){//month
     		$date = date("Y-m",strtotime($date));
-    		$sql="
-    		SELECT 
+    		$sql="SELECT 
 					SUM(total)
 				FROM `st_budget_expense` be,
 					`st_budget_expense_detail` bed
 			WHERE 
 				be.id=bed.budgetExpenseId
-				
 				
     		";
     		if(!empty($data['budgetItemId'])){
@@ -620,29 +618,36 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
     		
     		return $totatBudget;
     	}else{//year
-    			$date = date("Y",strtotime($date));
+    			//$date = date("Y",strtotime($date));
+    			
+// 	    		$sql="SELECT
+// 			    		SUM(ex.total_amount) AS totalbymonth
+// 			    		FROM `ln_expense` AS ex
+// 	    			WHERE ex.status=1 AND DATE_FORMAT(ex.date,'%Y') ='$date'";
+	    		
+	    		$date = date("Y",strtotime($data['date']));
 	    		$sql="SELECT
-			    		SUM(ex.total_amount) AS totalbymonth
-			    		FROM `ln_expense` AS ex
-	    			WHERE ex.status=1 AND DATE_FORMAT(ex.date,'%Y') ='$date'";
-	    		if (!empty($branch)){
-	    		$sql.=" AND ex.branch_id=".$branch;
+				    		SUM(total)
+				    	FROM `st_budget_expense` be,
+				    		`st_budget_expense_detail` bed
+	    				WHERE
+	    				be.id=bed.budgetExpenseId ";
+	    		if(!empty($data['budgetItemId'])){
+	    			$sql.=" AND bed.budgetItemId=".$data['budgetItemId'];
 	    		}
-	    		$total_expense = $db->fetchOne($sql);
-	    		if(empty($total_expense)){
-	    		$total_expense=0;
+	    		if(!empty($data['projectId'])){
+	    			$sql.=" AND be.projectId=".$data['projectId'];
 	    		}
-	    			
-	    		$sql="SELECT SUM(total_amount) FROM `ln_comission` WHERE status=1
-	    		AND DATE_FORMAT(for_date,'%Y') ='$date'";
-	    		if (!empty($branch)){
-	    			$sql.=" AND branch_id=".$branch;
+	    		if(!empty($data['date'])){
+	    			$sql.=" AND DATE_FORMAT(be.createDate,'%Y')='".$date."'";
 	    		}
-	    			$total_commission = $db->fetchOne($sql);
-	    			if(empty($total_commission)){
-	    			$total_commission=0;
+	    		$sql.=" GROUP BY bed.budgetItemId ";
+	    		$totatBudget = $db->fetchOne($sql);
+	    		if(empty($totatBudget)){
+	    			$totatBudget=0;
 	    		}
-	    		return $total_expense+$total_commission;
+	    		
+	    		return $totatBudget;
     		}
     
     	}
