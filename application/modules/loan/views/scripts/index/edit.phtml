@@ -1932,7 +1932,7 @@ function addPreviewLoan(){
 			form: dojo.byId("frm_add_tran"),		    
 			handleAs:"json", 
 			load: function(data) {
-				 document.getElementsByClassName("overlay")[0].style.display="none";
+				HideloadingBlock();
 				if(data.row_id=='row_id'){//return 1;
 					printSave('','');
 					}else{
@@ -1974,7 +1974,7 @@ function addPreviewLoan(){
 				
 			},
 			error: function(response, ioArgs) {
-				 document.getElementsByClassName("overlay")[0].style.display="none";
+				HideloadingBlock();
 				alert("Failed while doing the operation: " + ioArgs.xhr.response);
 			}
 	   });
@@ -1995,7 +1995,7 @@ function hideDialog() {
 	dijit.byId("lbl_schedule").hide();
 }
 function loading(){
-    document.getElementsByClassName("overlay")[0].style.display="block";
+     loadingBlock();
 }
 
 var url_add_staff = '<?php echo $this->url(array("module"=>"loan","controller"=>"index","action"=>"add-staff")); ?>';

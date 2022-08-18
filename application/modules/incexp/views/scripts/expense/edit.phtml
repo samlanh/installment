@@ -878,10 +878,10 @@ function getRefreshProduct(){
 		load: function(data) {
 			pro_store  = getDataStorefromJSON('id','name', data);
 			dijit.byId('pro_id').set('store',pro_store);  
-		   document.getElementsByClassName("overlay")[0].style.display="none";
+		   HideloadingBlock();
 		},
 		error: function(err) {
-			document.getElementsByClassName("overlay")[0].style.display="none";
+			HideloadingBlock();
 		}
 	});
 }
@@ -908,16 +908,16 @@ function getProductInfo(){
 					 readychoose = dijit.byId('product_name_'+arrays[i]).get('value');
 					 if(readychoose==pro_id){						
 						dijit.byId('cost_'+arrays[i]).set('value',data.price);	
-						document.getElementsByClassName("overlay")[0].style.display="none";						 
+						HideloadingBlock();					 
 						 return false;
 					 }
 				}
 			}
 	
-		   document.getElementsByClassName("overlay")[0].style.display="none";
+		   HideloadingBlock();
 		},
 		error: function(err) {
-			document.getElementsByClassName("overlay")[0].style.display="none";
+			HideloadingBlock();
 		}
 	});
 }
