@@ -542,4 +542,108 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
 		FROM `st_transferstock_detail` AS td WHERE transferId=".$recordId." ";
     	return $db->fetchAll($sql);
     }
+    function getBudgetList($search){
+    	$sql="SELECT 
+    			bi.id,
+    			bi.budgetTypeId,
+		    	bi.budgetTitle,
+		    	(SELECT p.budgetTitle FROM st_budget_item AS p WHERE p.id=bi.parentId LIMIT 1) AS parentTitle,
+		    	(SELECT b.budgetTitle FROM st_budget_type AS b WHERE b.id=bi.budgetTypeId LIMIT 1) AS budgetType,
+		    	bi.createDate,
+		    	(SELECT first_name FROM rms_users AS u WHERE u.id = bi.userId LIMIT 1) AS USER ,
+		    	(SELECT name_en FROM ln_view WHERE TYPE=3 AND key_code = bi.status LIMIT 1) AS STATUS,
+		    	bp.projectId,
+		    	bp.totalBudget
+		    	FROM 
+		    		st_budget_item AS bi,
+		    		st_budget_project bp
+    		WHERE bi.id=bp.budgetId ";
+    	 
+    	 
+    	$from_date =(empty($search['start_date']))? '1': " bi.createDate >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " bi.createDate <= '".$search['end_date']." 23:59:59'";
+    	$where='';
+    	$where_date = " AND ".$from_date." AND ".$to_date;
+    	 
+    	if(!empty($search['adv_search'])){
+    	$s_where = array();
+    	$s_search = (trim($search['adv_search']));
+    	$s_where[] = " bi.budgetTitle LIKE '%{$s_search}%'";
+    	$where .=' AND ( '.implode(' OR ',$s_where).')';
+    	}
+//     	if($search['status']>-1){
+//     		$where.= " AND bi.status = ".$search['status'];
+//     	}
+    	if($search['branch_id']>-1){
+    		$where.= " AND bi.status = ".$search['branch_id'];
+    	}
+    	
+    	 
+    	$order=' ORDER BY bi.id DESC  ';
+    		 
+    		$db = $this->getAdapter();
+    		return $db->fetchAll($sql.$where_date.$order);
+    }
+    function getExpensByMonth($data,$branch,$date,$monthlytype=1){
+    	$db = $this->getAdapter();
+    	if ($data['monthlytype']==1){//month
+    		$date = date("Y-m",strtotime($date));
+    		$sql="
+    		SELECT 
+					SUM(total)
+				FROM `st_budget_expense` be,
+					`st_budget_expense_detail` bed
+			WHERE 
+				be.id=bed.budgetExpenseId
+				
+				
+    		";
+    		if(!empty($data['budgetItemId'])){
+    			$sql.=" AND bed.budgetItemId=".$data['budgetItemId'];
+    		}
+    		if(!empty($data['projectId'])){
+    			$sql.=" AND be.projectId=".$data['projectId'];
+    		}
+    		if(!empty($data['date'])){
+    			$sql.=" AND DATE_FORMAT(be.createDate,'%Y-%m')='".$data['date']."'";
+    		}
+    		$sql.=" GROUP BY bed.budgetItemId ";
+//     		$sql="SELECT
+// 	    				SUM(ex.total_amount) AS totalbymonth
+// 	    			FROM 
+// 	    				`ln_expense` AS ex
+//     				WHERE ex.status=1 AND DATE_FORMAT(ex.date,'%Y-%m') ='$date'";
+    		$totatBudget = $db->fetchOne($sql);
+    		if(empty($totatBudget)){
+    			$totatBudget=0;
+    		}
+    		
+    		return $totatBudget;
+    	}else{//year
+    			$date = date("Y",strtotime($date));
+	    		$sql="SELECT
+			    		SUM(ex.total_amount) AS totalbymonth
+			    		FROM `ln_expense` AS ex
+	    			WHERE ex.status=1 AND DATE_FORMAT(ex.date,'%Y') ='$date'";
+	    		if (!empty($branch)){
+	    		$sql.=" AND ex.branch_id=".$branch;
+	    		}
+	    		$total_expense = $db->fetchOne($sql);
+	    		if(empty($total_expense)){
+	    		$total_expense=0;
+	    		}
+	    			
+	    		$sql="SELECT SUM(total_amount) FROM `ln_comission` WHERE status=1
+	    		AND DATE_FORMAT(for_date,'%Y') ='$date'";
+	    		if (!empty($branch)){
+	    			$sql.=" AND branch_id=".$branch;
+	    		}
+	    			$total_commission = $db->fetchOne($sql);
+	    			if(empty($total_commission)){
+	    			$total_commission=0;
+	    		}
+	    		return $total_expense+$total_commission;
+    		}
+    
+    	}
 }
