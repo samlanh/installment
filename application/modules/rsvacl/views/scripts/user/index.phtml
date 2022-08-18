@@ -17,7 +17,7 @@
 		<div class="card-box">
                	<div class="col-sm-12 border-botom">
 		    		<div class="col-sm-8 pd-0">
-		    			<h4 class="m-b-0"><i class="fa fa-users" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('USER');?></h4>
+		    			<h4 class="m-b-0"><i class="glyphicon glyphicon-user" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('USER');?></h4>
     			</div>
     			<div class="col-sm-4 text-right">
     			</div>
@@ -25,33 +25,33 @@
     	</div>
 		<div class="card-box">
 			<form name="frmlist_users" action="<?php echo $this->url(array('module'=>'rsvacl','controller'=>'user','action'=>'index')); ?>" dojoType="dijit.form.Form" method="post">
-				<table>	  	
-					  <tr>
-					    <td>
-					    	<input type="text" name="txtsearch" id="txtsearch" placeholder="តាម (នាម​ត្រកូល , នាម​ខ្លួន  និង អ្នក​ប្រើ​ប្រាស់)"  dojoType="dijit.form.TextBox"
-							 style="height: 30px;" value='<?php echo $this->txtsearch;?>'/>
-						</td>
-					    <td align="right">
-					    	<select name="user_type" id="user_type"  onChange="document.frmlist_agent.submit();" style=" height: 30px;" dojoType="dijit.form.FilteringSelect"> 
+				<div class="form-group">
+					
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<input class="fullside" type="text" name="txtsearch" id="txtsearch" placeholder="តាម (នាម​ត្រកូល , នាម​ខ្លួន  និង អ្នក​ប្រើ​ប្រាស់)"  dojoType="dijit.form.TextBox" alue='<?php echo $this->txtsearch;?>'/>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<select class="fullside" name="user_type" id="user_type"  onChange="document.frmlist_agent.submit();" dojoType="dijit.form.FilteringSelect"> 
 								<option value="-1" <?php if($this->user_type == -1) echo 'selected="selected"';?> ><?php echo $tr->translate("SELECT_USER_TYPE");?></option> 
 								<?php foreach ($this->user_typelist as $key => $ut) : ?>
 									<option value="<?php echo $ut['id'];?>" <?php if($ut['id'] == $this->user_type) echo 'selected'?>><?php echo $ut['name'];?></option>
 								<?php endforeach;?>	 
 							</select>
-						</td>
-						<td>
-					    	<select name="active" id="active"  onChange="document.frmlist_agent.submit();" style=" height: 30px;" dojoType="dijit.form.FilteringSelect"> 
-								<option value="-1" <?php if($this->active == -1) echo 'selected="selected"';?> ><?php echo $tr->translate("SELECT_STATUS");?></option> 
-								<?php foreach ($this->activelist as $key => $at) : ?>
-									<option value="<?php echo $key;?>" <?php if($key == $this->active) echo 'selected'?>><?php echo $at;?></option>
-								<?php endforeach;?>	 
-							</select>
-						</td>
-						<td>
-							 <button dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
-						</td>			
-					  </tr>	
-				</table>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<select class="fullside" name="active" id="active"  onChange="document.frmlist_agent.submit();"dojoType="dijit.form.FilteringSelect"> 
+							<option value="-1" <?php if($this->active == -1) echo 'selected="selected"';?> ><?php echo $tr->translate("SELECT_STATUS");?></option> 
+							<?php foreach ($this->activelist as $key => $at) : ?>
+								<option value="<?php echo $key;?>" <?php if($key == $this->active) echo 'selected'?>><?php echo $at;?></option>
+							<?php endforeach;?>	 
+						</select>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<button class="button-class button-primary " iconclass="glyphicon glyphicon-search" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+					</div>
+					
+				</div>
+		
 			</form>
 		</div>
 		<div class="card-box">
