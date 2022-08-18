@@ -51,6 +51,10 @@
 		</form>
 		<div style="width:100%; margin:0 auto;">
 		<div style="min-height:22cm; margin:0 auto;">
+			<style>
+				.hideblog{display: block !important;;border: 1px solid #fff; border-bottom: 1px solid #000;}
+				.hiddenblog{display: block !important;}
+			</style>
 			<div id="divPrint">
 				<style type="text/css">
 					.style{
@@ -79,7 +83,7 @@
 						margin:0;
 					  }
 						.hide{visibility: visible; height: <?php echo $classHideHeight;?>;}
-						@page {size: portrait; margin-left: 0.3cm;margin-right:0.3cm;}
+						@page {size: landscape;margin:0.5cm 0.2cm;}
 					}
 					.center{text-align: center !important;}
 					table.content-data{
@@ -92,76 +96,17 @@
 						background: #c1d0f3;
 						font-weight:600;
 					}
-					.style td{
-						padding: 0px 2px;
-					}
-					table.tb-footer{
-						border-collapse:collapse;
-						border:1px solid #000; 
-						font-size:13px;
-						font-family: 'Times New Roman','Khmer OS Battambang';
-					}
-					
-					table.tb-footer tr{
-					 line-height: 14px; font-size:11px; padding:2px 0px; height: 25px;
-					}
-					 	table tr td{
+					table tr td{
 						padding:0 2px;
 					}
-					.style:hover{background:#eee;}
-					  
-					  @media screen and (max-width: 600px) {
-							  table {
-							    border: 0;
-							  }
-								table.content-data {
-								    border-collapse: collapse;
-								    border: 1px solid #fff;
-								    font-size: 13px;
-								}
-													
-							  table thead {
-							    border: none;
-							    clip: rect(0 0 0 0);
-							    height: 1px;
-							    margin: -1px;
-							    overflow: hidden;
-							    padding: 0;
-							    position: absolute;
-							    width: 1px;
-							  }
-							  
-							  table .content-data tr {
-							    border-bottom: 3px solid #ddd;
-							    border-right: 3px solid #ddd;
-							    display: block;
-							    margin-bottom: .625em;
-							  }
-							  
-								table .content-data td {
-							    /*border-bottom: 1px solid #ddd;*/
-							    display: block;
-							    font-size: .8em;
-							    text-align: right;
-							  }
-							table .content-data td{
-										border-bottom: 1px solid #ddd;	}
-							  
-							  table td::before {
-							    /*
-							    * aria-label has no advantage, it won't be read inside a table
-							    content: attr(aria-label);
-							    */
-							    content: attr(data-label);
-							    float: left;
-							    font-weight: bold;
-							    text-transform: uppercase;
-							  }
-							  
-							  table td:last-child {
-							    border-bottom: 0;
-							  }
-							}
+					td.rightText {
+						text-align: right;
+					}
+					.redBold {
+						font-weight: 600;
+						color: #f80000;
+					}
+					
 					.lbTitle{
 						display:block;
 					    line-height:20px;
@@ -169,7 +114,7 @@
 					}
 					.lbEng{
 						
-					    line-height:12px;
+					    line-height:14px;
 						
 					}
 					
@@ -187,9 +132,9 @@
 				    	<td id="exportExcel">
 				            <table class="content-data" width="100%" border="1"  cellspacing="0" cellpadding="0">
 					                <thead>
-					                <tr class="hide" style="border:1px solid #000;">
-				                		<td colspan="17" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
-				                	</tr>
+									<tr class="hide" style="border:1px solid #000;">
+					                	<td colspan="17" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
+					                </tr>
 					                <tr  class="style" align="center" >
 					                    <td scope="col" class="center">
 											<span class="lbTitle">ល.រ</span> 
@@ -238,7 +183,7 @@
 				                		<td data-label="ឈ្មោះទំនិញ/Product Name"><?php echo $rs['proName'];?></td>
 				                		<td data-label="បរិមាណនៅសល់/Remaining QTY"><?php echo number_format($rs['currentQty'],2);?></td>
 				                		<td data-label="បរិមាណរាប់ក្នុងឃ្លាំង/Exact Qty"><?php echo number_format($rs['exactQty'],2);?></td>
-				                		<td data-label="បរិមាណលម្អៀង/Difference Qty"><?php echo number_format($rs['exactQty']-$rs['currentQty'],2);?></td>
+				                		<td data-label="បរិមាណលម្អៀង/Difference Qty" class="redBold"><?php echo number_format($rs['exactQty']-$rs['currentQty'],2);?></td>
 				                		<td data-label="សម្គាល់/note"><?php echo $rs['note'];?></td>
 				                	</tr>
 				                <?php }?>
