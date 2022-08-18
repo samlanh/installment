@@ -3,6 +3,8 @@
 	$tr=Application_Form_FrmLanguages::getCurrentlanguage();
 	$this->headTitle($this->data["system_name"].'--Installment System');
 	echo $this->headTitle();
+	
+	$them_style = 'soria';
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
@@ -15,7 +17,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	<script src="<?php echo $base_url;?>js/dojo-1.6.1/dojo/dojo.js"  djConfig="isDebug: true,parseOnLoad: true"></script>
 	<script>dojoConfig = {parseOnLoad: true}</script>
-	<link rel="stylesheet" type="text/css" href="<?php echo $base_url;?>js/dojo-1.6.1/dijit/themes/tundra/tundra.css"/>
+	<link rel="stylesheet" type="text/css" href="<?php echo $base_url;?>js/dojo-1.6.1/dijit/themes/<?php echo $them_style."/".$them_style?>.css"/>
 	<link rel="shortcut icon" href="<?php echo $this->baseUrl()."/"?>images/icon.ico" type="image/x-icon"/>
 	<script>	
 		require(["dojo/parser", "dijit/form/Form", "dijit/form/Button", "dijit/form/ValidationTextBox","dijit/form/FilteringSelect"]);
@@ -64,7 +66,7 @@
 	</style>
 
 </head>
-<body class="tundra" style="background: #edf7ef;" >
+<body class="<?php echo $them_style?>" style="background: #edf7ef;" >
 	<div class="container ">
     	<div class="main_container login-page">
     		<div class="header-top">
@@ -133,10 +135,10 @@
 			                    </div>
 							</div>
 							<div class="form-group login-row text-center">
-								<input class="f_styles" style=" font-weight:bold;	color: #02014a; font-size: 13px;" type="submit" value="ចូលប្រើប្រាស់" label="<?php echo $tr->translate("LOGIN");?>" data-dojo-type="dijit/form/Button" />
-								<input class="f_styles" style=" font-weight:bold; color: #02014a; font-size: 13px;" type="reset" value="សំអាត" id="clear_login" data-dojo-type="dijit/form/Button" label="<?php echo $tr->translate("CLEAR");?>" />
-								<input class="f_styles" onclick="window.open('<?php echo $this->url(array('module'=>'default','controller'=>'index','action'=>'saledash'))?>','_blank');" style=" font-weight:bold; color: #02014a; font-size: 13px;" type="button" id="movehouse" data-dojo-type="dijit/form/Button" iconClass="dijitIconTask" label="<?php echo $tr->translate("DOC_MOVEHOUSE");?>" />
-							</div>
+								<input class="button-class button-return" iconClass="glyphicon glyphicon-refresh"  type="reset" value="សំអាត" id="clear_login" data-dojo-type="dijit/form/Button" label="<?php echo $tr->translate("CLEAR");?>" />
+								<input class="button-class button-primary" iconClass="glyphicon glyphicon-log-in" type="submit" value="ចូលប្រើប្រាស់" label="<?php echo $tr->translate("LOGIN");?>" data-dojo-type="dijit/form/Button" />
+								<input class="button-class button-danger" iconClass="glyphicon glyphicon-list-alt"  onclick="window.open('<?php echo $this->url(array('module'=>'default','controller'=>'index','action'=>'saledash'))?>','_blank');"  type="button" id="movehouse" data-dojo-type="dijit/form/Button"  label="<?php echo $tr->translate("DOC_MOVEHOUSE");?>" />
+							</div>                        
 						</form>
     				</div>
     			</div>
