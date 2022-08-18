@@ -55,12 +55,6 @@
 		}
 </script>
 
-<div class="overlay">
-	<div class="overlay-load">
-		<div class="overlay-msg">
-	    </div>
-	</div>
-</div>	
 <style>
 .center tr{text-align:left;}
 </style>
@@ -599,7 +593,7 @@ function submitDataClose(){
 		    url: url_submit,	
 			form: dojo.byId("frm_add_group_pay"),		    
 			load: function(data) {
-				document.getElementsByClassName("overlay")[0].style.display="none";		
+				HideloadingBlock();
 				alert('<?php echo $tr->translate('INSERT_SUCCESS');?> !');
 				window.location.href ="<?php echo $this->baseUrl();?>/loan/ilpayment";
 			},
@@ -1913,7 +1907,7 @@ function checkScheduleOption(){
 	
 }
 function loading(){
-    document.getElementsByClassName("overlay")[0].style.display="block";
+     loadingBlock();
 }
 function roundhundred(n){
 		total = parseFloat(n);
@@ -1921,12 +1915,3 @@ function roundhundred(n){
     return x;
   }
 </script>
-<style>
-.overlay {display: none;position: absolute;width: 100%;height: 100%;top: 0px;left: 0px;background: #FCFCFC;z-index: 1001;opacity: .95;}
-.overlay-load {width: 350px;height: 100px;margin: auto;top: 0px;bottom: 0px;position: absolute;left: 0px;right: 0px;
-           border: solid 1px #060522;text-align: center;
-           background: #fff url("<?php echo $this->baseUrl()?>/images/loading.gif") 50% 25%;
-           background-repeat: no-repeat;          
-}
-.overlay-msg{margin-bottom: 10px;bottom: 0px;position: absolute;font-style: italic;color: rgb(19, 19, 19);} 
-</style>

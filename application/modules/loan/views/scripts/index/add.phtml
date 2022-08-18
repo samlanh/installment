@@ -55,12 +55,6 @@
 		color: #fff;
 	}
 </style>
-<div class="overlay">
-	<div class="overlay-load">
-		<div class="overlay-msg">
-	    </div>
-	</div>
-</div>	
 	<script src="<?php echo $baseurl;?>/js/help.js"></script>
 	<script src="<?php echo $this->baseUrl();?>/js/pdbs_js.js"  type="text/javascript"></script>
 	<script type="text/javascript"  src="<?php echo $this->baseUrl();?>/js/jquery-1.7.2.min.js"></script>
@@ -1985,7 +1979,7 @@ function addPreviewLoan(){
 			form: dojo.byId("frm_add_tran"),		    
 			handleAs:"json", 
 			load: function(data) {
-				 document.getElementsByClassName("overlay")[0].style.display="none";
+				 HideloadingBlock();
 				if(data.row_id=='row_id'){//return 1;
 					printSave('','');
 					}else{
@@ -2053,7 +2047,7 @@ function addPreviewLoan(){
 					}
 			},
 			error: function(response, ioArgs) {
-				 document.getElementsByClassName("overlay")[0].style.display="none";
+				HideloadingBlock();
 			}
 	   });
 	}
@@ -2073,7 +2067,7 @@ function hideDialog() {
 	dijit.byId("lbl_schedule").hide();
 }
 function loading(){
-    document.getElementsByClassName("overlay")[0].style.display="block";
+    loadingBlock();
 }
 var url_add_staff = '<?php echo $this->url(array("module"=>"group","controller"=>"co","action"=>"add-staff")); ?>';
 function addStaff(){

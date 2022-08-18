@@ -549,7 +549,7 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
     }
     function getDNById($recordId){
     	$db = $this->getAdapter();
-    	$sql=" SELECT r.id,
+    	$sql=" SELECT r.id,r.projectId,
 				(SELECT project_name FROM `ln_project` WHERE br_id=r.projectId LIMIT 1) AS projectName,
 				(SELECT name_kh FROM `st_view` WHERE type=4 AND key_code=r.dnType LIMIT 1) dnType,
 				r.dnNumber,
