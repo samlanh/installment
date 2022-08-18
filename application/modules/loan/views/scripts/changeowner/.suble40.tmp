@@ -5,12 +5,6 @@
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$baseurl =  Zend_Controller_Front::getInstance()->getBaseUrl();
 ?>
-<div class="overlay">
-	<div class="overlay-load">
-		<div class="overlay-msg">
-	    </div>
-	</div>
-</div>	
 	<script src="<?php echo $baseurl;?>/js/help.js"></script>
    <script>
 		require(["dijit/form/DateTextBox","dijit/form/NumberTextBox","dojo/number","dijit/Dialog"]);
@@ -1178,7 +1172,7 @@ function addPreviewLoan(){
 				if(data.row_id=='row_id'){//return 1;
 					printSave();
 					}else{
-						  document.getElementsByClassName("overlay")[0].style.display="none";
+						  HideloadingBlock();
 						  temp='';	
 						  fund_title=0;thead='';fund_title=0;
 						  temp='<table class="collape tablesorter" style="font-size:13px; width:1000px !important; " id="table">'
@@ -1218,7 +1212,7 @@ function addPreviewLoan(){
 			},
 			error: function(response, ioArgs) {
 				alert("Failed while doing the operation: " + ioArgs.xhr.response);
-				//document.getElementsByClassName("overlay")[0].style.display="none";
+				HideloadingBlock();
 				//alert("You can not preview this loan number!");
 			}
 	   });
@@ -1275,15 +1269,6 @@ function printSubmit(){
 	 $('#frm_add_tran').submit();
 }
 function loading(){
-    document.getElementsByClassName("overlay")[0].style.display="block";
+    loadingBlock();
 }
 </script>
-<style>
-.overlay {display: none;position: absolute;width: 100%;height: 100%;top: 0px;left: 0px;background: #FCFCFC;z-index: 1001;opacity: .95;}
-.overlay-load {width: 350px;height: 100px;margin: auto;top: 0px;bottom: 0px;position: absolute;left: 0px;right: 0px;
-           border: solid 1px #060522;text-align: center;
-           background: #fff url("<?php echo $this->baseUrl()?>/images/loading.gif") 50% 25%;
-           background-repeat: no-repeat;          
-}
-.overlay-msg{margin-bottom: 10px;bottom: 0px;position: absolute;font-style: italic;color: rgb(19, 19, 19);} 
-</style>
