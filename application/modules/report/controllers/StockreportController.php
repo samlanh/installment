@@ -108,7 +108,7 @@ public function rptUsageAction(){
 	    $id = empty($id)?0:$id;
 	    $row = $db->getDataRow($id);
 	    if (empty($row)){
-	      Application_Form_FrmMessage::Sucessfull("NO_RECORD", "/report/stockreport/rpt-usage");
+	      Application_Form_FrmMessage::Sucessfull("NO_RECORD", "/report/stockreport/rpt-usage",2);
 	      exit();
 	    }
 	    $this->view->row = $row;
@@ -268,7 +268,7 @@ public function rptUsageAction(){
 	    $id = empty($id)?0:$id;
 	    $row = $db->getTransferRow($id);
 	    if (empty($row)){
-	      Application_Form_FrmMessage::Sucessfull("NO_RECORD", "/report/stockreport/rpt-transfer");
+	      Application_Form_FrmMessage::Sucessfull("NO_RECORD", "/report/stockreport/rpt-transfer",2);
 	      exit();
 	    }
 	    $this->view->row = $row;

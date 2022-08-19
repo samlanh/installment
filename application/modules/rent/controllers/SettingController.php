@@ -71,7 +71,7 @@ class Rent_SettingController extends Zend_Controller_Action {
     	}
     	$row = $db->getSettingById($id);
     	if (empty($row)){
-    		Application_Form_FrmMessage::Sucessfull("NO_RECORD", self::REDIRECT_URL."/index");
+    		Application_Form_FrmMessage::Sucessfull("NO_RECORD", self::REDIRECT_URL."/index",2);
     		exit();
     	}
     	$this->view->row = $row;
@@ -98,7 +98,7 @@ class Rent_SettingController extends Zend_Controller_Action {
 		}
 		$row = $db->getSettingById($id);
 		if (empty($row)){
-			Application_Form_FrmMessage::Sucessfull("NO_RECORD", self::REDIRECT_URL."/index");
+			Application_Form_FrmMessage::Sucessfull("NO_RECORD", self::REDIRECT_URL."/index",2);
 			exit();
 		}
 		$this->view->row = $row;

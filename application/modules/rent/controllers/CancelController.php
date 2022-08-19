@@ -91,7 +91,7 @@ class Rent_CancelController extends Zend_Controller_Action {
 		$id = empty($id)?0:$id;
 		$row = $_dbmodel->getCancelRentalById($id);
 		if(empty($row)){
-			Application_Form_FrmMessage::Sucessfull("NO_RECORD","/rent/cancel");
+			Application_Form_FrmMessage::Sucessfull("NO_RECORD","/rent/cancel",2);
 			exit();
 		}
 		$this->view->row =$row;

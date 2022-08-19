@@ -78,7 +78,7 @@
     <script src="<?php echo $this->baseUrl()."/contextMenu/1.11.3/"?>jquery.min.js"></script>
 	
 	<script src="<?php echo $this->baseUrl()?>/admin/sweetalert2/sweetalert2.min.js"></script>
-<link rel="stylesheet" href="<?php echo $this->baseUrl()?>/admin/sweetalert2/sweetalert2.min.css">
+	<link rel="stylesheet" href="<?php echo $this->baseUrl()?>/admin/sweetalert2/sweetalert2.min.css">
 
 	<!-- export library -->
 	<?php if($module=='report'){?>
@@ -139,27 +139,27 @@
 		<?php } ?>
 		
 		ul.notify-main li.event .media-body {
-    width: 100%;
-}
-ul.notify-main li.event .media-body a.btn-go:hover {
-    background: #0077c5;
-}
-ul.notify-main li.event .media-body a.btn-go {
-    display: block;
-    text-align: center;
-    background: #02014a;
-    padding: 5px 2px;
-    color: #fff;
-    border-radius: 3px;
-    width: 90%;
-    margin: 0 auto;
-    font-size: 11px;
-}
-p.proccessingStatus{
-	color: #f00;
-    text-align: center;
-    font-weight: 600;
-}
+			width: 100%;
+		}
+		ul.notify-main li.event .media-body a.btn-go:hover {
+			background: #0077c5;
+		}
+		ul.notify-main li.event .media-body a.btn-go {
+			display: block;
+			text-align: center;
+			background: #02014a;
+			padding: 5px 2px;
+			color: #fff;
+			border-radius: 3px;
+			width: 90%;
+			margin: 0 auto;
+			font-size: 11px;
+		}
+		p.proccessingStatus{
+			color: #f00;
+			text-align: center;
+			font-weight: 600;
+		}
     </style>
    <?php if($module=='home' AND $controller=="index" AND $action=="index"){?>	
    <?php }else if($module=='home' AND $controller=="index" AND $action=="rpt-income-graphic"){?>	
@@ -345,7 +345,7 @@ p.proccessingStatus{
 	</div>	
 
 <!-- Custom Theme Scripts -->
-<script>
+<script type="text/javascript">
 
 var url_changelang = '<?php echo $this->url(array('module'=>'default','controller'=>'index','action'=>'changelange'));?> ';
 function changeLange(lang){
@@ -361,9 +361,7 @@ function changeLange(lang){
 		}
 	});
 }
-</script>
 
-<script type="text/javascript">
 $(document).ready(function(){
 	$("body").hover(function() {
 		updateTimeOut();
@@ -391,7 +389,7 @@ $(document).ready(function(){
 		});
 	  });
 	<?php }?>
-
+	messageAlert()
 });
 
 var urlReload = '<?php echo $this->url(array('module'=>'default','controller'=>'index','action'=>'reloadr'));?> ';
@@ -534,6 +532,33 @@ function exportExcel(){
 	$('#exportExcel').tableExport({type:'excel',escape:'false'});
 }
 <?php }?>
+
+function messageAlert(){
+	
+	params = (new URL(document.location)).searchParams;
+	alertmg = params.get("alertmg");
+	if(alertmg){
+		messsageTitle = params.get("messsageTitle");
+		classMessage = params.get("classMessage");
+		if(classMessage==''){
+			classMessage="info";
+		}
+		Swal.fire({
+			  icon: classMessage,
+			  title: messsageTitle,
+			  showConfirmButton: false,
+			  timer: 1000,
+			  timerProgressBar: true,
+			  didOpen: (toast) => {
+				toast.addEventListener('mouseenter', Swal.stopTimer)
+				toast.addEventListener('mouseleave', Swal.resumeTimer)
+			  }
+		}).then((result) => {
+				window.history.pushState(null, null, '<?php echo $base_url.$module."/".$controller."/".$action;?>');
+		})
+	}
+}
+
 </script>
 <?php if($action!='index'){?>
 <?php if($module!="report"){?>

@@ -88,7 +88,7 @@ class Invest_InvestmentController extends Zend_Controller_Action {
 		$_dbmodel = new Invest_Model_DbTable_DbInvestment();
 		$row = $_dbmodel->getInvestmentById($id);
 		if (empty($row)){
-			Application_Form_FrmMessage::Sucessfull("NO_RECORD","/invest/investment");
+			Application_Form_FrmMessage::Sucessfull("NO_RECORD","/invest/investment",2);
 			exit();
 		}
 		

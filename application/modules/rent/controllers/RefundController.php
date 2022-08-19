@@ -97,7 +97,7 @@ class Rent_RefundController extends Zend_Controller_Action {
 		$id = empty($id)?0:$id;
 		$row = $_dbmodel->getRefundById($id);
 		if(empty($row)){
-			Application_Form_FrmMessage::Sucessfull("NO_RECORD","/rent/refund");
+			Application_Form_FrmMessage::Sucessfull("NO_RECORD","/rent/refund",2);
 			exit();
 		}
 		$this->view->row =$row;

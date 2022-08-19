@@ -81,7 +81,7 @@ class Requesting_RequestController extends Zend_Controller_Action {
     	}
     	$row = $db->getRequestPOById($id);
     	if (empty($row)){
-    		Application_Form_FrmMessage::Sucessfull("NO_RECORD", self::REDIRECT_URL."/index");
+    		Application_Form_FrmMessage::Sucessfull("NO_RECORD", self::REDIRECT_URL."/index",2);
     		exit();
     	}
 		
@@ -97,7 +97,7 @@ class Requesting_RequestController extends Zend_Controller_Action {
     	}
 		/*
 		if ($row['checkingStatus']>0){
-    		Application_Form_FrmMessage::Sucessfull("REQUEST_IS_ON_PROCCESING", self::REDIRECT_URL."/index");
+    		Application_Form_FrmMessage::Sucessfull("REQUEST_IS_ON_PROCCESING", self::REDIRECT_URL."/index",2);
     		exit();
     	}
 		*/

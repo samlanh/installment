@@ -78,7 +78,7 @@ class Invest_BrokerController extends Zend_Controller_Action {
 		$_db = new Invest_Model_DbTable_DbBroker();
 		$row = $_db->getBrokerById($id);
 		if (empty($row)){
-			Application_Form_FrmMessage::Sucessfull("NO_RECORD","/invest/broker");
+			Application_Form_FrmMessage::Sucessfull("NO_RECORD","/invest/broker",2);
 			exit();
 		}
 		$this->view->row = $row;

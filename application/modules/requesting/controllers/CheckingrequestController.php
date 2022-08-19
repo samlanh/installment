@@ -68,11 +68,11 @@ class Requesting_CheckingrequestController extends Zend_Controller_Action {
 		$dbReq = new Requesting_Model_DbTable_DbRequest();
     	$row = $dbReq->getRequestPOById($id);
     	if (empty($row)){
-    		Application_Form_FrmMessage::Sucessfull("NO_RECORD", self::REDIRECT_URL."/index");
+    		Application_Form_FrmMessage::Sucessfull("NO_RECORD", self::REDIRECT_URL."/index",2);
     		exit();
     	}
 		if ($row['status']==0){
-    		Application_Form_FrmMessage::Sucessfull("NO_RECORD", self::REDIRECT_URL."/index");
+    		Application_Form_FrmMessage::Sucessfull("NO_RECORD", self::REDIRECT_URL."/index",2);
     		exit();
     	}
 		
@@ -83,7 +83,7 @@ class Requesting_CheckingrequestController extends Zend_Controller_Action {
 		);
 		$processingStatusTitle = $dbGbSt->requestingProccess($arrStep);
 		if ($row['processingStatus']>2){
-    		Application_Form_FrmMessage::Sucessfull($tr->translate('REQUEST_IS_ON_PROCCESING')." ".$processingStatusTitle, self::REDIRECT_URL."/index");
+    		Application_Form_FrmMessage::Sucessfull($tr->translate('REQUEST_IS_ON_PROCCESING')." ".$processingStatusTitle, self::REDIRECT_URL."/index",2);
     		exit();
     	}
     	$this->view->row = $row;
