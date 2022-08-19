@@ -146,6 +146,10 @@
 						font-weight: 600;
 						color: #f80000;
 					}
+					.blueBold {
+						font-weight: 600;
+						color: blue;
+					}
 					
 					table.totalBottom{
 						line-height: 25px; 
@@ -259,7 +263,20 @@
 				                		<td data-label="ឈ្មោះទំនិញ/Product Name"><?php echo $rs['proName'];?></td>
 				                		<td data-label="បរិមាណនៅសល់/Remaining QTY"><?php echo number_format($rs['currentQty'],2);?></td>
 				                		<td data-label="បរិមាណរាប់ក្នុងឃ្លាំង/Exact Qty"><?php echo number_format($rs['exactQty'],2);?></td>
-				                		<td data-label="បរិមាណលម្អៀង/Difference Qty" class="redBold"><?php echo number_format($rs['exactQty']-$rs['currentQty'],2);?></td>
+
+										<?php $df_qty= $rs['exactQty']-$rs['currentQty']; 
+										if($df_qty<0){?>
+												<td class="redBold" data-label="បរិមាណលម្អៀង/Difference Qty">																						
+														<?php echo number_format($df_qty,2);?>
+												</td>
+											<?php }else{?>
+												<td  data-label="បរិមាណលម្អៀង/Difference Qty">																						
+														<?php echo number_format($df_qty,2);?>
+												</td>
+											<?php } ?>
+
+
+
 				                		<td data-label="សម្គាល់/note"><?php echo $rs['note'];?></td>
 				                	</tr>
 				                <?php }?>
