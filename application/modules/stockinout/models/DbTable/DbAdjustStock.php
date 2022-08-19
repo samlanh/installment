@@ -10,7 +10,7 @@ class Stockinout_Model_DbTable_DbAdjustStock extends Zend_Db_Table_Abstract
     function getAllAdjustStock($search){
     	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
     	$approved = $tr->translate("APPROVED");
-    	$reject =  $tr->translate("REJECTED");
+    	$reject =  $tr->translate("PENDING");
     	$sql="SELECT 
     			sa.id,
     			(SELECT project_name FROM `ln_project` WHERE br_id=sa.projectId LIMIT 1) AS projectName,
