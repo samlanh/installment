@@ -76,7 +76,7 @@ class Stock_SupplierController extends Zend_Controller_Action {
 		}
 		$row = $db->getSupplierById($id);
 		if (empty($row)){
-			Application_Form_FrmMessage::Sucessfull("NO_RECORD","/stock/supplier");
+			Application_Form_FrmMessage::Sucessfull("NO_RECORD","/stock/supplier",2);
 			exit();
 		}
 		$fm = new Stock_Form_FrmSupplier();

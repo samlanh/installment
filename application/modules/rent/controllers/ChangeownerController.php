@@ -91,7 +91,7 @@ class Rent_ChangeownerController extends Zend_Controller_Action {
 		$id = empty($id)?0:$id;
 		$row = $_dbmodel->getChangeOwnerById($id);
 		if(empty($row)){
-			Application_Form_FrmMessage::Sucessfull("NO_RECORD","/rent/changeowner");
+			Application_Form_FrmMessage::Sucessfull("NO_RECORD","/rent/changeowner",2);
 			exit();
 		}
 		$this->view->row =$row;

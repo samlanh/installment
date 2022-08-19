@@ -78,7 +78,7 @@ class Invest_IndexController extends Zend_Controller_Action {
 		$_db = new Invest_Model_DbTable_DbInvestor();
 		$row = $_db->getInvestorById($id);
 		if (empty($row)){
-			Application_Form_FrmMessage::Sucessfull("NO_RECORD","/invest");
+			Application_Form_FrmMessage::Sucessfull("NO_RECORD","/invest",2);
 			exit();
 		}
 		$this->view->row = $row;

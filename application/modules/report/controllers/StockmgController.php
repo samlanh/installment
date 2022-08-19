@@ -48,7 +48,7 @@ class Report_StockmgController extends Zend_Controller_Action {
     		$id = empty($id)?0:$id;
 			$row = $db->getRequestPOById($id);
 			if (empty($row)){
-				Application_Form_FrmMessage::Sucessfull("NO_RECORD", "/requesting/request");
+				Application_Form_FrmMessage::Sucessfull("NO_RECORD", "/requesting/request",2);
 				exit();
 			}
 			$this->view->row = $row;
@@ -69,7 +69,7 @@ class Report_StockmgController extends Zend_Controller_Action {
     		$id = empty($id)?0:$id;
 			$row = $db->getRequestPOById($id);
 			if (empty($row)){
-				Application_Form_FrmMessage::Sucessfull("NO_RECORD", "/requesting/request");
+				Application_Form_FrmMessage::Sucessfull("NO_RECORD", "/requesting/request",2);
 				exit();
 			}
 			$this->view->row = $row;
@@ -128,7 +128,7 @@ class Report_StockmgController extends Zend_Controller_Action {
     		$id = empty($id)?0:$id;
 			$row = $db->getPurchasingById($id);
 			if (empty($row)){
-				Application_Form_FrmMessage::Sucessfull("NO_RECORD", "/po/index");
+				Application_Form_FrmMessage::Sucessfull("NO_RECORD", "/po/index",2);
 				exit();
 			}
 			$this->view->row = $row;
@@ -186,7 +186,7 @@ class Report_StockmgController extends Zend_Controller_Action {
     		$id = empty($id)?0:$id;
 			$row = $db->getPaymentInvoiceById($id);
 			if (empty($row)){
-				Application_Form_FrmMessage::Sucessfull("NO_RECORD", "/invpayment/payment");
+				Application_Form_FrmMessage::Sucessfull("NO_RECORD", "/invpayment/payment",2);
 				exit();
 			}
 			$this->view->row = $row;
@@ -329,7 +329,7 @@ class Report_StockmgController extends Zend_Controller_Action {
     		$id = empty($id)?0:$id;
 			$row = $db->getDataRowInvoice($id);
 			if (empty($row)){
-				Application_Form_FrmMessage::Sucessfull("NO_RECORD", "/invpayment/index");
+				Application_Form_FrmMessage::Sucessfull("NO_RECORD", "/invpayment/index",2);
 				exit();
 			}
 			
@@ -362,7 +362,7 @@ class Report_StockmgController extends Zend_Controller_Action {
 			
 			$row = $db->getDataRowInvoice($id);
 			if (empty($row)){
-				Application_Form_FrmMessage::Sucessfull("NO_RECORD", "/invpayment/index");
+				Application_Form_FrmMessage::Sucessfull("NO_RECORD", "/invpayment/index",2);
 				exit();
 			}
 		

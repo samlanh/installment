@@ -67,7 +67,7 @@ class Project_StreetController extends Zend_Controller_Action {
 		}
 		$row = $db->getStreetById($id);
 		if (empty($row)){
-			Application_Form_FrmMessage::Sucessfull('NO_RECORD',"/project/street");
+			Application_Form_FrmMessage::Sucessfull('NO_RECORD',"/project/street",2);
 			exit();
 		}
 		$frm = new Project_Form_FrmStreet();

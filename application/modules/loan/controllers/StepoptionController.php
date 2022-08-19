@@ -84,7 +84,7 @@ class Loan_StepoptionController extends Zend_Controller_Action
     	$id = empty($id)?0:$id;
     	$row = $db->getStepoptionBYID($id);
     	if (empty($row)){
-    		Application_Form_FrmMessage::Sucessfull("NO_RECORD",self::REDIRECT_URL);
+    		Application_Form_FrmMessage::Sucessfull("NO_RECORD",self::REDIRECT_URL,2);
     		exit();
     	}
     	$this->view->row = $row;

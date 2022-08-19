@@ -100,7 +100,7 @@ class Stock_ProductController extends Zend_Controller_Action {
     	$type=3; //Product
     	$row =$db->getItemsDetailById($id,$type);
     	if (empty($row)){
-    		Application_Form_FrmMessage::Sucessfull("NO_RECORD", self::REDIRECT_URL."/index");
+    		Application_Form_FrmMessage::Sucessfull("NO_RECORD", self::REDIRECT_URL."/index",2);
     	}
     	$this->view->row = $row;
     	$this->view->productBranch = $db->getProductLocation($id);
@@ -139,7 +139,7 @@ class Stock_ProductController extends Zend_Controller_Action {
     	$type=3; //Product
     	$row =$db->getItemsDetailById($id,$type);
     	if (empty($row)){
-    		Application_Form_FrmMessage::Sucessfull("NO_RECORD", self::REDIRECT_URL."/index");
+    		Application_Form_FrmMessage::Sucessfull("NO_RECORD", self::REDIRECT_URL."/index",2);
     	}
     	$this->view->row = $row;
     	$this->view->productBranch = $db->getProductLocation($id);

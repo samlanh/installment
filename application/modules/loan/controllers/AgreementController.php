@@ -95,7 +95,7 @@ class Loan_AgreementController extends Zend_Controller_Action {
 		$id = $this->getRequest()->getParam('id');
 		$rs = $_dbmodel->getSaleAgreementById($id);
 		if(empty($rs)){
-			Application_Form_FrmMessage::Sucessfull("NO_RECORD","/loan/agreement");
+			Application_Form_FrmMessage::Sucessfull("NO_RECORD","/loan/agreement",2);
 		}
 		$this->view->rs = $rs;
 		$fm = new Loan_Form_FrmCancel();

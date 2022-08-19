@@ -14,13 +14,19 @@ class Application_Form_FrmMessage extends Zend_Form
 	{
 		$tr= Application_Form_FrmLanguages::getCurrentlanguage();
 		$msg = $tr->translate($msg);
-		
+		$msg = preg_replace( "/\r|\n/", "", addslashes(strip_tags(htmlspecialchars($msg))));
 		$classMessage="success";//1=Success Message,2=Infomation Message
 		if($typeMessage!=1){
 			$classMessage="info";
 		}
 		$stringScript ="<script language='javascript'>";
-		$stringScript.="
+		
+		if($typeMessage!=1){
+			$stringScript.="
+				window.location.href = '".Zend_Controller_Front::getInstance()->getBaseUrl().$url."?alertmg=true&messsageTitle=$msg&classMessage=$classMessage';
+			"; 
+		}else{
+			$stringScript.="
 				Swal.fire({
 				  icon: '".$classMessage."',
 				  title: '".$msg."',
@@ -34,8 +40,10 @@ class Application_Form_FrmMessage extends Zend_Form
 				}).then((result) => {
 				  window.location.href = '".Zend_Controller_Front::getInstance()->getBaseUrl().$url."';
 				})
-		";
+			";
+		}
 		$stringScript.="</script>";
+		
 		echo $stringScript;
 	}
 	
