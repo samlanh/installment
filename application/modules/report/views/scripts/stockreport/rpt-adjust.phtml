@@ -1,7 +1,32 @@
 <?php 
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$frm = $this->frm_search;
+	$dbGB = new Application_Model_DbTable_DbGlobal();
+	
+
+	$montFomat=DATE_FORMAT_FOR_PHP;
+	
+	$headerReportType = REPORT_LETER_HEAD;
+	$classHideHeight="110px";
+	if($headerReportType==2){
+		$classHideHeight="125px";
+	}
+	
+	$branch_title = $tr->translate("BRAND_TITLE");
+	$dbAcc = new Report_Model_DbTable_DbAccountant();
+	$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
+	$arrStep = array(
+			'keyIndex'=>1,//Purchase By Request
+			'typeKeyIndex'=>1,
+		);
+	$purchaseType = $dbGBstock->purchasingTypeKey($arrStep);
+	$arrStep = array(
+			'keyIndex'=>1,//Purchase 
+			'typeKeyIndex'=>4,
+		);
+	$purchaseTypeOPt = $dbGBstock->purchasingTypeKey($arrStep);
 	$search=$this->search;
+
 ?>
 <title><?php echo $tr->translate("RPT_ADJUST");?></title>
 <script>
@@ -83,7 +108,7 @@
 						margin:0;
 					  }
 						.hide{visibility: visible; height: <?php echo $classHideHeight;?>;}
-						@page {size: landscape;margin:0.5cm 0.2cm;}
+						@page {size: landscape}
 					}
 					.center{text-align: center !important;}
 					table.content-data{
@@ -96,8 +121,23 @@
 						background: #c1d0f3;
 						font-weight:600;
 					}
+					table.tb-footer{
+						border-collapse:collapse;
+						border:1px solid #000; 
+						font-size:13px;
+						font-family: 'Times New Roman','Khmer OS Battambang';
+					}
+					table.tb-footer tr{
+					 line-height: 14px; font-size:11px; padding:2px 0px; height: 25px;
+					}
 					table tr td{
 						padding:0 2px;
+					}
+					tr.voidclass {
+						background: #fff7f7;
+					}
+					td.centerText{
+						text-align: center;
 					}
 					td.rightText {
 						text-align: right;
@@ -107,6 +147,42 @@
 						color: #f80000;
 					}
 					
+					table.totalBottom{
+						line-height: 25px; 
+						font-size:12px !important;
+						font-family: 'Times New Roman','Khmer OS Battambang';
+					}
+					table.totalBottom tr td{
+						padding:2px;
+						line-height: 14px;
+					}
+					table.totalBottom tr.rowHead td {
+						padding: 4px 0;
+						font-weight: 600;
+					}
+					table.totalBottom tr.rowHead td.mainCol {
+						width: 30%;
+						border-bottom: solid 1px #000;
+						border-top: solid 1px #000;
+						padding: 2px 0;
+					}
+					table.totalBottom td.blankCol {
+						width: 5%;
+					}
+					table.totalBottom td.sideCol {
+						width: 20%;
+					}
+					table.totalBottom td.valueData {
+					}
+					table.totalBottom td.valueData.totalVal {
+						font-weight: 600;
+					}
+					table.totalBottom tr.rowBottom td.mainCol {
+						border-top: solid 2px #000;
+						padding: 2px 0;
+						font-size: 12px;
+						font-weight: 600;
+					}
 					.lbTitle{
 						display:block;
 					    line-height:20px;
@@ -114,7 +190,7 @@
 					}
 					.lbEng{
 						
-					    line-height:14px;
+					    line-height:12px;
 						
 					}
 					
@@ -131,7 +207,7 @@
 				    <tr>
 				    	<td id="exportExcel">
 				            <table class="content-data" width="100%" border="1"  cellspacing="0" cellpadding="0">
-					                <thead>
+					          <thead>
 									<tr class="hide" style="border:1px solid #000;">
 					                	<td colspan="17" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
 					                </tr>
@@ -200,7 +276,9 @@
 	dojo.require("dojo.data.ItemFileWriteStore"); 
 	require(["dojo/ready"], function(ready){
 		ready(function(){
+			 
 			 getBranchInfo();
+			 
 			 document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
 			 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("RPT_ADJUST");?>';
 			 document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date(DATE_FORMAT_FOR_PHP); }else{ echo date(DATE_FORMAT_FOR_PHP,strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date(DATE_FORMAT_FOR_PHP,strtotime($this->search['end_date'])); }?>';

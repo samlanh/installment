@@ -93,7 +93,7 @@ class Invpayment_ReceivechequeController extends Zend_Controller_Action {
 		$id = $this->getRequest()->getParam('id');
 		$id = empty($id)?0:$id;
 		if(empty($id)){
-			Application_Form_FrmMessage::Sucessfull("NO_DATA","//");
+			Application_Form_FrmMessage::Sucessfull("NO_DATA","//",2);
 		}
 		$row = $db->getDataRowIsseueCheque($id);
 		$this->view->row = $row;

@@ -84,7 +84,7 @@ class Invpayment_DepositinvController extends Zend_Controller_Action {
 		$id = $this->getRequest()->getParam('id');
 		$id = empty($id)?0:$id;
 		if(empty($id)){
-			Application_Form_FrmMessage::Sucessfull("NO_DATA",self::REDIRECT_URL."/index");
+			Application_Form_FrmMessage::Sucessfull("NO_DATA",self::REDIRECT_URL."/index",2);
 			exit();
 		}
 		
@@ -103,7 +103,7 @@ class Invpayment_DepositinvController extends Zend_Controller_Action {
 		$invoiceType = $dbGBstock->invoiceTypeKey($arrStep);
 		
 		if ($row['ivType']!=$invoiceType){
-    		Application_Form_FrmMessage::Sucessfull($tr->translate('NO_DATA'), self::REDIRECT_URL."/index");
+    		Application_Form_FrmMessage::Sucessfull($tr->translate('NO_DATA'), self::REDIRECT_URL."/index",2);
     		exit();
     	}
 		
