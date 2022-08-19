@@ -123,7 +123,7 @@ class Incexp_CreditController extends Zend_Controller_Action
 		$db = new Incexp_Model_DbTable_DbCredit();
 		$row  = $db->getCreditbyId($id);
 		if(empty($row)){
-			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/incexp/credit");
+			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/incexp/credit",2);
 			exit();
 		}
 		$row['other_invoice']='';

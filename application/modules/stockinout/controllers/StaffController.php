@@ -72,7 +72,7 @@ class Stockinout_StaffController extends Zend_Controller_Action {
 		$row = $db->getDataRow($id);
 		
 		if(empty($id) OR empty($row)){
-			Application_Form_FrmMessage::Sucessfull("NO_DATA","/stockinout/staff/index");
+			Application_Form_FrmMessage::Sucessfull("NO_DATA","/stockinout/staff/index",2);
 		}
 		
 		

@@ -67,7 +67,7 @@ class Incexp_ExpenseController extends Zend_Controller_Action
 				}
 				
 				if (empty($data)){
-					Application_Form_FrmMessage::Sucessfull("File Attachment to large can't upload and Save data !","/incexp/expense");
+					Application_Form_FrmMessage::Sucessfull("File Attachment to large can't upload and Save data !","/incexp/expense",2);
 					exit();
 				}
 			
@@ -123,7 +123,7 @@ class Incexp_ExpenseController extends Zend_Controller_Action
 			$db = new Incexp_Model_DbTable_DbExpense();				
 			try {
 				if (empty($data)){
-					Application_Form_FrmMessage::Sucessfull("File Attachment to large can't upload and Save data !","/incexp/expense");
+					Application_Form_FrmMessage::Sucessfull("File Attachment to large can't upload and Save data !","/incexp/expense",2);
 					exit();
 				}
 				
@@ -138,16 +138,16 @@ class Incexp_ExpenseController extends Zend_Controller_Action
 		$db = new Incexp_Model_DbTable_DbExpense();
 		$row  = $db->getexpensebyid($id);
 		if(empty($row)){
-			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND",self::REDIRECT_URL);
+			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND",self::REDIRECT_URL,2);
 			exit();
 		}else if ($row['is_paid']==1){
-			Application_Form_FrmMessage::Sucessfull("This Expense Already Payment",self::REDIRECT_URL);
+			Application_Form_FrmMessage::Sucessfull("This Expense Already Payment",self::REDIRECT_URL,2);
 			exit();
 		}
 		
 		$haspay = $db->checkHaspayment($id);
 		if (!empty($haspay)){
-			Application_Form_FrmMessage::Sucessfull("This Expense has paid on some payment ready",self::REDIRECT_URL);
+			Application_Form_FrmMessage::Sucessfull("This Expense has paid on some payment ready",self::REDIRECT_URL,2);
 			exit();
 		}
 		

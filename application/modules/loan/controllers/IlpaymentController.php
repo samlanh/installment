@@ -56,19 +56,19 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
   		$db = new Loan_Model_DbTable_DbLoanILPayment();
   		$payment_il = $db->getIlPaymentByID($id);
   		if(empty($payment_il)){
-  			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/ilpayment");
+  			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/ilpayment",2);
   			exit();
   		}
   		if (!empty($payment_il)){
   			if ($payment_il['is_closed']==1){
-  				Application_Form_FrmMessage::Sucessfull("Can not delete this record","/loan/ilpayment");
+  				Application_Form_FrmMessage::Sucessfull("Can not delete this record","/loan/ilpayment",2);
   			}
   			
   			$sale_id = empty($payment_il['sale_id'])?0:$payment_il['sale_id'];
   			$lastPaymentRecord = $db->getLastPaymentRecord($sale_id);
   			$lastPayId = empty($lastPaymentRecord['id'])?0:$lastPaymentRecord['id'];
   			if ($lastPayId!=$id){
-  				Application_Form_FrmMessage::Sucessfull("Only Last Payment Receipt Can Delete","/loan/ilpayment");
+  				Application_Form_FrmMessage::Sucessfull("Only Last Payment Receipt Can Delete","/loan/ilpayment",2);
   			}
   		}
   		
@@ -106,7 +106,7 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 	 				Application_Form_FrmMessage::Sucessfull("has been delete","/loan/ilpayment");
 	 			}
 	 		}
-	 		Application_Form_FrmMessage::Sucessfull("You no permission to delete","/loan/ilpayment");
+	 		Application_Form_FrmMessage::Sucessfull("You no permission to delete","/loan/ilpayment",2);
 	 	}catch (Exception $e) {
 	 		Application_Form_FrmMessage::message("INSERT_FAIL");
 	 		echo $e->getMessage();
@@ -223,7 +223,7 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 			$identify = $_data["identity"];
 			try {
 				if($identify==""){
-					Application_Form_FrmMessage::Sucessfull("Client no laon to pay!","/loan/ilpayment/");
+					Application_Form_FrmMessage::Sucessfull("Client no laon to pay!","/loan/ilpayment/",2);
 				}else{
 					$db->updateIlPayment($_data);
 					//Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","/loan/ilpayment/");
@@ -499,14 +499,14 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 				if(empty($payment_il)){
 					print_r(Zend_Json::encode(2));
 					exit();//RECORD_NOTFUND
-					//Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/ilpayment");
+					//Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/ilpayment",2);
 					
 				}
 				if (!empty($payment_il)){
 					if ($payment_il['is_closed']==1){
 						print_r(Zend_Json::encode(3));
 						exit();//Receipt Closed
-						//Application_Form_FrmMessage::Sucessfull("Can not delete this record","/loan/ilpayment");
+						//Application_Form_FrmMessage::Sucessfull("Can not delete this record","/loan/ilpayment",2);
 					}
 					//if ($payment_il['total_payment']<=0){
 					if ($payment_il['total_payment_parent']<=0){
@@ -520,7 +520,7 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 					if ($lastPayId!=$id){
 						print_r(Zend_Json::encode(4));
 						exit();//Only Last Payment Receipt Can Delete
-						//Application_Form_FrmMessage::Sucessfull("Only Last Payment Receipt Can Delete","/loan/ilpayment");
+						//Application_Form_FrmMessage::Sucessfull("Only Last Payment Receipt Can Delete","/loan/ilpayment",2);
 					}
 				}
 				
@@ -537,7 +537,7 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 					exit();//Void Failed
 				}
 			}
-	 		Application_Form_FrmMessage::Sucessfull("You no permission to delete","/loan/ilpayment");
+	 		Application_Form_FrmMessage::Sucessfull("You no permission to delete","/loan/ilpayment",2);
 			exit();
 	 	}catch (Exception $e) {
 	 		Application_Form_FrmMessage::message("INSERT_FAIL");

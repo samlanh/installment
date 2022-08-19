@@ -119,7 +119,7 @@ class Loan_CancelController extends Zend_Controller_Action {
 	      }
 	    $row  = $_dbmodel->getCancelById($id);
 	    if(empty($row)){
-	    	Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/cancel");
+	    	Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/cancel",2);
 	    	exit();
 	    }
 	    $this->view->row = $row;

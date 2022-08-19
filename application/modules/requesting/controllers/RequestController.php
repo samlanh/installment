@@ -92,7 +92,7 @@ class Requesting_RequestController extends Zend_Controller_Action {
 		);
 		$processingStatusTitle = $dbGbSt->requestingProccess($arrStep);
 		if ($row['processingStatus']>1){
-    		Application_Form_FrmMessage::Sucessfull($tr->translate('REQUEST_IS_ON_PROCCESING')." ".$processingStatusTitle, self::REDIRECT_URL."/index");
+    		Application_Form_FrmMessage::Sucessfull($tr->translate('REQUEST_IS_ON_PROCCESING')." ".$processingStatusTitle, self::REDIRECT_URL."/index",2);
     		exit();
     	}
 		/*

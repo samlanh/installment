@@ -56,11 +56,11 @@ class Budget_Model_DbTable_DbBudgetType extends Zend_Db_Table_Abstract
 	    			);
 	    		$this->insert($arr);
     		}else{
-    			Application_Form_FrmMessage::Sucessfull("DATA_EXISTING", "/budget/type/add");
+    			Application_Form_FrmMessage::Sucessfull("DATA_EXISTING", "/budget/type/add",2);
     		}
     	}catch (Exception $e){
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-    		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL", "/budget/type/add");
+    		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL", "/budget/type/add",2);
     	}
     }
     function updateBudgetType($data){
@@ -78,7 +78,7 @@ class Budget_Model_DbTable_DbBudgetType extends Zend_Db_Table_Abstract
 			
     	}catch (Exception $e){
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-    		Application_Form_FrmMessage::Sucessfull("UPDATE_FAIL", "/budget/type/index");
+    		Application_Form_FrmMessage::Sucessfull("UPDATE_FAIL", "/budget/type/index",2);
     	}
     }
     function getDataRow($recordId){

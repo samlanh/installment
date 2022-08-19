@@ -88,9 +88,9 @@ class Group_propertiestypeController extends Zend_Controller_Action {
    			
    			$_data['id']= $id;
    			$db_co->addPropery($_data);
-   			Application_Form_FrmMessage::Sucessfull("ការ​បញ្ចូល​ជោគ​ជ័យ !",'/group/propertiestype');
+   			Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS",'/group/propertiestype');
    		}catch(Exception $e){
-   			Application_Form_FrmMessage::message("ការ​បញ្ចូល​មិន​ជោគ​ជ័យ");
+   			Application_Form_FrmMessage::message("UPDATE_FAIL");
    			$err =$e->getMessage();
    			Application_Model_DbTable_DbUserLog::writeMessageError($err);
    		}

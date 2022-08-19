@@ -107,7 +107,7 @@ class Loan_ChangpropertyController extends Zend_Controller_Action {
 		$id = $this->getRequest()->getParam('id');
 		$rs = $_dbmodel->getTransferProject($id);
 		if(empty($rs)){
-			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/changproperty");
+			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/changproperty",2);
 			exit();
 		}
 		$this->view->rs = $rs;
@@ -142,7 +142,7 @@ class Loan_ChangpropertyController extends Zend_Controller_Action {
 		$rs = $_dbmodel->getTransferProject($id);
 
 		if(empty($rs)){
-			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/changproperty");
+			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/changproperty",2);
 			exit();
 		}
 		$this->view->rs = $rs;

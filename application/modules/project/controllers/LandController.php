@@ -190,7 +190,7 @@ class Project_LandController extends Zend_Controller_Action {
 		$row = $db->getClientById($id);
 	        $this->view->row=$row;
 		if(empty($row)){
-			Application_Form_FrmMessage::Sucessfull('RECORD_NOTFUND',"/project/land");
+			Application_Form_FrmMessage::Sucessfull('RECORD_NOTFUND',"/project/land",2);
 			exit();
 		}
 		$fm = new Project_Form_FrmLand();
@@ -228,7 +228,7 @@ class Project_LandController extends Zend_Controller_Action {
 		$db = new Project_Model_DbTable_DbLand();
 		$row = $db->getCheckPropertyInSale($id);
 		if (!empty($row)){
-			Application_Form_FrmMessage::Sucessfull("Can not delete this record","/project/land");
+			Application_Form_FrmMessage::Sucessfull("Can not delete this record","/project/land",2);
 			exit();
 		}
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
@@ -269,7 +269,7 @@ class Project_LandController extends Zend_Controller_Action {
 				Application_Form_FrmMessage::Sucessfull("DELETE_SUCCESS","/project/land");
 				exit();
 			}
-			Application_Form_FrmMessage::Sucessfull("You no permission to delete","/project/land");
+			Application_Form_FrmMessage::Sucessfull("You no permission to delete","/project/land",2);
 			exit();
 		}catch (Exception $e) {
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());

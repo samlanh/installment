@@ -91,7 +91,7 @@ class Product_IndexController extends Zend_Controller_Action {
 		$id = empty($id)?0:$id;
 		$result = $db->getProductbyId($id);
 		if(empty($id) OR empty($result)){
-			Application_Form_FrmMessage::Sucessfull("NO_DATA","/product/index");
+			Application_Form_FrmMessage::Sucessfull("NO_DATA","/product/index",2);
 		}
 		$this->view->photo = $result['image'];
 		$frm = new Product_Form_Frmproduct();
@@ -107,7 +107,7 @@ class Product_IndexController extends Zend_Controller_Action {
 		$id = empty($id)?0:$id;
 		$result = $db->getProductDetailbyId($id);
 		if(empty($id) OR empty($result)){
-			Application_Form_FrmMessage::Sucessfull("NO_DATA","/product/index");
+			Application_Form_FrmMessage::Sucessfull("NO_DATA","/product/index",2);
 		}
 		$this->view->rsProduct = $result;
 		
@@ -133,7 +133,7 @@ class Product_IndexController extends Zend_Controller_Action {
 		$id = empty($id)?0:$id;
 		$result = $db->getProductbyId($id);
 		if(empty($id) OR empty($result)){
-			Application_Form_FrmMessage::Sucessfull("NO_DATA","/product/index");
+			Application_Form_FrmMessage::Sucessfull("NO_DATA","/product/index",2);
 		}
 		$this->view->photo = $result['image'];
 		$frm = new Product_Form_Frmproduct();

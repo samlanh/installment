@@ -80,10 +80,10 @@ class Product_InitqtyController extends Zend_Controller_Action {
 		$id = empty($id)?0:$id;
 		$row = $db->getDataRow($id);
 		if(empty($id) OR empty($row)){
-			Application_Form_FrmMessage::Sucessfull("NO_DATA","/product/initqty/index");
+			Application_Form_FrmMessage::Sucessfull("NO_DATA","/product/initqty/index",2);
 		}
 		if($row['recordHistory']>1){
-			Application_Form_FrmMessage::Sucessfull("Can not edit this data","/product/initqty/");
+			Application_Form_FrmMessage::Sucessfull("Can not edit this data","/product/initqty/",2);
 		}
 		$this->view->rs = $row;
 	}
@@ -95,7 +95,7 @@ class Product_InitqtyController extends Zend_Controller_Action {
 		
 		$row = $db->getDataRow($id);
 		if(empty($id) OR empty($row)){
-			Application_Form_FrmMessage::Sucessfull("NO_DATA","/product/initqty/");
+			Application_Form_FrmMessage::Sucessfull("NO_DATA","/product/initqty/",2);
 		}
 		$this->view->rsProLocation = $row;
 		$proId = $row['proId'];
@@ -107,7 +107,7 @@ class Product_InitqtyController extends Zend_Controller_Action {
 		
 		$result = $dbs->getProductDetailbyId($proId);
 		if(empty($id) OR empty($result)){
-			Application_Form_FrmMessage::Sucessfull("NO_DATA","/product/index");
+			Application_Form_FrmMessage::Sucessfull("NO_DATA","/product/index",2);
 		}
 		$this->view->rsProduct = $result;
 	

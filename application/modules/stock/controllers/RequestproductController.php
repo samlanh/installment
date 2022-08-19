@@ -109,7 +109,7 @@ class Stock_RequestproductController extends Zend_Controller_Action {
 		$_pur = new Stock_Model_DbTable_DbRequestProduct();
 		$row = $_pur->getRequestById($id);
 		if (empty($row)){
-			Application_Form_FrmMessage::Sucessfull("No Record","/stock/requestproduct");
+			Application_Form_FrmMessage::Sucessfull("No Record","/stock/requestproduct",2);
 			exit();
 		}
 		$this->view->row= $row;

@@ -103,15 +103,16 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
 			$rs = $db->getTranLoanByIdWithBranch($id,null);
 			$this->view->rsresult =  $rs;
 			if(empty($rs)){
-				Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index");
+				Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index",2);
 				exit();
 			}
 			if($rs['is_cancel']==1){
-				Application_Form_FrmMessage::message('This Sale already cancel');
-				echo "<script>window.close();</script>";
+				Application_Form_FrmMessage::Sucessfull("This Sale already cancel","/loan",2);
+				//Application_Form_FrmMessage::message('This Sale already cancel');
+				//echo "<script>window.close();</script>";
 			}
 			if($rs['payment_id']!=1){
-				Application_Form_FrmMessage::Sucessfull("RESCHEDULE_EXIST","/loan");
+				Application_Form_FrmMessage::Sucessfull("RESCHEDULE_EXIST","/loan",2);
 			}
 		}
 		$this->view->id = $id;//use
