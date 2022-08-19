@@ -74,7 +74,7 @@ class Budget_ItemController extends Zend_Controller_Action {
 		$id = $this->getRequest()->getParam('id');
 		$id = empty($id)?0:$id;
 		if(empty($id)){
-			Application_Form_FrmMessage::Sucessfull("NO_DATA","/budget/item");
+			Application_Form_FrmMessage::Sucessfull("NO_DATA","/budget/item",2);
 		}
 		
 		$result = $db->getDataRow($id);

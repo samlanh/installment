@@ -56,7 +56,7 @@ class Po_IndexController extends Zend_Controller_Action {
 			$row = $dbRq->getRequestPOById($id);
 			$this->view->reqResult =  $row;
 			if ($row['approveStatus']!=1 AND ($row['processingStatus']!=4 OR $row['processingStatus']!=5)){
-				Application_Form_FrmMessage::Sucessfull("NO_DATA", self::REDIRECT_URL."/index");
+				Application_Form_FrmMessage::Sucessfull("NO_DATA", self::REDIRECT_URL."/index",2);
 				exit();
 			}
 			
@@ -104,7 +104,7 @@ class Po_IndexController extends Zend_Controller_Action {
 		$id = $this->getRequest()->getParam('id');
 		$id = empty($id)?0:$id;
 		if(empty($id)){
-			Application_Form_FrmMessage::Sucessfull("NO_DATA",self::REDIRECT_URL."/index");
+			Application_Form_FrmMessage::Sucessfull("NO_DATA",self::REDIRECT_URL."/index",2);
 			exit();
 		}
 		
@@ -122,7 +122,7 @@ class Po_IndexController extends Zend_Controller_Action {
 			);
 		$purchaseType = $dbGBstock->purchasingTypeKey($arrStep);
 		if ($row['purchaseType']!=$purchaseType){
-    		Application_Form_FrmMessage::Sucessfull($tr->translate('NO_DATA'), self::REDIRECT_URL."/index");
+    		Application_Form_FrmMessage::Sucessfull($tr->translate('NO_DATA'), self::REDIRECT_URL."/index",2);
     		exit();
     	}
 		$this->view->rowdetail = $db->getPODetailById($id);
