@@ -60,7 +60,7 @@ class Product_MeasureController extends Zend_Controller_Action {
 		$id = empty($id)?0:$id;
 		$result = $db->getMeasureById($id);
 		if(empty($id) OR empty($result)){
-			Application_Form_FrmMessage::Sucessfull("NO_DATA","/product/measure/index");
+			Application_Form_FrmMessage::Sucessfull("NO_DATA","/product/measure/index",2);
 		}
 		$this->view->rs = $result;
 	}

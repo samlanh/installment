@@ -159,7 +159,7 @@ class Report_InvestController extends Zend_Controller_Action {
 	  $dbinv = new Report_Model_DbTable_DbInvestment();
 	  $rs = $dbinv->getInvestmentById($id);
 	  if(empty($rs)){
-	  	Application_Form_FrmMessage::Sucessfull("NO_RECORD",'/report/invest/rpt-investment');
+	  	Application_Form_FrmMessage::Sucessfull("NO_RECORD",'/report/invest/rpt-investment',2);
 	  }
 	  $this->view->rs = $rs;
 	  
@@ -175,7 +175,7 @@ class Report_InvestController extends Zend_Controller_Action {
 	  $dbinv = new Report_Model_DbTable_DbInvestment();
 	  $rs = $dbinv->getInvestmentBrokerById($id);
 	  if(empty($rs)){
-	  	Application_Form_FrmMessage::Sucessfull("NO_RECORD",'/report/invest/rpt-investment');
+	  	Application_Form_FrmMessage::Sucessfull("NO_RECORD",'/report/invest/rpt-investment',2);
 	  }
 	  $this->view->rs = $rs;
 	  
@@ -193,7 +193,7 @@ class Report_InvestController extends Zend_Controller_Action {
   	if(!empty($id)){
   		$receipt = $db->getInvestmentReceiptById($id);
   		if(empty($receipt)){
-  			Application_Form_FrmMessage::Sucessfull("NO_RECORD",'/report/invest/rpt-withdrawalhistory');
+  			Application_Form_FrmMessage::Sucessfull("NO_RECORD",'/report/invest/rpt-withdrawalhistory',2);
   			exit();
   		}
   		$this->view->rs = $receipt;
@@ -217,7 +217,7 @@ class Report_InvestController extends Zend_Controller_Action {
   	if(!empty($id)){
   		$receipt = $db->getBrokerReceiptById($id);
   		if(empty($receipt)){
-  			Application_Form_FrmMessage::Sucessfull("NO_RECORD",'/report/invest/rpt-withdrawalbrokerhistory');
+  			Application_Form_FrmMessage::Sucessfull("NO_RECORD",'/report/invest/rpt-withdrawalbrokerhistory',2);
   			exit();
   		}
   		$this->view->rs = $receipt;
@@ -254,11 +254,11 @@ class Report_InvestController extends Zend_Controller_Action {
   	$dbinv = new Report_Model_DbTable_DbInvestment();
   	$rs = $dbinv->getInvestmentBrokerById($id);
   	if(empty($rs)){
-  		Application_Form_FrmMessage::Sucessfull("NO_RECORD",'/report/invest/investment');
+  		Application_Form_FrmMessage::Sucessfull("NO_RECORD",'/report/invest/investment',2);
   		exit();
   	}
   	if ($rs['is_broker_completed']==1){
-  		Application_Form_FrmMessage::Sucessfull("COMPLETED_WITHDRAW_CAN_NOT_EDIT","/invest/investment");
+  		Application_Form_FrmMessage::Sucessfull("COMPLETED_WITHDRAW_CAN_NOT_EDIT","/invest/investment",2);
   		exit();
   	}
   	$this->view->rs = $rs;
@@ -291,11 +291,11 @@ class Report_InvestController extends Zend_Controller_Action {
   	$dbinv = new Report_Model_DbTable_DbInvestment();
   	$rs = $dbinv->getInvestmentById($id);
   	if(empty($rs)){
-  		Application_Form_FrmMessage::Sucessfull("NO_RECORD",'/report/invest/investment');
+  		Application_Form_FrmMessage::Sucessfull("NO_RECORD",'/report/invest/investment',2);
   		exit();
   	}
   	if ($rs['is_completed']==1){
-  		Application_Form_FrmMessage::Sucessfull("COMPLETED_WITHDRAW_CAN_NOT_EDIT","/invest/investment");
+  		Application_Form_FrmMessage::Sucessfull("COMPLETED_WITHDRAW_CAN_NOT_EDIT","/invest/investment",2);
   		exit();
   	}
   	$this->view->rs = $rs;

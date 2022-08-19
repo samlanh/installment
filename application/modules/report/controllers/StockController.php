@@ -316,7 +316,7 @@ class Report_StockController extends Zend_Controller_Action {
 		$id = empty($id)?0:$id;
 		$row = $db->getRequestProductById($id);
 		if (empty($row)){
-			Application_Form_FrmMessage::Sucessfull("NO_RECORD","/allreport/stock/rpt-request-product");
+			Application_Form_FrmMessage::Sucessfull("NO_RECORD","/allreport/stock/rpt-request-product",2);
 			exit();
 		}
 		$this->view->req =$row;
@@ -587,14 +587,14 @@ class Report_StockController extends Zend_Controller_Action {
 			if($this->getRequest()->isPost()){
 				$_data = $this->getRequest()->getPost();
 				if (empty($_data['selector'])){
-					Application_Form_FrmMessage::Sucessfull("NO_RECORD","/allreport/stock/rpt-closing-purchasepayment");
+					Application_Form_FrmMessage::Sucessfull("NO_RECORD","/allreport/stock/rpt-closing-purchasepayment",2);
 					exit();
 				}
 				$db->closingPurchasePayment($_data);
 				Application_Form_FrmMessage::Sucessfull("CLOSING_SUCCESS", "/allreport/stock/rpt-closing-purchasepayment");
 				exit();
 			}
-			Application_Form_FrmMessage::Sucessfull("NO_RECORD","/allreport/stock/rpt-closing-purchasepayment");
+			Application_Form_FrmMessage::Sucessfull("NO_RECORD","/allreport/stock/rpt-closing-purchasepayment",2);
 			exit();
 		}catch (Exception $e){
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -719,14 +719,14 @@ class Report_StockController extends Zend_Controller_Action {
 			if($this->getRequest()->isPost()){
 				$_data = $this->getRequest()->getPost();
 				if (empty($_data['selector'])){
-					Application_Form_FrmMessage::Sucessfull("NO_RECORD","/allreport/stock/rpt-closing-productstudent");
+					Application_Form_FrmMessage::Sucessfull("NO_RECORD","/allreport/stock/rpt-closing-productstudent",2);
 					exit();
 				}
 				$db->closingStuProduct($_data);
 				Application_Form_FrmMessage::Sucessfull("CLOSING_SUCCESS", "/allreport/stock/rpt-closing-productstudent");
 				exit();
 			}
-			Application_Form_FrmMessage::Sucessfull("NO_RECORD","/allreport/stock/rpt-closing-productstudent");
+			Application_Form_FrmMessage::Sucessfull("NO_RECORD","/allreport/stock/rpt-closing-productstudent",2);
 			exit();
 		}catch (Exception $e){
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());

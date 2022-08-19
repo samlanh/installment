@@ -67,11 +67,11 @@ class Requesting_PcheckingrequestController extends Zend_Controller_Action {
 		$dbReq = new Requesting_Model_DbTable_DbRequest();
     	$row = $dbReq->getRequestPOById($id);
     	if (empty($row)){
-    		Application_Form_FrmMessage::Sucessfull("NO_RECORD", self::REDIRECT_URL."/index");
+    		Application_Form_FrmMessage::Sucessfull("NO_RECORD", self::REDIRECT_URL."/index",2);
     		exit();
     	}
 		if ($row['status']==0){
-    		Application_Form_FrmMessage::Sucessfull("NO_RECORD", self::REDIRECT_URL."/index");
+    		Application_Form_FrmMessage::Sucessfull("NO_RECORD", self::REDIRECT_URL."/index",2);
     		exit();
     	}
 		
@@ -82,17 +82,17 @@ class Requesting_PcheckingrequestController extends Zend_Controller_Action {
 		);
 		$processingStatusTitle = $dbGbSt->requestingProccess($arrStep);
 		if ($row['processingStatus']>3){
-    		Application_Form_FrmMessage::Sucessfull($tr->translate('REQUEST_IS_ON_PROCCESING')." ".$processingStatusTitle, self::REDIRECT_URL."/index");
+    		Application_Form_FrmMessage::Sucessfull($tr->translate('REQUEST_IS_ON_PROCCESING')." ".$processingStatusTitle, self::REDIRECT_URL."/index",2);
     		exit();
     	}
 		if ($row['checkingStatus']!=1){
-    		Application_Form_FrmMessage::Sucessfull("RECORD_NEED_TO_COMPLETED_STEP_2", self::REDIRECT_URL."/index");
+    		Application_Form_FrmMessage::Sucessfull("RECORD_NEED_TO_COMPLETED_STEP_2", self::REDIRECT_URL."/index",2);
     		exit();
     	}
 		/*
 		
 		if ($row['approveStatus']>0){
-    		Application_Form_FrmMessage::Sucessfull("REQUEST_ALREADY_APPROVED_TO_PURCHASE", self::REDIRECT_URL."/index");
+    		Application_Form_FrmMessage::Sucessfull("REQUEST_ALREADY_APPROVED_TO_PURCHASE", self::REDIRECT_URL."/index",2);
     		exit();
     	}
 		*/

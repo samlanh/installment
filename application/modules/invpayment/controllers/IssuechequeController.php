@@ -88,12 +88,16 @@ class Invpayment_IssuechequeController extends Zend_Controller_Action {
 		}
 		$row = $db->getDataRowIsseueCheque($id);
 		$this->view->row = $row;
+		if(empty($row)){
+			Application_Form_FrmMessage::Sucessfull($tr->translate('NO_DATA'), self::REDIRECT_URL."/index",2);
+			exit();
+		}
 		if ($row['status']==0){
-    		Application_Form_FrmMessage::Sucessfull($tr->translate('ALREADY_VOID'), self::REDIRECT_URL."/index");
+    		Application_Form_FrmMessage::Sucessfull($tr->translate('ALREADY_VOID'), self::REDIRECT_URL."/index",2);
     		exit();
     	}
 		if (!empty($row['drawUserId'])){
-    		Application_Form_FrmMessage::Sucessfull($tr->translate('ALREADY_WITHDRAW_CHEQUE'), self::REDIRECT_URL."/index");
+    		Application_Form_FrmMessage::Sucessfull($tr->translate('ALREADY_WITHDRAW_CHEQUE'), self::REDIRECT_URL."/index",2);
     		exit();
     	}
 		

@@ -76,7 +76,7 @@ class Stock_ProductcateController extends Zend_Controller_Action {
     	$type =3; //service category
     	$row =$db->getDegreeById($id,$type);
     	if (empty($row)){
-    		Application_Form_FrmMessage::Sucessfull("NO_RECORD", self::REDIRECT_URL."/index");
+    		Application_Form_FrmMessage::Sucessfull("NO_RECORD", self::REDIRECT_URL."/index",2);
     	}
     	$this->view->row = $row;
     	
