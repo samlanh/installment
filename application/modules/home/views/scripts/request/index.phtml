@@ -6,6 +6,7 @@
 	
 	$montFomat=DATE_FORMAT_FOR_PHP;
 
+
 ?>
 <section class="inputmask">
 	<div class="row">
@@ -114,7 +115,13 @@
                        </div>
 					   <div class="col-md-6 col-sm-6 col-xs-12">
 							<p class="text-muted info-list font-13">
-								<span class="title-info"><?php echo $tr->translate('REQUEST_PO');?></span>
+								<span class="title-info"> 
+									<?php if(!empty($rs)){ ?>
+									<i class="fa fa-check-circle text-success " aria-hidden="true"></i>
+									<?php } ?>
+
+									<?php  echo $tr->translate('REQUEST_PO');?>
+								</span>
 							</p>
 								<ul class="stepInfoList">
 									<li class="red">
@@ -131,7 +138,16 @@
 									</li>
 								</ul>
 							<p class="text-muted info-list font-13">
-								<span class="title-info"><?php echo $tr->translate('CHECKING_INFO');?></span>
+								<span class="title-info">
+									<?php
+									 if($rs['checkingStatus']=="យល់ព្រម" OR $rs['checkingStatus']=="APPROVED"){ ?>
+										<i class="fa fa-check-circle text-success " aria-hidden="true"></i>
+										
+									<?php }elseif($rs['checkingStatus']=="បដិសេធ" OR $rs['checkingStatus']=="REJECTED"){?>
+										<i class="fa fa-times-circle text-danger " aria-hidden="true"></i>
+										<?php } ?>
+									<?php echo $tr->translate('CHECKING_INFO');?>
+								</span>
 							</p>
 								<ul class="stepInfoList">
 									<li>
@@ -148,7 +164,17 @@
 									</li>
 								</ul>
 							 <p class="text-muted info-list font-13">
-								<span class="title-info"><?php echo $tr->translate('VIEW_INFO');?></span>
+								<span class="title-info">
+									<?php
+									 if($rs['pCheckingStatus']=="យល់ព្រម" OR $rs['pCheckingStatus']=="APPROVED"){ ?>
+										<i class="fa fa-check-circle text-success " aria-hidden="true"></i>
+										
+									<?php }elseif($rs['pCheckingStatus']=="បដិសេធ" OR $rs['pCheckingStatus']=="REJECTED"){?>
+										<i class="fa fa-times-circle text-danger " aria-hidden="true"></i>
+									<?php } ?>
+									
+									<?php echo $tr->translate('VIEW_INFO');?>
+								</span>
 							 </p>
 								<ul class="stepInfoList">
 									<li>
@@ -168,6 +194,13 @@
 					   </div>
 					   <div class="col-md-6 col-sm-6 col-xs-12">
 							<p class="text-muted info-list font-13">
+								<?php
+									 if($rs['approveStatus']=="យល់ព្រម" OR $rs['approveStatus']=="APPROVED"){ ?>
+										<i class="fa fa-check-circle text-success " aria-hidden="true"></i>
+										
+									<?php }elseif($rs['approveStatus']=="បដិសេធ" OR $rs['approveStatus']=="REJECTED"){?>
+										<i class="fa fa-times-circle text-danger " aria-hidden="true"></i>
+									<?php } ?>
 								<span class="title-info"><?php echo $tr->translate('APPROVED_INFO');?></span>
 							 </p>
 								<ul class="stepInfoList">
@@ -185,7 +218,12 @@
 									</li>
 								</ul>
 							<p class="text-muted info-list font-13">
-								<span class="title-info"><?php echo $tr->translate('PURCHASE_INFO');?></span>
+								<span class="title-info">
+									<?php if(!empty($rs['purchaseNoList'])){?>
+										<i class="fa fa-check-circle text-success " aria-hidden="true"></i>
+									<?php } ?>	
+									<?php echo $tr->translate('PURCHASE_INFO');?>
+								</span>
 							</p>
 								<ul class="stepInfoList">
 									<li >
@@ -203,7 +241,12 @@
 									
 								</ul>
 							<p class="text-muted info-list font-13">
-								<span class="title-info"><?php echo $tr->translate('RECEIVED_INFO');?></span>
+								<span class="title-info">
+									<?php if(!empty($rs['dnNumberList'])){?>
+										<i class="fa fa-check-circle text-success " aria-hidden="true"></i>
+									<?php } ?>	
+									<?php echo $tr->translate('RECEIVED_INFO');?>
+								</span>
 							</p>
 								<ul class="stepInfoList">
 									<li >
