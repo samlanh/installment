@@ -46,10 +46,14 @@ class Stockinout_IndexController extends Zend_Controller_Action {
 	function addAction(){
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
-			try {		
-				$db = new Stockinout_Model_DbTable_DbReceiveStock();
-				$db->addReceiveStock($_data);
-				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/stockinout/index/add");
+			try {	
+				if(empty($_data)){
+					Application_Form_FrmMessage::Sucessfull("NO_DATA","/stockinout/index/add",2);
+				}else{
+					$db = new Stockinout_Model_DbTable_DbReceiveStock();
+					$db->addReceiveStock($_data);
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/stockinout/index/add");
+				}
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -65,7 +69,11 @@ class Stockinout_IndexController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {
-				$db->updateDataReceive($_data);
+				if(empty($_data)){
+					Application_Form_FrmMessage::Sucessfull("NO_DATA","/stockinout/index/add",2);
+				}else{
+					$db->updateDataReceive($_data);
+				}
 				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","/stockinout/index/index");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
@@ -86,7 +94,6 @@ class Stockinout_IndexController extends Zend_Controller_Action {
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frmReceivStock = $frm;
 		$this->view->rsDn = $result;
-		
 	}
 	function verifyAction(){
 		$db = new Stockinout_Model_DbTable_DbReceiveStock();

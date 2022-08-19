@@ -93,12 +93,12 @@ class Invest_WithdrawbrokerController extends Zend_Controller_Action {
 		$db = new Invest_Model_DbTable_DbWithdrawBroker();
 		$payment_il = $db->getReceiptByID($id);
 		if (empty($payment_il)){
-			Application_Form_FrmMessage::Sucessfull("NO_RECORD","/invest/withdrawbroker");
+			Application_Form_FrmMessage::Sucessfull("NO_RECORD","/invest/withdrawbroker",2);
 			exit();
 		}
 		if (!empty($payment_il)){
 			if ($payment_il['is_closed']==1){
-				Application_Form_FrmMessage::Sucessfull("Can not delete this record","/invest/withdrawbroker");
+				Application_Form_FrmMessage::Sucessfull("Can not delete this record","/invest/withdrawbroker",2);
 			}
 		}
 		$delete_sms=$tr->translate('CONFIRM_DELETE');
@@ -143,7 +143,7 @@ class Invest_WithdrawbrokerController extends Zend_Controller_Action {
 					Application_Form_FrmMessage::Sucessfull("has been delete","/invest/withdrawbroker");
 				}
 			}
-			Application_Form_FrmMessage::Sucessfull("You no permission to delete","/invest/withdrawbroker");
+			Application_Form_FrmMessage::Sucessfull("You no permission to delete","/invest/withdrawbroker",2);
 		}catch (Exception $e) {
 			Application_Form_FrmMessage::message("INSERT_FAIL");
 			echo $e->getMessage();
