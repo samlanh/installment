@@ -97,7 +97,7 @@ class Issue_indexController extends Zend_Controller_Action {
 		
 		$row = $_dbmodel->getIssueHousebyId($id);
 		if(empty($row)){
-			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/issue/index");
+			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/issue/index",2);
 			exit();
 		}
 		$this->view->rs = $row;

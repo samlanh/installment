@@ -100,7 +100,7 @@ class Issue_IssueplongController extends Zend_Controller_Action {
 		$rs = $_dbmodel->getPlongbyId($id);
 		$this->view->rs = $rs;
 		if(empty($rs)){
-			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/issue/issueplong");
+			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/issue/issueplong",2);
 			exit();
 		}
 		

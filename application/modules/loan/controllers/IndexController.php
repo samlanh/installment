@@ -168,10 +168,10 @@ class Loan_IndexController extends Zend_Controller_Action {
 		$db = new Loan_Model_DbTable_DbLandpayment();
 		$rs = $db->getSalePaidExist($id,null);
 		if(count($rs)>=2){
-			Application_Form_FrmMessage::Sucessfull("ទិន្នន័យនេះមានប្រវត្តិបង់ប្រាក់ច្រើនជាង១ដងរួចហើយ មិនអាចកែប្រែបានទេ","/loan/index/index");
+			Application_Form_FrmMessage::Sucessfull("ទិន្នន័យនេះមានប្រវត្តិបង់ប្រាក់ច្រើនជាង១ដងរួចហើយ មិនអាចកែប្រែបានទេ","/loan/index/index",2);
 		}
 		$row = $db->getTranLoanByIdWithBranch($id,null);
-		if(empty($row)){Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index");}
+		if(empty($row)){Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index",2);}
 		$rs = array();
 		//if($row['payment_id']==6 OR $row['payment_id']==4){
 		 if($row['payment_id']!=1){
@@ -234,13 +234,13 @@ class Loan_IndexController extends Zend_Controller_Action {
 		$db = new Loan_Model_DbTable_DbLandpayment();
 		$row = $db->getTranLoanByIdWithBranch($id,null);
 		if(empty($row)){
-			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index");
+			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index",2);
 			exit();
 		}
 		if($row['is_cancel']==1){
-			Application_Form_FrmMessage::message('This Sale already cancel');
-			echo "<script>window.close();</script>";
-// 			Application_Form_FrmMessage::Sucessfull("This Sale already cancel","/loan");
+			Application_Form_FrmMessage::Sucessfull("This Sale already cancel","/loan/index",2);
+			//Application_Form_FrmMessage::message('This Sale already cancel');
+			//echo "<script>window.close();</script>";
 		}
 		
 		$frm = new Loan_Form_FrmLoan();
@@ -285,7 +285,7 @@ class Loan_IndexController extends Zend_Controller_Action {
 		$id = $this->getRequest()->getParam('id');
 		$db_g = new Application_Model_DbTable_DbGlobal();
 		if(empty($id)){
-			Application_Form_FrmMessage::Sucessfull("RECORD_NOT_FUND","/loan/index/index");
+			Application_Form_FrmMessage::Sucessfull("RECORD_NOT_FUND","/loan/index/index",2);
 		}
 		$db = new Loan_Model_DbTable_DbLandpayment();
 		$row = $db->getLoanviewById($id);
@@ -423,7 +423,7 @@ class Loan_IndexController extends Zend_Controller_Action {
 	function rptUpdatepaymentAction(){
 		$showEditSchedule = SHOW_EDIT_SCHEDULE;
 		if($showEditSchedule!=1){
-			//Application_Form_FrmMessage::Sucessfull("NO_ENOUGH_PERMISSION","/loan/index/");
+			//Application_Form_FrmMessage::Sucessfull("NO_ENOUGH_PERMISSION","/loan/index/",2);
 			$this->_redirect("/loan/index");
 			exit();
 		}
@@ -442,7 +442,7 @@ class Loan_IndexController extends Zend_Controller_Action {
 	  		$db = new Loan_Model_DbTable_DbLandpayment();
 	  		$rs = $db->getTranLoanByIdWithBranch($id,null);
 	  		if(empty($rs)){
-	  			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index");
+	  			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index",2);
 	  			exit();
 	  		}
 	  		

@@ -90,10 +90,10 @@ class Incexp_ExpensepaymentController extends Zend_Controller_Action {
 			Application_Form_FrmMessage::Sucessfull("No Record",self::REDIRECT_URL."/index");
 			exit();
 		}else if ($row['is_closed']==1){
-			Application_Form_FrmMessage::Sucessfull("This Payment already closing",self::REDIRECT_URL."/index");
+			Application_Form_FrmMessage::Sucessfull("This Payment already closing",self::REDIRECT_URL."/index",2);
 			exit();
 		}else if ($row['status']==0){
-			Application_Form_FrmMessage::Sucessfull("This Record already void",self::REDIRECT_URL."/index");
+			Application_Form_FrmMessage::Sucessfull("This Record already void",self::REDIRECT_URL."/index",2);
 			exit();
 		}
 		if($this->getRequest()->isPost()){
@@ -127,13 +127,13 @@ class Incexp_ExpensepaymentController extends Zend_Controller_Action {
 			try{
 				$row = $db->getPurchasePaymentById($id);
 				if (empty($row)){
-					Application_Form_FrmMessage::Sucessfull("No Record",self::REDIRECT_URL."/index");
+					Application_Form_FrmMessage::Sucessfull("No Record",self::REDIRECT_URL."/index",2);
 					exit();
 				}else if ($row['is_closed']==1){
-					Application_Form_FrmMessage::Sucessfull("This Payment already closing",self::REDIRECT_URL."/index");
+					Application_Form_FrmMessage::Sucessfull("This Payment already closing",self::REDIRECT_URL."/index",2);
 					exit();
 				}else if ($row['status']==0){
-					Application_Form_FrmMessage::Sucessfull("This Record already void",self::REDIRECT_URL."/index");
+					Application_Form_FrmMessage::Sucessfull("This Record already void",self::REDIRECT_URL."/index",2);
 					exit();
 				}
 				$db->voidPaymentReceipt($id,$row['branch_id']);

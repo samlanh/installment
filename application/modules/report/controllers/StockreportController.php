@@ -167,7 +167,7 @@ public function rptUsageAction(){
 			$id = empty($id)?0:$id;
 			$rs = $db->getDNById($id);
 			if(empty($id) OR empty($rs)){
-				Application_Form_FrmMessage::Sucessfull("NO_DATA","/report/stockreport/rpt-receivestock");
+				Application_Form_FrmMessage::Sucessfull("NO_DATA","/report/stockreport/rpt-receivestock",2);
 			}
 	  
 	  }catch (Exception $e){

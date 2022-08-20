@@ -88,7 +88,7 @@ class Loan_CustomerpaymentController extends Zend_Controller_Action {
 			$rs = $dbp->getTranLoanByIdWithBranch($id,null);
 			$this->view->rsresult =  $rs;
 			if($rs['payment_id']==1){
-				Application_Form_FrmMessage::Sucessfull("មិនមានទិន្នន័យសម្រាប់បង់ប្រាក់ទេ!","/loan");
+				Application_Form_FrmMessage::Sucessfull("មិនមានទិន្នន័យសម្រាប់បង់ប្រាក់ទេ!","/loan",2);
 			}
 		}
 		
@@ -174,7 +174,7 @@ class Loan_CustomerpaymentController extends Zend_Controller_Action {
 			$identify = $_data["identity"];
 			try {
 				if($identify==""){
-					Application_Form_FrmMessage::Sucessfull("Client no laon to pay!","/loan/ilpayment/");
+					Application_Form_FrmMessage::Sucessfull("Client no laon to pay!","/loan/ilpayment/",2);
 				}else{
 					$db->updateIlPayment($_data);
 					//Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","/loan/ilpayment/");

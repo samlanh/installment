@@ -60,7 +60,7 @@ class Incexp_IncomeOtherController extends Zend_Controller_Action
     		
 			$data=$this->getRequest()->getPost();	
 			if (empty($data)){
-				Application_Form_FrmMessage::Sucessfull("File Attachment to large can't upload and Save data !","/incexp/incomeother");
+				Application_Form_FrmMessage::Sucessfull("File Attachment to large can't upload and Save data !","/incexp/incomeother",2);
 				exit();
 			}
 			$db = new Incexp_Model_DbTable_DbIncomeother();				
@@ -108,7 +108,7 @@ class Incexp_IncomeOtherController extends Zend_Controller_Action
     		}
 			$data=$this->getRequest()->getPost();	
 			if (empty($data)){
-				Application_Form_FrmMessage::Sucessfull("File Attachment to large can't upload and Save data !","/incexp/incomeother");
+				Application_Form_FrmMessage::Sucessfull("File Attachment to large can't upload and Save data !","/incexp/incomeother",2);
 				exit();
 			}
 			$db = new Incexp_Model_DbTable_DbIncomeother();	
@@ -125,18 +125,18 @@ class Incexp_IncomeOtherController extends Zend_Controller_Action
 		$db = new Incexp_Model_DbTable_DbIncomeother();
 		$row  = $db->getincomebyid($id);
 		if(empty($row)){
-			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/incexp/incomeother");
+			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/incexp/incomeother",2);
 			exit();
 		}
 		if ($row['is_fullpaid']==1){
-			Application_Form_FrmMessage::Sucessfull('PAYMENT_READY', "/incexp/incomeother");
+			Application_Form_FrmMessage::Sucessfull('PAYMENT_READY', "/incexp/incomeother",2);
 			exit();
 		}
 		
 		$dboinp = new Incexp_Model_DbTable_DbIncomeOtherPayment();
 		$check = $dboinp->checkOtherIncomeInpay($id);
 		if (!empty($check)){
-			Application_Form_FrmMessage::Sucessfull('HAS_SOME_PAYMENT_READY', "/incexp/incomeother");
+			Application_Form_FrmMessage::Sucessfull('HAS_SOME_PAYMENT_READY', "/incexp/incomeother",2);
 			exit();
 		}
 		$this->view->rows = $db->getincomeDetailbyid($id);

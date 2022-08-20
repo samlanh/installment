@@ -111,7 +111,7 @@ class Loan_SetcommissionController extends Zend_Controller_Action {
 			Application_Form_FrmMessage::Sucessfull("NO_RECORD","/loan/setcommission",2);
 		}
 		if($row['totoalCmminssionPaid']>=$row['full_commission']){
-			//Application_Form_FrmMessage::Sucessfull("COMMISSION_PAYMENT_READY","/loan/setcommission");
+			//Application_Form_FrmMessage::Sucessfull("COMMISSION_PAYMENT_READY","/loan/setcommission",2);
 		}
 		$this->view->rs = $row;
 		

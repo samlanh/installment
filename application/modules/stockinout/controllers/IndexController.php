@@ -85,7 +85,7 @@ class Stockinout_IndexController extends Zend_Controller_Action {
 		$id = empty($id)?0:$id;
 		$result = $db->getDataRow($id);
 		if(empty($id) OR empty($result) OR ($result['isIssueInvoice']==1)){
-			Application_Form_FrmMessage::Sucessfull("NO_DATA","/stockinout/index/index");
+			Application_Form_FrmMessage::Sucessfull("NO_DATA","/stockinout/index/index",2);
 		}
 		
 		
@@ -111,7 +111,7 @@ class Stockinout_IndexController extends Zend_Controller_Action {
 		$id = $this->getRequest()->getParam('id');
 		$id = empty($id)?0:$id;
 		if(empty($id)){
-			Application_Form_FrmMessage::Sucessfull("NO_DATA","//");
+			Application_Form_FrmMessage::Sucessfull("NO_DATA","//",2);
 		}
 		
 		$rs = $db->getDNById($id);

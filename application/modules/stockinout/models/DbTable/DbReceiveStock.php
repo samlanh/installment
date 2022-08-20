@@ -210,7 +210,7 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
     	}catch(Exception $e){
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     		$db->rollBack();
-    		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL","/stockinout/index/add");
+    		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL","/stockinout/index/add",2);
     	}
     }
     function updateDataReceive($data){
@@ -373,7 +373,7 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
     	}catch(Exception $e){
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     		$db->rollBack();
-    		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL","/stockinout/index/add");
+    		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL","/stockinout/index/add",2);
     	}
     }
     function reverseReceivedTransaction($dnId,$poId,$branchId){

@@ -104,7 +104,7 @@ class Issue_PlongstepController extends Zend_Controller_Action {
 		$rs = $_dbmodel->getPlogStepById($id);
 		$this->view->rs = $rs;
 		if(empty($rs)){
-			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/issue/plongstep");
+			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/issue/plongstep",2);
 			exit();
 		}
 		$this->view->rsdetail = $_dbmodel->getPlogStepDetailById($id);
@@ -143,11 +143,11 @@ class Issue_PlongstepController extends Zend_Controller_Action {
 		$rs = $_dbmodel->getPlogStepById($id);
 		$this->view->rs = $rs;
 		if(empty($rs)){
-			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/issue/plongstep");
+			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/issue/plongstep",2);
 			exit();
 		}
 		if ($rs['process_status']==5){
-			Application_Form_FrmMessage::Sucessfull("COMPLETED_STEP","/issue/plongstep");
+			Application_Form_FrmMessage::Sucessfull("COMPLETED_STEP","/issue/plongstep",2);
 			exit();
 		}
 		$this->view->rsdetail = $_dbmodel->getPlogStepDetailById($id);

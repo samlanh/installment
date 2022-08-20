@@ -56,12 +56,12 @@ class Rent_PaymentController extends Zend_Controller_Action {
   		$db = new Rent_Model_DbTable_DbLoanILPayment();
   		$payment_il = $db->getIlPaymentByID($id);
   		if(empty($payment_il)){
-  			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/rent/payment");
+  			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/rent/payment",2);
   			exit();
   		}
   		if (!empty($payment_il)){
   			if ($payment_il['is_closed']==1){
-  				Application_Form_FrmMessage::Sucessfull("Can not delete this record","/rent/payment");
+  				Application_Form_FrmMessage::Sucessfull("Can not delete this record","/rent/payment",2);
   			}
   		}
   		$delete_sms=$tr->translate('CONFIRM_DELETE');
@@ -97,7 +97,7 @@ class Rent_PaymentController extends Zend_Controller_Action {
 	 				Application_Form_FrmMessage::Sucessfull("has been delete","/rent/payment");
 	 			}
 	 		}
-	 		Application_Form_FrmMessage::Sucessfull("You no permission to delete","/rent/payment");
+	 		Application_Form_FrmMessage::Sucessfull("You no permission to delete","/rent/payment",2);
 	 	}catch (Exception $e) {
 	 		Application_Form_FrmMessage::message("INSERT_FAIL");
 	 		echo $e->getMessage();
