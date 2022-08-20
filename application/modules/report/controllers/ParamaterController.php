@@ -241,7 +241,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   		
   		$rsagreement = $db->getAgreementBySaleID($id);
   		if (empty($rsagreement)){
-  			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index");
+  			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index",2);
   			exit();
   		}
 	  	$this->view->termcodiction = $db->getTermCodiction();
@@ -427,7 +427,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$id = empty($id)?0:$id;
   	$row = $db->getComissionById($id);
   	if (empty($row)){
-  		Application_Form_FrmMessage::Sucessfull("NO RECORD","/incexp/comission");
+  		Application_Form_FrmMessage::Sucessfull("NO RECORD","/incexp/comission",2);
   		exit();
   	}
   	$this->view->row = $row;
@@ -479,7 +479,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   				Application_Form_FrmMessage::Sucessfull("VERIFIED_SUCCESS","/report/paramater/rpt-agreement/id/".$data['sale_id']);
   			}
   		}
-  		Application_Form_FrmMessage::Sucessfull("You no permission to verify","/report/paramater/rpt-agreement/id/".$data['sale_id']);
+  		Application_Form_FrmMessage::Sucessfull("You no permission to verify","/report/paramater/rpt-agreement/id/".$data['sale_id'],2);
   	}catch (Exception $e) {
   		Application_Form_FrmMessage::message("INSERT_FAIL");
   		echo $e->getMessage();
@@ -851,7 +851,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$id = empty($id)?0:$id;
   	$row = $db->getCommissionPaymentById($id);
   	if (empty($row)){
-  		Application_Form_FrmMessage::Sucessfull("NO RECORD","/incexp/comissionpayment");
+  		Application_Form_FrmMessage::Sucessfull("NO RECORD","/incexp/comissionpayment",2);
   		exit();
   	}
   	$this->view->row = $row;
@@ -872,7 +872,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
 	  $allContact = $db->AllHistoryContact($id);
 	 
 	   if (empty($allContact)){
-			Application_Form_FrmMessage::Sucessfull("NO RECORD","/report/paramater/customerrequire");
+			Application_Form_FrmMessage::Sucessfull("NO RECORD","/report/paramater/customerrequire",2);
 			exit();
 	  }
 	  
@@ -951,7 +951,7 @@ function rptContactListAction(){
   		
   		$rsagreement = $db->getAgreementByChangeOwnerSaleID($id);
   		if (empty($rsagreement)){
-  			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index");
+  			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index",2);
   			exit();
   		}
 	  	$this->view->agreement = $rsagreement;
@@ -1033,7 +1033,7 @@ function rptContactListAction(){
 			$db = new Report_Model_DbTable_DbParamater();
 			$row = $db->getexpensebyid($id);
 			if (empty($row)){
-				Application_Form_FrmMessage::Sucessfull("No Record","/report/paramater/rpt-expense");
+				Application_Form_FrmMessage::Sucessfull("No Record","/report/paramater/rpt-expense",2);
 				exit();
 			}
 			$this->view->row = $row;
@@ -1052,7 +1052,7 @@ function rptContactListAction(){
 			$db = new Report_Model_DbTable_DbParamater();
 			$row = $db->getPurchasePaymentById($id);
 			if (empty($row)){
-				Application_Form_FrmMessage::Sucessfull("No Record","/report/paramater/rpt-expense-payment");
+				Application_Form_FrmMessage::Sucessfull("No Record","/report/paramater/rpt-expense-payment",2);
 				exit();
 			}
 			$this->view->row = $row;
@@ -1072,13 +1072,13 @@ function rptContactListAction(){
   		
   		$rsagreement = $db->getRefundLetterByID($cancelId);
   		if (empty($rsagreement)){
-  			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index");
+  			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index",2);
   			exit();
   		}
 		
 		$rsagreement['amountReturnBack'] = empty($rsagreement['amountReturnBack'])?0:$rsagreement['amountReturnBack'];
 		if ($rsagreement['amountReturnBack']<=0){
-  			Application_Form_FrmMessage::Sucessfull("NO_REFUND_LETTER_FOR_THIS_RECORD","/loan/cancel");
+  			Application_Form_FrmMessage::Sucessfull("NO_REFUND_LETTER_FOR_THIS_RECORD","/loan/cancel",2);
   			exit();
   		}
 		
@@ -1105,7 +1105,7 @@ function rptContactListAction(){
   		
   		$rsagreement = $db->getAgreementBySaleID($id);
   		if (empty($rsagreement)){
-  			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index");
+  			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index",2);
   			exit();
   		}
 	  	

@@ -45,9 +45,10 @@ class Accounting_IncomeController extends Zend_Controller_Action {
     		$db_agent = new Accounting_Model_DbTable_DbIncome();
     		try {
     			$db = $db_agent->addasset($agentdata);
-    			//Application_Form_FrmMessage::Sucessfull('ការ​បញ្ចូល​​ជោគ​ជ័យ', self::REDIRECT_URL);
+    			//Application_Form_FrmMessage::Sucessfull('INSERT_SUCCESS', self::REDIRECT_URL);
     		} catch (Exception $e) {
-    			$this->view->msg = 'ការ​បញ្ចូល​មិន​ជោគ​ជ័យ';
+    			$this->view->msg = 'INSERT_FAIL';
+				Application_Form_FrmMessage::message("INSERT_FAIL");
     		}
     	
     }
@@ -65,9 +66,10 @@ class Accounting_IncomeController extends Zend_Controller_Action {
     		$db_agent = new Accounting_Model_DbTable_DbIncome();
     		try {
     			$db = $db_agent->updatasset($agentdata);
-    			Application_Form_FrmMessage::Sucessfull('ការ​បញ្ចូល​​ជោគ​ជ័យ', self::REDIRECT_URL);
+    			Application_Form_FrmMessage::Sucessfull('INSERT_SUCCESS', self::REDIRECT_URL);
     		} catch (Exception $e) {
-    			$this->view->msg = 'ការ​បញ្ចូល​មិន​ជោគ​ជ័យ';
+    			$this->view->msg = 'INSERT_FAIL';
+				Application_Form_FrmMessage::message("INSERT_FAIL");
     		}
     	}
     	$id = $this->getRequest()->getParam('id');

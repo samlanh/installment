@@ -318,6 +318,13 @@
 	                   		<?php echo $frm->getElement('sold_price');?>
 	                   </div>
 	                </div>
+	                <div class="form-group">
+	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("OPTION_CONDITION");?>  :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                   		<input id="option_condition" />
+	                   </div>
+	                </div>
 	                <?php if($this->data['note_agreement']==1){?>
 	                <div class="form-group">
 	                   <label id="lbl_dateline" class="control-label   col-md-5 col-sm-5 col-xs-12" >
@@ -573,6 +580,25 @@
 					<td colspan="2" align="center">
 						<input type="button" value="Save" label="<?php echo $tr->translate('GO_SAVE');?>" dojoType="dijit.form.Button"
 							iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addinterest();"/>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" data-dojo-props="title:'<?php echo $tr->translate("OPTION_CONDITION ")?>'"  id="OptionCondition" >
+		<form id="frmOptionCondtion" dojoType="dijit.form.Form">
+			<table style="margin: 0 auto; width: 100%;" cellspacing="7">
+				<tr>
+					<td>
+						<input dojoType="dijit.form.ValidationTextBox" required="true" class="fullside" id="txtoptionCondtion" name="txtoptionCondtion" value="" type="text">
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center">
+						<input type="button" value="Save" label="<?php echo $tr->translate('GO_SAVE');?>" dojoType="dijit.form.Button"
+							iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addOptionCondtion();"/>
 					</td>
 				</tr>
 			</table>
@@ -873,6 +899,7 @@ dojo.require("dijit.form.Textarea");
 
 var contractNameStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
 var client_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->client_name));?> );
+var optionStore = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->optionStore));?> );
 var property_store  = getDataStorefromJSON('id','name', null );
 
 require(["dojo/ready"], function(ready){
@@ -959,6 +986,26 @@ require(["dojo/ready"], function(ready){
 			}
 	   }
 	}, "contract_issuer_id");
+
+	new dijit.form.FilteringSelect({
+		store: optionStore,
+		autoComplete: false,
+		queryExpr: "*${0}*",	           
+		name: "option_condition",
+		id: "option_condition",
+		searchAttr: "name",
+		required:true,
+		class: 'fullside',
+		onChange: function() {
+			option_condition = dijit.byId('option_condition').get('value');
+			if(option_condition==-1){
+				//dijit.byId("frmOptionCondition").show();
+				dijit.byId('OptionCondition').show();
+			}
+	   }
+	}, "option_condition");
+
+	
 
 var currentContractIssue = '<?php echo empty($this->rsresult['contract_issuer_id'])?"":$this->rsresult['contract_issuer_id'];?>';	
 var urlGetContractName = '<?php echo $this->url(array('module'=>'project','controller'=>'issuer','action'=>'getcontractname')); ?>';
@@ -1848,6 +1895,34 @@ function addinterest(){
 		dijit.byId('interest_rate').attr('value',dijit.byId('interest_ratenew').get('value'));
 		dijit.byId('frm_interest').reset();
 		dijit.byId('frm_interest').hide();
+	}
+}
+function addOptionCondtion(){
+	if(dijit.byId('frmOptionCondtion').validate()){
+		urlAddCondition = '<?php echo $this->url(array('module'=>'other','controller'=>'loantype','action'=>'add-salecondition'));?>';
+		txtoptionCondtion = dijit.byId('txtoptionCondtion').get('value');
+		contentData = {
+    			'textValue':txtoptionCondtion,
+    			'type':'33'
+    		};
+		
+		dojo.xhrPost({
+			url:urlAddCondition,	
+			content:contentData,
+			handleAs:"json",
+			load: function(data) {	
+				var Itemmake = {					
+						id: data,
+					    name: dijit.byId('txtoptionCondtion').get('value')
+				};
+				addDataToSelectbox(dijit.byId('option_condition'), optionStore, Itemmake, data);
+				
+				dijit.byId('txtoptionCondtion').attr('value','');
+				dijit.byId('OptionCondition').hide();
+			},
+			error: function(err){
+			}
+		});
 	}
 }
 function printSubmit(){

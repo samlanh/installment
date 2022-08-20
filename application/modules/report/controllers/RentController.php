@@ -82,7 +82,7 @@ class Report_RentController extends Zend_Controller_Action {
   	$rs=$db->getPaymentSaleid($id);
   	$this->view->loantotalcollect_list =$rs;
   	if(empty($rs)){
-  		Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/rent/deposit");
+  		Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/rent/deposit",2);
   		exit();
   	}
   }
@@ -93,11 +93,11 @@ class Report_RentController extends Zend_Controller_Action {
   	$row = $db->getPaymentSchedule($id);
   	$this->view->tran_schedule=$row;
   	if(empty($row) or $row==''){
-  		Application_Form_FrmMessage::Sucessfull("RECORD_NOT_EXIST",'/report/rent/rpt-rent');
+  		Application_Form_FrmMessage::Sucessfull("RECORD_NOT_EXIST",'/report/rent/rpt-rent',2);
   	}
   	$rs = $db->getClientByMemberId($id);
   	if(empty($rs)){
-  		Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND",'/report/rent/rpt-rent');
+  		Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND",'/report/rent/rpt-rent',2);
   		exit();
   	}
   	$this->view->client =$rs;
@@ -140,7 +140,7 @@ class Report_RentController extends Zend_Controller_Action {
   
   	$rsagreement = $db->getAgreementByRentID($id);
   	if (empty($rsagreement)){
-  		Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/rent/deposit");
+  		Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/rent/deposit",2);
   		exit();
   	}
   	$this->view->agreement = $rsagreement;

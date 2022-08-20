@@ -32,7 +32,7 @@ public function init()
 				Application_Form_FrmMessage::Sucessfull("BACKUP_SUCCESS","/setting/backupdatabase");
 			}else{
 				
-				Application_Form_FrmMessage::Sucessfull("BACKUP_FAIL","/setting/backupdatabase");
+				Application_Form_FrmMessage::Sucessfull("BACKUP_FAIL","/setting/backupdatabase",2);
 			}
 			
 			

@@ -69,7 +69,7 @@ public function init()
 		$id = $this->getRequest()->getParam('id');
 		$id = empty($id)?0:$id;
 		if(empty($id)){
-			Application_Form_FrmMessage::Sucessfull("NO_DATA","/stockinout/worktype");
+			Application_Form_FrmMessage::Sucessfull("NO_DATA","/stockinout/worktype",2);
 		}
 		
 		$result = $db->getDataRow($id);

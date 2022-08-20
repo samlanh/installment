@@ -53,6 +53,7 @@ class Stock_ProductController extends Zend_Controller_Action {
     			$_major_id = $db->AddProduct($_data);
     			if($_major_id==-1){
     				$sms = "RECORD_EXIST";
+					Application_Form_FrmMessage::Sucessfull($sms, self::REDIRECT_URL."/index",2);
     			}
     			if(!empty($_data['save_close'])){
     				Application_Form_FrmMessage::Sucessfull($sms, self::REDIRECT_URL."/index");

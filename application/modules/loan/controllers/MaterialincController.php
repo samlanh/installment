@@ -117,7 +117,7 @@ class Loan_MaterialincController extends Zend_Controller_Action
 		$db = new Loan_Model_DbTable_DbMaterialInclude();
 		$row  = $db->getMaterialIncludebyid($id);
 		if(empty($row)){
-			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/materialinc");
+			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/materialinc",2);
 			exit();
 		}
 		

@@ -159,7 +159,7 @@ class Group_CustomerController extends Zend_Controller_Action {
 		}
 		$row = $db->getById($id);
 		if (empty($row)){
-			Application_Form_FrmMessage::Sucessfull("No Record","/group/customer");
+			Application_Form_FrmMessage::Sucessfull("No Record","/group/customer",2);
 		}
 		$this->view->row = $row;
 		$allContact = $db->AllHistoryContact($id);

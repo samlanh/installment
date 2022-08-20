@@ -3,7 +3,7 @@
 class Other_Model_DbTable_DbLoanType extends Zend_Db_Table_Abstract
 {
     protected $_name = 'ln_view';
-    function addViewType($data){
+    function addViewType($data,$getKeycode=null){
     	try{
     	$db = $this->getAdapter();
     	$key_code = $this->getLastKeycodeByType($data['type']);
@@ -16,7 +16,11 @@ class Other_Model_DbTable_DbLoanType extends Zend_Db_Table_Abstract
     			'type'=>$data['type'],
     			
     			);
-         return $this->insert($arr);
+         $id =  $this->insert($arr);
+         if($getKeycode!=null){
+         	return $key_code;
+         }
+         return $id;
     	}catch (Exception $e){
     		echo '<script>alert('."$e".');</script>';
     	}

@@ -128,7 +128,7 @@ class Issue_ReceivplongController extends Zend_Controller_Action {
 	    $this->view->layouttype=$layoutType;	      
 	    $row  = $_dbmodel->getPlongById($id);
 	    if(empty($row)){
-	    	Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/issue/receivplong");
+	    	Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/issue/receivplong",2);
 	    	exit();
 	    }
 	    $this->view->row = $row;

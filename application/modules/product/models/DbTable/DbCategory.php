@@ -57,11 +57,11 @@ class Product_Model_DbTable_DbCategory extends Zend_Db_Table_Abstract
 	    			);
 	    		$this->insert($arr);
     		}else{
-    			Application_Form_FrmMessage::Sucessfull("DATA_EXISTING", "/product/category/add");
+    			Application_Form_FrmMessage::Sucessfull("DATA_EXISTING", "/product/category/add",2);
     		}
     	}catch (Exception $e){
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-    		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL", "/product/category/add");
+    		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL", "/product/category/add",2);
     	}
     }
     function updateCategory($data){
@@ -80,7 +80,7 @@ class Product_Model_DbTable_DbCategory extends Zend_Db_Table_Abstract
 			
     	}catch (Exception $e){
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-    		Application_Form_FrmMessage::Sucessfull("UPDATE_FAIL", "/product/category/index");
+    		Application_Form_FrmMessage::Sucessfull("UPDATE_FAIL", "/product/category/index",2);
     	}
     }
     function getDataRow($recordId){

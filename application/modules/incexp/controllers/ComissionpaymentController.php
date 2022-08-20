@@ -119,7 +119,7 @@ class Incexp_ComissionpaymentController extends Zend_Controller_Action {
 	    $row  = $_dbmodel->getCommissionPaymentById($id);
 	    $this->view->row = $row;
 	    if(empty($row)){
-	    	Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/incexp/comissionpayment");
+	    	Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/incexp/comissionpayment",2);
 	    	exit();
 	    }
 	    $tr = Application_Form_FrmLanguages::getCurrentlanguage();
