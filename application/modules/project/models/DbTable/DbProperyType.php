@@ -16,10 +16,7 @@ class Project_Model_DbTable_DbProperyType extends Zend_Db_Table_Abstract
 			if (!file_exists($part)) {
 				mkdir($part, 0777, true);
 			}
-		
 			
-			
-		
 	    	$arr = array(
 	    			'type_nameen'=>$data['type_nameen'],
 	    			'type_namekh'=>$data['type_nameen'],
@@ -44,8 +41,9 @@ class Project_Model_DbTable_DbProperyType extends Zend_Db_Table_Abstract
 			
 	    	$this->_name='ln_properties_type';
 	    	if(!empty($data['id'])){
+				$status = empty($data['status'])?0:1;
 	    		$where = 'id = '.$data['id'];
-	    		$arr['status']=$data['status'];
+	    		$arr['status']=$status;
 	    		return  $this->update($arr, $where);
 	    	}else{
 	    		$arr['status']=1;

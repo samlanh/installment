@@ -86,9 +86,9 @@ class Project_propertiestypeController extends Zend_Controller_Action {
 	   			
 	   			$_data['id']= $id;
 	   			$db_co->addPropery($_data);
-	   			Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",'/project/propertiestype');
+	   			Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS",'/project/propertiestype');
 	   		}catch(Exception $e){
-	   			Application_Form_FrmMessage::message("INSERT_FAIL");
+	   			Application_Form_FrmMessage::message("EDIT_FAIL");
 	   			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 	   		}
 	   	}
