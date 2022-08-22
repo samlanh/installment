@@ -21,25 +21,25 @@
 	  			 if(this.validate()) {
 					branch_id = dijit.byId('branch_id').get('value');
 					if(branch_id=='' || branch_id<=0){
-						alert('<?php echo $tr->translate('PLEASE_SELECT_BRANCH');?>');
+						infoMessageAlert('<?php echo $tr->translate('PLEASE_SELECT_BRANCH');?>');
 						dijit.byId('branch_id').focus();
 						return false;
 					}
 					requestId = dijit.byId('requestId').get('value');
 					if(requestId=='' || requestId<=0){
-						alert('<?php echo $tr->translate('PLEASE_SELECT_REQUEST_NO');?>');
+						infoMessageAlert('<?php echo $tr->translate('PLEASE_SELECT_REQUEST_NO');?>');
 						dijit.byId('requestId').focus();
 						return false;
 					}
 					supplierId = dijit.byId('supplierId').get('value');
 					if(supplierId=='' || supplierId<=0){
-						alert('<?php echo $tr->translate('PLEASE_SELECT_SUPPLIER');?>');
+						infoMessageAlert('<?php echo $tr->translate('PLEASE_SELECT_SUPPLIER');?>');
 						dijit.byId('supplierId').focus();
 						return false;
 					}
 					var rowId = $('#identity').val();
 					if(rowId==''){ 
-						alert("<?php echo $tr->translate("PLEASE_ADD_RECORD");?>");
+						infoMessageAlert("<?php echo $tr->translate("PLEASE_ADD_RECORD");?>");
 						return false;
 					}
 					loadingBlock();
@@ -49,7 +49,7 @@
 	   			}
 			</script>
 			<div class="card-box">
-				<div class="col-md-3 col-sm-3 col-xs-12">
+				<div class="col-md-4 col-sm-4 col-xs-12">
 		             <div class="form-group">
 		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("BRANCH_NAME");?> </label>
 		                <div class="col-md-7 col-sm-7 col-xs-12">
@@ -71,9 +71,12 @@
 		             </div>  
 					 <div class="form-group">
 		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("SUPPLIER");?> </label>
-		                <div class="col-md-7 col-sm-7 col-xs-12">
+		                <div class="col-md-4 col-sm-4 col-xs-12">
 		                	<?php echo $frm->getElement("supplierId");?>
 		                </div>
+						 <div class="col-md-3 col-sm-3 col-xs-12">
+							<input type="button" class="button-class button-primary" iconClass="glyphicon glyphicon-refresh" dojoType="dijit.form.Button" onclick="getRefreshData();" label="<?php echo $tr->translate("GET_DATA");?>"  />
+						</div>
 		             </div>
 					 <div class="form-group">
 		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("DATE");?> </label>
@@ -88,15 +91,10 @@
 		                	<?php echo $frm->getElement("note");?>
 		                </div>
 		             </div>
-					 <div class="form-group">
-		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"></label>
-		                <div class="col-md-7 col-sm-7 col-xs-12">
-						<input type="button" dojoType="dijit.form.Button" onclick="getRefreshData();" label="<?php echo $tr->translate("GET_DATA");?>" iconClass="dijitEditorIcon dijitEditorIconUndo" />
-		                </div>
-		             </div>
+					
 					 
 				</div>
-				<div class="col-md-9 col-sm-9 col-xs-12">
+				<div class="col-md-8 col-sm-8 col-xs-12">
 					 <div id="request-info" class="information-style"></div>
 					<div class="form-group" style="background: #d8e0e2;padding: 5px 15px;margin: 0;border: solid 1px #697996;border-radius: 2px;margin-top: 10px;">
 						<label style=" margin: 0; line-height: 30px; " class="control-label bold col-md-2 col-sm-2 col-xs-12"><?php echo $tr->translate("CATEGORY");?> </label>
@@ -142,10 +140,8 @@
 			<div class="clearfix"></div>
 	       	<div class="card-box mt-20">
                	<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
-               		<input type="submit" value="save_close" id="save_close" name="save_close" label="<?php echo $tr->translate("SAVE_CLOSE");?>" dojoType="dijit.form.Button" 
-						iconClass="dijitEditorIcon dijitEditorIconSave" />
-					<input type="submit" value="save_close" id="save_new" name="save_new" label="<?php echo $tr->translate("SAVENEW");?>" dojoType="dijit.form.Button" 
-						iconClass="dijitEditorIcon dijitEditorIconSave" />
+               		<input type="submit" class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-remove" value="save_close" id="save_close" name="save_close" label="<?php echo $tr->translate("SAVE_CLOSE");?>" dojoType="dijit.form.Button"  />
+					<input type="submit" class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-disk" value="save_close" id="save_new" name="save_new" label="<?php echo $tr->translate("SAVENEW");?>" dojoType="dijit.form.Button" />
                	</div>
              </div>
 		</form>
@@ -268,7 +264,7 @@
 		}
 		requestId = dijit.byId('requestId').get('value');
 		if(requestId=='' || requestId==0){
-			alert('<?php echo $tr->translate('PLEASE_SELECT_REQUEST_NO');?>');
+			infoMessageAlert('<?php echo $tr->translate('PLEASE_SELECT_REQUEST_NO');?>');
 			dijit.byId('requestId').focus();
 			return false;
 		}
@@ -330,13 +326,13 @@
 		
 		branch_id = dijit.byId('branch_id').get('value');
 		if(branch_id=='' || branch_id<=0){
-			alert('<?php echo $tr->translate('PLEASE_SELECT_BRANCH');?>');
+			infoMessageAlert('<?php echo $tr->translate('PLEASE_SELECT_BRANCH');?>');
 			dijit.byId('branch_id').focus();
 			return false;
 		}
 		requestId = dijit.byId('requestId').get('value');
 		if(requestId=='' || requestId<=0){
-			alert('<?php echo $tr->translate('PLEASE_SELECT_REQUEST_NO');?>');
+			infoMessageAlert('<?php echo $tr->translate('PLEASE_SELECT_REQUEST_NO');?>');
 			dijit.byId('requestId').focus();
 			return false;
 		}
@@ -354,7 +350,7 @@
 			 for(var i=0;i< arrays.length;i++) {
 				 readychoose = dijit.byId('proId'+arrays[i]).get('value');
 				 if(readychoose==productId){
-					 alert("<?php echo $tr->translate("Choosen ready")?> "+productLabel);
+					 infoMessageAlert("<?php echo $tr->translate("Choosen ready")?> "+productLabel);
 					 dijit.byId('productId').reset();
 					 return false;
 				 }
@@ -372,7 +368,7 @@
 			load: function(data) {
 				
 							
-				template+='<td class="numberRecord" align="center"><span title="<?php echo $tr->translate("REMOVE_RECORD");?>" class="removeRow" onclick="deleteRecord('+col+');"><i class="fa fa-times" aria-hidden="true"></i></span></td>';
+				template+='<td class="numberRecord" align="center"><span title="<?php echo $tr->translate("REMOVE_RECORD");?>" class="removeRow" onclick="deleteRecord('+col+');"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></span></td>';
 				template+='<td class="numberRecord" data-label="<?php echo $tr->translate("N_O");?>" align="center" >'+no+'</td>';
 				template+='<td data-label="<?php echo $tr->translate("PRODUCT_NAME");?>" class="productName" >'+data.proCode+'<br />'+data.proName+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId'+col+'" name="proId'+col+'" value="'+data.id+'" type="text"  ></td>';	
 				template+='<td data-label="<?php echo $tr->translate("STOCK_REMAIN");?>" class="currentQty"  >'+data.currentQty+' ('+data.measureTitle+')</td>';	
@@ -406,7 +402,7 @@
 		qty = dijit.byId('qty'+index).get('value');
 		if(qty>qtyApprovedAfter){
 			dijit.byId('qty'+index).set('value',qtyApprovedAfter);
-			alert("<?php echo $tr->translate("MAXIMUM_QTY_OF_THIS_ITEMS_IS_ONLY")?>"+" "+qtyApprovedAfter);
+			infoMessageAlert("<?php echo $tr->translate("MAXIMUM_QTY_OF_THIS_ITEMS_IS_ONLY")?>"+" "+qtyApprovedAfter);
 		}
 	}
 	function calculateTotal(index){
@@ -425,7 +421,7 @@
 		if(discountAmount>subtotal){
 			dijit.byId('subTotal'+index).set('value',0);
 			dijit.byId('discountAmount'+index).set('value',subtotal);
-			alert("<?php echo $tr->translate("DISCOUNT_CAN_NOT_BIGER_THAN_TOTAL")?>"+" "+subtotal);
+			infoMessageAlert("<?php echo $tr->translate("DISCOUNT_CAN_NOT_BIGER_THAN_TOTAL")?>"+" "+subtotal);
 			netTotal();
 			return false;
 		}
@@ -438,7 +434,7 @@
 		var rowId = $('#identity').val();
 		var rowIDArray = rowId.split(',');
 		if(rowId==''){
-			alert("<?php echo $tr->translate('PLEASE_SELECT_PRODUCT');?>");
+			infoMessageAlert("<?php echo $tr->translate('PLEASE_SELECT_PRODUCT');?>");
 			dijit.byId("productId").focus();
 			dijit.byId('total').attr('value',netTotal.toFixed(2));
 			return false;
