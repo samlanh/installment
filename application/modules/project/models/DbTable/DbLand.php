@@ -269,8 +269,9 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 			$after_edit_info = $record['after_edit_info'];
 			$label_new = 'Create New Property';
 			
+			$status = empty($_data['status'])?0:1;
+			$old_status = $status;
 			if(!empty($_data['id'])){
-				$old_status = $_data['status'];
 				$oldCode = $this->getClientById($_data['id']);
 				$land_code = $oldCode['land_code'];
 				$old_status = $oldCode['status'];
@@ -302,7 +303,6 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 // 	    		'is_lock'     => $_data['buy_status'],
 				'hardtitle'   => $_data['hardtitle'],
 				'note'        => $_data['desc'],
-				//'status'	  => 1,//$_data['status'],
 				'user_id'	  => $this->getUserId(),
 		    	'property_type'	  => $_data['property_type'],
 		    	'type_tob'	  => $_data['type_tob'],
@@ -329,10 +329,11 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 	    }
 		    
 		if(!empty($_data['id'])){
+			
 			if($old_status==-2 || $old_status==-1){
 				//$_arr['status']=-2;
 			}else{
-				$_arr['status']= $_data['status'];
+				$_arr['status']= $status;
 			}
 			
 			$_arr['is_lock']=$_data['buy_status'];

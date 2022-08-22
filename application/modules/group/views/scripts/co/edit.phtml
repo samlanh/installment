@@ -53,10 +53,11 @@ input.btn_borwse_image {
 			<script type="dojo/method" event="onSubmit">			
 				if(this.validate()) {
 					if(isCheck==1){
-						alert('<?php echo $tr->translate("This user name has been use on other accont");?>');
+						infoMessageAlert('<?php echo $tr->translate("This user name has been use on other account");?>');
 						dijit.byId('user_name').focus();
 						return false;
 					}
+					loadingBlock();
 					dijit.byId('save_new').set('disabled',true);
 					return true;
 				} else {
@@ -66,7 +67,7 @@ input.btn_borwse_image {
 			<div class="card-box">
                	<div class="col-sm-12 border-botom">
 		    		<div class="col-sm-8 pd-0">
-		    			<h4 class="m-b-0"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('UPDAPE_STAFF');?></h4>
+		    			<h4 class="m-b-0"><i class="fa fa-bookmark" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('UPDAPE_STAFF');?></h4>
 	    			</div>
 	    			<div class="col-sm-4 text-right">
 	    			</div>
@@ -74,171 +75,214 @@ input.btn_borwse_image {
 	    	</div>
 	    	<div class="card-box">
 	    		<div class="col-md-4 col-sm-4 col-xs-12">
-					<div class="form-group">
-	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("INFO_STAFF");?> 
-	                   </label>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BRANCH_NAME");?>  :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm_staff->getElement('branch_id');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("MAIN_AGENCY");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php  echo $frm_staff->getElement('parent_id');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("STAFF_CODE");?>  :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php  echo $frm_staff->getElement('co_id'); echo $frm_staff->getElement('id');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CO_NAME");?>  :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php  echo $frm_staff->getElement('name_kh');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("SEX");?>  :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php  echo $frm_staff->getElement('co_sex');?>
-	                   </div>
-	                </div>
-	                 <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("NATIONALITY_NO");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php  echo $frm_staff->getElement('national_id');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("POB");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php  echo $frm_staff->getElement('pob');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("STATUS");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php  echo $frm_staff->getElement('status');?>
-	                   </div>
-	                </div>
-	             </div>
-	             <div class="col-md-4 col-sm-4 col-xs-12">
-					<div class="form-group">
-	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("CONTACT_INFO");?> 
-	                   </label>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PHONE");?>  :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php  echo $frm_staff->getElement('tel');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("EMAIL");?>  :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php  echo $frm_staff->getElement('email');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CURRENT_ADDRESS");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php  echo $frm_staff->getElement('address');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("NOTE");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php  echo $frm_staff->getElement('note');?>
-	                   </div>
-	                </div>
-	                <?php if (empty($this->datainuser)){?>
-	                <div class="form-group">
-	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" >
-	                   <?php echo $tr->translate("CREATE_AS_USER");?> 
-	                   <input dojoType='dijit.form.CheckBox' id="check_create" name="check_create" onChange="CheckCreatUser();" />
-	                   </label>
-	                </div>
-	                <?php }?>
-	                <div class="form-group">
-	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("USER_NAMES");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php  echo $frm_staff->getElement('user_name');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("USER_TYPE");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php  echo $frm_staff->getElement('user_type');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PASSWORD");?> 
-	                    <?php if (!empty($this->datainuser)){?>
-	                   <input dojoType='dijit.form.CheckBox' id="check_change" name="check_change" onChange="Checkchange();" />
-	                   <?php }?>
-	                   :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<input type="password" required="true" name="password" id="password" placeholder="<?php echo $tr->translate("PASSWORD");?>" 
-							regExp="\w{6,}" invalidMessage="ពាក្យ​សំងាត់យ៉ាង​តិច មាន 6​ តួអក្សរ"
-							dojoType="dijit.form.ValidationTextBox" missingMessage="អ្នក​ភ្លេច​បំពេញ​ ពាក្យ​​សំងាត់!" class='fullside'/>
-	                   </div>
-	                </div>
-	             </div>
-	             </div>
-	             <div class="col-md-4 col-sm-4 col-xs-12">
-					<div class="form-group">
-	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("OTHER_INFO");?> 
-	                   </label>
-	                </div>
-					 <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" >
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	 <?php 
-								$images = $this->baseUrl().'/images/no-profile.png';
-								if (!empty($this->photo)){
-									$images =  $this->baseUrl().'/images/'.$this->photo;
-								}
-							?>
-							<input name="old_photo"  value="<?php echo $this->photo;?>" type="hidden" />
-							<div class="account-image" >
-								<div class="image-box">
-									<img id="profile_wiew" src="<?php echo $images;?>" alt=""  />
-								</div>
-								<div class="button_browse">
-								<div id='preview'></div>	
-										<span>Upload <span ><i class="fa fa-camera" aria-hidden="true"></i></span></span>
-										<input class="btn_borwse_image" type="file" id="photo" name="photo" />
+					<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="glyphicon glyphicon glyphicon-info-sign" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('INFO_STAFF')?> </p>
+											
+										</div> 
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BRANCH_NAME");?>  :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm_staff->getElement('branch_id');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("MAIN_AGENCY");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm_staff->getElement('parent_id');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("STAFF_CODE");?>  :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm_staff->getElement('co_id'); echo $frm_staff->getElement('id');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CO_NAME");?>  :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm_staff->getElement('name_kh');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("SEX");?>  :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm_staff->getElement('co_sex');?>
+									   </div>
+									</div>
+									 <div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("NATIONALITY_NO");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm_staff->getElement('national_id');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("POB");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm_staff->getElement('pob');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("STATUS");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm_staff->getElement('status');?>
+									   </div>
+									</div>
 								</div>
 							</div>
-	                   </div>
-	                </div>
+						</div>
+					</div>
+	             </div>
+	             <div class="col-md-4 col-sm-4 col-xs-12">
+					<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="glyphicon glyphicon-phone-alt" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('CONTACT_INFO')?> </p>
+											
+										</div> 
+									</div>
+									
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PHONE");?>  :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm_staff->getElement('tel');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("EMAIL");?>  :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm_staff->getElement('email');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CURRENT_ADDRESS");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm_staff->getElement('address');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("NOTE");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm_staff->getElement('note');?>
+									   </div>
+									</div>
+									<?php if (empty($this->datainuser)){?>
+									<div class="form-group">
+										<div class="custom-control custom-checkbox float-start ">
+											<input type="checkbox" class="checkboxSystem custom-control-input" name="check_create" id="check_create" value="all" onChange="CheckCreatUser();" >
+											<label class="custom-control-label" for="check_create">
+												<?php echo $tr->translate('CREATE_AS_USER');?>
+											</label>
+										</div>
+							
+									</div>
+									<?php }?>
+									<div class="form-group">
+									   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("USER_NAMES");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm_staff->getElement('user_name');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("USER_TYPE");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm_staff->getElement('user_type');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PASSWORD");?> 
+										<?php if (!empty($this->datainuser)){?>
+									   <input dojoType='dijit.form.CheckBox' id="check_change" name="check_change" onChange="Checkchange();" />
+									   <?php }?>
+									   :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<input type="password" required="true" name="password" id="password" placeholder="<?php echo $tr->translate("PASSWORD");?>" 
+											regExp="\w{6,}" invalidMessage="ពាក្យ​សំងាត់យ៉ាង​តិច មាន 6​ តួអក្សរ"
+											dojoType="dijit.form.ValidationTextBox" missingMessage="អ្នក​ភ្លេច​បំពេញ​ ពាក្យ​​សំងាត់!" class='fullside'/>
+									   </div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+	             </div>
+	             </div>
+	             <div class="col-md-4 col-sm-4 col-xs-12">
+					<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="glyphicon glyphicon-picture" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('OTHER_INFO')?> </p>
+											
+										</div> 
+									</div>
+									 <div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" >
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											 <?php 
+												$images = $this->baseUrl().'/images/no-profile.png';
+												if (!empty($this->photo)){
+													$images =  $this->baseUrl().'/images/'.$this->photo;
+												}
+											?>
+											<input name="old_photo"  value="<?php echo $this->photo;?>" type="hidden" />
+											<div class="account-image" >
+												<div class="image-box">
+													<img id="profile_wiew" src="<?php echo $images;?>" alt=""  />
+												</div>
+												<div class="button_browse">
+												<div id='preview'></div>	
+														<span>Upload <span ><i class="fa fa-camera" aria-hidden="true"></i></span></span>
+														<input class="btn_borwse_image" type="file" id="photo" name="photo" />
+												</div>
+											</div>
+									   </div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 	                
 	        </div>
 	        <div class="clearfix"></div>
-			    <div class="card-box">
-               		<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
-		    			<input type="submit" id="save_new" value="រក្សាទុក" label="<?php echo $tr->translate("GO_EDIT")?>" dojoType="dijit.form.Button"  iconClass="dijitEditorIcon dijitEditorIconSave"/> 
+			<div class="card-box">
+				<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
+					<input type="submit" class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-disk"  id="save_new" value="រក្សាទុក" label="<?php echo $tr->translate("GO_EDIT")?>" dojoType="dijit.form.Button" /> 
 	    		</div>
 	    	</div>
 		</form>
@@ -325,7 +369,7 @@ function getCheckUserName(){
 				if(oldUserName == user_name){
 					isCheck=0;
 				}else{
-					alert('<?php echo $tr->translate("This user name has been use on other accont");?>');
+					infoMessageAlert('<?php echo $tr->translate("This user name has been use on other account");?>');
 					dijit.byId('user_name').focus();
 					isCheck=1;
 				}
