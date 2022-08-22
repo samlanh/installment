@@ -21,25 +21,25 @@
 	  			 if(this.validate()) {
 					branch_id = dijit.byId('branch_id').get('value');
 					if(branch_id=='' || branch_id<=0){
-						alert('<?php echo $tr->translate('PLEASE_SELECT_BRANCH');?>');
+						infoMessageAlert('<?php echo $tr->translate('PLEASE_SELECT_BRANCH');?>');
 						dijit.byId('branch_id').focus();
 						return false;
 					}
 					requestId = dijit.byId('requestId').get('value');
 					if(requestId=='' || requestId<=0){
-						alert('<?php echo $tr->translate('PLEASE_SELECT_REQUEST_NO');?>');
+						infoMessageAlert('<?php echo $tr->translate('PLEASE_SELECT_REQUEST_NO');?>');
 						dijit.byId('requestId').focus();
 						return false;
 					}
 					supplierId = dijit.byId('supplierId').get('value');
 					if(supplierId=='' || supplierId<=0){
-						alert('<?php echo $tr->translate('PLEASE_SELECT_SUPPLIER');?>');
+						infoMessageAlert('<?php echo $tr->translate('PLEASE_SELECT_SUPPLIER');?>');
 						dijit.byId('supplierId').focus();
 						return false;
 					}
 					var rowId = $('#identity').val();
 					if(rowId==''){ 
-						alert("<?php echo $tr->translate("PLEASE_ADD_RECORD");?>");
+						infoMessageAlert("<?php echo $tr->translate("PLEASE_ADD_RECORD");?>");
 						return false;
 					}
 					loadingBlock();
@@ -142,8 +142,7 @@
 			<div class="clearfix"></div>
 	       	<div class="card-box mt-20">
                	<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
-               		<input type="submit" value="save_close" id="save_close" name="save_close" label="<?php echo $tr->translate("SAVE");?>" dojoType="dijit.form.Button" 
-						iconClass="dijitEditorIcon dijitEditorIconSave" />
+               		<input type="submit" class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-disk" value="save_close" id="save_close" name="save_close" label="<?php echo $tr->translate("SAVE");?>" dojoType="dijit.form.Button"  />
 					
                	</div>
              </div>
@@ -254,7 +253,7 @@
 		}
 		requestId = dijit.byId('requestId').get('value');
 		if(requestId=='' || requestId==0){
-			alert('<?php echo $tr->translate('PLEASE_SELECT_REQUEST_NO');?>');
+			infoMessageAlert('<?php echo $tr->translate('PLEASE_SELECT_REQUEST_NO');?>');
 			dijit.byId('requestId').focus();
 			return false;
 		}
@@ -278,13 +277,13 @@
 		
 		branch_id = dijit.byId('branch_id').get('value');
 		if(branch_id=='' || branch_id<=0){
-			alert('<?php echo $tr->translate('PLEASE_SELECT_BRANCH');?>');
+			infoMessageAlert('<?php echo $tr->translate('PLEASE_SELECT_BRANCH');?>');
 			dijit.byId('branch_id').focus();
 			return false;
 		}
 		requestId = dijit.byId('requestId').get('value');
 		if(requestId=='' || requestId<=0){
-			alert('<?php echo $tr->translate('PLEASE_SELECT_REQUEST_NO');?>');
+			infoMessageAlert('<?php echo $tr->translate('PLEASE_SELECT_REQUEST_NO');?>');
 			dijit.byId('requestId').focus();
 			return false;
 		}
@@ -308,7 +307,7 @@
 			 for(var i=0;i< arrays.length;i++) {
 				 readychoose = dijit.byId('proId'+arrays[i]).get('value');
 				 if(readychoose==productId){
-					 alert("<?php echo $tr->translate("Choosen ready")?> "+productLabel);
+					 infoMessageAlert("<?php echo $tr->translate("Choosen ready")?> "+productLabel);
 					 dijit.byId('productId').reset();
 					 return false;
 				 }
@@ -324,7 +323,7 @@
 			},		    
 			handleAs:"json",
 			load: function(data) {
-				template+='<td align="center" class="numberRecord"><span title="<?php echo $tr->translate("REMOVE_RECORD");?>" class="removeRow" onclick="deleteRecord('+col+');"><i class="fa fa-times" aria-hidden="true"></i></span></td>';
+				template+='<td align="center" class="numberRecord"><span title="<?php echo $tr->translate("REMOVE_RECORD");?>" class="removeRow" onclick="deleteRecord('+col+');"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></span></td>';
 				template+='<td align="center" class="numberRecord" data-label="<?php echo $tr->translate("N_O");?>">'+no+'</td>';
 				template+='<td data-label="<?php echo $tr->translate("PRODUCT_NAME");?>" class="productName" >'+data.proCode+'<br />'+data.proName+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId'+col+'" name="proId'+col+'" value="'+data.id+'" type="text"  ></td>';	
 				template+='<td data-label="<?php echo $tr->translate("STOCK_REMAIN");?>" class="currentQty" >'+data.currentQty+' ('+data.measureTitle+')</td>';	
@@ -358,7 +357,7 @@
 		qty = dijit.byId('qty'+index).get('value');
 		if(qty>qtyApprovedAfter){
 			dijit.byId('qty'+index).set('value',qtyApprovedAfter);
-			alert("<?php echo $tr->translate("MAXIMUM_QTY_OF_THIS_ITEMS_IS_ONLY")?>"+" "+qtyApprovedAfter);
+			infoMessageAlert("<?php echo $tr->translate("MAXIMUM_QTY_OF_THIS_ITEMS_IS_ONLY")?>"+" "+qtyApprovedAfter);
 		}
 	}
 	function calculateTotal(index){
@@ -377,7 +376,7 @@
 		if(discountAmount>subtotal){
 			dijit.byId('subTotal'+index).set('value',0);
 			dijit.byId('discountAmount'+index).set('value',subtotal);
-			alert("<?php echo $tr->translate("DISCOUNT_CAN_NOT_BIGER_THAN_TOTAL")?>"+" "+subtotal);
+			infoMessageAlert("<?php echo $tr->translate("DISCOUNT_CAN_NOT_BIGER_THAN_TOTAL")?>"+" "+subtotal);
 			return false;
 		}
 		subtotal=subtotal-discountAmount;
@@ -389,7 +388,7 @@
 		var rowId = $('#identity').val();
 		var rowIDArray = rowId.split(',');
 		if(rowId==''){
-			alert("<?php echo $tr->translate('PLEASE_SELECT_PRODUCT');?>");
+			infoMessageAlert("<?php echo $tr->translate('PLEASE_SELECT_PRODUCT');?>");
 			dijit.byId("productId").focus();
 			dijit.byId('total').attr('value',netTotal.toFixed(2));
 			return false;
@@ -452,7 +451,7 @@
 		var itemsNoteString = $( '#itemsNote'+'<?php echo $key;?>').html();
 		
 							
-		template+='<td class="numberRecord" align="center"><span title="<?php echo $tr->translate("REMOVE_RECORD");?>" class="removeRow" onclick="deleteRecord('+col+');"><i class="fa fa-times" aria-hidden="true"></i></span></td>';
+		template+='<td class="numberRecord" align="center"><span title="<?php echo $tr->translate("REMOVE_RECORD");?>" class="removeRow" onclick="deleteRecord('+col+');"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></span></td>';
 		template+='<td align="center" class="numberRecord" data-label="<?php echo $tr->translate("N_O");?>">'+no+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="detailId'+col+'" name="detailId'+col+'" value="<?php echo $rs['id'];?>" type="text"  ></td>';
 		template+='<td data-label="<?php echo $tr->translate("PRODUCT_NAME");?>" class="productName" >'+proCodeString+'<br />'+productNameString+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId'+col+'" name="proId'+col+'" value="<?php echo $rs['proId'];?>" type="text"  ></td>';	
 		template+='<td data-label="<?php echo $tr->translate("STOCK_REMAIN");?>" class="currentQty" ><?php echo $rs['currentQty'];?> ('+measureTitleString+')</td>';	
