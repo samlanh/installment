@@ -95,15 +95,15 @@ class Stock_PurchaseController extends Zend_Controller_Action {
 		$row = $_pur->getSupplierById($id);
 		//print_r($row);exit();
 		if (empty($row)){
-			Application_Form_FrmMessage::Sucessfull("No Record","/stock/purchase");
+			Application_Form_FrmMessage::Sucessfull("No Record","/stock/purchase",2);
 			exit();
 		}else if ($row['is_paid']==1){
-			Application_Form_FrmMessage::Sucessfull("This Purchase Already Payment","/stock/purchase");
+			Application_Form_FrmMessage::Sucessfull("This Purchase Already Payment","/stock/purchase",2);
 			exit();
 		}
 		$haspay = $_pur->checkHaspayment($id);
 		if (!empty($haspay)){
-			Application_Form_FrmMessage::Sucessfull("This Purchase has paid on some payment ready","/stock/purchase");
+			Application_Form_FrmMessage::Sucessfull("This Purchase has paid on some payment ready","/stock/purchase",2);
 			exit();
 		}
 		

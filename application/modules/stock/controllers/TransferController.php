@@ -80,7 +80,7 @@ class Stock_TransferController extends Zend_Controller_Action {
 		$id = empty($id)?0:$id;
 		$row = $db->getTransferById($id);
 		if (empty($row)){
-			Application_Form_FrmMessage::Sucessfull("No Record","/stock/transfer");
+			Application_Form_FrmMessage::Sucessfull("No Record","/stock/transfer",2);
 			exit();
 		}
 		$key = new Application_Model_DbTable_DbKeycode();
@@ -88,7 +88,7 @@ class Stock_TransferController extends Zend_Controller_Action {
 		$condictionTransfer = empty($keydata['trasfer_st_cut'])?0:$keydata['trasfer_st_cut'];//0=Transfer Cut Stock Direct,1=Transfer  Cut Stock with Receive
 		if ($condictionTransfer==1){
 			if ($row['is_received']==1){
-				Application_Form_FrmMessage::Sucessfull("TRANSFER_ALREADY_RECEIVED", self::REDIRECT_URL."");
+				Application_Form_FrmMessage::Sucessfull("TRANSFER_ALREADY_RECEIVED", self::REDIRECT_URL."",2);
 				exit();
 			}
 		}

@@ -92,7 +92,7 @@ class Loan_NewscheduleController extends Zend_Controller_Action {
 			$this->view->rsresult =  $rs;
 			
 			if(empty($rs)){
-				Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index");
+				Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index",2);
 				exit();
 			}
 		}
@@ -117,11 +117,11 @@ class Loan_NewscheduleController extends Zend_Controller_Action {
 		$this->view->rsresult = $data_row;
 // 		$rs = $db_g->getLoanFundExist($id);
 // 		if($rs==true){
-// 			Application_Form_FrmMessage::Sucessfull("LOAN_FUND_EXIST","/loan/repaymentschedule/index");
+// 			Application_Form_FrmMessage::Sucessfull("LOAN_FUND_EXIST","/loan/repaymentschedule/index",2);
 // 		}
 // 		$db = new Loan_Model_DbTable_DbLoanIL();
 // 		$row = $db->getTranLoanByIdWithBranch($id,1,1);
-// 		if(empty($row)){ Application_Form_FrmMessage::Sucessfull("RECORD_NOT_EXIST","/loan/repaymentschedule/index"); }
+// 		if(empty($row)){ Application_Form_FrmMessage::Sucessfull("RECORD_NOT_EXIST","/loan/repaymentschedule/index",2); }
 		print_r($data_row);
 		$frm = new Loan_Form_FrmRepaymentSchedule();
 		$frm_loan=$frm->FrmAddLoan($data_row);

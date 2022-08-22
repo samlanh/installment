@@ -93,7 +93,7 @@ class Stock_BrokenstockController extends Zend_Controller_Action {
 		$_pur = new Stock_Model_DbTable_DbBrokenStock();
 		$row =$_pur->getAdjustStockById($id);
 		if (empty($row)){
-			Application_Form_FrmMessage::Sucessfull("No Record","/stock/adjuststock");
+			Application_Form_FrmMessage::Sucessfull("No Record","/stock/adjuststock",2);
 			exit();
 		}
 		$this->view->row = $row;

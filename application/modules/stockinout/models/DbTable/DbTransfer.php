@@ -192,7 +192,7 @@ class Stockinout_Model_DbTable_DbTransfer extends Zend_Db_Table_Abstract
     	}catch (Exception $e){
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     		$db->rollBack();
-    		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL", "/stockinout/transferout/add");
+    		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL", "/stockinout/transferout/add",2);
     	}
     }
     function upateUsageStock($data){
@@ -254,7 +254,7 @@ class Stockinout_Model_DbTable_DbTransfer extends Zend_Db_Table_Abstract
     	}catch (Exception $e){
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     		$db->rollBack();
-    		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL", "/stockinout/usage/add");
+    		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL", "/stockinout/usage/add",2);
     	}
     }
     function resetUsageStock($stockId,$branchId){

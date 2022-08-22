@@ -91,7 +91,7 @@ class Budget_Model_DbTable_DbInitilizeBudget extends Zend_Db_Table_Abstract
     	}catch (Exception $e){
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     		$db->rollBack();
-    		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL", "/budget/setup/add");
+    		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL", "/budget/setup/add",2);
     	}
     }
 //     function updateData($data){

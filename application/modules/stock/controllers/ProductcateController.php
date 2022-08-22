@@ -44,6 +44,7 @@ class Stock_ProductcateController extends Zend_Controller_Action {
     			$degree_id= $db->AddDegree($_data);
     			if($degree_id==-1){
     				$sms = "RECORD_EXIST";
+					Application_Form_FrmMessage::Sucessfull($sms, self::REDIRECT_URL."/index",2);
     			}
     			if(isset($_data['save_close'])){
     				Application_Form_FrmMessage::Sucessfull($sms, self::REDIRECT_URL."/index");

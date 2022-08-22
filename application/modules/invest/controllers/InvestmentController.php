@@ -94,13 +94,13 @@ class Invest_InvestmentController extends Zend_Controller_Action {
 		
 		$_hasPayment = $_dbmodel->checkInvestmentInWithdrawById($id);
 		if (!empty($_hasPayment)){
-			Application_Form_FrmMessage::Sucessfull("RECORD_HAS_SOME_WITHDRAW_CAN_NOT_EDIT","/invest/investment");
+			Application_Form_FrmMessage::Sucessfull("RECORD_HAS_SOME_WITHDRAW_CAN_NOT_EDIT","/invest/investment",2);
 			exit();
 		}
 		
 		$_hasPaymentBroker = $_dbmodel->checkInvestmentInWithdrawBrokerById($id);
 		if (!empty($_hasPaymentBroker)){
-			Application_Form_FrmMessage::Sucessfull("RECORD_BROKER_HAS_SOME_WITHDRAW_CAN_NOT_EDIT","/invest/investment");
+			Application_Form_FrmMessage::Sucessfull("RECORD_BROKER_HAS_SOME_WITHDRAW_CAN_NOT_EDIT","/invest/investment",2);
 			exit();
 		}
 		

@@ -56,11 +56,11 @@ class Stockinout_Model_DbTable_DbWorkType extends Zend_Db_Table_Abstract
 	    			);
 	    		$this->insert($arr);
     		}else{
-    			Application_Form_FrmMessage::Sucessfull("DATA_EXISTING", "/stockinout/worktype/add");
+    			Application_Form_FrmMessage::Sucessfull("DATA_EXISTING", "/stockinout/worktype/add",2);
     		}
     	}catch (Exception $e){
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-    		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL", "/stockinout/worktype/add");
+    		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL", "/stockinout/worktype/add",2);
     	}
     }
     function updateWorkType($data){
@@ -78,7 +78,7 @@ class Stockinout_Model_DbTable_DbWorkType extends Zend_Db_Table_Abstract
 			
     	}catch (Exception $e){
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-    		Application_Form_FrmMessage::Sucessfull("UPDATE_FAIL", "/stockinout/worktype/index");
+    		Application_Form_FrmMessage::Sucessfull("UPDATE_FAIL", "/stockinout/worktype/index",2);
     	}
     }
     function getDataRow($recordId){

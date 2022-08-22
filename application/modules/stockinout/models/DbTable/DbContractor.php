@@ -75,7 +75,7 @@ class Stockinout_Model_DbTable_DbContractor extends Zend_Db_Table_Abstract
     		}
     	}catch (Exception $e){
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-    		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL", "/stockinout/staff/add");
+    		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL", "/stockinout/staff/add",2);
     	}
     }
     function updateWorker($data){
@@ -100,7 +100,7 @@ class Stockinout_Model_DbTable_DbContractor extends Zend_Db_Table_Abstract
 			
     	}catch (Exception $e){
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-    		Application_Form_FrmMessage::Sucessfull("UPDATE_FAIL", "/stockinout/staff/index");
+    		Application_Form_FrmMessage::Sucessfull("UPDATE_FAIL", "/stockinout/staff/index",2);
     	}
     }
     function getDataRow($recordId){

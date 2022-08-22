@@ -95,7 +95,7 @@ public function init()
 				$dbglobal = new Application_Model_DbTable_DbGlobal();
 				$return = $dbglobal->testTruncate($type,$param);
 				if ($return==-1){
-					Application_Form_FrmMessage::Sucessfull("Can not Clear Data", "/setting/general/refresh");
+					Application_Form_FrmMessage::Sucessfull("Can not Clear Data", "/setting/general/refresh",2);
 				}else{
 					Application_Form_FrmMessage::Sucessfull("SUCCESSFULLY", "/setting/general/refresh");
 				}

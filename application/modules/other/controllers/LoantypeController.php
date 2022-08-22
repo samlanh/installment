@@ -90,5 +90,20 @@ class Other_LoanTypeController extends Zend_Controller_Action
 	    Application_Model_Decorator::removeAllDecorator($frm);
 	    $this->view->Form_Frmcallecterall = $frm;
     }
+    function addSaleconditionAction(){
+    	if($this->getRequest()->isPost()){
+    		$data=$this->getRequest()->getPost();
+    		$db = new Other_Model_DbTable_DbLoanType();
+    		$param = array(
+    				'title_en'=>$data['textValue'],
+    				'title_kh'=>$data['textValue'],
+    				'type'=>$data['type']
+    				);
+    		$id = $db->addViewType($param,1);
+    		//print_r($id);
+    		print_r(Zend_Json::encode($id));
+    		exit();
+    	}
+    }
 }
 ?>

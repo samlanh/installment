@@ -46,7 +46,7 @@ class Project_IssuerController extends Zend_Controller_Action {
 	   				exit();
 	   			}
 	   			if (empty($_data)){
-					Application_Form_FrmMessage::Sucessfull("File Attachment to large can't upload and Save data !","/project/issuer");
+					Application_Form_FrmMessage::Sucessfull("File Attachment to large can't upload and Save data !","/project/issuer",2);
 					exit();
 				}
 				
@@ -80,7 +80,7 @@ class Project_IssuerController extends Zend_Controller_Action {
 	   				exit();
 	   			}
 				if (empty($_data)){
-					Application_Form_FrmMessage::Sucessfull("File Attachment to large can't upload and Save data !","/project/issuer");
+					Application_Form_FrmMessage::Sucessfull("File Attachment to large can't upload and Save data !","/project/issuer",2);
 					exit();
 				}
 	   			

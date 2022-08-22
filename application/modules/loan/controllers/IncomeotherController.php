@@ -54,7 +54,7 @@ class Loan_IncomeOtherController extends Zend_Controller_Action
     	if($this->getRequest()->isPost()){
 			$data=$this->getRequest()->getPost();	
 			if (empty($data)){
-				Application_Form_FrmMessage::Sucessfull("File Attachment to large can't upload and Save data !","/loan/incomeother");
+				Application_Form_FrmMessage::Sucessfull("File Attachment to large can't upload and Save data !","/loan/incomeother",2);
 				exit();
 			}
 			$db = new Loan_Model_DbTable_DbIncomeother();				
@@ -94,7 +94,7 @@ class Loan_IncomeOtherController extends Zend_Controller_Action
     	if($this->getRequest()->isPost()){
 			$data=$this->getRequest()->getPost();	
 			if (empty($data)){
-				Application_Form_FrmMessage::Sucessfull("File Attachment to large can't upload and Save data !","/loan/incomeother");
+				Application_Form_FrmMessage::Sucessfull("File Attachment to large can't upload and Save data !","/loan/incomeother",2);
 				exit();
 			}
 			$db = new Loan_Model_DbTable_DbIncomeother();	
@@ -111,14 +111,14 @@ class Loan_IncomeOtherController extends Zend_Controller_Action
 		$db = new Loan_Model_DbTable_DbIncomeother();
 		$row  = $db->getincomebyid($id);
 		if ($row['is_fullpaid']==1){
-			Application_Form_FrmMessage::Sucessfull('PAYMENT_READY', "/loan/incomeother");
+			Application_Form_FrmMessage::Sucessfull('PAYMENT_READY', "/loan/incomeother",2);
 			exit();
 		}
 		
 		$dboinp = new Loan_Model_DbTable_DbIncomeOtherPayment();
 		$check = $dboinp->checkOtherIncomeInpay($id);
 		if (!empty($check)){
-			Application_Form_FrmMessage::Sucessfull('HAS_SOME_PAYMENT_READY', "/loan/incomeother");
+			Application_Form_FrmMessage::Sucessfull('HAS_SOME_PAYMENT_READY', "/loan/incomeother",2);
 			exit();
 		}
 		$this->view->rows = $db->getincomeDetailbyid($id);

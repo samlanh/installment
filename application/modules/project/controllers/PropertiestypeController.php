@@ -46,7 +46,7 @@ class Project_propertiestypeController extends Zend_Controller_Action {
 	   				exit();
 	   			}
 	   			if (empty($_data)){
-					Application_Form_FrmMessage::Sucessfull("File Attachment to large can't upload and Save data !","/project/propertiestype");
+					Application_Form_FrmMessage::Sucessfull("File Attachment to large can't upload and Save data !","/project/propertiestype",2);
 					exit();
 				}
 				
@@ -80,7 +80,7 @@ class Project_propertiestypeController extends Zend_Controller_Action {
 	   				exit();
 	   			}
 				if (empty($_data)){
-					Application_Form_FrmMessage::Sucessfull("File Attachment to large can't upload and Save data !","/project/propertiestype");
+					Application_Form_FrmMessage::Sucessfull("File Attachment to large can't upload and Save data !","/project/propertiestype",2);
 					exit();
 				}
 	   			

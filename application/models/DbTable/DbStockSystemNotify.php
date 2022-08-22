@@ -129,7 +129,7 @@ class Application_Model_DbTable_DbStockSystemNotify extends Zend_Db_Table_Abstra
 						<p><strong><i class="fa fa-newspaper-o"></i> '.$result['purpose'].'</strong>  </p>
 						<p><strong></strong> <i class="fa fa-calendar"></i> '.date("d/m/Y",strtotime($result['date'])).'</p>
 						<p><strong></strong> <i class="fa fa-user"></i> '.$result['user_name'].'</p>
-						<p class="proccessingStatus"><i class="fa fa-sliders"></i> '.$result['processingStatusTitle'].'</p>
+						<p class="proccessingStatus"><i class="fa fa-check-square"></i> '.$result['processingStatusTitle'].'</p>
 						<a class="btn-go" href="'.$url.'"><i class="fa fa-location-arrow" aria-hidden="true"></i> '.$title.'</a>
 								
 					</div>

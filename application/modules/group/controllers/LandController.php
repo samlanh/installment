@@ -27,6 +27,7 @@ class Group_LandController extends Zend_Controller_Action {
 						'status' => -1,
 						'branch_id' => -1,
 						'property_type_search'=>-1,
+						'type_property_sale'=>-1,
 						'start_date'=> date('Y-m-d'),
 						'end_date'=>date('Y-m-d'),
 						'streetlist'=>''			
