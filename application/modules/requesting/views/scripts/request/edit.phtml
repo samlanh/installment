@@ -10,7 +10,7 @@
 		<div class="card-box">
                	<div class="col-sm-12 border-botom">
 		    		<div class="col-sm-8 pd-0">
-		    			<h4 class="m-b-0"><i class="fa fa-tasks" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('EDIT_REQUEST_PO');?></h4>
+		    			<h4 class="m-b-0"><i class="fa fa-edit" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('EDIT_REQUEST_PO');?></h4>
     			</div>
     			<div class="col-sm-4 text-right">
     			</div>
@@ -21,13 +21,13 @@
 	  			 if(this.validate()) {
 					branch_id = dijit.byId('branch_id').get('value');
 					if(branch_id=='' || branch_id<=0){
-						alert('<?php echo $tr->translate('PLEASE_SELECT_BRANCH');?>');
+						infoMessageAlert('<?php echo $tr->translate('PLEASE_SELECT_BRANCH');?>');
 						dijit.byId('branch_id').focus();
 						return false;
 					}
 					var rowId = $('#identity').val();
 					if(rowId==''){ 
-						alert("<?php echo $tr->translate("PLEASE_ADD_RECORD");?>");
+						infoMessageAlert("<?php echo $tr->translate("PLEASE_ADD_RECORD");?>");
 						return false;
 					}
 					loadingBlock();
@@ -38,89 +38,117 @@
 			</script>
 			<div class="card-box">
 				<div class="col-md-3 col-sm-3 col-xs-12">
-		             <div class="form-group">
-		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("BRANCH_NAME");?> </label>
-		                <div class="col-md-7 col-sm-7 col-xs-12">
-		                	<?php echo $frm->getElement("branch_id");?>
-		                	<?php echo $frm->getElement("id");?>
-		                </div>
-		             </div>
-					 <div class="form-group">
-		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("REQUEST_NO");?> </label>
-		                <div class="col-md-7 col-sm-7 col-xs-12">
-		                	<?php echo $frm->getElement("requestNo");?>
-		                </div>
-		             </div>
-					  <div class="form-group">
-		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("REQUEST_NO_FROM");?> </label>
-		                <div class="col-md-7 col-sm-7 col-xs-12">
-		                	<?php echo $frm->getElement("requestNoLetter");?>
-		                </div>
-		             </div>
-					 <div class="form-group">
-		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("DATE");?> </label>
-		                <div class="col-md-7 col-sm-7 col-xs-12">
-		                	<?php echo $frm->getElement("date");?>
-		                </div>
-		             </div>
-					  <div class="form-group">
-		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("PURPOSE");?> </label>
-		                <div class="col-md-7 col-sm-7 col-xs-12">
-		                	<?php echo $frm->getElement("purpose");?>
-		                </div>
-		             </div>
-		             <div class="form-group">
-		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("NOTE");?> </label>
-		                <div class="col-md-7 col-sm-7 col-xs-12">
-		                	<?php echo $frm->getElement("note");?>
-		                </div>
-		             </div>
-					 <div class="form-group">
-		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("STATUS");?> </label>
-		                <div class="col-md-7 col-sm-7 col-xs-12">
-		                	<?php echo $frm->getElement("status");?>
-		                </div>
-		             </div>
+					<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="fa fa-tasks" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('REQUEST_PO')?> </p>
+										</div> 
+									</div>
+									 <div class="form-group">
+										<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("BRANCH_NAME");?> </label>
+										<div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement("branch_id");?>
+											<?php echo $frm->getElement("id");?>
+										</div>
+									 </div>
+									 <div class="form-group">
+										<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("REQUEST_NO");?> </label>
+										<div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement("requestNo");?>
+										</div>
+									 </div>
+									  <div class="form-group">
+										<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("REQUEST_NO_FROM");?> </label>
+										<div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement("requestNoLetter");?>
+										</div>
+									 </div>
+									 <div class="form-group">
+										<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("DATE");?> </label>
+										<div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement("date");?>
+										</div>
+									 </div>
+									  <div class="form-group">
+										<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("PURPOSE");?> </label>
+										<div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement("purpose");?>
+										</div>
+									 </div>
+									 <div class="form-group">
+										<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("NOTE");?> </label>
+										<div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement("note");?>
+										</div>
+									 </div>
+									 <div class="form-group">
+										<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("STATUS");?> </label>
+										<div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement("status");?>
+										</div>
+									 </div>
+								 </div>
+							 </div>
+						 </div>
+					 </div>
 				</div>
 				<div class="col-md-9 col-sm-9 col-xs-12">
-					<div class="form-group" style="background: #d8e0e2;padding: 5px 15px;margin: 0;border: solid 1px #697996;border-radius: 2px;margin-top: 10px;">
-						<label style=" margin: 0; line-height: 30px; " class="control-label bold col-md-2 col-sm-2 col-xs-12"><?php echo $tr->translate("CATEGORY");?> </label>
-						 <div class="col-md-3 col-sm-3 col-xs-12">
-								<?php echo $frm->getElement("categoryId");?>
+					<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="fa fa-cubes" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('PRODUCT_INFO')?> </p>
+										</div> 
+									</div>
+									
+									<div class="form-group" style="background: #d8e0e2;padding: 5px 15px;margin: 0;border: solid 1px #697996;border-radius: 2px;margin-top: 10px;">
+										<label style=" margin: 0; line-height: 30px; " class="control-label bold col-md-2 col-sm-2 col-xs-12"><?php echo $tr->translate("CATEGORY");?> </label>
+										 <div class="col-md-3 col-sm-3 col-xs-12">
+												<?php echo $frm->getElement("categoryId");?>
+										</div>
+										<label style=" margin: 0; line-height: 30px; text-align: center;" class="control-label bold col-md-1 col-sm-1 col-xs-12"><?php echo $tr->translate("PRODUCT");?> </label>
+										<div class="col-md-3 col-sm-3 col-xs-12">
+											<input id="productId" />
+										</div>
+									</div>
+									<table class="collape responsiveTable"  >
+										<thead>
+											<tr id="head-title" class="head-td" align="center">
+												<th scope="col"><?php echo $tr->translate("DEL");?></th>
+												<th scope="col"><?php echo $tr->translate("N_O");?></th>
+												<th scope="col" width="20%"><i class="fa fa-cubes" aria-hidden="true"></i> <?php echo $tr->translate("PRODUCT_NAME");?></th>
+												<th scope="col" class="currentQty"><?php echo $tr->translate("STOCK_REMAIN");?></th>
+												<th scope="col" width="10%"><?php echo $tr->translate("QTY_REQUEST");?></th>
+												<th scope="col" width="10%"><i class="fa fa-calendar" aria-hidden="true"></i> <?php echo $tr->translate("DATE_ENTRY");?></th>
+												<th scope="col" width="20%"><?php echo $tr->translate("NOTE");?></th>
+											</tr>
+										</thead>
+										<tbody id="table_row">
+										</tbody>
+									</table>
+									<input type="hidden" name="identity" id="identity" dojoType="dijit.form.TextBox" value="" >
+								</div>
+							</div>
 						</div>
-						<label style=" margin: 0; line-height: 30px; text-align: center;" class="control-label bold col-md-1 col-sm-1 col-xs-12"><?php echo $tr->translate("PRODUCT");?> </label>
-						<div class="col-md-3 col-sm-3 col-xs-12">
-							<input id="productId" />
-						</div>
-						
 					</div>
-						
-					<table class="collape responsiveTable"  >
-						<thead>
-							<tr id="head-title" class="head-td" align="center">
-								<th scope="col"><?php echo $tr->translate("DEL");?></th>
-								<th scope="col"><?php echo $tr->translate("N_O");?></th>
-								<th scope="col" width="20%"><i class="fa fa-cubes" aria-hidden="true"></i> <?php echo $tr->translate("PRODUCT_NAME");?></th>
-								<th scope="col" class="currentQty"><?php echo $tr->translate("STOCK_REMAIN");?></th>
-								<th scope="col" width="10%"><?php echo $tr->translate("QTY_REQUEST");?></th>
-								<th scope="col" width="10%"><i class="fa fa-calendar" aria-hidden="true"></i> <?php echo $tr->translate("DATE_ENTRY");?></th>
-								<th scope="col" width="20%"><?php echo $tr->translate("NOTE");?></th>
-							</tr>
-						</thead>
-						<tbody id="table_row">
-						</tbody>
-						
-					</table>
-					<input type="hidden" name="identity" id="identity" dojoType="dijit.form.TextBox" value="" >
-					
 				</div>
 				<div class="clearfix"></div>
 			</div>
 			<div class="clearfix"></div>
 	       	<div class="card-box mt-20">
                	<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
-               		<input type="submit" value="save_close" id="save_close" name="save_close" label="<?php echo $tr->translate("SAVE");?>" dojoType="dijit.form.Button" 
-						iconClass="dijitEditorIcon dijitEditorIconSave" />
+               		<input type="submit" class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-disk" value="save_close" id="save_close" name="save_close" label="<?php echo $tr->translate("SAVE");?>" dojoType="dijit.form.Button"  />
 				
                	</div>
              </div>
@@ -192,13 +220,13 @@
 		
 		branch_id = dijit.byId('branch_id').get('value');
 		if(branch_id=='' || branch_id<=0){
-			//alert('<?php echo $tr->translate('PLEASE_SELECT_BRANCH');?>');
+			//infoMessageAlert('<?php echo $tr->translate('PLEASE_SELECT_BRANCH');?>');
 			//dijit.byId('branch_id').focus();
 			return false;
 		}
 		dateRequest = dijit.byId('date').get('value');
 		if(dateRequest==''){
-			alert('<?php echo $tr->translate('PLEASE_SELECT_DATE');?>');
+			infoMessageAlert('<?php echo $tr->translate('PLEASE_SELECT_DATE');?>');
 			dijit.byId('date').focus();
 			return false;
 		}
@@ -241,7 +269,7 @@
 		
 		branch_id = dijit.byId('branch_id').get('value');
 		if(branch_id=='' || branch_id<=0){
-			alert('<?php echo $tr->translate('PLEASE_SELECT_BRANCH');?>');
+			infoMessageAlert('<?php echo $tr->translate('PLEASE_SELECT_BRANCH');?>');
 			dijit.byId('branch_id').focus();
 			return false;
 		}
@@ -259,7 +287,7 @@
 			 for(var i=0;i< arrays.length;i++) {
 				 readychoose = dijit.byId('proId'+arrays[i]).get('value');
 				 if(readychoose==productId){
-					 alert("<?php echo $tr->translate("Choosen ready")?> "+productLabel);
+					 infoMessageAlert("<?php echo $tr->translate("Choosen ready")?> "+productLabel);
 					 dijit.byId('productId').reset();
 					 return false;
 				 }
@@ -274,7 +302,7 @@
 			},		    
 			handleAs:"json",
 			load: function(data) {
-				template+='<td class="numberRecord"  align="center"><span title="<?php echo $tr->translate("REMOVE_RECORD");?>" class="removeRow" onclick="deleteRecord('+col+');"><i class="fa fa-times" aria-hidden="true"></i></span></td>';
+				template+='<td class="numberRecord"  align="center"><span title="<?php echo $tr->translate("REMOVE_RECORD");?>" class="removeRow" onclick="deleteRecord('+col+');"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></span></td>';
 				template+='<td class="numberRecord"  align="center" data-label="<?php echo $tr->translate("N_O");?>">'+no+'</td>';
 				template+='<td data-label="<?php echo $tr->translate("PRODUCT_NAME");?>"  class="productName" >'+data.proCode+'<br />'+data.proName+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId'+col+'" name="proId'+col+'" value="'+data.id+'" type="text"  ></td>';	
 				template+='<td data-label="<?php echo $tr->translate("STOCK_REMAIN");?>"  class="currentQty">'+data.currentQty+' ('+data.measureTitle+')</td>';	
@@ -322,7 +350,7 @@
 		var measureTitleString = $( '#measureTitle'+'<?php echo $key;?>').html();
 		var itemsNoteString = $( '#itemsNote'+'<?php echo $key;?>').html();
 		
-		template+='<td class="numberRecord"  align="center"><span title="<?php echo $tr->translate("REMOVE_RECORD");?>" class="removeRow" onclick="deleteRecord('+col+');"><i class="fa fa-times" aria-hidden="true"></i></span></td>';
+		template+='<td class="numberRecord"  align="center"><span title="<?php echo $tr->translate("REMOVE_RECORD");?>" class="removeRow" onclick="deleteRecord('+col+');"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></span></td>';
 		template+='<td class="numberRecord"  align="center" data-label="<?php echo $tr->translate("N_O");?>">'+no+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="detailId'+col+'" name="detailId'+col+'" value="<?php echo $rs['id'];?>" type="text"  ></td>';
 		template+='<td data-label="<?php echo $tr->translate("PRODUCT_NAME");?>"  class="productName" >'+proCodeString+'<br />'+productNameString+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId'+col+'" name="proId'+col+'" value="<?php echo $rs['proId'];?>" type="text"  ></td>';	
 		template+='<td data-label="<?php echo $tr->translate("STOCK_REMAIN");?>"  class="currentQty" ><?php echo $rs['currentQty'];?> ('+measureTitleString+')</td>';	
