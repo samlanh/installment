@@ -51,140 +51,176 @@ div.expenseItem.showFeature{
 			if($settingDoc==1){
 			?>
 			<div class="card-box">
-					 <ul class="nav  md-pills pills-primary nav-tab" role="tablist">
+				<ul class="nav  nav-pills nav-fill gap-2 p-1 small bg-white border rounded-5 shadow-sm pills-primary nav-tab" role="tablist">
 					<li class="nav-item active">
-				 <a class="nav-link " data-toggle="tab" href="#panel211" role="tab">
-				 <i class="fa fa-pie-chart"></i> <?php echo $tr->translate("EXPENSE_INFO");?></a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" data-toggle="tab" href="#panel213" role="tab">
-					<i class="fa fa-file-text"></i> <?php echo $tr->translate("DOCUMENT");?>
-					</a>
-				</li>
+						<a class="nav-link rounded-5" data-toggle="tab" href="#panel211" role="tab">
+							<i class="fa fa-pie-chart"></i> <?php echo $tr->translate("EXPENSE_INFO");?>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link rounded-5" data-toggle="tab" href="#panel213" role="tab">
+							<i class="fa fa-file-text"></i> <?php echo $tr->translate("DOCUMENT");?>
+						</a>
+					</li>
 				</ul>
 			 </div>
 			<?php 
 			}
 			?>
 			<!-- Tab panels -->
-			<div class="tab-content vertical">
+			<div class="tab-content ">
 				<!--Schedule Panel 1-->
 				<div class="tab-pane fade in active" id="panel211" role="tabpanel">
 					<div class="card-box">
 						<div class="col-md-4 col-sm-4 col-xs-12">
-							<div class="form-group">
-							   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("PROJECT_INFO");?> 
-							   </label>
-							</div>
-							<div class="form-group">
-							   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BRANCH_NAME");?>  :
-							   </label>
-							   <div class="col-md-7 col-sm-7 col-xs-12">
-									<?php echo $frm->getElement('branch_id');?>
-							   </div>
-							</div>
-							<div class="form-group">
-							   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("RECEIPT_NO");?> :
-							   </label>
-							   <div class="col-md-7 col-sm-7 col-xs-12">
-									<?php echo $frm->getElement('invoice');?>
-							   </div>
-							</div>
-							<div class="form-group">
-							   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("SUPPLIER");?> :
-							   </label>
-							   <div class="col-md-7 col-sm-7 col-xs-12">
-									<div class="col-md-7 col-sm-7 col-xs-12">
-									<?php echo $frm->getElement('supplier_id');?>
+							<div class="card-blogform">
+								<div class="card-body"> 
+									<div class="row"> 
+										<div class="col-md-12 col-sm-12 col-xs-12"> 
+											<div class="d-flex"> 
+												<div class="settings-main-icon ">
+													<i class="fa fa-tasks" aria-hidden="true"></i>
+												</div> 
+												<div class="col-md-10 col-sm-10 col-xs-12"> 
+													<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("PROJECT_INFO");?></p>
+												</div> 
+											</div>
+											<div class="form-group">
+											   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BRANCH_NAME");?>  :
+											   </label>
+											   <div class="col-md-7 col-sm-7 col-xs-12">
+													<?php echo $frm->getElement('branch_id');?>
+											   </div>
+											</div>
+											<div class="form-group">
+											   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("RECEIPT_NO");?> :
+											   </label>
+											   <div class="col-md-7 col-sm-7 col-xs-12">
+													<?php echo $frm->getElement('invoice');?>
+											   </div>
+											</div>
+											<div class="form-group">
+											   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("SUPPLIER");?> :
+											   </label>
+											   <div class="col-md-7 col-sm-7 col-xs-12">
+													<div class="col-md-7 col-sm-7 col-xs-12">
+													<?php echo $frm->getElement('supplier_id');?>
+													</div>
+													 <div class="col-md-3 col-sm-3 col-xs-12">
+														<input class="button-class button-primary" iconClass="glyphicon glyphicon-refresh" type="button" label="<?php echo $tr->translate('REFRESH');?>" dojoType="dijit.form.Button" onclick="getSupplier()"/>
+													 </div>
+											   </div>
+											</div>
+											<div class="form-group">
+											   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CANCEL_SALE_FOR_RETURN");?> :
+											   </label>
+											   <div class="col-md-7 col-sm-7 col-xs-12">
+													<input id="cancelSale_id" />
+											   </div>
+											</div>
+										</div>
 									</div>
-									 <div class="col-md-3 col-sm-3 col-xs-12">
-										<input iconClass="dijitIconUndo" type="button" label="<?php echo $tr->translate('REFRESH');?>" dojoType="dijit.form.Button" onclick="getSupplier()"/>
-									 </div>
-							   </div>
+								</div>
 							</div>
-							<div class="form-group">
-							   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CANCEL_SALE_FOR_RETURN");?> :
-							   </label>
-							   <div class="col-md-7 col-sm-7 col-xs-12">
-									<input id="cancelSale_id" />
-							   </div>
-							</div>
-							
 						</div>
 						<div class="col-md-4 col-sm-4 col-xs-12">
-							<div class="form-group">
-							   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("AMOUNT_INFO");?> 
-							   </label>
-							</div>
-							<div class="form-group">
-							   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("DATE");?> :
-							   </label>
-							   <div class="col-md-7 col-sm-7 col-xs-12">
-									<?php echo $frm->getElement('Date');?>
-							   </div>
-							</div>
-							<div class="form-group">
-							   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("EXPENSE_TITLE");?> :
-							   </label>
-							   <div class="col-md-7 col-sm-7 col-xs-12">
-									<?php echo $frm->getElement('title');?>
-							   </div>
-							</div>
-							 <div class="form-group">
-							   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("INVOICE");?> :
-							   </label>
-							   <div class="col-md-7 col-sm-7 col-xs-12">
-									<?php echo $frm->getElement('other_invoice');?>
-							   </div>
-							</div>
-							<div class="form-group">
-							   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CATEGORY");?> :
-							   </label>
-							   <div class="col-md-7 col-sm-7 col-xs-12">
-									<input id="income_category" />
-							   </div>
-							</div>
-							<div class="form-group">
-							   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("TOTAL_EXPENSE");?>* :
-							   </label>
-							   <div class="col-md-7 col-sm-7 col-xs-12">
-									<?php echo $frm->getElement('total_amount');?>
-							   </div>
-							</div>
-							
-							<div class="form-group">
-							   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PAYMENT_TYPE");?> :
-							   </label>
-							   <div class="col-md-7 col-sm-7 col-xs-12">
-									<?php echo $frm->getElement('payment_type');?>
-							   </div>
-							</div>
-							<div class="form-group">
-							   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CHEQUE");?> :
-							   </label>
-							   <div class="col-md-7 col-sm-7 col-xs-12">
-									<?php echo $frm->getElement('cheque');?>
-							   </div>
-							</div>
-							<div class="form-group">
-							   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CHEQUE_ISSUER");?> :
-							   </label>
-							   <div class="col-md-7 col-sm-7 col-xs-12">
-									<?php echo $frm->getElement('cheque_issuer');?>
-							   </div>
+							<div class="card-blogform">
+								<div class="card-body"> 
+									<div class="row"> 
+										<div class="col-md-12 col-sm-12 col-xs-12"> 
+											<div class="d-flex"> 
+												<div class="settings-main-icon ">
+													<i class="fa fa-money" aria-hidden="true"></i>
+												</div> 
+												<div class="col-md-10 col-sm-10 col-xs-12"> 
+													<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('AMOUNT_INFO')?> </p>
+												</div> 
+											</div>
+											<div class="form-group">
+											   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("DATE");?> :
+											   </label>
+											   <div class="col-md-7 col-sm-7 col-xs-12">
+													<?php echo $frm->getElement('Date');?>
+											   </div>
+											</div>
+											<div class="form-group">
+											   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("EXPENSE_TITLE");?> :
+											   </label>
+											   <div class="col-md-7 col-sm-7 col-xs-12">
+													<?php echo $frm->getElement('title');?>
+											   </div>
+											</div>
+											 <div class="form-group">
+											   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("INVOICE");?> :
+											   </label>
+											   <div class="col-md-7 col-sm-7 col-xs-12">
+													<?php echo $frm->getElement('other_invoice');?>
+											   </div>
+											</div>
+											<div class="form-group">
+											   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CATEGORY");?> :
+											   </label>
+											   <div class="col-md-7 col-sm-7 col-xs-12">
+													<input id="income_category" />
+											   </div>
+											</div>
+											<div class="form-group">
+											   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("TOTAL_EXPENSE");?>* :
+											   </label>
+											   <div class="col-md-7 col-sm-7 col-xs-12">
+													<?php echo $frm->getElement('total_amount');?>
+											   </div>
+											</div>
+											
+											<div class="form-group">
+											   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PAYMENT_TYPE");?> :
+											   </label>
+											   <div class="col-md-7 col-sm-7 col-xs-12">
+													<?php echo $frm->getElement('payment_type');?>
+											   </div>
+											</div>
+											<div class="form-group">
+											   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CHEQUE");?> :
+											   </label>
+											   <div class="col-md-7 col-sm-7 col-xs-12">
+													<?php echo $frm->getElement('cheque');?>
+											   </div>
+											</div>
+											<div class="form-group">
+											   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CHEQUE_ISSUER");?> :
+											   </label>
+											   <div class="col-md-7 col-sm-7 col-xs-12">
+													<?php echo $frm->getElement('cheque_issuer');?>
+											   </div>
+											</div>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
 						<div class="col-md-4 col-sm-4 col-xs-12">	
-							<div class="form-group">
-							   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("OTHER");?> 
-							   </label>
-							</div>
-							<div class="form-group">
-							   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("NOTE");?> :
-							   </label>
-							   <div class="col-md-7 col-sm-7 col-xs-12">
-									<?php echo $frm->getElement('Description');?>
-							   </div>
+							<div class="card-blogform">
+								<div class="card-body"> 
+									<div class="row"> 
+										<div class="col-md-12 col-sm-12 col-xs-12"> 
+											<div class="d-flex"> 
+												<div class="settings-main-icon ">
+													<i class="glyphicon glyphicon-info-sign" aria-hidden="true"></i>
+												</div> 
+												<div class="col-md-10 col-sm-10 col-xs-12"> 
+													<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('OTHER_INFO')?> </p>
+												</div> 
+											</div>
+											<div class="form-group">
+											   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("NOTE");?> :
+											   </label>
+											   <div class="col-md-7 col-sm-7 col-xs-12">
+													<?php echo $frm->getElement('Description');?>
+											   </div>
+											</div>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
 				   </div>
@@ -194,16 +230,33 @@ div.expenseItem.showFeature{
 				<div class="tab-pane fade in " id="panel213" role="tabpanel">
 					<div class="card-box">
 						<div class="col-md-12 col-sm-12 col-xs-12">
-							<div class="form-group">
-								 <div class="col-md-10 col-sm-10 col-xs-10" >
-									<table style="white-space: nowrap;width:100%; margin-top: 8px;">
-										<tr id="fileList"></tr>
-									</table>
+							<div class="card-blogform">
+								<div class="card-body"> 
+									<div class="row"> 
+										<div class="col-md-12 col-sm-12 col-xs-12"> 
+											<div class="d-flex"> 
+												<div class="settings-main-icon ">
+													<i class="fa fa-file-text" aria-hidden="true"></i>
+												</div> 
+												<div class="col-md-10 col-sm-10 col-xs-12"> 
+													<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('DOCUMENT')?> </p>
+												</div> 
+											</div>
+									
+											<div class="form-group">
+												 <div class="col-md-10 col-sm-10 col-xs-10" >
+													<table style="white-space: nowrap;width:100%; margin-top: 8px;">
+														<tr id="fileList"></tr>
+													</table>
+												 </div>
+											 </div>
+											 <div class="form-group">
+												<button class="button-class button-primary" iconClass="glyphicon glyphicon-sort-by-attributes" onclick="addRow();" dojoType="dijit.form.Button"  type="button"><?php echo $tr->translate('Add More Doc')?></button>
+												<input type="hidden" name="identity1" id="identity1"  value="" >
+											 </div>
+										 </div>
+									</div>
 								 </div>
-							 </div>
-							 <div class="form-group">
-								<button class="btn btn-default addfile" onclick="addRow();" type="button"><?php echo $tr->translate('Add More Doc')?></button>
-								<input type="hidden" name="identity1" id="identity1"  value="" >
 							 </div>
 						</div>
 					</div>
@@ -212,39 +265,52 @@ div.expenseItem.showFeature{
 			</div>
 	    
 			<div class="card-box expenseItem <?php if($expenseFeauture==1){ echo "showFeature";}?>">
-				 <div class="col-md-8 col-sm-8 col-xs-12">
-					<div class="form-group" style="background: #d8e0e2;padding: 5px 15px;margin: 0;border: solid 1px #697996;border-radius: 2px;margin-top: 10px;">
-						<label class="control-label bold col-md-2 col-sm-2 col-xs-12"><?php echo $tr->translate("PRODUCT_CATEGORY");?> </label>
-						 <div class="col-md-3 col-sm-3 col-xs-12">
-								<?php echo $frm->getElement('items_id');?>
-						</div>
-						<label class="control-label bold col-md-2 col-sm-2 col-xs-12"><?php echo $tr->translate("PRODUCT");?> </label>
-						 <div class="col-md-3 col-sm-3 col-xs-12">
-								<input id="pro_id" name="pro_id" />
-						</div>
-						<div class="col-md-2 col-sm-2 col-xs-12">
-							<input iconClass="dijitIconUndo" type="button" label="<?php echo $tr->translate('REFRESH');?>" dojoType="dijit.form.Button" onclick="getRefreshProduct();"/>
-						</div>
-						 <div class="clearfix"></div>
-					</div>
-					<div class="form-group">
-						<table id="table_rowItems" border="1" style="width:100%; border-collapse: collapse; border:1px solid #ccc;">
-								<tr id="head-titleItems" class="head-td" align="right"></tr>
-						</table>
-						<input type="hidden" id="identity" name="identity" />
+				 <div class="col-md-12 col-sm-12 col-xs-12">
+					<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="fa fa-cubes" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('PRODUCT_INFO')?> </p>
+										</div> 
+									</div>
+									<div class="form-group" style="background: #d8e0e2;padding: 5px 15px;margin: 0;border: solid 1px #697996;border-radius: 2px;margin-top: 10px;">
+										<label class="control-label bold col-md-2 col-sm-2 col-xs-12"><?php echo $tr->translate("PRODUCT_CATEGORY");?> </label>
+										 <div class="col-md-3 col-sm-3 col-xs-12">
+												<?php echo $frm->getElement('items_id');?>
+										</div>
+										<label class="control-label bold col-md-2 col-sm-2 col-xs-12"><?php echo $tr->translate("PRODUCT");?> </label>
+										 <div class="col-md-3 col-sm-3 col-xs-12">
+												<input id="pro_id" name="pro_id" />
+										</div>
+										<div class="col-md-2 col-sm-2 col-xs-12">
+											<input class="button-class button-primary" iconClass="glyphicon glyphicon-refresh" type="button" label="<?php echo $tr->translate('REFRESH');?>" dojoType="dijit.form.Button" onclick="getRefreshProduct();"/>
+										</div>
+										 <div class="clearfix"></div>
+									</div>
+									<div class="form-group">
+										<table id="table_rowItems" border="1" style="width:100%; border-collapse: collapse; border:1px solid #ccc;">
+												<tr id="head-titleItems" class="head-td" align="right"></tr>
+										</table>
+										<input type="hidden" id="identity" name="identity" />
+									 </div>
+								 </div>
+							 </div>
+						 </div>
 					 </div>
 				</div>
 		  </div>
 		  
-	       <div class="clearfix"></div>
-			 <div class="card-box">
-             	<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
-					<input type="submit" label="<?php echo $tr->translate("SAVECLOSE");?>" id='saveclose' name='saveclose' value='saveclose' dojoType="dijit.form.Button"
-						 iconClass="dijitIconDelete"/>
-					<input type="submit" label="<?php echo $tr->translate("SAVENEW")?>" id='savenew' name='savenew' value='savenew' dojoType="dijit.form.Button"
-						 iconClass="dijitIconNewTask"/>
-					<input type="button" label="<?php echo $tr->translate("SAVEPRINT")?>" name='print' value='print' dojoType="dijit.form.Button"
-						 iconClass="dijitIconNewTask" onClick="printSave('');displayNone();" />
+	   <div class="clearfix"></div>
+		 <div class="card-box">
+             	<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
+					<input type="submit" class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-remove" label="<?php echo $tr->translate("SAVECLOSE");?>" id='saveclose' name='saveclose' value='saveclose' dojoType="dijit.form.Button" />
+					<input type="submit" class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-disk" label="<?php echo $tr->translate("SAVENEW")?>" id='savenew' name='savenew' value='savenew' dojoType="dijit.form.Button" />
+					<input type="button" class="button-class button-primary" iconClass="glyphicon glyphicon-print" label="<?php echo $tr->translate("SAVEPRINT")?>" name='print' value='print' dojoType="dijit.form.Button" onClick="printSave('');displayNone();" />
     			</div>
     		</div>
 		</form>
@@ -261,8 +327,7 @@ div.expenseItem.showFeature{
 				</tr>
 				<tr>
 					<td colspan="2" align="center">
-						<input type="button" id="save_cheque" value="Save" label="<?php echo $tr->translate('GO_SAVE');?>" dojoType="dijit.form.Button"
-							iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addNewCheque();"/>
+						<input type="button" class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-disk" id="save_cheque" value="Save" label="<?php echo $tr->translate('GO_SAVE');?>" dojoType="dijit.form.Button" onclick="addNewCheque();"/>
 					</td>
 				</tr>
 			</table>
@@ -292,10 +357,8 @@ div.expenseItem.showFeature{
 	         </div>
 	         <div class="card-box">
              	<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
-					<input type="button" value="ចាកចេញ" label="<?php echo $tr->translate("CANCEL");?>" id="close" name="close" dojoType="dijit.form.Button" 
-						​ ​​iconClass="dijitIconUndo" onclick="hideDialog1();"/>
-						<input type="button" value="save" label="<?php echo $tr->translate("GO_SAVE");?>" id="save" name="save" dojoType="dijit.form.Button" 
-						 iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addCategory();"/>
+					<input type="button" class="button-class button-danger" iconClass="glyphicon glyphicon-remove"  value="ចាកចេញ" label="<?php echo $tr->translate("CANCEL");?>" id="close" name="close" dojoType="dijit.form.Button"  onclick="hideDialog1();"/>
+					<input type="button" class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-disk" value="save" label="<?php echo $tr->translate("GO_SAVE");?>" id="save" name="save" dojoType="dijit.form.Button"  onclick="addCategory();"/>
     			</div>
     		</div>
 		</form>
@@ -463,6 +526,7 @@ function displayNone(){
 dojo.ready(function(){
 	getInvoiceNo('');
 	enablePayment();
+	
 	new dijit.form.FilteringSelect({
 	    autoComplete: true,                        
 	    id: "customer",
@@ -474,8 +538,6 @@ dojo.ready(function(){
 	    }
 	}, "customer");
 	
-});
-require(["dojo/ready"], function(ready){
 	new dijit.form.FilteringSelect({
 		name: "cheque_issuer",
 		id: "cheque_issuer",
@@ -561,14 +623,14 @@ function printSave(new_invoice_no){
 	
 	branch_id = dijit.byId('branch_id').get('value');
 	if(branch_id==0){
-		alert('Select branch');
+		infoMessageAlert('Select branch');
 		dijit.byId('branch_id').focus();
 		return false;
 	}
 	
 	cate = dijit.byId('income_category').get('value');
 	if(cate=='' ||cate==-1){
-		alert('Select Category');
+		infoMessageAlert('Select Category');
 		dijit.byId('income_category').focus();
 		return false;
 	}
@@ -705,8 +767,7 @@ function resetStoreCategory(keyValue){
 	<div data-dojo-type="dijit.Dialog" style="width:22cm;" align="center" data-dojo-props="title:'<?php echo $tr->translate("PAYMENT_RECEIPT");?>'" id="print_expense" >
 		<table>
 			<iframe name=print_frame width=0 height=0 frameborder=0 src=about:blank></iframe>
-			<button dojoType="dijit.form.Button" iconClass="dijitEditorIcon dijitEditorIconPrint"
-				type="button" onclick="doPrint();">បោះពុម្ភ/Print</button>
+			<button dojoType="dijit.form.Button" class="button-class button-primary" iconClass="glyphicon glyphicon-print" type="button" onclick="doPrint();">បោះពុម្ភ/Print</button>
 		</table>
 		<div id="rpt_print" style="height: 13cm ; padding: 0px; margin: 0px;font-family:'Khmer OS Battambang';">
 			<?php 
@@ -894,6 +955,8 @@ var pro_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::enco
 				}
 			}
 		}, "pro_id");
+		
+		getRefreshProduct();
 	});	
 	
 function getRefreshProduct(){
@@ -957,7 +1020,7 @@ function getProductInfo(){
 var template = '';
 var product_name = '<?php //echo $this->product; ?>';
 var col = 0;
-var no = 0;
+var noRowproduct = 0;
 var title = 0;
 tmp = '';
 temp='';
@@ -974,12 +1037,12 @@ function addRowItemslist() {
 		 for(var i=0;i< arrays.length;i++) {
 			 readychoose = dijit.byId('product_name_'+arrays[i]).get('value');
 			 if(readychoose==pro_id){
-				 alert("<?php echo $tr->translate("Choosen ready")?>");
+				 infoMessageAlert("<?php echo $tr->translate("Choosen ready")?>");
 				 return false;
 			 }
 		}
 	}
-		col++;no++;
+		col++;noRowproduct++;
 		template='';
 		if(title!=1){
 			temp+='<th><?php echo $tr->translate("DEL");?></th>';
@@ -992,8 +1055,8 @@ function addRowItemslist() {
 			dojo.query("#head-titleItems").append(temp);
 			title=1;
 		}
-			template+='<td width="47px" align="center"><img onclick="deleteRecordItesmExpse('+col+')" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
-			template+='<td width="15px" align="center"  >'+no+'</td>';
+			template+='<td width="47px" align="center"><span title="<?php echo $tr->translate("REMOVE_RECORD");?>" class="removeRow" onclick="deleteRecordItesmExpse('+col+');"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></span></td>';
+			template+='<td width="15px" align="center"  >'+noRowproduct+'</td>';
 			template+='<td width="20%">&nbsp;'+label_proname+'<input type="hidden" dojoType="dijit.form.TextBox" required="true" id="product_name_'+col+'" name="product_name_'+col+'" value="'+pro_id+'" /></td>';
 			//template+='<td><select style="width:100%;"  dojoType="dijit.form.FilteringSelect" id="product_name_'+col+'" name="product_name_'+col+'" onChange="sumAmountDue();">'+''+'</select></td>';			
 
