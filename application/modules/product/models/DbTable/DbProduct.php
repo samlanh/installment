@@ -118,7 +118,7 @@ class Product_Model_DbTable_DbProduct extends Zend_Db_Table_Abstract
     	}catch (Exception $e){
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     		$db->rollBack();
-    		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL", "/product/index/add");
+    		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL", "/product/index/add",2);
     	}
     }
     function updateProductData($data){
@@ -167,7 +167,7 @@ class Product_Model_DbTable_DbProduct extends Zend_Db_Table_Abstract
     	}catch (Exception $e){
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     		$db->rollBack();
-    		Application_Form_FrmMessage::Sucessfull("UPDATE_FAIL", "/product/index");
+    		Application_Form_FrmMessage::Sucessfull("UPDATE_FAIL", "/product/index",2);
     	}
     }
     function generateProductCode(){

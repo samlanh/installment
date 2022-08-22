@@ -203,7 +203,17 @@ class Application_Form_FrmAdvanceSearch extends Zend_Dojo_Form
     			'class'=>'fullside height-text',));
 		$_proccessSearch->setValue($request->getParam('proccessSearch'));
 		
-		$this->addElements(array($know_by,$statusreq,$position_,$from_date,$to_date,$type,$employee,$_title,$_title,$_status,$_btn_search,$branch_id,
+		$_type_of_property=  new Zend_Dojo_Form_Element_FilteringSelect('type_property_sale');
+		$_type_of_property->setAttribs(array('dojoType'=>$this->filter,	'class'=>'fullside',));
+		$_type_of = array(
+				'-1'=>$this->tr->translate("SELECT_TYPE"),
+				'1'=>$this->tr->translate("SOLD_OUT"),
+				'0'=>$this->tr->translate("NOT_YET_SALE"));
+		$_type_of_property->setMultiOptions($_type_of);
+		$_type_of_property->setValue($request->getParam("type_property_sale"));
+		
+		
+		$this->addElements(array($_type_of_property,$know_by,$statusreq,$position_,$from_date,$to_date,$type,$employee,$_title,$_title,$_status,$_btn_search,$branch_id,
 		$approve_by,$user,
 		$_proccessSearch
 		

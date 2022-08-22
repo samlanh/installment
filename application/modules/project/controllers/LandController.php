@@ -19,6 +19,7 @@ class Project_LandController extends Zend_Controller_Action {
 						'end_date'=>$formdata['end_date'],
 						'streetlist'=>$formdata['streetlist'],
 						'property_type_search'=>$formdata['property_type_search'],
+						'type_property_sale'=>$formdata['type_property_sale'],
 					);
 			}
 			else{
@@ -27,6 +28,7 @@ class Project_LandController extends Zend_Controller_Action {
 						'status' => -1,
 						'branch_id' => -1,
 						'property_type_search'=>-1,
+						'type_property_sale'=>-1,
 						'start_date'=> date('Y-m-d'),
 						'end_date'=>date('Y-m-d'),
 						'streetlist'=>''			
@@ -190,7 +192,7 @@ class Project_LandController extends Zend_Controller_Action {
 		$row = $db->getClientById($id);
 	        $this->view->row=$row;
 		if(empty($row)){
-			Application_Form_FrmMessage::Sucessfull('RECORD_NOTFUND',"/project/land");
+			Application_Form_FrmMessage::Sucessfull('RECORD_NOTFUND',"/project/land",2);
 			exit();
 		}
 		$fm = new Project_Form_FrmLand();
@@ -228,7 +230,7 @@ class Project_LandController extends Zend_Controller_Action {
 		$db = new Project_Model_DbTable_DbLand();
 		$row = $db->getCheckPropertyInSale($id);
 		if (!empty($row)){
-			Application_Form_FrmMessage::Sucessfull("Can not delete this record","/project/land");
+			Application_Form_FrmMessage::Sucessfull("Can not delete this record","/project/land",2);
 			exit();
 		}
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
@@ -269,7 +271,7 @@ class Project_LandController extends Zend_Controller_Action {
 				Application_Form_FrmMessage::Sucessfull("DELETE_SUCCESS","/project/land");
 				exit();
 			}
-			Application_Form_FrmMessage::Sucessfull("You no permission to delete","/project/land");
+			Application_Form_FrmMessage::Sucessfull("You no permission to delete","/project/land",2);
 			exit();
 		}catch (Exception $e) {
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());

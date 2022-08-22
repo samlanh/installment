@@ -224,6 +224,10 @@ class Group_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 		if($search['branch_id']>-1){
 			$where.= " AND branch_id = ".$search['branch_id'];
 		}
+		if($search['type_property_sale']>-1){
+			$where.= " AND is_lock = ".$search['type_property_sale'];
+		}
+		
 		if(($search['property_type_search'])>0){
 			$where.= " AND property_type = ".$search['property_type_search'];
 		}

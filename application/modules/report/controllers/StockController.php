@@ -537,7 +537,7 @@ class Report_StockController extends Zend_Controller_Action {
 			$db = new Report_Model_DbTable_DbPurchase();
 			$row = $db->getPurchasePaymentById($id);
 			if (empty($row)){
-				Application_Form_FrmMessage::Sucessfull("No Record","/allreport/stock/rpt-purchase-payment");
+				Application_Form_FrmMessage::Sucessfull("No Record","/allreport/stock/rpt-purchase-payment",2);
 				exit();
 			}
 			$this->view->row = $row;

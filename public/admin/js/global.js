@@ -122,3 +122,31 @@ function getAllCategory(urlGetCategory){
 			}
 		});
 	}
+	function getAllWorkType(urlGetAllContractor,objectContentFilter){
+		dojo.xhrPost({
+			url:urlGetAllContractor,	
+			content:objectContentFilter,		    
+			handleAs:"json",
+			load: function(data) {
+				workTypeStore  = getDataStorefromJSON('id','name', data);		
+				dijit.byId('workType').set('store', workTypeStore);
+
+			},
+			error: function(err) {
+			}
+		});
+	}
+	function addConditionOption(urlAddCondition,objectContentFilter){
+		dojo.xhrPost({
+			url:urlAddCondition,	
+			content:objectContentFilter,
+			handleAs:"json",
+			load: function(data) {	
+				return data;
+			},
+			error: function(err){
+			}
+		})
+		
+	}
+

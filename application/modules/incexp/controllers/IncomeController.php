@@ -123,7 +123,7 @@ class Incexp_IncomeController extends Zend_Controller_Action
 		$db = new Incexp_Model_DbTable_DbIncome();
 		$row  = $db->getexpensebyid($id);
 		if(empty($row)){
-			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/incexp/income");
+			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/incexp/income",2);
 			exit();
 		}
 // 		$row['payment_id']=0;

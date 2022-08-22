@@ -86,7 +86,7 @@ class Stockinout_SaleoutController extends Zend_Controller_Action {
 		$arr = $db->getDataRow($id);
 		
 		if(empty($id) OR empty($arr)){
-			Application_Form_FrmMessage::Sucessfull("NO_DATA","/stockinout/saleout");
+			Application_Form_FrmMessage::Sucessfull("NO_DATA","/stockinout/saleout",2);
 		}
 		
 		$fm = new Stockinout_Form_FrmStockOut();

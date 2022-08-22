@@ -71,7 +71,7 @@ class Stockinout_AdjuststockController extends Zend_Controller_Action {
 		$id = empty($id)?0:$id;
 		$row = $db->getDataRow($id);
 		if(empty($id) OR empty($row)){
-			Application_Form_FrmMessage::Sucessfull("NO_DATA","/stockinout/adjuststock/");
+			Application_Form_FrmMessage::Sucessfull("NO_DATA","/stockinout/adjuststock/",2);
 		}
 		$this->view->rs = $row;
 		$this->view->results = $db->getDataAllRow($id);

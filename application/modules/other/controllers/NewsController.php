@@ -111,7 +111,7 @@ class Other_NewsController extends Zend_Controller_Action {
    				Application_Form_FrmMessage::Sucessfull("DELETE_SUCCESS",self::REDIRECT_URL);
    			}
    		}
-   		Application_Form_FrmMessage::Sucessfull("You no permission to delete",self::REDIRECT_URL);
+   		Application_Form_FrmMessage::Sucessfull("You no permission to delete",self::REDIRECT_URL,2);
    	}catch (Exception $e){
    		Application_Form_FrmMessage::message("Application Error");
    		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());

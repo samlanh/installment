@@ -133,7 +133,7 @@ class Report_InvestController extends Zend_Controller_Action {
   	$rs=$db->getInvestorPaymentHistory($id);
   	$this->view->historypayment =$rs;
   	if(empty($rs)){
-  		Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/invest/investment");
+  		Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/invest/investment",2);
   		exit();
   	}
   	$frmpopup = new Application_Form_FrmPopupGlobal();
@@ -147,7 +147,7 @@ class Report_InvestController extends Zend_Controller_Action {
   	$rs=$db->getBrokerPaymentHistory($id);
   	$this->view->historypayment =$rs;
   	if(empty($rs)){
-  		Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/invest/investment");
+  		Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/invest/investment",2);
   		exit();
   	}
   	$frmpopup = new Application_Form_FrmPopupGlobal();

@@ -142,7 +142,7 @@ class Property_indexController extends Zend_Controller_Action {
 					$db->deleteBuyLand($id);
 					Application_Form_FrmMessage::Sucessfull('DELETE_SUCCESS',"/property/index");
 				}else{
-					Application_Form_FrmMessage::Sucessfull('ដីនេះបានដាក់លក់ឬក៏ជួលរួចហើយមិនអាចលុបបានទេ!',"/property/index");
+					Application_Form_FrmMessage::Sucessfull('ដីនេះបានដាក់លក់ឬក៏ជួលរួចហើយមិនអាចលុបបានទេ!',"/property/index",2);
 				}
 				
 			}catch (Exception $e){

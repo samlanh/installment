@@ -45,7 +45,7 @@ class Product_Model_DbTable_DbMeasure extends Zend_Db_Table_Abstract
 		    	);
 		    	$this->insert($_arr);
     		}else{
-    			Application_Form_FrmMessage::Sucessfull("DATA_EXISTING", "/product/measure/add");
+    			Application_Form_FrmMessage::Sucessfull("DATA_EXISTING", "/product/measure/add",2);
     		}
     } 
      

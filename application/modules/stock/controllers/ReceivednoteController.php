@@ -75,7 +75,7 @@ class Stock_ReceivednoteController extends Zend_Controller_Action {
 		$row = $db->getReceiveNoteById($id);
 		$this->view->row = $row;
 		if (empty($row)){
-			Application_Form_FrmMessage::Sucessfull("NORECORD", self::REDIRECT_URL."");
+			Application_Form_FrmMessage::Sucessfull("NORECORD", self::REDIRECT_URL."",2);
 			exit();
 		}
 		$this->view->detail = $db->getReceiveNoteDetailById($id);
