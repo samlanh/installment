@@ -99,7 +99,7 @@ div#t_amountmoneytype tr.regurlar {
 	                   		 	<input type="hidden" name="identity" id="identity"  value="" >
 	                   		 </div>
 	                   		  <div class="col-md-3 col-sm-3 col-xs-12">
-	                   		  	<input iconClass="glyphicon glyphicon-refresh" type="button" label="<?php echo $tr->translate('REFRESH');?>" dojoType="dijit.form.Button" onclick="filterClient();"/>
+	                   		  	<input class="button-class button-primary" iconClass="glyphicon glyphicon-refresh" type="button" label="<?php echo $tr->translate('REFRESH');?>" dojoType="dijit.form.Button" onclick="filterClient();"/>
 	                   		 </div>
 	                   </div>
 	                </div>
@@ -259,9 +259,8 @@ div#t_amountmoneytype tr.regurlar {
 	                 <div class="clearfix"></div>
 						 <div class="card-box">
 			             	<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
-								<input iconClass="glyphicon glyphicon-equalizer" type="button" onclick="addPreviewLoan();" label="<?php echo $tr->translate("Preview");?>" name='savenew' value='<?php echo $tr->translate("Preview");?>' dojoType="dijit.form.Button" iconClass="dijitIconNewTask" />
-			    				<input iconClass="glyphicon glyphicon-print" type="button" value="<?php echo $tr->translate('PRINT');?>" label="<?php echo $tr->translate('PRINT');?>" dojoType="dijit.form.Button"
-							iconClass="dijitEditorIcon dijitEditorIconSave" onclick="doPrintSchedule();"/>
+								<input class="button-class button-primary" iconClass="glyphicon glyphicon-equalizer" type="button" onclick="addPreviewLoan();" label="<?php echo $tr->translate("Preview");?>" name='savenew' value='<?php echo $tr->translate("Preview");?>' dojoType="dijit.form.Button" />
+			    				<input class="button-class button-primary" iconClass="glyphicon glyphicon-print" type="button" value="<?php echo $tr->translate('PRINT');?>" label="<?php echo $tr->translate('PRINT');?>" dojoType="dijit.form.Button" onclick="doPrintSchedule();"/>
 			    			</div>
 			    		</div>
 			    		<div class="form-group blog-left-title">
@@ -271,8 +270,7 @@ div#t_amountmoneytype tr.regurlar {
 	                <div class="form-group">
 	                	 <div class="col-md-12 col-sm-12 col-xs-12 blog-left-content">
 	                	 	<div  id="showrecord"></div>
-							<input type="button" label="<?php echo $tr->translate('ADD_INSTALLMENT');?>" dojoType="dijit.form.Button" 
-					 		iconClass="dijitIconEditProperty" onclick="addRow();" />
+							<input type="button" class="button-class button-primary" iconClass="glyphicon glyphicon-sort-by-attributes" label="<?php echo $tr->translate('ADD_INSTALLMENT');?>" dojoType="dijit.form.Button" onclick="addRow();" />
 	                	 </div>
 	                </div>
 	             </div>
@@ -1043,7 +1041,7 @@ function addRow(){
 	if(payment_method==4){addInstallment();}
 	if(payment_method ==4 || payment_method==3 || payment_method==2 || payment_method==1){return false;}
 	period = dijit.byId('period').get('value');
-	if(period==0){alert("សូមបញ្ជូលចំនួនដង ត្រូវបង់!");dijit.byId('period').focus();return false;}
+	if(period==0){infoMessageAlert("សូមបញ្ជូលចំនួនដង ត្រូវបង់!");dijit.byId('period').focus();return false;}
 
 	no=0;title=0;temp='';$('#identity').val('');
 	dojo.byId("showrecord").innerHTML = '';
@@ -1118,7 +1116,7 @@ function addInstallment(){
 	payment_method = dijit.byId('schedule_opt').get('value');
 	
 	period = dijit.byId('period').get('value')*<?php echo $install_month;?>;
-	if(period==0){alert("សូមបញ្ជូលចំនួនដង ត្រូវបង់!");dijit.byId('period').focus();return false;}
+	if(period==0){infoMessageAlert("សូមបញ្ជូលចំនួនដង ត្រូវបង់!");dijit.byId('period').focus();return false;}
 	temp='';
 
 	result = checkFirstRecord();
@@ -1202,8 +1200,8 @@ function calCulateAmount(index,revers=1){
      }
 	calCulateSchedulePayment();
 	 if(dijit.byId('percent'+index).get('value')>100){
-		 alert("តម្លៃត្រូវបង់មិនអាចធំជាង ១០០ ភាគរយបានទេ !");
-		 dijit.byId('percent'+index).attr("");
+		 infoMessageAlert("តម្លៃត្រូវបង់មិនអាចធំជាង ១០០ ភាគរយបានទេ !");
+		 dijit.byId('percent'+index).attr('value',"100");
 		 dijit.byId('percent'+index).focus();
      }
 }

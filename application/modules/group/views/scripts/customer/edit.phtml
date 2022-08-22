@@ -25,6 +25,7 @@
     		<form id='edit_customer' action="<?php echo $this->url(array('module'=>'group','controller'=>'customer','action'=>'edit')); ?>" enctype="multipart/form-data" dojoType="dijit.form.Form" method="post">
 				<script type="dojo/method" event="onSubmit">			
 					if(this.validate()) {
+						loadingBlock();
 						dijit.byId('save_new').set('disabled',true);
 						return true;
 					} else {
@@ -32,114 +33,142 @@
 					}
 				</script>
 				<div class="col-md-6 col-sm-6 col-xs-12">
-					<div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("DATE");?>  :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php  echo $frm->getElement('date');?>
-	                   </div>
-	                </div>
-                                        
-	                <div class="form-group">
-	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" ><strong><?php echo $tr->translate("CUSTOMER_NAME");?>*</strong>  :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php  echo $frm->getElement('name');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PHONE");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php  echo $frm->getElement('phone');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("KNOW_BY");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php  echo $frm->getElement('know_by');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label  col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("FROM_PRICE");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php  echo $frm->getElement('from_price');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label  col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("TO_PRICE");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php  echo $frm->getElement('to_price');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label  col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("REQUIREDMENT");?> <span class="required"></span> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php  echo $frm->getElement('requirement');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label  col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PROPERTY_TYPE");?> <span class="required"></span> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php  echo $frm->getElement('type');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("DESCRIPTION");?>  :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php  echo $frm->getElement('description');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("STATUS_REQ");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('statusreq');?>
-	                   </div>
-	                </div>
+					<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="glyphicon glyphicon-list-alt" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('CUSTOMER_REQUIREMENT')?> </p>
+											
+										</div> 
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("DATE");?>  :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm->getElement('date');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" ><strong><?php echo $tr->translate("CUSTOMER_NAME");?>*</strong>  :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm->getElement('name');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PHONE");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm->getElement('phone');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("KNOW_BY");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm->getElement('know_by');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label  col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("FROM_PRICE");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm->getElement('from_price');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label  col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("TO_PRICE");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm->getElement('to_price');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label  col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("REQUIREDMENT");?> <span class="required"></span> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm->getElement('requirement');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label  col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PROPERTY_TYPE");?> <span class="required"></span> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm->getElement('type');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("DESCRIPTION");?>  :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm->getElement('description');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("STATUS_REQ");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('statusreq');?>
+									   </div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
                 </div>
                <div class="col-md-6 col-sm-6 col-xs-12">
                		<?php if (!empty($this->history )){?>
-	               		 <div class="form-group">
-		                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("CONTACT_HISTORY");?></label>
-		                </div>
-		                <div class="form-group">
-		                	<table class="history-record" >
-		                		<thead>
-		                			<tr>
-		                				<th><?php echo $tr->translate("NUM");?></th>
-		                				<th><?php echo $tr->translate("CONTACT_DATE");?></th>
-		                				<th style="width: 150px;"><?php echo $tr->translate("FEEDBACK");?></th>
-		                				<th><?php echo $tr->translate("NEXT_DATE_CONTACT");?></th>
-		                				<th><?php echo $tr->translate("CONTACT_BY");?></th>
-		                			</tr>
-		                		</thead>
-		                		<tbody>
-		                			<?php foreach ($this->history as $key => $record){?>
-		                			<tr>
-		                				<td align="center">&nbsp;<?php echo $key+1;?>&nbsp;</td>
-		                				<td align="center">&nbsp;<?php echo date("d/m/Y",strtotime($record['contact_date']))?>&nbsp;</td>
-		                				<td align="left">&nbsp;<?php echo $record['feedback'];?>&nbsp;</td>
-		                				<td align="center">&nbsp;<?php echo date("d/m/Y",strtotime($record['next_contact']))?>&nbsp;</td>
-		                				<td align="center">&nbsp;<?php echo $record['user_contact_name'];?>&nbsp;</td>
-		                			</tr>
-		                			<?php }?>
-		                		</tbody>
-		                	</table>
-		                </div>
+	               		<div class="card-blogform">
+							<div class="card-body"> 
+								<div class="row"> 
+									<div class="col-md-12 col-sm-12 col-xs-12"> 
+										<div class="d-flex"> 
+											<div class="settings-main-icon ">
+												<i class="glyphicon glyphicon-phone-alt" aria-hidden="true"></i>
+											</div> 
+											<div class="col-md-10 col-sm-10 col-xs-12"> 
+												<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('CONTACT_HISTORY')?> </p>
+											</div> 
+										</div>
+										<br />
+										<div class="form-group">
+											<table class="history-record responsiveTable" >
+												<thead>
+													<tr>
+														<th scope="col"><?php echo $tr->translate("NUM");?></th>
+														<th scope="col"><?php echo $tr->translate("CONTACT_DATE");?></th>
+														<th scope="col" style="width: 150px;"><?php echo $tr->translate("FEEDBACK");?></th>
+														<th scope="col"><?php echo $tr->translate("NEXT_DATE_CONTACT");?></th>
+														<th scope="col"><?php echo $tr->translate("CONTACT_BY");?></th>
+													</tr>
+												</thead>
+												<tbody>
+													<?php foreach ($this->history as $key => $record){?>
+													<tr>
+														<td data-label="<?php echo $tr->translate("NUM");?>" align="center">&nbsp;<?php echo $key+1;?>&nbsp;</td>
+														<td data-label="<?php echo $tr->translate("CONTACT_DATE");?>" align="center">&nbsp;<?php echo date("d/m/Y",strtotime($record['contact_date']))?>&nbsp;</td>
+														<td data-label="<?php echo $tr->translate("FEEDBACK");?>" align="left">&nbsp;<?php echo $record['feedback'];?>&nbsp;</td>
+														<td data-label="<?php echo $tr->translate("NEXT_DATE_CONTACT");?>" align="center">&nbsp;<?php echo date("d/m/Y",strtotime($record['next_contact']))?>&nbsp;</td>
+														<td data-label="<?php echo $tr->translate("CONTACT_BY");?>" align="center">&nbsp;<?php echo $record['user_contact_name'];?>&nbsp;</td>
+													</tr>
+													<?php }?>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
 		                <?php }?>
 	               </div>
 	                <div class="col-sm-12 border-top mt-20 ptb-10 text-center">
-			    		<input type="reset" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button" 
-							 iconClass="dijitIconClear" /> 
-						<input type="submit" value="SAVE_NEW" tabindex="1" label="<?php echo $tr->translate('SAVENEW');?>" id="save_new" dojoType="dijit.form.Button" name="save_new"
-							 iconClass="dijitEditorIcon dijitEditorIconSave"/> 
+			    		<input type="reset" class="button-class button-danger" iconClass="glyphicon glyphicon-repeat" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button" /> 
+						<input type="submit" class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-disk" value="SAVE_NEW" tabindex="1" label="<?php echo $tr->translate('SAVENEW');?>" id="save_new" dojoType="dijit.form.Button" name="save_new" /> 
 		    		</div>
 			</form>
     	</div>

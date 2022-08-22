@@ -96,7 +96,7 @@
 	            <div class="col-md-4 col-sm-4 col-xs-12">
 					<div class="form-group">
 	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-home" aria-hidden="true"></i> <?php echo $tr->translate("USAGE_INFO");?> 
-	                   	<input type="button" dojoType="dijit.form.Button" onclick="getDataByBranch();" label="<?php echo $tr->translate("GET_DATA");?>" iconClass="dijitEditorIcon dijitEditorIconUndo" /> 
+	                   	<input type="button" dojoType="dijit.form.Button" onclick="getRefreshData();" label="<?php echo $tr->translate("GET_DATA");?>" iconClass="dijitEditorIcon dijitEditorIconUndo" /> 
 	                   </label>
 	                </div>
 	                <div class="form-group">
@@ -179,6 +179,7 @@
     require(["dojo/ready"], function(ready){
 		ready(function(){
 			getDataByBranch();
+			getRefreshData();
 			var workType = dijit.byId('workType');
 			workType.on('change',function(evt){
 				workType = dijit.byId('workType').get('value');
@@ -245,6 +246,18 @@
 		    }
 	     } 
 	 }, "contractor");
+
+	 function getRefreshData(){
+		 getWorkType();
+		 branch_id = dijit.byId('branch_id').get('value');
+		if(branch_id=='' || branch_id==0){
+			return false;
+		}
+		 getAllProduct(branch_id);
+		 getWithdrawRequestNo(branch_id);
+		 getAllStaff(branch_id);
+		 getAllContractor(branch_id);
+	}
 
 
 	 function getDataByBranch(){
@@ -389,7 +402,8 @@
 				 }
 			}
 		}
-		col++;no++;
+		col++;
+		no++;
 		dojo.xhrPost({
 			url:urlGetProductInfo,	
 			content:{ 
