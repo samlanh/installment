@@ -57,7 +57,7 @@ class Loan_ChangeownerController extends Zend_Controller_Action {
 				if(!empty($_data['saveclose'])){
 					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/changeowner");
 				}else{
-					Application_Form_FrmMessage::message("INSERT_SUCCESS");
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/changeowner/add");
 				}
 			}catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");

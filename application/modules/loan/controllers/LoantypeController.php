@@ -17,13 +17,11 @@ public function init()
 			$data=$this->getRequest()->getPost();
 			$db = new Loan_Model_DbTable_DbLoanType();
 			try {
+				$db->addViewType($data);
 				if(isset($data['save_new'])){
-					$db->addViewType($data);
-					Application_Form_FrmMessage::message('ការ​បញ្ចូល​​ជោគ​ជ័យ');
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/loantype/add");
 				}else{
-					$db->addViewType($data);
-					Application_Form_FrmMessage::message('ការ​បញ្ចូល​​ជោគ​ជ័យ');
-					Application_Form_FrmMessage::redirectUrl('/loan/loantype');
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/loantype");
 				}
 			} catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");
@@ -69,8 +67,8 @@ public function init()
 			$db = new Loan_Model_DbTable_DbLoanType();
 			try {
 				$db->updatViewById($data);
-				Application_Form_FrmMessage::message($this->tr->translate('EDIT_SUCCESS'));
-				Application_Form_FrmMessage::redirectUrl('/loan/loantype');
+				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","/loan/loantype");
+				
 			} catch (Exception $e) {
 				Application_Form_FrmMessage::message("EDIT_FAIL");
 				$err = $e->getMessage();

@@ -52,7 +52,7 @@ class Project_IssuerController extends Zend_Controller_Action {
 				
 	   			$db->addContractIssuer($_data);
 	   				if(!empty($_data['save_new'])){
-						Application_Form_FrmMessage::message('INSERT_SUCCESS');
+						Application_Form_FrmMessage::Sucessfull('INSERT_SUCCESS', self::REDIRECT_URL . '/issuer/add');
 					}else{
 						Application_Form_FrmMessage::Sucessfull('INSERT_SUCCESS', self::REDIRECT_URL . '/issuer');
 					}

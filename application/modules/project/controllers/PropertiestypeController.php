@@ -52,7 +52,7 @@ class Project_propertiestypeController extends Zend_Controller_Action {
 				
 	   			$db->addPropery($_data);
 	   				if(!empty($_data['save_new'])){
-						Application_Form_FrmMessage::message('INSERT_SUCCESS');
+					Application_Form_FrmMessage::Sucessfull('INSERT_SUCCESS', self::REDIRECT_URL . '/propertiestype/add');
 					}else{
 						Application_Form_FrmMessage::Sucessfull('INSERT_SUCCESS', self::REDIRECT_URL . '/propertiestype');
 					}

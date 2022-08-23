@@ -49,7 +49,7 @@ class Other_HolidayController extends Zend_Controller_Action {
 				$db = new Other_Model_DbTable_DbHoliday();
 				$_major_id = $db->addHoliday($_data);
 				if(!empty($_data['save_new'])){
-					Application_Form_FrmMessage::message($this->tr->translate('INSERT_SUCCESS'));
+					Application_Form_FrmMessage::Sucessfull($this->tr->translate('INSERT_SUCCESS'), self::REDIRECT_URL . '/holiday/add');
 				}else{
 					Application_Form_FrmMessage::Sucessfull($this->tr->translate('INSERT_SUCCESS'), self::REDIRECT_URL . '/holiday/index');
 				}

@@ -48,7 +48,7 @@ class Other_NewsController extends Zend_Controller_Action {
 	   			$db = new Other_Model_DbTable_DbNews();
 	   			$db->addArticle($_data);
 	   			if(!empty($_data['save_new'])){
-	   				Application_Form_FrmMessage::message($this->tr->translate('INSERT_SUCCESS'));
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS", self::REDIRECT_URL."/add");
 	   			}else{
 	   				Application_Form_FrmMessage::Sucessfull($this->tr->translate('INSERT_SUCCESS'), self::REDIRECT_URL);
 	   			}

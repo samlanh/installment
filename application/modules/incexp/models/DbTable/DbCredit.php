@@ -11,6 +11,10 @@ class Incexp_Model_DbTable_DbCredit extends Zend_Db_Table_Abstract
 		$_db->beginTransaction();
 		try{
 			$invoice = $this->getInvoiceNo($data['branch_id']);
+			$data['income_category'] = empty($data['income_category'])?0:$data['income_category'];
+			if($data['income_category']<0){
+				$data['income_category']=0;
+			}
 			$array = array(
 				'branch_id'		=>$data['branch_id'],
 				'sale_id'		=>$data['sale_client'],
@@ -38,6 +42,10 @@ class Incexp_Model_DbTable_DbCredit extends Zend_Db_Table_Abstract
 	 	$_db= $this->getAdapter();
 	 	$_db->beginTransaction();
 	 	try{
+			$data['income_category'] = empty($data['income_category'])?0:$data['income_category'];
+			if($data['income_category']<0){
+				$data['income_category']=0;
+			}
 			$arr = array(
 						'sale_id'	=>$data['sale_client'],
 						'house_id'	=>$data['house_id'],

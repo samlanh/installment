@@ -75,8 +75,7 @@ class Project_MappingplanController extends Zend_Controller_Action {
 		
 				$_dbmodel = new Project_Model_DbTable_Dbpinmap();
 				$_dbmodel->addMapPin($_data);
-					Application_Form_FrmMessage::message("INSERT_SUCCESS");
-					//Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/project/mappingplan");
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/project/mappingplan");
 				
 			}catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");

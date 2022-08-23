@@ -65,7 +65,6 @@ class Incexp_ExpensepaymentController extends Zend_Controller_Action {
 				}else{
 					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL."/add");
 				}
-				Application_Form_FrmMessage::message("INSERT_SUCCESS");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -105,7 +104,7 @@ class Incexp_ExpensepaymentController extends Zend_Controller_Action {
 				}else{
 					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL."/add");
 				}
-				Application_Form_FrmMessage::message("INSERT_SUCCESS");
+				
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());

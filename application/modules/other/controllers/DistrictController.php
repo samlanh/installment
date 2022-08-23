@@ -43,7 +43,7 @@ class Other_DistrictController extends Zend_Controller_Action {
 				$db_district = new Other_Model_DbTable_DbDistrict();
 				$db_district->addDistrict($_data);
 				if(!empty($_data['save_new'])){
-					Application_Form_FrmMessage::message($this->tr->translate('INSERT_SUCCESS'));
+					Application_Form_FrmMessage::Sucessfull($this->tr->translate("INSERT_SUCCESS"),self::REDIRECT_URL .'/district/add');
 				}else{
 					Application_Form_FrmMessage::Sucessfull($this->tr->translate("INSERT_SUCCESS"),self::REDIRECT_URL .'/district/index');
 				}

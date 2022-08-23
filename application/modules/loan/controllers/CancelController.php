@@ -61,8 +61,8 @@ class Loan_CancelController extends Zend_Controller_Action {
 				$_dbmodel = new Loan_Model_DbTable_DbCancel();
 				$_dbmodel->addCancelSale($_data);
 				$_dbmodel->recordhistory($_data);
-// 				Application_Form_FrmMessage::message("INSERT_SUCCESS");
 				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/cancel");
+				
 			}catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				$err =$e->getMessage();

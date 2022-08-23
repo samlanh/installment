@@ -47,7 +47,7 @@ class Other_VillageController extends Zend_Controller_Action {
 			try{
 				$db->addVillage($_data);
 				if(!empty($_data['save_new'])){
-					Application_Form_FrmMessage::message($this->tr->translate('INSERT_SUCCESS'));
+					Application_Form_FrmMessage::Sucessfull($this->tr->translate('INSERT_SUCCESS'),self::REDIRECT_URL . '/village/add');
 				}else{
 					Application_Form_FrmMessage::Sucessfull($this->tr->translate('INSERT_SUCCESS'),self::REDIRECT_URL . '/village/index');
 				}

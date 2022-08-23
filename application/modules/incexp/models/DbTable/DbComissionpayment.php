@@ -178,7 +178,13 @@ class Incexp_Model_DbTable_DbComissionpayment extends Zend_Db_Table_Abstract
     			}
     			$string.='
     			<tr id="row'.$no.'" style="background: #fff; border: solid 1px #bac;">
-    				<td align="center" style="  padding: 0 10px;"><input  OnChange="CheckAllTotal('.$no.')" style=" vertical-align: top; height: initial;" type="checkbox" class="checkbox" id="mfdid_'.$no.'" value="'.$no.'"  name="selector[]"/></td>
+    				<td align="center" style="  padding: 0 10px;">
+						<div class="custom-control custom-checkbox float-start ">
+							<input type="checkbox" class="checkboxSystem custom-control-input checkbox"  OnChange="CheckAllTotal('.$no.')" id="mfdid_'.$no.'" value="'.$no.'"  name="selector[]" >
+							<label class="custom-control-label" for="mfdid_'.$no.'">
+							</label>
+						</div>
+					</td>
 	    			<td style="text-align: center;vertical-align: middle; ">'.($key+1).'</td>
 	    			<td style="vertical-align: middle; text-align: left; border-left:solid 1px #ccc; min-width: 100px;">&nbsp;
 	    				<label id="customerName'.$no.'">'.$row['customerName'].'</label>
@@ -352,7 +358,13 @@ class Incexp_Model_DbTable_DbComissionpayment extends Zend_Db_Table_Abstract
     				}
     				$string.='
     				<tr id="row'.$no.'" style="background: #fff; border: solid 1px #bac;">
-	    				<td align="center" style="  padding: 0 10px;"><input checked="checked" OnChange="CheckAllTotal('.$no.')" style=" vertical-align: top; height: initial;" type="checkbox" class="checkbox" id="mfdid_'.$no.'" value="'.$no.'"  name="selector[]"/></td>
+	    				<td align="center" style="  padding: 0 10px;">
+							<div class="custom-control custom-checkbox float-start ">
+								<input type="checkbox" class="checkboxSystem custom-control-input checkbox" checked="checked" OnChange="CheckAllTotal('.$no.')" id="mfdid_'.$no.'" value="'.$no.'"  name="selector[]" >
+								<label class="custom-control-label" for="mfdid_'.$no.'">
+								</label>
+							</div>
+						</td>
 	    				<td style="text-align: center;vertical-align: middle; ">'.($key+1).'</td>
 	    				<td style="vertical-align: middle; text-align: left; border-left:solid 1px #ccc; min-width: 100px;">&nbsp;
 		    				<label id="customerName'.$no.'">'.$rowpaymentdetail['customerName'].'</label>
@@ -376,7 +388,14 @@ class Incexp_Model_DbTable_DbComissionpayment extends Zend_Db_Table_Abstract
     			}else{
 	    			$string.='
 						<tr id="row'.$no.'" style="background: #fff; border: solid 1px #bac;">
-							<td align="center" style="  padding: 0 10px;"><input  OnChange="CheckAllTotal('.$no.')" style=" vertical-align: top; height: initial;" type="checkbox" class="checkbox" id="mfdid_'.$no.'" value="'.$no.'"  name="selector[]"/></td>
+							<td align="center" style="  padding: 0 10px;">
+								<div class="custom-control custom-checkbox float-start ">
+									<input type="checkbox" class="checkboxSystem custom-control-input checkbox"  OnChange="CheckAllTotal('.$no.')" id="mfdid_'.$no.'" value="'.$no.'"  name="selector[]" >
+									<label class="custom-control-label" for="mfdid_'.$no.'">
+									</label>
+								</div>
+							
+							</td>
 							<td style="text-align: center;vertical-align: middle; ">'.($key+1).'</td>
 							<td style="vertical-align: middle; text-align: left; border-left:solid 1px #ccc; min-width: 100px;">&nbsp;
 								<label id="customerName'.$no.'">'.$row['customerName'].'</label>

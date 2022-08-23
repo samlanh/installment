@@ -81,8 +81,8 @@ class Incexp_IndexController extends Zend_Controller_Action
 			$db = new Incexp_Model_DbTable_DbLoanType();
 			try {
 				$db->updatViewById($data);
-				Application_Form_FrmMessage::message($this->tr->translate('EDIT_SUCCESS'));
-				Application_Form_FrmMessage::redirectUrl('/incexp/index');
+				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","/incexp/index");
+				
 			} catch (Exception $e) {
 				Application_Form_FrmMessage::message("EDIT_FAIL");
 				$err = $e->getMessage();

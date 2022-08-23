@@ -16,13 +16,11 @@ class Other_LoanTypeController extends Zend_Controller_Action
 			$data=$this->getRequest()->getPost();
 			$db = new Other_Model_DbTable_DbLoanType();
 			try {
+				$db->addViewType($data);
 				if(isset($data['save_new'])){
-					$db->addViewType($data);
-					Application_Form_FrmMessage::message('INSERT_SUCCESS');
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS", "/other/loantype/add");
 				}else{
-					$db->addViewType($data);
-					Application_Form_FrmMessage::message('INSERT_SUCCESS');
-					Application_Form_FrmMessage::redirectUrl('/other/loantype');
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS", "/other/loantype");
 				}
 			} catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");
@@ -72,8 +70,8 @@ class Other_LoanTypeController extends Zend_Controller_Action
 			$db = new Other_Model_DbTable_DbLoanType();
 			try {
 				$db->updatViewById($data);
-				Application_Form_FrmMessage::message($this->tr->translate('EDIT_SUCCESS'));
-				Application_Form_FrmMessage::redirectUrl('/other/loantype');
+				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS", "/other/loantype");
+				
 			} catch (Exception $e) {
 				Application_Form_FrmMessage::message("EDIT_FAIL");
 				$err = $e->getMessage();

@@ -61,7 +61,7 @@ class Loan_ExpenseOtherController extends Zend_Controller_Action
 				if(!empty($data['saveclose'])){
 					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/expenseother");
 				}else{
-					Application_Form_FrmMessage::message("INSERT_SUCCESS");
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/expenseother/add");
 				}				
 			} catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");

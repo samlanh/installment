@@ -63,7 +63,7 @@ class Loan_IncomeOtherController extends Zend_Controller_Action
 				if(!empty($data['saveclose'])){
 					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/incomeother");
 				}else{
-					Application_Form_FrmMessage::message("INSERT_SUCCESS");
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/incomeother/add");
 				}				
 			} catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");
