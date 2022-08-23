@@ -19,6 +19,10 @@ $frm = $this->frm_income;
 .head-td th {
     padding: 5px;
 }
+.custom-switch a.switchButton {
+    width: initial;
+    min-width: initial;
+}
 </style>
 <script src="<?php echo $this->baseUrl();?>/js/help.js"  type="text/javascript"></script>
  <script>
@@ -32,14 +36,14 @@ $frm = $this->frm_income;
 				if(this.validate()) {
 					branch_id = dijit.byId('branch_id').get('value');
 					if(branch_id=='' || branch_id==-1){
-						alert('<?php echo $tr->translate("PLEASE_SELECT_BRANCH")?>!');
+						infoMessageAlert('<?php echo $tr->translate("PLEASE_SELECT_BRANCH")?>!');
 						dijit.byId('branch_id').focus();
 						return false;
 					}
 				
 					var identity = $('#identity').val();
 					if(identity==''){
-						alert("<?php echo $tr->translate("PLEASE_SET_MATERAIL");?>");
+						infoMessageAlert("<?php echo $tr->translate("PLEASE_SET_MATERAIL");?>");
 						dijit.byId("loan_number").focus();
 						return false;
 					}
@@ -63,104 +67,137 @@ $frm = $this->frm_income;
 	    	</div>
 	    	<div class="card-box">
 	    		<div class="col-md-4 col-sm-4 col-xs-12">
-					<div class="form-group">
-	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("PROJECT_INFO");?> 
-	                   </label>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BRANCH_NAME");?>  :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('branch_id');?>
-	                    	<?php echo $frm->getElement('id');?>
-	                   </div>
-	                </div>
-	                
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PROPERTY_CODE");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<input id="sale_client" />
-	                    <input type="hidden" id="land_address" name="land_address" dojoType="dijit.form.TextBox"/>
-	                    <input type="hidden" id=street name="street" dojoType="dijit.form.TextBox"/>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CUSTOMER_NAME");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<input id="customer" />
-							<input type="hidden" id="house_id" name="house_id" dojoType="dijit.form.TextBox"/>
-	                   </div>
-	                </div>
+					<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="glyphicon glyphicon-screenshot" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('PROJECT_INFO')?> </p>
+										</div> 
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BRANCH_NAME");?>  :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('branch_id');?>
+											<?php echo $frm->getElement('id');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PROPERTY_CODE");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<input id="sale_client" />
+										<input type="hidden" id="land_address" name="land_address" dojoType="dijit.form.TextBox"/>
+										<input type="hidden" id=street name="street" dojoType="dijit.form.TextBox"/>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CUSTOMER_NAME");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<input id="customer" />
+											<input type="hidden" id="house_id" name="house_id" dojoType="dijit.form.TextBox"/>
+									   </div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 	             </div>
 	             <div class="col-md-4 col-sm-4 col-xs-12">
-					<div class="form-group">
-	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("OTHER_INFO");?> 
-	                   </label>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("DATE");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('Date');?>
-	                   </div>
-	                </div>
-	              
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("NOTE");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('Description');?>
-	                   </div>
-	                </div>
-					 <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("STATUS");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('status');?>
-	                   </div>
-	                </div>
+					<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="glyphicon glyphicon-info-sign" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('OTHER_INFO')?> </p>
+										</div> 
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("DATE");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('Date');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("NOTE");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('Description');?>
+									   </div>
+									</div>
+									 <div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("STATUS");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('status');?>
+									   </div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 	             </div>
 	            
 	        </div>
 			<div class="card-box">
 				<div class="col-md-12 col-sm-12 col-xs-12">
-					<div class="form-group" style="background: #d8e0e2;padding: 5px 15px;margin: 0;border: solid 1px #697996;border-radius: 2px;margin-top: 10px;">
-						<div class="form-group">
-						   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("ITEMS");?> :
-						   </label>
-						   <div class="col-md-5 col-sm-5 col-xs-12">
-								<?php echo $frm->getElement('items_id');?>
-						   </div>
-						   <div class="col-md-2 col-sm-2 col-xs-12">
-								<input iconClass="dijitIconUndo" type="button" label="<?php echo $tr->translate('REFRESH');?>" dojoType="dijit.form.Button" onclick="getRefreshItems();"/>
+					<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="fa fa-tasks" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('ITEMS')?> </p>
+										</div> 
+									</div>
+									<div class="form-group" style="background: #d8e0e2;padding: 5px 15px;margin: 0;border: solid 1px #697996;border-radius: 2px;margin-top: 10px;">
+										<div class="form-group">
+										   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("ITEMS");?> :
+										   </label>
+										   <div class="col-md-5 col-sm-5 col-xs-12">
+												<?php echo $frm->getElement('items_id');?>
+										   </div>
+										   <div class="col-md-2 col-sm-2 col-xs-12">
+												<input class="button-class button-primary" iconClass="glyphicon glyphicon glyphicon-refresh" type="button" label="<?php echo $tr->translate('REFRESH');?>" dojoType="dijit.form.Button" onclick="getRefreshItems();"/>
+											</div>
+										</div>
+									</div>
+									<div class="card-box mb-20">
+										<table id="table_row" class="collape responsiveTable">
+												<tr id="head-title1" class="head-td" align="right">
+													<th scope="col" width="47px"><?php echo $tr->translate("DEL");?></th>
+													<th scope="col"><?php echo $tr->translate("NUM");?></th>
+													<th scope="col"><?php echo $tr->translate("ITEMS");?></th>
+													<th scope="col"><?php echo $tr->translate("DESCRIPTION");?></th>
+													<th scope="col" width="120px"><?php echo $tr->translate("STATUS");?></th>
+												</tr>
+											</table>
+										<input type="hidden" name="identity" id="identity"  value="" >
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
-					<div class="card-box mb-20">
-							<div class="col-md-12 col-sm-12 col-xs-12 ">
-									<table id="table_row" style="border-collapse: collapse; border:1px solid #ccc;white-space: nowrap;width:100%; margin-top: 8px;">
-										<tr id="head-title1" class="head-td" align="right">
-											<th><?php echo $tr->translate("DEL");?></th>
-											<th><?php echo $tr->translate("NUM");?></th>
-											<th><?php echo $tr->translate("ITEMS");?></th>
-											<th><?php echo $tr->translate("DESCRIPTION");?></th>
-											<th width="120px"><?php echo $tr->translate("STATUS");?></th>
-										</tr>
-									</table>
-								</div>
-								<div class="col-md-12 col-sm-12 col-xs-12 ">
-										<input type="hidden" name="identity" id="identity"  value="" >
-								</div>
-							</div>
-       			  </div>
-           	  </div>
-	        <div class="clearfix"></div>
-			 <div class="card-box">
-             	<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
-					<input type="submit" label="<?php echo $tr->translate("GO_EDIT");?>" name='saveclose' value='saveclose' dojoType="dijit.form.Button"
-						 iconClass="dijitIconDelete"/>
+			  </div>
+			</div>
+			<div class="clearfix"></div>
+			<div class="card-box">
+             	<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
+					<input type="submit" class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-disk" label="<?php echo $tr->translate("GO_EDIT");?>" name='saveclose' value='saveclose' dojoType="dijit.form.Button" />
 					
     			</div>
     		</div>
@@ -275,23 +312,27 @@ if(items_id=='' || items_id==-1){
 	col++;noo++;
 		template='';
 		if(title!=1){  
-			temp+='<th><?php echo $tr->translate("DEL");?></th>';
-			temp+='<th><?php echo $tr->translate("NUM");?></th>';
-			temp+='<th><?php echo $tr->translate("ITEMS");?></th>';
-			temp+='<th><?php echo $tr->translate("DESCRIPTION");?></th>';
-			temp+='<th><?php echo $tr->translate("STATUS");?></th>';
+			temp+='<th scope="col" width="47px" ><?php echo $tr->translate("DEL");?></th>';
+			temp+='<th scope="col" width="50px" ><?php echo $tr->translate("NUM");?></th>';
+			temp+='<th scope="col" width="25%"><?php echo $tr->translate("ITEMS");?></th>';
+			temp+='<th scope="col"><?php echo $tr->translate("DESCRIPTION");?></th>';
+			temp+='<th scope="col"><?php echo $tr->translate("STATUS");?></th>';
 			dojo.query("#head-title1").append(temp);
 			title=1;
 	    }
-		template+='<td width="47px" align="center"><img onclick="deleteRecords('+col+');calculateTotal('+col+');" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
-		template+='<td width="50px" align="center">'+noo+'</td>';
-		template+='<td width="25%">'+itemslabel+'<input dojoType="dijit.form.TextBox" class="fullside" required="required" id="items_id'+col+'" name="items_id'+col+'" value="'+items_id+'" type="hidden" ></td>';	
-		template+='<td><input type="text" name="description_'+col+'" id="description_'+col+'" dojoType="dijit.form.Textarea" placeholder="<?php echo $tr->translate("NOTE");?>" style="width:100%;" /></td>';
-		template+='<td><select name="is_gived_'+col+'" id="is_gived_'+col+'" dojoType="dijit.form.FilteringSelect"   class="fullside">';
-	    		template+='<option value="0" ><?php echo $tr->translate('NOT_YET_GIVE');?></option>';
-				template+='<option value="1" ><?php echo $tr->translate('GIVED_TO_CUSTOMER');?></option>';
-		template+='</select></td>';
-		tmp='<tr id="row'+col+'">';
+		template+='<td data-label="<?php echo $tr->translate("DEL");?>" align="center"><span title="<?php echo $tr->translate("REMOVE_RECORD");?>" class="removeRow" onclick="deleteRecords('+col+');calculateTotal('+col+');"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></span></td>';
+		template+='<td data-label="<?php echo $tr->translate("NUM");?>" align="center">'+noo+'</td>';
+		template+='<td data-label="<?php echo $tr->translate("ITEMS");?>" >'+itemslabel+'<input dojoType="dijit.form.TextBox" class="fullside" required="required" id="items_id'+col+'" name="items_id'+col+'" value="'+items_id+'" type="hidden" ></td>';	
+		template+='<td data-label="<?php echo $tr->translate("DESCRIPTION");?>"><input type="text" name="description_'+col+'" id="description_'+col+'" dojoType="dijit.form.Textarea" placeholder="<?php echo $tr->translate("NOTE");?>" class="fullside" /></td>';
+		template+='<td data-label="<?php echo $tr->translate("STATUS");?>">';
+		template+='<label class="control-label custom-switch ">';
+			template+='<a href="javascript:void(0);" class="switchButton "><?php echo $tr->translate("GIVED_TO_CUSTOMER");?></a>'; 
+			template+='<input type="checkbox" id="is_gived_'+col+'" name="is_gived_'+col+'" class="custom-switch-input" > ';
+			template+='<span class="custom-switch-indicator custom-radius "></span>'; 
+		template+='</label>';
+		template+='</td>';
+		
+		tmp='<tr class="rowData" id="row'+col+'">';
 		tmp+="</tr>";
 		dojo.query("#table_row").append(tmp);
 		if($("#identity").val()!="") {
@@ -309,23 +350,28 @@ function initialize(){
 	col++;noo++;
 	template='';
 	if(title!=1){  
-		temp+='<th><?php echo $tr->translate("DEL");?></th>';
-		temp+='<th><?php echo $tr->translate("NUM");?></th>';
-		temp+='<th><?php echo $tr->translate("ITEMS");?></th>';
-		temp+='<th><?php echo $tr->translate("DESCRIPTION");?></th>';
-		temp+='<th><?php echo $tr->translate("STATUS");?></th>';
+		temp+='<th scope="col" width="47px" ><?php echo $tr->translate("DEL");?></th>';
+		temp+='<th scope="col" width="50px" ><?php echo $tr->translate("NUM");?></th>';
+		temp+='<th scope="col" width="25%"><?php echo $tr->translate("ITEMS");?></th>';
+		temp+='<th scope="col"><?php echo $tr->translate("DESCRIPTION");?></th>';
+		temp+='<th scope="col"><?php echo $tr->translate("STATUS");?></th>';
 		dojo.query("#head-title").append(temp);
 		title=1;
     }
-	template+='<td width="47px" align="center"><?php if($row['is_gived']!=1){?><img onclick="deleteRecords('+col+');calculateTotal('+col+');" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"><?php }?></td>';
-	template+='<td width="50px" align="center">'+noo+'<input dojoType="dijit.form.TextBox" class="fullside" required="required" id="detailid'+col+'" name="detailid'+col+'" value="" type="hidden" ></td>';
-	template+='<td width="25%"><?php echo $row['itmesTitle'];?><input dojoType="dijit.form.TextBox" class="fullside" required="required" id="items_id'+col+'" name="items_id'+col+'" value="" type="hidden" ></td>';	
-	template+='<td><input type="text" name="description_'+col+'" id="description_'+col+'" dojoType="dijit.form.Textarea" placeholder="<?php echo $tr->translate("NOTE");?>" style="width:100%;" /></td>';
-	template+='<td><select name="is_gived_'+col+'" id="is_gived_'+col+'" dojoType="dijit.form.FilteringSelect"   class="fullside">';
-	    		template+='<option value="0" ><?php echo $tr->translate('NOT_YET_GIVE');?></option>';
-				template+='<option value="1" ><?php echo $tr->translate('GIVED_TO_CUSTOMER');?></option>';
-	template+='</select></td>';
-	tmp='<tr id="row'+col+'">';
+	template+='<td data-label="<?php echo $tr->translate("DEL");?>" align="center"><?php if($row['is_gived']!=1){?><span title="<?php echo $tr->translate("REMOVE_RECORD");?>" class="removeRow" onclick="deleteRecords('+col+');calculateTotal('+col+');"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></span><?php }?></td>';
+	template+='<td data-label="<?php echo $tr->translate("NUM");?>" align="center">'+noo+'<input dojoType="dijit.form.TextBox" class="fullside" required="required" id="detailid'+col+'" name="detailid'+col+'" value="" type="hidden" ></td>';
+	template+='<td data-label="<?php echo $tr->translate("ITEMS");?>" ><?php echo $row['itmesTitle'];?><input dojoType="dijit.form.TextBox" class="fullside" required="required" id="items_id'+col+'" name="items_id'+col+'" value="" type="hidden" ></td>';	
+	template+='<td data-label="<?php echo $tr->translate("DESCRIPTION");?>"><input type="text" name="description_'+col+'" id="description_'+col+'" dojoType="dijit.form.Textarea" placeholder="<?php echo $tr->translate("NOTE");?>" class="fullside" /></td>';
+	
+	template+='<td data-label="<?php echo $tr->translate("STATUS");?>">';
+	template+='<label class="control-label custom-switch ">';
+		template+='<a href="javascript:void(0);" class="switchButton "><?php echo $tr->translate("GIVED_TO_CUSTOMER");?></a>'; 
+		template+='<input <?php if($row['is_gived']==1){ echo "checked";}?> type="checkbox" id="is_gived_'+col+'" name="is_gived_'+col+'" class="custom-switch-input" > ';
+		template+='<span class="custom-switch-indicator custom-radius "></span>'; 
+	template+='</label>';
+	template+='</td>';
+	
+	tmp='<tr class="rowData" id="row'+col+'">';
 	tmp+="</tr>";
 		
 	
@@ -340,7 +386,6 @@ function initialize(){
 	dijit.byId('description_'+col).attr('value',$( '#description_from_php_'+col).html());
 	dijit.byId('items_id'+col).attr('value',"<?php echo $row['items_id'];?>");
 	dijit.byId('detailid'+col).attr('value',"<?php echo $row['id'];?>");
-	dijit.byId('is_gived_'+col).attr('value',"<?php echo $row['is_gived'];?>");
 
 	<?php }}?>
 }

@@ -31,11 +31,13 @@ class Loan_Model_DbTable_DbMaterialInclude extends Zend_Db_Table_Abstract
 			$ids = explode(',', $data['identity']);
 			$this->_name='ln_material_include_detail';
 			foreach ($ids as $j){
+				$isGived = 0;
+				$isGived = empty($data['is_gived_'.$j])?0:1;
 				$arr = array(
 						'materailinc_id'	=>$materailinc_id,
 						'items_id'	=>$data['items_id'.$j],
 						'description'		=>$data['description_'.$j],
-						'is_gived'		=>empty($data['is_gived_'.$j])?0:$data['is_gived_'.$j],
+						'is_gived'		=>$isGived,
 				);
 				$this->insert($arr);
 			}
@@ -88,12 +90,16 @@ class Loan_Model_DbTable_DbMaterialInclude extends Zend_Db_Table_Abstract
 					
 					$ids = explode(',', $data['identity']);
 					foreach ($ids as $j){ 
+					
+							$isGived = 0;
+							$isGived = empty($data['is_gived_'.$j])?0:1;
 						if (!empty($data['detailid'.$j])){
+							
 							$arr = array(
 									'materailinc_id'	=>$id,
 									'items_id'			=>$data['items_id'.$j],
 									'description'		=>$data['description_'.$j],
-									'is_gived'		=>empty($data['is_gived_'.$j])?0:$data['is_gived_'.$j],
+									'is_gived'		=>$isGived,
 									);
 							$whereUpdate=" id=".$data['detailid'.$j];
 							$this->update($arr, $whereUpdate);
@@ -102,7 +108,7 @@ class Loan_Model_DbTable_DbMaterialInclude extends Zend_Db_Table_Abstract
 									'materailinc_id'	=>$id,
 									'items_id'	=>$data['items_id'.$j],
 									'description'		=>$data['description_'.$j],
-									'is_gived'		=>empty($data['is_gived_'.$j])?0:$data['is_gived_'.$j],
+									'is_gived'		=>$isGived,
 									);
 							$this->insert($arr);
 						}

@@ -15,6 +15,18 @@
 		<form id="add_cancel" action="<?php echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'add')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
 			 <script type="dojo/method" event="onSubmit">			
 				if(this.validate()) {
+					cancelType = dijit.byId('cancel_type').get('value');
+					if(cancelType==2){
+						returnBack = dijit.byId('return_back').get('value');
+						if(isNaN(returnBack)){ 
+							returnBack=0; 
+						}
+						if(returnBack<=0){
+							infoMessageAlert("<?php echo $tr->translate('RETURN_MONEY_BACK_MUST_BE_BIGGER_THAN_ZERO');?>");
+							return false;
+						}
+					}
+					loadingBlock();
 					dijit.byId('savenew').set('disabled',true);
     				return true;
    				}else {
@@ -32,138 +44,177 @@
 	    	</div>
 	    	<div class="card-box">
 	    		<div class="col-md-4 col-sm-4 col-xs-12">
-	                <div class="form-group">
-					   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("INFO_INDILOAN");?> 
-					   </label>
-					</div>
-					<div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BRANCH_NAME");?>  :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('branch_id');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PROPERTY_CODE");?>  :</label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<input id="sale_client" />
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("SALE_NO");?>  :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<input id="sale_no" ><?php echo $frm->getElement('property_id');?>
-	                   </div>
-	                </div>
+					<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="fa fa-tasks" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('INFO_INDILOAN')?> </p>
+										</div> 
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BRANCH_NAME");?>  :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('branch_id');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PROPERTY_CODE");?>  :</label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<input id="sale_client" />
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("SALE_NO");?>  :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<input id="sale_no" ><?php echo $frm->getElement('property_id');?>
+									   </div>
+									</div>
+									
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("SOLD_PRICE");?> :</label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('price_sold');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PAYMENT_TYPE");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('schedule_opt');?>
+									   </div>
+									</div>
 					
-					<div class="form-group">
-					   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("SOLD_PRICE");?> :</label>
-					   <div class="col-md-7 col-sm-7 col-xs-12">
-							<?php echo $frm->getElement('price_sold');?>
-					   </div>
+								</div>
+							</div>
+						</div>
 					</div>
-					<div class="form-group">
-					   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PAYMENT_TYPE");?> :
-					   </label>
-					   <div class="col-md-7 col-sm-7 col-xs-12">
-							<?php echo $frm->getElement('schedule_opt');?>
-					   </div>
-					</div>
-					<div class="form-group">
-					   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("PAYMENT_INFO");?> 
-					   </label>
-					</div>
-					<div class="form-group">
-					   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BUY_DATE");?> :
-					   </label>
-					   <div class="col-md-7 col-sm-7 col-xs-12">
-						<?php echo $frm->getElement('sold_date');?>
-					   </div>
-					</div>
-					<div class="form-group">
-					   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("INSTALLMENT_PAID");?> :
-					   </label>
-					   <div class="col-md-7 col-sm-7 col-xs-12">
-						<?php echo $frm->getElement('installment_paid');?>
-					   </div>
-					</div>
-					<div class="form-group">
-					   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PAID_AMOUNT");?> :
-					   </label>
-					   <div class="col-md-7 col-sm-7 col-xs-12">
-							<?php echo $frm->getElement('paid_amount');?>
-					   </div>
-				   </div>
-				   <div class="form-group">
-					   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BALANCE");?> :
-					   </label>
-					   <div class="col-md-7 col-sm-7 col-xs-12">
-							<?php echo $frm->getElement('balance');?>
-					   </div>
+
+					
+	            </div>
+				<div class="col-md-4 col-sm-4 col-xs-12">
+					<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="fa fa-money" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('PAYMENT_INFO')?> </p>
+										</div> 
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BUY_DATE");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+										<?php echo $frm->getElement('sold_date');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("INSTALLMENT_PAID");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+										<?php echo $frm->getElement('installment_paid');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PAID_AMOUNT");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('paid_amount');?>
+									   </div>
+								    </div>
+								    <div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BALANCE");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('balance');?>
+									   </div>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
 	            </div>
 	             <div class="col-md-4 col-sm-4 col-xs-12">
-		             <div class="form-group">
-					   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-hand-o-right" aria-hidden="true"></i> <?php echo $tr->translate("CANCEL_INFO");?> 
-					   </label>
+					<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="glyphicon glyphicon-info-sign" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('CANCEL_INFO')?> </p>
+										</div> 
+									</div>
+									<div class="form-group">
+										   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CANCEL_DATE");?>  :
+										   </label>
+										   <div class="col-md-7 col-sm-7 col-xs-12">
+												<?php echo $frm->getElement('cancel_date');?>
+										   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("REASON");?> :
+									   </label>
+									</div>
+									<div class="form-group">
+									   <div class="col-md-12 col-sm-12 col-xs-12">
+											<input style=" min-height: 60px; font-family:inherit;" dojoType="dijit.form.Textarea" class="fullside" id="reason" name="reason" value="" type="text">
+									   </div>
+									</div>
+									<div class="form-group">
+										   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CANCEL_TYPE");?>  :
+										   </label>
+										   <div class="col-md-7 col-sm-7 col-xs-12">
+												<?php echo $frm->getElement('cancel_type');?>
+										   </div>
+									</div>
+									<div class="blogReturn">
+										<div class="form-group">
+											   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CONDITION_RETURN");?>  :
+											   </label>
+											   <div class="col-md-7 col-sm-7 col-xs-12">
+													<?php echo $frm->getElement('condition_return');?>
+											   </div>
+										</div>
+										 <div class="dateForReturn form-group">
+										   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("SET_DATE_FOR_RETURN");?> :
+										   </label>
+										   <div class="col-md-7 col-sm-7 col-xs-12">
+												<?php echo $frm->getElement('expense_date');?>
+										   </div>
+										</div>
+										<div class="form-group">
+										   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("RETURN_MONEY_BACK");?> :
+										   </label>
+										   <div class="col-md-7 col-sm-7 col-xs-12">
+												<?php echo $frm->getElement('return_back');?>
+										   </div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
-						<div class="form-group">
-			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CANCEL_DATE");?>  :
-			                   </label>
-			                   <div class="col-md-7 col-sm-7 col-xs-12">
-			                    	<?php echo $frm->getElement('cancel_date');?>
-			                   </div>
-		                </div>
-		                <div class="form-group">
-		                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("REASON");?> :
-		                   </label>
-		                </div>
-		                <div class="form-group">
-		                   <div class="col-md-12 col-sm-12 col-xs-12">
-		                   		<input style=" min-height: 60px; font-family:inherit;" dojoType="dijit.form.Textarea" class="fullside" id="reason" name="reason" value="" type="text">
-		                   </div>
-		                </div>
-						
-						<div class="form-group">
-			                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CANCEL_TYPE");?>  :
-			                   </label>
-			                   <div class="col-md-7 col-sm-7 col-xs-12">
-			                    	<?php echo $frm->getElement('cancel_type');?>
-			                   </div>
-		                </div>
-						<div class="blogReturn">
-							<div class="form-group">
-								   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CONDITION_RETURN");?>  :
-								   </label>
-								   <div class="col-md-7 col-sm-7 col-xs-12">
-										<?php echo $frm->getElement('condition_return');?>
-								   </div>
-							</div>
-							 <div class="dateForReturn form-group">
-							   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("SET_DATE_FOR_RETURN");?> :
-							   </label>
-							   <div class="col-md-7 col-sm-7 col-xs-12">
-									<?php echo $frm->getElement('expense_date');?>
-							   </div>
-							</div>
-							<div class="form-group">
-							   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("RETURN_MONEY_BACK");?> :
-							   </label>
-							   <div class="col-md-7 col-sm-7 col-xs-12">
-									<?php echo $frm->getElement('return_back');?>
-							   </div>
-							</div>
-		                </div>
 		               
 		                
 	             </div>
 	         </div>
 	    	<div class="clearfix"></div>
 			 <div class="card-box">
-             	<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
-               		<input type="submit" name="save" id="savenew" value="រក្សាទុក  + បន្ថែមថ្មី​​ " label="<?php echo $tr->translate('SAVENEW');?>" id="submitButton" dojoType="dijit.form.Button"
-				 		iconClass="dijitEditorIcon dijitEditorIconSave"/>
+             	<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
+               		<input type="submit" name="save" class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-disk" id="savenew" value="រក្សាទុក  + បន្ថែមថ្មី​​ " label="<?php echo $tr->translate('SAVENEW');?>" id="submitButton" dojoType="dijit.form.Button" />
  				
     			</div>
     		</div>

@@ -20,21 +20,21 @@
 			if(this.validate()) {
 				branch_id = dijit.byId('branch_id').get('value');
 				if(branch_id=='' || branch_id==-1){
-					alert('<?php echo $tr->translate("PLEASE_SELECT_BRANCH")?>!');
+					infoMessageAlert('<?php echo $tr->translate("PLEASE_SELECT_BRANCH")?>!');
 					dijit.byId('branch_id').focus();
 					return false;
 				}
 				
 				staff_id = dijit.byId('staff_id').get('value');
 				if(staff_id=='' || staff_id==-1){
-					alert('<?php echo $tr->translate("PLEASE_SELECT_STAFF")?>!');
+					infoMessageAlert('<?php echo $tr->translate("PLEASE_SELECT_STAFF")?>!');
 					dijit.byId('staff_id').focus();
 					return false;
 				}
 				
 				var identity = $('#identity').val();
 				if(identity==''){
-					alert("<?php echo $tr->translate("PLEASE_SET_SALE_COMMISSION");?>");
+					infoMessageAlert("<?php echo $tr->translate("PLEASE_SET_SALE_COMMISSION");?>");
 					dijit.byId("loan_number").focus();
 					return false;
 				}
@@ -57,115 +57,134 @@
 	    	</div>
 	    	<div class="card-box">
 	    		<div class="col-md-4 col-sm-4 col-xs-12">
-	    			<div class="form-group">
-	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-map" aria-hidden="true"></i> <?php echo $tr->translate("INFO_INDILOAN");?> 
-	                   </label>
-	                </div>
-	                
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BRANCH_NAME");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('branch_id')?>
-	                   </div>
-	                </div>
-					 <div class="form-group">
-					   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CO_NAME");?>  :
-					   </label>
-					   <div class="col-md-7 col-sm-7 col-xs-12">
-							<input id="staff_id" />
-					   </div>
-					</div>
-	               
-	    		</div>
-	    		<div class="col-md-8 col-sm-8 col-xs-12">
-					 
-	    			<div class="form-group">
-	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-list" aria-hidden="true"></i> <?php echo $tr->translate("INFO_INDILOAN");?> 
-	                   </label>
-	                </div>
-	                
-					<div class="form-group" style="background: #d8e0e2;padding: 5px 15px;margin: 0;border: solid 1px #697996;border-radius: 2px;margin-top: 10px;">
-						<div class="form-group">
-						   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("INFO_INDILOAN");?> :
-						   </label>
-						   <div class="col-md-7 col-sm-7 col-xs-12">
-								<input id='loan_number' />
-								<input type="hidden" name="identity" id="identity"  value="" >
-						   </div>
+					<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="glyphicon glyphicon-user" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("AGENCY_INFO");?></p>
+										</div> 
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BRANCH_NAME");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('branch_id')?>
+									   </div>
+									</div>
+									 <div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CO_NAME");?>  :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<input id="staff_id" />
+									   </div>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
-	                <div  id="showrecord"></div>
-	    			<div id='data_table_loan_haspay' name='data_table_loan_haspay' style="white-space: nowrap;"></div>
+	    		</div>
+	    		<div class="col-md-8 col-sm-8 col-xs-12">
+					 <div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="fa fa-tasks" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("INFO_INDILOAN");?></p>
+										</div> 
+									</div>
+									<div class="form-group" style="background: #d8e0e2;padding: 5px 15px;margin: 0;border: solid 1px #697996;border-radius: 2px;margin-top: 10px;">
+										<div class="form-group">
+										   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("INFO_INDILOAN");?> :
+										   </label>
+										   <div class="col-md-7 col-sm-7 col-xs-12">
+												<input id='loan_number' />
+												<input type="hidden" name="identity" id="identity"  value="" >
+										   </div>
+										</div>
+									</div>
+									<div  id="showrecord"></div>
+									<div id='data_table_loan_haspay' name='data_table_loan_haspay' style="white-space: nowrap;"></div>
+								</div>
+							</div>
+						</div>
+					</div>
 	    		</div>
 	    	</div>
 	    	<div class="col-md-4 col-sm-4 col-xs-12">
 	    	</div>
 	    	<div class="clearfix"></div>
 			 <div class="card-box">
-             	<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
-               		<input type="reset" label="<?php echo $tr->translate("CLEAR")?>" dojoType="dijit.form.Button" iconClass="dijitIconClear"/>
-					<input type="submit" label="<?php echo $tr->translate("SAVENEW")?>" name='savenew' id='savenew' value='savenew' dojoType="dijit.form.Button" iconClass="dijitIconNewTask"/>
+             	<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
+               		<input type="reset" class="button-class button-danger" iconClass="glyphicon glyphicon-repeat" label="<?php echo $tr->translate("CLEAR")?>" dojoType="dijit.form.Button" iconClass="dijitIconClear"/>
+					<input type="submit" class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-disk"  label="<?php echo $tr->translate("SAVENEW")?>" name='savenew' id='savenew' value='savenew' dojoType="dijit.form.Button"/>
     			</div>
     		</div>
 		</form>
 	</div>
 </div>
 <div class="dijitHidden">
-	<div data-dojo-type="dijit.Dialog" style="width:30%;" id="popup_staff" >
-		<form style=" width:100%;" id='frm_staff' dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
-			<table cellspacing="10" width="100%" style="margin: 0 auto;">
-				<tr>
-					<td>
-						<fieldset >
-						<legend align="center" ><?php echo $tr->translate('ADD_STAFF');?></legend>
-							<table style="margin: 0 auto; width: 100%;  padding:10px; line-height: 32px;" cellspacing="7" >
-								<tr>
-									<td><?php echo $tr->translate('PARENT');?></td>
-									<td>
-										<input id="parent_id" />
-									</td>
-								</tr>
-								<tr>
-									<td><?php echo $tr->translate('NAME_KH');?></td>
-									<td>
-										<input dojoType="dijit.form.ValidationTextBox" required="1" class="fullside" id="kh_name" name="kh_name" value="" type="text">
-									</td>
-								</tr>
-								<tr>
-									<td><?php echo $tr->translate('SEX');?></td>
-									<td><input type="hidden" name="branch_id_pop" id="branch_id_pop" dojoType="dijit.form.TextBox" />
-										<select dojoType="dijit.form.FilteringSelect"  class="fullside" id="sex" name="sex" value="" type="text">
-											<option value="1"><?php echo $tr->translate("MALE");?></option>
-											<option value="2"><?php echo $tr->translate("FEMALE");?></option>
-										</select>
-									</td>
-								</tr>
-								<tr>
-									<td><?php echo $tr->translate('PHONE');?></td>
-									<td>
-										<input type="text" name="phone" id="phone" class="fullside" dojoType="dijit.form.TextBox" />
-									</td>
-								</tr>
-								<tr>
-									<td><?php echo $tr->translate('NOTE');?></td>
-									<td>
-										<input type="text" name="note_pop" id="note_pop" class="fullside" dojoType="dijit.form.TextBox" />
-									</td>
-								</tr>
-								<tr>
-									<td colspan="4" align="center">
-										<input type="button" value="ចាកចេញ" label="<?php echo $tr->translate("CANCEL");?>" id="close" name="close" dojoType="dijit.form.Button" 
-										​ ​​iconClass="dijitIconUndo" onclick="hideDialog1();"/>
-										<input type="button" value="save" label="<?php echo $tr->translate("GO_SAVE");?>" id="save" name="save" dojoType="dijit.form.Button" 
-										 iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addStaff();"/>
-									</td>
-								</tr>
-							</table>
-					</fieldset>
-					</td>
-				</tr>
-			</table>
+	<div data-dojo-type="dijit.Dialog" style="width:30%;" id="popup_staff" data-dojo-props="title:'<?php echo $tr->translate("ADD_STAFF")?>'" >
+		<form style=" width:100%;" id='frm_staff' dojoType="dijit.form.Form" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+			<div class="card-box">
+	    		<div class="col-md-12 col-sm-12 col-xs-12">
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PARENT");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<input id="parent_id" />
+	                   </div>
+	                </div>
+					<div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("NAME_KH");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<input dojoType="dijit.form.ValidationTextBox" required="1" class="fullside" id="kh_name" name="kh_name" value="" type="text">
+	                   </div>
+	                </div>
+					<div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("SEX");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<input type="hidden" name="branch_id_pop" id="branch_id_pop" dojoType="dijit.form.TextBox" />
+							<select dojoType="dijit.form.FilteringSelect"  class="fullside" id="sex" name="sex"  type="text">
+								<option value="1"><?php echo $tr->translate("MALE");?></option>
+								<option value="2"><?php echo $tr->translate("FEMALE");?></option>
+							</select>
+	                   </div>
+	                </div>
+					<div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PHONE");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<input type="text" name="phone" id="phone" class="fullside" dojoType="dijit.form.TextBox" />
+	                   </div>
+	                </div>
+					<div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("NOTE");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<input type="text" name="note_pop" id="note_pop" class="fullside" dojoType="dijit.form.TextBox" />
+	                   </div>
+	                </div>
+					
+				</div>
+			</div>
+			 <div class="clearfix"></div>
+			 <div class="card-box">
+				<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
+					<input type="button" class="button-class button-danger" iconClass="glyphicon glyphicon-repeat" value="ចាកចេញ" label="<?php echo $tr->translate("CANCEL");?>" id="close" name="close" dojoType="dijit.form.Button"  onclick="hideDialog1();"/>
+					<input type="button" class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-disk"  value="save" label="<?php echo $tr->translate("GO_SAVE");?>" id="save" name="save" dojoType="dijit.form.Button"  onclick="addStaff();"/>
+			   </div>
+			</div>
 		</form>
 	</div>
 </div>
@@ -173,9 +192,10 @@
 
 
 <script type="text/javascript">	
-dojo.require("dojo.html");
-dojo.require("dojo.data.ItemFileWriteStore"); 
+dojo.require("dijit.form.Textarea");
+dojo.require("dojo.data.ItemFileWriteStore");  
 dojo.require("dojo.NodeList-manipulate");
+dojo.require("dojo.html");
 
 var sale_store  = getDataStorefromJSON('id','name', null );
 var staff_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode(array()));?> );
@@ -218,7 +238,7 @@ require(["dojo/ready"], function(ready){
 	     	staff_id = dijit.byId('staff_id').get('value');
 	     	if(branch_id==0){
 	     		if(staff_id==-1){
-	     			alert('<?php echo $tr->translate("PLEASE_SELECT_BRANCH")?>');
+	     			infoMessageAlert('<?php echo $tr->translate("PLEASE_SELECT_BRANCH")?>');
 	     			dijit.byId('branch_id').focus();
 	     			return false;
 	         	}
@@ -255,12 +275,7 @@ function addStaff(){
 			form: dojo.byId("frm_staff"),
 			handleAs:"json",
 			load: function(data) {
-				/*var Itemmake = { 
-		    	  	id: data,
-			        name: dijit.byId('kh_name').get('value')
-			    };
-		 		addDataToSelectbox(dijit.byId('staff_id'), staff_store, Itemmake, data);
-				*/
+		
 				getAllStaffByBranch(data);
 			    dijit.byId('frm_staff').reset();
 			    dijit.byId("popup_staff").hide();
@@ -276,15 +291,7 @@ function addStaff(){
 url_getgroup = '<?php echo $this->url(array('module'=>'group','controller'=>'co','action'=>'getallstaff'));?>';
 function getAllStaffByBranch(staff_id=null){
 	dijit.byId('staff_id').reset();
-	/*
-	branch_id = dijit.byId('branch_id').get('value');
-	if(branch_id=='' || branch_id==-1){
-		var group_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode(array()));?> );
-		dijit.byId('staff_id').set('store',group_store);  
-		dijit.byId('branch_id').focus();
-		return false;
-	}
-	*/
+
 	branch_id = null
 	dojo.xhrPost({
 		url: url_getgroup,
@@ -355,7 +362,7 @@ function addRow(){
 		 for(var i=0;i< arrays.length;i++){
 			 readychoose = dijit.byId('sale_id'+arrays[i]).get('value');
 			 if(readychoose==loan_number){
-				 alert("<?php echo $tr->translate("Choosen ready")?>");
+				 infoMessageAlert("<?php echo $tr->translate("Choosen ready")?>");
 				 return false;
 			 }
 		}
@@ -364,18 +371,18 @@ function addRow(){
 	col++;no++;
 	template='';
 	if(title!=1){    
-		tmp='<table id="table_row" width="100%" style="border-collapse: collapse; border:1px solid #ccc !important;">';
-		tmp+='<tr id="head-title" class="head-td" style="color:#000 !important;background:#eee; font-size: 12px; height: 30px;margin-bottom: 10px;" id="head_title" class="head-title" align="center"></tr>';
+		tmp='<table id="table_row" class="collape responsiveTable">';
+		tmp+='<tr id="head-title" class="head-td" align="center"></tr>';
 		tmp+='</table>';
 		dojo.query("#showrecord").append(tmp);
 		
-		temp+='<th><?php echo $tr->translate("DEL");?></th>';
-		temp+='<th><?php echo $tr->translate("NUM");?></th>';
-		temp+='<th><?php echo $tr->translate("PROPERTY_CODE");?></th>';
-		temp+='<th><?php echo $tr->translate("SOLD_PRICE");?></th>';
-		temp+='<th id="lbl_titlemetion" width="100px"><?php echo $tr->translate("PAID");?></th>';
-		temp+='<th id="lbl_titlemetion" width="100px"><?php echo $tr->translate("BALANCE");?></th>';
-		temp+='<th width="100px"><?php echo $tr->translate("COMISSION_EXPECTED");?></th>';
+		temp+='<th scope="col" width="47px"><?php echo $tr->translate("DEL");?></th>';
+		temp+='<th scope="col" width="2%"><?php echo $tr->translate("NUM");?></th>';
+		temp+='<th scope="col"><?php echo $tr->translate("PROPERTY_CODE");?></th>';
+		temp+='<th scope="col" width="100px;"><?php echo $tr->translate("SOLD_PRICE");?></th>';
+		temp+='<th scope="col" id="lbl_titlemetion" width="100px"><?php echo $tr->translate("PAID");?></th>';
+		temp+='<th scope="col" id="lbl_titlemetion" width="100px"><?php echo $tr->translate("BALANCE");?></th>';
+		temp+='<th scope="col" width="100px"><?php echo $tr->translate("COMISSION_EXPECTED");?></th>';
 		
 		dojo.query("#head-title").append(temp);
 		title=1;
@@ -383,13 +390,13 @@ function addRow(){
 	}
 		sale_label = dijit.byId("loan_number").attr("displayedValue");
 		sale_id = dijit.byId("loan_number").get("value");
-		template+='<td width="47px"align="center"><img onclick="deleteRecord('+col+')" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
-		template+='<td width="2%" align="center">'+no+'</td>';
-		template+='<td style="white-space: nowrap"><input class="fullside" value="'+sale_id+'" type="hidden" data-dojo-type="dijit.form.TextBox" id="sale_id'+col+'" name="sale_id'+col+'" />'+sale_label+'</td>';	
-		template+='<td width="100px;"><input readonly class="fullside" type="text"  name="price_sold'+col+'" id="price_sold'+col+'" dojoType="dijit.form.TextBox" /></td>';	
-		template+='<td width="50px;"><input readonly class="fullside" type="text"  name="paid'+col+'" id="paid'+col+'" dojoType="dijit.form.TextBox" /></td>';			
-		template+='<td><input readonly class="fullside" type="text"  name="balance'+col+'" id="balance'+col+'" dojoType="dijit.form.TextBox" /></td>';
-		template+='<td><input class="fullside" type="text"  name="commission_amount'+col+'" id="commission_amount'+col+'" dojoType="dijit.form.TextBox" /><input class="fullside" value="" type="hidden" data-dojo-type="dijit.form.TextBox" id="house_id'+col+'" name="house_id'+col+'" /></td>';
+		template+='<td data-label="<?php echo $tr->translate("DEL");?>" align="center"><span title="<?php echo $tr->translate("REMOVE_RECORD");?>" class="removeRow" onclick="deleteRecord('+col+');"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></span></td>';
+		template+='<td data-label="<?php echo $tr->translate("NUM");?>"  align="center">'+no+'</td>';
+		template+='<td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>" style="white-space: nowrap"><input class="fullside" value="'+sale_id+'" type="hidden" data-dojo-type="dijit.form.TextBox" id="sale_id'+col+'" name="sale_id'+col+'" />'+sale_label+'</td>';	
+		template+='<td data-label="<?php echo $tr->translate("SOLD_PRICE");?>" ><input readonly class="fullside" type="text"  name="price_sold'+col+'" id="price_sold'+col+'" dojoType="dijit.form.TextBox" /></td>';	
+		template+='<td data-label="<?php echo $tr->translate("PAID");?>" ><input readonly class="fullside" type="text"  name="paid'+col+'" id="paid'+col+'" dojoType="dijit.form.TextBox" /></td>';			
+		template+='<td data-label="<?php echo $tr->translate("BALANCE");?>"><input readonly class="fullside" type="text"  name="balance'+col+'" id="balance'+col+'" dojoType="dijit.form.TextBox" /></td>';
+		template+='<td data-label="<?php echo $tr->translate("COMISSION_EXPECTED");?>"><input required class="fullside" type="text" data-dojo-props="constraints:{min:0.01},rangeMessage:'+"'<?php echo $tr->translate("MINIMUM_VALUE_IS_ONE");?>'"+'" name="commission_amount'+col+'" id="commission_amount'+col+'" dojoType="dijit.form.NumberTextBox" /><input class="fullside" value="" type="hidden" data-dojo-type="dijit.form.TextBox" id="house_id'+col+'" name="house_id'+col+'" /></td>';
 	tmp='<tr class="hover" style="border-bottom:1px solid #ccc;" id="row'+col+'">';
 	tmp+="</tr>";
 	dojo.query("#table_row").append(tmp);
@@ -462,7 +469,7 @@ function getInfoByLoanNumber(index){
 			
 		},
 		error: function(err) {
-			alert(err);
+			infoMessageAlert(err);
 		}
 	});
 }
