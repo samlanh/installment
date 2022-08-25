@@ -954,8 +954,8 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
     	$string = "";
     	$string.='
-    		<table id="table_row" border="1" width="100%" style="border-collapse: collapse; border:1px solid #ccc !important;">
-    			<tr id="head-title" class="head-td" style="color: #fff;background: #060679;font-size: 12px;height: 30px;margin-bottom: 10px;" id="head_title" class="head-title" align="center">
+    		<table id="table_row" border="1" class="collape responsiveTable" >
+    			<tr id="head-title" class="head-td" align="center">
     				<th>'.$tr->translate("NUM").'</th>
     				<th>'.$tr->translate("DATE_PAYMENT").'</th>
     				<th>'.$tr->translate("TOTAL_PAYMENT").'</th>
@@ -964,8 +964,14 @@ class Rent_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     	';
     	if (!empty($rows)) foreach ($rows as $key => $re){
     		$index = $key+1;
+			
+			$odd="odd";
+			if(($key%2)==0){
+			  $odd="regurlar";
+			}
+						  
     		$string.='
-    			<tr class="hover" style="border-bottom:1px solid #ccc;" >
+    			<tr class="hover rowData '.$odd.'" style="border-bottom:1px solid #ccc;" >
     				<td width="2%" align="center">'.($index).'</td>
     				<td>'.date("d/m/Y",strtotime($re['date_payment'])).'</td>
     				<td>'.number_format($re['total_payment'],2).'</td>

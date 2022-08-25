@@ -79,7 +79,7 @@ class Rent_ChangeownerController extends Zend_Controller_Action {
 			}
 			$_data = $this->getRequest()->getPost();
 			try {
-	
+				
 				$_dbmodel->updateChangeOwner($_data);
 				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","/rent/changeowner");
 			}catch (Exception $e) {
