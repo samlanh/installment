@@ -36,43 +36,68 @@
 	    	</div>
 	    	<div class="card-box">
 	    		<div class="col-md-4 col-sm-4 col-xs-12">
-	    			<div class="form-group">
-	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-map" aria-hidden="true"></i> <?php echo $tr->translate("INFO_INDILOAN");?> 
-	                   </label>
-	                </div>
+	    			<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="fa fa-tasks" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("INFO_INDILOAN");?></p>
+										</div> 
+									</div>
 	                
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BRANCH_NAME");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('branch_id')?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PROPERTY_CODE");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<input id='loan_number' />
-	                    	<input type="hidden" name="identity" id="identity"  value="" >
-	                   </div>
-	                </div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BRANCH_NAME");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('branch_id')?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PROPERTY_CODE");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<input id='loan_number' />
+											<input type="hidden" name="identity" id="identity"  value="" >
+									   </div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 	    		</div>
 	    		<div class="col-md-8 col-sm-8 col-xs-12">
-	    			<div class="form-group">
-	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-list" aria-hidden="true"></i> <?php echo $tr->translate("INFO_INDILOAN");?> 
-	                   </label>
-	                </div>
-	                <div  id="showrecord"></div>
-	    			<div id='data_table_loan_haspay' name='data_table_loan_haspay' style="white-space: nowrap;"></div>
+	    			<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="fa fa-tasks" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("INFO_INDILOAN");?></p>
+										</div> 
+									</div>
+									<br />
+									<div  id="showrecord"></div>
+									<div id='data_table_loan_haspay' name='data_table_loan_haspay' style="white-space: nowrap;"></div>
+								</div>
+							</div>
+						</div>
+					</div>
 	    		</div>
 	    	</div>
 	    	<div class="col-md-4 col-sm-4 col-xs-12">
 	    	</div>
 	    	<div class="clearfix"></div>
 			 <div class="card-box">
-             	<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
-               		<input type="reset" label="<?php echo $tr->translate("CLEAR")?>" dojoType="dijit.form.Button" iconClass="dijitIconClear"/>
-					<input type="submit" label="<?php echo $tr->translate("GO_EDIT")?>" name='savenew' id='savenew' value='savenew' dojoType="dijit.form.Button" iconClass="dijitIconNewTask"/>
+             	<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
+               		<input type="reset" class="button-class button-danger" iconClass="glyphicon glyphicon-repeat" label="<?php echo $tr->translate("CLEAR")?>" dojoType="dijit.form.Button" />
+					<input type="submit" class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-disk" label="<?php echo $tr->translate("GO_EDIT")?>" name='savenew' id='savenew' value='savenew' dojoType="dijit.form.Button" />
     			</div>
     		</div>
 		</form>
@@ -95,7 +120,7 @@ function addRow(){
 		 for(var i=0;i< arrays.length;i++){
 			 readychoose = dijit.byId('sale_id'+arrays[i]).get('value');
 			 if(readychoose==loan_number){
-				 alert("<?php echo $tr->translate("Choosen ready")?>");
+				 infoMessageAlert("<?php echo $tr->translate("Choosen ready")?>");
 				 return false;
 			 }
 		}
@@ -104,19 +129,19 @@ function addRow(){
 	col++;no++;
 	template='';
 	if(title!=1){    
-		tmp='<table id="table_row" width="100%" style="border-collapse: collapse; border:1px solid #ccc !important;">';
-		tmp+='<tr id="head-title" class="head-td" style="color:#000 !important;background:#eee; font-size: 12px; height: 30px;margin-bottom: 10px;" id="head_title" class="head-title" align="center"></tr>';
+		tmp='<table id="table_row" class="collape responsiveTable">';
+		tmp+='<tr id="head-title" class="head-td" align="center"></tr>';
 		tmp+='</table>';
 		dojo.query("#showrecord").append(tmp);
 		
-		temp+='<th><?php echo $tr->translate("DEL");?></th>';
-		temp+='<th><?php echo $tr->translate("NUM");?></th>';
-		temp+='<th><?php echo $tr->translate("PROPERTY_CODE");?></th>';
-		temp+='<th><?php echo $tr->translate("SOLD_PRICE");?></th>';
-		temp+='<th id="lbl_titlemetion" width="100px"><?php echo $tr->translate("PAID");?></th>';
-		temp+='<th id="lbl_titlemetion" width="100px"><?php echo $tr->translate("BALANCE");?></th>';
-		temp+='<th width="100px"><?php echo $tr->translate("HEAD_TITLE_NO");?></th>';
-		temp+='<th><?php echo $tr->translate("NOTE");?></th>';
+		
+		temp+='<th scope="col" width="2%"><?php echo $tr->translate("NUM");?></th>';
+		temp+='<th scope="col" width="60px;"><?php echo $tr->translate("PROPERTY_CODE");?></th>';
+		temp+='<th scope="col"><?php echo $tr->translate("SOLD_PRICE");?></th>';
+		temp+='<th scope="col" id="lbl_titlemetion" width="100px"><?php echo $tr->translate("PAID");?></th>';
+		temp+='<th scope="col" id="lbl_titlemetion" width="100px"><?php echo $tr->translate("BALANCE");?></th>';
+		temp+='<th scope="col" width="100px"><?php echo $tr->translate("HEAD_TITLE_NO");?></th>';
+		temp+='<th scope="col"><?php echo $tr->translate("NOTE");?></th>';
 		
 		dojo.query("#head-title").append(temp);
 		title=1;
@@ -124,15 +149,15 @@ function addRow(){
 	}
 		sale_label = dijit.byId("loan_number").attr("displayedValue");
 		sale_id = dijit.byId("loan_number").get("value");
-		template+='<td width="47px"align="center"></td>';
-		template+='<td width="2%" align="center">'+no+'</td>';
-		template+='<td style="white-space: nowrap"><input class="fullside" value="'+sale_id+'" type="hidden" data-dojo-type="dijit.form.TextBox" id="sale_id'+col+'" name="sale_id'+col+'" />'+sale_label+'</td>';	
-		template+='<td width="60px;"><input readonly class="fullside" type="text"  name="price_sold'+col+'" id="price_sold'+col+'" dojoType="dijit.form.TextBox" /></td>';	
-		template+='<td width="60px;"><input readonly class="fullside" type="text"  name="paid'+col+'" id="paid'+col+'" dojoType="dijit.form.TextBox" /></td>';			
-		template+='<td width="60px;"><input readonly class="fullside" type="text"  name="balance'+col+'" id="balance'+col+'" dojoType="dijit.form.TextBox" /></td>';
-		template+='<td><input class="fullside" type="text"  name="hardtitle'+col+'" id="hardtitle'+col+'" dojoType="dijit.form.TextBox" /><input class="fullside" value="" type="hidden" data-dojo-type="dijit.form.TextBox" id="house_id'+col+'" name="house_id'+col+'" /></td>';
-		template+='<td><input class="fullside" type="text" name="note'+col+'" id="note'+col+'" dojoType="dijit.form.TextBox" value="<?php echo $this->rs['note'];?>" /></td>';
-	tmp='<tr class="hover" style="border-bottom:1px solid #ccc;" id="row'+col+'">';
+		
+		template+='<td data-label="<?php echo $tr->translate("NUM");?>"  align="center">'+no+'</td>';
+		template+='<td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>" style="white-space: nowrap"><input class="fullside" value="'+sale_id+'" type="hidden" data-dojo-type="dijit.form.TextBox" id="sale_id'+col+'" name="sale_id'+col+'" />'+sale_label+'</td>';	
+		template+='<td data-label="<?php echo $tr->translate("SOLD_PRICE");?>" ><input readonly class="fullside" type="text"  name="price_sold'+col+'" id="price_sold'+col+'" dojoType="dijit.form.TextBox" /></td>';	
+		template+='<td data-label="<?php echo $tr->translate("DEL");?>" ><input readonly class="fullside" type="text"  name="paid'+col+'" id="paid'+col+'" dojoType="dijit.form.TextBox" /></td>';			
+		template+='<td data-label="<?php echo $tr->translate("PAID");?>" ><input readonly class="fullside" type="text"  name="balance'+col+'" id="balance'+col+'" dojoType="dijit.form.TextBox" /></td>';
+		template+='<td data-label="<?php echo $tr->translate("BALANCE");?>"><input class="fullside" type="text"  name="hardtitle'+col+'" id="hardtitle'+col+'" dojoType="dijit.form.TextBox" /><input class="fullside" value="" type="hidden" data-dojo-type="dijit.form.TextBox" id="house_id'+col+'" name="house_id'+col+'" /></td>';
+		template+='<td data-label="<?php echo $tr->translate("HEAD_TITLE_NO");?>"><input class="fullside" type="text" name="note'+col+'" id="note'+col+'" dojoType="dijit.form.TextBox" value="<?php echo $this->rs['note'];?>" /></td>';
+	tmp='<tr  class="rowData hover"  id="row'+col+'">';
 	tmp+="</tr>";
 	dojo.query("#table_row").append(tmp);
 
@@ -156,7 +181,7 @@ var url_getloan = '<?php echo $this->url(array('module'=>'loan','controller'=>'i
 function getLoanByBranch(){
 	branch_id = dijit.byId('branch_id').get('value');
 	if(branch_id==''){
-		alert('Please Select Branch');
+		infoMessageAlert('Please Select Branch');
 		dijit.byId('branch_id').focus();
 		return false;
 	}

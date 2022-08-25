@@ -22,7 +22,7 @@ if (!empty($this->detialinfo)){
 			if(this.validate()) {
 				process_status = dijit.byId('process_status').get('value');
             		if (process_status=='' || process_status==-1){
-						alert('<?php echo $tr->translate("PLEASE_SELECT_PROCCESSING");?>');
+						infoMessageAlert('<?php echo $tr->translate("PLEASE_SELECT_PROCCESSING");?>');
 						dijit.byId('process_status').focus();
 						return false;
 					}
@@ -35,7 +35,7 @@ if (!empty($this->detialinfo)){
 			<div class="card-box">
                	<div class="col-sm-12 border-botom">
 		    		<div class="col-sm-8 pd-0">
-		    			<h4 class="m-b-0"><i class="fa fa-list" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $editlabel." ".$tr->translate('PLONG_STEP')." (".$this->rs['land_address'].")";?></h4>
+		    			<h4 class="m-b-0"><i class="glyphicon glyphicon-indent-left" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $editlabel." ".$tr->translate('PLONG_STEP')." (".$this->rs['land_address'].")";?></h4>
 	    			</div>
 	    			<div class="col-sm-4 text-right">
 	    			</div>
@@ -43,88 +43,113 @@ if (!empty($this->detialinfo)){
 	    	</div>
 	    	<div class="card-box">
 	    		<div class="col-md-4 col-sm-4 col-xs-12">
-	    			<div class="form-group">
-	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-list" aria-hidden="true"></i> <?php echo $tr->translate("PROCESS_INFO");?> 
-	                   </label>
-	                </div>
-	    			<div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("DATE");?>:
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('date')?>
-	                    	<?php echo $frm->getElement('id')?>
-	                    	<?php echo $frm->getElement('detail_id')?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PROCCESSING");?>:
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('process_status')?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("GIVE_BY");?>:
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('give_by')?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("RECEIVE_BY");?>:
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('receive_by')?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("NOTE");?>:
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('note')?>
-	                   </div>
-	                </div>
+					<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="glyphicon glyphicon-info-sign" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("PROCESS_INFO");?></p>
+										</div> 
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("DATE");?>:
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('date')?>
+											<?php echo $frm->getElement('id')?>
+											<?php echo $frm->getElement('detail_id')?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PROCCESSING");?>:
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('process_status')?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("GIVE_BY");?>:
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('give_by')?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("RECEIVE_BY");?>:
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('receive_by')?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("NOTE");?>:
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('note')?>
+									   </div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 	    		</div>
 	    	</div>
 	    	<div class="col-md-8 col-sm-8 col-xs-12">
-	    			<div class="form-group">
-	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-list" aria-hidden="true"></i> <?php echo $tr->translate("PROCESS_HISTORY");?> 
-	                   </label>
-	                </div>
-	                <?php if (!empty($this->rsdetail)){?>
-	                <div class="form-group">
-	                	<table class="history-record" >
-	                		<thead>
-	                			<tr>
-	                				<th><?php echo $tr->translate("NUM");?></th>
-	                				<th><?php echo $tr->translate("DATE");?></th>
-	                				<th><?php echo $tr->translate("PROCCESSING");?></th>
-	                				<th><?php echo $tr->translate("NOTE");?></th>
-	                				<th><?php echo $tr->translate("GIVE_BY");?></th>
-	                				<th><?php echo $tr->translate("RECEIVE_BY");?></th>
-	                			</tr>
-	                		</thead>
-	                		<tbody>
-	                		<?php foreach ($this->rsdetail as $key => $record){?>
-	                			<tr>
-	                				<td align="center">&nbsp;<?php echo $key+1;?>&nbsp;</td>
-	                				<td align="center">&nbsp;<?php echo date("d/M/Y",strtotime($record['date']))?>&nbsp;</td>
-	                				<td align="center">&nbsp;<?php echo $record['processing'];?>&nbsp;</td>
-	                				<td align="center">&nbsp;<?php echo $record['note'];?>&nbsp;</td>
-	                				<td align="center">&nbsp;<?php echo $record['give_by']?>&nbsp;</td>
-	                				<td align="center">&nbsp;<?php echo $record['receive_by'];?>&nbsp;</td>
-	                			</tr>
-	                			<?php }?>
-	                		</tbody>
-	                	</table>
-	                </div>
-	                <?php }?>
-	    		</div>
+				<div class="card-blogform">
+					<div class="card-body"> 
+						<div class="row"> 
+							<div class="col-md-12 col-sm-12 col-xs-12"> 
+								<div class="d-flex"> 
+									<div class="settings-main-icon ">
+										<i class="glyphicon glyphicon-indent-left" aria-hidden="true"></i>
+									</div> 
+									<div class="col-md-10 col-sm-10 col-xs-12"> 
+										<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("PROCESS_HISTORY");?></p>
+									</div> 
+								</div>
+								<br />
+								<?php if (!empty($this->rsdetail)){?>
+								<div class="form-group">
+									<table class="history-record" >
+										<thead>
+											<tr>
+												<th><?php echo $tr->translate("NUM");?></th>
+												<th><?php echo $tr->translate("DATE");?></th>
+												<th><?php echo $tr->translate("PROCCESSING");?></th>
+												<th><?php echo $tr->translate("NOTE");?></th>
+												<th><?php echo $tr->translate("GIVE_BY");?></th>
+												<th><?php echo $tr->translate("RECEIVE_BY");?></th>
+											</tr>
+										</thead>
+										<tbody>
+										<?php foreach ($this->rsdetail as $key => $record){?>
+											<tr>
+												<td align="center">&nbsp;<?php echo $key+1;?>&nbsp;</td>
+												<td align="center">&nbsp;<?php echo date("d/M/Y",strtotime($record['date']))?>&nbsp;</td>
+												<td align="center">&nbsp;<?php echo $record['processing'];?>&nbsp;</td>
+												<td align="center">&nbsp;<?php echo $record['note'];?>&nbsp;</td>
+												<td align="center">&nbsp;<?php echo $record['give_by']?>&nbsp;</td>
+												<td align="center">&nbsp;<?php echo $record['receive_by'];?>&nbsp;</td>
+											</tr>
+											<?php }?>
+										</tbody>
+									</table>
+								</div>
+								<?php }?>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 	    	<div class="clearfix"></div>
 			 <div class="card-box">
              	<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
-               		<input type="button" onclick="window.location.replace('<?php echo $this->baseUrl()."/issue/plongstep";?>');" label="<?php echo $tr->translate("GO_BACK")?>" dojoType="dijit.form.Button" iconClass="dijitIconClear"/>
-					<input type="submit" label="<?php echo $tr->translate("SAVE")?>" name='savenew' id='savenew' value='savenew' dojoType="dijit.form.Button" iconClass="dijitIconNewTask"/>
+               		<input type="button" class="button-class button-danger" iconClass="glyphicon glyphicon-chevron-left" onclick="window.location.replace('<?php echo $this->baseUrl()."/issue/plongstep";?>');" label="<?php echo $tr->translate("GO_BACK")?>" dojoType="dijit.form.Button" iconClass="dijitIconClear"/>
+					<input type="submit" class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-disk" label="<?php echo $tr->translate("SAVE")?>" name='savenew' id='savenew' value='savenew' dojoType="dijit.form.Button" iconClass="dijitIconNewTask"/>
     			</div>
     		</div>
 		</form>

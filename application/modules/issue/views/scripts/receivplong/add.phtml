@@ -22,7 +22,7 @@ $userNameInput = $last_name." ".$username;
 				if(this.validate()) {
 					plong_type = dijit.byId('plong_type').get('value');
 					if(plong_type==-1 || plong_type==""){
-						alert("<?php echo $tr->translate("PLEASE_LAYOUT_TYPE")?>");
+						infoMessageAlert("<?php echo $tr->translate("PLEASE_LAYOUT_TYPE")?>");
 						dijit.byId('plong_type').focus();
 						return false;
 					}
@@ -44,70 +44,97 @@ $userNameInput = $last_name." ".$username;
 	    	</div>
 	    	<div class="card-box">
 	    		<div class="col-md-6 col-sm-6 col-xs-12">
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BRANCH_NAME");?>  :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('branch_id');?>
-							<input type="hidden" name="customer_id" id="customer_id" dojoType="dijit.form.TextBox"/>
-							<input type="hidden" name="house_id" id="house_id" dojoType="dijit.form.TextBox"/>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PROPERTY_CODE")?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<input id="sale_client" />
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><strong><?php echo $tr->translate("HEAD_TITLE_NO");?></strong> :</label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<input dojoType="dijit.form.TextBox" class="fullside" id="hardtitle" name="hardtitle" value="" type="text">
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("LAYOUT_TYPE")?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<input id="plong_type" />
-	                   </div>
-	                </div>
-	              	<div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("NOTE");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<input style=" min-height: 60px;" dojoType="dijit.form.Textarea" class="fullside" id="reason" name="reason" value="" type="text">
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("RECEIVED_DATE");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('date');?>
-	                   </div>
-	                </div>
+					<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="fa fa-map" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("RECEIVPLONG");?></p>
+										</div> 
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BRANCH_NAME");?>  :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('branch_id');?>
+											<input type="hidden" name="customer_id" id="customer_id" dojoType="dijit.form.TextBox"/>
+											<input type="hidden" name="house_id" id="house_id" dojoType="dijit.form.TextBox"/>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PROPERTY_CODE")?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<input id="sale_client" />
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><strong><?php echo $tr->translate("HEAD_TITLE_NO");?></strong> :</label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<input dojoType="dijit.form.TextBox" class="fullside" id="hardtitle" name="hardtitle" value="" type="text">
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("LAYOUT_TYPE")?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<input id="plong_type" />
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("NOTE");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<input style=" min-height: 60px;" dojoType="dijit.form.Textarea" class="fullside" id="reason" name="reason" value="" type="text">
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("RECEIVED_DATE");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('date');?>
+									   </div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 	                
     			
 	             </div>
 	             <div class="col-md-6 col-sm-6 col-xs-12">
-	             	<div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PROPERTY_INFO");?> :
-	                   </label>
-	                </div>
-	                <div class="form-group">
-	                	 <div  id="land_information" class="fullside" class="col-md-12 col-sm-12 col-xs-12" style="height: 70px; border:1px solid #aac4e6;background:#fff;">
-	                   </div>
-	              	</div>
+					<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="fa fa-map" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("PROPERTY_INFO");?></p>
+										</div> 
+									</div>
+									<br />
+									<div class="form-group">
+										 <div  id="land_information" class="fullside" class="col-md-12 col-sm-12 col-xs-12" style="height: 70px; border:1px solid #aac4e6;background:#fff;">
+									   </div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 	             </div>
 	         </div>
 	         <div class="clearfix"></div>
 			 <div class="card-box">
-             	<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
-             		<input type="submit" name="savenew" id="savenew" value="រក្សាទុក  + បន្ថែមថ្មី​​ " label="<?php echo $tr->translate('SAVENEW')?>" id="submitButton" dojoType="dijit.form.Button"
-					 					iconClass="dijitEditorIcon dijitEditorIconSave"/>
-					 <input type="button" value="រក្សាទុក & បោះពុម្ព" label="<?php echo $tr->translate('SAVEPRINT');?>" id="saveprint" dojoType="dijit.form.Button" 
-					iconClass="dijitEditorIcon dijitEditorIconPrint" onclick="getSaleInfo();displayNone();"/>
+             	<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
+             		<input type="submit" class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-disk" name="savenew" id="savenew" value="រក្សាទុក  + បន្ថែមថ្មី​​ " label="<?php echo $tr->translate('SAVENEW')?>" id="submitButton" dojoType="dijit.form.Button"/>
+					 <input type="button" class="button-class button-primary" iconClass="glyphicon glyphicon-print" value="រក្សាទុក & បោះពុម្ព" label="<?php echo $tr->translate('SAVEPRINT');?>" id="saveprint" dojoType="dijit.form.Button" onclick="getSaleInfo();displayNone();"/>
     			</div>
     		</div>
 		</form>
@@ -116,19 +143,36 @@ $userNameInput = $last_name." ".$username;
 <div class="dijitHidden">
 	<div data-dojo-type="dijit.Dialog" data-dojo-props="title:'<?php echo $tr->translate("LAYOUT_TYPE")?>'"  id="frm_plong_type" >
 		<form id="form_propertytype" >
-			<table style="margin: 0 auto; width: 100%;" cellspacing="7">
-				<tr>
-					<td>
-						<input dojoType="dijit.form.ValidationTextBox" required="true" class="fullside" id="newplong_type" name="newplong_type" value="" type="text">
-					</td>
-				</tr>
-				<tr>
-					<td colspan="2" align="center">
-						<input type="button" value="Save" label="<?php echo $tr->translate('GO_SAVE');?>" dojoType="dijit.form.Button"
-							iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addPlongType();"/>
-					</td>
-				</tr>
-			</table>
+			<div class="card-box">
+				<div class="card-blogform">
+					<div class="card-body"> 
+						<div class="row"> 
+							<div class="col-md-12 col-sm-12 col-xs-12"> 
+								<div class="d-flex"> 
+									<div class="settings-main-icon ">
+										<i class="fa fa-map" aria-hidden="true"></i>
+									</div> 
+									<div class="col-md-10 col-sm-10 col-xs-12"> 
+										<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("LAYOUT_TYPE");?></p>
+									</div> 
+								</div>
+								<div class="form-group">
+								   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("TITLE");?>  :
+								   </label>
+								   <div class="col-md-7 col-sm-7 col-xs-12">
+										<input dojoType="dijit.form.ValidationTextBox" required="true" class="fullside" id="newplong_type" name="newplong_type" value="" type="text">
+								   </div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="card-box">
+             	<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
+             		<input type="button" class="button-class button-primary" iconClass="glyphicon glyphicon-print" value="Save" label="<?php echo $tr->translate('GO_SAVE');?>" dojoType="dijit.form.Button" onclick="addPlongType();"/>
+    			</div>
+    		</div>						
 		</form>
 	</div>
 </div>
@@ -288,10 +332,8 @@ $userNameInput = $last_name." ".$username;
 				<tr>
 					<td align="center">
 						<iframe name=print_frame width=0 height=0 frameborder=0 src=about:blank></iframe>
-						<input type="button" value="បិទ" label="បិទ" id="close" dojoType="dijit.form.Button" 
-							iconClass="dijitEditorIcon dijitEditorIconCancel" onclick="hideDialog();"/>
-						<input type="button" value="បោះពុម្ព" label="បោះពុម្ព" id="print" dojoType="dijit.form.Button" 
-							iconClass="dijitEditorIcon dijitEditorIconPrint" onclick="print();"/>
+						<input type="button" class="button-class button-danger" iconClass="glyphicon glyphicon-remove" value="បិទ" label="បិទ" id="close" dojoType="dijit.form.Button"  onclick="hideDialog();"/>
+						<input type="button" class="button-class button-primary" iconClass="glyphicon glyphicon-print" value="បោះពុម្ព" label="បោះពុម្ព" id="print" dojoType="dijit.form.Button"  onclick="print();"/>
 					<td>
 				<tr>
 			</table>
@@ -310,7 +352,7 @@ function displayNone(){
 var	url_getSaleInfo = '<?php echo $this->url(array('module'=>'issue','controller'=>'receivplong','action'=>'getsaleinfo'));?>';
 function getSaleInfo(){
 	plong_type = dijit.byId('plong_type').get('value');
-	if(plong_type==-1 || plong_type==""){ alert("<?php echo $tr->translate("PLEASE_LAYOUT_TYPE")?>"); dijit.byId('plong_type').focus();return false;}
+	if(plong_type==-1 || plong_type==""){ infoMessageAlert("<?php echo $tr->translate("PLEASE_LAYOUT_TYPE")?>"); dijit.byId('plong_type').focus();return false;}
 	sale_client = dijit.byId('sale_client').get('value');
 	
 	if(sale_client==0){
@@ -450,14 +492,14 @@ dojo.ready(function(){
 			}, "plong_type");
 		getSaleClie();
 		}catch(e){
-			alert(e);
+			infoMessageAlert(e);
 		}
 });
 
 function addPlongType(){
 	newplong_type = dijit.byId('newplong_type').get('value');
 	if(newplong_type==""){
-		alert("<?php echo $tr->translate("PLEASE_ENTER_TITLE")?>");
+		infoMessageAlert("<?php echo $tr->translate("PLEASE_ENTER_TITLE")?>");
 		dijit.byId('newplong_type').focus();
 		return false;
 	}
