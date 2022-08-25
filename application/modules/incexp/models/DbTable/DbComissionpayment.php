@@ -166,6 +166,7 @@ class Incexp_Model_DbTable_DbComissionpayment extends Zend_Db_Table_Abstract
 		}
     	$rs = $db->fetchAll($sql);
     	
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
     	$string='';
     	$no = $data['keyindex'];
     	$identity='';
@@ -177,33 +178,33 @@ class Incexp_Model_DbTable_DbComissionpayment extends Zend_Db_Table_Abstract
     			}else{$identity=$identity.",".$no;
     			}
     			$string.='
-    			<tr id="row'.$no.'" style="background: #fff; border: solid 1px #bac;">
-    				<td align="center" style="  padding: 0 10px;">
-						<div class="custom-control custom-checkbox float-start ">
+    			<tr id="row'.$no.'" class="rowData">
+    				<td data-label="'.$tr->translate("CHECKING").'" align="center" style="  padding: 0 10px;">
+						<div class="custom-control custom-checkbox ">
 							<input type="checkbox" class="checkboxSystem custom-control-input checkbox"  OnChange="CheckAllTotal('.$no.')" id="mfdid_'.$no.'" value="'.$no.'"  name="selector[]" >
 							<label class="custom-control-label" for="mfdid_'.$no.'">
 							</label>
 						</div>
 					</td>
-	    			<td style="text-align: center;vertical-align: middle; ">'.($key+1).'</td>
-	    			<td style="vertical-align: middle; text-align: left; border-left:solid 1px #ccc; min-width: 100px;">&nbsp;
+	    			<td data-label="'.$tr->translate("NUM").'" >'.($key+1).'</td>
+	    			<td data-label="'.$tr->translate("CUSTOMER_NAME").'" >&nbsp;
 	    				<label id="customerName'.$no.'">'.$row['customerName'].'</label>
 	    				<input type="hidden" dojoType="dijit.form.TextBox" name="sale_id'.$no.'" id="sale_id'.$no.'" value="'.$row['id'].'" >
     				</td>
-    			<td style="vertical-align: middle; text-align: left; border-left:solid 1px #ccc; min-width: 100px;">&nbsp;
+    			<td data-label="'.$tr->translate("PROPERTY_CODE").'" >&nbsp;
 					<label id="landCode'.$no.'" >'.$row['landCode']." , ".$row['street'].'</label>
 					<input type="hidden" dojoType="dijit.form.TextBox" name="house_id'.$no.'" id="house_id'.$no.'" value="'.$row['house_id'].'" >
     			</td>
-    			<td style="vertical-align: middle; text-align: left; border-left:solid 1px #ccc; min-width: 100px;">&nbsp;
+    			<td data-label="'.$tr->translate("COMMISSION_AMOUNT").'" >&nbsp;
 					<label id="origtotallabel'.$no.'">'.number_format($row['full_commission'],2).'</label>
 					<input type="hidden" dojoType="dijit.form.TextBox" name="origVal'.$no.'" id="origVal'.$no.'" value="'.$row['full_commission'].'" >
     			</td>
-    			<td style="vertical-align: middle; text-align: left; border-left:solid 1px #ccc;  min-width: 100px; ">&nbsp;
+    			<td data-label="'.$tr->translate("DUE").'" >&nbsp;
 					<label id="duelabel'.$no.'">'.number_format($row['full_commission_after'],2).'</label>
 					<input type="hidden" dojoType="dijit.form.TextBox" name="due_val'.$no.'" id="due_val'.$no.'" value="'.$row['full_commission_after'].'" >
     			</td>
-    			<td><input type="text" readonly="readonly" class="fullside" dojoType="dijit.form.NumberTextBox" required="required" onKeyup="calculateamount('.$no.');" name="payment_amount'.$no.'" id="payment_amount'.$no.'" value="0" style="text-align: center;" ></td>
-    			<td><input type="text" class="fullside" readonly="readonly" dojoType="dijit.form.NumberTextBox" required="required" name="remain'.$no.'" id="remain'.$no.'" value="'.$row['full_commission_after'].'" style="text-align: center;" ></td>
+    			<td data-label="'.$tr->translate("PAYMENT_AMOUNT").'"><input type="text" readonly="readonly" class="fullside" dojoType="dijit.form.NumberTextBox" required="required" onKeyup="calculateamount('.$no.');" name="payment_amount'.$no.'" id="payment_amount'.$no.'" value="0" style="text-align: center;" ></td>
+    			<td data-label="'.$tr->translate("REMAIN").'"><input type="text" class="fullside" readonly="readonly" dojoType="dijit.form.NumberTextBox" required="required" name="remain'.$no.'" id="remain'.$no.'" value="'.$row['full_commission_after'].'" style="text-align: center;" ></td>
     			</tr>
     			';$no++;
     		}
@@ -325,6 +326,7 @@ class Incexp_Model_DbTable_DbComissionpayment extends Zend_Db_Table_Abstract
     	}
     	$rs = $db->fetchAll($sql);
     	 
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
     	$string='';
     	$no = $data['keyindex'];
     	$identity='';
@@ -357,64 +359,64 @@ class Incexp_Model_DbTable_DbComissionpayment extends Zend_Db_Table_Abstract
     				}else{$identityedit=$identityedit.",".$no;
     				}
     				$string.='
-    				<tr id="row'.$no.'" style="background: #fff; border: solid 1px #bac;">
-	    				<td align="center" style="  padding: 0 10px;">
-							<div class="custom-control custom-checkbox float-start ">
+    				<tr id="row'.$no.'" class="rowData">
+	    				<td data-label="'.$tr->translate("CHECKING").'" align="center" style="  padding: 0 10px;">
+							<div class="custom-control custom-checkbox ">
 								<input type="checkbox" class="checkboxSystem custom-control-input checkbox" checked="checked" OnChange="CheckAllTotal('.$no.')" id="mfdid_'.$no.'" value="'.$no.'"  name="selector[]" >
 								<label class="custom-control-label" for="mfdid_'.$no.'">
 								</label>
 							</div>
 						</td>
-	    				<td style="text-align: center;vertical-align: middle; ">'.($key+1).'</td>
-	    				<td style="vertical-align: middle; text-align: left; border-left:solid 1px #ccc; min-width: 100px;">&nbsp;
+	    				<td data-label="'.$tr->translate("NUM").'" >'.($key+1).'</td>
+	    				<td data-label="'.$tr->translate("CUSTOMER_NAME").'" >&nbsp;
 		    				<label id="customerName'.$no.'">'.$rowpaymentdetail['customerName'].'</label>
 							<input type="hidden" dojoType="dijit.form.TextBox" name="sale_id'.$no.'" id="sale_id'.$no.'" value="'.$rowpaymentdetail['sale_id'].'" >
 	    				</td>
-	    				<td style="vertical-align: middle; text-align: left; border-left:solid 1px #ccc; min-width: 100px;">&nbsp;
+	    				<td data-label="'.$tr->translate("PROPERTY_CODE").'" >&nbsp;
 							<label id="landCode'.$no.'" >'.$rowpaymentdetail['landCode']." , ".$rowpaymentdetail['street'].'</label>
 							<input type="hidden" dojoType="dijit.form.TextBox" name="house_id'.$no.'" id="house_id'.$no.'" value="'.$rowpaymentdetail['house_id'].'" >
 	    				</td>
-	    				<td style="vertical-align: middle; text-align: left; border-left:solid 1px #ccc; min-width: 100px;">&nbsp;
+	    				<td data-label="'.$tr->translate("COMMISSION_AMOUNT").'" >&nbsp;
 	    					<label id="origtotallabel'.$no.'">'.number_format($rowpaymentdetail['full_commission'],2).'</label>
 	    				</td>
-	    				<td style="vertical-align: middle; text-align: left; border-left:solid 1px #ccc;  min-width: 100px; ">&nbsp;
+	    				<td data-label="'.$tr->translate("DUE").'" >&nbsp;
 		    				<label id="duelabel'.$no.'">'.number_format($rowpaymentdetail['full_commission_after'],2).'</label>
 		    				<input type="hidden" dojoType="dijit.form.TextBox" name="due_val'.$no.'" id="due_val'.$no.'" value="'.$duevalu.'" >
 							<input type="hidden" dojoType="dijit.form.TextBox" name="detailid'.$no.'" id="detailid'.$no.'" value="'.$rowpaymentdetail['id'].'" >
 	    				</td>
-	    				<td><input type="text" class="fullside" dojoType="dijit.form.NumberTextBox" required="required" onKeyup="calculateamount('.$no.');" name="payment_amount'.$no.'" id="payment_amount'.$no.'" value="'.$rowpaymentdetail['payment_amount'].'" style="text-align: center;" ></td>
-	    				<td><input type="text" class="fullside" readonly="readonly" dojoType="dijit.form.NumberTextBox" required="required" name="remain'.$no.'" id="remain'.$no.'" value="'.$rowpaymentdetail['full_commission_after'].'" style="text-align: center;" ></td>
+	    				<td data-label="'.$tr->translate("PAYMENT_AMOUNT").'"><input type="text" class="fullside" dojoType="dijit.form.NumberTextBox" required="required" onKeyup="calculateamount('.$no.');" name="payment_amount'.$no.'" id="payment_amount'.$no.'" value="'.$rowpaymentdetail['payment_amount'].'" style="text-align: center;" ></td>
+	    				<td data-label="'.$tr->translate("REMAIN").'"><input type="text" class="fullside" readonly="readonly" dojoType="dijit.form.NumberTextBox" required="required" name="remain'.$no.'" id="remain'.$no.'" value="'.$rowpaymentdetail['full_commission_after'].'" style="text-align: center;" ></td>
     				</tr>';
     			}else{
 	    			$string.='
-						<tr id="row'.$no.'" style="background: #fff; border: solid 1px #bac;">
-							<td align="center" style="  padding: 0 10px;">
-								<div class="custom-control custom-checkbox float-start ">
+						<tr id="row'.$no.'" class="rowData">
+							<td data-label="'.$tr->translate("CHECKING").'" align="center" style="  padding: 0 10px;">
+								<div class="custom-control custom-checkbox ">
 									<input type="checkbox" class="checkboxSystem custom-control-input checkbox"  OnChange="CheckAllTotal('.$no.')" id="mfdid_'.$no.'" value="'.$no.'"  name="selector[]" >
 									<label class="custom-control-label" for="mfdid_'.$no.'">
 									</label>
 								</div>
 							
 							</td>
-							<td style="text-align: center;vertical-align: middle; ">'.($key+1).'</td>
-							<td style="vertical-align: middle; text-align: left; border-left:solid 1px #ccc; min-width: 100px;">&nbsp;
+							<td data-label="'.$tr->translate("NUM").'" >'.($key+1).'</td>
+							<td data-label="'.$tr->translate("CUSTOMER_NAME").'" >&nbsp;
 								<label id="customerName'.$no.'">'.$row['customerName'].'</label>
 								<input type="hidden" dojoType="dijit.form.TextBox" name="sale_id'.$no.'" id="sale_id'.$no.'" value="'.$row['id'].'" >
 							</td>
-						<td style="vertical-align: middle; text-align: left; border-left:solid 1px #ccc; min-width: 100px;">&nbsp;
+						<td data-label="'.$tr->translate("PROPERTY_CODE").'" >&nbsp;
 							<label id="landCode'.$no.'" >'.$row['landCode']." , ".$row['street'].'</label>
 							<input type="hidden" dojoType="dijit.form.TextBox" name="house_id'.$no.'" id="house_id'.$no.'" value="'.$row['house_id'].'" >
 						</td>
-						<td style="vertical-align: middle; text-align: left; border-left:solid 1px #ccc; min-width: 100px;">&nbsp;
+						<td data-label="'.$tr->translate("COMMISSION_AMOUNT").'" >&nbsp;
 							<label id="origtotallabel'.$no.'">'.number_format($row['full_commission'],2).'</label>
 							<input type="hidden" dojoType="dijit.form.TextBox" name="origVal'.$no.'" id="origVal'.$no.'" value="'.$row['full_commission'].'" >
 						</td>
-						<td style="vertical-align: middle; text-align: left; border-left:solid 1px #ccc;  min-width: 100px; ">&nbsp;
+						<td data-label="'.$tr->translate("DUE").'" >&nbsp;
 							<label id="duelabel'.$no.'">'.number_format($row['full_commission_after'],2).'</label>
 							<input type="hidden" dojoType="dijit.form.TextBox" name="due_val'.$no.'" id="due_val'.$no.'" value="'.$row['full_commission_after'].'" >
 						</td>
-						<td><input type="text" readonly="readonly" class="fullside" dojoType="dijit.form.NumberTextBox" required="required" onKeyup="calculateamount('.$no.');" name="payment_amount'.$no.'" id="payment_amount'.$no.'" value="0" style="text-align: center;" ></td>
-						<td><input type="text" class="fullside" readonly="readonly" dojoType="dijit.form.NumberTextBox" required="required" name="remain'.$no.'" id="remain'.$no.'" value="'.$row['full_commission_after'].'" style="text-align: center;" ></td>
+						<td data-label="'.$tr->translate("PAYMENT_AMOUNT").'"><input type="text" readonly="readonly" class="fullside" dojoType="dijit.form.NumberTextBox" required="required" onKeyup="calculateamount('.$no.');" name="payment_amount'.$no.'" id="payment_amount'.$no.'" value="0" style="text-align: center;" ></td>
+						<td data-label="'.$tr->translate("REMAIN").'"><input type="text" class="fullside" readonly="readonly" dojoType="dijit.form.NumberTextBox" required="required" name="remain'.$no.'" id="remain'.$no.'" value="'.$row['full_commission_after'].'" style="text-align: center;" ></td>
 						</tr>
 						';
     			}$no++;

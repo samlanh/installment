@@ -73,7 +73,7 @@ input.btn_borwse_image {
 					loadingBlock();		
 					items_id = dijit.byId('items_id').get('value');
 					if(items_id=="" || items_id==-1){
-						alert("<?php echo $tr->translate("PLEASE_PRODUCT_CATEGORY");?>");
+						infoMessageAlert("<?php echo $tr->translate("PLEASE_PRODUCT_CATEGORY");?>");
 						return false;
 					}			
 					return true;
@@ -83,88 +83,117 @@ input.btn_borwse_image {
 			</script>
 			<div class="card-box">
 				<div class="col-md-4 col-sm-4 col-xs-12">
-					<div class="form-group">
-	                   <label class="control-label  col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PRODUCT_CODE");?>
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                   		<?php echo $frm_items->getElement("code");?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("PRODUCT_NAME");?> </label>
-		                <div class="col-md-7 col-sm-7 col-xs-12">
-		                	<?php echo $frm_items->getElement("title");?>
-		                	<?php echo $frm_items->getElement("id");?>
-		                </div>
-		             </div>
-					<div class="form-group">
-		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("PRODUCT_CATEGORY");?> </label>
-		                <div class="col-md-4 col-sm-4 col-xs-12">
-		                	<?php echo $frm_items->getElement("items_id");?>
-		                </div>
-		                <div class="col-md-2 col-sm-2 col-xs-12">
-		                <input iconClass="dijitIconUndo" type="button" label="<?php echo $tr->translate('REFRESH');?>" dojoType="dijit.form.Button" onclick="getRefreshItems();"/>
-		            	</div>
-		             </div>
-		             
-	                <div class="form-group">
-	                   <label class="control-label  col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PRICE");?>
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                   		<?php echo $frm_items->getElement("price");?>
-	                   </div>
-	                </div>
-					<div class="form-group">
-	                   <label class="control-label  col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("STATUS");?>
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                   		<?php echo $frm_items->getElement("status");?>
-	                   </div>
-	                </div>
-					<div class="form-group">
-		                <label class="control-label  col-md-12 col-sm-12 col-xs-12"><?php echo $tr->translate("NOTE");?> </label>
-		             </div>
-		             <div class="form-group">
-		                <div class="col-md-12 col-sm-12 col-xs-12">
-		                	<?php echo $frm_items->getElement("note");?>
-		                </div>
-		             </div>
-					 
-		             
+					<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="fa fa-cubes" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("PRODUCT");?></p>
+										</div> 
+									</div>
+									
+									<div class="form-group">
+									   <label class="control-label  col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PRODUCT_CODE");?>
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm_items->getElement("code");?>
+									   </div>
+									</div>
+									<div class="form-group">
+										<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("PRODUCT_NAME");?> </label>
+										<div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm_items->getElement("title");?>
+											<?php echo $frm_items->getElement("id");?>
+										</div>
+									 </div>
+									<div class="form-group">
+										<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("PRODUCT_CATEGORY");?> </label>
+										<div class="col-md-4 col-sm-4 col-xs-12">
+											<?php echo $frm_items->getElement("items_id");?>
+										</div>
+										<div class="col-md-2 col-sm-2 col-xs-12">
+											<input class="button-class button-primary" iconClass="glyphicon glyphicon-refresh" type="button" label="<?php echo $tr->translate('REFRESH');?>" dojoType="dijit.form.Button" onclick="getRefreshItems();"/>
+										</div>
+									 </div>
+									 
+									<div class="form-group">
+									   <label class="control-label  col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PRICE");?>
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm_items->getElement("price");?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label  col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("STATUS");?>
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm_items->getElement("status");?>
+									   </div>
+									</div>
+									<div class="form-group">
+										<label class="control-label  col-md-12 col-sm-12 col-xs-12"><?php echo $tr->translate("NOTE");?> </label>
+									 </div>
+									 <div class="form-group">
+										<div class="col-md-12 col-sm-12 col-xs-12">
+											<?php echo $frm_items->getElement("note");?>
+										</div>
+									 </div>
+								 </div>
+							 </div>
+						 </div>
+					 </div>
 		         </div>
 		         <div class="col-md-8 col-sm-8 col-xs-12">
-		         	<div class="form-group">
-		                <div class="col-md-12 col-sm-12 col-xs-12 text-center">
-		                	<?php 
-							$images = $this->baseUrl().'/images/no-photo.png';
-							if (!empty($this->row['images'])){
-								if (file_exists(PUBLIC_PATH.'/images/proimage/'.$this->row['images'])) {
-									$images = $this->baseUrl().'/images/proimage/'.$this->row['images'];
-								}
-							}
-							?>
-							<input name="old_photo"  value="<?php echo $this->row['images'];?>" type="hidden" />
-							<div class="account-image" style=" margin-top: -130px;">
-								<div class="image-box">
-									<img id="profile_wiew" src="<?php echo $images;?>" alt=""  />
-								</div>
-								<div class="button_browse">
-								<div id='preview'></div>	
-										<span>Upload <span ><i class="fa fa-camera" aria-hidden="true"></i></span></span>
-										<input class="btn_borwse_image" type="file" id="images" name="images" />
-								</div>
-							</div>
-		                </div>
-		                <div class="clearfix"></div>
-		             </div>
-	             	
+					<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="glyphicon glyphicon-picture" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("PICTURE");?></p>
+										</div> 
+									</div>
+									<div class="form-group">
+										<div class="col-md-12 col-sm-12 col-xs-12 text-center">
+											<?php 
+											$images = $this->baseUrl().'/images/no-photo.png';
+											if (!empty($this->row['images'])){
+												if (file_exists(PUBLIC_PATH.'/images/proimage/'.$this->row['images'])) {
+													$images = $this->baseUrl().'/images/proimage/'.$this->row['images'];
+												}
+											}
+											?>
+											<input name="old_photo"  value="<?php echo $this->row['images'];?>" type="hidden" />
+											<div class="account-image" >
+												<div class="image-box">
+													<img id="profile_wiew" src="<?php echo $images;?>" alt=""  />
+												</div>
+												<div class="button_browse">
+												<div id='preview'></div>	
+														<span>Upload <span ><i class="fa fa-camera" aria-hidden="true"></i></span></span>
+														<input class="btn_borwse_image" type="file" id="images" name="images" />
+												</div>
+											</div>
+										</div>
+										<div class="clearfix"></div>
+									 </div>
+								 </div>
+							 </div>
+						 </div>
+					 </div>
 		         </div>
 		         <div class="clearfix"></div>
 			         <div class="card-box mt-20">
 		               	<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
-		               		<input iconClass="dijitIconClear" type="reset" value="clear" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button"/>
-							<input type="submit"  label="<?php echo $tr->translate("GO_EDIT");?>" id="submitButton" dojoType="dijit.form.Button" 
-						 		iconClass="dijitEditorIcon dijitEditorIconSave" />
+		               		<input type="reset" class="button-class button-danger" iconClass="glyphicon glyphicon-repeat" value="clear" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button"/>
+							<input type="submit" class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-disk" label="<?php echo $tr->translate("GO_EDIT");?>" id="submitButton" dojoType="dijit.form.Button"  />
 		               	</div>
 		             </div>
 			</div>
