@@ -53,7 +53,6 @@ class Loan_NewscheduleController extends Zend_Controller_Action {
 				//echo "<script>window.close();</script>";exit();
 				
 				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/index");
-				exit();
 			
 			}catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");

@@ -54,13 +54,13 @@
 				if(this.validate()) {
            			 branch_id = dijit.byId('branch_id').get('value');
            			 if (branch_id=='' || branch_id==-1){
-						alert('<?php echo $tr->translate("PLEASE_SELECT_BRANCH")?>!');
+						infoMessageAlert('<?php echo $tr->translate("PLEASE_SELECT_BRANCH")?>!');
 						dijit.byId('branch_id').focus();
 						return false;
 					}
 					client = dijit.byId('member').get('value');
 					if (client=='' || client==-1){
-						alert('<?php echo $tr->translate("PLEASE_SELECT_CUSTOMER")?> !');
+						infoMessageAlert('<?php echo $tr->translate("PLEASE_SELECT_CUSTOMER")?> !');
 						dijit.byId('member').focus();
 						return false;
 					}
@@ -68,19 +68,20 @@
               		date_agreement = dijit.byId("date_line").get("value");
             
               		if(payment_id==1 && date_agreement==null){ 
-						alert("សូមបញ្ចូលថ្ងៃត្រូវមកធ្វើកិច្ចសន្យា");
+						infoMessageAlert("សូមបញ្ចូលថ្ងៃត្រូវមកធ្វើកិច្ចសន្យា");
 						dijit.byId("date_line").focus();return false;
              		 }
 					if(payment_id==2){//បង់ផ្តាច់
 				  		sold_price = dijit.byId("sold_price").get("value");
   				  		deposit = dijit.byId("deposit").get("value");
 					 	if(sold_price!=deposit){
-							alert("បង់ផ្តាច់តម្លៃលក់ ត្រូវស្មើរ នឹងប្រាក់ដែលត្រូវទទួល!");
+							infoMessageAlert("បង់ផ្តាច់តម្លៃលក់ ត្រូវស្មើរ នឹងប្រាក់ដែលត្រូវទទួល!");
 							dijit.byId("deposit").focus();
 							return false;
 				 		}
 					}
-			  	 dijit.byId('savenew').set('disabled',true);
+					loadingBlock();
+					dijit.byId('savenew').set('disabled',true);
 			  	 return true;
 				}else {
 					return false;
@@ -870,7 +871,7 @@ var url_getloan = '<?php echo $this->url(array('module'=>'loan','controller'=>'i
 function getLoanByBranch(condition){
 	branch_id = dijit.byId('branch_id').get('value');
 	if(branch_id==''){
-		alert('Please Select Branch');
+		infoMessageAlert('Please Select Branch');
 		dijit.byId('branch_id').focus();
 		return false;
 	}
@@ -895,7 +896,7 @@ var url_getreceipt = '<?php echo $this->url(array('module'=>'loan','controller'=
 function getReceiptByBranch(new_sale_id){
 	branch_id = dijit.byId('branch_id').get('value');
 	if(branch_id==''){
-		alert('Please Select Branch');
+		infoMessageAlert('Please Select Branch');
 		dijit.byId('branch_id').focus();
 		return false;
 	}
@@ -924,7 +925,7 @@ function getReceiptByBranch(new_sale_id){
     		deposit=0;
     	}
     	if(deposit>price){
-    		alert("Deposit can not biger than price ");
+    		infoMessageAlert("Deposit can not biger than price ");
     		dijit.byId('deposit').focus();
     		dijit.byId('deposit').attr('value',price)
     	}
@@ -991,7 +992,7 @@ require(["dojo/ready"], function(ready){
 	     	staff_id = dijit.byId('staff_id').get('value');
 	     	if(branch_id==0){
 	     		if(staff_id==-1){
-	     			alert('<?php echo $tr->translate("PLEASE_SELECT_BRANCH")?>');
+	     			infoMessageAlert('<?php echo $tr->translate("PLEASE_SELECT_BRANCH")?>');
 	     			dijit.byId('branch_id').focus();
 	     			return false;
 	         	}
@@ -1125,7 +1126,7 @@ function getcustomerinfo(client_id){
 			dijit.byId('client_phone').attr('value',data.phone);
 		},
 		error: function(err) {
-			alert(err);
+			infoMessageAlert(err);
 		}
 	});
 }
@@ -1152,7 +1153,7 @@ function getlandinfo(){
 			 		var rowIDArray = rowId.split(',');
 		 			for(var n = 0; n < rowIDArray.length; n++) {
 		 				if(landcode == rowIDArray[n]){
-			 				alert("លេខដី/ផ្ទះ នេះបានជ្រើសរើសរួចហើយ");
+			 				infoMessageAlert("លេខដី/ផ្ទះ នេះបានជ្រើសរើសរួចហើយ");
 			 				had = 1;
 		 				}
 		 			}
@@ -1311,19 +1312,19 @@ function printSave(new_stu_id,new_receipt_no){
 
     date_agreement = dijit.byId("date_line").get("value");
     if(schedule_opt==1 && date_agreement==null){ 
-		alert("សូមបញ្ចូលថ្ងៃត្រូវមកធ្វើកិច្ចសន្យា");
+		infoMessageAlert("សូមបញ្ចូលថ្ងៃត្រូវមកធ្វើកិច្ចសន្យា");
 		dijit.byId("date_line").focus();return false;
     }
     
 	deposit = dijit.byId('deposit').get('value');
 	if (deposit=='' || deposit==-1){
-		alert('សូមបញ្ចូលប្រាក់ត្រូវបង់ ទើបបោះពុម្ភបង្កាន់ដៃបង់ប្រាក់បាន!');
+		infoMessageAlert('សូមបញ្ចូលប្រាក់ត្រូវបង់ ទើបបោះពុម្ភបង្កាន់ដៃបង់ប្រាក់បាន!');
 		dijit.byId('deposit').focus();
 		return false;
 	}
 	date_line = dijit.byId('date_line').get('value');
 	if(date_line=="" || date_line==null){
-		alert("<?php echo $tr->translate("ALERT_DEPOSIT_WARNING");?>");
+		infoMessageAlert("<?php echo $tr->translate("ALERT_DEPOSIT_WARNING");?>");
 		dijit.byId("date_line").focus();return false;
 	}
 	
