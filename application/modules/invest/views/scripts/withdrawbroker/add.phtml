@@ -10,13 +10,13 @@
 				if(this.validate()) {
 					investment_id = dijit.byId('investment_id').get('value');
 					if(investment_id==0 || investment_id==""){
-						alert("<?php echo $tr->translate("PLEASE_SELECT_INVESTMENT");?>");
+						infoMessageAlert("<?php echo $tr->translate("PLEASE_SELECT_INVESTMENT");?>");
 						dijit.byId('investment_id').focus();
 						return false;
 					}
 					recieve_amount = dijit.byId('recieve_amount').get('value');
 					if(recieve_amount==0 || recieve_amount==""){
-						alert("<?php echo $tr->translate("PLEASE_ENTER_RECEIVE_AMOUNT");?>");
+						infoMessageAlert("<?php echo $tr->translate("PLEASE_ENTER_RECEIVE_AMOUNT");?>");
 						dijit.byId('recieve_amount').focus();
 						return false;
 					}
@@ -37,100 +37,132 @@
 	    	</div>
 	    	<div class="card-box">
 	    		<div class="col-md-6 col-sm-6 col-xs-12">
-	    			<div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("INVESTMENT");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('investment_id');?>
-	                    	<?php echo $frm->getElement('broker_id');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label  col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PAY_DATE");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('payment_date');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("TIMES");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('times');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PAYMENT_OPTION");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('option_pay');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("AMOUNT_RETURN");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('interest_paid');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("TOTAL_AMOUNT_RETURN");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('total_payment');?>
-	                   </div>
-	                </div>
+					<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="fa fa-recycle" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("BROKER_INFO");?></p>
+										</div> 
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("INVESTMENT");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('investment_id');?>
+											<?php echo $frm->getElement('broker_id');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label  col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PAY_DATE");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('payment_date');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("TIMES");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('times');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PAYMENT_OPTION");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('option_pay');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("AMOUNT_RETURN");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('interest_paid');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("TOTAL_AMOUNT_RETURN");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('total_payment');?>
+									   </div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 	    		</div>
 	    		<div class="col-md-6 col-sm-6 col-xs-12">
-	                <div class="form-group">
-	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("RECIEPT_NO");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('receipt_no');?>
-	                   </div>
-	                </div>
-	                 <div class="form-group">
-	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("DATE_INPUT");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('paid_date');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PAYMENT_TYPE");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('payment_method');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("NUMBER_CODE");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('cheque');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("RECEIVE_AMOUNT");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('recieve_amount');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("REMAIN");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('remain');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("NOTE");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('note');?>
-	                   </div>
-	                </div>
+					<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="glyphicon glyphicon-compressed" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("WITHDRAWAL_INFO");?></p>
+										</div> 
+									</div>
+									<div class="form-group">
+									   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("RECIEPT_NO");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('receipt_no');?>
+									   </div>
+									</div>
+									 <div class="form-group">
+									   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("DATE_INPUT");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('paid_date');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PAYMENT_TYPE");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('payment_method');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("NUMBER_CODE");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('cheque');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("RECEIVE_AMOUNT");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('recieve_amount');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("REMAIN");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('remain');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("NOTE");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('note');?>
+									   </div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 	    		</div>
 	           
 	    	</div>
@@ -176,8 +208,8 @@
 							        <!--/.Schedule Panel 3-->
 							     </div>
 							     <input type="hidden" dojoType="dijit.form.TextBox" name="lastpaiddate" id="lastpaiddate">
-				<input type="hidden" dojoType="dijit.form.TextBox" name="identity" id="identity">
-				<input type="hidden" dojoType="dijit.form.TextBox" name="record_id" id="record_id">
+									<input type="hidden" dojoType="dijit.form.TextBox" name="identity" id="identity">
+									<input type="hidden" dojoType="dijit.form.TextBox" name="record_id" id="record_id">
 							 </div>
                 		</div>
                 	</div>
@@ -185,10 +217,10 @@
 			</div>
 									    
 	    	<div class="clearfix"></div>
-			    <div class="card-box">
-               		<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
-					 <input type="submit" value="save_close" tabindex="2" label="<?php echo $tr->translate('SAVECLOSE');?>" id="save_close" dojoType="dijit.form.Button" name="save_close" iconClass="dijitEditorIcon dijitEditorIconSave" /> 
-					<input type="submit" value="SAVE_NEW" tabindex="1" label="<?php echo $tr->translate('SAVENEW');?>" id="save_new" dojoType="dijit.form.Button" name="save_new" iconClass="dijitEditorIcon dijitEditorIconSave"/> 
+			<div class="card-box">
+				<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
+					<input type="submit" class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-remove"  value="save_close" tabindex="2" label="<?php echo $tr->translate('SAVECLOSE');?>" id="save_close" dojoType="dijit.form.Button" name="save_close" iconClass="dijitEditorIcon dijitEditorIconSave" /> 
+					<input type="submit" class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-disk"  value="SAVE_NEW" tabindex="1" label="<?php echo $tr->translate('SAVENEW');?>" id="save_new" dojoType="dijit.form.Button" name="save_new" iconClass="dijitEditorIcon dijitEditorIconSave"/> 
 	    		</div>
 	    	</div>
 		</form>
@@ -285,7 +317,7 @@ function getLaonPayment(){//tab ទី១
 	is_set=0;
 		var investment_id = dijit.byId('investment_id').get('value');
 		if(investment_id==0 || investment_id==""){
-			alert("<?php echo $tr->translate("PLEASE_SELECT_INVESTMENT");?>");
+			infoMessageAlert("<?php echo $tr->translate("PLEASE_SELECT_INVESTMENT");?>");
 			dijit.byId('investment_id').focus();
 			return false;
 		}
@@ -391,7 +423,7 @@ function getAllLaonPayment(){//get schedule Tab ទី២
 	var url_submits = '<?php echo $this->url(array('module'=>'invest','controller'=>'withdrawbroker','action'=>'get-allinvestdetail')); ?>';
 		var investment_id = dijit.byId('investment_id').get('value');
 		if(investment_id==0 || investment_id==""){
-			alert("<?php echo $tr->translate("PLEASE_SELECT_INVESTMENT");?>");
+			infoMessageAlert("<?php echo $tr->translate("PLEASE_SELECT_INVESTMENT");?>");
 			dijit.byId('investment_id').focus();
 			return false;
 		}
@@ -442,7 +474,7 @@ function getInvesthaswithdraw(){//tab3 ប្រវត្តបានបង់�
 
 		var investment_id = dijit.byId('investment_id').get('value');
 		if(investment_id==0 || investment_id==""){
-			alert("<?php echo $tr->translate("PLEASE_SELECT_INVESTMENT");?>");
+			infoMessageAlert("<?php echo $tr->translate("PLEASE_SELECT_INVESTMENT");?>");
 			dijit.byId('investment_id').focus();
 			return false;
 		}
@@ -564,7 +596,7 @@ function calculateTotal(index){//គណនាបង់
 		
 		totalReturn();	
 	}catch(err){
-		alert(err);
+		infoMessageAlert(err);
 	}
 }
 function doTotalByServ(){

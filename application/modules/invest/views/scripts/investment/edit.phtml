@@ -10,25 +10,25 @@
 				if(this.validate()) {
 					investor_id = dijit.byId('investor_id').get('value');
 					if(investor_id==0 || investor_id==""){
-						alert("<?php echo $tr->translate("PLEASE_SELECT_INVESTOR");?>");
+						infoMessageAlert("<?php echo $tr->translate("PLEASE_SELECT_INVESTOR");?>");
 						dijit.byId('investor_id').focus();
 						return false;
 					}
 
 					amount = dijit.byId('amount').get('value');
 					if(amount==0 || amount==""){
-						alert("<?php echo $tr->translate("PLEASE_ENTER_AMOUNT_INVEST");?>");
+						infoMessageAlert("<?php echo $tr->translate("PLEASE_ENTER_AMOUNT_INVEST");?>");
 						dijit.byId('amount').focus();
 						return false;
 					}
 					period = dijit.byId('duration').get('value');
 					if(period==0){
-						alert("<?php echo $tr->translate("PLEASE_ENTER_DURATION_INVEST");?>");
+						infoMessageAlert("<?php echo $tr->translate("PLEASE_ENTER_DURATION_INVEST");?>");
 						dijit.byId('duration').focus();return false;
 					}
 					identity= $("#identity").val();
 					if(identity=='' || identity==null){
-						alert("<?php echo $tr->translate("PLEASE_ADD_RECORD_INVESTOR_SCHEDULE");?>");
+						infoMessageAlert("<?php echo $tr->translate("PLEASE_ADD_RECORD_INVESTOR_SCHEDULE");?>");
 						addRow();
 						return false;
 					}
@@ -37,19 +37,19 @@
 					if(broker_id>0){
 						broker_amount = dijit.byId('broker_amount').get('value');
 						if(broker_amount==0 || broker_amount==""){
-							alert("<?php echo $tr->translate("PLEASE_ENTER_BROKER_AMOUNT");?>");
+							infoMessageAlert("<?php echo $tr->translate("PLEASE_ENTER_BROKER_AMOUNT");?>");
 							dijit.byId('broker_amount').focus();
 							return false;
 						}
 						period = dijit.byId('broker_duration').get('value');
 						if(period==0){
-								alert("<?php echo $tr->translate("PLEASE_ENTER_DURATION_BROKER");?>");
+								infoMessageAlert("<?php echo $tr->translate("PLEASE_ENTER_DURATION_BROKER");?>");
 								dijit.byId('broker_duration').focus();
 								return false;
 						}
 						identity_broker= $("#identity_broker").val();
 						if(identity_broker=='' || identity_broker==null){
-							alert("<?php echo $tr->translate("PLEASE_ADD_RECORD_BROKER_SCHEDULE");?>");
+							infoMessageAlert("<?php echo $tr->translate("PLEASE_ADD_RECORD_BROKER_SCHEDULE");?>");
 							addRowBroker();
 							return false;
 						}
@@ -61,10 +61,10 @@
 							amount_payment = amount_payment + row_amount;
 						}
 						if(broker_amount>amount_payment){
-							alert("<?php echo $tr->translate("TOTAL_AMOUNT_BROKER_SCHEDULE_NOT_ENOUGHT");?>");
+							infoMessageAlert("<?php echo $tr->translate("TOTAL_AMOUNT_BROKER_SCHEDULE_NOT_ENOUGHT");?>");
 							return false;
 						}else if(broker_amount<amount_payment){
-							alert("<?php echo $tr->translate("TOTAL_AMOUNT_BROKER_SCHEDULE_IS_OVER_BROKER_AMOUNT");?>");
+							infoMessageAlert("<?php echo $tr->translate("TOTAL_AMOUNT_BROKER_SCHEDULE_IS_OVER_BROKER_AMOUNT");?>");
 							return false;
 						}
 					}
@@ -78,7 +78,7 @@
 			<div class="card-box">
                	<div class="col-sm-12 border-botom">
 		    		<div class="col-sm-8 pd-0">
-		    			<h4 class="m-b-0"><i class="fa fa-recycle " aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('EDIT_INVESTMENT');?></h4>
+		    			<h4 class="m-b-0"><i class="fa fa-edit " aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('EDIT_INVESTMENT');?></h4>
 	    			</div>
 	    			<div class="col-sm-4 text-right">
 	    			</div>
@@ -86,86 +86,118 @@
 	    	</div>
 	    	<div class="card-box">
 	    		<div class="col-md-6 col-sm-6 col-xs-12">
-	    			<div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("INVEST_NO");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('invest_no');?>
-	                    	<?php echo $frm->getElement('id');?>
-	                   </div>
-	                </div>
-	    			<div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("INVESTOR");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('investor_id');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("INVEST_DATE");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('date');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("AMOUNT_INVEST");?> ($) :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('amount');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("DURATION_INVEST").$tr->translate("YEAR");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('duration');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("NOTE");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('note');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("STATUS");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('status');?>
-	                   </div>
-	                </div>
+					<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="fa fa-recycle" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("INVESTMENT");?></p>
+										</div> 
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("INVEST_NO");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('invest_no');?>
+											<?php echo $frm->getElement('id');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("INVESTOR");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('investor_id');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("INVEST_DATE");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('date');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("AMOUNT_INVEST");?> ($) :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('amount');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("DURATION_INVEST").$tr->translate("YEAR");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('duration');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("NOTE");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('note');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("STATUS");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('status');?>
+									   </div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 	    		</div>
 	    		<div class="col-md-6 col-sm-6 col-xs-12">
-	    			<div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BROKER");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('broker_id');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BROKER_PROFIT");?> (%) :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('broker_percent');?>
-	                   </div>
-	                </div>
-	                 <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BROKER_AMOUNT");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('broker_amount');?>
-	                   </div>
-	                </div>
-	                 <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("DURATION");?> :
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('broker_duration');?>
-	                   </div>
-	                </div>
+					<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="glyphicon glyphicon-user" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("BROKER_INFO");?></p>
+										</div> 
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BROKER");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('broker_id');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BROKER_PROFIT");?> (%) :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('broker_percent');?>
+									   </div>
+									</div>
+									 <div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BROKER_AMOUNT");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('broker_amount');?>
+									   </div>
+									</div>
+									 <div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("DURATION");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('broker_duration');?>
+									   </div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 	            </div>
 	           
 	    	</div>
@@ -196,7 +228,7 @@
 							        		<table id="table_row" width="100%" style="border-collapse: collapse; border:1px solid #ccc !important;"><tbody><tr id="head-title" class="head-td" style="color:#000 !important;background:#eee; font-size: 12px; height: 30px;margin-bottom: 10px;" align="center"></tr></tbody></table>
 							        	</div>
 							        	<input type="hidden" name="identity" id="identity"  value="" >
-										<input type="button" label="<?php echo $tr->translate('ADD_INSTALLMENT');?>" dojoType="dijit.form.Button" iconClass="dijitIconEditProperty" onclick="addRow();" />
+										<input type="button" class="button-class button-primary" iconClass="glyphicon glyphicon-sort-by-attributes" label="<?php echo $tr->translate('ADD_INSTALLMENT');?>" dojoType="dijit.form.Button" onclick="addRow();" />
 							        </div>
 							        <!--/.Schedule Panel 1-->
 							        <!--Schedule Panel 2-->
@@ -214,10 +246,10 @@
 			</div>
 									    
 	    	<div class="clearfix"></div>
-			    <div class="card-box">
-               		<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
+			<div class="card-box">
+				<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
 					 <input type="submit" value="save_close" tabindex="2" label="<?php echo $tr->translate('SAVECLOSE');?>" id="save_close" dojoType="dijit.form.Button" name="save_close" iconClass="dijitEditorIcon dijitEditorIconSave" /> 
-					<input type="submit" value="SAVE_NEW" tabindex="1" label="<?php echo $tr->translate('SAVENEW');?>" id="save_new" dojoType="dijit.form.Button" name="save_new" iconClass="dijitEditorIcon dijitEditorIconSave"/> 
+					<input type="submit" class="button-class button-primary" iconClass="glyphicon glyphicon-sort-by-attributes" value="SAVE_NEW" tabindex="1" label="<?php echo $tr->translate('SAVENEW');?>" id="save_new" dojoType="dijit.form.Button" name="save_new" /> 
 	    		</div>
 	    	</div>
 		</form>
@@ -348,20 +380,20 @@ function initailizeRow(){
 function addRow(){
 	investor_id = dijit.byId('investor_id').get('value');
 	if(investor_id==0 || investor_id==""){
-			alert("<?php echo $tr->translate("PLEASE_SELECT_INVESTOR");?>");
+			infoMessageAlert("<?php echo $tr->translate("PLEASE_SELECT_INVESTOR");?>");
 			dijit.byId('investor_id').focus();
 			return false;
 	}
 
 	amount = dijit.byId('amount').get('value');
 	if(amount==0 || amount==""){
-			alert("<?php echo $tr->translate("PLEASE_ENTER_AMOUNT_INVEST");?>");
+			infoMessageAlert("<?php echo $tr->translate("PLEASE_ENTER_AMOUNT_INVEST");?>");
 			dijit.byId('amount').focus();
 			return false;
 	}
 	
 	period = dijit.byId('duration').get('value');
-	if(period==0){alert("<?php echo $tr->translate("PLEASE_ENTER_DURATION_INVEST");?>");dijit.byId('duration').focus();return false;}
+	if(period==0){infoMessageAlert("<?php echo $tr->translate("PLEASE_ENTER_DURATION_INVEST");?>");dijit.byId('duration').focus();return false;}
 
 	no=0;title=0;temp=''; tempbroker=""; $('#identity').val('');
 	dojo.byId("showrecord").innerHTML = '';
@@ -461,7 +493,7 @@ function calCulateAmount(index,revers=1){
 	   dijit.byId('percent'+index).attr('value',percent);
    }
 	if(dijit.byId('percent'+index).get('value')>100){
-		 alert("តម្លៃត្រូវបង់មិនអាចធំជាង ១០០ ភាគរយបានទេ !");
+		 infoMessageAlert("តម្លៃត្រូវបង់មិនអាចធំជាង ១០០ ភាគរយបានទេ !");
 		 dijit.byId('percent'+index).attr('value',"");
 		 dijit.byId('total_payment'+index).attr('value',"");
 		 dijit.byId('percent'+index).focus();
@@ -492,7 +524,7 @@ function getBrokerInfo(){
 function calculateBrokerAmount(revers=1){
 	amount = dijit.byId('amount').get('value');
 	if(amount==0 || amount==""){
-		alert("<?php echo $tr->translate("PLEASE_ENTER_AMOUNT_INVEST");?>");
+		infoMessageAlert("<?php echo $tr->translate("PLEASE_ENTER_AMOUNT_INVEST");?>");
 		dijit.byId('amount').focus();
 		return false;
 	}
@@ -511,7 +543,7 @@ function calculateBrokerAmount(revers=1){
 	   dijit.byId('broker_percent').attr('value',broker_percent);
    }
 	if(dijit.byId('broker_percent').get('value')>100){
-		 alert("តម្លៃត្រូវបង់មិនអាចធំជាង ១០០ ភាគរយបានទេ !");
+		 infoMessageAlert("តម្លៃត្រូវបង់មិនអាចធំជាង ១០០ ភាគរយបានទេ !");
 		 dijit.byId('broker_percent').attr('value',0);
 		 dijit.byId('broker_amount').attr('value',0);
 		 dijit.byId('broker_percent').focus();
@@ -566,20 +598,20 @@ function initializeRowBroker(){
 function addRowBroker(){
 	broker_id = dijit.byId('broker_id').get('value');
 	if(broker_id==0 || broker_id==""){
-			alert("<?php echo $tr->translate("PLEASE_SELECT_BROKER");?>");
+			infoMessageAlert("<?php echo $tr->translate("PLEASE_SELECT_BROKER");?>");
 			dijit.byId('broker_id').focus();
 			return false;
 	}
 
 	broker_amount = dijit.byId('broker_amount').get('value');
 	if(broker_amount==0 || broker_amount==""){
-			alert("<?php echo $tr->translate("PLEASE_ENTER_BROKER_AMOUNT");?>");
+			infoMessageAlert("<?php echo $tr->translate("PLEASE_ENTER_BROKER_AMOUNT");?>");
 			dijit.byId('broker_amount').focus();
 			return false;
 	}
 	
 	period = dijit.byId('broker_duration').get('value');
-	if(period==0){alert("<?php echo $tr->translate("PLEASE_ENTER_DURATION_BROKER");?>");dijit.byId('broker_duration').focus();return false;}
+	if(period==0){infoMessageAlert("<?php echo $tr->translate("PLEASE_ENTER_DURATION_BROKER");?>");dijit.byId('broker_duration').focus();return false;}
 
 	no_broker=0;title_broker=0;temp_broker=''; $('#identity_broker').val('');
 	dojo.byId("showrecord_broker").innerHTML = '';
@@ -654,7 +686,7 @@ function calCulateAmountBroker(index,revers=1){
 	broker_amount = dijit.byId('broker_amount').get('value');
 	amount_payment =  dijit.byId('total_payment_broker'+index).get('value');
 	if(amount_payment>broker_amount){
-		alert("<?php echo $tr->translate("TOTAL_AMOUNT_BROKER_SCHEDULE_IS_OVER_BROKER_AMOUNT");?>");
+		infoMessageAlert("<?php echo $tr->translate("TOTAL_AMOUNT_BROKER_SCHEDULE_IS_OVER_BROKER_AMOUNT");?>");
 		dijit.byId('total_payment_broker'+index).attr('value',broker_amount);
 		return false;
 	}
@@ -670,7 +702,7 @@ function calCulateAmountBroker(index,revers=1){
 	   dijit.byId('percent_broker'+index).attr('value',percent);
    }
 	if(dijit.byId('percent_broker'+index).get('value')>100){
-		 alert("តម្លៃត្រូវបង់មិនអាចធំជាង ១០០ ភាគរយបានទេ !");
+		 infoMessageAlert("តម្លៃត្រូវបង់មិនអាចធំជាង ១០០ ភាគរយបានទេ !");
 		 dijit.byId('percent_broker'+index).attr('value',"");
 		 dijit.byId('total_payment_broker'+index).attr('value',"");
 		 dijit.byId('percent_broker'+index).focus();
