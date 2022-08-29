@@ -875,7 +875,12 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
 								$true=1;
 								$string.='
 									<li>
-										<span  class="dnNumber"><input checked="checked" OnChange="checkAllDn('.$no.')" style=" vertical-align: top; height: initial;" type="checkbox" class="checkbox" id="mfdid_'.$no.'" value="'.$no.'"  name="selector[]"/> '.$row['dnNumber'].' '.date("d-m-Y",strtotime($row['receiveDate'])).'</span>
+										<div class="custom-control custom-checkbox ">
+											<input type="checkbox" class="checkbox custom-control-input" checked="checked" OnChange="checkAllDn('.$no.')"  class="checkbox" id="mfdid_'.$no.'" value="'.$no.'"  name="selector[]" >
+											<label class="custom-control-label dnNumber " for="mfdid_'.$no.'">
+												<span  class="dnNumber">'.$row['dnNumber'].' '.date("d-m-Y",strtotime($row['receiveDate'])).'</span>
+											</label>
+										</div>
 										<small class="poNumber">'.$tr->translate("PO_NO").' : '.$row['purchaseNo'].' '.date("d-m-Y",strtotime($row['purchaseDate'])).'</small>
 										<small class="requestNumber">'.$tr->translate("REQUEST_NO").' : '.$row['requestNo'].' '.date("d-m-Y",strtotime($row['requestDate'])).'</small>
 										<input type="hidden" dojoType="dijit.form.TextBox" name="deliveryId'.$no.'" id="deliveryId'.$no.'" value="'.$row['id'].'" >
@@ -887,7 +892,12 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
 						if($true==0){
 							$string.='
 								<li>
-									<span  class="dnNumber"><input  OnChange="checkAllDn('.$no.')" style=" vertical-align: top; height: initial;" type="checkbox" class="checkbox" id="mfdid_'.$no.'" value="'.$no.'"  name="selector[]"/> '.$row['dnNumber'].' '.date("d-m-Y",strtotime($row['receiveDate'])).'</span>
+									<div class="custom-control custom-checkbox ">
+										<input type="checkbox" class="checkbox custom-control-input" OnChange="checkAllDn('.$no.')" class="checkbox" id="mfdid_'.$no.'" value="'.$no.'"  name="selector[]" >
+										<label class="custom-control-label dnNumber " for="mfdid_'.$no.'">
+											<span  class="dnNumber">'.$row['dnNumber'].' '.date("d-m-Y",strtotime($row['receiveDate'])).'</span>
+										</label>
+									</div>
 									<small class="poNumber">'.$tr->translate("PO_NO").' : '.$row['purchaseNo'].' '.date("d-m-Y",strtotime($row['purchaseDate'])).'</small>
 									<small class="requestNumber">'.$tr->translate("REQUEST_NO").' : '.$row['requestNo'].' '.date("d-m-Y",strtotime($row['requestDate'])).'</small>
 									<input type="hidden" dojoType="dijit.form.TextBox" name="deliveryId'.$no.'" id="deliveryId'.$no.'" value="'.$row['id'].'" >
@@ -897,7 +907,12 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
 					}else{
 						$string.='
 							<li>
-								<span  class="dnNumber"><input  OnChange="checkAllDn('.$no.')" style=" vertical-align: top; height: initial;" type="checkbox" class="checkbox" id="mfdid_'.$no.'" value="'.$no.'"  name="selector[]"/> '.$row['dnNumber'].' '.date("d-m-Y",strtotime($row['receiveDate'])).'</span>
+								<div class="custom-control custom-checkbox ">
+									<input type="checkbox" class="checkbox custom-control-input" OnChange="checkAllDn('.$no.')" class="checkbox" id="mfdid_'.$no.'" value="'.$no.'"  name="selector[]" >
+									<label class="custom-control-label dnNumber " for="mfdid_'.$no.'">
+										<span  class="dnNumber">'.$row['dnNumber'].' '.date("d-m-Y",strtotime($row['receiveDate'])).'</span>
+									</label>
+								</div>
 								<small class="poNumber">'.$tr->translate("PO_NO").' : '.$row['purchaseNo'].' '.date("d-m-Y",strtotime($row['purchaseDate'])).'</small>
 								<small class="requestNumber">'.$tr->translate("REQUEST_NO").' : '.$row['requestNo'].' '.date("d-m-Y",strtotime($row['requestDate'])).'</small>
 								<input type="hidden" dojoType="dijit.form.TextBox" name="deliveryId'.$no.'" id="deliveryId'.$no.'" value="'.$row['id'].'" >
@@ -912,7 +927,12 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
 					}
 					$string.='
 							<li>
-								<span  class="dnNumber"><input checked="checked" OnChange="checkAllDn('.$no.')" style=" vertical-align: top; height: initial;" type="checkbox" class="checkbox" id="mfdid_'.$no.'" value="'.$no.'"  name="selector[]"/> '.$row['dnNumber'].' '.date("d-m-Y",strtotime($row['receiveDate'])).'</span>
+								<div class="custom-control custom-checkbox ">
+									<input type="checkbox" class="checkbox custom-control-input" checked="checked" OnChange="checkAllDn('.$no.')"  class="checkbox" id="mfdid_'.$no.'" value="'.$no.'"  name="selector[]" >
+									<label class="custom-control-label dnNumber " for="mfdid_'.$no.'">
+										<span  class="dnNumber">'.$row['dnNumber'].' '.date("d-m-Y",strtotime($row['receiveDate'])).'</span>
+									</label>
+								</div>
 								<small class="poNumber">'.$tr->translate("PO_NO").' : '.$row['purchaseNo'].' '.date("d-m-Y",strtotime($row['purchaseDate'])).'</small>
 								<small class="requestNumber">'.$tr->translate("REQUEST_NO").' : '.$row['requestNo'].' '.date("d-m-Y",strtotime($row['requestDate'])).'</small>
 								<input type="hidden" dojoType="dijit.form.TextBox" name="deliveryId'.$no.'" id="deliveryId'.$no.'" value="'.$row['id'].'" >

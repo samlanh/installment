@@ -21,13 +21,13 @@
 	  			 if(this.validate()) {
 					branch_id = dijit.byId('branch_id').get('value');
 					if(branch_id=='' || branch_id<=0){
-						alert('<?php echo $tr->translate('PLEASE_SELECT_BRANCH');?>');
+						infoMessageAlert('<?php echo $tr->translate('PLEASE_SELECT_BRANCH');?>');
 						dijit.byId('branch_id').focus();
 						return false;
 					}
 					paymentId = dijit.byId('paymentId').get('value');
 					if(paymentId=='' || paymentId<=0){
-						alert('<?php echo $tr->translate('PLEASE_SELECT_PAYMENT_NO');?>');
+						infoMessageAlert('<?php echo $tr->translate('PLEASE_SELECT_PAYMENT_NO');?>');
 						dijit.byId('paymentId').focus();
 						return false;
 					}
@@ -39,42 +39,56 @@
 	   			}
 			</script>
 			<div class="card-box">
-				<div class="col-md-4 col-sm-4 col-xs-12">
-		             <div class="form-group">
-		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("BRANCH_NAME");?> </label>
-		                <div class="col-md-7 col-sm-7 col-xs-12">
-		                	<?php echo $frm->getElement("branch_id");?>
-		                </div>
-		             </div>
-					
-					<div class="form-group">
-		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("RECEIVED_CHEQUE_NAME");?> </label>
-		                <div class="col-md-7 col-sm-7 col-xs-12">
-							<input id="issueId" />
-							<?php echo $frm->getElement("paymentId");?>
-		                </div>
-		             </div>  
-					
-					 <div class="form-group">
-		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("WITHDRAW_DATE");?> </label>
-		                <div class="col-md-7 col-sm-7 col-xs-12">
-		                	<?php echo $frm->getElement("withdrawDate");?>
-		                </div>
-		             </div>
-		             <div class="form-group">
-		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("NOTE");?> </label>
-		                <div class="col-md-7 col-sm-7 col-xs-12">
-		                	<?php echo $frm->getElement("noteWithdraw");?>
-		                </div>
-		             </div>
-					  <div class="form-group">
-		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("STATUS");?> </label>
-		                <div class="col-md-7 col-sm-7 col-xs-12">
-		                	<?php echo $frm->getElement("statusWithdraw");?>
-		                </div>
-		             </div>
+				<div class="col-md-6 col-sm-6 col-xs-12">
+					<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="glyphicon glyphicon-credit-card" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("RECEIVECHEQE");?></p>
+										</div> 
+									</div>
+									 <div class="form-group">
+										<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("BRANCH_NAME");?> </label>
+										<div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement("branch_id");?>
+										</div>
+									 </div>
+									<div class="form-group">
+										<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("RECEIVED_CHEQUE_NAME");?> </label>
+										<div class="col-md-7 col-sm-7 col-xs-12">
+											<input id="issueId" />
+											<?php echo $frm->getElement("paymentId");?>
+										</div>
+									 </div>  
+									 <div class="form-group">
+										<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("WITHDRAW_DATE");?> </label>
+										<div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement("withdrawDate");?>
+										</div>
+									 </div>
+									 <div class="form-group">
+										<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("NOTE");?> </label>
+										<div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement("noteWithdraw");?>
+										</div>
+									 </div>
+									  <div class="form-group">
+										<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("STATUS");?> </label>
+										<div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement("statusWithdraw");?>
+										</div>
+									 </div>
+								 </div>
+							 </div>
+						 </div>
+					 </div>
 				</div>
-				<div class="col-md-8 col-sm-8 col-xs-12">
+				<div class="col-md-6 col-sm-6 col-xs-12">
 					<div id="request-info"></div>
 				 </div>
 				<div class="clearfix"></div>
@@ -82,8 +96,7 @@
 			<div class="clearfix"></div>
 	       	<div class="card-box mt-20">
                	<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
-               		<input type="submit" value="save_close" id="save_close" name="save_close" label="<?php echo $tr->translate("SAVE");?>" dojoType="dijit.form.Button" 
-						iconClass="dijitEditorIcon dijitEditorIconSave" />
+               		<input type="submit" class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-remove" value="save_close" id="save_close" name="save_close" label="<?php echo $tr->translate("SAVE");?>" dojoType="dijit.form.Button" />
 					
                	</div>
              </div>
