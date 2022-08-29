@@ -49,13 +49,13 @@ input.btn_borwse_image {
 				if(this.validate()) {
 					measureId = dijit.byId('measureId').get('value');
 					if(measureId<1){
-						alert('<?php echo $tr->translate('PLEASE_SELECT_MEASURE');?>');
+						infoMessageAlert('<?php echo $tr->translate('PLEASE_SELECT_MEASURE');?>');
 						dijit.byId('measureId').focus();
 						return false;
 					}
 					budgetItem = dijit.byId('budgetItem').get('value');
 					if(budgetItem<1){
-						alert('<?php echo $tr->translate('PLEASE_SELECT_BUDGET');?>');
+						infoMessageAlert('<?php echo $tr->translate('PLEASE_SELECT_BUDGET');?>');
 						dijit.byId('budgetItem').focus();
 						return false;
 					}
@@ -76,163 +76,197 @@ input.btn_borwse_image {
 	    	</div>
 		    <div class="col-md-12">
 	        	<div class="col-md-4 col-sm-4 col-xs-12">
-					<div class="form-group">
-	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-barcode" aria-hidden="true"></i> <?php echo $tr->translate("PRODUCT_INFO");?> 
-	                   </label>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("SERVICE_PRODUCT");?>
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('isService');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("IS_COUNT_STOCK");?>
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('isCountStock');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PRODUCT_CATEGORY");?>
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('categoryId');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><strong><?php echo $tr->translate("PRODUCT_NAME");?> *</strong>
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('productName');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PRODUCT_CODE");?>
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('productCode');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><i class="fa fa-barcode" aria-hidden="true"></i>&nbsp;&nbsp;<?php echo $tr->translate("BAR_CODE");?>
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('barCode');?>
-	                   </div>
-	                </div>
-	            </div>
-	            <div class="col-md-4 col-sm-4 col-xs-12">
-					<div class="form-group title-blog">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12 bold" >
-	                   		<i class="fa fa-clone" aria-hidden="true"></i> <?php echo $tr->translate("CONVERT_MEASURE");?>
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                   		<input type="button" dojoType="dijit.form.Button" onclick="getRefreshData();" label="<?php echo $tr->translate("GET_DATA");?>" iconClass="dijitEditorIcon dijitEditorIconUndo" /> 
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><strong><?php echo $tr->translate("MEASURE");?></strong>*
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('measureId');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CONVERT");?>
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                   		<div class="col-md-2 col-sm-2 col-xs-12">
-	                    		<?php echo $frm->getElement('isConvert');?>
-	                    	</div>
-	                    	<div class="col-md-10 col-sm-10 col-xs-12">
-	                    		<label id="convert"></label>
-	                    	</div>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("QTY");?>
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('qtyMeasure');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("labelMeasure");?>
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('labelMeasure');?>
-	                    	<input type="hidden" name="oldMeasure"  id="oldMeasure" dojoType="dijit.form.ValidationTextBox"/>
-	                    	<input type="hidden" name="oldMeasureValue" id="oldMeasureValue" dojoType="dijit.form.ValidationTextBox"/>
-	                   </div>
-	                </div>
-	                <div class="form-group" style="display: none;">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" >
-	                   		<strong><?php echo $tr->translate("COSTING");?></strong><span id="measureLabel"></span>
-	                   		<span class="control-label col-md-2 col-sm-2" ><i class="fa fa-money" aria-hidden="true"></i></span>
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('costing');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" >
-	                   		<strong><?php echo $tr->translate("BUDGET_ITEM");?></strong>
-	                   		<span class="control-label col-md-2 col-sm-2" ><i class="fa fa-usd" aria-hidden="true"></i></span>
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('budgetItem');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" >
-	                   		<?php echo $tr->translate("NOTE");?>
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('note');?>
-	                   </div>
-	                </div>
-	            </div>
-	            <div class="col-md-4 col-sm-4 col-xs-12">
-					<div class="form-group">
-	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-file-image-o" aria-hidden="true"></i> <?php echo $tr->translate("PRODUCT_IMAGE");?> 
-	                   </label>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" >
-	                   		<?php echo $tr->translate("PRODUCT_IMAGE");?>
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                   <?php 
-						$images = $this->baseUrl().'/images/no-photo.png';
-						if (!empty($this->photo)){
-							$images = $this->baseUrl().'/images/'.$this->photo;
-						}
-						?>
-						<div class="account-image" >
-							<div class="image-box">
-								<img id="profile_wiew" src="<?php echo $images;?>" alt=""  />
-							</div>
-							<div class="button_browse">
-								<div id='preview'></div>	
-								<span>Upload <span ><i class="fa fa-camera" aria-hidden="true"></i></span></span>
-								<input class="btn_borwse_image" type="file" id="photo" name="photo" />
-								<?php echo $frm->getElement('oldPhoto');?>
-								<?php echo $frm->getElement('id');?>
+					<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="fa fa-barcode" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("PRODUCT_INFO");?></p>
+										</div> 
+									</div>
+								
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("SERVICE_PRODUCT");?>
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('isService');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("IS_COUNT_STOCK");?>
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('isCountStock');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PRODUCT_CATEGORY");?>
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('categoryId');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><strong><?php echo $tr->translate("PRODUCT_NAME");?> *</strong>
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('productName');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PRODUCT_CODE");?>
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('productCode');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><i class="fa fa-barcode" aria-hidden="true"></i>&nbsp;&nbsp;<?php echo $tr->translate("BAR_CODE");?>
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('barCode');?>
+									   </div>
+									</div>
+								</div>
 							</div>
 						</div>
-	                   </div>
-	                </div>
+					</div>
+	            </div>
+	            <div class="col-md-4 col-sm-4 col-xs-12">
+					<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="fa fa-clone" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("CONVERT_MEASURE");?></p>
+										</div> 
+									</div>
+									
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><strong><?php echo $tr->translate("MEASURE");?></strong>*
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+										   <div class="col-md-6 col-sm-6 col-xs-12">
+												<?php echo $frm->getElement('measureId');?>
+										   </div>
+										   <div class="col-md-6 col-sm-6 col-xs-12">
+												<input type="button" class="button-class button-primary" iconClass="glyphicon glyphicon-refresh" dojoType="dijit.form.Button" onclick="getRefreshData();" label="<?php echo $tr->translate("GET_DATA");?>"  /> 
+										   </div>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CONVERT");?>
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<div class="col-md-2 col-sm-2 col-xs-12">
+												<?php echo $frm->getElement('isConvert');?>
+											</div>
+											<div class="col-md-10 col-sm-10 col-xs-12">
+												<label id="convert"></label>
+											</div>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("QTY");?>
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('qtyMeasure');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("labelMeasure");?>
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('labelMeasure');?>
+											<input type="hidden" name="oldMeasure"  id="oldMeasure" dojoType="dijit.form.ValidationTextBox"/>
+											<input type="hidden" name="oldMeasureValue" id="oldMeasureValue" dojoType="dijit.form.ValidationTextBox"/>
+									   </div>
+									</div>
+									<div class="form-group" style="display: none;">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" >
+											<strong><?php echo $tr->translate("COSTING");?></strong><span id="measureLabel"></span>
+											<span class="control-label col-md-2 col-sm-2" ><i class="fa fa-money" aria-hidden="true"></i></span>
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('costing');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" >
+											<strong><?php echo $tr->translate("BUDGET_ITEM");?></strong>
+											<span class="control-label col-md-2 col-sm-2" ><i class="fa fa-usd" aria-hidden="true"></i></span>
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('budgetItem');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" >
+											<?php echo $tr->translate("NOTE");?>
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('note');?>
+									   </div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+	            </div>
+	            <div class="col-md-4 col-sm-4 col-xs-12">
+					<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="fa fa-image" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("PRODUCT_IMAGE");?></p>
+										</div> 
+									</div>
+									<div class="form-group">
+									   <div class="col-md-12 col-sm-12 col-xs-12">
+									   <?php 
+										$images = $this->baseUrl().'/images/no-photo.png';
+										if (!empty($this->photo)){
+											$images = $this->baseUrl().'/images/'.$this->photo;
+										}
+										?>
+										<div class="account-image" >
+											<div class="image-box">
+												<img id="profile_wiew" src="<?php echo $images;?>" alt=""  />
+											</div>
+											<div class="button_browse">
+												<div id='preview'></div>	
+												<span>Upload <span ><i class="fa fa-camera" aria-hidden="true"></i></span></span>
+												<input class="btn_borwse_image" type="file" id="photo" name="photo" />
+												<?php echo $frm->getElement('oldPhoto');?>
+												<?php echo $frm->getElement('id');?>
+											</div>
+										</div>
+									   </div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 	            </div>
 	        </div>
 			<div class="clearfix"></div>
 			  <div class="card-box">
-               	<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
-					<input type="reset" value="CLEAR" tabindex="2" label="<?php echo $tr->translate('CLEAR');?>" id="save_close" dojoType="dijit.form.Button" name="save_close"
-					 iconClass="dijitIconClear" /> 
-					<input type="submit" value="SAVE_NEW" tabindex="1" label="<?php echo $tr->translate('SAVENEW');?>" id="save_new" dojoType="dijit.form.Button" name="save_new"
-						 iconClass="dijitEditorIcon dijitEditorIconSave"/> 
+               	<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
+					<input type="reset" class="button-class button-danger"  iconClass="glyphicon glyphicon-repeat" value="CLEAR" tabindex="2" label="<?php echo $tr->translate('CLEAR');?>" id="save_close" dojoType="dijit.form.Button" name="save_close"  /> 
+					<input type="submit" class="button-class button-primary"  iconClass="glyphicon glyphicon-floppy-disk"  value="SAVE_NEW" tabindex="1" label="<?php echo $tr->translate('SAVE');?>" id="save_new" dojoType="dijit.form.Button" name="save_new" /> 
     			</div>
 	    	</div>
 		</form>

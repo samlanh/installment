@@ -57,8 +57,9 @@ class Application_Form_FrmAdvanceSearch extends Zend_Dojo_Form
 		$_btn_search = new Zend_Dojo_Form_Element_SubmitButton('btn_search');
 		$_btn_search->setAttribs(array(
 				'dojoType'=>'dijit.form.Button',
-				'iconclass'=>'dijitIconSearch',
-				'label'=>'Search'
+				'class'=>'button-class button-primary',
+				'iconclass'=>'glyphicon glyphicon-search',
+				'label'=>$this->tr->translate("SEARCH")
 				
 				));
 		
