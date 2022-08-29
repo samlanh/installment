@@ -476,9 +476,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		if(!empty($_data['productId'])){
 			$sql.=" AND p.proId= ".$_data['productId'];
 		}
-		if(!empty($_data['productId'])){
-			$sql.=" AND p.proId= ".$_data['productId'];
-		}
+		
 		if(!empty($_data['isCountStock'])){
 			$sql.=" AND p.isCountStock= ".$_data['isCountStock'];
 		}
