@@ -629,17 +629,97 @@ public function getAllOutstadingLoan($search=null){
       public function getALLLoanPayment($search=null,$order11=0){
       	//$search['is_closed']='';
       	$db = $this->getAdapter();
-      	/*
-		$sql="SELECT *,
-			(SELECT first_name FROM `rms_users` WHERE id=v_getcollectmoney.user_id LIMIT 1) AS user_name,
-			(SELECT s.price_sold FROM `ln_sale` AS s WHERE s.id = sale_id LIMIT 1) AS sold_price,
-			(SELECT COUNT(id) FROM `ln_saleschedule` WHERE sale_id=v_getcollectmoney.sale_id LIMIT 1) As times,
-			(SELECT c.closing_note FROM `ln_client_receipt_money` AS c WHERE c.id =v_getcollectmoney.id LIMIT 1) AS closing_note
-      	FROM v_getcollectmoney WHERE status=1 ";
-		*/
+      	
       	
 		$dbp = new Application_Model_DbTable_DbGlobal();
-      	$sql = $dbp->getCollectPaymentSqlSt();
+//       	$sql = $dbp->getCollectPaymentSqlSt();
+		$sql="SELECT
+			  (SELECT
+			     `ln_project`.`project_name`
+			   FROM `ln_project`
+			   WHERE (`ln_project`.`br_id` = `crm`.`branch_id`)
+			   LIMIT 1) AS `branch_name`,
+			  `c`.`client_id`                      AS `client_id`,
+			  `c`.`client_number`                  AS `client_number`,
+			  `c`.`name_kh`                        AS `name_kh`,
+			  `c`.`name_en`                        AS `client_name`,
+			  `crm`.`id`                           AS `id`,
+			  `crm`.`sale_id`                      AS `sale_id`,
+			  `crm`.`branch_id`                    AS `branch_id`,
+			  `crm`.`receipt_no`                   AS `receipt_no`,
+			  `crm`.`date_pay`                     AS `date_pay`,
+			  `crm`.`date_input`                   AS `date_input`,
+			  `crm`.`note`                         AS `note`,
+			  `crm`.`user_id`                      AS `user_id`,
+			  `crm`.`return_amount`                AS `return_amount`,
+			  `crm`.`status`                       AS `status`,
+			  `crm`.`payment_option`               AS `payment_option`,
+			  `crm`.`principal_amount`             AS `principal_amount`,
+			  `crm`.`is_payoff`                    AS `is_payoff`,
+			  `crm`.`total_principal_permonth`     AS `total_principal_permonth`,
+			  `crm`.`total_principal_permonthpaid` AS `total_principal_permonthpaid`,
+			  `crm`.`total_interest_permonth`      AS `total_interest_permonth`,
+			  `crm`.`total_interest_permonthpaid`  AS `total_interest_permonthpaid`,
+			  `crm`.`penalize_amount`              AS `penalize_amount`,
+			  `crm`.`penalize_amountpaid`          AS `penalize_amountpaid`,
+			  `crm`.`service_chargepaid`           AS `service_chargepaid`,
+			  `crm`.`service_charge`               AS `service_charge`,
+			  `crm`.`amount_payment`               AS `amount_payment`,
+			  `crm`.`total_payment`                AS `total_payment`,
+			  `crm`.`recieve_amount`               AS `amount_recieve`,
+			  `crm`.`penalize_amount`              AS `penelize`,
+			  `crm`.`service_charge`               AS `service`,
+			  `crm`.`extra_payment`                AS `extra_payment`,
+			  `crm`.`payment_times`                AS `payment_times`,
+			  `crm`.`field3`                       AS `field3`,
+			  `crm`.`is_closed`                    AS `is_closed`,
+			  `crm`.`closing_note`                    AS `closing_note`,
+			  `sl`.`sale_number`                   AS `sale_number`,
+			  `sl`.`price_sold`                   AS `sold_price`,
+			  `sl`.`total_duration`                   AS `times`,
+			  
+			  
+			  (SELECT `l`.`land_address` FROM `ln_properties` `l` WHERE `l`.`id` = `sl`.`house_id` LIMIT 1 ) AS land_address,
+			  (SELECT `l`.`street` FROM `ln_properties` `l` WHERE `l`.`id` = `sl`.`house_id` LIMIT 1 ) AS street,
+			  
+			  (SELECT `l`.`land_code` FROM `ln_properties` `l` WHERE `l`.`id` = `sl`.`house_id` LIMIT 1 ) AS land_code,
+			  (SELECT `l`.`land_size` FROM `ln_properties` `l` WHERE `l`.`id` = `sl`.`house_id` LIMIT 1 ) AS land_size,
+			  (SELECT `l`.`id` FROM `ln_properties` `l` WHERE `l`.`id` = `sl`.`house_id` LIMIT 1 ) AS hous_id,
+			 
+			  `crm`.`payment_method`               AS `payment_methodid`,
+			  `crm`.`payment_method`               AS `payment_id`,
+			  `crm`.`date_payment`                 AS `date_payment`,
+			  
+			  `crm`.`void_reason`           AS `void_reason`,
+			  `crm`.`void_date`             AS `void_date`,
+			  `crm`.`void_by`               AS `void_by`,
+			  (SELECT first_name FROM `rms_users` WHERE id=`crm`.`void_by` LIMIT 1) AS voidByUserName,
+			  
+			  (SELECT
+			     `ln_view`.`name_kh`
+			   FROM `ln_view`
+			   WHERE ((`ln_view`.`key_code` = `crm`.`payment_method`)
+			          AND (`ln_view`.`type` = 2))
+			   LIMIT 1) AS `payment_method`,
+			  (SELECT
+			     `ln_view`.`name_en`
+			   FROM `ln_view`
+			   WHERE ((`ln_view`.`key_code` = `crm`.`payment_option`)
+			          AND (`ln_view`.`type` = 7))
+			   LIMIT 1) AS `paymentoption`,
+			   (SELECT first_name FROM `rms_users` WHERE id=crm.user_id LIMIT 1) AS user_name,
+			    (SELECT
+		     `ln_staff`.`co_khname`
+		   FROM `ln_staff`
+		   WHERE (`ln_staff`.`co_id` = `sl`.`staff_id`)
+		   LIMIT 1) AS `staff_name`
+		   
+			FROM ((`ln_client_receipt_money` `crm`
+			    JOIN `ln_sale` `sl`)
+			   JOIN `ln_client` `c`)
+			WHERE ((`crm`.`client_id` = `c`.`client_id`)
+			       AND (`sl`.`id` = `crm`.`sale_id`)
+			      ) " ;
       	$sql.=" AND crm.status= 1 ";
 			
       	$from_date =(empty($search['start_date']))? '1': " `crm`.`date_pay` >= '".$search['start_date']." 00:00:00'";

@@ -1918,11 +1918,13 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 			  `sl`.`price_sold`                   AS `sold_price`,
 			  `sl`.`total_duration`                   AS `times`,
 			  
-			  `l`.`land_code`                      AS `land_code`,
-			  `l`.`land_address`                   AS `land_address`,
-			  `l`.`land_size`                      AS `land_size`,
-			  `l`.`street`                         AS `street`,
-			  `l`.`id`                             AS `hous_id`,
+			  
+			  (SELECT `l`.`land_address` FROM `ln_properties` `l` WHERE `l`.`id` = `sl`.`house_id` LIMIT 1 ) AS land_address,
+			  (SELECT `l`.`street` FROM `ln_properties` `l` WHERE `l`.`id` = `sl`.`house_id` LIMIT 1 ) AS street,
+			  
+			  (SELECT `l`.`land_code` FROM `ln_properties` `l` WHERE `l`.`id` = `sl`.`house_id` LIMIT 1 ) AS land_code,
+			  (SELECT `l`.`land_size` FROM `ln_properties` `l` WHERE `l`.`id` = `sl`.`house_id` LIMIT 1 ) AS land_size,
+			  (SELECT `l`.`id` FROM `ln_properties` `l` WHERE `l`.`id` = `sl`.`house_id` LIMIT 1 ) AS hous_id,
 			 
 			  `crm`.`payment_method`               AS `payment_methodid`,
 			  `crm`.`payment_method`               AS `payment_id`,
@@ -1952,13 +1954,12 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		   WHERE (`ln_staff`.`co_id` = `sl`.`staff_id`)
 		   LIMIT 1) AS `staff_name`
 		   
-			FROM (((`ln_client_receipt_money` `crm`
-			     JOIN `ln_properties` `l`)
+			FROM ((`ln_client_receipt_money` `crm`
 			    JOIN `ln_sale` `sl`)
 			   JOIN `ln_client` `c`)
 			WHERE ((`crm`.`client_id` = `c`.`client_id`)
 			       AND (`sl`.`id` = `crm`.`sale_id`)
-			       AND (`l`.`id` = `sl`.`house_id`))
+			      )
 			        	";
   	return $sql;
   }

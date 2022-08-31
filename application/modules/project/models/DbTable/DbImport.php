@@ -20,9 +20,16 @@ class Project_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	$count = count($data);
     	$dbg = new Application_Model_DbTable_DbGlobal();
+    	$dbl = new Project_Model_DbTable_DbLand();
     	for($i=1; $i<=$count; $i++){
     		$land_code = $dbg->getNewLandByBranch($branch_id);
-    		
+    		$param  = array(
+    				'land_address'=>$data[$i]['B'],
+    				'branch_id'=>$branch_id,
+    				'street'	=>$data[$i]['C']
+    				);
+    		$result = $dbl->CheckTitle($param);
+    		if(!empty($result)){continue;}
 //     		$cate_title = empty($data[$i]['D'])?null:$data[$i]['D'];
 //     		$cate = $this->checkItemsTypeId($cate_title);
 //     		$property_type = 0;
