@@ -106,7 +106,75 @@ table.tb-footer tr.style-head {
     </form>
 	<div id="divPrint" style="margin: 0 auto;">
 	<style>
+
+		.hover:hover{ background: #ccc;}
 		.style{
+			line-height: 20px;font-size: 14px !important;
+			font-family:'Times New Roman','Khmer OS Battambang';
+		}
+		table { page-break-inside:auto }
+		tr{ page-break-inside:avoid; page-break-after:auto; }
+		#header {
+		  display: table-header-group;
+		  page-break-inside:avoid; page-break-after:auto;
+		}
+		table tr td ul li{text-align: center;list-style: none;line-height: 25px; }
+		th{padding: 5px;}
+		.hover td{padding: 1px;}
+		.hide{visibility: hidden;}
+		@media print {
+		  div.divFooter {
+		    position: fixed;
+		    top: 0;
+		  	width: 100%;
+		  	height: 100px;
+		  	bottom:0px;
+			margin:0;
+		  }
+			.hide{visibility: visible; height: <?php echo $classHideHeight;?>;}
+		}
+		.divFooter table{
+			font-family: 'Times New Roman','Khmer OS Battambang';
+			margin:0; 
+			padding:0; 
+			border:none;
+		}
+		table.content-data{
+			border-collapse:collapse;
+			border:1px solid #000; 
+			font-size:13px;
+
+			width:100%;
+		}
+		table.content-data thead tr.style {
+		   line-height: 25px; font-size:12px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
+		   background: #ccd9ff;
+			text-align: center;
+		}
+
+		table.content-data  tr.style {
+		  
+		    white-space: nowrap;
+			line-height: 20px;
+		  
+		}
+		
+		table.tb-footer{
+		border-collapse:collapse;
+		border:1px solid #000; 
+		font-size:13px;
+		}
+		table.tb-footer tr{
+		 line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;
+		}
+		.border_bottom {
+			border-bottom: 2px solid #000;
+		}
+		table tr td{
+			padding:0 1px;
+		}
+		/*
+		.style-head{
 			line-height: 20px;font-size: 14px !important;
 			font-family:'Times New Roman','Khmer OS Battambang';
 		}
@@ -161,6 +229,7 @@ table.tb-footer tr.style-head {
 		table tr td{
 			padding:0 2px;
 		}
+		*/
 	</style>
 	<table style="font-family: 'Times New Roman','Khmer OS Battambang'; width:100%;">
 		<tr>
@@ -177,42 +246,42 @@ table.tb-footer tr.style-head {
 	                 <tr class="hide" style="border:1px solid #000;">
 		                <td colspan="17" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
 		             </tr>
-	                 <tr class="style-head">
+	                 <tr class="style" align="center">
 					  <?php 
 					  $colspan=8;
 					  if($is_showhouse==0){
 						   $colspan=9;
 					  }?>
-						<td rowspan="2"><?php echo $tr->translate("NUM");?></td>
-						<td rowspan="2"><?php echo $tr->translate("CUSTOMER_INFO");?></td>
-						<td colspan="<?php echo $colspan;?>"><?php echo $tr->translate("SALE_INFO");?></td>
-						<td colspan="4"><?php echo $tr->translate("PAYMENT_INFO");?></td>
-						<td rowspan="2"><?php echo $tr->translate("AGENTCY");?></td>
-						<td rowspan="2"><?php echo $tr->translate("STATUS");?></td>
+						<td scope="col" rowspan="2"><?php echo $tr->translate("NUM");?></td>
+						<td scope="col" rowspan="2"><?php echo $tr->translate("CUSTOMER_INFO");?></td>
+						<td scope="col" colspan="<?php echo $colspan;?>"><?php echo $tr->translate("SALE_INFO");?></td>
+						<td scope="col" colspan="4"><?php echo $tr->translate("PAYMENT_INFO");?></td>
+						<td scope="col" rowspan="2"><?php echo $tr->translate("AGENTCY");?></td>
+						<td scope="col" rowspan="2"><?php echo $tr->translate("STATUS");?></td>
 					 </tr>
-	                 <tr class="style-head">
-	                    <td><?php echo $tr->translate("PROPERTY_CODE");?></td>
+	                 <tr class="style" align="center">
+	                    <td  scope="col"><?php echo $tr->translate("PROPERTY_CODE");?></td>
 	                    <?php if($is_showhouse==0){?>
 	                    	<td><?php echo $tr->translate("AMOUNT_PROPERTY");?></td>
 	                    <?php }?>
 						
-	                    <td><?php echo $tr->translate("BUY_DATE");?></td>
-	                    <td><?php echo $tr->translate("END_DATE");?></td>
+	                    <td scope="col"><?php echo $tr->translate("BUY_DATE");?></td>
+	                    <td scope="col"><?php echo $tr->translate("END_DATE");?></td>
 	                   
 	                    
-	                    <td><?php echo $tr->translate("PRICE_BEFORE");?></td>
-	                    <td><?php echo $tr->translate("DISCOUNT");?>$</td>
-	                    <td><?php echo $tr->translate("DISCOUNT_PERCENT");?></td>
-	                    <td><?php echo $tr->translate("SOLD_PRICE");?></td>
-						<td><?php echo $tr->translate("TYPE");?></td>
+	                    <td scope="col"><?php echo $tr->translate("PRICE_BEFORE");?></td>
+	                    <td scope="col"><?php echo $tr->translate("DISCOUNT");?>$</td>
+	                    <td scope="col"><?php echo $tr->translate("DISCOUNT_PERCENT");?></td>
+	                    <td scope="col"><?php echo $tr->translate("SOLD_PRICE");?></td>
+						<td scope="col"><?php echo $tr->translate("TYPE");?></td>
 						
-	                    <td><?php echo $tr->translate("PAID_PRINCIPAL");?></td>
-	                    <td><?php echo $tr->translate("REMAIN");?></td>
-	                    <td><?php echo $tr->translate("TOTAL_INTEREST");?></td>
-	                    <td><?php echo $tr->translate("TOTAL_PENELIZE");?></td>
+	                    <td scope="col"><?php echo $tr->translate("PAID_PRINCIPAL");?></td>
+	                    <td scope="col"><?php echo $tr->translate("REMAIN");?></td>
+	                    <td scope="col"><?php echo $tr->translate("TOTAL_INTEREST");?></td>
+	                    <td scope="col"><?php echo $tr->translate("TOTAL_PENELIZE");?></td>
 	                   
 	                   
-	                </tr>
+	               	 </tr>
 	              </thead>
 	               <?php 
 	               $amount_property=0;
@@ -339,34 +408,34 @@ table.tb-footer tr.style-head {
 	             <?php 
 	              	$payment_id = $row['payment_id'];
 	              	?>
-	              	<tr class="style-rowdata hover context-menu-one <?php echo $classComplete; ?>" oncontextmenu="setrowdata(<?php echo $row['id'];?>);return false;" >
-						<td align="center"><?php echo $key+1; ?></td>
-						<td><span style="line-height: 14px;white-space: pre-wrap !important;max-width: 150px;width: 150px;display: block;font-size: 11px;overflow-wrap: break-word;text-align: left;vertical-align: top;" ><?php echo $row['name_kh']; if(!empty($row['phone'])){ echo "<span style='display: block; line-height: 14px;' />".$row['phone'];}?></span></span></td>
-						<td><span style="line-height: 14px;white-space: pre-wrap !important;max-width: 150px;width: 150px;display: block;font-size: 11px;overflow-wrap: break-word;text-align: left;vertical-align: top; font-weight: 600;" ><?php echo $row['land_address']." ".$row['street']; ?></span></td>
+	              	<tr class="style hover context-menu-one <?php echo $classComplete; ?>" oncontextmenu="setrowdata(<?php echo $row['id'];?>);return false;" >
+						<td data-label="<?php echo $tr->translate("NUM");?>" align="center"><?php echo $key+1; ?></td>
+						<td data-label="<?php echo $tr->translate("CUSTOMER_INFO");?>"><span style="line-height: 14px;white-space: pre-wrap !important;max-width: 150px;width: 150px;display: block;font-size: 11px;overflow-wrap: break-word;text-align: left;vertical-align: top;" ><?php echo $row['name_kh']; if(!empty($row['phone'])){ echo "<span style='display: block; line-height: 14px;' />".$row['phone'];}?></span></span></td>
+						<td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>"><span style="line-height: 14px;white-space: pre-wrap !important;max-width: 150px;width: 150px;display: block;font-size: 11px;overflow-wrap: break-word;text-align: left;vertical-align: top; font-weight: 600;" ><?php echo $row['land_address']." ".$row['street']; ?></span></td>
 						<?php if($is_showhouse==0){?>
-						 <td align="center"><?php echo $countland." ".$notupdateLock; ?></td>
+						 <td data-label="<?php echo $tr->translate("AMOUNT_PROPERTY");?>" align="center"><?php echo $countland." ".$notupdateLock; ?></td>
 						<?php }?>
 						
-						<td style="white-space:nowrap;"><?php echo date($montFomat,strtotime($row['buy_date'])); ?></td>
-						<td style="white-space:nowrap;" ><?php $date= new DateTime($row['end_line']); echo $date->format($montFomat); ?></td>
+						<td data-label="<?php echo $tr->translate("BUY_DATE");?>" style="white-space:nowrap;"><?php echo date($montFomat,strtotime($row['buy_date'])); ?></td>
+						<td data-label="<?php echo $tr->translate("END_DATE");?>" style="white-space:nowrap;" ><?php $date= new DateTime($row['end_line']); echo $date->format($montFomat); ?></td>
 						
 						
-						<td align="right"><span style="line-height:15px;"><?php echo number_format($row['price_before'],2); ?></span></td>
-						<td align="right" style="white-space:nowrap;"><?php 
-						$other_discount = empty($row['other_discount'])?0:$row['other_discount'];
+						<td data-label="<?php echo $tr->translate("PRICE_BEFORE");?>" align="right"><span style="line-height:15px;"><?php echo number_format($row['price_before'],2); ?></span></td>
+						<td data-label="<?php echo $tr->translate("DISCOUNT");?>" align="right" style="white-space:nowrap;"><?php 
+						$other_discount = empty($row['other_discount'])?0:$row['other_discount'];		
 						echo number_format($row['discount_amount']+$other_discount,2); ?></td>	
-						<td align="center" style="white-space:nowrap;"><?php echo number_format($row['discount_percent'],2); ?></td>
+						<td data-label="<?php echo $tr->translate("DISCOUNT_PERCENT");?>" align="center" style="white-space:nowrap;"><?php echo number_format($row['discount_percent'],2); ?></td>
 						
 						
-						<td align="right" style="white-space:nowrap;"><?php echo number_format($row['price_sold'],2); ?></td>	
-						<td><?php echo $row['paymenttype']; ?></td>
-						<td align="right" style="white-space:nowrap; text-align: right;"><?php echo number_format($paidAmount,2);//echo number_format($row['paid_amount'],2);?></td>
-						<td align="right" style="white-space:nowrap;"><?php echo number_format($row['price_sold']-$paidAmount,2); //echo number_format($row['price_sold']-$row['paid_amount'],2); ?></td>
-						<td align="right"><?php echo number_format($row['total_interest_permonthpaid'],2);?></td>
-						<td align="right"><?php echo number_format($row['penalize_amountpaid'],2);?></td>
+						<td data-label="<?php echo $tr->translate("SOLD_PRICE");?>" align="right" style="white-space:nowrap;"><?php echo number_format($row['price_sold'],2); ?></td>	
+						<td data-label="<?php echo $tr->translate("TYPE");?>"><?php echo $row['paymenttype']; ?></td>
+						<td data-label="<?php echo $tr->translate("PAID_PRINCIPAL");?>" align="right" style="white-space:nowrap; text-align: right;"><?php echo number_format($paidAmount,2);//echo number_format($row['paid_amount'],2);?></td>
+						<td data-label="<?php echo $tr->translate("REMAIN");?>" align="right" style="white-space:nowrap;"><?php echo number_format($row['price_sold']-$paidAmount,2); //echo number_format($row['price_sold']-$row['paid_amount'],2); ?></td>
+						<td data-label="<?php echo $tr->translate("TOTAL_INTEREST");?>" align="right"><?php echo number_format($row['total_interest_permonthpaid'],2);?></td>
+						<td data-label="<?php echo $tr->translate("TOTAL_PENELIZE");?>" align="right"><?php echo number_format($row['penalize_amountpaid'],2);?></td>
 						
-						<td><?php echo $row['agency_name']; ?></td>
-						<td><?php  if($row['is_cancel']==1){ echo "បោះបង់";} ?></td>
+						<td data-label="<?php echo $tr->translate("AGENTCY");?>"><?php echo $row['agency_name']; ?></td>
+						<td data-label="<?php echo $tr->translate("STATUS");?>"><?php  if($row['is_cancel']==1){ echo "បោះបង់";} ?></td>
 						<!-- <td align="center" title='<?php echo ($row['verify_by']>0 ? 'Authorized':'Unauthorized');?>'><img  src="<?php echo $this->baseUrl().'/images/icon/'.($row['verify_by']>0 ? 'apply2.png':'none.png'); ?>" /></td>
 						 -->
 						<?php 
