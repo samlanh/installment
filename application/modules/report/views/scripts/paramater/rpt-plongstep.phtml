@@ -141,41 +141,41 @@
 						             <td colspan="12" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
 						        </tr>
 						    	<tr class="style" align="center" >
-									<td rowspan="2"><?php echo $tr->translate("NUM");?></td>
-								    <td rowspan="2"><?php echo $tr->translate("BRANCH_NAME");?></td>
-								    <td rowspan="2"><?php echo $tr->translate("CLIENT_NAME");?></td>
-								    <td rowspan="2"><?php echo $tr->translate("TEL");?></td>
-								    <td rowspan="2"><?php echo $tr->translate("PROPERTY_CODE");?></td>
-								    <td rowspan="2"><?php echo $tr->translate("HEAD_TITLE_NO");?></td>
+									<td scope="col" rowspan="2"><?php echo $tr->translate("NUM");?></td>
+								    <td scope="col" rowspan="2"><?php echo $tr->translate("BRANCH_NAME");?></td>
+								    <td scope="col" rowspan="2"><?php echo $tr->translate("CLIENT_NAME");?></td>
+								    <td scope="col" rowspan="2"><?php echo $tr->translate("TEL");?></td>
+								    <td scope="col" rowspan="2"><?php echo $tr->translate("PROPERTY_CODE");?></td>
+								    <td scope="col" rowspan="2"><?php echo $tr->translate("HEAD_TITLE_NO");?></td>
 								    <?php if (!empty($this->allStep)) foreach ($this->allStep as $step){?>
-								    <td style="min-width: 78px;" rowspan="2"><?php echo $tr->translate("Date");?></td>
-								    <td colspan="2"><?php echo $step['name'];?></td>
+								    <td scope="col" style="min-width: 78px;" rowspan="2"><?php echo $tr->translate("Date");?></td>
+								    <td scope="col" colspan="2"><?php echo $step['name'];?></td>
 								    <?php }?>
 								    
 								</tr>
 								<tr class="style" align="center"  >
 								<?php if (!empty($this->allStep)) foreach ($this->allStep as $step){?>
-									<td><?php echo $tr->translate("ប្រគល់");?></td>
-									<td><?php echo $tr->translate("ទទួល");?></td>
+									<td scope="col"><?php echo $tr->translate("ប្រគល់");?></td>
+									<td scope="col"><?php echo $tr->translate("ទទួល");?></td>
 								<?php }?>
 								</tr>
 								</thead>
 						       <?php $i=0; if(!empty($this->row)) foreach($this->row as $key =>$row){ $i++;?>
 								<tr align="left">
-								   <td align="center">&nbsp;<?php echo $i; ?>&nbsp;</td>
-								   <td align="center" style="white-space: nowrap;">&nbsp;<?php echo $row['branch_name'];?>&nbsp;</td>
-								   <td align="center">
+								   <td data-label="<?php echo $tr->translate("NUM");?>" align="center">&nbsp;<?php echo $i; ?>&nbsp;</td>
+								   <td data-label="<?php echo $tr->translate("BRANCH_NAME");?>" align="center" style="white-space: nowrap;">&nbsp;<?php echo $row['branch_name'];?>&nbsp;</td>
+								   <td data-label="<?php echo $tr->translate("CLIENT_NAME");?>" align="center">
 								   		<?php echo $row['name_kh'];?>
 								   </td>
-								   <td align="center"><?php echo $row['phone'];?></td>
-								   <td align="center" ><?php echo $row['land_address'];?></td>
-								   <td align="center" ><?php echo $row['hardtitle'];?></td>
+								   <td data-label="<?php echo $tr->translate("TEL");?>" align="center"><?php echo $row['phone'];?></td>
+								   <td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>" align="center" ><?php echo $row['land_address'];?></td>
+								   <td data-label="<?php echo $tr->translate("HEAD_TITLE_NO");?>" align="center" ><?php echo $row['hardtitle'];?></td>
 								   <?php if (!empty($this->allStep)) foreach ($this->allStep as $step){
 								   		$step1= $dbpara->getPlongStepDetailByID($row['id'],$step['id']);
 								   	?>
-								   	<td align="center">&nbsp;<?php echo empty($step1['date'])?"":date("d/m/Y",strtotime($step1['date']))?>&nbsp;</td>
-									<td>&nbsp;<?php echo empty($step1['give_by'])?"":$step1['give_by']?>&nbsp;</td>
-									<td>&nbsp;<?php echo empty($step1['receive_by'])?"":$step1['receive_by']?>&nbsp;</td>
+								   	<td data-label="<?php echo $tr->translate("Date");?>" align="center">&nbsp;<?php echo empty($step1['date'])?"":date("d/m/Y",strtotime($step1['date']))?>&nbsp;</td>
+									<td data-label="<?php echo $tr->translate("ប្រគល់");?>">&nbsp;<?php echo empty($step1['give_by'])?"":$step1['give_by']?>&nbsp;</td>
+									<td data-label="<?php echo $tr->translate("ទទួល");?>">&nbsp;<?php echo empty($step1['receive_by'])?"":$step1['receive_by']?>&nbsp;</td>
 								   <?php }?>
 								</tr>
 								<?php }?>

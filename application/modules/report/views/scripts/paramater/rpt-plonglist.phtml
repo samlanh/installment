@@ -138,32 +138,32 @@
      <table id="exportExcel" class="content-data" border="1"​ width="100%" cellspacing="0" >
 		     <thead>
 		     	<tr bgcolor="#c1d0f3" class="style hover" align="center">
-					<td  rowspan="2"><?php echo $tr->translate("NUM");?></td>
-					<td  rowspan="2"><?php echo $tr->translate("BRANCH_NAME");?></td>
-					<td colspan="3"><span><?php echo $tr->translate("PROPERTY_INFO");?></span></td>
+					<td scope="col"  rowspan="2"><?php echo $tr->translate("NUM");?></td>
+					<td scope="col"   rowspan="2"><?php echo $tr->translate("BRANCH_NAME");?></td>
+					<td scope="col"  colspan="3"><span><?php echo $tr->translate("PROPERTY_INFO");?></span></td>
 					
-					<td colspan="3"><span><?php echo $tr->translate("INFO_INDILOAN");?></span></td>
-					<td colspan="2"><span><?php echo $tr->translate("HEAD_TITL_INFO");?></span></td>
+					<td scope="col"  colspan="3"><span><?php echo $tr->translate("INFO_INDILOAN");?></span></td>
+					<td scope="col"  colspan="2"><span><?php echo $tr->translate("HEAD_TITL_INFO");?></span></td>
 					
-					<td colspan="4"><?php echo $tr->translate("កិច្ចការការទទួល");?></td>
-					<td  rowspan="2"><?php echo $tr->translate("PROPERTY_LAYOUT_NOTE");?></td>
+					<td scope="col"  colspan="4"><?php echo $tr->translate("កិច្ចការការទទួល");?></td>
+					<td scope="col"   rowspan="2"><?php echo $tr->translate("PROPERTY_LAYOUT_NOTE");?></td>
 				</tr>
 				<tr bgcolor="#c1d0f3" class="style hover" align="center">
-					<td ><?php echo $tr->translate("PROPERTY_CODE");?></td>
-					<td ><?php echo $tr->translate("STREET_NO");?></td>
-					<td ><?php echo $tr->translate("PROPERTY_TYPE");?></td>
+					<td scope="col" ><?php echo $tr->translate("PROPERTY_CODE");?></td>
+					<td scope="col" ><?php echo $tr->translate("STREET_NO");?></td>
+					<td scope="col" ><?php echo $tr->translate("PROPERTY_TYPE");?></td>
 					
-					<td ><?php echo $tr->translate("SOLD_PRICE");?></td>
-					<td ><?php echo $tr->translate("PAID");?></td>
-					<td ><?php echo $tr->translate("BALANCE");?></td>
+					<td scope="col" ><?php echo $tr->translate("SOLD_PRICE");?></td>
+					<td scope="col" ><?php echo $tr->translate("PAID");?></td>
+					<td scope="col" ><?php echo $tr->translate("BALANCE");?></td>
 					
-					<td><?php echo $tr->translate("HEAD_TITLE_NO");?></td>
-					<td><?php echo $tr->translate("PLONG_STEP");?></td>
+					<td scope="col" ><?php echo $tr->translate("HEAD_TITLE_NO");?></td>
+					<td scope="col" ><?php echo $tr->translate("PLONG_STEP");?></td>
 					
-					<td ><?php echo $tr->translate("CUSTOMER_NAME");?></td>
-					<td ><?php echo $tr->translate("TEL");?></td>
-					<td ><?php echo $tr->translate("LAYOUT_TYPE");?></td>
-					<td ><?php echo $tr->translate("RECEIVED_DATE");?></td>
+					<td scope="col" ><?php echo $tr->translate("CUSTOMER_NAME");?></td>
+					<td scope="col" ><?php echo $tr->translate("TEL");?></td>
+					<td scope="col" ><?php echo $tr->translate("LAYOUT_TYPE");?></td>
+					<td scope="col"  ><?php echo $tr->translate("RECEIVED_DATE");?></td>
 				</tr>
 			</thead>
 			<?php 
@@ -181,24 +181,24 @@
 				$remain = $soldPrice-$totalPaid;
 			?>
 					<tr oncontextmenu="setrowdata(<?php echo $row['id'];?>);return false;"class="context-menu-one hover" style="font-size: 12px;border:1px solid #000; white-space: nowrap;line-height: 25px;" align="left">
-					     <td align="center"><?php echo $key+1; ?></td>
-					     <td align="center"><?php echo $row['branch_name'];?></td>
+					     <td data-label="<?php echo $tr->translate("NUM");?>" align="center"><?php echo $key+1; ?></td>
+					     <td data-label="<?php echo $tr->translate("BRANCH_NAME");?>" align="center"><?php echo $row['branch_name'];?></td>
 						 
-					     <td align="center"><?php echo $row['land_address'];?></td>
-					     <td align="center"><?php echo $row['street'];?></td>
-						<td align="center"><?php echo $row['pro_type'];?></td>
+					     <td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>" align="center"><?php echo $row['land_address'];?></td>
+					     <td data-label="<?php echo $tr->translate("STREET_NO");?>" align="center"><?php echo $row['street'];?></td>
+						<td data-label="<?php echo $tr->translate("PROPERTY_TYPE");?>" align="center"><?php echo $row['pro_type'];?></td>
 						
-						<td align="center"><?php if(!empty($soldPrice)){ echo number_format($soldPrice,2);}else{ echo "-";} ?></td>
-						<td align="center"><?php if(!empty($totalPaid)){ echo number_format($totalPaid,2);}else{ echo "-";} ?></td>
-						<td align="center"><?php if(!empty($totalPaid)){ if($remain<0){ echo "(".abs(number_format($remain,2)).")";}else{ echo number_format($remain,2);} }else{ echo "-";} ?></td>
+						<td data-label="<?php echo $tr->translate("SOLD_PRICE");?>" align="center"><?php if(!empty($soldPrice)){ echo number_format($soldPrice,2);}else{ echo "-";} ?></td>
+						<td data-label="<?php echo $tr->translate("PAID");?>" align="center"><?php if(!empty($totalPaid)){ echo number_format($totalPaid,2);}else{ echo "-";} ?></td>
+						<td data-label="<?php echo $tr->translate("BALANCE");?>" align="center"><?php if(!empty($totalPaid)){ if($remain<0){ echo "(".abs(number_format($remain,2)).")";}else{ echo number_format($remain,2);} }else{ echo "-";} ?></td>
 						
-						 <td align="center" style="border:1px solid #000;"><?php echo $row['hardtitle'];?></td>
-						 <td><?php echo $row['processing']; ?></td>
-						 <td><?php echo $row['client_name'];?></td>
-						 <td><?php echo $row['tel']; ?></td>
-						 <td align="center" ><?php echo $row['layout_type']; ?></td>
-						 <td align="center"><?php echo empty($row['received_date'])?"":date("d-m-Y",strtotime($row['received_date'])); ?></td>
-						<td align="center"><span style="line-height: 18px;white-space: pre-wrap !important;max-width: 200px;width: 200px;padding: 5px;display: block;font-size: 11px;overflow-wrap: break-word;text-align: left;vertical-align: top;" class="note_<?php echo $row['id'];?>"><?php echo $row["noteForLayout"];?></span></td>
+						 <td data-label="<?php echo $tr->translate("HEAD_TITLE_NO");?>" align="center" style="border:1px solid #000;"><?php echo $row['hardtitle'];?></td>
+						 <td data-label="<?php echo $tr->translate("PLONG_STEP");?>"><?php echo $row['processing']; ?></td>
+						 <td data-label="<?php echo $tr->translate("CUSTOMER_NAME");?>"><?php echo $row['client_name'];?></td>
+						 <td data-label="<?php echo $tr->translate("TEL");?>"><?php echo $row['tel']; ?></td>
+						 <td data-label="<?php echo $tr->translate("LAYOUT_TYPE");?>" align="center" ><?php echo $row['layout_type']; ?></td>
+						 <td data-label="<?php echo $tr->translate("RECEIVED_DATE");?>" align="center"><?php echo empty($row['received_date'])?"":date("d-m-Y",strtotime($row['received_date'])); ?></td>
+						<td data-label="<?php echo $tr->translate("PROPERTY_LAYOUT_NOTE");?>" align="center"><span style="line-height: 18px;white-space: pre-wrap !important;max-width: 200px;width: 200px;padding: 5px;display: block;font-size: 11px;overflow-wrap: break-word;text-align: left;vertical-align: top;" class="note_<?php echo $row['id'];?>"><?php echo $row["noteForLayout"];?></span></td>
 					 </tr>
 				<?php 
 					if(!empty($row['hardtitle']) AND empty($row['processing']) AND empty($row['layout_type'])){
