@@ -100,69 +100,70 @@
 			<div id="divPrint">
 				<style type="text/css">
 					.style{
-						line-height: 20px;font-size: 11px !important;
-						font-family: 'Times New Roman','Khmer OS Battambang';
-					}
-					.hideblog{display: none;}
-					.hiddenblog{display: block !important;}
-					.style1:hover{ background: #ccc; }
-					table tr td ul li{text-align: center;list-style: none;line-height: 25px; }
-					table { page-break-inside:auto }
-					tr{ page-break-inside:avoid; page-break-after:auto; }
-					#header {
-					  display: table-header-group;
-					  page-break-inside:avoid; page-break-after:auto;
-					  margin-top: 100px;
-					}
-					.hide{visibility: hidden;}
-					@media print {
-					 div.divFooter {
-					    position: fixed;
-					    top: 0;
-					  	width: 100%;
-					  	height: 100px;
-					  	bottom:0px;
-						margin:0;
-					  }
-						.hide{visibility: visible; height: <?php echo $classHideHeight;?>;}
-						
-					}
-					.center{text-align: center !important;}
-					table.content-data{
-						border-collapse:collapse;
-						border:1px solid #000; 
-						font-size:8px;
-					}
-					table.content-data thead tr.style {
-					   line-height: 25px; font-size:10px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
-						background: #c1d0f3;
-						font-weight:600;
-					}
-					table.tb-footer{
-						border-collapse:collapse;
-						border:1px solid #000; 
-						font-size:11px;
-						font-family: 'Times New Roman','Khmer OS Battambang';
-					}
-					table.tb-footer tr{
-					 line-height: 14px; font-size:11px; padding:2px 0px; height: 25px;
-					}
-					table tr td{
-						padding:0 2px;
-					}
-					tr.voidclass {
-						background: #fff7f7;
-					}
-					td.centerText{
-						text-align: center;
-					}
-					.redBold {
-						font-weight: 600;
-						color: #f80000;
-					}
-					table.content-data tr td{
-						padding: 2px;
-					}
+  						  line-height: 20px;font-size: 11px !important;
+           				 font-family: 'Times New Roman','Khmer OS Battambang';
+       					 }
+							.hideblog{display: none;}
+							.hiddenblog{display: block !important;}
+							.style1:hover{ background: #ccc; }
+							table tr td ul li{text-align: center;list-style: none;line-height: 25px; }
+							table { page-break-inside:auto }
+							tr{ page-break-inside:avoid; page-break-after:auto; }
+							#header {
+							display: table-header-group;
+							page-break-inside:avoid; page-break-after:auto;
+							margin-top: 100px;
+							}
+							.hide{visibility: hidden;}
+							@media print {
+							div.divFooter {
+								position: fixed;
+								top: 0;
+								width: 100%;
+								height: 100px;
+								bottom:0px;
+								margin:0;
+							}
+								.hide{visibility: visible; height: <?php echo $classHideHeight;?>;}
+								
+							}
+							.center{text-align: center !important;}
+							table.content-data{
+								border-collapse:collapse;
+								border:1px solid #000; 
+								font-size:8px;
+							}
+							table.content-data thead tr.style {
+							line-height: 25px; font-size:10px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
+								background: #c1d0f3;
+								font-weight:600;
+							}
+							table.content-data tr.style {
+							white-space: nowrap;
+							
+							}
+							table.tb-footer{
+								border-collapse:collapse;
+								border:1px solid #000; 
+								font-size:11px;
+								font-family: 'Times New Roman','Khmer OS Battambang';
+							}
+							table.tb-footer tr{
+							line-height: 14px; font-size:11px; padding:2px 0px; height: 25px;
+							}
+							table tr td{
+								padding:0 2px;
+							}
+							tr.voidclass {
+								background: #fff7f7;
+							}
+							td.centerText{
+								text-align: center;
+							}
+							.redBold {
+								font-weight: 600;
+								color: #f80000;
+							}
 					/*
 					.style{
 						line-height: 20px;font-size: 11px !important;
@@ -311,22 +312,22 @@
 									}
 									?>
 									
-				                <tr class="<?php echo $classVoid;?> style style1" style="font-family: 'Khmer OS Content'; white-space:nowrap; ">
+				                <tr class="<?php echo $classVoid;?> style " >
 				               		<td data-label="<?php echo $tr->translate("N_O");?>" style="text-align: center;"><?php echo $i++; ?></td>
 				               		<td data-label="<?php echo $tr->translate("BRANCH_NAME");?>"><?php echo $rs["branch_name"];?></td>
 				               		<td data-label="<?php echo $tr->translate("CUSTOMER_NAME");?>"><?php echo $rs["name_kh"];?></td>                 		
-				               		<td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>" style="vertical-align: top; padding: 1px;"><strong style="max-width: 200px;min-width: 100px;display: block;white-space: pre-line;line-height: 14px;overflow-wrap: break-word;padding: 1px;font-size: 10px;" ><?php echo $rs["land_address"].",".$rs["street"];?></strong></td>
+				               		<td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>" ><strong ><?php echo $rs["land_address"].",".$rs["street"];?></strong></td>
 				               		<td data-label="<?php echo $tr->translate("PAYMENT_TYPE");?>"><?php echo $rs["payment_method"];?></td>
 				               		<td data-label="<?php echo $tr->translate("AMOUNT_COLLECT");?>" align="center"><?php echo $stringPaid;//$rs["payment_times"];?></td>
-				               		<td data-label="<?php echo $tr->translate("PRINCIPAL");?>" align="right" style="font:bolder 11px Arial;padding:0px 1px;"><?php echo number_format($rs['total_principal_permonthpaid'],2);?></td>               		
-				               		<td data-label="<?php echo $tr->translate("INTEREST");?>" align="right" style="font:bolder 11px Arial;padding:0px 1px;"><?php echo number_format($rs['total_interest_permonthpaid'],2);?></td>
-				               		<td data-label="<?php echo $tr->translate("PENALIZE AMOUNT");?>" align="right" style="font:bolder 11px Arial;padding:0px 1px;"><?php echo number_format($rs['penalize_amountpaid'],2);?></td>
-				               		<td data-label="<?php echo $tr->translate("EXTRA_PAYMENT");?>" align="right" style="font:bolder 11px Arial;padding:0px 1px;"><?php echo number_format($rs['extra_payment'],2);?></td>
-				               		<td data-label="<?php echo $tr->translate("TOTAL");?>" align="right" style="font:bolder 11px Arial;"><?php echo number_format($rs['amount_payment'],2);?></td>
-				               		<td data-label="<?php echo $tr->translate("PAY_DATE");?>" align="center" style="white-space:nowrap; border-right:3px double black; "><?php echo date($montFomat,strtotime($rs["date_payment"]));?></td>
-				               		<td data-label="<?php echo $tr->translate("INPUT_DATE");?>" align="center" style="white-space:nowrap; "><?php echo date($montFomat,strtotime($rs["date_pay"]));?></td>
+				               		<td data-label="<?php echo $tr->translate("PRINCIPAL");?>" ><?php echo number_format($rs['total_principal_permonthpaid'],2);?></td>               		
+				               		<td data-label="<?php echo $tr->translate("INTEREST");?>" ><?php echo number_format($rs['total_interest_permonthpaid'],2);?></td>
+				               		<td data-label="<?php echo $tr->translate("PENALIZE AMOUNT");?>" ><?php echo number_format($rs['penalize_amountpaid'],2);?></td>
+				               		<td data-label="<?php echo $tr->translate("EXTRA_PAYMENT");?>" ><?php echo number_format($rs['extra_payment'],2);?></td>
+				               		<td data-label="<?php echo $tr->translate("TOTAL");?>" ><?php echo number_format($rs['amount_payment'],2);?></td>
+				               		<td data-label="<?php echo $tr->translate("PAY_DATE");?>" ><?php echo date($montFomat,strtotime($rs["date_payment"]));?></td>
+				               		<td data-label="<?php echo $tr->translate("INPUT_DATE");?>" align="center" ><?php echo date($montFomat,strtotime($rs["date_pay"]));?></td>
 				               		<td data-label="<?php echo $tr->translate("RECIEPT_NO");?>" align="center"><?php echo $rs["receipt_no"];?></td>
-				               		<td data-label="<?php echo $tr->translate("PAYMENT_OPTION");?>" style="white-space: nowrap;font-site:9px; <?php if($rs["payment_option"]==4){echo " background:#ccc";} ?>" align="center" >
+				               		<td data-label="<?php echo $tr->translate("PAYMENT_OPTION");?>" style=" <?php if($rs["payment_option"]==4){echo " background:#ccc";} ?>" align="center" >
 									<a target="_blank" style="color:#000; text-decoration: none;" href="<?php echo $url_receipt.'/id/'.$rs["id"];?>">
 									<?php echo $rs["paymentoption"];?></a>
 									</td>
@@ -342,7 +343,7 @@
 				               		<td data-label="<?php echo $tr->translate("VOID_BY");?>" class="<?php echo $classVoid;?>" align="center"><?php echo $voidByUserName;?></td>
 				                </tr>
 				                <?php }?>
-				                <tr class="style style1" style="font-weight: 600; background: #c1d0f3;">
+				                <tr class="style style" style="font-weight: 600; background: #c1d0f3;">
 				                	<td colspan="6"></td>
 				                	<td align="right"><?php echo number_format($amt_d1,2);?></td>
 				                    <td align="right"><?php echo number_format($amt_d2,2);?></td>
@@ -381,8 +382,12 @@
 				              </table>
 				            -->
 				             <br />
-				             <table class="tb-footer" border="1"​ width="30%" cellspacing="0">
-				                <tr align="center" bgcolor="#c1d0f3" >
+				             <table id="exportExcel" class="content-data" border="1"​ width="30%" cellspacing="0">
+								 <tr class="hide" style="border:1px solid #000;">
+					                	<td colspan="2" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
+					                </tr>
+
+				                <tr align="center" bgcolor="#c1d0f3" class="syle">
 				                    <td colspan="2" align="center">ចំណូលតាមប្រភេទ</td>
 				                </tr>
 				                <tr>
