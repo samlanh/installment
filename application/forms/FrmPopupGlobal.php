@@ -3718,12 +3718,12 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				<tr style="white-space: nowrap;">
 				    <td class="khmerbold" style="line-height: 14px;"colspan="2"  align="center" >&nbsp;&nbsp;
 						<span style=" font-family: Arial Black;font-family:'."'Khmer OS Muol Light'".';">
-						'.$data['customer_sign'].'
+						ស្នាមមេដៃអ្នកទទួល
 						</span>
 					</td>
 				    <td colspan="2" class="khmerbold" style="line-height: 14px;" align="center" >
 						<span style=" font-family: Arial Black;font-family:'."'Khmer OS Muol Light'".';">
-						'.$data['teller_sign'].'
+						ស្នាមមេដៃរដ្ឋបាល
 						</span>
 					</td>
 				</tr>

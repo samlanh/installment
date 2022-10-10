@@ -150,23 +150,23 @@ dojo.require("dijit.form.DateTextBox");
 				                <td colspan="13" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
 				             </tr>
 			                <tr class="style" align="center" style="font-weight: bold;background: #ccd9ff" >
-			                    <td rowspan="2"><?php echo $tr->translate("NUM");?></td>
-			                    <td rowspan="2"><?php echo $tr->translate("BRANCH_NAME");?></td>
-			                    <td rowspan="2"><?php echo $tr->translate("CUSTOMER_NAME");?></td>
-			                    <td rowspan="2"><?php echo $tr->translate("PROPERTY_CODE");?></td>
-			                    <td colspan="5" style="text-align: center;"><?php echo $tr->translate("PAID_INFO");?></td>
-			                    <td colspan="3" style="text-align: center;"><?php echo $tr->translate("SCHEDULE_PAYMENTUNPAID");?></td>
-			                    <td rowspan="2"><?php echo $tr->translate("NOTE");?></td>
+			                    <td scope="col" rowspan="2"><?php echo $tr->translate("NUM");?></td>
+			                    <td scope="col" rowspan="2"><?php echo $tr->translate("BRANCH_NAME");?></td>
+			                    <td scope="col" rowspan="2"><?php echo $tr->translate("CUSTOMER_NAME");?></td>
+			                    <td scope="col" rowspan="2"><?php echo $tr->translate("PROPERTY_CODE");?></td>
+			                    <td scope="col" colspan="5" style="text-align: center;"><?php echo $tr->translate("PAID_INFO");?></td>
+			                    <td scope="col" colspan="3" style="text-align: center;"><?php echo $tr->translate("SCHEDULE_PAYMENTUNPAID");?></td>
+			                    <td scope="col" rowspan="2"><?php echo $tr->translate("NOTE");?></td>
 			                </tr>
 			                <tr  class="style" align="center"  style="font-weight: bold;background: #ccd9ff">
-			                    <td><?php echo $tr->translate("DAY_PAYMENT");?></td>
-			                    <td><?php echo $tr->translate("AMOUNT_COLLECT");?></td>
-			                    <td><?php echo $tr->translate("PRINCIPAL");?></td> 
-			                    <td><?php echo $tr->translate("INTEREST");?></td>
-			                    <td><?php echo $tr->translate("TOTAL_PAYMENT");?></td>
-			                    <td><?php echo $tr->translate("PRINCIPAL");?></td> 
-			                    <td><?php echo $tr->translate("INTEREST");?></td>
-			                    <td><?php echo $tr->translate("TOTAL_PAYMENT");?></td>
+			                    <td scope="col"><?php echo $tr->translate("DAY_PAYMENT");?></td>
+			                    <td scope="col"><?php echo $tr->translate("AMOUNT_COLLECT");?></td>
+			                    <td scope="col"><?php echo $tr->translate("PRINCIPAL");?></td> 
+			                    <td scope="col"><?php echo $tr->translate("INTEREST");?></td>
+			                    <td scope="col"><?php echo $tr->translate("TOTAL_PAYMENT");?></td>
+			                    <td scope="col"><?php echo $tr->translate("PRINCIPAL");?></td> 
+			                    <td scope="col"><?php echo $tr->translate("INTEREST");?></td>
+			                    <td scope="col"><?php echo $tr->translate("TOTAL_PAYMENT");?></td>
 			                </tr>
 			                </thead>
 			                <?php 
@@ -197,11 +197,11 @@ dojo.require("dijit.form.DateTextBox");
 								 }
 			               ?>
 			                <tr oncontextmenu="setrowdata(<?php echo $rs['sale_id'];?>);return false;" class="style hover context-menu-one" style="font-size: 12px; font-family: 'Times New Roman','Khmer OS Battambang';<?php if($total_paid>0){echo 'background:#f8414140;';}?>">
-			               		<td style="font-size: 12px; text-align: center;"><?php echo $key+1; ?></td>
-			               		<td ><?php echo $rs["branch_name"];?></td>
-			               		<td ><span style="line-height: 18px;white-space: pre-wrap !important;max-width: 150px;width: 150px;display: block;font-size: 11px;overflow-wrap: break-word;text-align: left;vertical-align: top;" ><?php echo $rs["name_kh"]; if(!empty($rs["phone"])){ echo "<br />".$rs["phone"]; }?></span></td>
-			               		<td ><span style="max-width: 330px; display: block; white-space: pre-line; line-height: 16px; overflow-wrap: break-word;padding: 0 1px;" ><?php echo $rs["land_address"].','.$rs["street"];?></span></td>
-			               		<td align="center">
+			               		<td data-label="<?php echo $tr->translate("NUM");?>" style="font-size: 12px; text-align: center;"><?php echo $key+1; ?></td>
+			               		<td data-label="<?php echo $tr->translate("BRANCH_NAME");?>"><?php echo $rs["branch_name"];?></td>
+			               		<td data-label="<?php echo $tr->translate("CUSTOMER_NAME");?>"><span style="line-height: 18px;white-space: pre-wrap !important;max-width: 150px;width: 150px;display: block;font-size: 11px;overflow-wrap: break-word;text-align: left;vertical-align: top;" ><?php echo $rs["name_kh"]; if(!empty($rs["phone"])){ echo "<br />".$rs["phone"]; }?></span></td>
+			               		<td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>"><span style="max-width: 330px; display: block; white-space: pre-line; line-height: 16px; overflow-wrap: break-word;padding: 0 1px;" ><?php echo $rs["land_address"].','.$rs["street"];?></span></td>
+			               		<td  data-label="<?php echo $tr->translate("DAY_PAYMENT");?>"align="center">
 			               		
 			               		<?php 
 		                    	if($rs['last_optiontype']==1){//by date
@@ -224,14 +224,14 @@ dojo.require("dijit.form.DateTextBox");
 		                    		}*/
 		                    	?>
 			               		</td>
-								<td align="center"><?php echo $rs["no_installment"];?></td>
-			               		<td align="right"><?php echo number_format($rs["principal_permonth"],2);?></td>
-			               		<td align="right"><?php echo number_format($rs["total_interest"],2);?></td>
-			               		<td align="right"><?php echo number_format($rs["principal_permonth"]+$rs["total_interest"],2);?></td>
-			               		<td align="right"><?php echo number_format($rs["principal_permonthafter"],2);?></td>
-			               		<td align="right"><?php echo number_format($rs["total_interest_after"],2);?></td>
-			               		<td align="right"><?php echo number_format($rs["principal_permonthafter"]+$rs["total_interest_after"],2);?></td>
-			               		<td align="center"><span style="line-height: 18px;white-space: pre-wrap !important;max-width: 200px;width: 200px;padding: 5px;display: block;font-size: 11px;overflow-wrap: break-word;text-align: left;vertical-align: top;" class="note_<?php echo $rs['sale_id'];?>"><?php echo $rs["expect_income_note"];?></span></td>
+								<td data-label="<?php echo $tr->translate("AMOUNT_COLLECT");?>" align="center"><?php echo $rs["no_installment"];?></td>
+			               		<td data-label="<?php echo $tr->translate("PRINCIPAL");?>" align="right"><?php echo number_format($rs["principal_permonth"],2);?></td>
+			               		<td data-label="<?php echo $tr->translate("INTEREST");?>" align="right"><?php echo number_format($rs["total_interest"],2);?></td>
+			               		<td data-label="<?php echo $tr->translate("TOTAL_PAYMENT");?>" align="right"><?php echo number_format($rs["principal_permonth"]+$rs["total_interest"],2);?></td>
+			               		<td data-label="<?php echo $tr->translate("PRINCIPAL");?>" align="right"><?php echo number_format($rs["principal_permonthafter"],2);?></td>
+			               		<td data-label="<?php echo $tr->translate("INTEREST");?>" align="right"><?php echo number_format($rs["total_interest_after"],2);?></td>
+			               		<td data-label="<?php echo $tr->translate("DAY_PAYMENT");?>" align="right"><?php echo number_format($rs["principal_permonthafter"]+$rs["total_interest_after"],2);?></td>
+			               		<td data-label="<?php echo $tr->translate("NOTE");?>" align="center"><span style="line-height: 18px;white-space: pre-wrap !important;max-width: 200px;width: 200px;padding: 5px;display: block;font-size: 11px;overflow-wrap: break-word;text-align: left;vertical-align: top;" class="note_<?php echo $rs['sale_id'];?>"><?php echo $rs["expect_income_note"];?></span></td>
 			                </tr>
 			                <?php }?>
 			                <tr style="height: 30px;  text-align: center;font-size: 14px; background:#87acff;">

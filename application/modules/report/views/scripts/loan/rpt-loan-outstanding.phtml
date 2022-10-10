@@ -141,19 +141,19 @@ dojo.require("dijit.form.DateTextBox");
 				                <td colspan="16" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
 				             </tr>
 			                 <tr height="35px;" class="style" align="center" >
-			                    <td style="padding:2px 0px;"><?php echo $tr->translate("NUM");?></td>
-			                    <td style=""><?php echo $tr->translate("CUSTOMER_NAME");?></td>
-			                    <td style=""><?php echo $tr->translate("TEL");?></td>
-			                    <td><?php echo $tr->translate("AMOUNT_PROPERTY");?></td>
-			                    <td><?php echo $tr->translate("PROPERTY_CODE");?></td>  
-			                    <td style=""><?php echo $tr->translate("DATE_BUY");?></td>
-			                    <td style=""><?php echo $tr->translate("PAMENT_METHOD");?></td>
-			                    <td style=""><?php echo $tr->translate("LOAN_PERIOD");?></td>
-			                    <td style=""><?php echo $tr->translate("SOLD_PRICE");?></td>			                   
-			                    <td style=""><?php echo $tr->translate("PRINCIPAL").$tr->translate("PAID");?></td>
-			                    <td style=""><?php echo $tr->translate("PERCENTAGE");?></td>
-			                    <td style=""><?php echo $tr->translate("NOT_TO_REPAY");?></td>
-			                    <td style=""><?php echo $tr->translate("TOTAL_INTEREST");?></td>
+			                    <td scope="col" style="padding:2px 0px;"><?php echo $tr->translate("NUM");?></td>
+			                    <td scope="col"><?php echo $tr->translate("CUSTOMER_NAME");?></td>
+			                    <td scope="col"><?php echo $tr->translate("TEL");?></td>
+			                    <td scope="col"><?php echo $tr->translate("AMOUNT_PROPERTY");?></td>
+			                    <td scope="col"><?php echo $tr->translate("PROPERTY_CODE");?></td>  
+			                    <td scope="col"><?php echo $tr->translate("DATE_BUY");?></td>
+			                    <td scope="col"><?php echo $tr->translate("PAMENT_METHOD");?></td>
+			                    <td scope="col"><?php echo $tr->translate("LOAN_PERIOD");?></td>
+			                    <td scope="col"><?php echo $tr->translate("SOLD_PRICE");?></td>			                   
+			                    <td scope="col"><?php echo $tr->translate("PRINCIPAL").$tr->translate("PAID");?></td>
+			                    <td scope="col"><?php echo $tr->translate("PERCENTAGE");?></td>
+			                    <td scope="col"><?php echo $tr->translate("NOT_TO_REPAY");?></td>
+			                    <td scope="col"><?php echo $tr->translate("TOTAL_INTEREST");?></td>
 			                </tr>
 		                </thead>
 		               <?php 
@@ -193,14 +193,14 @@ dojo.require("dijit.form.DateTextBox");
 							$i = $i+1;
 		               ?>
 							<tr align="center" class="hover">
-								<td><?php echo $i+1; ?></td>
-								<td align="left" style="font-size:11px; line-height: 13px; white-space: nowrap;"><a target="_blank" style="color:#000; text-decoration: none;" href="<?php echo $link;?>"><?php echo $row['client_kh']; ?></a></td>
-								<td align="left" style="line-height: 12px;white-space: normal !important;max-width: 100px;width: 100px;padding: 5px;overflow-wrap: break-word;"><?php echo $row['phone']; ?></td>
-								<td align="center"><?php echo $countland; ?></td>
-								<td align="left"><a target="_blank" style="color:#000; text-decoration: none;" href="<?php echo $link;?>"><?php echo $row['land_address'].",".$row['street'];?></a></td>
-								<td><?php echo date("d-m-Y",strtotime($row['first_payment']));?></td>
-								<td><?php echo $row['paymenttype'];?></td>
-								<td>
+								<td data-label="<?php echo $tr->translate("NUM");?>"><?php echo $i+1; ?></td>
+								<td data-label="<?php echo $tr->translate("CUSTOMER_NAME");?>" align="left" style="font-size:11px; line-height: 13px; white-space: nowrap;"><a target="_blank" style="color:#000; text-decoration: none;" href="<?php echo $link;?>"><?php echo $row['client_kh']; ?></a></td>
+								<td data-label="<?php echo $tr->translate("TEL");?>" align="left" ><?php echo $row['phone']; ?></td>
+								<td data-label="<?php echo $tr->translate("AMOUNT_PROPERTY");?>" align="center"><?php echo $countland; ?></td>
+								<td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>" align="left"><a target="_blank" style="color:#000; text-decoration: none;" href="<?php echo $link;?>"><?php echo $row['land_address'].",".$row['street'];?></a></td>
+								<td data-label="<?php echo $tr->translate("DATE_BUY");?>"><?php echo date("d-m-Y",strtotime($row['first_payment']));?></td>
+								<td data-label="<?php echo $tr->translate("PAMENT_METHOD");?>"><?php echo $row['paymenttype'];?></td>
+								<td data-label="<?php echo $tr->translate("LOAN_PERIOD");?>"> 
 									
 									<?php 
 										echo $row['total_duration']; 
@@ -212,13 +212,13 @@ dojo.require("dijit.form.DateTextBox");
 									?>
 									
 								</td>
-								<td><?php echo number_format($row['price_sold'],2);?></td>
-								<td style="white-space:nowrap; text-align: right;"><?php echo number_format($total_receive,2);?></td>
-								<td><?php 
+								<td data-label="<?php echo $tr->translate("SOLD_PRICE");?>"><?php echo number_format($row['price_sold'],2);?></td>
+								<td data-label="<?php echo $tr->translate("PRINCIPAL");?>" style="white-space:nowrap; text-align: right;"><?php echo number_format($total_receive,2);?></td>
+								<td data-label="<?php echo $tr->translate("PERCENTAGE");?>"><?php 
 									echo number_format($total_receive/$row['price_sold']*100,2).' %';
 								?></td>
-								<td><?php echo number_format(($row['price_sold']-$total_receive),2);?></td>
-								<td><?php echo number_format($row['balance_interest'],2);
+								<td data-label="<?php echo $tr->translate("NOT_TO_REPAY");?>"><?php echo number_format(($row['price_sold']-$total_receive),2);?></td>
+								<td data-label="<?php echo $tr->translate("TOTAL_INTEREST");?>"><?php echo number_format($row['balance_interest'],2);
 										$total_interest = $total_interest + $row['balance_interest'];
 								?></td>
 							</tr>
