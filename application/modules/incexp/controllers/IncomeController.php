@@ -2,8 +2,6 @@
 
 class Incexp_IncomeController extends Zend_Controller_Action
 {
-	//const REDIRECT_URL = '/incexp/expense';
-	
     public function init()
     {
     	header('content-type: text/html; charset=utf8');
@@ -39,7 +37,6 @@ class Incexp_IncomeController extends Zend_Controller_Action
     	}catch (Exception $e){
     		Application_Form_FrmMessage::message("Application Error");
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-    		echo $e->getMessage();
     	}
 //     	$frm = new Incexp_Form_Frmexpense();
 //     	Application_Model_Decorator::removeAllDecorator($frm);

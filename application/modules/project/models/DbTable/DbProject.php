@@ -314,8 +314,7 @@ class Project_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     	$dbp = new Application_Model_DbTable_DbGlobal();
     	
     	$sql = "SELECT b.br_id,b.project_name,
-		b.prefix,b.branch_code,b.br_address,b.branch_tel,b.fax,
-		b.other,p_manager_namekh,w_manager_namekh	
+		b.prefix,b.branch_code,b.br_address,b.branch_tel	
     	";
     	
     	$sql.=$dbp->caseStatusShowImage("b.`status`").",";

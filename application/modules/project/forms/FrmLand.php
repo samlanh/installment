@@ -319,7 +319,10 @@ Class Project_Form_FrmLand extends Zend_Dojo_Form {
 		
 		$dbe = new Project_Model_DbTable_DbLand();
 		$rscheque = $dbe->getAllTypeTob();
-		$opt1=array(''=>$this->tr->translate("SELECT_TYPE_STORE"),'-1'=>$this->tr->translate("ADD_NEW"));
+		$opt1=array(''=>$this->tr->translate("SELECT_TYPE_STORE"));
+		if($request->getActionName()!='index'){
+			$opt1['-1']=$this->tr->translate("ADD_NEW");
+		}
 		if(!empty($rscheque))foreach($rscheque AS $row){
 			$opt1[$row['id']]=$row['name'];
 		}

@@ -55,14 +55,61 @@ $opt = array(1=>"បង់ធម្មតា",2=>"បង់មុន",3=>"បង
 	<div style="min-height:22cm; margin:0 auto;">
 			<div id="divPrint">
 			<style>
-			.style{
-				line-height: 20px;font-size: 12px !important;
-				font-family: 'Khmer OS Battambang';
-			}
-			.stylehover:hover{background: #ccc;}
-			table tr td ul li{text-align: center;list-style: none;line-height: 25px;}
-			th{padding: 5px;}
-			.even{background:#f1f1f1;border:1px solid #d2d2d2;}
+				.style{
+   				 	line-height: 20px;font-size: 11px !important;
+           			 font-family: 'Times New Roman','Khmer OS Battambang';
+        }
+        .hideblog{display: none;}
+        .hiddenblog{display: block !important;}
+        .style1:hover{ background: #ccc; }
+        table tr td ul li{text-align: center;list-style: none;line-height: 25px; }
+        table { page-break-inside:auto }
+        tr{ page-break-inside:avoid; page-break-after:auto; }
+        #header {
+        display: table-header-group;
+        page-break-inside:avoid; page-break-after:auto;
+        margin-top: 100px;
+        }
+        
+        .center{text-align: center !important;}
+        table.content-data{
+            border-collapse:collapse;
+            border:1px solid #000; 
+            font-size:8px;
+        }
+        table.content-data thead tr.style {
+        line-height: 25px; font-size:10px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
+            background: #c1d0f3;
+            font-weight:600;
+        }
+        table.content-data tr.style {
+         white-space: nowrap;
+        
+        }
+        table.tb-footer{
+            border-collapse:collapse;
+            border:1px solid #000; 
+            font-size:11px;
+            font-family: 'Times New Roman','Khmer OS Battambang';
+        }
+        table.tb-footer tr{
+        line-height: 14px; font-size:11px; padding:2px 0px; height: 25px;
+        }
+        table tr td{
+            padding:0 2px;
+        }
+        tr.voidclass {
+            background: #fff7f7;
+        }
+        td.centerText{
+            text-align: center;
+        }
+        .redBold {
+            font-weight: 600;
+            color: #f80000;
+        }
+
+			
 			</style>
 			<?php $client_id = null; $sale_id = null;?>
 			<?php 
@@ -89,7 +136,7 @@ $opt = array(1=>"បង់ធម្មតា",2=>"បង់មុន",3=>"បង
 			        </td>
 			    </tr>
 			    <tr><td id="exportExcel" class="mymy">
-			    		<table width="100%" style="border-collapse:collapse; border: 1px solid #000;" cellspacing="0">
+			    		<table width="100%" class="content-data" cellspacing="0">
 			            	<?php 
 			            	$grtotalprice =0; 
 			            	$totalcustomer=0;
@@ -121,36 +168,38 @@ $opt = array(1=>"បង់ធម្មតា",2=>"បង់មុន",3=>"បង
 					              			?>
 			              				</td>
 					              	</tr>
-			                <tr bgcolor="#ccc" class="style" align="center" style="border:1px solid #ccc;padding:5px 0;height: 20px; white-space: nowrap;">
-			                   <td><?php echo $tr->translate("NUM");?></td>
-			                   <td><?php echo $tr->translate("BRANCH_NAME");?></td>
-			                   <td><?php echo $tr->translate("DATE");?></td>
-			                   <td><?php echo $tr->translate("RECEIPT_NO");?></td>
-			                   <td><?php echo $tr->translate("PROPERTY_CODE");?></td>  
-			                   <td><?php echo $tr->translate("STREET");?></td>
-			                   <td><?php echo $tr->translate("CATEGORY");?></td>	
-			                   <td><?php echo $tr->translate("DESCRIPTION");?></td>   
-			                   <td><?php echo $tr->translate("PRICE");?></td>
-			                   <td><?php echo $tr->translate("QUANTITY");?></td>
-			                   <td><?php echo $tr->translate("TOTAL");?></td>
-			                </tr>
+			               <thead>
+									<tr  class="style" align="center" >
+									<td scope="col"><?php echo $tr->translate("NUM");?></td>
+									<td scope="col"><?php echo $tr->translate("BRANCH_NAME");?></td>
+									<td scope="col"><?php echo $tr->translate("DATE");?></td>
+									<td scope="col"><?php echo $tr->translate("RECEIPT_NO");?></td>
+									<td scope="col"><?php echo $tr->translate("PROPERTY_CODE");?></td>  
+									<td scope="col"><?php echo $tr->translate("STREET");?></td>
+									<td scope="col"><?php echo $tr->translate("CATEGORY");?></td>	
+									<td scope="col"><?php echo $tr->translate("DESCRIPTION");?></td>   
+									<td scope="col"><?php echo $tr->translate("PRICE");?></td>
+									<td scope="col"><?php echo $tr->translate("QUANTITY");?></td>
+									<td scope="col"><?php echo $tr->translate("TOTAL");?></td>
+									</tr>
+						   </thead>
 				              <?php }?>
 				            <?php 
 				            $grtotalprice = $grtotalprice+$rs["total"];
 				            $totalcustomer = $totalcustomer+$rs["total"];
 				            ?>
 			                <tr class="style stylehover <?php if($index%2==1){echo"even";}?>" style="border:1px solid #ccc;font-family: 'Times New Roman','Khmer OS Battambang';white-space: nowrap;" width="100%">
-			               		<td style="text-align: center;">&nbsp;<?php echo $i++; ?>&nbsp;</td>
-			               		<td align="center">&nbsp;<?php echo $rs["branch_name"];?>&nbsp;</td>
-			               		<td align="center">&nbsp;<?php echo date("d/m/Y",strtotime($rs["date"]));?>&nbsp;</td>
-			               		<td align="center">&nbsp;<?php echo $rs["invoice"];?>&nbsp;</td>
-			               		<td align="center">&nbsp;<?php echo $rs["land_address"];?>&nbsp;</td>
-			               		<td align="center">&nbsp;<?php echo $rs["street"];?>&nbsp;</td>
-			               		<td style="max-width: 230px;white-space: normal;" valign="top">&nbsp;<?php echo $rs["category"];?>&nbsp;</td>
-			               		<td style="max-width: 230px;white-space: normal;">&nbsp;<?php echo $rs["description"];?>&nbsp;</td>
-			               		<td align="right">&nbsp;&nbsp;<?php echo number_format($rs["price"],2);?>&nbsp;</td>
-			               		<td align="center">&nbsp;&nbsp;<?php echo $rs["qty"];?></td>               		
-			               		<td align="right">&nbsp;<?php echo number_format($rs["total"],2);?>&nbsp;</td>
+			               		<td data-label="<?php echo $tr->translate("NUM");?>" style="text-align: center;">&nbsp;<?php echo $i++; ?>&nbsp;</td>
+			               		<td data-label="<?php echo $tr->translate("BRANCH_NAME");?>" align="center">&nbsp;<?php echo $rs["branch_name"];?>&nbsp;</td>
+			               		<td data-label="<?php echo $tr->translate("DATE");?>" align="center">&nbsp;<?php echo date("d/m/Y",strtotime($rs["date"]));?>&nbsp;</td>
+			               		<td data-label="<?php echo $tr->translate("RECEIPT_NO");?>" align="center">&nbsp;<?php echo $rs["invoice"];?>&nbsp;</td>
+			               		<td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>" align="center">&nbsp;<?php echo $rs["land_address"];?>&nbsp;</td>
+			               		<td data-label="<?php echo $tr->translate("STREET");?>" align="center">&nbsp;<?php echo $rs["street"];?>&nbsp;</td>
+			               		<td  data-label="<?php echo $tr->translate("CATEGORY");?>" valign="top">&nbsp;<?php echo $rs["category"];?>&nbsp;</td>
+			               		<td data-label="<?php echo $tr->translate("DESCRIPTION");?>" >&nbsp;<?php echo $rs["description"];?>&nbsp;</td>
+			               		<td data-label="<?php echo $tr->translate("PRICE");?>" align="right">&nbsp;&nbsp;<?php echo number_format($rs["price"],2);?>&nbsp;</td>
+			               		<td data-label="<?php echo $tr->translate("QUANTITY");?>" align="center">&nbsp;&nbsp;<?php echo $rs["qty"];?></td>               		
+			               		<td data-label="<?php echo $tr->translate("TOTAL");?>" align="right">&nbsp;<?php echo number_format($rs["total"],2);?>&nbsp;</td>
 			                </tr>
 			                <?php if ($client_id!=$rs["client_id"]) {
 			                	$client_id=$rs["client_id"];

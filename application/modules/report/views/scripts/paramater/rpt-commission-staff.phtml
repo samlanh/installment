@@ -124,16 +124,16 @@
 				                <td colspan="16" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
 				             </tr>
 					    	<tr class="style" align="center"  >
-				        		<td><?php echo $tr->translate("NUM");?></td>
-					            <td><?php echo $tr->translate("BRANCH_NAME");?></td>
-					            <td><?php echo $tr->translate("STAFF_NAME");?></td>
-					            <td><?php echo $tr->translate("TEL");?></td>
-					            <td><?php echo $tr->translate("SEX");?></td>
-					            <td><?php echo $tr->translate("PROPERTY_CODE");?></td>
-					            <td><?php echo $tr->translate("RECEIPT_NO");?></td>
-					            <td><?php echo $tr->translate("COMISSION");?></td>
-					            <td><?php echo $tr->translate("DATE");?></td>
-					            <td><?php echo $tr->translate("BY_USER");?></td>
+				        		<td scope="col"><?php echo $tr->translate("NUM");?></td>
+					            <td scope="col"><?php echo $tr->translate("BRANCH_NAME");?></td>
+					            <td scope="col"><?php echo $tr->translate("STAFF_NAME");?></td>
+					            <td scope="col"><?php echo $tr->translate("TEL");?></td>
+					            <td scope="col"><?php echo $tr->translate("SEX");?></td>
+					            <td scope="col"><?php echo $tr->translate("PROPERTY_CODE");?></td>
+					            <td scope="col"><?php echo $tr->translate("RECEIPT_NO");?></td>
+					            <td scope="col"><?php echo $tr->translate("COMISSION");?></td>
+					            <td scope="col"><?php echo $tr->translate("DATE");?></td>
+					            <td scope="col"><?php echo $tr->translate("BY_USER");?></td>
 					         </tr>
 				         </thead>
 				       <?php  $total = 0;
@@ -141,15 +141,15 @@
 				       	   if(!empty($this->staff_list))foreach($this->staff_list as $key =>$row){
 						   $total = $total +$row['comission'];				   ?>
 						<tr style="font-size: 12px; font-family: 'Times New Roman','Khmer OS Battambang'" align="left" class="hover">
-						     <td align="center"><?php echo $key+1; ?></td>
-						     <td align="center"><?php echo $row['project_name']?></td>
-							 <td><?php echo $row['co_khname'];?></td>
-							 <td align="center" style="white-space: nowrap;"><?php echo $row['tel'];?></td>
-							 <td align="center" style="white-space: nowrap;"><?php if($row['sex']==1){ echo "ប្រុស";}else{ echo 'ស្រី';}?></td>
-							 <td style="white-space: nowrap;"><?php echo $row['land_name'].', '.$row['street'];?></td>
-							 <td align="right"><?php echo number_format($row['comission'],2);?></td>
-							 <td style="white-space: nowrap;"><?php echo date("d-m-Y",strtotime($row['buy_date']));?></td>
-							 <td><?php echo $row['user_name'];?></td>
+						     <td data-label="<?php echo $tr->translate("NUM");?>" align="center"><?php echo $key+1; ?></td>
+						     <td data-label="<?php echo $tr->translate("BRANCH_NAME");?>" align="center"><?php echo $row['project_name']?></td>
+							 <td data-label="<?php echo $tr->translate("STAFF_NAME");?>"><?php echo $row['co_khname'];?></td>
+							 <td data-label="<?php echo $tr->translate("TEL");?>" align="center" style="white-space: nowrap;"><?php echo $row['tel'];?></td>
+							 <td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>" align="center" style="white-space: nowrap;"><?php if($row['sex']==1){ echo "ប្រុស";}else{ echo 'ស្រី';}?></td>
+							 <td data-label="<?php echo $tr->translate("RECEIPT_NO");?>" style="white-space: nowrap;"><?php echo $row['land_name'].', '.$row['street'];?></td>
+							 <td data-label="<?php echo $tr->translate("COMISSION");?>" align="right"><?php echo number_format($row['comission'],2);?></td>
+							 <td data-label="<?php echo $tr->translate("DATE");?>" style="white-space: nowrap;"><?php echo date("d-m-Y",strtotime($row['buy_date']));?></td>
+							 <td data-label="<?php echo $tr->translate("BY_USER");?>"><?php echo $row['user_name'];?></td>
 						</tr>
 						<?php }
 						 $record = $key;
@@ -164,16 +164,16 @@
 							$old_sale=$rscom['saleid'];
 						?>
 						 <tr oncontextmenu="setrowdata(<?php echo $rscom['payment_id'];?>,1);return false;" style="font-size: 12px; font-family: 'Times New Roman','Khmer OS Battambang'" align="left" class="hover context-menu-one">
-						     <td align="center"><?php echo $record; ?></td>
-						     <td align="left"><?php echo $rscom['project_name']?></td>
-							 <td><?php echo $rscom['staff_name'];?></td>
-							 <td align="center"><?php echo $rscom['tel'];?></td>
-							 <td align="center"><?php if($rscom['sex']==1){ echo "ប្រុស";}else{ echo 'ស្រី';}?></td>
-							 <td style="white-space: nowrap;"><?php echo $rscom['land_address'].', '.$rscom['street'];?></td>
-							 <td align="right"><?php echo $rscom['invoice'];?></td>
-							 <td align="right"><?php echo number_format($rscom['total_amount'],2);?></td>
-							 <td align="center" style="white-space: nowrap;"><?php echo date("d-m-Y",strtotime($rscom['create_date']));?></td>
-							 <td><?php echo $rscom['user_name'];?></td>
+						     <td data-label="<?php echo $tr->translate("NUM");?>"  align="center"><?php echo $record; ?></td>
+						     <td data-label="<?php echo $tr->translate("BRANCH_NAME");?>"  align="left"><?php echo $rscom['project_name']?></td>
+							 <td data-label="<?php echo $tr->translate("STAFF_NAME");?>" ><?php echo $rscom['staff_name'];?></td>
+							 <td data-label="<?php echo $tr->translate("TEL");?>"   align="center"><?php echo $rscom['tel'];?></td>
+							 <td  data-label="<?php echo $tr->translate("SEX");?>"  align="center"><?php if($rscom['sex']==1){ echo "ប្រុស";}else{ echo 'ស្រី';}?></td>
+							 <td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>"  style="white-space: nowrap;"><?php echo $rscom['land_address'].', '.$rscom['street'];?></td>
+							 <td data-label="<?php echo $tr->translate("RECEIPT_NO");?>"  align="right"><?php echo $rscom['invoice'];?></td>
+							 <td data-label="<?php echo $tr->translate("COMISSION");?>"  align="right"><?php echo number_format($rscom['total_amount'],2);?></td>
+							 <td data-label="<?php echo $tr->translate("DATE");?>"  align="center" style="white-space: nowrap;"><?php echo date("d-m-Y",strtotime($rscom['create_date']));?></td>
+							 <td data-label="<?php echo $tr->translate("BY_USER");?>" ><?php echo $rscom['user_name'];?></td>
 						</tr>
 						<?php } ?>
 						<?php  $old_sale = '';
@@ -194,16 +194,16 @@
 								$old_sale=$rscom['sale_id'];
 							?>
 							<tr oncontextmenu="setrowdata(<?php echo $rscom['payment_id'];?>,2);return false;" style="font-size: 12px; font-family: 'Times New Roman','Khmer OS Battambang'" align="left" class="hover context-menu-one">
-								 <td align="center"><?php echo $record; ?></td>
-								 <td align="left"><?php echo $rscom['branchName']?></td>
-								 <td><?php echo $rscom['agencyNname'];?></td>
-								 <td align="center"><?php echo $rscom['agencyTel'];?></td>
-								 <td align="center"><?php if($rscom['sex']==1){ echo "ប្រុស";}else{ echo 'ស្រី';}?></td>
-								 <td style="white-space: nowrap;"><?php echo $rscom['landCode'].', '.$rscom['street'];?></td>
-								 <td align="right"><?php echo $rscom['receipt_no'];?></td>
-								 <td align="right"><?php echo number_format($rscom['payment_amount'],2);?></td>
-								 <td align="center" style="white-space: nowrap;"><?php echo date("d-m-Y",strtotime($rscom['date_payment']));?></td>
-								 <td><?php echo $rscom['userName'];?></td>
+								 <td data-label="<?php echo $tr->translate("NUM");?>"  align="center"><?php echo $record; ?></td>
+								 <td data-label="<?php echo $tr->translate("BRANCH_NAME");?>"  align="left"><?php echo $rscom['branchName']?></td>
+								 <td data-label="<?php echo $tr->translate("STAFF_NAME");?>" ><?php echo $rscom['agencyNname'];?></td>
+								 <td  data-label="<?php echo $tr->translate("TEL");?>" align="center"><?php echo $rscom['agencyTel'];?></td>
+								 <td data-label="<?php echo $tr->translate("SEX");?>"  align="center"><?php if($rscom['sex']==1){ echo "ប្រុស";}else{ echo 'ស្រី';}?></td>
+								 <td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>"   style="white-space: nowrap;"><?php echo $rscom['landCode'].', '.$rscom['street'];?></td>
+								 <td data-label="<?php echo $tr->translate("RECEIPT_NO");?>"  align="right"><?php echo $rscom['receipt_no'];?></td>
+								 <td data-label="<?php echo $tr->translate("COMISSION");?>"  align="right"><?php echo number_format($rscom['payment_amount'],2);?></td>
+								 <td data-label="<?php echo $tr->translate("DATE");?>"  align="center" style="white-space: nowrap;"><?php echo date("d-m-Y",strtotime($rscom['date_payment']));?></td>
+								 <td data-label="<?php echo $tr->translate("BY_USER");?>" ><?php echo $rscom['userName'];?></td>
 							</tr>
 							<?php } ?>
 						<?php } ?>

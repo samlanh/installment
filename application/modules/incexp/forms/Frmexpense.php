@@ -215,8 +215,56 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
     			'onChange'=>'getRefreshProduct();',
     			'missingMessage'=>'Invalid Module!',
     			'class'=>'fullside height-text',));
+    	
+    	$start_Date = new Zend_Dojo_Form_Element_DateTextBox('from_date');
+    	$start_Date->setAttribs(array(
+    			'dojoType'=>'dijit.form.DateTextBox',
+    			'required'=>true,
+    			'class'=>'fullside',
+    			'constraints'=>"{".$constraintsDate."datePattern:'dd/MM/yyyy'}",
+    			'readOnly' =>$paymentDateEnable,
+    	));
+    	$start_Date->setValue(date('Y-m-d'));
+    	
+    	$end_Date = new Zend_Dojo_Form_Element_DateTextBox('end_date');
+    	$end_Date->setAttribs(array(
+    			'dojoType'=>'dijit.form.DateTextBox',
+    			'required'=>true,
+    			'class'=>'fullside',
+    			'constraints'=>"{".$constraintsDate."datePattern:'dd/MM/yyyy'}",
+    			'readOnly' =>$paymentDateEnable,
+    	));
+    	
+    	$qty=new Zend_Dojo_Form_Element_NumberTextBox('qty');
+    	$qty->setAttribs(array(
+    			'dojoType'=>'dijit.form.NumberTextBox',
+    			'class'=>'fullside',
+    			'required'=>'true',
+    	));
+    	
+    	$price=new Zend_Dojo_Form_Element_NumberTextBox('unit_price');
+    	$price->setAttribs(array(
+    			'dojoType'=>'dijit.form.NumberTextBox',
+    			'class'=>'fullside',
+    			'required'=>'true',
+    	));
+    	
+    	
+    	$amount=new Zend_Dojo_Form_Element_NumberTextBox('amount');
+    	$amount->setAttribs(array(
+    			'dojoType'=>'dijit.form.NumberTextBox',
+    			'class'=>'fullside',
+    			'required'=>'true',
+    	));
 		
 		if($data!=null){
+			
+			$start_Date->setValue($data['category_id']);
+			$_currency_type->setValue($data['category_id']);
+			$_currency_type->setValue($data['category_id']);
+			$_currency_type->setValue($data['category_id']);
+			$_currency_type->setValue($data['category_id']);
+			
 			$_currency_type->setValue($data['category_id']);
 			$category_id_expense->setValue($data['category_id']);
 			$_branch_id->setValue($data['branch_id']);
@@ -245,7 +293,7 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
 			}
 			
 		}
-		$this->addElements(array($_status,$payment_type,$_cheque,$invoice,$_currency_type,$title,$_Date ,$_stutas,$_Description,
+		$this->addElements(array($amount,$qty,$price,$start_Date,$end_Date,$_status,$payment_type,$_cheque,$invoice,$_currency_type,$title,$_Date ,$_stutas,$_Description,
 				$category_id_expense,
 				$total_amount,$convert_to_dollar,$_branch_id,$for_date,$id,$_supplier_id,$cheque_issuer,$_other_invoice,
 				$_items_id

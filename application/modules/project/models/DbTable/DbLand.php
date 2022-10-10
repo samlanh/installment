@@ -53,6 +53,10 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
     	if($search['type_property_sale']>-1){
     		$where.= " AND is_lock = ".$search['type_property_sale'];
     	}
+    	if(!empty($search['type_tob'])){
+    		$where.= " AND `type`=".$search['type_tob'];
+    	}
+    	
     	$where.=$dbp->getAccessPermission("ln_properties.branch_id");
     	
 //     	$order=" ORDER BY cast(land_address as unsigned) , id DESC ";

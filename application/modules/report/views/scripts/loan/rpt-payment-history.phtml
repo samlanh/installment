@@ -220,23 +220,27 @@ if($headerReportType==2){
 				              			?>
 					              			</td>
 					              	</tr>
-				                <tr class="style saleback" align="center" style="padding:5px 0;height: 20px; white-space: nowrap;">
-				                    <td><?php echo $tr->translate("NUM");?></td>
-				                    <td><?php echo $tr->translate("BRANCH_NAME");?></td>
-				                    <td><?php echo $tr->translate("PROPERTY_CODE");?></td>  
-				                    <td><?php echo $tr->translate("STREET");?></td>
-				                    <td><?php echo $tr->translate("SOLD_PRICE");?></td>	
-				                    <td><?php echo $tr->translate("PAID_PRINCIPAL");?></td>                   
-				                    <td><?php echo $tr->translate("INTEREST");?></td>
-				                    <td><?php echo $tr->translate("PENALIZE AMOUNT");?></td>
-				                    <td><?php echo $tr->translate("EXTRA_PAYMENT");?></td>
-				                    <td><?php echo $tr->translate("PAY_DATE");?></td>
-				                    <td class="payment-info"><?php echo $tr->translate("RECIEPT_NO");?></td>
-				                    <td class="payment-info"><?php echo $tr->translate("PAYMENTED");?></td>
-				                    <td class="payment-info"><?php echo $tr->translate("INPUT_DATE");?></td>
-				                    <td class="payment-info"><?php echo $tr->translate("PAYMENT_OPTION");?></td>
-				                    <td class="payment-info"><?php echo $tr->translate("BY_USER");?></td>
+				              <thead>
+
+							  <tr class="style saleback" align="center" style="padding:5px 0;height: 20px; white-space: nowrap;">
+				                    <td scope="col"><?php echo $tr->translate("NUM");?></td>
+				                    <td scope="col"><?php echo $tr->translate("BRANCH_NAME");?></td>
+				                    <td scope="col"><?php echo $tr->translate("PROPERTY_CODE");?></td>  
+				                    <td scope="col"><?php echo $tr->translate("STREET");?></td>
+				                    <td scope="col"><?php echo $tr->translate("SOLD_PRICE");?></td>	
+				                    <td scope="col"><?php echo $tr->translate("PAID_PRINCIPAL");?></td>                   
+				                    <td scope="col"><?php echo $tr->translate("INTEREST");?></td>
+				                    <td scope="col"><?php echo $tr->translate("PENALIZE AMOUNT");?></td>
+				                    <td scope="col"><?php echo $tr->translate("EXTRA_PAYMENT");?></td>
+				                    <td scope="col"><?php echo $tr->translate("PAY_DATE");?></td>
+				                    <td scope="col" class="payment-info"><?php echo $tr->translate("RECIEPT_NO");?></td>
+				                    <td scope="col" class="payment-info"><?php echo $tr->translate("PAYMENTED");?></td>
+				                    <td scope="col" class="payment-info"><?php echo $tr->translate("INPUT_DATE");?></td>
+				                    <td scope="col" class="payment-info"><?php echo $tr->translate("PAYMENT_OPTION");?></td>
+				                    <td scope="col" class="payment-info"><?php echo $tr->translate("BY_USER");?></td>
 				                </tr>
+
+							  </thead>
 				                <?php }?>
 				                <?php if ($client_id==$rs["client_id"]) {?>
 				                	<?php if($sale_id!=$rs["sale_id"]){ $counsaleCus++;?>
@@ -284,21 +288,21 @@ if($headerReportType==2){
 								$clientExtra=$clientExtra+$rs["extra_payment"];
 							?>
 			                <tr class="style stylehover" style="font-family: 'Times New Roman','Khmer OS Battambang';white-space: nowrap;" width="100%">
-			               		<td style="text-align: center;"><?php echo $i++; ?></td>
-			               		<td><?php echo $rs["branch_name"];?></td>
-			               		<td><?php echo $rs["land_address"];?></td>
-			               		<td><?php echo $rs["street"];?></td>
-			               		<td><?php echo number_format($rs["sold_price"],2);?></td>
-			               		<td align="right"><?php echo number_format($rs["total_principal_permonth"],2);?></td>               		
-			               		<td align="right"><?php echo number_format($rs["total_interest_permonthpaid"],2);?></td>
-			               		<td align="right"><?php echo number_format($rs["penalize_amount"],2);?></td>
-			               		<td align="right"><?php echo number_format($rs["extra_payment"],2);?></td>
-			               		<td><?php echo date('d-m-Y',strtotime($rs["date_payment"]));?></td>
-			               		<td class="receiptNum"><?php echo $rs["receipt_no"];?></td>
-			               		<td align="right"><?php echo number_format($rs["amount_payment"],2);?></td>
-			               		<td><?php echo date("d-m-Y",strtotime($rs['date_pay']));?></td>
-			               		<td style="font-site:9px; <?php if($rs["payment_option"]==4){echo " background:#ccc";} ?>" align="center" ><?php echo $rs["paymentoption"]; //echo @$opt[$rs["payment_option"]];?></td>
-			               		<td><?php echo $rs["user_name"];?></td>
+			               		<td data-label="<?php echo $tr->translate("NUM");?>" style="text-align: center;"><?php echo $i++; ?></td>
+			               		<td data-label="<?php echo $tr->translate("BRANCH_NAME");?>"><?php echo $rs["branch_name"];?></td>
+			               		<td data-label="<?php echo $tr->translate("NUM");?>"><?php echo $rs["land_address"];?></td>
+			               		<td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>"><?php echo $rs["street"];?></td>
+			               		<td data-label="<?php echo $tr->translate("SOLD_PRICE");?>"><?php echo number_format($rs["sold_price"],2);?></td>
+			               		<td data-label="<?php echo $tr->translate("PAID_PRINCIPAL");?>" align="right"><?php echo number_format($rs["total_principal_permonth"],2);?></td>               		
+			               		<td data-label="<?php echo $tr->translate("INTEREST");?>" align="right"><?php echo number_format($rs["total_interest_permonthpaid"],2);?></td>
+			               		<td data-label="<?php echo $tr->translate("PENALIZE AMOUNT");?>" align="right"><?php echo number_format($rs["penalize_amount"],2);?></td>
+			               		<td data-label="<?php echo $tr->translate("EXTRA_PAYMENT");?>" align="right"><?php echo number_format($rs["extra_payment"],2);?></td>
+			               		<td data-label="<?php echo $tr->translate("PAY_DATE");?>"><?php echo date('d-m-Y',strtotime($rs["date_payment"]));?></td>
+			               		<td data-label="<?php echo $tr->translate("RECIEPT_NO");?>" class="receiptNum"><?php echo $rs["receipt_no"];?></td>
+			               		<td data-label="<?php echo $tr->translate("PAYMENTED");?>" align="right"><?php echo number_format($rs["amount_payment"],2);?></td>
+			               		<td data-label="<?php echo $tr->translate("INPUT_DATE");?>"><?php echo date("d-m-Y",strtotime($rs['date_pay']));?></td>
+			               		<td data-label="<?php echo $tr->translate("PAYMENT_OPTION");?>" style="font-site:9px; <?php if($rs["payment_option"]==4){echo " background:#ccc";} ?>" align="center" ><?php echo $rs["paymentoption"]; //echo @$opt[$rs["payment_option"]];?></td>
+			               		<td data-label="<?php echo $tr->translate("BY_USER");?>"><?php echo $rs["user_name"];?></td>
 			                </tr>
 			                <?php if ($client_id!=$rs["client_id"]) {
 			                	$client_id=$rs["client_id"];

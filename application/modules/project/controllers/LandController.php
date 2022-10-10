@@ -20,6 +20,7 @@ class Project_LandController extends Zend_Controller_Action {
 						'streetlist'=>$formdata['streetlist'],
 						'property_type_search'=>$formdata['property_type_search'],
 						'type_property_sale'=>$formdata['type_property_sale'],
+						'type_tob'=>$formdata['type_tob'],
 					);
 			}
 			else{
@@ -31,7 +32,8 @@ class Project_LandController extends Zend_Controller_Action {
 						'type_property_sale'=>-1,
 						'start_date'=> date('Y-m-d'),
 						'end_date'=>date('Y-m-d'),
-						'streetlist'=>''			
+						'streetlist'=>'',
+						'type_tob'=>'',	
 					);
 			}
 			$rs_rows= $db->getAllLandInfo($search);
