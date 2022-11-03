@@ -7,8 +7,24 @@ Class Loan_Form_FrmLoan extends Zend_Dojo_Form {
 	}
 	public function FrmAddLoan($data=null){
 		$db = new Application_Model_DbTable_DbGlobal();
+		$dbGBStock = new Application_Model_DbTable_DbGlobalStock(); 
 		$userInfo = $db->getUserInfo();
 		$userLevel = empty($userInfo['level'])?0:$userInfo['level'];
+		
+		$_bankId = new Zend_Dojo_Form_Element_FilteringSelect('bank_id');
+		$_bankId->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'required'=>'false',
+		));
+		$rsBank = $dbGBStock->getAllBank();
+		$optBank=array(''=>$this->tr->translate("SELECT_BANK"));
+		if(!empty($rsBank))foreach($rsBank AS $row){
+			$optBank[$row['id']]=$row['name'];
+		}
+		$_bankId->setMultiOptions($optBank);
+		
+
 		
 		$_branch_id = new Zend_Dojo_Form_Element_FilteringSelect('branch_id');
 		$_branch_id->setAttribs(array(
@@ -357,6 +373,9 @@ Class Loan_Form_FrmLoan extends Zend_Dojo_Form {
 		$cheque->setAttribs(array(
 			'dojoType'=>'dijit.form.TextBox',
 			'class'=>'fullside',
+			'placeholder'=>$this->tr->translate("ACCOUNT_AND_CHEQUE_NO"),
+			'style'=>'color:red;font-weight: 600;',
+			'missingMessage'=>$this->tr->translate("Forget Enter Data")
 		));
 		
 		$_service_charge = new Zend_Dojo_Form_Element_TextBox("service_charge");
@@ -660,7 +679,8 @@ Class Loan_Form_FrmLoan extends Zend_Dojo_Form {
 				$_witness_ii,
 				
 				$agreement_for,
-				$contract_issuer_id
+				$contract_issuer_id,
+				$_bankId
 				));
 		return $this;
 		

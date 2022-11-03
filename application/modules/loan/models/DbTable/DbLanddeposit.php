@@ -413,6 +413,7 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     				    	'payment_option'	=>($data['schedule_opt']==2)?4:1,//4 payoff,1normal
     				    	'is_completed'		=>($data['schedule_opt']==2)?1:0,
     		    			'payment_method'	=> $data['payment_method'],
+							'bank_id'			=> $data['bank_id'],
     		    			'cheque'			=> $data['cheque'],
     				    	'status'			=> 1,
     				    	'note'				=> $data['note'],
@@ -461,6 +462,8 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
             Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
         }
     }
+
+
     function updateLoanById($data){
     	$db = $this->getAdapter();
     	$db->beginTransaction();
