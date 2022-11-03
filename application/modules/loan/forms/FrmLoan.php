@@ -658,6 +658,9 @@ Class Loan_Form_FrmLoan extends Zend_Dojo_Form {
 			
 			$agreement_for->setValue($data['agreement_for']);
 			$contract_issuer_id->setValue($data['contract_issuer_id']);
+			$payment_method->setValue($data['Payment_Method']);
+			$_bankId->setValue($data['bank_id']);
+			$cheque->setValue($data['cheque']);
 		}
 		$this->addElements(array($free_tob,$grace_period,$commision_amt,$times_commission,$last_payment,$paid_date,$note_agreement,$total_discount,$delay_day,$full_commission,$payment_method,$other_feenote,$start_building,$amount_build,$typesale,$paid_receivehouse,$agreementdate,$discount_percent,$cheque,$paid_before,$balance_before,$receipt,$fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,
 				$_interest,$_service_charge,$schedule_opt,$_to_total_sold,$_total_sold,$_house_price,$balance,$paid,

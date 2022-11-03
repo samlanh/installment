@@ -453,7 +453,7 @@
 												<div class="form-group">
 													<label class="control-label col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("BANK");?> </label>
 													<div class="col-md-7 col-sm-7 col-xs-12">
-														<?php echo $frm->getElement("bankId");?>
+														<?php echo $frm->getElement("bank_id");?>
 													</div>
 												</div>
 
@@ -1784,18 +1784,19 @@ function getAllStaffByBranchPop(){
 function enablePayment(){
 	payment_method = dijit.byId('payment_method').get('value');
 
-	dijit.byId("bankId").set("readOnly",false);
-	dijit.byId("bankId").reset();
+	dijit.byId("bank_id").set("readOnly",false);
+	dijit.byId("bank_id").reset();
 
 	dijit.byId("cheque").set("readOnly",false);
-	dijit.byId("cheque").attr("value",'');
+	dijit.byId("cheque").reset();
+	
 	
 	if(payment_method==1){
 		dijit.byId("cheque").attr("value",'N/A');
 		dijit.byId("cheque").set("readOnly",true);
 
-		dijit.byId("bankId").set("readOnly",true);
-		dijit.byId("bankId").attr("value",'');
+		dijit.byId("bank_id").set("readOnly",true);
+		dijit.byId("bank_id").attr("value",'');
 			
 	}
 }

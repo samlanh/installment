@@ -248,6 +248,7 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
 		    				'status'			=>1,
 		    				'note'				=>$data['note'],
 		    				'payment_method'	=>$data['payment_method'],
+							'bank_id'			=>$data['bank_id'],
 		    				'cheque'			=>$data['cheque'],
 		    				'payment_times'		=>1,
 		    				'is_payoff'			=>1,

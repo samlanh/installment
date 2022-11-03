@@ -764,6 +764,7 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     				'branch_id'			=>$data['branch_id'],
     				'client_id'			=>$data['member'],
     				'payment_method'	=>  $data['payment_method'],
+					'bank_id'			=>  $data['bank_id'],
     				'cheque'			=>	$data['cheque'],
     				'date_pay'			=>$data['paid_date'],
     				'land_id'			=>$data['land_code'],

@@ -123,7 +123,17 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		WHERE ln_client_receipt_money.receipt_no=s.receipt_no AND ln_client_receipt_money.branch_id = $branch_id LIMIT 1) AS paid_amount,
     	(SELECT date_input  FROM `ln_client_receipt_money` 
     		WHERE ln_client_receipt_money.receipt_no=s.receipt_no AND ln_client_receipt_money.branch_id = $branch_id LIMIT 1) AS date_input,
-    		
+
+		(SELECT payment_method  FROM `ln_client_receipt_money` 
+    	WHERE ln_client_receipt_money.receipt_no=s.receipt_no AND ln_client_receipt_money.branch_id = $branch_id LIMIT 1) AS Payment_Method,
+
+		(SELECT bank_id  FROM `ln_client_receipt_money` 
+    	WHERE ln_client_receipt_money.receipt_no=s.receipt_no AND ln_client_receipt_money.branch_id = $branch_id LIMIT 1) AS bank_id,
+
+		(SELECT cheque  FROM `ln_client_receipt_money` 
+    	WHERE ln_client_receipt_money.receipt_no=s.receipt_no AND ln_client_receipt_money.branch_id = $branch_id LIMIT 1) AS cheque,
+    	
+
     	(SELECT p.old_land_id FROM `ln_properties` AS p WHERE p.id=s.house_id) AS old_land_id,
     	(SELECT CASE WHEN p.old_land_id  IS NULL THEN p.id ELSE p.old_land_id 	END  FROM `ln_properties` AS p WHERE p.id=s.house_id) AS all_land_id  
     		FROM `ln_sale` AS s

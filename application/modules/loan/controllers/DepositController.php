@@ -116,6 +116,7 @@ class Loan_DepositController extends Zend_Controller_Action {
 		$id = $this->getRequest()->getParam('id');
 		$db = new Loan_Model_DbTable_DbLandpayment();
 		$row = $db->getTranLoanByIdWithBranch($id,null);
+
 		if(empty($row)){Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/deposit",2);}
 		
 		 
