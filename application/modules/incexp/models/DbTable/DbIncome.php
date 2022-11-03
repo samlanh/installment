@@ -29,6 +29,12 @@ class Incexp_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 				'user_id'		=>$this->getUserId(),
 				'create_date'	=>date('Y-m-d'),
 				'is_beginning'=>$data['is_beginning'],
+					
+				'qty'=>$data['qty'],
+				'unit_price'=>$data['unit_price'],
+				'amount'=>$data['total_amount'],
+				'from_date'=>$data['from_date'],
+				'next_date'=>$data['end_date'],
 			);
 			$this->insert($array);
 			$_db->commit();
@@ -54,8 +60,14 @@ class Incexp_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 				'description'=>$data['Description'],
 				'date'=>$data['Date'],
 				'status'=>$data['Stutas'],
-			   'is_beginning'=>$data['is_beginning'],
+			    'is_beginning'=>$data['is_beginning'],
 				'user_id'=>$this->getUserId(),
+					
+				'qty'=>$data['qty'],
+				'unit_price'=>$data['unit_price'],
+				'amount'=>$data['total_amount'],
+				'from_date'=>$data['from_date'],
+				'next_date'=>$data['end_date'],
 			);
 			$where=" id =  $id " ;
 			$this->update($arr, $where);

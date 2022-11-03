@@ -155,6 +155,50 @@ $frm = $this->frm_expense;
 								<div class="col-md-12 col-sm-12 col-xs-12"> 
 									<div class="d-flex"> 
 										<div class="settings-main-icon ">
+											<i class="fa fa-calendar" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('PAYMENT_COLLECTION_DATE')?> </p>
+										</div> 
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("QTY").$tr->translate("MONTH");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('qty');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("AMOUNT");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('unit_price');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("TOTAL_AMOUNT");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('amount');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("START_DATE");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('from_date');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("END_DATE");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('end_date');?>
+									   </div>
+									</div>
+									
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
 											<i class="glyphicon glyphicon-info-sign" aria-hidden="true"></i>
 										</div> 
 										<div class="col-md-10 col-sm-10 col-xs-12"> 
@@ -458,6 +502,15 @@ function printSave(new_invoice_no){
 	dojo.byId("lbl_paymenttype").innerHTML = dijit.byId("payment_type").attr('displayedValue');
 	dojo.byId("lb_cheque").innerHTML = dijit.byId("cheque").attr('displayedValue');
 	dojo.byId("lb_customer_name").innerHTML = dijit.byId("customer").attr('displayedValue');
+
+	$('.lblpaymentdetail').css('visibility', 'hidden');
+	if(dijit.byId("total_amount").get('value')!='' || dijit.byId("total_amount").get('value')>0){
+		$('.lblpaymentdetail').css('visibility', 'visible');
+		dojo.byId("lbl_qty").innerHTML = dijit.byId("qty").get('value')+' Month(s)';
+		dojo.byId("lbl_price").innerHTML = '$ '+dojo.number.format(dijit.byId("unit_price").get('value'),{places:2});
+		dojo.byId("lbl_amount").innerHTML = '$ '+dojo.number.format(dijit.byId("total_amount").get('value'),{places:2});
+		dojo.byId("lbl_validate").innerHTML = dijit.byId("from_date").attr('displayedValue')+' ដល់ '+dijit.byId("end_date").attr('displayedValue');
+	}
 	
 	dijit.byId("print_income").show();
 }
@@ -545,6 +598,31 @@ function returnMOnth(monthnum){
 	month[11] = "Nov";
 	month[12] = "Dec";
 	return month[monthnum];
+}
+
+function CalculateAmount(){
+	qty = dijit.byId('qty').get('value');
+	price = dijit.byId('unit_price').get('value');
+	if(isNaN(qty)){qty = 0;}
+	if(isNaN(price)){price = 0;};
+	totalAmount = qty*price;
+	dijit.byId('amount').attr('value',totalAmount);
+	dijit.byId('total_amount').attr('value',totalAmount);
+
+	from_date = dijit.byId('from_date').get('value');
+
+	var a = new Date(from_date);
+	mm = a.getMonth()+1+qty;
+	var dd = a.getDate();
+	 if(dd<10){
+		 dd = "0"+dd;
+	}
+	if(mm<10){
+		 mm = "0"+mm;
+	}
+	var y = a.getFullYear();
+	var epx_date = y+'-'+ mm + '-'+dd ;
+	dijit.byId('end_date').attr('value',epx_date);
 }
 </script>
 

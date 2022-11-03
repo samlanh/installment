@@ -239,14 +239,14 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
     	$qty->setAttribs(array(
     			'dojoType'=>'dijit.form.NumberTextBox',
     			'class'=>'fullside',
-    			'required'=>'true',
+    			'onkeyup'=>'CalculateAmount();'
     	));
     	
     	$price=new Zend_Dojo_Form_Element_NumberTextBox('unit_price');
     	$price->setAttribs(array(
     			'dojoType'=>'dijit.form.NumberTextBox',
     			'class'=>'fullside',
-    			'required'=>'true',
+    			'onkeyup'=>'CalculateAmount();'
     	));
     	
     	
@@ -254,7 +254,6 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
     	$amount->setAttribs(array(
     			'dojoType'=>'dijit.form.NumberTextBox',
     			'class'=>'fullside',
-    			'required'=>'true',
     	));
 		
 		if($data!=null){
@@ -278,6 +277,14 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
 			$id->setValue($data['id']);
 			$_cheque->setValue($data['cheque']);
 			$payment_type->setValue($data['payment_id']);
+			
+			$qty->setValue($data['qty']);
+			$price->setValue($data['unit_price']);
+			$amount->setValue($data['amount']);
+			$start_Date->setValue($data['from_date']);
+			$end_Date->setValue($data['next_date']);
+			
+			
 			$request=Zend_Controller_Front::getInstance()->getRequest();
 			if($request->getControllerName()=='income'){
 				$_status->setValue($data['is_beginning']);

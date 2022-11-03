@@ -124,7 +124,7 @@ class IndexController extends Zend_Controller_Action
 					exit();
 				}
 				else{					
-					$this->view->msg = 'ឈ្មោះ​អ្នក​ប្រើ​ប្រាស់ និង ពាក្យ​​សំងាត់ មិន​ត្រឺម​ត្រូវ​ទេ ';
+					$this->view->msg = 'ឈ្មោះ​អ្នក​ប្រើ​ប្រាស់ និង ពាក្យ​​សម្ងាត់ មិន​ត្រឹម​ត្រូវ​ទេ ';
 				}
 			}
 			else{				
