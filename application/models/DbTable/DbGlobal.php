@@ -1925,7 +1925,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 			  (SELECT `l`.`land_code` FROM `ln_properties` `l` WHERE `l`.`id` = `sl`.`house_id` LIMIT 1 ) AS land_code,
 			  (SELECT `l`.`land_size` FROM `ln_properties` `l` WHERE `l`.`id` = `sl`.`house_id` LIMIT 1 ) AS land_size,
 			  (SELECT `l`.`id` FROM `ln_properties` `l` WHERE `l`.`id` = `sl`.`house_id` LIMIT 1 ) AS hous_id,
-			 
+			  (SELECT bank_name FROM `st_bank` WHERE id =crm.bank_id LIMIT 1) AS bank,
 			  `crm`.`payment_method`               AS `payment_methodid`,
 			  `crm`.`payment_method`               AS `payment_id`,
 			  `crm`.`date_payment`                 AS `date_payment`,
@@ -2440,6 +2440,19 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		";
 		$order="  ORDER BY ci.id ASC ";
 		return $db->fetchAll($sql.$order);
+	}
+
+	public function getPaymentColectionInfo($data){
+		$db = $this->getAdapter();
+		$sql = "SELECT * FROM `ln_income` WHERE 1 ";
+		if( !empty($data['income_category'])){
+			$sql.= " AND category_id = ".$data['income_category'];
+		}
+		if( !empty($data['sale_id'])){
+			$sql.= " AND sale_id = ".$data['sale_id'];
+		}
+  
+		return $db->fetchRow($sql);
 	}
 }
 ?>

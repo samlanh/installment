@@ -688,6 +688,7 @@ public function getAllOutstadingLoan($search=null){
 			 
 			  `crm`.`payment_method`               AS `payment_methodid`,
 			  `crm`.`payment_method`               AS `payment_id`,
+			  (SELECT bank_name FROM `st_bank` WHERE id=`crm`.`bank_id` LIMIT 1) AS bank,
 			  `crm`.`date_payment`                 AS `date_payment`,
 			  
 			  `crm`.`void_reason`           AS `void_reason`,
@@ -3362,6 +3363,7 @@ function updatePaymentStatus($data){
    	   	(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =op.branch_id LIMIT 1) AS branch_name,
    	   	(SELECT `ln_view`.`name_kh` FROM `ln_view` WHERE `key_code` = `op`.`payment_method`
          		 AND `type` = 2 LIMIT 1) AS `payment_method`,
+		(SELECT bank_name FROM `st_bank` WHERE id =op.bank_id LIMIT 1) AS bank,
 		`op`.`payment_method` AS payment_id,
    	   	oi.client_id,
    	   	op.for_date AS date,

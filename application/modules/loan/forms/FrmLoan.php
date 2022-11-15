@@ -7,8 +7,24 @@ Class Loan_Form_FrmLoan extends Zend_Dojo_Form {
 	}
 	public function FrmAddLoan($data=null){
 		$db = new Application_Model_DbTable_DbGlobal();
+		$dbGBStock = new Application_Model_DbTable_DbGlobalStock(); 
 		$userInfo = $db->getUserInfo();
 		$userLevel = empty($userInfo['level'])?0:$userInfo['level'];
+		
+		$_bankId = new Zend_Dojo_Form_Element_FilteringSelect('bank_id');
+		$_bankId->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'required'=>'false',
+		));
+		$rsBank = $dbGBStock->getAllBank();
+		$optBank=array(''=>$this->tr->translate("SELECT_BANK"));
+		if(!empty($rsBank))foreach($rsBank AS $row){
+			$optBank[$row['id']]=$row['name'];
+		}
+		$_bankId->setMultiOptions($optBank);
+		
+
 		
 		$_branch_id = new Zend_Dojo_Form_Element_FilteringSelect('branch_id');
 		$_branch_id->setAttribs(array(
@@ -357,6 +373,9 @@ Class Loan_Form_FrmLoan extends Zend_Dojo_Form {
 		$cheque->setAttribs(array(
 			'dojoType'=>'dijit.form.TextBox',
 			'class'=>'fullside',
+			'placeholder'=>$this->tr->translate("ACCOUNT_AND_CHEQUE_NO"),
+			'style'=>'color:red;font-weight: 600;',
+			'missingMessage'=>$this->tr->translate("Forget Enter Data")
 		));
 		
 		$_service_charge = new Zend_Dojo_Form_Element_TextBox("service_charge");
@@ -639,6 +658,9 @@ Class Loan_Form_FrmLoan extends Zend_Dojo_Form {
 			
 			$agreement_for->setValue($data['agreement_for']);
 			$contract_issuer_id->setValue($data['contract_issuer_id']);
+			$payment_method->setValue($data['Payment_Method']);
+			$_bankId->setValue($data['bank_id']);
+			$cheque->setValue($data['cheque']);
 		}
 		$this->addElements(array($free_tob,$grace_period,$commision_amt,$times_commission,$last_payment,$paid_date,$note_agreement,$total_discount,$delay_day,$full_commission,$payment_method,$other_feenote,$start_building,$amount_build,$typesale,$paid_receivehouse,$agreementdate,$discount_percent,$cheque,$paid_before,$balance_before,$receipt,$fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,
 				$_interest,$_service_charge,$schedule_opt,$_to_total_sold,$_total_sold,$_house_price,$balance,$paid,
@@ -660,7 +682,8 @@ Class Loan_Form_FrmLoan extends Zend_Dojo_Form {
 				$_witness_ii,
 				
 				$agreement_for,
-				$contract_issuer_id
+				$contract_issuer_id,
+				$_bankId
 				));
 		return $this;
 		

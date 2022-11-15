@@ -7,6 +7,21 @@ Class Incexp_Form_FrmOtherIncomePayment extends Zend_Dojo_Form {
 	}
 	
 	public function FrmAddIncomeother($data=null){
+		$dbGBStock = new Application_Model_DbTable_DbGlobalStock(); 
+
+
+		$_bankId = new Zend_Dojo_Form_Element_FilteringSelect('bank_id');
+		$_bankId->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'required'=>'false',
+		));
+		$rsBank = $dbGBStock->getAllBank();
+		$optBank=array(''=>$this->tr->translate("SELECT_BANK"));
+		if(!empty($rsBank))foreach($rsBank AS $row){
+			$optBank[$row['id']]=$row['name'];
+		}
+		$_bankId->setMultiOptions($optBank);
 	
 		$title = new Zend_Dojo_Form_Element_TextBox('title');
 		$title->setAttribs(array(
@@ -84,6 +99,8 @@ Class Incexp_Form_FrmOtherIncomePayment extends Zend_Dojo_Form {
 		$_cheque ->setAttribs(array(
 				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
+				'placeholder'=>$this->tr->translate("ACCOUNT_AND_CHEQUE_NO"),
+				'style'=>'color:red;font-weight: 600;',
 		));
 		
 		$balance=new Zend_Dojo_Form_Element_NumberTextBox('balance');
@@ -138,6 +155,7 @@ Class Incexp_Form_FrmOtherIncomePayment extends Zend_Dojo_Form {
 			$_Date->setValue($data['for_date']);
 			$_cate_type->setValue($data['cate_type']);
 			$payment_method->setValue($data['payment_method']);
+			$_bankId->setValue($data['bank_id']);
 			$_cheque->setValue($data['cheque']);
 			$balance->setValue($data['balance']);
 			$total_amount->setValue($data['total_paid']);
@@ -150,6 +168,7 @@ Class Incexp_Form_FrmOtherIncomePayment extends Zend_Dojo_Form {
 			));
 		}
 		$this->addElements(array(
+				$_bankId,
 				$_cate_type,
 				$payment_method,
 				$_cheque,

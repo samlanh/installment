@@ -206,6 +206,15 @@ class Incexp_IncomeController extends Zend_Controller_Action
     	}
     	
     }
+	function getpaymentinfoAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Application_Model_DbTable_DbGlobal();
+			$payment_info=$db->getPaymentColectionInfo($data);
+			print_r(Zend_Json::encode($payment_info));
+			exit();
+		}
+	}
     
     
     

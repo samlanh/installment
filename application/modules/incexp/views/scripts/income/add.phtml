@@ -131,6 +131,13 @@
 									   </div>
 									</div>
 									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BANK");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('bank_id');?>
+									   </div>
+									</div>
+									<div class="form-group">
 									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CHEQUE");?> :
 									   </label>
 									   <div class="col-md-7 col-sm-7 col-xs-12">
@@ -320,11 +327,18 @@ function CalculateAmount(){
 }
 function enablePayment(){
 	payment_method = dijit.byId('payment_type').get('value');
+
+	dijit.byId("bank_id").set("readOnly",false);
+	dijit.byId("bank_id").reset();
+
 	dijit.byId("cheque").set("readOnly",false);
 	dijit.byId("cheque").attr("value",'');
 	if(payment_method==1){
 		dijit.byId("cheque").attr("value",'N/A');
 		dijit.byId("cheque").set("readOnly",true);
+		
+		dijit.byId("bank_id").set("readOnly",false);
+		dijit.byId("bank_id").attr("value",'');
 	}
 }
 
@@ -391,6 +405,7 @@ new dijit.form.FilteringSelect({
 	    if(fa_job==-1){
 	   	 dijit.byId("popup_category").show();
 	    }
+		getPaymentcollection();
     } 
 }, "income_category");
 
@@ -405,6 +420,7 @@ new dijit.form.FilteringSelect({
 	class: 'fullside',
 		onChange: function() {
 			getLandAndClientDetail();
+			getPaymentcollection();
 		}
 	}, "sale_client");
 	
@@ -452,6 +468,35 @@ function getLandAndClientDetail(){
 			
 		}
 	});
+}
+
+var url_payment= '<?php echo $this->url(array('module'=>'incexp','controller'=>'income','action'=>'getpaymentinfo'));?>';
+function getPaymentcollection(){
+		sale_id = dijit.byId('sale_client').get('value');
+		income_category = dijit.byId('income_category').get('value');
+		
+		if(sale_id=='' || income_category==""){return false;}
+		
+		dojo.xhrPost({
+		url:url_payment,	
+		content:{ 
+		    'sale_id':sale_id,
+			'income_category':income_category
+		},		    
+		handleAs:"json",
+		load: function(data) {
+			
+			
+			dijit.byId("unit_price").attr("value",data.unit_price);
+			dijit.byId("from_date").attr("value",data.next_date);
+			
+		},
+		error: function(err) {
+			
+		}
+		
+	});
+	
 }
 
 function printSave(new_invoice_no){

@@ -396,6 +396,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     			'extra_payment' 				=>  $data["extrapayment"],
     			'payment_times'					=>  $data['paid_times'],
     			'payment_method'				=>  $data['payment_method'],
+				'bank_id'						=>  $data['bank_id'],
 				
     			'date_payment'				=>  $datePaymentForReceipt,
     		);
