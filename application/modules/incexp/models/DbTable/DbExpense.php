@@ -49,6 +49,7 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 				'cheque_issuer'	=> $data['cheque_issuer'],
 				'other_invoice'	=> $data['other_invoice'],
 	            'payment_id'	=> $data['payment_type'],
+				'bank_id'		=> $data['bank_id'],
 				'category_id'	=> $data['income_category'],
 				'description'	=> $data['Description'],
 				'date'			=> $data['Date'],
@@ -158,6 +159,7 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 				'total_amount'	=> $data['total_amount'],
 				'total_amount_after'	=> $data['total_amount'],//new 2021-6-02
 				'payment_id'	=> $data['payment_type'],
+				'bank_id'		=> $data['bank_id'],
 				'cheque'		=> $data['cheque'],
 				'cheque_issuer'	=> $data['cheque_issuer'],
 				'other_invoice'	=> $data['other_invoice'],

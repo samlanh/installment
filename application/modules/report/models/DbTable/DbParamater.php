@@ -278,6 +278,7 @@ function getAllBranch($search=null){
     		(SELECT CONCAT(land_address,',',street) FROM `ln_properties` WHERE id =ln_income.house_id LIMIT 1) as house_name,
     		(SELECT name_kh FROM `ln_view` WHERE type=12 and key_code=category_id LIMIT 1) AS category_name,
     		(SELECT name_kh FROM `ln_view` WHERE type=2 and key_code=payment_id LIMIT 1) AS payment_type,
+			(SELECT bank_name FROM `st_bank` WHERE  id=ln_income.bank_id LIMIT 1) AS bank,
 			payment_id,
     		(SELECT name_kh FROM `ln_client` WHERE ln_client.client_id=ln_income.client_id limit 1) AS client_name,
     		 cheque,total_amount,description,date,is_closed,

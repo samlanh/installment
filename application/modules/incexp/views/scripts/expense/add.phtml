@@ -180,6 +180,13 @@ div.expenseItem.showFeature{
 											   </div>
 											</div>
 											<div class="form-group">
+													<label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BANK");?> :
+													</label>
+													<div class="col-md-7 col-sm-7 col-xs-12">
+															<?php echo $frm->getElement('bank_id');?>
+													</div>
+											</div>
+											<div class="form-group">
 											   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CHEQUE");?> :
 											   </label>
 											   <div class="col-md-7 col-sm-7 col-xs-12">
@@ -478,6 +485,10 @@ function getCancelSaleInfo(){
 		
 function enablePayment(){
 	payment_method = dijit.byId('payment_type').get('value');
+
+	dijit.byId("bank_id").set("readOnly",false);
+	dijit.byId("bank_id").reset();
+
 	dijit.byId("cheque").set("readOnly",false);
 	dijit.byId("cheque").attr("value",'');
 	dijit.byId("cheque_issuer").set("readOnly",false);
@@ -486,6 +497,9 @@ function enablePayment(){
 		dijit.byId("cheque").set("readOnly",true);
 		dijit.byId('cheque_issuer').reset();
 		dijit.byId("cheque_issuer").set("readOnly",true);
+
+		dijit.byId("bank_id").set("readOnly",true);
+		dijit.byId("bank_id").attr("value",'');
 	}
 }
 function Addsupplier(){

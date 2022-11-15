@@ -8,6 +8,22 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
 	public function FrmAddExpense($data=null){
 		$request=Zend_Controller_Front::getInstance()->getRequest();
 		$dbgb = new Application_Model_DbTable_DbGlobal();
+		$dbGBStock = new Application_Model_DbTable_DbGlobalStock(); 
+
+
+		$_bankId = new Zend_Dojo_Form_Element_FilteringSelect('bank_id');
+		$_bankId->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'required'=>'false',
+		));
+		$rsBank = $dbGBStock->getAllBank();
+		$optBank=array(''=>$this->tr->translate("SELECT_BANK"));
+		if(!empty($rsBank))foreach($rsBank AS $row){
+			$optBank[$row['id']]=$row['name'];
+		}
+		$_bankId->setMultiOptions($optBank);
+
 		
 		$title = new Zend_Dojo_Form_Element_ValidationTextBox('title');
 		$title->setAttribs(array(
@@ -100,6 +116,8 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
 		$_cheque ->setAttribs(array(
 				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
+				'placeholder'=>$this->tr->translate("ACCOUNT_AND_CHEQUE_NO"),
+				'style'=>'color:red;font-weight: 600;',
 		));
 		
 		$total_amount=new Zend_Dojo_Form_Element_NumberTextBox('total_amount');
@@ -285,6 +303,8 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
 			$end_Date->setValue($data['next_date']);
 			
 			
+
+			$_bankId->setValue($data['bank_id']);
 			$request=Zend_Controller_Front::getInstance()->getRequest();
 			if($request->getControllerName()=='income'){
 				$_status->setValue($data['is_beginning']);
@@ -303,7 +323,7 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
 		$this->addElements(array($amount,$qty,$price,$start_Date,$end_Date,$_status,$payment_type,$_cheque,$invoice,$_currency_type,$title,$_Date ,$_stutas,$_Description,
 				$category_id_expense,
 				$total_amount,$convert_to_dollar,$_branch_id,$for_date,$id,$_supplier_id,$cheque_issuer,$_other_invoice,
-				$_items_id
+				$_items_id,$_bankId
 				
 				));
 		return $this;

@@ -1925,7 +1925,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 			  (SELECT `l`.`land_code` FROM `ln_properties` `l` WHERE `l`.`id` = `sl`.`house_id` LIMIT 1 ) AS land_code,
 			  (SELECT `l`.`land_size` FROM `ln_properties` `l` WHERE `l`.`id` = `sl`.`house_id` LIMIT 1 ) AS land_size,
 			  (SELECT `l`.`id` FROM `ln_properties` `l` WHERE `l`.`id` = `sl`.`house_id` LIMIT 1 ) AS hous_id,
-			 
+			  (SELECT bank_name FROM `st_bank` WHERE id =crm.bank_id LIMIT 1) AS bank,
 			  `crm`.`payment_method`               AS `payment_methodid`,
 			  `crm`.`payment_method`               AS `payment_id`,
 			  `crm`.`date_payment`                 AS `date_payment`,

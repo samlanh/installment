@@ -536,6 +536,15 @@
 									   </div>
 									</div>
 									<div class="form-group">
+									   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" >
+											<?php echo $tr->translate("BANK");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('bank_id');?>
+									   </div>
+									</div>
+
+									<div class="form-group">
 									   <label class="control-label col-md-5 col-sm-5 col-xs-12" >
 											<?php echo $tr->translate("CHEQUE");?> :
 									   </label>
@@ -679,6 +688,11 @@
 	require(["dijit/form/DateTextBox","dijit/form/NumberTextBox","dojo/number","dijit/Dialog"]);
 </script>
 <script type="text/javascript">	
+
+
+
+
+
 function checkScheduleOption(){
 	//document.getElementById('hidden_lastpayment').style.display='none';
 	interest_rate = dijit.byId("interest_rate").get("value");
@@ -990,6 +1004,7 @@ require(["dojo/ready"], function(ready){
 		dijit.byId("full_commission").set("readOnly",true);
 		CheckAttrDeposit();
 		getAllContractName();
+		enablePayment();
 	  });
 	 
 	new dijit.form.FilteringSelect({
@@ -2013,5 +2028,27 @@ function CheckAttrDeposit(){
 		dojo.byId('lblDateLine').innerHTML="<?php echo $tr->translate("DATE_MAKE_AGREEEMNT");?>";
 		$("#nextDeposit").css("display", "flow-root");
 	}
+}
+
+function enablePayment(){
+	payment_method = dijit.byId('payment_method').get('value');
+	
+	dijit.byId("bank_id").set("readOnly",false);
+	dijit.byId("bank_id").reset();
+	
+	dijit.byId("cheque").set("readOnly",false);
+	dijit.byId("cheque").attr("value",'');
+
+	if(payment_method==1){
+
+		dijit.byId("bank_id").set("readOnly",true);
+		dijit.byId("bank_id").attr("value",'');
+		
+		dijit.byId("cheque").set("readOnly",true);
+		dijit.byId("cheque").attr("value",'N/A');
+		
+	
+	}
+
 }
 </script>
