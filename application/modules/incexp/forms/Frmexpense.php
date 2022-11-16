@@ -239,6 +239,7 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
     			'dojoType'=>'dijit.form.DateTextBox',
     			'required'=>true,
     			'class'=>'fullside',
+    			'onchange'=>'CalculateAmount();',
     			'constraints'=>"{".$constraintsDate."datePattern:'dd/MM/yyyy'}",
     			'readOnly' =>$paymentDateEnable,
     	));

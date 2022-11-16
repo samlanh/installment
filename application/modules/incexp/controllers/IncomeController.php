@@ -215,14 +215,4 @@ class Incexp_IncomeController extends Zend_Controller_Action
 			exit();
 		}
 	}
-    
-    
-    
 }
-
-
-
-
-
-
-
