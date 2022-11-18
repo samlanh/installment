@@ -278,10 +278,6 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
 		if($data!=null){
 			
 			$start_Date->setValue($data['category_id']);
-			$_currency_type->setValue($data['category_id']);
-			$_currency_type->setValue($data['category_id']);
-			$_currency_type->setValue($data['category_id']);
-			$_currency_type->setValue($data['category_id']);
 			
 			$_currency_type->setValue($data['category_id']);
 			$category_id_expense->setValue($data['category_id']);
@@ -302,7 +298,6 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
 			$amount->setValue($data['amount']);
 			$start_Date->setValue($data['from_date']);
 			$end_Date->setValue($data['next_date']);
-			
 			
 
 			$_bankId->setValue($data['bank_id']);

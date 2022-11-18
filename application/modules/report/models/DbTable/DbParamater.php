@@ -379,7 +379,11 @@ function getAllBranch($search=null){
     		cheque,total_amount,description,date,
     		(SELECT CONCAT(last_name,' ',first_name) FROM rms_users WHERE rms_users.id=ln_income.user_id LIMIT 1) AS user_name,
 			(SELECT v.name_kh FROM ln_view AS v WHERE v.type=2 AND key_code=payment_id LIMIT 1) AS payment_method,
-    		status
+    		status,
+    		qty,unit_price,
+    		amount,
+    		DATE_FORMAT(from_date,'%d/%m/%Y') AS from_date,
+    		DATE_FORMAT(next_date,'%d/%m/%Y') next_date
     		FROM ln_income 
     		WHERE status=1 AND id =".$income_id;
     		$dbp = new Application_Model_DbTable_DbGlobal();

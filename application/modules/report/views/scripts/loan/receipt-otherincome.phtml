@@ -108,5 +108,16 @@ function printSave(){
 	$( '#lb_description' ).text( htmlString );
 	
 	dojo.byId("lb_total_amount").innerHTML = '<?php echo "$ ".number_format($this->rs['total_amount'],2);?>';
+
+	$('.lblpaymentdetail').css('visibility', 'hidden');
+	<?php if(!empty($rs['unit_price'])){?>
+		$('.lblpaymentdetail').css('visibility', 'visible');
+		dojo.byId("lbl_qty").innerHTML = '<?php echo $rs['qty'];?>'+' Month(s)';
+		dojo.byId("lbl_price").innerHTML = '$ '+'<?php echo $rs['unit_price'];?>';
+		dojo.byId("lbl_amount").innerHTML = '$ '+'<?php echo $rs['amount'];?>';
+		dojo.byId("lbl_validate").innerHTML = '<?php echo $rs['from_date'];?>'+' ដល់ '+'<?php echo $rs['next_date'];?>';
+	<?php 
+		}
+	?>
 }
 </script>
