@@ -15,7 +15,7 @@ $dbparmeter = new Report_Model_DbTable_DbParamater();
 $branch_title = $tr->translate("BRAND_TITLE");
 $address= $tr->translate("ADDRESS_COMPANY");
 
-$companyname = "អេវើដ ឌីវេឡុបម៉ិន ប្រផឺធី ឯ.ក ";
+$companyname = "Borey Lorn City Lotussea";
 $companynameAddress="ផ្ទះស្ថិតនៅហ្គ្រែនភ្នំពេញ #3 ផ្លូវ I 13  សង្កាត់ឃ្មួញ ខណ្ឌសែនសុខ រាជធានីភ្នំពេញ";
 $projectName = str_replace("គម្រោង", "", $this->agreement['project_name']);
 $project_location=$this->agreement['project_location'];
@@ -156,7 +156,7 @@ dojo.require("dijit.form.DateTextBox");
 							</td>
 							<td>
 								<span style=" font-family: 'Times New Roman','Book Antiqua';">
-									Borey Lorn City Lotussea has its address located at Chamnoat Ream village, Boet Traing commune, Prey Nup district, Preah Sihanouk province.A signed contract represented by CHEA SOPHENG, sex: male, born in 1989, holding Khmer Identity Card No. 021055916, dated 22 March 2014 and KONG SOMALY, sex: female, born in 2001, holding Khmer Identity Card No. 130219092, dated 17 August 2017, hereinafter referred to as Party “A”.
+								<?php echo $companyname;?> has its address located at Chamnoat Ream village, Boet Traing commune, Prey Nup district, Preah Sihanouk province.A signed contract represented by CHEA SOPHENG, sex: male, born in 1989, holding Khmer Identity Card No. 021055916, dated 22 March 2014 and KONG SOMALY, sex: female, born in 2001, holding Khmer Identity Card No. 130219092, dated 17 August 2017, hereinafter referred to as Party “A”.
 								</span>
 							</td>
 
@@ -166,8 +166,23 @@ dojo.require("dijit.form.DateTextBox");
 								<span style=" font-weight:600; font-family: 'Times New Roman','Book Antiqua';">- The Buyer:</span>
 							</td>
 							<td>
+
+							<?php 
+		             				$cussex="Male";
+		             				if($this->agreement['sex']==2){
+		             					$cussex="Female";
+		             				}
+		             				$with_sex="Male";
+		             				if($this->agreement['ksex']==2){
+		             					$with_sex="Female";
+		             				}
+		             			?>
+
 								<span style=" font-family: 'Times New Roman','Book Antiqua';">
-								Name: ____ sex: ____, born in ____, holding Khmer Identity Card No. _____, dated __ __ __, currently residing at ____ village, Sangkat ___, Khan ____, Preah Sihanouk and Name:__________________, sex: ____, born in ____, holding Khmer Identity Card No._____, dated ________, currently residing at ______ village, Sangkat _______, Khan ______, ________, hereinafter referred to as Party “B”, Telephone No.___________.
+								Name: <?php echo $this->agreement['client_namekh'];?>, sex: <?php echo $cussex;?> , born in <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['dob'])));?>
+								, holding Khmer Identity Card No. <?php echo $dbparmeter->getNumberInkhmer($this->agreement['client_nation_id']);?>, dated __ __ __, 
+								currently residing at <?php echo $this->agreement['client_village_kh'];?> village, Sangkat <?php echo $this->agreement['client_commune_kh'];?>, Khan <?php echo $this->agreement['client_districtkh'];?>, <?php echo $this->agreement['client_province_kh'];?>
+								 and Name:__________________, sex: ____, born in ____, holding Khmer Identity Card No._____, dated ________, currently residing at ______ village, Sangkat _______, Khan ______, ________, hereinafter referred to as Party “B”, Telephone No.___________.
 								</span>
 							</td>
 
@@ -188,16 +203,7 @@ dojo.require("dijit.form.DateTextBox");
 						<tr>
 							<td align="justify">
 								
-								<?php 
-		             				$cussex="ប្រុស";
-		             				if($this->agreement['sex']==2){
-		             					$cussex="ស្រី";
-		             				}
-		             				$with_sex="ប្រុស";
-		             				if($this->agreement['ksex']==2){
-		             					$with_sex="ស្រី";
-		             				}
-		             			?>
+								
 		             			  <span class="margin-left"></span>- អ្នកទិញដីឡូត៍៖  លោក/លោកស្រី <span class="value" style="min-width:50px; font-weight:600;"><?php echo $this->agreement['client_namekh'];?></span> ភេទ <?php echo $cussex;?> 
 		             			  កើតថ្ងៃទី <?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['dob'])));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['dob']))]?> ឆ្នាំ<?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['dob'])));?>
 								សញ្ជាតិ <span class="value" style="min-width:30px;"><?php echo $this->agreement['client_nationality'];?></span> 
