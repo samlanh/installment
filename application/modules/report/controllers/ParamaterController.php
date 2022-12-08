@@ -247,6 +247,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
 	  	$this->view->termcodiction = $db->getTermCodiction();
 	  	
 	  	$this->view->agreement = $rsagreement;
+	  	$this->view->agreementen = $db->getIssueHouseAgreementEnglish($id);;
 	  	$this->view->sale_schedule = $db->getScheduleBySaleID($id,$rsagreement['payment_id']);
 	  	$this->view->first_deposit = $db->getFirstDepositAgreement($id);
 	  	

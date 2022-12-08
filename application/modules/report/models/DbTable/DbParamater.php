@@ -1195,6 +1195,60 @@ function getAllBranch($search=null){
     
     	return $db->fetchRow($sql);
     }
+    function getIssueHouseAgreementEnglish($id=null){//bppt,natha,longny,moul mith
+    	$db = $this->getAdapter();
+    	$sql="SELECT
+	    	`p`.`map_url` AS `project_location_en`,
+	    	(SELECT name_en FROM `ln_view` WHERE type=23 and key_code=c.client_d_type limit 1) AS client_doc_type,
+	    		
+	    	(SELECT
+	    	`village`.`village_name`
+	    	FROM `ln_village` `village`
+	    	WHERE (`village`.`vill_id` = `c`.`village_id`
+	    	)
+	    	LIMIT 1) AS `village_en`,
+	    	
+	    	(SELECT
+	    	`comm`.`commune_name` FROM `ln_commune` `comm`
+	    	WHERE (`comm`.`com_id` = `c`.`com_id`)
+	    	LIMIT 1) AS `commune_en`,
+	    	
+	    	(SELECT
+	    	`dist`.`district_name`
+	    	FROM `ln_district` `dist`
+	    	WHERE (`dist`.`dis_id` = `c`.`dis_id`)
+	    	LIMIT 1) AS `district_en`,
+	    	
+	    	(SELECT
+	    	`provi`.`province_en_name`
+	    	FROM `ln_province` `provi`
+	    	WHERE (`provi`.`province_id` = `c`.`pro_id`)
+	    	LIMIT 1) AS `province_en`,
+	    	 
+	    	
+	    	
+	    	(SELECT
+	    	`prope_type`.`type_nameen`
+	    	FROM `ln_properties_type` `prope_type`
+	    	WHERE (`prope_type`.`id` =`pp`.`property_type`)
+	    	LIMIT 1) AS `property_type_en`
+	    	
+    	FROM
+	    	`ln_sale` AS `s`,
+	    	ln_project AS p ,
+	    	`ln_client` AS c,
+	    	ln_properties as pp
+    	WHERE
+	    	`p`.`br_id` = `s`.`branch_id`
+	    	AND `c`.`client_id` = `s`.`client_id`
+	    	AND `pp`.`id` = `s`.`house_id`
+	    	AND s.id=".$id;
+    
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	$sql.=$dbp->getAccessPermission("`s`.`branch_id`");
+    
+    	return $db->fetchRow($sql);
+    }
 //     function getAgreementBySaleID($id=null){//tbongkhmom
 //     	$db = $this->getAdapter();
 //     	$sql="
