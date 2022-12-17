@@ -2732,7 +2732,7 @@ function getAllBranch($search=null){
 			(SELECT project_name FROM ln_project WHERE br_id = p.`branch_id` limit 1) AS branch_name,
 			p.`land_code`,p.`land_address`,p.`property_type`,p.`street`,p.hardtitle ,
 			p.noteForLayout,
-			(SELECT ps.title FROM `ln_plongstep_option` AS ps,ln_processing_plong AS pr WHERE ps.id = pr.process_status AND `p`.`id` = `pr`.`property_id` ORDER BY pr.id DESC ​LIMIT 1) AS processing,
+			(SELECT ps.title FROM `ln_plongstep_option` AS ps,ln_processing_plong AS pr WHERE ps.id = pr.process_status AND `p`.`id` = `pr`.`property_id` ORDER BY pr.id DESC limit 1 ) AS processing,
 			(SELECT t.type_nameen FROM `ln_properties_type` AS t WHERE t.id = p.`property_type` LIMIT 1) AS pro_type,
 			rp.layout_type,rp.date AS received_date,
 			(SELECT cl.name_kh FROM ln_client AS cl WHERE cl.`client_id` = rp.`customer_id` LIMIT 1) AS client_name,
