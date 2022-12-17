@@ -67,263 +67,264 @@ if($headerReportType==2){
 			</div>
 		</div>
  </form> 
-<table style="font-family: 'Times New Roman','Khmer OS Battambang'; width:100%;"  >
+	<table style="font-family: 'Times New Roman','Khmer OS Battambang'; width:100%;"  >
 	<tr>
     	<td align="center">
-    	 <div id="divPrint">
-    	 	<style>
-			.style{
-				line-height: 20px;font-size: 11px !important;
-				font-family: 'Times New Roman','Khmer OS Battambang';
-				}
-				th{padding: 5px;}
-				.hover:hover{background: #ccc;}
-				table tr td ul li{text-align: center;list-style: none;line-height: 25px; }
-				table { page-break-inside:auto }
-				tr{ page-break-inside:avoid; page-break-after:auto; }
-				#header {
-				  display: table-header-group;
-				  page-break-inside:avoid; page-break-after:auto;
-				}
-			table.content-data{
-				border-collapse:collapse;
-				border:1px solid #000; 
-				font-size:13px;
-				font-family: 'Times New Roman','Khmer OS Battambang';
-				white-space: nowrap;
-				line-height: 22px;
-				width: 100%;
-			}
-			table.content-data thead tr.style {
-			   line-height: 25px; font-size:13px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
-				background: #c1d0f3;
-			}
-			table.tb-footer{
-				border-collapse:collapse;
-				border:1px solid #000; 
-				font-family: 'Times New Roman','Khmer OS Battambang';
-				font-size:11px;
-			}
-			table.tb-footer tr{
-			 line-height: 14px;  padding:2px 0px; height: 25px;
-			}			
-			.border_bottom {
-				border-bottom: 1px solid #000;
-			}
-			table tr td{
-				padding:0 2px;
-			}
-			.hide{visibility: hidden;}
-			@media print {
-			 div.divFooter {
-				position: absolute;
-				top: 0;
-				width: 100%;
-				height: 100px;
-				bottom:0px;
-				margin:0;
-			  }
-				.hide{visibility: visible; height: <?php echo $classHideHeight;?>;}
-			}
- 		</style>
-	<div class="divFooter">
-	    <?php echo $this->headerReport;?>
-	</div>
-	 <table id="exportExcel" border="1" class="content-data" width="100%" style="font-family:'Times New Roman','Khmer OS Battambang';margin:0; padding:0; border:1px solid #000; border-collapse: collapse;" >
-		<tr class="hide" style="border:1px solid #000;">
-			<td  colspan="12" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
-		</tr>
-	</table>
-     <table id="exportExcel" border="1" class="content-data" width="100%" style="font-family:'Times New Roman','Khmer OS Battambang';margin:0; padding:0; border:1px solid #000; border-collapse: collapse;" >
-		
-		<?php
-		   $all_totalland = 0;$all_totalhouse =0;$all_total=0;$all_propertype=0;
-	       $total_land_pric=0; $total_house_price = 0; $property_type=0; $i=0; $total=0;
-	       $is_lock=0; 
-	       if(!empty($this->row))foreach($this->row as $key =>$row){?>
-	     <?php  
-	      	$all_totalhouse=$all_totalhouse+$row['house_price'];
-	      	$all_total=$all_total+$row['price'];
-	      	$all_propertype = $key+1;
-	      	if($row['is_lock']=='null'){
-	      		$row['is_lock']=0;
-	      	}
-	      	if($row['is_lock']==1){//ban sell hz
-	      		$is_lock=$is_lock+1;
-	      	}
-			if($row['property_type']!=$property_type){	
-				if($key>0 ){
-			?>
-			<tr >
-				<td colspan="12" style="border-left: solid 1px #fff;">
-					<br />
-					 <table style=" font-size:11px;width:70%;margin:0 auto;" cellspacing="0">
-		                 <tr bgcolor="#a0baf5" class="style" style=" line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
-		                 	<td></td>
-		                    <td align="center"><span class="border_bottom"><?php echo $tr->translate("TOTAL_PROPERTY");?></span></td>
-		                    <!-- 
-		                    <td align="center"><span class="border_bottom"><?php echo $tr->translate("TOTAL_LAND_PRICE");?></span></td>
-		                    <td align="center"><span class="border_bottom"><?php echo $tr->translate("TOTAL_HOUSE_PRICE");?></span></td>
-		                     -->
-		                    <td align="center"><span class="border_bottom"><?php echo $tr->translate("TOTAL");?></span></td>
-		                    <td></td>
-		                    <td></td>
-		                    
-		                    <td></td>
-		                 </tr>
-		                  <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
-		                  	<td></td>
-		                  	<td align="center"><?php echo $i;?></td>
-		                    <!-- 
-		                    <td align="center"><?php echo number_format($total_land_pric,2);?></td>
-		                    <td align="center"><?php echo number_format($total_house_price,2);?></td>
-		                     -->
-		                    <td align="center"><strong><?php echo number_format($total,2);?></strong></td>
-		                    <td></td>
-		                    <td></td>
-		                    <td></td>
-		                  </tr>
-			          </table>
-			          <br />
-				</td>
-			</tr>
-				<?php $i=0; $total_land_pric=0;$total_house_price=0;$total_house_price=0;$total=0;}?>
-		     <thead>
-		     	<tr bgcolor="#c1d0f3" class="style hover" align="center"  >
-					<td scope="col"><?php echo $tr->translate("NUM");?></td>
-					<td scope="col"><?php echo $tr->translate("BRANCH_NAME");?></td>
-					<td scope="col"><?php echo $tr->translate("PROPERTY_CODE");?></td>
-					<td scope="col"><?php echo $tr->translate("STREET_NO");?></td>
-					<td scope="col"><?php echo $tr->translate("PROPERTY_TYPE");?></td>
-					<td scope="col"><?php echo $tr->translate("SIZE");?></td>
-					<td scope="col"><?php echo $tr->translate("WIDTH");?></td>
-					<td scope="col"><?php echo $tr->translate("HEIGHT");?></td>
-					<td scope="col"><?php echo $tr->translate("PRICE");?></td>
-					<td scope="col"><?php echo $tr->translate("PRICE_SOLD");?></td>
-					<td scope="col"><?php echo $tr->translate("NOTE");?></td>
-					<td scope="col"><?php echo $tr->translate("BY_USER");?></td>
-					<td scope="col"><?php echo $tr->translate("STATUS");?></td>
+			<div id="divPrint">
+				<style>
+					.style{
+						line-height: 20px;font-size: 11px !important;
+						font-family: 'Times New Roman','Khmer OS Battambang';
+					}
+					th{padding: 5px;}
+					.hover:hover{background: #ccc;}
+					table tr td ul li{text-align: center;list-style: none;line-height: 25px; }
+					
+					table.content-data { page-break-inside:auto }
+					table.content-data tr{ page-break-inside:avoid; page-break-after:auto; }
+					#header {
+					  display: table-header-group;
+					  page-break-inside:avoid; page-break-after:auto;
+					}
+					table.content-data{
+						border-collapse:collapse;
+						border:1px solid #000; 
+						font-size:13px;
+						font-family: 'Times New Roman','Khmer OS Battambang';
+						white-space: nowrap;
+						line-height: 22px;
+						width: 100%;
+					}
+					table.content-data thead tr.style {
+					   line-height: 25px; font-size:13px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
+						background: #c1d0f3;
+					}
+					table.tb-footer{
+						border-collapse:collapse;
+						border:1px solid #000; 
+						font-family: 'Times New Roman','Khmer OS Battambang';
+						font-size:11px;
+					}
+					table.tb-footer tr{
+					 line-height: 14px;  padding:2px 0px; height: 25px;
+					}			
+					.border_bottom {
+						border-bottom: 1px solid #000;
+					}
+					table tr td{
+						padding:0 2px;
+					}
+					.hide{visibility: hidden;}
+					@media print {
+					 div.divFooter {
+						position: absolute;
+						top: 0;
+						width: 100%;
+						height: 100px;
+						bottom:0px;
+						margin:0;
+					  }
+						.hide{visibility: visible; height: <?php echo $classHideHeight;?>;}
+					}
+				</style>
+			<div class="divFooter">
+				<?php echo $this->headerReport;?>
+			</div>
+			 <table id="exportExcel" border="1" class="content-data" width="100%" style="font-family:'Times New Roman','Khmer OS Battambang';margin:0; padding:0; border:1px solid #000; border-collapse: collapse;" >
+				<tr class="hide" style="border:1px solid #000;">
+					<td  colspan="12" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
 				</tr>
-			</thead>
-			<?php }  $i++;?>
-			   <tr class="hover" style="font-size: 12px;border:1px solid #000; white-space: nowrap;line-height: 25px;<?php if ($row['is_lock']==1){ echo'background:#fbbfbf;';}?>" align="left">
-			     <td data-label="<?php echo $tr->translate("NUM");?>" align="center"><?php echo $i; ?></td>
-			     <td data-label="<?php echo $tr->translate("BRANCH_NAME");?>" align="center"><?php echo $row['branch_name'];?></td>
-			     <td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>" align="center"><?php echo $row['land_address'];?></td>
-				 <td data-label="<?php echo $tr->translate("STREET_NO");?>" align="center"><?php echo $row['street'];?></td>
-				 <td  data-label="<?php echo $tr->translate("PROPERTY_TYPE");?>"><?php echo $row['pro_type'];?></td>
-				 <td data-label="<?php echo $tr->translate("SIZE");?>" align="center"><?php echo $row['land_size'];?></td>
-				 <td data-label="<?php echo $tr->translate("WIDTH");?>" align="center"><?php echo $row['width'];?></td>
-				 <td data-label="<?php echo $tr->translate("HEIGHT");?>" align="center"><?php echo $row['height'];?></td>
-				 <td data-label="<?php echo $tr->translate("PRICE");?>" align="right"><?php echo number_format($row['price'],2);?>​</td>
-				 <td data-label="<?php echo $tr->translate("PRICE_SOLD");?>" align="right">
-				 	<?php if(!empty($row['price_sold'])){
-							echo number_format($row['price_sold'],2);
-						}
-						echo "";
-					?>
-				</td>
-				 <td data-label="<?php echo $tr->translate("NOTE");?>" align="left"><span style="max-width: 220px; width: 220px; display: block; white-space: pre-line; line-height: 16px; overflow-wrap: break-word;padding: 0 1px;" ><?php echo $row['note'];?></span></td>
-				 <td data-label="<?php echo $tr->translate("BY_USER");?>" ><?php echo $row['user_name']?></td>
-				 <td data-label="<?php echo $tr->translate("STATUS");?>" align="center" ><?php if ($row['is_lock']==1){ echo $tr->translate("SOLD_OUT");}else{ echo $tr->translate("NOT_YET_SALE"); }?></td>
-			 </tr>
-				<?php $total = $total + $row['price'];
-				$total_land_pric= $total_land_pric +$row['land_price'];
-				$total_house_price= $total_house_price +$row['house_price'];
-				$property_type = $row['property_type'];
-				$all_totalland = $all_totalland+$row['land_price'];
-				?>
-			<?php }?>
-			<?php if(!empty($this->row)){?>
-			<tr >
-				<td colspan="12" style="border-left: solid 1px #fff;border-bottom: solid 1px #fff;border-right: solid 1px #fff;">
-					<br />
-					 <table style=" font-size:11px;width:70%;margin:0 auto;" cellspacing="0">
-		                 <tr bgcolor="#a0baf5" class="style" style=" line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
-		                 	<td></td>
-		                    <td align="center"><span class="border_bottom"><?php echo $tr->translate("TOTAL_PROPERTY");?></span></td>
-		                    <!-- 
-		                    <td align="center"><span class="border_bottom"><?php echo $tr->translate("TOTAL_LAND_PRICE");?></span></td>
-		                    <td align="center"><span class="border_bottom"><?php echo $tr->translate("TOTAL_HOUSE_PRICE");?></span></td>
-		                     -->
-		                    <td align="center"><span class="border_bottom"><?php echo $tr->translate("TOTAL");?></span></td>
-		                    <td></td>
-		                 </tr>
-		                  <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
-		                  	<td></td>
-		                  	<td align="center"><?php echo $i;?></td>
-		                    <!-- 
-		                    <td align="center"><?php echo number_format($total_land_pric,2);?></td>
-		                    <td align="center"><?php echo number_format($total_house_price,2);?></td>
-		                     -->
-		                    <td align="center"><strong><?php echo number_format($total,2);?></strong></td>
-		                    <td></td>
-		                  </tr>
-			          </table>
-			          <br />
-				</td>
-			</tr>
-			<tr>
-            	<td colspan="13" style=" border: #fff solid 1px;    border-top: solid 1px #000;">
-	            	 <br />
-		             <table style=" font-size:11px;width:70%;margin:0 auto;" cellspacing="0">
-		                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
-		                 	<td></td>
-		                    <td align="center"><span class="border_bottom"><?php echo $tr->translate("PROPERTY");?></span></td>
-		                    <td align="center"></td>
-		                    <td align="center"></td>
-		                    <td align="center"><span class="border_bottom"><?php echo $tr->translate("PRICE");?></span></td>
-		                    <td></td>
-		                 </tr>
-		                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
-		                    <td align="center"><?php echo $tr->translate("TOTAL_PROPERTY");?></td>
-		                    <td align="center"><?php echo $all_propertype;?></td>
-		                    <td></td>
-		                    
-		                    <td align="right"><?php echo $tr->translate("TOTAL");?>$</td>
-		                    <td align="right"><strong><?php echo number_format($all_total,2);?></strong></td>
-		                    
-		                    <!-- 
-		                    <td align="right"><?php echo $tr->translate("TOTAL_LAND_PRICE");?>$</td>
-		                    <td align="right"><strong><?php echo number_format($all_totalland,2);?></strong></td>
-		                     -->
-		                    <td></td>
-		                 </tr>
-		                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
-		                 	 <td align="center"><?php echo $tr->translate("PROPERTY").$tr->translate("SOLD_OUT");?></td>
-		                 	 <td align="center"><?php echo $is_lock;?></td>
-		                 	 <td></td>
-		                 	<!-- 
-		                 	 <td align="right"><?php echo $tr->translate("TOTAL_HOUSE_PRICE");?>$</td>
-		                 	 <td align="right"><strong><?php echo number_format($all_totalhouse,2);?></strong></td>
-		                 	 -->
-		                 	 <td></td>
-		                 	 <td></td>
-		                 	 
-		                 	 <td></td>
-		                 </tr>
-		                 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
-		                    <td align="center"><?php echo $tr->translate("PROPERTY").$tr->translate("NOT_YET_SALE");?></td>
-		                    <td align="center"><?php echo $all_propertype-$is_lock;;?></td>
-		                    <td></td>
-		                    <!-- 
-		                    <td align="right"><?php echo $tr->translate("TOTAL");?>$</td>
-		                    <td align="right"><strong><?php echo number_format($all_total,2);?></strong></td>
-		                     -->
-		                     <td></td>
-		                 	 <td></td>
-		                 	 
-		                    <td></td>
-		                 </tr>
-		             </table>
-	            </td>
-	         </tr>
+			</table>
+		 <table id="exportExcel" border="1" class="content-data" width="100%" style="font-family:'Times New Roman','Khmer OS Battambang';margin:0; padding:0; border:1px solid #000; border-collapse: collapse;" >
 			
-			<?php }?>
-	    </table>
-	 </div>
-	</td>
-  </tr>
+			<?php
+			   $all_totalland = 0;$all_totalhouse =0;$all_total=0;$all_propertype=0;
+			   $total_land_pric=0; $total_house_price = 0; $property_type=0; $i=0; $total=0;
+			   $is_lock=0; 
+			   if(!empty($this->row))foreach($this->row as $key =>$row){?>
+			 <?php  
+				$all_totalhouse=$all_totalhouse+$row['house_price'];
+				$all_total=$all_total+$row['price'];
+				$all_propertype = $key+1;
+				if($row['is_lock']=='null'){
+					$row['is_lock']=0;
+				}
+				if($row['is_lock']==1){//ban sell hz
+					$is_lock=$is_lock+1;
+				}
+				if($row['property_type']!=$property_type){	
+					if($key>0 ){
+				?>
+				<tr >
+					<td colspan="12" style="border-left: solid 1px #fff;">
+						<br />
+						 <table style=" font-size:11px;width:70%;margin:0 auto;" cellspacing="0">
+							 <tr bgcolor="#a0baf5" class="style" style=" line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
+								<td></td>
+								<td align="center"><span class="border_bottom"><?php echo $tr->translate("TOTAL_PROPERTY");?></span></td>
+								<!-- 
+								<td align="center"><span class="border_bottom"><?php echo $tr->translate("TOTAL_LAND_PRICE");?></span></td>
+								<td align="center"><span class="border_bottom"><?php echo $tr->translate("TOTAL_HOUSE_PRICE");?></span></td>
+								 -->
+								<td align="center"><span class="border_bottom"><?php echo $tr->translate("TOTAL");?></span></td>
+								<td></td>
+								<td></td>
+								
+								<td></td>
+							 </tr>
+							  <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
+								<td></td>
+								<td align="center"><?php echo $i;?></td>
+								<!-- 
+								<td align="center"><?php echo number_format($total_land_pric,2);?></td>
+								<td align="center"><?php echo number_format($total_house_price,2);?></td>
+								 -->
+								<td align="center"><strong><?php echo number_format($total,2);?></strong></td>
+								<td></td>
+								<td></td>
+								<td></td>
+							  </tr>
+						  </table>
+						  <br />
+					</td>
+				</tr>
+					<?php $i=0; $total_land_pric=0;$total_house_price=0;$total_house_price=0;$total=0;}?>
+				 <thead>
+					<tr bgcolor="#c1d0f3" class="style hover" align="center"  >
+						<td scope="col"><?php echo $tr->translate("NUM");?></td>
+						<td scope="col"><?php echo $tr->translate("BRANCH_NAME");?></td>
+						<td scope="col"><?php echo $tr->translate("PROPERTY_CODE");?></td>
+						<td scope="col"><?php echo $tr->translate("STREET_NO");?></td>
+						<td scope="col"><?php echo $tr->translate("PROPERTY_TYPE");?></td>
+						<td scope="col"><?php echo $tr->translate("SIZE");?></td>
+						<td scope="col"><?php echo $tr->translate("WIDTH");?></td>
+						<td scope="col"><?php echo $tr->translate("HEIGHT");?></td>
+						<td scope="col"><?php echo $tr->translate("PRICE");?></td>
+						<td scope="col"><?php echo $tr->translate("PRICE_SOLD");?></td>
+						<td scope="col"><?php echo $tr->translate("NOTE");?></td>
+						<td scope="col"><?php echo $tr->translate("BY_USER");?></td>
+						<td scope="col"><?php echo $tr->translate("STATUS");?></td>
+					</tr>
+				</thead>
+				<?php }  $i++;?>
+				   <tr class="hover" style="font-size: 12px;border:1px solid #000; white-space: nowrap;line-height: 25px;<?php if ($row['is_lock']==1){ echo'background:#fbbfbf;';}?>" align="left">
+					 <td data-label="<?php echo $tr->translate("NUM");?>" align="center"><?php echo $i; ?></td>
+					 <td data-label="<?php echo $tr->translate("BRANCH_NAME");?>" align="center"><?php echo $row['branch_name'];?></td>
+					 <td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>" align="center"><?php echo $row['land_address'];?></td>
+					 <td data-label="<?php echo $tr->translate("STREET_NO");?>" align="center"><?php echo $row['street'];?></td>
+					 <td  data-label="<?php echo $tr->translate("PROPERTY_TYPE");?>"><?php echo $row['pro_type'];?></td>
+					 <td data-label="<?php echo $tr->translate("SIZE");?>" align="center"><?php echo $row['land_size'];?></td>
+					 <td data-label="<?php echo $tr->translate("WIDTH");?>" align="center"><?php echo $row['width'];?></td>
+					 <td data-label="<?php echo $tr->translate("HEIGHT");?>" align="center"><?php echo $row['height'];?></td>
+					 <td data-label="<?php echo $tr->translate("PRICE");?>" align="right"><?php echo number_format($row['price'],2);?>​</td>
+					 <td data-label="<?php echo $tr->translate("PRICE_SOLD");?>" align="right">
+						<?php if(!empty($row['price_sold'])){
+								echo number_format($row['price_sold'],2);
+							}
+							echo "";
+						?>
+					</td>
+					 <td data-label="<?php echo $tr->translate("NOTE");?>" align="left"><span style="max-width: 220px; width: 220px; display: block; white-space: pre-line; line-height: 16px; overflow-wrap: break-word;padding: 0 1px;" ><?php echo $row['note'];?></span></td>
+					 <td data-label="<?php echo $tr->translate("BY_USER");?>" ><?php echo $row['user_name']?></td>
+					 <td data-label="<?php echo $tr->translate("STATUS");?>" align="center" ><?php if ($row['is_lock']==1){ echo $tr->translate("SOLD_OUT");}else{ echo $tr->translate("NOT_YET_SALE"); }?></td>
+				 </tr>
+					<?php $total = $total + $row['price'];
+					$total_land_pric= $total_land_pric +$row['land_price'];
+					$total_house_price= $total_house_price +$row['house_price'];
+					$property_type = $row['property_type'];
+					$all_totalland = $all_totalland+$row['land_price'];
+					?>
+				<?php }?>
+				<?php if(!empty($this->row)){?>
+				<tr >
+					<td colspan="12" style="border-left: solid 1px #fff;border-bottom: solid 1px #fff;border-right: solid 1px #fff;">
+						<br />
+						 <table style=" font-size:11px;width:70%;margin:0 auto;" cellspacing="0">
+							 <tr bgcolor="#a0baf5" class="style" style=" line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
+								<td></td>
+								<td align="center"><span class="border_bottom"><?php echo $tr->translate("TOTAL_PROPERTY");?></span></td>
+								<!-- 
+								<td align="center"><span class="border_bottom"><?php echo $tr->translate("TOTAL_LAND_PRICE");?></span></td>
+								<td align="center"><span class="border_bottom"><?php echo $tr->translate("TOTAL_HOUSE_PRICE");?></span></td>
+								 -->
+								<td align="center"><span class="border_bottom"><?php echo $tr->translate("TOTAL");?></span></td>
+								<td></td>
+							 </tr>
+							  <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
+								<td></td>
+								<td align="center"><?php echo $i;?></td>
+								<!-- 
+								<td align="center"><?php echo number_format($total_land_pric,2);?></td>
+								<td align="center"><?php echo number_format($total_house_price,2);?></td>
+								 -->
+								<td align="center"><strong><?php echo number_format($total,2);?></strong></td>
+								<td></td>
+							  </tr>
+						  </table>
+						  <br />
+					</td>
+				</tr>
+				<tr>
+					<td colspan="13" style=" border: #fff solid 1px;    border-top: solid 1px #000;">
+						 <br />
+						 <table style=" font-size:11px;width:70%;margin:0 auto;" cellspacing="0">
+							 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
+								<td></td>
+								<td align="center"><span class="border_bottom"><?php echo $tr->translate("PROPERTY");?></span></td>
+								<td align="center"></td>
+								<td align="center"></td>
+								<td align="center"><span class="border_bottom"><?php echo $tr->translate("PRICE");?></span></td>
+								<td></td>
+							 </tr>
+							 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
+								<td align="center"><?php echo $tr->translate("TOTAL_PROPERTY");?></td>
+								<td align="center"><?php echo $all_propertype;?></td>
+								<td></td>
+								
+								<td align="right"><?php echo $tr->translate("TOTAL");?>$</td>
+								<td align="right"><strong><?php echo number_format($all_total,2);?></strong></td>
+								
+								<!-- 
+								<td align="right"><?php echo $tr->translate("TOTAL_LAND_PRICE");?>$</td>
+								<td align="right"><strong><?php echo number_format($all_totalland,2);?></strong></td>
+								 -->
+								<td></td>
+							 </tr>
+							 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
+								 <td align="center"><?php echo $tr->translate("PROPERTY").$tr->translate("SOLD_OUT");?></td>
+								 <td align="center"><?php echo $is_lock;?></td>
+								 <td></td>
+								<!-- 
+								 <td align="right"><?php echo $tr->translate("TOTAL_HOUSE_PRICE");?>$</td>
+								 <td align="right"><strong><?php echo number_format($all_totalhouse,2);?></strong></td>
+								 -->
+								 <td></td>
+								 <td></td>
+								 
+								 <td></td>
+							 </tr>
+							 <tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
+								<td align="center"><?php echo $tr->translate("PROPERTY").$tr->translate("NOT_YET_SALE");?></td>
+								<td align="center"><?php echo $all_propertype-$is_lock;;?></td>
+								<td></td>
+								<!-- 
+								<td align="right"><?php echo $tr->translate("TOTAL");?>$</td>
+								<td align="right"><strong><?php echo number_format($all_total,2);?></strong></td>
+								 -->
+								 <td></td>
+								 <td></td>
+								 
+								<td></td>
+							 </tr>
+						 </table>
+					</td>
+				 </tr>
+				
+				<?php }?>
+				</table>
+			</div>
+		</td>
+	</tr>
 </table>
 </div>
 <script>
