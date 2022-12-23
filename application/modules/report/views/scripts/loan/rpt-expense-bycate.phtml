@@ -78,19 +78,37 @@
 	     </div>        
 	 </form> 
 	 <div id="divPrint">
-	<style>
-		table {page-break-inside:auto }
-	  tr{ page-break-inside:avoid; page-break-after:auto; }
-	  #header {
-		display: table-header-group;
-		page-break-inside:avoid; page-break-after:auto;
-	  }
-	  table tr th{background-color: #ccc;}		
-	  @page {
-		margin-left: 5px;
-		margin-right: 5px;
-	 }
-	</style>
+		<style>
+			table.content-data{
+				border-collapse:collapse;
+				width:100%;
+				border:none; 
+				font-family:'Times New Roman','Khmer OS Battambang';
+				font-size:12px;
+				white-space: nowrap;
+				margin:0 auto;
+			}
+			table.content-data tr.style-head {
+			   line-height: 25px; padding:1px 0px; white-space: nowrap;height: 22px; 
+				background: #ccd9ff;
+				text-align: center;
+			}
+			table.content-data tr.style-rowdata {
+				font-size:12px; 
+				height: 23px;
+			}
+			table.content-data td {
+				padding: 2px;
+			}
+			.border_bottom{
+				border-bottom:2px solid #000;
+			}
+			
+			  @page {
+				margin-left: 5px;
+				margin-right: 5px;
+			 }
+		</style>
 		<div>
 			<table  style="background:#fff; margin: 0 auto; ;white-space: nowrap;width: 100%">
 				<tr>
@@ -103,9 +121,9 @@
 				
 				<tr>
 					<td colspan="3" id="exportExcel" valign="top">
-						<table cellpadding="0"​ style="font-family:'Times New Roman','Khmer OS Battambang';margin:0 auto;width:100%; " >
+						<table class="content-data" cellpadding="5"​ border="0" width="100%">
 							<thead>
-								<tr style="font-size:14px; height: 20px;background-color: #ccd9ff;line-height: 30px;" align="center" >
+								<tr class="style-head">
 									<td style="text-align: right;" colspan="2"><?php echo $tr->translate('CATEGORY')?></td>
 									<td style=""></td>
 									<td style=""><?php echo $tr->translate('TOTAL_EXPENSE')?></td>
