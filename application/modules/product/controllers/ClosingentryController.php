@@ -31,9 +31,9 @@ class Product_ClosingentryController extends Zend_Controller_Action {
 			$this->view->search = $search;
 			$list = new Application_Form_Frmtable();
 			$collumns = array("PROJECT_NAME","CLOSING_DATE","NOTE","ADJUST_DATE","BY_USER");
-			$link=array('module'=>'stockinout','controller'=>'adjuststock','action'=>'edit');
+			$link=array('module'=>'product','controller'=>'closingentry','action'=>'index');
 			$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array('projectName'=>$link,'adjustDate'=>$link,
-					'user_name'=>$link,'status'=>$link));
+			'user_name'=>$link,'status'=>$link));
 			$frm = new Application_Form_FrmAdvanceSearch();
 			$frm = $frm->AdvanceSearch();
 			Application_Model_Decorator::removeAllDecorator($frm);

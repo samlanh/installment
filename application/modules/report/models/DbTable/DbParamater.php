@@ -153,13 +153,11 @@ function getAllBranch($search=null){
 				WHEN  is_lock =1 THEN (SELECT 1 FROM `ln_sale` AS s WHERE s.house_id =  p.`id`  AND s.status=1 AND s.is_cancel = 0 AND $to_enddate LIMIT 1)
 				ELSE  0
 				END AS is_lock,
-				p.`width`,p.`height`,p.`land_size`,p.`price`,p.`land_price`,p.`house_price`,p.`is_lock`, ";
-//     			$sql.="CASE
-// 				WHEN  is_lock =1 THEN (SELECT 1 FROM `ln_sale` AS s WHERE s.house_id =  p.`id`  AND s.status=1 AND s.is_cancel = 0 AND $to_enddate LIMIT 1)
-// 				ELSE  0
-// 				END AS is_lock,";
-    		
-    		$sql.="(SELECT first_name FROM `rms_users` WHERE id=p.user_id LIMIT 1) AS user_name
+				p.`width`,p.`height`,p.`land_size`,p.`price`,p.`land_price`,p.`house_price`,p.`is_lock`, ";		
+
+    		$sql.="(SELECT first_name FROM `rms_users` WHERE id=p.user_id LIMIT 1) AS user_name,
+					(SELECT s.price_sold FROM `ln_sale` AS s WHERE s.house_id =  p.id  AND s.is_cancel = 0  LIMIT 1) AS price_sold
+				
 			 FROM `ln_properties` AS p WHERE p.`status`=1 ";
     		
     		$from_date =(empty($search['start_date']))? '1': " create_date >= '".$search['start_date']." 00:00:00'";
