@@ -30,22 +30,39 @@ dojo.require("dijit.form.DateTextBox");
 .hideblog{display: block !important;;border: 1px solid #fff; border-bottom: 1px solid #000;}
 </style>
 <div id="divPrint" style="width:30cm">
-<style>
-.style{
-	line-height: 20px;font-size: 14px !important;
-	font-family:Arial,'Khmer OS Battambang';
-}
-  table { page-break-inside:auto }
-  tr{ page-break-inside:avoid; page-break-after:auto; }
-#header {
-  display: table-header-group;
-  page-break-inside:avoid; page-break-after:auto;
-}
-.hideblog{display: none;}
-table tr td ul li{text-align: center;list-style: none;line-height: 25px; font-weight: bold;}
-th{padding: 5px;}
-.hover td{padding: 1px;}
-</style>
+	<style>
+		table.content-data { page-break-inside:auto }
+		table.content-data tr{ page-break-inside:avoid; page-break-after:auto; }
+		#header {
+		  display: table-header-group;
+		  page-break-inside:avoid; page-break-after:auto;
+		}
+		table.content-data{
+			border-collapse:collapse;
+			border:1px solid #000; 
+			font-size:13px;
+			font-family: 'Times New Roman','Khmer OS Battambang';
+			white-space: nowrap;
+			line-height: 22px;
+			width: 100%;
+		}
+		table.content-data thead tr.style {
+		   line-height: 25px; font-size:13px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
+			background: #c1d0f3;
+		}
+		table.tb-footer{
+			border-collapse:collapse;
+			border:1px solid #000; 
+			font-family: 'Times New Roman','Khmer OS Battambang';
+			font-size:11px;
+		}
+		table.tb-footer tr{
+		 line-height: 14px;  padding:2px 0px; height: 25px;
+		}
+		table tr td{
+			padding:0 2px;
+		}
+	</style>
 <table style="font-family: 'Khmer OS Content'; width:100%;">
 	<tr>
     	<td align="center">
@@ -67,29 +84,29 @@ th{padding: 5px;}
     </tr>
     <tr>
     	<td id="exportExcel">
-            <table border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:13px;" width="100%" cellspacing="0">
-                 <thead>
-                 <tr bgcolor="#c1d0f3" class="style" align="center" style="font-weight:bold; line-height: 25px; font-size:12px !important; padding:1px 0px; white-space: nowrap;height: 22px; ">
-                    <td rowspan="2">&nbsp;<?php echo $tr->translate("NUM");?>&nbsp;</td>
-                    <td rowspan="2"><?php echo $tr->translate("CUSTOMER_NAME");?></td>
-                    <td colspan="3"><?php echo $tr->translate("PROPERTY_INFO");?></td>
-                    <td colspan="3"><?php echo $tr->translate("INFO_INDILOAN");?></td>
-                    <td colspan="9"><?php echo $tr->translate("PAYMENT_INFO");?></td>
-                </tr>
-                <tr bgcolor="#c1d0f3" class="style" align="center" style="font-weight:bold; line-height: 25px; font-size:12px !important; padding:1px 0px; white-space: nowrap;height: 22px; ">                	
-                    <td><?php echo $tr->translate("TYPE");?></td>
-                    <td><?php echo $tr->translate("PROPERTY_CODE");?></td>
-                    <td><?php echo $tr->translate("STREET");?></td>
-                    <td><?php echo $tr->translate("PRICE_BEFORE");?></td>
-                    <td><?php echo $tr->translate("DISCOUNT");?>%</td>
-                    <td><?php echo $tr->translate("DISCOUNT");?></td>
-                    <td><?php echo $tr->translate("SOLD_PRICE");?></td>        
-                    <td><?php echo $tr->translate("PAID");?></td>
-                    <td><?php echo $tr->translate("BALANCE");?></td>
-                    <td><?php echo $tr->translate("BUY_DATE");?></td>                   
-                    <td><?php echo $tr->translate("END_DATE");?></td>
-                    <td><?php echo $tr->translate("NOTE");?></td>
-                </tr>
+            <table class="content-data" width="100%" cellspacing="0">
+				<thead>
+					<tr  class="style" align="center" >
+						<td rowspan="2"><?php echo $tr->translate("NUM");?></td>
+						<td rowspan="2"><?php echo $tr->translate("CUSTOMER_NAME");?></td>
+						<td colspan="3"><?php echo $tr->translate("PROPERTY_INFO");?></td>
+						<td colspan="3"><?php echo $tr->translate("INFO_INDILOAN");?></td>
+						<td colspan="9"><?php echo $tr->translate("PAYMENT_INFO");?></td>
+					</tr>
+					<tr  class="style" align="center" >             	
+						<td><?php echo $tr->translate("TYPE");?></td>
+						<td><?php echo $tr->translate("PROPERTY_CODE");?></td>
+						<td><?php echo $tr->translate("STREET");?></td>
+						<td><?php echo $tr->translate("PRICE_BEFORE");?></td>
+						<td><?php echo $tr->translate("DISCOUNT");?>%</td>
+						<td><?php echo $tr->translate("DISCOUNT");?></td>
+						<td><?php echo $tr->translate("SOLD_PRICE");?></td>        
+						<td><?php echo $tr->translate("PAID");?></td>
+						<td><?php echo $tr->translate("BALANCE");?></td>
+						<td><?php echo $tr->translate("BUY_DATE");?></td>                   
+						<td><?php echo $tr->translate("END_DATE");?></td>
+						<td><?php echo $tr->translate("NOTE");?></td>
+					</tr>
                 </thead>
                <?php 
                $total_paid = 0;$total=0;$balance=0;$set_cancel=0;
