@@ -82,8 +82,9 @@ dojo.require("dijit.form.DateTextBox");
 				table tr th{
 					border: 1px solid #000;	
 				}
-				table {page-break-inside:auto }
-				tr{ page-break-inside:avoid; page-break-after:auto; }
+				table {font-family:'Times New Roman','Khmer OS Battambang'; }
+				table.content-data {page-break-inside:auto }
+				table.content-data tr{ page-break-inside:avoid; page-break-after:auto; }
 				#header {
 				  display: table-header-group;
 				  page-break-inside:avoid; page-break-after:auto;
@@ -99,9 +100,30 @@ dojo.require("dijit.form.DateTextBox");
 					margin:0;
 				  }
 					.hide{visibility: visible; height: <?php echo $classHideHeight;?>;}
-				}						
+				}
+
+				table.content-data{
+					border-collapse:collapse;
+					border:1px solid #000; 
+					font-size:13px;
+
+					width:100%;
+				}
+				table.content-data thead tr.style {
+				   line-height: 25px; font-size:12px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
+				   background: #ccd9ff;
+					text-align: center;
+				}
+
+				table.content-data  tr.style {
+				  
+					white-space: nowrap;
+					line-height: 20px;
+				  
+				}
+		
 			</style>
-			<table style="background:#fff;width:90%; margin: 0 auto;white-space: nowrap;width: 100%;">
+			<table style="background:#fff;width:90%; margin: 0 auto;white-space: nowrap;width: 100%;" border="0">
 				<tr>
 					<td colspan="3">
 						<div class="divFooter">
@@ -111,12 +133,12 @@ dojo.require("dijit.form.DateTextBox");
 				</tr>
 				<tr>
 					<td colspan="3" id="exportExcel">
-						<table cellpadding="5"​ style="font-family: 'Times New Roman','Khmer OS Battambang'; margin:0 auto;border: 1px solid #000;width:100%; border-collapse: collapse;white-space: nowrap;"  border="1" >
+						<table class="content-data" border="1"​ cellspacing="0">
 							<thead>
-							 <tr class="hide" >
-								<td style="border-top:solid 1px #fff; border-left:solid 1px #fff;border-right:solid 1px #fff;"></td>
-							</tr>
-							<tr style="font-size:12px; height: 20px;background-color: #CCD9FF;line-height: 30px;font-weight: bold;" align="center">
+								 <tr class="hide" >
+									<td colspan="13" style="border-top:solid 1px #fff; border-left:solid 1px #fff;border-right:solid 1px #fff;"></td>
+								</tr>
+								<tr class="style" align="center">
 									<td>&nbsp;<?php echo $tr->translate('NUM');?>&nbsp;</td>
 									<td>&nbsp;<?php echo $tr->translate('BRANCH_NAME');?>&nbsp;</td>
 									<td>&nbsp;<?php echo $tr->translate('RECEIPT_NO');?>&nbsp;</td>
@@ -130,7 +152,7 @@ dojo.require("dijit.form.DateTextBox");
 									<td>&nbsp;<?php echo $tr->translate('DATE');?>&nbsp;</td>
 									<td>&nbsp;<?php echo $tr->translate('NOTE');?>&nbsp;</td>
 									<td>&nbsp;<?php echo $tr->translate('BY_USER');?>&nbsp;</td>
-						   </tr>
+								</tr>
 							</thead>
 						<?php $i=0;$totalpaid=0;$totalbalance=0; if(!empty($this->row))foreach ($this->row AS $rs) { $i++;
 						       

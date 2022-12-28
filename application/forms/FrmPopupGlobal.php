@@ -4093,7 +4093,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 						font-family:'.'"Times New Roman"'.','.'"Khmer OS Muol Light"'.';
 					}
 				</style>
-				<table class="tableTop" width="100%" style="border-bottom: double 5px #337ab7;">
+				<table class="tableTop" width="100%" border="0" style="border-bottom: double 5px #337ab7;">
 					<tr>
 						<td width="20%" id="projectlogo"><img src="'.$defaultLogo.'" style="max-height:85px; max-width: 100%; " ></td>
 						<td width="60%" valign="top" style=" padding-bottom: 40px;">
