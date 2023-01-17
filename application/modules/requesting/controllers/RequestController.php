@@ -18,6 +18,7 @@ class Requesting_RequestController extends Zend_Controller_Action {
 					'start_date'=> date('Y-m-d'),
 					'end_date'=>date('Y-m-d'),
 					'status'=>-1,
+					'reqPOStatus'=>-1,
 				);
     		}
     		$this->view->search = $search;
@@ -25,7 +26,7 @@ class Requesting_RequestController extends Zend_Controller_Action {
 			$rs_rows = $db->getAllRequestPO($search);
 			
 			$list = new Application_Form_Frmtable();
-    		$collumns = array("PROJECT_NAME","REQUEST_NO","REQUEST_NO_FROM","PURPOSE","DATE","CHECKING_STATUS","CHECKING_BY","PCHECKING_STATUS","PCHECKING_BY","APPROVED_STATUS","APPROVED_BY","USER","PROCESSING_STATUS","STATUS");
+    		$collumns = array("PROJECT_NAME","REQUEST_NO","REQUEST_NO_FROM","PURPOSE","DATE","CHECKING_STATUS","CHECKING_BY","PCHECKING_STATUS","PCHECKING_BY","APPROVED_STATUS","APPROVED_BY","USER","PROCESSING_STATUS","PO_STATUS","STATUS");
     		$link=array(
     				'module'=>'requesting','controller'=>'request','action'=>'edit',
     		);

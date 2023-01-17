@@ -41,7 +41,9 @@ class Requesting_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 				(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.approveBy LIMIT 1 ) AS approveByName,
 				
 				
+				
 				(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.userId LIMIT 1 ) AS user_name
+				
 		";
 		$dbGbSt = new Application_Model_DbTable_DbGlobalStock();
 		$arrStep = array(
@@ -49,8 +51,13 @@ class Requesting_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 			'typeStep'=>3,
 		);
 		$sql.= $dbGbSt->requestingProccess($arrStep);
-		
+		$sql.=" ,(SELECT CASE
+					WHEN  rqd.isCompletedPO = 1 THEN '".$tr->translate("COMPLETED_PO")."'
+					ELSE   '".$tr->translate("UPCOMPLETED_PO")."'
+					END 
+				FROM `st_request_po_detail` AS rqd WHERE rqd.requestId =rq.id AND rqd.approvedStatus=1 ORDER BY rqd.isCompletedPO ASC LIMIT 1 ) AS isCompletedPO  ";
 		$sql.=$dbGb->caseStatusShowImage("rq.status");
+		
 		$sql.=" FROM `st_request_po` AS rq WHERE 1 ";
 		
     	$where = "";
@@ -86,6 +93,9 @@ class Requesting_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
     	}
 		if(!empty($search['processingStatus'])){
     		$where.= " AND rq.processingStatus = ".$search['processingStatus'];
+    	}
+		if(($search['reqPOStatus'])>-1){
+    		$where.= " AND (SELECT rqd.isCompletedPO FROM `st_request_po_detail` AS rqd WHERE rqd.requestId =rq.id AND rqd.approvedStatus=1 ORDER BY rqd.isCompletedPO ASC LIMIT 1 )= ".$search['reqPOStatus'];
     	}
 		$where.=$dbGb->getAccessPermission("rq.projectId");
     	$order=" ORDER BY rq.id DESC";

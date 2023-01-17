@@ -49,7 +49,12 @@ public function getAllRequestPO($search){
 			'typeStep'=>3,
 		);
 		$sql.= $dbGbSt->requestingProccess($arrStep);
-		
+		$sql.=" ,(SELECT CASE
+					WHEN  rqd.isCompletedPO = 1 THEN '".$tr->translate("COMPLETED_PO")."'
+					ELSE   '".$tr->translate("UPCOMPLETED_PO")."'
+					END 
+				FROM `st_request_po_detail` AS rqd WHERE rqd.requestId =rq.id AND rqd.approvedStatus=1 ORDER BY rqd.isCompletedPO ASC LIMIT 1 ) AS isCompletedPO  ";
+				
 		$sql.=" FROM `st_request_po` AS rq WHERE 1 ";
 		
     	$where = "";
@@ -83,6 +88,9 @@ public function getAllRequestPO($search){
     	}
     	if(($search['branch_id'])>0){
     		$where.= " AND rq.projectId = ".$search['branch_id'];
+    	}
+		if($search['reqPOStatus']>-1){
+    		$where.= " AND (SELECT rqd.isCompletedPO FROM `st_request_po_detail` AS rqd WHERE rqd.requestId =rq.id AND rqd.approvedStatus=1 ORDER BY rqd.isCompletedPO ASC LIMIT 1 )= ".$search['reqPOStatus'];
     	}
 		$where.=$dbGb->getAccessPermission("rq.projectId");
     	$order=" ORDER BY rq.id DESC";

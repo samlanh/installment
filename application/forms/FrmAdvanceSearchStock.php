@@ -283,6 +283,16 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 		$isPaidStatus->setMultiOptions($_isPaidStatusOpt);
 		$isPaidStatus->setValue($request->getParam("isPaidStatus"));
 		
+		$reqPOStatus=  new Zend_Dojo_Form_Element_FilteringSelect('reqPOStatus');
+		$reqPOStatus->setAttribs(array('dojoType'=>$this->filter,'class'=>'fullside'));
+		$reqPOStatusOpt = array(
+				-1=>$this->tr->translate("ALL"),
+				1=>$this->tr->translate("COMPLETED_PO"),
+				0=>$this->tr->translate("UPCOMPLETED_PO"),
+				);
+		$reqPOStatus->setMultiOptions($reqPOStatusOpt);
+		$reqPOStatus->setValue($request->getParam("reqPOStatus"));
+		
 		$this->addElements(
 			array(
 				$verifyStatus,
@@ -308,7 +318,8 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 				$statusWithdraw,	
 				
 				$supplierType,
-				$isPaidStatus
+				$isPaidStatus,
+				$reqPOStatus
 				
 			)
 		);

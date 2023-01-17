@@ -18,6 +18,7 @@ public function init()
 					'branch_id' => -1,
 					'start_date'=> date('Y-m-d'),
 					'end_date'=>date('Y-m-d'),
+					'reqPOStatus'=>-1,
 					'status'=>-1,
 				);
     		}
