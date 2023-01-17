@@ -10,6 +10,7 @@
 	 		'typeKeyIndex'=>1,
 	 );
 	 $purchaseType = $dbGBstock->purchasingTypeKey($arrStep);
+	 $invoiceType = $this->invoiceType;
 ?>
 <script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
 <title><?php echo $this->tr->translate("EDIT_DEPOSIT_INVOICE")?></title>
@@ -372,7 +373,7 @@ div#request-info .form-group ul li {
 			branch_id = 0;
 		}
 		
-		objectContentFilter = {'branch_id':branch_id,'purchaseType':'<?php echo $purchaseType;?>','purchaseId':currentPurchaseId};
+		objectContentFilter = {'branch_id':branch_id,'purchaseType':'<?php echo $purchaseType;?>','purchaseId':currentPurchaseId,'invoiceType':'<?php echo $invoiceType;?>'};
 		getAllPObyBranch(urlGetAllPO,objectContentFilter);
 		setTimeout(function () {
 			dijit.byId('purId').attr('value',currentPurchaseId);

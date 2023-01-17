@@ -632,8 +632,11 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 				CONCAT(COALESCE(po.purchaseNo,''),' ',COALESCE(spp.supplierName,'')) AS name			
 		";
 		$sql.=" FROM `st_purchasing` AS po 
-					LEFT JOIN `st_supplier` AS spp ON spp.id = po.supplierId 
-		WHERE po.status=1 AND po.isInvoiced !=1 "; 
+					LEFT JOIN `st_supplier` AS spp ON spp.id = po.supplierId "; 
+		if(!empty($_data['invoiceType'])){ // only Deposit 1 time
+			$sql.=" LEFT JOIN `st_invoice` AS inv ON po.id = inv.purId AND inv.ivType=2 AND inv.status=1 "; 
+		}		
+		$sql.=" WHERE po.status=1 AND po.isInvoiced !=1 "; 
 			
 		if(!empty($_data['branch_id'])){
 			$sql.=" AND po.projectId=".$_data['branch_id'];
@@ -641,7 +644,13 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		if(isset($_data['processingStatus'])){
 			$sql.=" AND po.processingStatus=".$_data['processingStatus'];
 		}
-		
+		if(!empty($_data['invoiceType'])){ 
+			// only Deposit 1 time
+			if($_data['invoiceType']==2){
+				//Deposit Invoice
+				$sql.=" AND inv.purId IS NULL "; 
+			}
+		}
 		if(!empty($_data['purchaseType'])){//Type Of Purchase
 		
 			$arrStep = array(
@@ -654,6 +663,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 				$sql.=" OR po.id=".$_data['purchaseId'];
 			}
 		}
+		
 		$row = $db->fetchAll($sql);
 		return $row;
 		

@@ -117,9 +117,14 @@ class Requesting_RequestController extends Zend_Controller_Action {
 			$_row =$db->getAllProduct($data);
 			
 			$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+			
+			$labelProductOrService = $tr->translate("SELECT_PRODUCT");
+			if(!empty($data['isService'])){
+				$labelProductOrService = $tr->translate("SELECT_SERVICE");
+			}
 			array_unshift($_row,array(
 					'id' => 0,
-					'name' => $tr->translate("SELECT_PRODUCT"),
+					'name' => $labelProductOrService,
 			) );
 			print_r(Zend_Json::encode($_row));
 			exit();

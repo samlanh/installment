@@ -60,7 +60,7 @@ class Invpayment_DepositinvController extends Zend_Controller_Action {
 			}
 		}
 		
-		
+		$this->view->invoiceType = self::INVOICE_TYPE;
     	$frm = new Invpayment_Form_FrmInvoice();
     	$frm->FrmInvoices(null);
     	Application_Model_Decorator::removeAllDecorator($frm);
@@ -114,6 +114,7 @@ class Invpayment_DepositinvController extends Zend_Controller_Action {
 		$arrFilter = array(
 						'id'=>$id,
 					);
+		$this->view->invoiceType = self::INVOICE_TYPE;
 		$this->view->rowdetail = $db->getInvoiceDetailById($arrFilter);
 		$arrFilter['isService']=1;
 		$this->view->rowdetailServicce = $db->getInvoiceDetailById($arrFilter);
