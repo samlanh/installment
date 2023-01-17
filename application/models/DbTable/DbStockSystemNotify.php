@@ -38,6 +38,8 @@ class Application_Model_DbTable_DbStockSystemNotify extends Zend_Db_Table_Abstra
 			'typeStep'=>3,
 		);
 		$sql.= $dbGbSt->requestingProccess($arrStep);
+		$sql.=" ,(SELECT rqd.isCompletedPO FROM `st_request_po_detail` AS rqd WHERE rqd.requestId =rq.id AND rqd.approvedStatus=1 ORDER BY rqd.isCompletedPO ASC LIMIT 1 ) AS isCompletedPO  ";
+		
 		
 		$sql.=" FROM `st_request_po` AS rq WHERE rq.status=1 ";
 		
@@ -75,11 +77,13 @@ class Application_Model_DbTable_DbStockSystemNotify extends Zend_Db_Table_Abstra
 		if(!empty($rs)){
 			//forPurchasing
 			if(is_null($processingStatus)){
-				$processingStatus =4; 
+				$processingStatus ="4,5"; 
 			}else{
-				$processingStatus =$processingStatus.",4";
+				$processingStatus =$processingStatus.",4,5";
 			}
-			$sql.=" AND rq.approveStatus!=2 ";
+			$sql.=" AND rq.approveStatus!=2 "; 
+			$sql.= " AND (SELECT rqd.isCompletedPO FROM `st_request_po_detail` AS rqd WHERE rqd.requestId =rq.id ORDER BY rqd.isCompletedPO ASC LIMIT 1 )= 0 ";
+    	
 		}
 		
 		if(is_null($processingStatus)){
@@ -120,7 +124,13 @@ class Application_Model_DbTable_DbStockSystemNotify extends Zend_Db_Table_Abstra
 			}elseif($result['processingStatus']==4){
 				$url=$baseUrls."/po/index/add/id/".$result['id'];
 				$title=$tr->translate("MAKING_PURCHASE_REQUEST_PO");
+			}elseif($result['processingStatus']==5){
+				if($result['isCompletedPO']==0){
+					$url=$baseUrls."/po/index/add/id/".$result['id'];
+					$title=$tr->translate("MAKING_PURCHASE_REQUEST_PO")." ".$tr->translate("Continue");
+				}
 			}
+			
 			$string.='
 				<li class=" event">
 					<div class="media-body">
