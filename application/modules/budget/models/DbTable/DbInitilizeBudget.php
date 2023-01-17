@@ -59,7 +59,7 @@ class Budget_Model_DbTable_DbInitilizeBudget extends Zend_Db_Table_Abstract
    
     function addAmountBudgetItem($data){
     	
-    $db = $this->getAdapter();
+    	$db = $this->getAdapter();
     	$db->beginTransaction();
     	try
     	{
@@ -94,32 +94,7 @@ class Budget_Model_DbTable_DbInitilizeBudget extends Zend_Db_Table_Abstract
     		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL", "/budget/setup/add",2);
     	}
     }
-//     function updateData($data){
-    	 
-//     	$db = $this->getAdapter();
-//     	$db->beginTransaction();
-//     	try
-//     	{
-//     		$arr = array(
-//     				''=>''
-    
-//     		);
-    		
-//     		//$this->_name='';
-//     		$where = 'client_id = '.$data['id'];
-// 			$this->update($arr, $where);
-//     		$db->commit();
-//     	}catch (Exception $e){
-//     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-//     		$db->rollBack();
-//     	}
-//     }
-//     function getDataRow($recordId){
-//     	$db = $this->getAdapter();
-    	
-//     	$sql=" SELECT * FROM $this->_name WHERE id=".$recordId." LIMIT 1";
-//     	return $db->fetchRow($sql);
-//     }
+
 		function addBudgetExpense($data){
 			$arr = array(
 					'projectId'=>$data['branch_id'],
@@ -166,9 +141,5 @@ class Budget_Model_DbTable_DbInitilizeBudget extends Zend_Db_Table_Abstract
 				$this->delete($where);
 				
 			}
-			
-			
 		}
-		
-		
 }

@@ -825,7 +825,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 	function updateStockbyBranchAndProductId($data){
 		$resultStock = $this->getProductInfoByLocation($data);
 		if(!empty($resultStock)){
-			if($resultStock['isCountStock']==1){//only for type product count stock only
+			if($resultStock['isCountStock']==1 AND $resultStock['isService']==0){//only for type product count stock only
 			
 				$currentStock = $resultStock['currentQty'];
 				$currentPrice = $resultStock['currentPrice'];

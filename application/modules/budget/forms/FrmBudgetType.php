@@ -9,6 +9,7 @@ Class Budget_Form_FrmBudgetType extends Zend_Dojo_Form {
 		$tarea = 'dijit.form.Textarea';
 		
 		$db = new Application_Model_DbTable_DbGlobalStock();
+		$request=Zend_Controller_Front::getInstance()->getRequest();
 		
 		$parentId = new Zend_Dojo_Form_Element_FilteringSelect('parent_id');
 		$parentId->setAttribs(array(
@@ -19,6 +20,9 @@ Class Budget_Form_FrmBudgetType extends Zend_Dojo_Form {
 			'queryExpr'=>'*${0}*',
 		));
 		$options = $db->getAllBudgetType(0,'','',1);
+		if($request->getControllerName()=='type'){//
+			unset($options[-1]);
+		}
 		$parentId->setMultiOptions($options);
 		
 		$status = new Zend_Dojo_Form_Element_FilteringSelect('status');

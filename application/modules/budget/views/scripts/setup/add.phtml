@@ -138,6 +138,15 @@
 	   }
     require(["dojo/ready"], function(ready){
 		ready(function(){
+			
+			var settingType = dijit.byId('settingType');
+			settingType.on('change', function(evt) {
+			 	dijit.byId('budgetItem').set('readOnly',false);
+			 	if(settingType==1){
+			 		dijit.byId('budgetItem').set('readOnly',true);
+				 }
+			 });
+			 
 			 var budgetItem = dijit.byId('budgetItem');
 			 budgetItem.on('change', function(evt) {
 				 branch_id = dijit.byId('branch_id').get('value');
@@ -155,6 +164,8 @@
 				}
 				
 			});
+
+				
 			 var branch_id = dijit.byId('branch_id');
 			 branch_id.on('change',function(evt){
 				 title=0;
