@@ -127,7 +127,7 @@ class Application_Model_DbTable_DbStockSystemNotify extends Zend_Db_Table_Abstra
 			}elseif($result['processingStatus']==5){
 				if($result['isCompletedPO']==0){
 					$url=$baseUrls."/po/index/add/id/".$result['id'];
-					$title=$tr->translate("MAKING_PURCHASE_REQUEST_PO")." ".$tr->translate("Continue");
+					$title=$tr->translate("MAKING_PURCHASE_REQUEST_PO")." (".$tr->translate("Continue").")";
 				}
 			}
 			
