@@ -48,7 +48,7 @@ class Po_ConcretController extends Zend_Controller_Action {
 			try {		
 				$db = new Po_Model_DbTable_DbConcret();
 				$db->addReceiveStock($_data);
-				//Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","po/concret/add");
+				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","po/concret/add");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());

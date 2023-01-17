@@ -34,7 +34,7 @@ class Stockinout_Model_DbTable_DbTransfer extends Zend_Db_Table_Abstract
     	$sql="SELECT t.id,
 					(SELECT project_name FROM `ln_project` WHERE br_id=t.fromProjectId LIMIT 1) AS projectName,
 					t.transferNo,
-					t.trasferDate,
+					t.transferDate,
 					t.deliverId,
 					t.driverName,
 					(SELECT project_name FROM `ln_project` WHERE br_id=t.toProjectId LIMIT 1) AS toProjectId,
@@ -46,8 +46,8 @@ class Stockinout_Model_DbTable_DbTransfer extends Zend_Db_Table_Abstract
 					
 				FROM `st_transferstock` t WHERE 1 ";
     	
-    	$from_date =(empty($search['start_date']))? '1': " t.trasferDate >= '".$search['start_date']." 00:00:00'";
-    	$to_date = (empty($search['end_date']))? '1': " t.trasferDate <= '".$search['end_date']." 23:59:59'";
+    	$from_date =(empty($search['start_date']))? '1': " t.transferDate >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " t.transferDate <= '".$search['end_date']." 23:59:59'";
     	
     	$where_date = " AND ".$from_date." AND ".$to_date;
     	$where='';
@@ -104,7 +104,7 @@ class Stockinout_Model_DbTable_DbTransfer extends Zend_Db_Table_Abstract
     			'transferNo'=>$requestStock,
     			'driverName'=>$data['driver'],
     			'deliverId'=>$data['transferer'],
-    			'trasferDate'=>$data['transferDate'],
+    			'transferDate'=>$data['transferDate'],
     				
     			'toProjectId'=>$data['toProjectId'],
     			'receiverId'=>$data['receiver'],

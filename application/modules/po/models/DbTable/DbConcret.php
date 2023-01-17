@@ -153,15 +153,15 @@ class Po_Model_DbTable_DbConcret extends Zend_Db_Table_Abstract
     			foreach($ids as $i){
     				
     				$arr = array(
-    						'purchaseId'		=>$poId,
-    						'proId'				=>$data['proId'.$i],
-    						'qty'				=>$data['qty'.$i],
-    						'qtyAfter'			=>0,
-    						'unitPrice'			=>$data['unitPrice'.$i],
-    						'discountAmount'	=>0,
-    						'subTotal'			=>$data['total'.$i],
-    						'isClosed'			=>1,
-    						'note'				=>$data['note'.$i],
+    						'purchaseId'		=> $poId,
+    						'proId'				=> $data['proId'.$i],
+    						'qty'				=> $data['qty'.$i],
+    						'qtyAfter'			=> 0,
+    						'unitPrice'			=> $data['unitPrice'.$i],
+    						'discountAmount'	=> 0,
+    						'subTotal'			=> $data['total'.$i],
+    						'isClosed'			=> 1,
+    						'note'				=> $data['note'.$i],
     				);
     				$this->_name='st_purchasing_detail';
     				$this->insert($arr);
@@ -203,50 +203,6 @@ class Po_Model_DbTable_DbConcret extends Zend_Db_Table_Abstract
     				
     				$this->_name='st_receive_stock_detail';
     				$id = $this->insert($arr);
-    				
-//     				$paramPro = array(
-//     						'fetchRow'=>1,
-//     						'isClosed'=>-1,
-//     						'purchaseId'=>$data['purId'],
-//     						'proId'=>$data['productId'.$i]
-//     				);
-    				
-//     				$poProduct = $dbs->getProductPOInfo($paramPro);
-    				
-//     				if(!empty($poProduct)){//update po product detail and po
-    					
-//     					$currentAfter = $poProduct['qtyAfter'];
-//     					$Receiveqty = $data['qtyReceive'.$i];
-//     					$arr =array(
-//     						'qtyAfter'=>$currentAfter-$Receiveqty
-//     					);
-//     					if($currentAfter-$Receiveqty<=0 OR $data['receiveStatus'.$i]==1){
-//     						$arr['isClosed']=1;
-//     					}
-    					
-//     					$where= "purchaseId = ".$poProduct['id']." AND proId=".$poProduct['proId'];
-    					
-//     					$this->_name='st_purchasing_detail';
-//     					$this->update($arr, $where);
-    					
-//     					$paramPro = array(
-//     						'fetchRow'=>1,
-//     						'isClosed'=>-1,
-//     						'orderisClosedASC'=>1,
-//     						'purchaseId'=>$data['purId'],
-//     					);
-//     					$dbs->updatePoStatusisClose($paramPro);//update PO Status
-//     				}
-    				
-//     				$param = array(
-//     					'branch_id'	=> $data['branch_id'],
-//     					'productId'	=> $data['productId'.$i],
-//     					'EntyQty'	=> $data['qtyReceive'.$i],
-//     					'EntyPrice'	=> $data['price'.$i]
-//     				);
-    				
-//     				$dbs->updateStockbyBranchAndProductId($param);//Update Stock qty and new costing
-    				
     				$dbs->addProductHistoryQty($data['branch_id'],$data['proId'.$i],2,$data['qty'.$i],$id);//movement'
     				
 //     				$param = array(
