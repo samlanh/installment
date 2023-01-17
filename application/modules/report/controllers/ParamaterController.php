@@ -643,7 +643,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   				'end_date'=>date('Y-m-d')
   			);
   	}
-  
+	$search['branch_id'] = empty($search['branch_id'])?0:$search['branch_id'];
   	$this->view->result=$search;
   	$this->view->search=$search;
   

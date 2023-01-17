@@ -510,17 +510,17 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 			}
 		}
 		if($option!=null){
+			$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+			$optionList= array(
+					0=>$tr->translate("SELECT_BUDGET_TYPE"),
+					-1=>$tr->translate("ADD_NEW")
+			);
 			if(!empty($cate_tree_array)){
-				$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-				$optionList= array(
-						0=>$tr->translate("SELECT_BUDGET_TYPE"),
-						-1=>$tr->translate("ADD_NEW")
-				);
 				foreach ($cate_tree_array as $rs){
 					$optionList[$rs['id']]=$rs['name'];
 				}
-				return $optionList;
 			}
+			return $optionList;
 		}
 		return $cate_tree_array;
 	
