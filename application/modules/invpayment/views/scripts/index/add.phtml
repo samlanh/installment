@@ -366,8 +366,8 @@ ul.listDn li small {
 			searchAttr: "name",
 			class: 'fullside',
 			onChange: function() {
-				addRowService();
-				addNewService();
+				addNewService();			
+		
 			}
 		}, "productId");
 		
@@ -402,8 +402,11 @@ ul.listDn li small {
 	function addNewService(){
 		serviceId = dijit.byId('productId').get('value');
 		if(serviceId == -1){
+			dijit.byId('productId').reset();
 			window.open('<?php echo $this->baseUrl();?>/product/index/add?isservice=1');
 		
+		}else{
+			addRowService();
 		}
 		
 		
@@ -592,7 +595,6 @@ ul.listDn li small {
 		template='';
 		tmp='';
 		
-		
 		branch_id = dijit.byId('branch_id').get('value');
 		if(branch_id=='' || branch_id<=0){
 			infoMessageAlert('<?php echo $tr->translate('PLEASE_SELECT_BRANCH');?>');
@@ -601,7 +603,7 @@ ul.listDn li small {
 		}
 
 		productId = dijit.byId('productId').get('value');
-		if(productId=='' || productId==0){
+		if(productId=='' || productId <=0 ){
 			dijit.byId('productId').reset();
 			dijit.byId('productId').focus();
 			return false;

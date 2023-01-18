@@ -375,7 +375,7 @@ ul.listDn li small {
 			searchAttr: "name",
 			class: 'fullside',
 			onChange: function() {
-				addRowService();
+				
 				addNewService();
 			}
 		}, "productId");
@@ -409,9 +409,14 @@ ul.listDn li small {
 	function addNewService(){
 		serviceId = dijit.byId('productId').get('value');
 		if(serviceId == -1){
+			dijit.byId('productId').reset();
 			window.open('<?php echo $this->baseUrl();?>/product/index/add?isservice=1');
 		
+		}else{
+			addRowService();
 		}
+		
+		
 	}
 	
 	function getAllPO(){
@@ -574,7 +579,7 @@ ul.listDn li small {
 		}
 
 		productId = dijit.byId('productId').get('value');
-		if(productId=='' || productId==0){
+		if(productId=='' || productId<=0){
 			dijit.byId('productId').reset();
 			dijit.byId('productId').focus();
 			return false;
