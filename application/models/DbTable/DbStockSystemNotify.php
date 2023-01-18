@@ -82,7 +82,7 @@ class Application_Model_DbTable_DbStockSystemNotify extends Zend_Db_Table_Abstra
 				$processingStatus =$processingStatus.",4,5";
 			}
 			$sql.=" AND rq.approveStatus!=2 "; 
-			$sql.= " AND (SELECT rqd.isCompletedPO FROM `st_request_po_detail` AS rqd WHERE rqd.requestId =rq.id ORDER BY rqd.isCompletedPO ASC LIMIT 1 )= 0 ";
+			$sql.= " AND (SELECT rqd.isCompletedPO FROM `st_request_po_detail` AS rqd WHERE rqd.requestId =rq.id AND rqd.approvedStatus!=2 ORDER BY rqd.isCompletedPO  ASC LIMIT 1 )= 0 ";
     	
 		}
 		
