@@ -96,11 +96,15 @@ class Po_Form_FrmConcretStock extends Zend_Dojo_Form
 		$supplierId->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
+				'onchange'=>'addNewSupplier();'
 		));
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		
 		$rsSpp = $dbGBStock->getAllSupplier();
-		$optSpp=array(''=>$tr->translate("SELECT_SUPPLIER"));
+		$optSpp=array(
+			''=>$tr->translate("SELECT_SUPPLIER"),
+			'-1'=>$tr->translate("ADD_NEW")
+		);
 		if(!empty($rsSpp))foreach($rsSpp AS $row){
 			$optSpp[$row['id']]=$row['name'];
 		}
