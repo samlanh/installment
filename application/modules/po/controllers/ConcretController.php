@@ -1,5 +1,6 @@
 <?php
 class Po_ConcretController extends Zend_Controller_Action {
+	const REDIRECT_URL = '/po/concret';
 	public function init()
 	{
 		header('content-type: text/html; charset=utf8');
@@ -48,7 +49,11 @@ class Po_ConcretController extends Zend_Controller_Action {
 			try {		
 				$db = new Po_Model_DbTable_DbConcret();
 				$db->addReceiveStock($_data);
-				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","po/concret/add");
+				if(isset($_data['save_new'])){
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL."/po/concret/add");
+				}else{
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL."/po/concret");
+				}
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());

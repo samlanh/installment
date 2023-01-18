@@ -167,6 +167,10 @@
 							<div class="col-md-6 col-sm-6 col-xs-12">
 								<input id="productId" />
 							</div>
+							<div class="col-md-2 col-sm-2 col-xs-12">
+								<input type="button" class="button-class button-primary" iconClass="glyphicon glyphicon-refresh" dojoType="dijit.form.Button" onclick="getRefreshData();" label="<?php echo $tr->translate("GET_DATA");?>"  />
+							</div>
+							
 						</div>
 						<div class="form-group" >
 							<div class="custom-control custom-checkbox ">
@@ -363,6 +367,7 @@ ul.listDn li small {
 			class: 'fullside',
 			onChange: function() {
 				addRowService();
+				addNewService();
 			}
 		}, "productId");
 		
@@ -377,6 +382,10 @@ ul.listDn li small {
 		getAllProduct();
 		
 	}
+	function getRefreshData(){
+		getAllProduct();
+
+	}
 	
 	var urlGetAllProduct = '<?php echo $this->url(array('module'=>'requesting','controller'=>'request','action'=>'getallproduct')); ?>';
 	function getAllProduct(){
@@ -385,10 +394,18 @@ ul.listDn li small {
 			branch_id = 0;
 		}
 		
-		
 		var urlGetAllProduct = '<?php echo $this->url(array('module'=>'requesting','controller'=>'request','action'=>'getallproduct')); ?>';
-		objectContentFilter = {'isService':1};
+		objectContentFilter = {'isAddnew':1,'isService':1};
 		getAllProductStoreFunction(urlGetAllProduct,objectContentFilter);
+		
+	}
+	function addNewService(){
+		serviceId = dijit.byId('productId').get('value');
+		if(serviceId == -1){
+			window.open('<?php echo $this->baseUrl();?>/product/index/add?isservice=1');
+		
+		}
+		
 		
 	}
 	
@@ -584,7 +601,7 @@ ul.listDn li small {
 		}
 
 		productId = dijit.byId('productId').get('value');
-		if(productId=='' || productId<=0){
+		if(productId=='' || productId==0){
 			dijit.byId('productId').reset();
 			dijit.byId('productId').focus();
 			return false;

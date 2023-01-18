@@ -57,6 +57,9 @@ class Product_IndexController extends Zend_Controller_Action {
 	}
 
 	function addAction(){
+		$isservice=$this->getRequest()->getParam('isservice');
+		$this->view->isserice = $isservice;
+
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {		
@@ -68,6 +71,7 @@ class Product_IndexController extends Zend_Controller_Action {
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
+
 		$frm = new Product_Form_Frmproduct();
 		$frm = $frm->FrmAddProduct();
 		Application_Model_Decorator::removeAllDecorator($frm);

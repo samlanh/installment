@@ -3,7 +3,8 @@
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	echo $this->headTitle($tr->translate('ADD'));
 	$frm = $this->frmProduct;
-	
+
+	$isservice = $this->isserice;
 ?>	
 <script src="<?php echo $this->baseUrl();?>/js/help.js"  type="text/javascript"></script>
 <style>
@@ -280,6 +281,11 @@ dojo.require('dijit.form.NumberTextBox');
 dojo.require("dojo.data.ItemFileWriteStore"); 
 require(["dojo/ready"], function(ready){
 	ready(function(){
+
+		<?php if(!empty($isservice)){?>
+  		  	dijit.byId('isService').attr('value',1);
+ 		 <?php }?>
+
 		getBudgetType();
 		
 		var isService = dijit.byId('isService');

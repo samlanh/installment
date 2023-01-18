@@ -127,6 +127,9 @@ class Requesting_RequestController extends Zend_Controller_Action {
 					'id' => 0,
 					'name' => $labelProductOrService,
 			) );
+			if(!empty($data['isAddnew'])){
+				array_unshift($_row,array('id' => -1,'name' => $tr->translate("ADD_NEW"),) );	
+			}
 			print_r(Zend_Json::encode($_row));
 			exit();
 			
