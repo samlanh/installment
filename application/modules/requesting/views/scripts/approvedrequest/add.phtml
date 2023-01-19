@@ -111,11 +111,10 @@
 											<tr class="head-td">
 												<th scope="col"><?php echo $tr->translate("N_O");?></th>
 												<th scope="col" width="20%" ><i class="fa fa-cubes" aria-hidden="true"></i> <?php echo $tr->translate("PRODUCT_NAME");?></th>
-												<th scope="col" width="10%" class="currentQty"><?php echo $tr->translate("STOCK_REMAIN");?></th>
+												<th scope="col" width="20%" class="currentQty"><?php echo $tr->translate("STOCK_REMAIN");?></th>
 												<th scope="col" width="5%"><?php echo $tr->translate("QTY_REQUEST");?></th>
 												<th scope="col" width="10%"><?php echo $tr->translate("QTY_APPROVED");?></th>
 												<th scope="col" ><i class="fa fa-calendar" aria-hidden="true"></i> <?php echo $tr->translate("DATE_ENTRY");?></th>
-												<th scope="col" ><?php echo $tr->translate("NOTE");?></th>
 												<th scope="col" ><?php echo $tr->translate("STATUS");?></th>
 											</tr>
 										  </thead>
@@ -144,6 +143,7 @@
 	<div id="productName<?php echo $key?>" style="display: none;"><?php echo $rs['proName'];?></div>
 	<div id="measureTitle<?php echo $key?>" style="display: none;"><?php echo $rs['measureTitle'];?></div>
 	<div id="itemsNote<?php echo $key?>" style="display: none;"><?php echo $rs['note'];?></div>
+	<div id="itemsVerifyNote<?php echo $key?>" style="display: none;"><?php echo $rs['verifyNote'];?></div>
 <?php } ?>
 
 <script type="text/javascript">
@@ -199,19 +199,46 @@
 		var productNameString = $( '#productName'+'<?php echo $key;?>').html();
 		var measureTitleString = $( '#measureTitle'+'<?php echo $key;?>').html();
 		var itemsNoteString = $( '#itemsNote'+'<?php echo $key;?>').html();
+		var itemsVerifyNote = $( '#itemsVerifyNote'+'<?php echo $key;?>').html();
 		
-		template+='<td class="numberRecord" data-label="<?php echo $tr->translate("N_O");?>" align="center" >'+no+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="detailId'+col+'" name="detailId'+col+'" value="<?php echo $rs['id'];?>" type="text"  ></td>';
-		template+='<td data-label="<?php echo $tr->translate("PRODUCT_NAME");?>" class="productName" >'+proCodeString+'<br />'+productNameString+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId'+col+'" name="proId'+col+'" value="<?php echo $rs['proId'];?>" type="text"  ></td>';	
-		template+='<td data-label="<?php echo $tr->translate("STOCK_REMAIN");?>" class="currentQty" ><?php echo $rs['currentQty'];?> ('+measureTitleString+')</td>';	
+		template+='<td rowspan="2" class="numberRecord infoCol" data-label="<?php echo $tr->translate("N_O");?>" align="center" >'+no+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="detailId'+col+'" name="detailId'+col+'" value="<?php echo $rs['id'];?>" type="text"  ></td>';
+		template+='<td data-label="<?php echo $tr->translate("PRODUCT_NAME");?>" class="productName infoCol" >';	
+			template+='<span class="stkInfo">'+proCodeString+'</span>';		
+			template+='<span class="stkInfo">'+productNameString+'</span>';		
+			template+='<span class="stkInfo red"><?php echo $tr->translate("LATEST_UNIT_PRICE")." : ".$rs['latestUnitPrice']." ".$tr->translate("CURRENCY_SIGN");?></span>';		
+		template+='<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId'+col+'" name="proId'+col+'" value="<?php echo $rs['proId'];?>" type="text"  >';
+		template+='</td>';
+		template+='<td align="left" data-label="<?php echo $tr->translate("STOCK_REMAIN");?>" class=" infoCol"  >';
+			template+='<span class="stkInfo"><?php echo $tr->translate("CURRENT_BRANCH")." : ".$rs['currentQty'];?> ('+measureTitleString+')</span>';	
+			template+='<span class="stkInfo"><?php echo $tr->translate("ALL_BRANCH")." : ".$rs['currentQtyAllBranch'];?> ('+measureTitleString+')</span>';	
+			template+='<span class="stkInfo "><a target="_blank" href="<?php echo $this->baseUrl()."/report/stockreport/rpt-currentstock"; ?>"><?php echo $tr->translate("MORE_DETAIL");?></a></span>';	
+		template+='</td>';
+		
+		<?php if($rs['verifyStatus']==2){?>
+		template+='<td data-label="<?php echo $tr->translate("QTY_REQUEST");?>"><input readOnly dojoType="dijit.form.NumberTextBox" class="fullside" id="qtyAdjust'+col+'" name="qtyAdjust'+col+'" placeholder="'+'<?php echo $tr->translate("QTY_REQUEST");?> " value="<?php echo $rs['qtyAdjust'];?>" type="text"  ></td>';	
+		template+='<td data-label="<?php echo $tr->translate("QTY_APPROVED");?>"><input readOnly required dojoType="dijit.form.NumberTextBox" data-dojo-props="constraints:{min:0.01},rangeMessage:'+"'<?php echo $tr->translate("MINIMUM_VALUE_IS_ZEROONE");?>'"+'" class="fullside" id="qtyApproved'+col+'" name="qtyApproved'+col+'" placeholder="'+'<?php echo $tr->translate("QTY_APPROVED");?> " value="<?php echo $rs['qtyApproved'];?>" type="text"  ></td>';	
+		template+='<td data-label="<?php echo $tr->translate("DATE_ENTRY");?>"><input readOnly dojoType="dijit.form.DateTextBox" class="fullside" constraints="{datePattern:'+"'dd/MM/yyyy'"+'}" id="dateReqStockIn'+col+'" name="dateReqStockIn'+col+'" placeholder="'+'<?php echo $tr->translate("DATE_ENTRY");?> " value="<?php echo date("Y-m-d",strtotime($rs['dateReqStockIn']));?>" type="text"  ></td>';	
+		template+='<td data-label="<?php echo $tr->translate("STATUS");?>">';
+			template+='<span class="stkInfo red"><?php echo $tr->translate("REJECTED");?></span>';
+			template+='<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="approvedStatus'+col+'" name="approvedStatus'+col+'" value="2" type="text"  >';
+		
+		template+='</td>';
+		
+		<?php }else{?>
 		template+='<td data-label="<?php echo $tr->translate("QTY_REQUEST");?>"><input readOnly dojoType="dijit.form.NumberTextBox" class="fullside" id="qtyAdjust'+col+'" name="qtyAdjust'+col+'" placeholder="'+'<?php echo $tr->translate("QTY_REQUEST");?> " value="<?php echo $rs['qtyAdjust'];?>" type="text"  ></td>';	
 		template+='<td data-label="<?php echo $tr->translate("QTY_APPROVED");?>"><input required dojoType="dijit.form.NumberTextBox" data-dojo-props="constraints:{min:0.01},rangeMessage:'+"'<?php echo $tr->translate("MINIMUM_VALUE_IS_ZEROONE");?>'"+'" class="fullside" id="qtyApproved'+col+'" name="qtyApproved'+col+'" placeholder="'+'<?php echo $tr->translate("QTY_APPROVED");?> " value="<?php echo $rs['qtyApproved'];?>" type="text"  ></td>';	
-		
 		template+='<td data-label="<?php echo $tr->translate("DATE_ENTRY");?>"><input readOnly dojoType="dijit.form.DateTextBox" class="fullside" constraints="{datePattern:'+"'dd/MM/yyyy'"+'}" id="dateReqStockIn'+col+'" name="dateReqStockIn'+col+'" placeholder="'+'<?php echo $tr->translate("DATE_ENTRY");?> " value="<?php echo date("Y-m-d",strtotime($rs['dateReqStockIn']));?>" type="text"  ></td>';	
-		template+='<td data-label="<?php echo $tr->translate("NOTE");?>"><input dojoType="dijit.form.TextBox" class="fullside" id="note'+col+'" name="note'+col+'" placeholder="'+'<?php echo $tr->translate("NOTE");?> " value="'+itemsNoteString+'" type="text"  ></td>';	
 		template+='<td data-label="<?php echo $tr->translate("STATUS");?>"><select class="fullside" name="approvedStatus'+col+'" id="approvedStatus'+col+'" dojoType="dijit.form.FilteringSelect" ><option value="1"><?php echo $tr->translate("APPROVED");?></option><option value="2"><?php echo $tr->translate("REJECTED");?></option></select></td>';
-					
+		<?php }?>			
 
-		tmp='<tr class="rowData" id="row'+col+'">';
+		templateii='<td class=" infoCol" colspan="2" data-label="<?php echo $tr->translate("NOTE");?>">';
+			templateii+='<span class="stkInfo"><?php echo $tr->translate("REQUEST_NOTE");?> : '+itemsNoteString+'</span>';
+			templateii+='<span class="stkInfo"><?php echo $tr->translate("VERIFY_NOTE");?> : '+itemsVerifyNote+'</span>';
+		templateii+='</td>';
+		
+		tmp='<tr class="rowData mainRowWithSub" id="row'+col+'">';
+		tmp+="</tr>";
+		tmp+='<tr class="rowData " id="rowii'+col+'">';
 		tmp+="</tr>";
 		dojo.query("#table_row").append(tmp);
 		if($("#identity").val()!="") {
@@ -219,6 +246,9 @@
 			$("#identity").val(identity+','+col);
 		} else {$("#identity").val(col);}
 		dojo.html.set(dojo.byId("row"+col),template , {
+		     parseContent: true,
+		});
+		dojo.html.set(dojo.byId("rowii"+col),templateii , {
 		     parseContent: true,
 		});
 		<?php }?>

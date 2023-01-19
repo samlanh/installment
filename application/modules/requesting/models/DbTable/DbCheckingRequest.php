@@ -100,6 +100,7 @@ class Requesting_Model_DbTable_DbCheckingRequest extends Zend_Db_Table_Abstract
 							'proId'				=>$data['proId'.$i],
 							
 							'qtyAdjust'			=>$data['qtyAdjust'.$i],
+							'qtyVerify'			=>$data['qtyAdjust'.$i],
 							'qtyApproved'		=>$data['qtyAdjust'.$i],
 							
 							'dateReqStockIn'	=>$data['dateReqStockIn'.$i],
