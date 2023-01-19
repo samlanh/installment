@@ -32,7 +32,7 @@ class Product_Model_DbTable_DbMeasure extends Zend_Db_Table_Abstract
     	$order = " ORDER BY id DESC ";
     	return $db->fetchAll($sql.$where.$order);
     }
-    
+    //
      function addMeasure($_data){
     		$existing = $this->ifMeasureExisting($_data['title']);
     		
