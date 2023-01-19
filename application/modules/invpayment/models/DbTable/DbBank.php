@@ -72,22 +72,35 @@ class Invpayment_Model_DbTable_DbBank extends Zend_Db_Table_Abstract
     	return $db->fetchRow($sql);
     }
 
+	
+
 	function updateBank($data){
-		$existing = $this->ifBankExisting($data['bank_name']);
-		if(empty($existing )){
+	
+		$existing = $this->ifBankExistingUpdate($data['bank_name'],$data['id']);
+
+	    if(empty($existing)){
 			$_arr = array(
 				'bank_name'			=>$data['bank_name'],
 				'note'				=>$data['note'],	
 				'modifyDate'		=>date("Y-m-d H:i:s"),
 				'userId'			=>$this->getUserId(),
+				'status'				=>$data['status'],
 			);
 			$where = " id = ".$data['id'];
 			return $this->update($_arr, $where);
+
 		}else{
 			Application_Form_FrmMessage::Sucessfull("DATA_EXISTING", "/invpayment/bank/edit",2);
-
 		}
-    	
+	
+    }
+
+	function ifBankExistingUpdate($bank_name,$id){
+		
+    	$db = $this->getAdapter();
+    	$sql=" SELECT * FROM $this->_name WHERE bank_name='".$bank_name."'";
+		$sql.=" AND id !=".$id;
+    	return $db->fetchRow($sql);
     }
 	/*
    
