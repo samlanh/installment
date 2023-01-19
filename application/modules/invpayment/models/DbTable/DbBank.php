@@ -51,8 +51,8 @@ class Invpayment_Model_DbTable_DbBank extends Zend_Db_Table_Abstract
     }
 
 	function addBank($data){
-		$existing = $this->ifBankExisting($data['bank_name']);
-		
+		$existing = $this->ifBankExisting($data);
+
 		if(empty($existing)){
 			$_arr = array(
 				'bank_name'			=>$data['bank_name'],
@@ -66,17 +66,10 @@ class Invpayment_Model_DbTable_DbBank extends Zend_Db_Table_Abstract
 			Application_Form_FrmMessage::Sucessfull("DATA_EXISTING", "/invpayment/bank/add",2);
 		}
 	} 
-	function ifBankExisting($bank_name){
-    	$db = $this->getAdapter();
-    	$sql=" SELECT * FROM $this->_name WHERE bank_name='".$bank_name."' LIMIT 1";
-    	return $db->fetchRow($sql);
-    }
-
 	
-
 	function updateBank($data){
 	
-		$existing = $this->ifBankExistingUpdate($data['bank_name'],$data['id']);
+		$existing = $this->ifBankExisting($data);
 
 	    if(empty($existing)){
 			$_arr = array(
@@ -94,12 +87,13 @@ class Invpayment_Model_DbTable_DbBank extends Zend_Db_Table_Abstract
 		}
 	
     }
-
-	function ifBankExistingUpdate($bank_name,$id){
+	function ifBankExisting($data){
 		
     	$db = $this->getAdapter();
-    	$sql=" SELECT * FROM $this->_name WHERE bank_name='".$bank_name."'";
-		$sql.=" AND id !=".$id;
+    	$sql=" SELECT * FROM $this->_name WHERE bank_name='".$data['bank_name']."'";
+		if(!empty($data['id'])){
+			$sql.=" AND id !=".$data['id'];
+		}	
     	return $db->fetchRow($sql);
     }
 	/*
