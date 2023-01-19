@@ -64,71 +64,11 @@ class Po_Model_DbTable_DbConcret extends Zend_Db_Table_Abstract
     	try
     	{
     		$dbs = new Application_Model_DbTable_DbGlobalStock();
-//     		$param = array(
-//     				'fetchRow'=>1,
-//     				'isClosed'=>-1,
-//     				'purchaseId'=>$data['purId']
-//     				);
-//     		$rowData = $dbs->getProductPOInfo($param);
     		
-//     		$arr = array(
-//     				'projectId'=>$data['branch_id'],
-//     				'transactionType'=>2,
-//     				'dnType'=>$data['documentType'],
-//     				'supplierId'=>$data['supplierId'],
-//     				'receiveDate'=>$data['date'],
-//     				'dnNumber'=>$data['dnNO'],
-// //     				'staffCounter'=>$data['counter'],
-// //     				'driverName'=>$data['driver'],
-// //     				'plateNo'=>$data['truckNumber'],
-// //     				'poId'=>$data['purId'],
-// //     				'requestId'=>$rowData['requestId'],
-//     				'note'=>$data['note'],
-//     				'userId'=>$this->getUserId(),
-//     				'createDate'=>date('Y-m-d'),
-//     			);
-    		
-//     		$part= PUBLIC_PATH.'/images/dndocument/';
-    		
-//     		$photo_name = $_FILES['photo']['name'];
-//     		if (!empty($photo_name)){
-//     			$tem =explode(".", $photo_name);
-//     			$image_name = "photoDn_".date("Y").date("m").date("d").time().".".end($tem);
-//     			$tmp = $_FILES['photo']['tmp_name'];
-//     			if(move_uploaded_file($tmp, $part.$image_name)){
-//     				move_uploaded_file($tmp, $part.$image_name);
-//     				$photo = $image_name;
-//     				$arr['photoDn']=$photo;
-//     			}
-//     		}
-    		
-//     		$photo_name = $_FILES['fileDn']['name'];
-//     		if (!empty($photo_name)){
-//     			$tem =explode(".", $photo_name);
-//     			$image_name = "fileDn".date("Y").date("m").date("d").time().".".end($tem);
-//     			$tmp = $_FILES['fileDn']['tmp_name'];
-//     			if(move_uploaded_file($tmp, $part.$image_name)){
-//     				move_uploaded_file($tmp, $part.$image_name);
-//     				$photo = $image_name;
-//     				$arr['fileDn']=$photo;
-//     			}
-//     		}
-//     		$receivedId = $this->insert($arr);
-    		
-    		$dbb = new Budget_Model_DbTable_DbInitilizeBudget();
-    		
-//     		$param = array(
-//     			'branch_id'=>$data['branch_id'],
-//     			'type'=>1,
-//     			'transactionId'=>$receivedId,
-//     		);
-    		
-//     		$budgetExpenseId = $dbb->addBudgetExpense($param);
-
     		$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
     		$data['dateRequest']=$data['date'];
-    		$purchaseNo =$dbGBstock->generatePurchaseNo($data);
-    		$purchaseNo=$purchaseNo."CC";
+    		$purchaseNo = $dbGBstock->generatePurchaseNo($data);
+    		$purchaseNo = $purchaseNo."CC";
     		
     		$arr = array(
     				'projectId'			=>$data['branch_id'],
@@ -137,7 +77,7 @@ class Po_Model_DbTable_DbConcret extends Zend_Db_Table_Abstract
     				'supplierId'		=>$data['supplierId'],
     				'date'				=>$data['date'],
     				'note'				=>$data['note'],
-//     				'total'				=>$data['total'],
+    				'workType'			=>$data['workType'],
     				'processingStatus'	=>1,
     				'status'			=>1,
     				'createDate'		=>date("Y-m-d H:i:s"),
@@ -177,10 +117,8 @@ class Po_Model_DbTable_DbConcret extends Zend_Db_Table_Abstract
     						'note'=>$data['note'],
     						'userId'=>$this->getUserId(),
     						'createDate'=>date('Y-m-d'),
-    						'verified'	=>1,
-    						'verifiedBy'=>$this->getUserId(),
-    						'verifiedDate'=>$data['date']
-
+    						'isClosed'	=>1,
+//     						'verifiedBy'=>$this->getUserId(),
     						// 'staffCounter'=>$data['counter'],
     						// 'driverName'=>$data['driver'],
     						// 'plateNo'=>$data['truckNumber'],
@@ -231,148 +169,88 @@ class Po_Model_DbTable_DbConcret extends Zend_Db_Table_Abstract
     	try
     	{
     		$dbs = new Application_Model_DbTable_DbGlobalStock();
-    		$param = array(
-    			'fetchRow'=>1,
-    			'isClosed'=>-1,
-    			'purchaseId'=>$data['purId']
-    		);
-    		$rowData = $dbs->getProductPOInfo($param);
     		
-    		$arr = array(
-    				'projectId'=>$data['branch_id'],
-    				'dnType'=>$data['documentType'],
-    				'poId'=>$data['purId'],
-    				'requestId'=>$rowData['requestId'],
-    				'supplierId'=>$rowData['supplierId'],
-    				'receiveDate'=>$data['dnDate'],
-    				'dnNumber'=>$data['dnTitle'],
-    				'staffCounter'=>$data['counter'],
-    				'driverName'=>$data['driver'],
-    				'plateNo'=>$data['truckNumber'],
-    				'note'=>$data['note'],
-    				'userId'=>$this->getUserId(),
-    				'createDate'=>date('Y-m-d'),
-    			);
+    		$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
+    		$dnId = $data['id'];
+    		$rsDn = $this->getDNById($dnId);
+    		if(!empty($rsDn)){
     		
-    		$part= PUBLIC_PATH.'/images/dndocument/';
-    		
-    		$photo_name = $_FILES['photo']['name'];
-    		if (!empty($photo_name)){
-    			//unset old file here
-    			$tem =explode(".", $photo_name);
-    			$image_name = "photoDn_".date("Y").date("m").date("d").time().".".end($tem);
-    			$tmp = $_FILES['photo']['tmp_name'];
-    			if(move_uploaded_file($tmp, $part.$image_name)){
-    				move_uploaded_file($tmp, $part.$image_name);
-    				$photo = $image_name;
-    				$arr['photoDn']=$photo;
-    			}
-    		}
-    		
-    		$photo_name = $_FILES['fileDn']['name'];
-    		if (!empty($photo_name)){
-    			//unset old file here
-    			$tem =explode(".", $photo_name);
-    			$image_name = "fileDn".date("Y").date("m").date("d").time().".".end($tem);
-    			$tmp = $_FILES['fileDn']['tmp_name'];
-    			if(move_uploaded_file($tmp, $part.$image_name)){
-    				move_uploaded_file($tmp, $part.$image_name);
-    				$photo = $image_name;
-    				$arr['fileDn']=$photo;
-    			}
-    		}
-    		$receivedId = $data['id'];
-    		$where="id=".$receivedId;
-    		
-    		$this->update($arr,$where);
-    		
-    		$this->reverseReceivedTransaction($receivedId,$data['purId'],$data['branch_id']);//reverse po and po detail'
-    		
-    		$dbb = new Budget_Model_DbTable_DbInitilizeBudget();
-    		
-    		$dbb->reverBudgetExpense($receivedId);//delete old budget plan
-    		
-    		$param = array(
-    			'branch_id'=>$data['branch_id'],
-    			'type'=>1,
-    			'transactionId'=>$receivedId,
-    		);
-    		
-    		$budgetExpenseId = $dbb->addBudgetExpense($param);
-    		
-    		$ids = explode(',',$data['identity']);
-    		if(!empty($ids)){
-    			foreach($ids as $i){
-    				$arr = array(
-    					'receiveId'=>$receivedId,
-    					'proId'=>$data['productId'.$i],
-    					'qtyReceive'=>$data['qtyReceive'.$i],
-    					'qtyAfterReceive'=>$data['qtyAfter'.$i]-$data['qtyReceive'.$i],
-    					'price'=>$data['price'.$i],
-    					'totalDiscount'=>$data['discountAmount'.$i]/$data['qtyPO'.$i]*$data['qtyReceive'.$i],
-    					'subTotal'=>$data['qtyReceive'.$i]*$data['price'.$i],
-    					'isClosed'=>$data['receiveStatus'.$i],
-    					'note'=>$data['note'.$i],
-    				);
-    				
-    				$this->_name='st_receive_stock_detail';
-    				$id = $this->insert($arr);
-    				
-    				$paramPro = array(
-    						'fetchRow'=>1,
-    						'isClosed'=>-1,
-    						'purchaseId'=>$data['purId'],
-    						'proId'=>$data['productId'.$i]
-    				);
-    				
-    				$poProduct = $dbs->getProductPOInfo($paramPro);
-    				
-    				if(!empty($poProduct)){//update po product detail and po
-    					
-    					$currentAfter = $poProduct['qtyAfter'];
-    					$Receiveqty = $data['qtyReceive'.$i];
-    					$arr =array(
-    						'qtyAfter'=>$currentAfter-$Receiveqty
-    					);
-    					if($currentAfter-$Receiveqty<=0 OR $data['receiveStatus'.$i]==1){
-    						$arr['isClosed']=1;
-    					}
-    					
-    					$where= "purchaseId = ".$poProduct['id']." AND proId=".$poProduct['proId'];
-    					
-    					$this->_name='st_purchasing_detail';
-    					$this->update($arr, $where);
-    					
-    					$paramPro = array(
-    						'fetchRow'=>1,
-    						'isClosed'=>-1,
-    						'orderisClosedASC'=>1,
-    						'purchaseId'=>$data['purId'],
-    					);
-    					$dbs->updatePoStatusisClose($paramPro);//update PO Status
-    				}
-    				
-    				$param = array(
-    					'branch_id'	=> $data['branch_id'],
-    					'productId'	=> $data['productId'.$i],
-    					'EntyQty'	=> $data['qtyReceive'.$i],
-    					'EntyPrice'	=> $data['price'.$i]
-    				);
-    				
-    				$dbs->updateStockbyBranchAndProductId($param);//Update Stock qty and new costing
-    				
-    				$dbs->addProductHistoryQty($data['branch_id'],$data['productId'.$i],2,$data['qtyReceive'.$i],$id);//movement'
-    				
-    				$param = array(
-    					'budgetExpenseId'=>$budgetExpenseId,
-    					'subtransactionId'=>$id,
-    					'productId'=>$data['productId'.$i],
-    					'price'=>$data['price'.$i],
-    					'qty'=>$data['qtyReceive'.$i],
-    					'totalDiscount'=>$data['discountAmount'.$i]/$data['qtyPO'.$i]*$data['qtyReceive'.$i]
-    				);
-    				$dbb->addBudgetExpenseDetail($param);
-    			}
+	    		$arr = array(
+	    				'projectId'			=> $data['branch_id'],
+	    				'purchaseType'		=> 3,
+	    				'supplierId'		=> $data['supplierId'],
+	    				'note'				=> $data['note'],
+	    				'workType'			=> $data['workType'],
+	    				'processingStatus'	=> 1,
+	    				'status'			=> $data['status'],
+	    				'createDate'		=> $data['date'],
+	    				'modifyDate'		=> date("Y-m-d H:i:s"),
+	    				'userId'			=> $this->getUserId(),
+	    		);
+	    		$this->_name='st_purchasing';
+	    		$poId = $rsDn['poId'];
+	    		$where = " id=".$poId;
+	    		$this->update($arr, $where);
+	    		
+	    		$ids = explode(',',$data['identity']);
+	    		if(!empty($ids)){
+	    			foreach($ids as $i){
+	    		
+	    				$arr = array(
+	    						'purchaseId'		=> $poId,
+	    						'proId'				=> $data['proId'.$i],
+	    						'qty'				=> $data['qty'.$i],
+	    						'qtyAfter'			=> 0,
+	    						'unitPrice'			=> $data['unitPrice'.$i],
+	    						'discountAmount'	=> 0,
+	    						'subTotal'			=> $data['total'.$i],
+	    						'isClosed'			=> 1,
+	    						'note'				=> $data['note'.$i],
+	    				);
+	    				$this->_name='st_purchasing_detail';
+	    				$where = " purchaseId=".$poId;
+	    				$this->update($arr, $where);
+	    				
+	    		
+	    				$arr = array(
+	    						'projectId'=>$data['branch_id'],
+	    						'transactionType'=>2,
+	    						'dnType'=>1,
+	    						'supplierId'=>$data['supplierId'],
+	    						'receiveDate'=>$data['date'],
+	    						'dnNumber'=>$data['dnNO'.$i],
+	    						'poId'=>$poId,
+	    						'note'=>$data['note'],
+	    						'userId'=>$this->getUserId(),
+	    						'createDate'=>date('Y-m-d'),
+	    						'isClosed'	=>1,
+	    				);
+	    				$this->_name='st_receive_stock';
+	    				
+	    				$where = " id=".$dnId;
+	    				$this->update($arr, $where);
+	    		
+	    				$arr = array(
+// 	    						'receiveId'=>$dnId,
+	    						'proId'=>$data['proId'.$i],
+	    						'qtyReceive'=>$data['qty'.$i],
+	    						'qtyAfterReceive'=>0,
+	    						'price'=>$data['unitPrice'.$i],
+	    						'totalDiscount'=>0,
+	    						'subTotal'=>$data['total'.$i],
+	    						'isClosed'=>1,
+	    						'note'=>$data['note'.$i],
+	    				);
+	    		
+	    				$this->_name='st_receive_stock_detail';
+	    				
+	    				$where = " receiveId=".$dnId;
+	    				$this->update($arr, $where);
+	    				
+	    				$dbs->addProductHistoryQty($data['branch_id'],$data['proId'.$i],2,$data['qty'.$i],$id);//movement'
+	    		
+	    			}
+	    		}
     		}
     		
     		$db->commit();
@@ -382,198 +260,37 @@ class Po_Model_DbTable_DbConcret extends Zend_Db_Table_Abstract
     		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL","/stockinout/index/add",2);
     	}
     }
-    function reverseReceivedTransaction($dnId,$poId,$branchId){
-    	$dbs = new Application_Model_DbTable_DbGlobalStock();
-    	$results = $this->getDNDetailById($dnId);
-    	if(!empty($results)){foreach ($results as $result){
-	    		$paramPro = array(
-    				'fetchRow'=>1,
-    				'isClosed'=>-1,
-    				'purchaseId'=>$poId,
-    				'proId'=>$result['proId']
-	    		);
-	    		
-	    		$poProduct = $dbs->getProductPOInfo($paramPro);
-	    		if(!empty($poProduct)){//update po product detail and po
-	    				
-	    			$currentAfter = $poProduct['qtyAfter'];
-	    			$Receiveqty = $result['qtyReceive'];
-	    			
-	    			$arr =array(
-    					'qtyAfter'=>$currentAfter+$Receiveqty,
-    					'isClosed'=>0
-	    			);
-	    				
-	    			$where= "purchaseId = ".$poId." AND proId=".$poProduct['proId'];
-	    			$this->_name='st_purchasing_detail';
-	    			$this->update($arr, $where);
-	    			
-	    			$param = array(
-	    					'EntyQty'=> -$result['qtyReceive'],
-	    					'branch_id'=> $branchId,
-	    					'productId'=> $result['proId'],
-	    			);
-	    			$dbs->updateProductLocation($param);
-	    			
-	    		}
-	    		
-	    		$dbs->DeleteProductHistoryQty($result['id']);
-	    	}
-	    	
-	    	$where= "receiveId = ".$dnId;
-	    	$this->_name='st_receive_stock_detail';
-	    	$this->delete($where);
-	    	
-	    	
-	    	$where="id=".$poId;
-	    	$this->_name="st_purchasing";
-		    	$arr =array(
-		    			'processingStatus'=>0
-		    	);
-	    	$this->update($arr, $where);
-    	}
-    				
-    }
-    function verifyDN($data){
-    	$arr = array(
-    			'verified'=>1,
-    			'verifiedBy'=>$this->getUserId(),
-    			'verifiedDate'=>date('Y-m-d')
-    			);
-    	$where= "id=".$data['purchaseId'];
-    	$this->update($arr, $where);
-    }
-   
-    function getAllProductByPO($data){
-    	$db = $this->getAdapter();
-    	
-    	$db = new Application_Model_DbTable_DbGlobalStock();
-    	$rs = $db->getProductPOInfo($data);
     
-    	$string='';
-    	$no = $data['keyindex'];
-    	$identity='';
-    	
-    	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-    	
-    	if(!empty($rs)){
-    	foreach ($rs as $key => $row){
-	    	if (empty($identity)){
-	    		$identity=$no;
-	    	}else{
-	    		$identity=$identity.",".$no;
-	    	}
-	    
-	    		$classRowBg = "odd";
-	    	if(($key%2)==0){
-	    			$classRowBg = "regurlar";
-	    	}
-	    	
-	    	$qtyReceived=0;
-	    	$row['qtyReceive']=$row['qtyAfter'];
-	    	$note='';
-	    	if(!empty($data['dnId'])){
-	    		$param = array(
-	    			'proId'=>$row['proId'],
-	    			'dnId'=>$data['dnId']
-	    			);
-	    		$result = $this->getQtyReceivedByProId($param);
-	    		$qtyReceived = $result['qtyReceive'];
-	    		$note = $result['note'];
-	    		$row['qtyReceive'] = $qtyReceived;
-	    		$row['qtyAfter'] = $row['qtyAfter']+$qtyReceived;
-	    		
-	    		
-	    	}
-	    	
-	    	$Message="rangeMessage:'".$tr->translate('CAN_NOT_RECEIVE_OVER')."'";
-	    		$string.='
-		    		<tr id="row'.$no.'" class="rowData '.$classRowBg.'" >
-			    		<td align="center" style="padding: 0 10px;"><input OnChange="CheckAllTotal('.$no.')" style="vertical-align: top; height: initial;" type="checkbox" class="checkbox" id="mfdid_'.$no.'" value="'.$no.'"  name="selector[]"/></td>
-			    		<td class="textCenter">'.($key+1).'</td>
-			    		<td class="textCenter">'.$row['proName'].'('.$row['measureLabel'].')</td>
-		    			<td><input type="text" class="fullside" readonly dojoType="dijit.form.NumberTextBox" required="required" name="qtyPO'.$no.'"  value="'.$row['qty'].'" style="text-align: center;" >
-		    				<input type="hidden" class="fullside" name="productId'.$no.'" id="productId'.$no.'" value="'.$row['proId'].'" style="text-align: center;" >
-		    				<input type="hidden" class="fullside" name="price'.$no.'" id="price'.$no.'" value="'.$row['unitPrice'].'" style="text-align: center;" >
-		    				<input type="hidden" class="fullside" name="discountAmount'.$no.'" id="discountAmount'.$no.'" value="'.$row['discountAmount'].'" style="text-align: center;" >
-		    			</td>
-		    			<td><input type="text" class="fullside" readonly dojoType="dijit.form.NumberTextBox" required="required" name="qtyAfter'.$no.'" id="qtyAfter'.$no.'" value="'.$row['qtyAfter'].'" style="text-align: center;" ></td>
-		    			<td><input type="text" class="fullside" data-dojo-props="constraints:{min:0,max:'.$row['qtyAfter'].'},'.$Message.'" dojoType="dijit.form.NumberTextBox" required="required" name="qtyReceive'.$no.'" id="qtyReceive'.$no.'" value="'.$row['qtyReceive'].'" style="text-align: center;" ></td>
-		    			<td><select dojoType="dijit.form.FilteringSelect" class="fullside" name="receiveStatus'.$no.'" id="receiveStatus'.$no.'" >
-		    					<option value="0">ទទួលមិនគ្រប់</option>
-		    					<option value="1">ទទួលគ្រប់</option>
-		    				</select>
-		    			</td>
-		    			<td><input type="text" class="fullside" dojoType="dijit.form.TextBox" name="note'.$no.'" id="note'.$no.'" value="'.$note.'" /></td>
-		    			</tr>
-	    			';
-	    		$no++;
-	    	}
-	    	}else{
-	    		$no++;
-	    	}
-	    	$data['fetchRow']=1;
-	    	$data['isClosed']=-1;
-	    	$rowData = $db->getProductPOInfo($data);
-	    	
-	    	$strPOInfo = '
-	    		<div class="form-group" style="padding: 4px !important;">
-	             	<span class="note_score">&nbsp;&nbsp; <i class="fa fa-file-text-o" aria-hidden="true"></i>&nbsp;&nbsp;
-	                   	'.$tr->translate("PURCHASING_INFO").'</span>
-                   		 <ul>
-                   		 	<li><span class="lbl-tt">'.$tr->translate("PO_DATE").'</span>: <span class="red">'.$rowData['createDate'].'</span></li>
-                   		 	<li><span class="lbl-tt">'.$tr->translate("PO_NO").'</span>: <span class="red">'.$rowData['purchaseNo'].'</span></li>
-                   		 	<li><span class="lbl-tt">'.$tr->translate("SUPPLIER_NAME").'</span>: <span class="red">'.$rowData['supplierName'].'</span></li>
-                   			<li><span class="lbl-tt">'.$tr->translate("REQUEST_NO").'</span>: <span class="red">'.$rowData['requestNo'].'</span></li>
-                   		</ul>
-             	</div>';
-    	
-    	$array = array('stringrow'=>$string,'POInfoDataBlog'=>$strPOInfo,'keyindex'=>$no,'identity'=>$identity);
-    	return $array;
-    }
-    function getQtyReceivedByProId($data){
-    	$db = $this->getAdapter();
-    	$sql=" SELECT rd.note,rd.qtyReceive 
-    					FROM `st_receive_stock` r,
-    						 `st_receive_stock_detail` rd
-					WHERE r.id=rd.receiveId ";
-    	if(!empty($data['proId'])){
-    		$sql.=" AND proId=".$data['proId'];
-    	}
-    	if(!empty($data['dnId'])){
-    		$sql.=" AND r.id=".$data['dnId'];
-    	}
-    	return $db->fetchRow($sql);
-    }
-    function getDataRow($recordId){
-    	$db = $this->getAdapter();
-    	$sql=" SELECT * FROM $this->_name WHERE id=".$recordId;
-    	$dbg = new Application_Model_DbTable_DbGlobal();
-    	$sql.= $dbg->getAccessPermission('projectId');
-    	$sql.=" LIMIT 1";
-    	return $db->fetchRow($sql);
-    }
+//     function verifyDN($data){
+//     	$arr = array(
+//     			'verified'=>1,
+//     			'verifiedBy'=>$this->getUserId(),
+//     			'verifiedDate'=>date('Y-m-d')
+//     			);
+//     	$where= "id=".$data['purchaseId'];
+//     	$this->update($arr, $where);
+//     }
+   
+    
     function getDNById($recordId){
     	$db = $this->getAdapter();
     	$sql=" SELECT r.id,
-				(SELECT project_name FROM `ln_project` WHERE br_id=r.projectId LIMIT 1) AS projectName,
-				(SELECT name_kh FROM `st_view` WHERE type=4 AND key_code=r.dnType LIMIT 1) dnType,
+    			r.poId,
+    			r.projectId,
 				r.dnNumber,
 				r.plateNo,
 				r.driverName,
-				r.staffCounter,
 				r.note,
-				r.verified,
-				DATE_FORMAT(r.receiveDate,'%d-%m-%Y') receiveDate,
-				(SELECT s.supplierName FROM st_supplier s WHERE s.id=r.supplierId LIMIT 1) AS supplierName,
-				(SELECT purchaseNo FROM `st_purchasing` as p WHERE p.id=r.poId LIMIT 1) AS purchaseNo,
-				(SELECT DATE_FORMAT(createDate,'%d-%m-%Y') FROM `st_purchasing` as p WHERE p.id=r.poId LIMIT 1) AS purchaseDate,
-				(SELECT requestNo FROM `st_request_po` AS s WHERE s.id=r.requestId LIMIT 1) AS requestNo,
-				(SELECT DATE_FORMAT(createDate,'%d-%m-%Y') FROM `st_request_po` AS s WHERE s.id=r.requestId LIMIT 1) requestDate,
-				(SELECT first_name FROM rms_users WHERE id=r.userId LIMIT 1 ) AS user_name,
-				(SELECT first_name FROM rms_users WHERE id=r.verifiedBy LIMIT 1 ) AS verifiedBy
-				
+				r.receiveDate,
+				r.supplierId,
+				r.status,
+				(SELECT po.workType FROM st_purchasing po WHERE po.id = r.poId LIMIT 1) AS workType
 			FROM `st_receive_stock` r WHERE r.id=".$recordId;
+//     	$sql.=" AND (SELECT id FROM st_receive_stock_detail rd WHERE r.id = rd.receiveId AND `isclosed`=0) ";
+    	
+    	$dbg = new Application_Model_DbTable_DbGlobal();
+    	$sql.= $dbg->getAccessPermission('projectId');
+    	$sql.=" LIMIT 1";
     	return $db->fetchRow($sql);
     }
     function getDNDetailById($recordId){
@@ -581,6 +298,8 @@ class Po_Model_DbTable_DbConcret extends Zend_Db_Table_Abstract
     	$sql=" SELECT 
     				sd.id,
     				sd.proId,
+    				sd.price,
+    				sd.subTotal,
 					(SELECT p.proName FROM st_product p WHERE p.proId=sd.proId LIMIT 1) proName,
 					(SELECT p.proCode FROM st_product p WHERE p.proId=sd.proId LIMIT 1) proCode,
 					(SELECT p.measureLabel FROM st_product p WHERE p.proId=sd.proId LIMIT 1) measureLabel,

@@ -1,0 +1,291 @@
+<?php 
+     $this->tr=Application_Form_FrmLanguages::getCurrentlanguage();
+     $tr = Application_Form_FrmLanguages::getCurrentlanguage();
+     $frm = $this->frm;
+?>
+
+<script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
+<title><?php echo $this->tr->translate("PO_EDIT_CONCRETE")?></title>
+ <div class="card">
+	<div class="card-content collapse show">
+		<div class="card-box">
+               	<div class="col-sm-12 border-botom">
+		    		<div class="col-sm-8 pd-0">
+		    			<h4 class="m-b-0"><i class="fa fa-truck" aria-hidden="true"></i>&nbsp;<i class="fa fa-tint" aria-hidden="true"></i>&nbsp;&nbsp;<?php echo $tr->translate('PO_CONCRETE');?></h4>
+    			</div>
+    			<div class="col-sm-4 text-right">
+    			</div>
+    		</div>
+    	</div>
+    	<form action="" dojoType="dijit.form.Form" method="post" enctype="multipart/form-data">
+			<script type="dojo/method" event="onSubmit">   
+	  			 if(this.validate()) {
+					branch_id = dijit.byId('branch_id').get('value');
+					if(branch_id=='' || branch_id<=0){
+						alert('<?php echo $tr->translate('PLEASE_SELECT_BRANCH');?>');
+						dijit.byId('branch_id').focus();
+						return false;
+					}
+					supplierId = dijit.byId('supplierId').get('value');
+					if(supplierId<=0){
+						alert('<?php echo $tr->translate('SELECT_SUPPLIER');?>');
+						dijit.byId('supplierId').focus();
+						return false;
+					}
+					
+					loadingBlock();
+					return true;
+	  			 }else {
+					return false;
+	   			}
+			</script>
+			<div class="card-box">
+				<div class="col-md-3 col-sm-3 col-xs-12">
+		             <div class="form-group">
+		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("BRANCH_NAME");?> </label>
+		                <div class="col-md-7 col-sm-7 col-xs-12">
+		                	<?php echo $frm->getElement("branch_id");?>
+		                </div>
+		             </div>
+		             <div class="form-group">
+		                <label class="control-label col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("SUPPLIER");?> </label>
+		                <div class="col-md-7 col-sm-7 col-xs-12">
+		                	<?php echo $frm->getElement("supplierId");?>
+		                </div>
+		             </div>
+		             <div class="form-group">
+		                <label class="control-label col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("WORK_TYPE");?> </label>
+		                <div class="col-md-7 col-sm-7 col-xs-12">
+		                	<input id="workType"/>
+		                </div>
+		             </div>
+		             <div class="form-group">
+		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"> </label>
+						<div class="col-md-7 col-sm-7 col-xs-12">
+							<input type="button" class="button-class button-primary" iconClass="glyphicon glyphicon-refresh" dojoType="dijit.form.Button" onclick="getRefreshData();" label="<?php echo $tr->translate("GET_DATA");?>"  />
+						</div>
+		             </div>
+					 <div class="form-group">
+		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("RECEIVE_DATE");?> </label>
+		                <div class="col-md-7 col-sm-7 col-xs-12">
+		                	<?php echo $frm->getElement("date");?>
+		                </div>
+		             </div>
+		             <div class="form-group">
+		                <label class="control-label col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("NOTE");?></label>
+		                <div class="col-md-7 col-sm-7 col-xs-12">
+		                	<?php echo $frm->getElement("note");?>
+		                </div>
+		             </div>
+		             <div class="form-group">
+		                <label class="control-label col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("STATUS");?></label>
+		                <div class="col-md-7 col-sm-7 col-xs-12">
+		                	<?php echo $frm->getElement("status");?>
+		                </div>
+		             </div>
+				</div>
+				<div class="col-md-9 col-sm-9 col-xs-12">
+					<div class="form-group" style="background: #d8e0e2;padding: 5px 15px;margin: 0;border: solid 1px #697996;border-radius: 2px;margin-top: 10px;">
+						<label style=" margin: 0; line-height: 30px; " class="control-label bold col-md-1 col-sm-1 col-xs-12"><?php echo $tr->translate("CATEGORY");?> </label>
+						<div class="col-md-3 col-sm-3 col-xs-12">
+								<?php echo $frm->getElement("categoryId");?>
+						</div>
+						<label class="col-md-1 col-sm-1 col-xs-12" style=" margin: 0; line-height: 30px; text-align: center;"><?php echo $tr->translate("RECORD");?></label>
+						<div class="col-md-1 col-sm-1 col-xs-12">
+								<?php echo $frm->getElement("init");?>
+						</div>
+						<label style=" margin: 0; line-height: 30px; text-align: center;" class="control-label bold col-md-1 col-sm-1 col-xs-12"><?php echo $tr->translate("PRODUCT");?> </label>
+						<div class="col-md-4 col-sm-4 col-xs-12">
+							<input id="productId" />
+							<input type="hidden" name="identity" id="identity" dojoType="dijit.form.TextBox" value="" >
+						</div>
+					</div>
+					<table class="collape tablesorter" id="table_row" style="width:100%; white-space: nowrap;border:1px solid #ddd;">
+				    	<tr id="head-title" class="head-td" align="center"></tr>
+					</table>
+				</div>
+				<div class="clearfix"></div>
+			</div>
+			<div class="clearfix"></div>
+	       	<div class="card-box mt-20">
+               	<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
+               		<input type="submit" value="save_close" id="save_close" name="save_close" label="<?php echo $tr->translate("GO_EDIT");?>" dojoType="dijit.form.Button" 
+						class="button-class button-primary" iconClass="	glyphicon glyphicon-floppy-remove" />
+               	</div>
+             </div>
+		</form>
+    </div>
+</div>
+<style>
+table#table_row td.productName {
+    font-size: 12px;
+    line-height: 14px;
+    font-weight: 600;
+}
+table#table_row td.currentQty {
+    text-align: center;
+    color: #f74545;
+    font-weight: 600;
+}
+tr.rowData {
+    border-bottom: solid 2px #02014a;
+}
+tr.rowData td {
+    padding: 5px 0;
+}
+#table tr td{
+	border:1px solid #cccccc;
+	text-align: center;
+}
+#table tr th{
+	background: #cccccc;
+	border:1px solid #ddd;
+}
+</style>
+<script src="<?php echo $this->baseUrl();?>/admin/js/global.js"  type="text/javascript"></script>
+<script type="text/javascript">
+	dojo.require("dojo.data.ItemFileWriteStore");  
+	dojo.require("dojo.NodeList-manipulate");
+    dojo.require("dijit.form.Textarea");
+    dojo.require("dijit.form.NumberTextBox");
+    dojo.require("dijit.form.DateTextBox");
+	
+    require(["dojo/ready"], function(ready){
+		ready(function(){
+			onChageFunctionByBranch();
+			addRecords();
+			dijit.byId('categoryId').set('readOnly',true);
+			dijit.byId('init').set('readOnly',true);
+			dijit.byId('productId').set('readOnly',true);
+		});
+		new dijit.form.FilteringSelect({
+			autoComplete: false,
+			queryExpr: "*${0}*",
+			required: false,		           
+			name: "workType",
+			placeHolder:'<?php echo $tr->translate('WORK_TYPE');?>',
+			id: "workType",
+			searchAttr: "name",
+			class: 'fullside',
+			onChange: function() {
+				workType = dijit.byId('workType').get('value');
+				if(workType==-1){
+					window.open('<?php echo $this->url(array('module'=>'stockinout','controller'=>'worktype','action'=>'add'))?>');
+				}
+			}
+		}, "workType");
+		
+		new dijit.form.FilteringSelect({
+			autoComplete: false,
+			queryExpr: "*${0}*",
+			required: false,		           
+			name: "productId",
+			placeHolder:'<?php echo $tr->translate('PRODUCT_NAME');?>',
+			id: "productId",
+			searchAttr: "name",
+			class: 'fullside',
+		}, "productId");
+    });
+    var col= 0; 
+    var no=0;
+	var title = 0;
+function addRecords(data){
+		<?php if (!empty($this->rows)) foreach ($this->rows as $key=> $row){?>
+			template='';
+			temp = "";
+			if(title!=1){
+				temp+='<td><?php echo $tr->translate("N_O");?></td>';
+				temp+='<td width="20%"><?php echo $tr->translate("PRODUCT_NAME");?></td>';
+				temp+='<td class="currentQty"><?php echo $tr->translate("MEASURE");?></td>';
+				temp+='<td width="20%"><?php echo $tr->translate("DN_NO");?></td>';
+				temp+='<td width="5%"><?php echo $tr->translate("QTY");?></td>';
+				temp+='<td width="10%"><?php echo $tr->translate("UNIT_PRICE");?></td>';
+				temp+='<td width="10%"><?php echo $tr->translate("TOTAL");?></td>';
+				temp+='<td width="25%"><?php echo $tr->translate("NOTE");?></td>';
+				dojo.query("#head-title").append(temp);
+				title=1;
+			}
+			
+				template='';
+				temp = "";
+				col++;no++;
+				proCode = '<?php echo $row['proCode']?>';
+				proName = '<?php echo $row['proName']?>';
+				measureTitle = '<?php echo $row['measureLabel']?>';
+				
+				template+='<td align="center" width="2%">'+no+'</td>';
+				template+='<td class="productName" >'+proCode+'<br />'+proName+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId'+col+'" name="proId'+col+'" value="<?php echo $row['id'];?>" type="text"  ></td>';	
+				template+='<td class="currentQty"  width="10%">('+measureTitle+')</td>';	
+				template+='<td><input required="true" dojoType="dijit.form.ValidationTextBox" class="fullside" id="dnNO'+col+'" name="dnNO'+col+'" placeholder="'+'<?php echo $tr->translate("DN_INFO");?> "type="text"  ></td>';	
+				template+='<td><input onkeyup="calculateTotal('+col+');" dojoType="dijit.form.NumberTextBox" required="true" data-dojo-props="constraints:{min:0.0001},rangeMessage:'+"'<?php echo $tr->translate("MINIMUM_VALUE_IS_ONE");?>'"+'" class="fullside" id="qty'+col+'" name="qty'+col+'" placeholder="'+'<?php echo $tr->translate("QTY");?> " value="1" type="text"  ></td>';	
+				template+='<td><input onkeyup="calculateTotal('+col+');" dojoType="dijit.form.NumberTextBox" required="true" data-dojo-props="constraints:{min:0.0001},rangeMessage:'+"'<?php echo $tr->translate("MINIMUM_VALUE_IS_ONE");?>'"+'" class="fullside" id="unitPrice'+col+'" name="unitPrice'+col+'" placeholder="'+'<?php echo $tr->translate("UNIT_PRICE");?>" type="text"  ></td>';	
+				template+='<td><input dojoType="dijit.form.NumberTextBox" readOnly required="true" class="fullside" id="total'+col+'" name="total'+col+'" placeholder="'+'<?php echo $tr->translate("TOTAL");?> " value="1" type="text"  ></td>';	
+				template+='<td><input dojoType="dijit.form.Textarea" class="fullside" id="note'+col+'" name="note'+col+'" placeholder="'+'<?php echo $tr->translate("NOTE");?> " value="" type="text"  ></td>';	
+				
+				tmp='<tr class="rowData" id="row'+col+'">';
+				tmp+="</tr>";
+				dojo.query("#table_row").append(tmp);
+				if($("#identity").val()!="") {
+					var identity = $("#identity").val();
+					$("#identity").val(identity+','+col);
+				} else {$("#identity").val(col);}
+				dojo.html.set(dojo.byId("row"+col),template , {
+					 parseContent: true,
+				});
+				dijit.byId('dnNO'+col).attr('value','<?php echo $this->rs['dnNumber']?>');
+				dijit.byId('qty'+col).attr('value','<?php echo $row['qtyReceive']?>');
+				dijit.byId('unitPrice'+col).attr('value','<?php echo $row['price']?>');
+				dijit.byId('total'+col).attr('value','<?php echo $row['subTotal']?>');
+				dijit.byId('note'+col).attr('value','<?php echo $row['note']?>');
+		<?php }?>
+		dijit.byId('productId').reset();
+	}
+		
+    function getWorkType(){
+		urlGetWorkType ='<?php echo $this->url(array('module'=>'stockinout','controller'=>'worktype','action'=>'getallworktype'))?>';
+		notinBranchId = dijit.byId('branch_id').get('value');
+		contentData = {
+			'addnew':1,
+    	};
+		getAllWorkType(urlGetWorkType,contentData,'<?php echo $this->rs['workType'];?>');
+    }
+    
+	function onChageFunctionByBranch(){
+		 getWorkType();
+	}
+	
+	function calculateTotal(index){
+		qty = dijit.byId('qty'+index).get('value');
+		if(qty=='' || isNaN(qty)){
+			qty =	0;
+		}
+		
+		unitPrice = dijit.byId('unitPrice'+index).get('value');
+		if(unitPrice=='' || isNaN(unitPrice)){
+			unitPrice =	0;
+		}
+		totalPrice = qty*unitPrice;
+		dijit.byId('total'+index).attr('value',totalPrice);
+	}
+
+	function addNewSupplier(){
+		categoryId = dijit.byId('supplierId').get('value');
+		if(categoryId==-1){
+			window.open('<?php echo $this->url(array('module'=>'po','controller'=>'supplier','action'=>'add'))?>');
+		}
+	}
+	var urlGetAllSuppilyer = '<?php echo $this->url(array('module'=>'po','controller'=>'supplier','action'=>'getallsupplier')); ?>';
+	function getRefreshData(){
+		dojo.xhrPost({
+			url:urlGetAllSuppilyer,	
+			handleAs:"json",
+			load: function(data) {
+				supplierStore  = getDataStorefromJSON('id','name', data);	
+			    dijit.byId('supplierId').set('store',supplierStore);
+			},
+			error: function(err){
+			}
+		});
+		getWorkType();
+	}
+</script>

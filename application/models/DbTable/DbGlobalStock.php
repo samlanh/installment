@@ -79,6 +79,9 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 				$sql.=" OR p.proId IN (SELECT pod.proId FROM `st_purchasing_detail` AS pod  WHERE pod.purchaseId=".$_data['purchaseId']." GROUP BY pod.proId ) ";
 			}
 		}
+		if(isset($_data['isMaterial'])){
+			$sql.=" AND (SELECT id FROM `st_category` AS ct  WHERE ct.id= p.categoryId AND ct.isMaterial=".$_data['isMaterial'].")";
+		}
 		if(!empty($_data['notExistingProjectid'])){
 			$sql.=" AND p.proId NOT IN (SELECT l.proId FROM `st_product_location` AS l  WHERE l.projectId=".$_data['notExistingProjectid']." )";
 		}
@@ -761,7 +764,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 				$optionList= array(
 						0=>$tr->translate("SELECT_WORK_TYPE")
 				);
-				if($request->getActionName()=='add'){
+				if($request->getActionName()=='add' AND $request->getControllerName()!='worktype'){
 					$optionList[-1]=$tr->translate("ADD_NEW");
 				}
 				foreach ($cate_tree_array as $rs){

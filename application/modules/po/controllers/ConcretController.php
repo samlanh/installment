@@ -50,9 +50,9 @@ class Po_ConcretController extends Zend_Controller_Action {
 				$db = new Po_Model_DbTable_DbConcret();
 				$db->addReceiveStock($_data);
 				if(isset($_data['save_new'])){
-					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL."/po/concret/add");
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL."/add");
 				}else{
-					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL."/po/concret");
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL);
 				}
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
@@ -65,26 +65,31 @@ class Po_ConcretController extends Zend_Controller_Action {
 		$this->view->frm = $frm;
 	}
 	function editAction(){
-		//$db = new Loan_Model_DbTable_DbCancel();
+		$db = new Po_Model_DbTable_DbConcret();
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {
-				
-				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","");
+// 				$db->addReceiveStock($_data);
+				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL);
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
-		//$fm = new Loan_Form_FrmCancel();
-		//$frm = $fm->FrmAddFrmCancel();
-		//Application_Model_Decorator::removeAllDecorator($frm);
-		//$this->view->frm_loan = $frm;
 		$id = $this->getRequest()->getParam('id');
 		$id = empty($id)?0:$id;
-		if(empty($id)){
-			Application_Form_FrmMessage::Sucessfull("NO_DATA","//",2);
+		$row = $db->getDNById($id);
+		if(empty($row)){//CA
+			Application_Form_FrmMessage::Sucessfull("NO_DATA",self::REDIRECT_URL,2);
 		}
+		
+		$fm = new Po_Form_FrmConcretStock();
+		$frm = $fm->Frmconcret($row);
+		$this->view->rs = $row;
+		
+		$this->view->rows = $db->getDNDetailById($id);
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frm = $frm;
 	}
 }
 

@@ -26,6 +26,12 @@
 						dijit.byId('branch_id').focus();
 						return false;
 					}
+					supplierId = dijit.byId('supplierId').get('value');
+					if(supplierId<=0){
+						alert('<?php echo $tr->translate('SELECT_SUPPLIER');?>');
+						dijit.byId('supplierId').focus();
+						return false;
+					}
 					var rowId = $('#identity').val();
 					if(rowId==''){ 
 						alert("<?php echo $tr->translate("PLEASE_ADD_RECORD");?>");
@@ -39,7 +45,6 @@
 			</script>
 			<div class="card-box">
 				<div class="col-md-3 col-sm-3 col-xs-12">
-					
 		             <div class="form-group">
 		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("BRANCH_NAME");?> </label>
 		                <div class="col-md-7 col-sm-7 col-xs-12">
@@ -52,18 +57,17 @@
 		                	<?php echo $frm->getElement("supplierId");?>
 		                </div>
 		             </div>
-					 
 		             <div class="form-group">
 		                <label class="control-label col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("WORK_TYPE");?> </label>
 		                <div class="col-md-7 col-sm-7 col-xs-12">
-		                	<input id="budgetType"/>
+		                	<input id="workType"/>
 		                </div>
 		             </div>
-		              <div class="form-group">
-		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("BUDGET_ITEM");?> </label>
-		                <div class="col-md-7 col-sm-7 col-xs-12">
-		                	<input id="budgetItem"/>
-		                </div>
+		             <div class="form-group">
+		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"> </label>
+						<div class="col-md-7 col-sm-7 col-xs-12">
+							<input type="button" class="button-class button-primary" iconClass="glyphicon glyphicon-refresh" dojoType="dijit.form.Button" onclick="getRefreshData();" label="<?php echo $tr->translate("GET_DATA");?>"  />
+						</div>
 		             </div>
 					 <div class="form-group">
 		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("RECEIVE_DATE");?> </label>
@@ -76,12 +80,6 @@
 		                <div class="col-md-7 col-sm-7 col-xs-12">
 		                	<?php echo $frm->getElement("note");?>
 		                </div>
-		             </div>
-					 <div class="form-group">
-		                <label class="control-label bold col-md-5 col-sm-5 col-xs-12"> </label>
-						<div class="col-md-7 col-sm-7 col-xs-12">
-							<input type="button" class="button-class button-primary" iconClass="glyphicon glyphicon-refresh" dojoType="dijit.form.Button" onclick="getRefreshData();" label="<?php echo $tr->translate("GET_DATA");?>"  />
-						</div>
 		             </div>
 				</div>
 				<div class="col-md-9 col-sm-9 col-xs-12">
@@ -98,9 +96,7 @@
 						<div class="col-md-4 col-sm-4 col-xs-12">
 							<input id="productId" />
 						</div>
-						
 					</div>
-						
 					<table class="collape tablesorter" id="table_row" style="width:100%; white-space: nowrap;border:1px solid #ddd;">
 				    	<tr id="head-title" class="head-td" align="center"></tr>
 					</table>
@@ -154,41 +150,29 @@ tr.rowData td {
     dojo.require("dijit.form.NumberTextBox");
     dojo.require("dijit.form.DateTextBox");
 	
-	var productStore  = getDataStorefromJSON('id','name', null );
     require(["dojo/ready"], function(ready){
 		ready(function(){
 			onChageFunctionByBranch();
-
 		});
 		new dijit.form.FilteringSelect({
 			autoComplete: false,
 			queryExpr: "*${0}*",
 			required: false,		           
-			name: "budgetType",
-			placeHolder:'<?php echo $tr->translate('budgetType');?>',
-			id: "budgetType",
+			name: "workType",
+			placeHolder:'<?php echo $tr->translate('WORK_TYPE');?>',
+			id: "workType",
 			searchAttr: "name",
 			class: 'fullside',
 			onChange: function() {
-				getBudgetItem();
+				workType = dijit.byId('workType').get('value');
+				if(workType==-1){
+					window.open('<?php echo $this->url(array('module'=>'stockinout','controller'=>'worktype','action'=>'add'))?>');
+				}
 			}
-		}, "budgetType");
+		}, "workType");
 
-		new dijit.form.FilteringSelect({
-			autoComplete: false,
-			queryExpr: "*${0}*",
-			required: false,		           
-			name: "budgetItem",
-			placeHolder:'<?php echo $tr->translate('budgetItem');?>',
-			id: "budgetItem",
-			searchAttr: "name",
-			class: 'fullside',
-			onChange: function() {
-			}
-		}, "budgetItem");
 		
 		new dijit.form.FilteringSelect({
-			store: productStore,
 			autoComplete: false,
 			queryExpr: "*${0}*",
 			required: false,		           
@@ -202,36 +186,19 @@ tr.rowData td {
 			}
 		}, "productId");
     });
-		
-    
 
-    function getBudgetType(){
-		urlGetBudgetType ='<?php echo $this->url(array('module'=>'budget','controller'=>'type','action'=>'getbudgettype'))?>';
+    function getWorkType(){
+		urlGetWorkType ='<?php echo $this->url(array('module'=>'stockinout','controller'=>'worktype','action'=>'getallworktype'))?>';
 		notinBranchId = dijit.byId('branch_id').get('value');
 		contentData = {
-    		'noBtnNew':1
+				'addnew':1
     	};
-		getAllBudgetType(urlGetBudgetType,contentData);
+		getAllWorkType(urlGetWorkType,contentData);
     }
-	function getBudgetItem(){
-		budgetType = dijit.byId('budgetType').get('value');
-		if(budgetType){
-    		urlGetBudgetItem = '<?php echo $this->url(array('module'=>'budget','controller'=>'item','action'=>'get-allbudgetitem'));?>';
-			notinBranchId = dijit.byId('branch_id').get('value');
-			contentData = {
-	    			'budgetType':budgetType,
-	    			'noBtnNew':1
-	    		};
-			getAllBudgetItem(urlGetBudgetItem,contentData);
-       }
-    	
-   }
     
 	function onChageFunctionByBranch(){
 		 getAllProduct();
-		
-		 getBudgetType();
-		 getBudgetItem();
+		 getWorkType();
 		}
     
 	function getAllProduct(){
@@ -246,7 +213,9 @@ tr.rowData td {
 		}
 		objectContentFilter = {
 				'categoryId':categoryId,
-				'isCountStock':0};
+				'isCountStock':0,
+				'isMaterial':1,
+				};
 		getAllProductStoreFunction(urlGetAllProduct,objectContentFilter);
 	}
 	
@@ -302,10 +271,10 @@ tr.rowData td {
 			temp+='<td width="20%"><?php echo $tr->translate("PRODUCT_NAME");?></td>';
 			temp+='<td class="currentQty"><?php echo $tr->translate("MEASURE");?></td>';
 			temp+='<td width="20%"><?php echo $tr->translate("DN_NO");?></td>';
-			temp+='<td width="10%"><?php echo $tr->translate("QTY");?></td>';
+			temp+='<td width="5%"><?php echo $tr->translate("QTY");?></td>';
 			temp+='<td width="10%"><?php echo $tr->translate("UNIT_PRICE");?></td>';
 			temp+='<td width="10%"><?php echo $tr->translate("TOTAL");?></td>';
-			temp+='<td width="20%"><?php echo $tr->translate("NOTE");?></td>';
+			temp+='<td width="25%"><?php echo $tr->translate("NOTE");?></td>';
 			dojo.query("#head-title").append(temp);
 			title=1;
 		}
@@ -326,7 +295,7 @@ tr.rowData td {
 			template+='<td><input onkeyup="calculateTotal('+col+');" dojoType="dijit.form.NumberTextBox" required="true" data-dojo-props="constraints:{min:0.0001},rangeMessage:'+"'<?php echo $tr->translate("MINIMUM_VALUE_IS_ONE");?>'"+'" class="fullside" id="qty'+col+'" name="qty'+col+'" placeholder="'+'<?php echo $tr->translate("QTY");?> " value="1" type="text"  ></td>';	
 			template+='<td><input onkeyup="calculateTotal('+col+');" dojoType="dijit.form.NumberTextBox" required="true" data-dojo-props="constraints:{min:0.0001},rangeMessage:'+"'<?php echo $tr->translate("MINIMUM_VALUE_IS_ONE");?>'"+'" class="fullside" id="unitPrice'+col+'" name="unitPrice'+col+'" placeholder="'+'<?php echo $tr->translate("UNIT_PRICE");?>" type="text"  ></td>';	
 			template+='<td><input dojoType="dijit.form.NumberTextBox" readOnly required="true" class="fullside" id="total'+col+'" name="total'+col+'" placeholder="'+'<?php echo $tr->translate("TOTAL");?> " value="1" type="text"  ></td>';	
-			template+='<td><input dojoType="dijit.form.TextBox" class="fullside" id="note'+col+'" name="note'+col+'" placeholder="'+'<?php echo $tr->translate("NOTE");?> " value="" type="text"  ></td>';	
+			template+='<td><input dojoType="dijit.form.Textarea" class="fullside" id="note'+col+'" name="note'+col+'" placeholder="'+'<?php echo $tr->translate("NOTE");?> " value="" type="text"  ></td>';	
 			
 			tmp='<tr class="rowData" id="row'+col+'">';
 			tmp+="</tr>";
@@ -376,20 +345,17 @@ tr.rowData td {
 	}
 	var urlGetAllSuppilyer = '<?php echo $this->url(array('module'=>'po','controller'=>'supplier','action'=>'getallsupplier')); ?>';
 	function getRefreshData(){
-			
 		dojo.xhrPost({
 			url:urlGetAllSuppilyer,	
 			handleAs:"json",
 			load: function(data) {
 				supplierStore  = getDataStorefromJSON('id','name', data);	
 			    dijit.byId('supplierId').set('store',supplierStore);
-				
-				
 			},
 			error: function(err){
 			}
 		});
-		
+		getWorkType();
 	}
 	
 </script>

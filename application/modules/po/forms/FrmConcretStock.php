@@ -37,15 +37,6 @@ class Po_Form_FrmConcretStock extends Zend_Dojo_Form
 			}
 		}
 		
-		$beginingStockDate = new Zend_Dojo_Form_Element_DateTextBox('beginingStockDate');
- 		$beginingStockDate->setAttribs(array(
- 			'dojoType'=>'dijit.form.DateTextBox',
- 			'class'=>'fullside',
- 			'constraints'=>"{datePattern:'dd/MM/yyyy'}",
-			'readOnly'=>'readOnly ',
- 		));
-		$beginingStockDate->setValue(date("Y-m-d"));
-				
     	$note=  new Zend_Form_Element_Textarea('note');
     	$note->setAttribs(array(
     			'dojoType'=>'dijit.form.Textarea',
@@ -110,34 +101,20 @@ class Po_Form_FrmConcretStock extends Zend_Dojo_Form
 		}
 		$supplierId->setMultiOptions($optSpp);
 		
-		$usageType = new Zend_Dojo_Form_Element_FilteringSelect('usageType');
-		$usageType->setAttribs(array(
-				'dojoType'=>'dijit.form.FilteringSelect',
-				'class'=>'fullside',
-		));
-		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-		
-		$rsSpp = $dbGBStock->getAllSupplier();
-		$optSpp=array(''=>$tr->translate("SELECT_SUPPLIER"));
-		if(!empty($rsSpp))foreach($rsSpp AS $row){
-			$optSpp[$row['id']]=$row['name'];
-		}
-		$usageType->setMultiOptions($optSpp);
-
-		
     	if(!empty($data)){
 			
-// 			$branch_id->setValue($data["projectId"]);
-// 			$branch_id->setAttribs(array(
-// 				'readOnly'=>'readOnly',
-// 			));
-// 			$note->setValue($data["note"]);
-// 			$date->setValue($data["date"]);
-// 			$date->setAttribs(array(
-// 				'readOnly'=>'readOnly',
-// 			));
-// 			$_status->setValue($data["status"]);
-// 			$counter->setValue($data["id"]);
+			$branch_id->setValue($data["projectId"]);
+			$branch_id->setAttribs(array(
+					'readOnly'=>'readOnly',
+			));
+			$supplierId->setValue($data["supplierId"]);
+			
+			$note->setValue($data["note"]);
+			$date->setValue($data["receiveDate"]);
+			$date->setAttribs(array(
+				'readOnly'=>'readOnly',
+			));
+			$_status->setValue($data["status"]);
     	}
     	
     	$this->addElements(array(
@@ -148,7 +125,6 @@ class Po_Form_FrmConcretStock extends Zend_Dojo_Form
 				$date,
     			$_status,
     			$init,
-    			$beginingStockDate
 				
     			));
     	return $this;
