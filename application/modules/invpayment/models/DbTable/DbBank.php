@@ -83,7 +83,7 @@ class Invpayment_Model_DbTable_DbBank extends Zend_Db_Table_Abstract
 			return $this->update($_arr, $where);
 
 		}else{
-			Application_Form_FrmMessage::Sucessfull("DATA_EXISTING", "/invpayment/bank/edit",2);
+			Application_Form_FrmMessage::Sucessfull("DATA_EXISTING", "/invpayment/bank/index",2);
 		}
 	
     }
