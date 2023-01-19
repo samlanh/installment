@@ -31,12 +31,21 @@ class Product_MeasureController extends Zend_Controller_Action {
 		
 	}
 	function addAction(){
+		$isAddMeasure = $this->getRequest()->getParam('isAddMeasure');
+
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {		
 				$db = new Product_Model_DbTable_DbMeasure();
 				$db->addMeasure($_data);
-				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/product/measure/add");
+				if(!empty($isAddMeasure)){
+					Application_Form_FrmMessage::message("INSERT_SUCCESS");
+					echo "<script> alert('INSERT_SUCCESS');</script>";
+		    		echo "<script>window.close();</script>";
+				}else{
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/product/measure/add");
+
+				}	
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());

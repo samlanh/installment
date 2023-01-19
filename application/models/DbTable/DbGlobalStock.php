@@ -424,6 +424,15 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		);
 		return $optStockType;
 	}
+	function initilizeCategoryType(){
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$optCatType = array(
+			-1=>$tr->translate("SELECT_CATEGORY_TYPE"),
+			0=>$tr->translate("NORMAL"),
+			1=>$tr->translate('IS_MATERIAL')
+		);
+		return $optCatType;
+	}
 	function addProductHistoryQty($projectId,$proId,$tranType,$Qty,$tranId=0){
 		$this->_name='st_product_story';
 		$arr = array(
