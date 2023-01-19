@@ -387,28 +387,63 @@ class Report_StockmgController extends Zend_Controller_Action {
 		$this->view->headerReport = $frmpopup->getLetterHeadReport();
 	}
 	public function rptBudgetAction(){
+		if($this->getRequest()->isPost()){
+			$search=$this->getRequest()->getPost();
+		}else{
+			$search = array(
+					"adv_search"=>'',
+					"supplier_id"=>"",
+					"branch_id"=>-1,
+					"ordering"=>1,
+					"category_id_expense"=>-1,
+					'payment_type'=>-1,
+					'start_date'=> date('Y-m-d'),
+					'end_date'=>date('Y-m-d'),
+					'monthlytype'=>1,
+			);
+		}
+		$this->view->search=$search;
+		$db  = new Report_Model_DbTable_DbStockReports();
+		$this->view->rsBudgets = $db->getBudgetList($search);
+		$frm = new Loan_Form_FrmSearchLoan();
+		$frm = $frm->AdvanceSearch();
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frm_search = $frm;
+	}
+	
+	public function rptRequestProductSummaryAction(){
+		try{
 			if($this->getRequest()->isPost()){
-  		$search=$this->getRequest()->getPost();
-  	}else{
-  		$search = array(
-  				"adv_search"=>'',
-  				"supplier_id"=>"",
-  				"branch_id"=>-1,
-  				"ordering"=>1,
-  				"category_id_expense"=>-1,
-  				'payment_type'=>-1,
-  				'start_date'=> date('Y-m-d'),
-  				'end_date'=>date('Y-m-d'),
-  				'monthlytype'=>1,
-  		);
-  	}
-  	$this->view->search=$search;
-  	$db  = new Report_Model_DbTable_DbStockReports();
-  	$this->view->rsBudgets = $db->getBudgetList($search);
-  	$frm = new Loan_Form_FrmSearchLoan();
-  	$frm = $frm->AdvanceSearch();
-  	Application_Model_Decorator::removeAllDecorator($frm);
-  	$this->view->frm_search = $frm;
+    			$search = $this->getRequest()->getPost();
+    		}
+    		else{
+    			$search=array(
+					'adv_search'=>"",
+					'branch_id' => -1,
+					'start_date'=> date('Y-m-d'),
+					'end_date'=>date('Y-m-d'),
+					'status'=>-1,
+				);
+    		}
+    		$this->view->search = $search;
+			$db = new Report_Model_DbTable_DbStockMg();
+			$rs_rows = $db->getProductRequestSummary($search);
+    		$this->view->row=$rs_rows;
+    		$this->view->search=$search;
+    		
+		}catch (Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+		}
+		
+		$frm_search = new Application_Form_FrmAdvanceSearchStock();
+		$frm = $frm_search->AdvanceSearch();
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frm_search = $frm;
+		
+		$frmpopup = new Application_Form_FrmPopupGlobal();
+		$this->view->footerReport = $frmpopup->getFooterReport();
+		$this->view->headerReport = $frmpopup->getLetterHeadReport();
 	}
 	
 	

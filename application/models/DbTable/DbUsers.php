@@ -263,6 +263,20 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 				'branch_list'=>$branchList,
 				'systemAccess'=>$systemList,
 		    ); 
+
+			$part= PUBLIC_PATH.'/images/';
+    		$photo_name = $_FILES['photo']['name'];
+    		if (!empty($photo_name)){
+    			$tem =explode(".", $photo_name);
+    			$image_name = "signature_".date("Y").date("m").date("d").time().".".end($tem);
+    			$tmp = $_FILES['photo']['tmp_name'];
+    			if(move_uploaded_file($tmp, $part.$image_name)){
+    				move_uploaded_file($tmp, $part.$image_name);
+    				$photo = $image_name;
+    				$_user_data['signature_pic']=$photo;
+    			}
+    		}
+			
 			return  $this->insert($_user_data);
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message($this->tr->translate("INSERT_SUCCSS"));

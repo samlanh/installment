@@ -285,17 +285,32 @@
 					</tr>
 					<tr >
 						<td colspan="3">
-							<ul class="dataValue">
-								<?php if(!empty($this->productLocation))foreach($this->productLocation as $row){?>
-									<li>
-										<div class="blgLeft">
-											<span class="title-row"><strong><i class="fa fa-university" aria-hidden="true"></i> <?php echo $row['projectName'];?></strong></span><br />
-										</div>
-										<div class="blgRight"><span class="values-row"><strong><?php echo $row['currentQty'].' '.$rs['measureLabel'];?></strong></span></div>
-										<div class="blgRight"><span class="values-row"><strong> <i class="fa fa-money" aria-hidden="true"></i> <?php echo $tr->translate("COSTING").$row['costing'];?></strong></span></div>
-									</li>
+							<table>
+								<tr>
+									<td><?php echo $tr->translate('NUM');?></td>
+									<td><?php echo $tr->translate('PROJECT_NAME');?></td>
+									<td><?php echo $tr->translate('QTY');?></td>
+									<td><?php echo $tr->translate('COSTING');?></td>
+									<td><?php echo $tr->translate('TOTAL_PRICE');?></td>
+								</tr>
+								<?php $num=0;$totalCosting = 0; if(!empty($this->productLocation))foreach($this->productLocation as $row){?>
+								<tr>
+									<td><?php $num++;echo $num;?></td>
+									<td><?php echo $row['projectName'];?></td>
+									<td><?php echo $row['currentQty'].' '.$rs['measureLabel'];?></td>
+									<td><?php echo $row['costing'];?></td>
+									<td><?php 
+										$totalPrice =$row['currentQty']*$row['costing'];
+										$totalCosting+=$totalPrice;
+									echo number_format($totalPrice,2);?></td>
+								</tr>
 								<?php }?>
-							</ul>
+								<tr>
+									<td colspan="4"><?php echo $tr->translate('TOTAL_COSTING');?></td>
+									<td style="background:#337ab7;">$ <strong><?php echo number_format($totalCosting,2);?></strong></td>
+								</tr>
+							</table>
+							
 						</td>
 					</tr>
 				</table>

@@ -153,7 +153,70 @@ class Application_Model_DbTable_DbStockSystemNotify extends Zend_Db_Table_Abstra
 		);
 		return $arrNoti;
 	}
+	function getCountDNConcrete($data=array()){
+		$db=$this->getAdapter();
+		$dbGb = new Application_Model_DbTable_DbGlobal();
+		$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+		$sql="SELECT r.id,
+				(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = r.projectId LIMIT 1) AS projectName,
+				(SELECT s.supplierName FROM `st_supplier` s WHERE s.id=r.supplierId LIMIT 1) AS supplierName,
+				DATE_FORMAT(receiveDate,'%d-%m-%Y') as receiveDate,
+				dnType,
+				dnNUmber,
+				staffCounter,
+				driverName,
+			   (SELECT first_name FROM rms_users WHERE id=r.userId LIMIT 1 ) AS user_name,
+				workType
+			FROM `st_receive_stock` r
+				WHERE r.status=1 ";
+		if(!empty($data['transactionType'])){
+			$sql.=" AND r.transactionType=".$data['transactionType'];
+		}
+		if(isset($data['verified'])){
+			$sql.=" AND r.verified=".$data['verified'];
+		}
+		if(isset($data['isclosed'])){
+			$sql.=" AND (SELECT id FROM st_receive_stock_detail rd WHERE r.id = rd.receiveId AND `isclosed`=".$data['isclosed'].")";
+		}
 	
+		$sql.=$dbGb->getAccessPermission("r.projectId");
+		$sql.=" ORDER BY r.id DESC ";
+		return $db->fetchAll($sql);
+	}
+	function getNotifyDNConcreteHtml($_data=array()){
+		$row = $this->getCountDNConcrete($_data);
+		$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+		$baseUrls = Zend_Controller_Front::getInstance()->getBaseUrl();
 	
+		$count = count($row);
+		$string='
+		<li class=" event title">
+		<h4><i class="fa fa-file-text"></i> '.$tr->translate("DN_CONCRETE").'</h4>
+		</li>
+		';
+		if(!empty($row)) foreach($row as $key=> $result){
+			$url="";
+			$url=$baseUrls."/po/directpo/check/id/".$result['id'];
+			$titleStatus=$tr->translate("UNVERIFY");
+			$title=$tr->translate("CLICK_TO_VERIFY");
+				
+			$string.='
+			<li class=" event">
+				<div class="media-body">
+					<small>'.$result['projectName'].'</small><br />
+					<span class="title" >'.$result['dnNUmber'].'</span>
+					<p><strong></strong> <i class="fa fa-calendar"></i> '.$result['receiveDate'].'</p>
+					<p><strong></strong> <i class="fa fa-user"></i> '.$result['user_name'].'</p>
+					<p class="proccessingStatus"><i class="fa fa-check-square"></i> '.$titleStatus.'</p>
+					<a class="btn-go" href="'.$url.'"><i class="fa fa-location-arrow" aria-hidden="true"></i> '.$title.'</a>
+				</div>
+			</li>';
+		}
+		$arrNoti = array(
+				'notification' => $string,
+				'counting'  => $count
+		);
+		return $arrNoti;
+	}
 }
 ?>

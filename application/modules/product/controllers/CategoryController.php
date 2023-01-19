@@ -27,7 +27,7 @@ class Product_CategoryController extends Zend_Controller_Action {
 			}
 			
 			$list = new Application_Form_Frmtable();
-			$collumns = array("PARENT_CATEGORY","CATEOGRY_TITLE","CREATE_DATE","BY_USER","STATUS");
+			$collumns = array("PARENT_CATEGORY","CATEOGRY_TITLE","IS_MATERIAL","CREATE_DATE","BY_USER","STATUS");
 			$link=array('module'=>'product','controller'=>'category','action'=>'edit');
 			$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array('parentTitle'=>$link,'categoryName'=>$link));
 			

@@ -14,17 +14,17 @@ class Report_Model_DbTable_DbStockMg extends Zend_Db_Table_Abstract
 					WHEN  rq.checkingStatus= 0 THEN '".$tr->translate("PENDING")."'
 					WHEN  rq.checkingStatus = 1 THEN '".$tr->translate("APPROVED")."'
 					WHEN  rq.checkingStatus = 2 THEN '".$tr->translate("REJECTED")."'
-				END AS checkingStatus,
+				END AS checkingStatusTitle,
 				CASE
 					WHEN  rq.pCheckingStatus= 0 THEN '".$tr->translate("PENDING")."'
 					WHEN  rq.pCheckingStatus = 1 THEN '".$tr->translate("APPROVED")."'
 					WHEN  rq.pCheckingStatus = 2 THEN '".$tr->translate("REJECTED")."'
-				END AS pCheckingStatus,
+				END AS pCheckingStatusTitle,
 				CASE
 					WHEN  rq.approveStatus= 0 THEN '".$tr->translate("PENDING")."'
 					WHEN  rq.approveStatus = 1 THEN '".$tr->translate("APPROVED")."'
 					WHEN  rq.approveStatus = 2 THEN '".$tr->translate("REJECTED")."'
-				END AS approveStatus,
+				END AS approveStatusTitle,
 				(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = rq.projectId LIMIT 1) AS branch_name,
 				(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.checkingBy LIMIT 1 ) AS checkingByName,
 				(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.pCheckingBy LIMIT 1 ) AS pCheckingByName,
@@ -194,4 +194,51 @@ class Report_Model_DbTable_DbStockMg extends Zend_Db_Table_Abstract
     	$where.=$dbGb->getAccessPermission("po.projectId");
     	return $db->fetchAll($sql.$where.$order);
     }
+	
+	
+	function getProductRequestSummary($search){
+		$db = $this->getAdapter();
+		$dbGb = new Application_Model_DbTable_DbGlobal();
+		$dbGbSt = new Application_Model_DbTable_DbGlobalStock();
+		$sql="
+			SELECT 
+			
+				(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = r.projectId LIMIT 1) AS branch_name
+				,r.projectId
+				,r.requestNo
+				,r.purpose AS purposeRequest
+				,r.requestNoLetter  AS requestNoLetter 
+				,r.date AS requestDate
+				,r.note AS requestNote
+				
+				,po.id AS poId
+				,po.purchaseNo
+				,COALESCE(pod.qty,0) AS qtyPO
+				,COALESCE(pod.unitPrice,0) AS unitPrice
+				,GROUP_CONCAT(rst.dnNumber) AS dnNumber
+				,COALESCE(SUM(rsd.qtyReceive),0) AS qtyReceive
+				,p.proName
+				,rd.* 
+			FROM `st_request_po_detail` AS rd 
+				JOIN `st_request_po` AS r ON r.id = rd.requestId
+				LEFT JOIN `st_product` AS p  ON p.proId = rd.proId 
+				LEFT JOIN (`st_purchasing_detail` AS pod JOIN `st_purchasing` AS po ON po.id = pod.purchaseId ) 
+					ON po.requestId = rd.requestId AND rd.proId = pod.proId
+				LEFT JOIN (st_receive_stock_detail AS rsd JOIN st_receive_stock AS rst ON rst.id = rsd.receiveId)
+					ON rst.requestId = rd.requestId AND po.id = rst.poId AND rd.proId = rsd.proId 
+			WHERE 1
+		";
+		
+		$where = "";
+    	$from_date =(empty($search['start_date']))? '1': " r.date >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " r.date <= '".$search['end_date']." 23:59:59'";
+    	
+    	$where.= " AND ".$from_date." AND ".$to_date;
+    	$where.= " AND r.status = 1 ";
+		
+		$order=' GROUP BY r.projectId,pod.purchaseId,rd.proId  ORDER BY rd.proId ASC,po.id ASC,rst.id ASC ';
+    	$where.=$dbGb->getAccessPermission("r.projectId");
+    	return $db->fetchAll($sql.$where.$order);
+		
+	}
 }

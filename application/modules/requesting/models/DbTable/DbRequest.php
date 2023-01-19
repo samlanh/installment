@@ -133,6 +133,7 @@ class Requesting_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 							
 							'qtyRequest'	=>$data['qtyRequest'.$i],
 							'qtyAdjust'		=>$data['qtyRequest'.$i],
+							'qtyVerify'		=>$data['qtyRequest'.$i],
 							'qtyApproved'	=>$data['qtyRequest'.$i],
 							
 							'dateReqStockIn'		=>$data['dateReqStockIn'.$i],
@@ -204,6 +205,7 @@ class Requesting_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 								
 							'qtyRequest'		=>$data['qtyRequest'.$i],
 							'qtyAdjust'			=>$data['qtyRequest'.$i],
+							'qtyVerify'			=>$data['qtyRequest'.$i],
 							'qtyApproved'		=>$data['qtyRequest'.$i],
 							
 							'dateReqStockIn'	=>$data['dateReqStockIn'.$i],
@@ -225,6 +227,7 @@ class Requesting_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 							
 							'qtyRequest'	=>$data['qtyRequest'.$i],
 							'qtyAdjust'		=>$data['qtyRequest'.$i],
+							'qtyVerify'			=>$data['qtyRequest'.$i],
 							'qtyApproved'	=>$data['qtyRequest'.$i],
 							
 							'dateReqStockIn'		=>$data['dateReqStockIn'.$i],
@@ -266,7 +269,9 @@ class Requesting_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 					rqd.*,p.proCode,
 					p.proName,
 					
-					(SELECT pl.qty FROM st_product_location AS pl WHERE pl.proId=p.proId AND pl.projectId= rq.projectId LIMIT 1) AS currentQty,
+					(SELECT COALESCE(SUM(pl.qty),0) FROM st_product_location AS pl WHERE pl.proId=p.proId LIMIT 1) AS currentQtyAllBranch,
+					(SELECT COALESCE(pl.qty,0) FROM st_product_location AS pl WHERE pl.proId=p.proId AND pl.projectId= rq.projectId LIMIT 1) AS currentQty,
+					(SELECT COALESCE(pod.unitPrice,0) FROM `st_purchasing_detail` AS pod WHERE pod.proId=p.proId ORDER BY pod.purchaseId DESC LIMIT 1) AS latestUnitPrice,
 					p.measureLabel AS measureTitle
 				";
 				

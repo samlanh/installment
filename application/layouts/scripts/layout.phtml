@@ -372,6 +372,7 @@ $(document).ready(function(){
 	loadRequestNotification();
 	 setInterval(function(){ 
 		loadRequestNotification();
+		loadRequestNotificationConcrete();
 	 }, 5000);
 	<?php } ?>
 
@@ -468,6 +469,34 @@ function loadRequestNotification(view = '')
 	});
 	
  }
+var urlRequestNotifDn = '<?php echo $this->url(array('module'=>'default','controller'=>'index','action'=>'notifdnconcrete'));?> ';
+function loadRequestNotificationConcrete(view = '')
+ {
+	 
+	 jQuery.ajax({
+		url: urlRequestNotifDn,
+		type: "post",
+		data:{'view':view},
+		dataType:"json",
+		success: function(datadN){
+			if(datadN.counting >= 0)
+			{
+			 jQuery('.requestNotifyDN').html(datadN.notification);
+			 if(datadN.counting==0){
+				 jQuery('#countDNnotification').html("");
+			 }else{
+				 jQuery('#countDNnotification').html(datadN.counting);
+			 }
+			 
+			}
+		},
+		error:function(err){
+			
+		}
+	});
+	
+ }
+
 <?php } ?>
 
 jQuery(function () {
