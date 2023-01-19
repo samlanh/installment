@@ -21,9 +21,9 @@ class Invpayment_Model_DbTable_DbBank extends Zend_Db_Table_Abstract
 				spp.id,
 				spp.bank_name
 		";
-    	$sql.=$dbGb->caseStatusShowImage("spp.status");
 		$sql.=",spp.createDate ";
 		$sql.=",(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=spp.userId LIMIT 1 ) AS byUser";
+		$sql.=$dbGb->caseStatusShowImage("spp.status");
 		$sql.=" FROM `st_bank` AS spp 
 				WHERE  1
 		";
@@ -49,6 +49,54 @@ class Invpayment_Model_DbTable_DbBank extends Zend_Db_Table_Abstract
     	$order=' ORDER BY spp.id DESC  ';
     	return $db->fetchAll($sql.$where.$order);
     }
+
+	function addBank($data){
+		$existing = $this->ifBankExisting($data);
+
+		if(empty($existing)){
+			$_arr = array(
+				'bank_name'			=>$data['bank_name'],
+    			'note'				=>$data['note'],	
+    			'createDate'		=>date("Y-m-d H:i:s"),
+				'modifyDate'		=>date("Y-m-d H:i:s"),
+    			'userId'			=>$this->getUserId(),
+			);
+			$this->insert($_arr);
+		}else{
+			Application_Form_FrmMessage::Sucessfull("DATA_EXISTING", "/invpayment/bank/add",2);
+		}
+	} 
+	
+	function updateBank($data){
+	
+		$existing = $this->ifBankExisting($data);
+
+	    if(empty($existing)){
+			$_arr = array(
+				'bank_name'			=>$data['bank_name'],
+				'note'				=>$data['note'],	
+				'modifyDate'		=>date("Y-m-d H:i:s"),
+				'userId'			=>$this->getUserId(),
+				'status'				=>$data['status'],
+			);
+			$where = " id = ".$data['id'];
+			return $this->update($_arr, $where);
+
+		}else{
+			Application_Form_FrmMessage::Sucessfull("DATA_EXISTING", "/invpayment/bank/index",2);
+		}
+	
+    }
+	function ifBankExisting($data){
+		
+    	$db = $this->getAdapter();
+    	$sql=" SELECT * FROM $this->_name WHERE bank_name='".$data['bank_name']."'";
+		if(!empty($data['id'])){
+			$sql.=" AND id !=".$data['id'];
+		}	
+    	return $db->fetchRow($sql);
+    }
+	/*
    
     function addBank($data){
     	
@@ -84,7 +132,7 @@ class Invpayment_Model_DbTable_DbBank extends Zend_Db_Table_Abstract
     		$db->rollBack();
     	}
     }
-
+*/
     function getDataRow($recordId){
     	$db = $this->getAdapter();
 		$dbGb = new Application_Model_DbTable_DbGlobal();		

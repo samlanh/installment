@@ -48,12 +48,25 @@ Class Product_Form_FrmCategory extends Zend_Dojo_Form {
 			'class'=>'fullside',
 			'style'=>'width:100%;min-height:103px; font-size:14px; font-family:khmer os Battambang'
 		));
+
+		$isMaterial = new Zend_Dojo_Form_Element_FilteringSelect('isMaterial');
+		$isMaterial->setAttribs(array(
+			'dojoType'=>$filter,
+			'class'=>'fullside',
+			'autoComplete'=>'false',
+			'queryExpr'=>'*${0}*',
+		));
+		
+		$optcat = $db->initilizeCategoryType();
+		unset($optcat[-1]);
+		$isMaterial->setMultiOptions($optcat);
 		
 		$id = new Zend_Form_Element_Hidden('id');
 		
 		if(!empty($data)){
 			$parentId->setValue($data['parentId']);
 			$status->setValue($data['status']);
+			$isMaterial->setValue($data['isMaterial']);
 			$categoryTitle->setValue($data['categoryName']);
 			$note->setValue($data['note']);
 			$id->setValue($data['id']);
@@ -64,7 +77,8 @@ Class Product_Form_FrmCategory extends Zend_Dojo_Form {
 				$categoryTitle,
 				$note,
 				$parentId,
-				$status
+				$status,
+				$isMaterial
 		));
 		return $this;
 	}

@@ -134,6 +134,7 @@
 						font-weight: 600;
 						color: #f80000;
 					}
+					
 				</style>
 				<table width="100%">
 					<tr>
@@ -209,11 +210,13 @@
 									$pCheckingDate="-";
 									$pCheckingNote="-";
 									$pCheckingByName="-";
+									$pCheckingStatusTitle="-";
 									$pCheckingNoteClass="centerText";
 									if(!empty($rs["pCheckingBy"])){
 										$pCheckingDate=date($montFomat,strtotime($rs["pCheckingDate"]));
 										$pCheckingNote=$rs["pCheckingNote"];
 										$pCheckingByName=$rs["pCheckingByName"];
+										$pCheckingStatusTitle=$rs["pCheckingStatusTitle"];
 										
 										$pCheckingNoteClass="";
 									}
@@ -221,16 +224,27 @@
 									$approveDate="-";
 									$approveNote="-";
 									$approveByName="-";
+									$approveStatusTitle="-";
 									$approveNoteClass="centerText";
 									if(!empty($rs["approveBy"])){
 										$approveDate=date($montFomat,strtotime($rs["approveDate"]));
 										$approveNote=$rs["approveNote"];
 										$approveByName=$rs["approveByName"];
+										$approveStatusTitle=$rs["approveStatusTitle"];
 										
 										$approveNoteClass="";
 									}
+									
+									$classRow="";
+									if($rs["checkingStatus"]==2){
+										$classRow="voidclass";
+									}else if($rs["pCheckingStatus"]==2){
+										$classRow="voidclass";
+									}else if($rs["approveStatus"]==2){
+										$classRow="voidclass";
+									}
 								?>
-				                <tr class="style " style="font-family: 'Khmer OS Content'; white-space:nowrap; ">
+				                <tr class="style <?php echo $classRow;?> " style="white-space:nowrap; ">
 				               		<td data-label="<?php echo $tr->translate("NUM");?>"  style="text-align: center;"><?php echo $i++; ?></td>
 				               		<td data-label="<?php echo $tr->translate("BRANCH_NAME");?>" ><?php echo $rs["branch_name"];?></td>
 				               		<td data-label="<?php echo $tr->translate("REQUEST_NO");?>"  class="redBold"><?php echo $rs["requestNo"];?></td>                 		
@@ -240,17 +254,17 @@
 				               		<td data-label="<?php echo $tr->translate("NOTE");?>" ><span style="max-width: 160px;min-width: 100px;display: block;white-space: pre-line;line-height: 14px;overflow-wrap: break-word;padding: 1px;font-size: 10px;" ><?php echo $rs["note"];?></span></td>
 									<td data-label="<?php echo $tr->translate("REQUEST_BY");?>"  class="centerText"><?php echo $rs["user_name"];?></td>
 									
-									<td data-label="<?php echo $tr->translate("CHECKING_S");?>"  class="centerText"><?php echo $rs["checkingStatus"];?></td>
+									<td data-label="<?php echo $tr->translate("CHECKING_S");?>"  class="centerText"><?php echo $rs["checkingStatusTitle"];?></td>
 									<td data-label="<?php echo $tr->translate("CHECKING_DATE");?>"  class="centerText"><?php echo $checkingDate;?></td>
 									<td data-label="<?php echo $tr->translate("FEEDBACK");?>"  class="<?php echo $checkingNoteClass;?>"><span style="max-width: 160px;min-width: 100px;display: block;white-space: pre-line;line-height: 14px;overflow-wrap: break-word;padding: 1px;font-size: 10px;" ><?php echo $checkingNote;?></span></td>
 									<td data-label="<?php echo $tr->translate("CHECKING_BY");?>"  class="centerText"><?php echo $checkingByName;?></td>
 				               		
-									<td data-label="<?php echo $tr->translate("VIEW_S");?>"  class="centerText"><?php echo $rs["pCheckingStatus"];?></td>
+									<td data-label="<?php echo $tr->translate("VIEW_S");?>"  class="centerText"><?php echo $pCheckingStatusTitle;?></td>
 									<td data-label="<?php echo $tr->translate("VIEWS_DATE");?>"  class="centerText"><?php echo $pCheckingDate;?></td>
 									<td data-label="<?php echo $tr->translate("FEEDBACK");?>"  class="<?php echo $pCheckingNoteClass;?>"><span style="max-width: 160px;min-width: 100px;display: block;white-space: pre-line;line-height: 14px;overflow-wrap: break-word;padding: 1px;font-size: 10px;" ><?php echo $pCheckingNote;?></span></td>
 									<td data-label="<?php echo $tr->translate("PCHECKING_BY");?>"  class="centerText"><?php echo $pCheckingByName;?></td>
 				               		
-									<td data-label="<?php echo $tr->translate("APROVED_S");?>"  class="centerText"><?php echo $rs["approveStatus"];?></td>
+									<td data-label="<?php echo $tr->translate("APROVED_S");?>"  class="centerText"><?php echo $approveStatusTitle;?></td>
 									<td data-label="<?php echo $tr->translate("APROVED_DATE");?>"  class="centerText"><?php echo $approveDate;?></td>
 									<td data-label="<?php echo $tr->translate("FEEDBACK");?>"  class="<?php echo $approveNoteClass;?>"><span style="max-width: 160px;min-width: 100px;display: block;white-space: pre-line;line-height: 14px;overflow-wrap: break-word;padding: 1px;font-size: 10px;" ><?php echo $approveNote;?></span></td>
 									<td data-label="<?php echo $tr->translate("APPROVED_BY");?>"  class="centerText"><?php echo $approveByName;?></td>

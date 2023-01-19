@@ -32,9 +32,9 @@ class Product_Model_DbTable_DbMeasure extends Zend_Db_Table_Abstract
     	$order = " ORDER BY id DESC ";
     	return $db->fetchAll($sql.$where.$order);
     }
-    
+    //
      function addMeasure($_data){
-    		$existing = $this->ifMeasureExisting($_data['title']);
+    		$existing = $this->ifMeasureExisting($_data);
     		
     		if(empty($existing)){
 		    	$_arr = array(
@@ -48,21 +48,40 @@ class Product_Model_DbTable_DbMeasure extends Zend_Db_Table_Abstract
     			Application_Form_FrmMessage::Sucessfull("DATA_EXISTING", "/product/measure/add",2);
     		}
     } 
+/*
      
     function ifMeasureExisting($title){
     	$db = $this->getAdapter();
     	$sql=" SELECT * FROM $this->_name WHERE name='".$title."' LIMIT 1";
     	return $db->fetchRow($sql);
     }
+	*/
     
      function updateMeasure($_data){
-    	$_arr = array(
-    		'name'=>$_data['title'],
-    		'status'=>$_data['status'],
-    		'user_id'=>$this->getUserId(),
-    	);
-    	$where = " id = ".$_data['id'];
-    	return $this->update($_arr, $where);
+		$existing = $this->ifMeasureExisting($_data);
+		if(empty($existing )){
+			$_arr = array(
+				'name'=>$_data['title'],
+				'status'=>$_data['status'],
+				'user_id'=>$this->getUserId(),
+			);
+			$where = " id = ".$_data['id'];
+			return $this->update($_arr, $where);
+
+		}else{
+			Application_Form_FrmMessage::Sucessfull("DATA_EXISTING", "/product/measure/index",2);
+		}
+    	
+    }
+
+	function ifMeasureExisting($_data){
+		
+    	$db = $this->getAdapter();
+    	$sql=" SELECT * FROM $this->_name WHERE name='".$_data['title']."'";
+		if(!empty($data['id'])){
+			$sql.=" AND id !=".$_data['id'];
+		}	
+    	return $db->fetchRow($sql);
     }
     
      function getMeasureById($id){
