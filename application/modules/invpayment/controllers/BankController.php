@@ -26,7 +26,7 @@ class Invpayment_BankController extends Zend_Controller_Action {
 			$rs_rows= $db->getAllBank($search);//
 			
 			$list = new Application_Form_Frmtable();
-    		$collumns = array("BANK_NAME","STATUS","CREATE_DATE","BY");
+    		$collumns = array("BANK_NAME","CREATE_DATE","BY","STATUS");
     		$link=array(
     				'module'=>'invpayment','controller'=>'bank','action'=>'edit',
     		);
@@ -72,7 +72,7 @@ class Invpayment_BankController extends Zend_Controller_Action {
 			$_data = $this->getRequest()->getPost();
 			try {		
 				
-				$db->addBank($_data);
+				$db->updateBank($_data);
 	    		Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS",self::REDIRECT_URL."/index");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
@@ -81,10 +81,6 @@ class Invpayment_BankController extends Zend_Controller_Action {
 		}
 		$id = $this->getRequest()->getParam('id');
 		$id = empty($id)?0:$id;
-		if(empty($id)){
-			Application_Form_FrmMessage::Sucessfull("NO_DATA",self::REDIRECT_URL."/index",2);
-			exit();
-		}
 		
 		$row = $db->getDataRow($id);
 		$this->view->row = $row;

@@ -91,6 +91,32 @@ class Requesting_Model_DbTable_DbPcheckingRequest extends Zend_Db_Table_Abstract
     		$this->_name='st_request_po';
 			$where=" id = ".$data['id'];
 			$this->update($arr, $where);
+			
+			if(!empty($data['identity'])){
+				$ids = explode(',', $data['identity']);
+				foreach ($ids as $i){
+					if (!empty($data['detailId'.$i])){
+						$arr = array(
+							'requestId'			=>$id,
+							'proId'				=>$data['proId'.$i],
+							
+							'qtyVerify'			=>$data['qtyVerify'.$i],
+							'qtyApproved'		=>$data['qtyVerify'.$i],
+							
+							'verifyStatus'		=>$data['verifyStatus'.$i],
+							
+							'verifyNote'				=>$data['verifyNote'.$i],
+						);
+						
+							
+							
+						$this->_name='st_request_po_detail';
+						$where =" id =".$data['detailId'.$i];
+						$this->update($arr, $where);
+					}
+				}
+			}
+			
 
     	}catch(Exception $e){
 	    	Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());

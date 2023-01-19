@@ -8,9 +8,17 @@ class Product_Model_DbTable_DbCategory extends Zend_Db_Table_Abstract
     	return $session_user->user_id;
     }
     function getAllCategory($search){
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$normal=$tr->translate('NOMAL');
+		$material=$tr->translate('MATERIAL');
     	$sql="SELECT c.id,
     		(SELECT p.categoryName FROM $this->_name As p WHERE p.id=c.parentId LIMIT 1) AS parentTitle,
 	    	c.categoryName,
+			CASE 
+				WHEN isMaterial=0 THEN   '$normal'
+				WHEN isMaterial=1 THEN  '$material'
+			END
+			AS categoryType,
 	    	c.createDate,
 	    	(SELECT first_name from rms_users as u where u.id = c.userId LIMIT 1) as user ,
     		(SELECT name_en from ln_view where type=3 and key_code = c.status LIMIT 1) AS status
@@ -50,6 +58,7 @@ class Product_Model_DbTable_DbCategory extends Zend_Db_Table_Abstract
 	    		$arr = array(
 	    				'parentId'=>$data['parent_id'],
 	    				'categoryName'=>$data['categoryTitle'],
+						'isMaterial'=>$data['isMaterial'],
 	    				'note'=>$data['note'],
 	    				'createDate'=>date("Y-m-d"),
 	    				'status'=>1,
@@ -69,6 +78,7 @@ class Product_Model_DbTable_DbCategory extends Zend_Db_Table_Abstract
     	{
     		$arr = array(
     			'parentId'=>$data['parent_id'],
+				'isMaterial'=>$data['isMaterial'],
     			'categoryName'=>$data['categoryTitle'],
     			'note'=>$data['note'],
     			'status'=>$data['status'],

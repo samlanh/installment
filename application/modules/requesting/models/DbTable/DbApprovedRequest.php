@@ -94,7 +94,7 @@ class Requesting_Model_DbTable_DbApprovedRequest extends Zend_Db_Table_Abstract
 							'qtyApproved'		=>$data['qtyApproved'.$i],
 							'qtyApprovedAfter'	=>$data['qtyApproved'.$i],
 							
-							'note'				=>$data['note'.$i],
+							//'note'				=>$data['note'.$i],
 							'approvedStatus'	=>$data['approvedStatus'.$i],
 						);
 
