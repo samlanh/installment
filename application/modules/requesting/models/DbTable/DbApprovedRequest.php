@@ -87,6 +87,12 @@ class Requesting_Model_DbTable_DbApprovedRequest extends Zend_Db_Table_Abstract
 				$ids = explode(',', $data['identity']);
 				foreach ($ids as $i){
 					if (!empty($data['detailId'.$i])){
+						
+						$approveStatus = $data['approvedStatus'.$i];
+						if($data['approveStatus']==2){ //REJECTED
+							$approveStatus = $data['approvedStatus'];
+						}
+						
 						$arr = array(
 							'requestId'			=>$id,
 							'proId'				=>$data['proId'.$i],
@@ -95,7 +101,7 @@ class Requesting_Model_DbTable_DbApprovedRequest extends Zend_Db_Table_Abstract
 							'qtyApprovedAfter'	=>$data['qtyApproved'.$i],
 							
 							//'note'				=>$data['note'.$i],
-							'approvedStatus'	=>$data['approvedStatus'.$i],
+							'approvedStatus'	=>$approveStatus,
 						);
 
 						$this->_name='st_request_po_detail';

@@ -96,16 +96,20 @@ class Requesting_Model_DbTable_DbPcheckingRequest extends Zend_Db_Table_Abstract
 				$ids = explode(',', $data['identity']);
 				foreach ($ids as $i){
 					if (!empty($data['detailId'.$i])){
+						
+						$verifyStatus = $data['verifyStatus'.$i];
+						if($data['pCheckingStatus']==2){ //REJECTED
+							$verifyStatus = $data['pCheckingStatus'];
+						}
+						
 						$arr = array(
 							'requestId'			=>$id,
 							'proId'				=>$data['proId'.$i],
 							
 							'qtyVerify'			=>$data['qtyVerify'.$i],
 							'qtyApproved'		=>$data['qtyVerify'.$i],
-							
-							'verifyStatus'		=>$data['verifyStatus'.$i],
-							
-							'verifyNote'				=>$data['verifyNote'.$i],
+							'verifyStatus'		=>$verifyStatus,
+							'verifyNote'		=>$data['verifyNote'.$i],
 						);
 						
 							

@@ -95,6 +95,11 @@ class Requesting_Model_DbTable_DbCheckingRequest extends Zend_Db_Table_Abstract
 				$ids = explode(',', $data['identity']);
 				foreach ($ids as $i){
 					if (!empty($data['detailId'.$i])){
+						
+						$adjustStatus = $data['adjustStatus'.$i];
+						if($data['checkingStatus']==2){ //REJECTED
+							$adjustStatus = $data['checkingStatus'];
+						}
 						$arr = array(
 							'requestId'			=>$id,
 							'proId'				=>$data['proId'.$i],
@@ -105,7 +110,7 @@ class Requesting_Model_DbTable_DbCheckingRequest extends Zend_Db_Table_Abstract
 							
 							'dateReqStockIn'	=>$data['dateReqStockIn'.$i],
 							'note'				=>$data['note'.$i],
-							'adjustStatus'		=>$data['adjustStatus'.$i],
+							'adjustStatus'		=>$adjustStatus,
 						);
 						
 							

@@ -244,16 +244,35 @@ class Report_Model_DbTable_DbStockMg extends Zend_Db_Table_Abstract
     	$where.= " AND r.status = 1 ";
 		if(!empty($search['requestStatusCheck'])){
 			if($search['requestStatusCheck']==1){
-				/*
-					$where.= " AND r.checkingStatus = 1 ";
-					$where.= " AND r.pCheckingStatus = 1 ";
-					$where.= " AND r.approveStatus = 1 ";
-					$where.= " AND rd.adjustStatus = 1 ";
-					$where.= " AND rd.verifyStatus = 1 ";
-					$where.= " AND rd.approvedStatus = 1 ";
-				*/
-			}else if($search['requestStatusCheck']==2){
+				$where.="
+				AND ( 
+					   (rd.adjustStatus=1 AND rd.verifyStatus=1 AND rd.approvedStatus=1) 
+					OR (rd.adjustStatus=1 AND rd.verifyStatus=1 AND rd.approvedStatus=0) 
+					OR (rd.adjustStatus=1 AND rd.verifyStatus=0 AND rd.approvedStatus=0) 
+					OR (rd.adjustStatus=1 AND rd.verifyStatus=0 AND rd.approvedStatus=1) 
+					OR (rd.adjustStatus=0 AND rd.verifyStatus=0 AND rd.approvedStatus=1)
+					OR (rd.adjustStatus=0 AND rd.verifyStatus=1 AND rd.approvedStatus=1)  
+				)
 				
+				";
+			}else if($search['requestStatusCheck']==2){
+				$where.="
+				AND ( 
+					   (rd.adjustStatus=2 AND rd.verifyStatus=2 AND rd.approvedStatus=2) 
+					OR (rd.adjustStatus=2 AND rd.verifyStatus=2 AND rd.approvedStatus=0) 
+					OR (rd.adjustStatus=2 AND rd.verifyStatus=0 AND rd.approvedStatus=0) 
+					OR (rd.adjustStatus=2 AND rd.verifyStatus=0 AND rd.approvedStatus=2) 
+					OR (rd.adjustStatus=0 AND rd.verifyStatus=0 AND rd.approvedStatus=2)
+					OR (rd.adjustStatus=0 AND rd.verifyStatus=2 AND rd.approvedStatus=2)  
+					OR (rd.adjustStatus=2 AND rd.verifyStatus=2 AND rd.approvedStatus=1) 
+					OR (rd.adjustStatus=2 AND rd.verifyStatus=1 AND rd.approvedStatus=1) 
+					OR (rd.adjustStatus=2 AND rd.verifyStatus=1 AND rd.approvedStatus=2) 
+					OR (rd.adjustStatus=1 AND rd.verifyStatus=1 AND rd.approvedStatus=2)
+					OR (rd.adjustStatus=1 AND rd.verifyStatus=2 AND rd.approvedStatus=2)  
+					OR (rd.adjustStatus=1 AND rd.verifyStatus=2 AND rd.approvedStatus=0)
+				)
+				
+				";
 			}
     		
     	}
