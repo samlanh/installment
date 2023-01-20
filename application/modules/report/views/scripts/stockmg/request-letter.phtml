@@ -117,7 +117,11 @@
 				span.gtotalVal.mainTotal {
 					font-size: 14px;
 				}
-				
+				.signatureImg{
+					height:50px;
+					position:relative;
+					margin-bottom: -15px;
+				}
 			</style>
 				
 			<table class="tableTop" width="100%" >
@@ -305,8 +309,53 @@
 								</td>
 							</tr>
 							<tr>
-								<td colspan="3" style="height:80px;" >
+								<td style="height:80px; text-align:center;" >
+									<?php 
+									if (!empty($this->row['userRequestSignature'])){
+										if (file_exists(PUBLIC_PATH."/images/photo/signature/".$this->row['userRequestSignature'])){
+											$images = $this->baseUrl().'/images/photo/signature/'.$this->row['userRequestSignature'];
+									?>
+									<img class="signatureImg" src="<?php echo $images;?>" />
+									<?php } 
+									}else{?>
 									&nbsp;
+									<?php } ?>
+								</td>
+								<td style="text-align:center;">
+									<?php 
+									if (!empty($this->row['checkingSignature'])){
+										if (file_exists(PUBLIC_PATH."/images/photo/signature/".$this->row['checkingSignature'])){
+											$images = $this->baseUrl().'/images/photo/signature/'.$this->row['checkingSignature'];
+									?>
+									<img class="signatureImg" src="<?php echo $images;?>"  />
+									<?php } 
+									}else{?>
+									&nbsp;
+									<?php } ?>
+								</td>
+								<td style="text-align:center;">
+									<?php 
+									if (!empty($this->row['pCheckingSignature'])){
+										if (file_exists(PUBLIC_PATH."/images/photo/signature/".$this->row['pCheckingSignature'])){
+											$images = $this->baseUrl().'/images/photo/signature/'.$this->row['pCheckingSignature'];
+									?>
+									<img class="signatureImg" src="<?php echo $images;?>"  />
+									<?php } 
+									}else{?>
+									&nbsp;
+									<?php } ?>
+								</td>
+								<td style="text-align:center;">
+									<?php 
+									if (!empty($this->row['approveSignature'])){
+										if (file_exists(PUBLIC_PATH."/images/photo/signature/".$this->row['approveSignature'])){
+											$images = $this->baseUrl().'/images/photo/signature/'.$this->row['approveSignature'];
+									?>
+									<img class="signatureImg" src="<?php echo $images;?>"  />
+									<?php } 
+									}else{?>
+									&nbsp;
+									<?php } ?>
 								</td>
 							</tr>
 							<tr>

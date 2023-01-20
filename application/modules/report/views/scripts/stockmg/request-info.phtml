@@ -128,6 +128,11 @@
 				a.colorInherit {
 					color: inherit;
 				}
+				.signatureImg{
+					height:50px;
+					position:relative;
+					margin-bottom: -15px;
+				}
 			</style>
 				
 			<table class="tableTop" width="100%" >
@@ -377,14 +382,60 @@
 								</td>
 							</tr>
 							<tr>
-								<td colspan="3" style="height:80px;" >
+								<td style="height:80px; text-align:center;" >
+									<?php 
+									if (!empty($this->row['userRequestSignature'])){
+										if (file_exists(PUBLIC_PATH."/images/photo/signature/".$this->row['userRequestSignature'])){
+											$images = $this->baseUrl().'/images/photo/signature/'.$this->row['userRequestSignature'];
+									?>
+									<img class="signatureImg" src="<?php echo $images;?>" />
+									<?php } 
+									}else{?>
 									&nbsp;
+									<?php } ?>
+								</td>
+								<td style="text-align:center;">
+									<?php 
+									if (!empty($this->row['checkingSignature'])){
+										if (file_exists(PUBLIC_PATH."/images/photo/signature/".$this->row['checkingSignature'])){
+											$images = $this->baseUrl().'/images/photo/signature/'.$this->row['checkingSignature'];
+									?>
+									<img class="signatureImg" src="<?php echo $images;?>"  />
+									<?php } 
+									}else{?>
+									&nbsp;
+									<?php } ?>
+								</td>
+								<td style="text-align:center;">
+									<?php 
+									if (!empty($this->row['pCheckingSignature'])){
+										if (file_exists(PUBLIC_PATH."/images/photo/signature/".$this->row['pCheckingSignature'])){
+											$images = $this->baseUrl().'/images/photo/signature/'.$this->row['pCheckingSignature'];
+									?>
+									<img class="signatureImg" src="<?php echo $images;?>"  />
+									<?php } 
+									}else{?>
+									&nbsp;
+									<?php } ?>
+								</td>
+								<td style="text-align:center;">
+									<?php 
+									if (!empty($this->row['approveSignature'])){
+										if (file_exists(PUBLIC_PATH."/images/photo/signature/".$this->row['approveSignature'])){
+											$images = $this->baseUrl().'/images/photo/signature/'.$this->row['approveSignature'];
+									?>
+									<img class="signatureImg" src="<?php echo $images;?>"  />
+									<?php } 
+									}else{?>
+									&nbsp;
+									<?php } ?>
 								</td>
 							</tr>
 							<tr>
 								<td style="text-align:center;">
+								
 									<span style="font-weight: 600; display: block; line-height: 16px;"><?php echo $this->row["user_name"];?></span>
-									<span style=" display: block; line-height: 16px;">ថ្ងៃទី<?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->row["date"])));?> ខែ<?php echo $month[date("m",strtotime($this->row["date"]))];?> ឆ្នាំ <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->row["date"])));?></span>
+										<span style=" display: block; line-height: 16px;">ថ្ងៃទី<?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->row["date"])));?> ខែ<?php echo $month[date("m",strtotime($this->row["date"]))];?> ឆ្នាំ <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->row["date"])));?></span>
 								</td>
 								<td style="text-align:center;">
 									<?php  if(!empty($this->row["checkingBy"])){?>

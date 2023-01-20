@@ -265,7 +265,10 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 				'systemAccess'=>$systemList,
 		    ); 
 
-			$part= PUBLIC_PATH.'/images/';
+			$part= PUBLIC_PATH.'/images/photo/signature/';
+			if (!file_exists($part)) {
+				mkdir($part, 0777, true);
+			}
     		$photo_name = $_FILES['photo']['name'];
     		if (!empty($photo_name)){
     			$tem =explode(".", $photo_name);
@@ -314,7 +317,10 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 				'branch_list'=>$branchList,
 				'systemAccess'=>$systemList,
 		    ); 
-			$part= PUBLIC_PATH.'/images/';
+			$part= PUBLIC_PATH.'/images/photo/signature/';
+			if (!file_exists($part)) {
+				mkdir($part, 0777, true);
+			}
     		$photo_name = $_FILES['photo']['name'];
     		if (!empty($photo_name)){
     			$tem =explode(".", $photo_name);

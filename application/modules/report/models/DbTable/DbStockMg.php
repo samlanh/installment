@@ -82,9 +82,13 @@ class Report_Model_DbTable_DbStockMg extends Zend_Db_Table_Abstract
 			SELECT rq.*,
 				(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = rq.projectId LIMIT 1) AS branch_name,
 				(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.checkingBy LIMIT 1 ) AS checkingByName,
+				(SELECT  u.signature_pic FROM rms_users AS u WHERE u.id=rq.checkingBy LIMIT 1 ) AS checkingSignature,
 				(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.pCheckingBy LIMIT 1 ) AS pCheckingByName,
+				(SELECT  u.signature_pic FROM rms_users AS u WHERE u.id=rq.pCheckingBy LIMIT 1 ) AS pCheckingSignature,
 				(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.approveBy LIMIT 1 ) AS approveByName,
-				(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.userId LIMIT 1 ) AS user_name
+				(SELECT  u.signature_pic FROM rms_users AS u WHERE u.id=rq.approveBy LIMIT 1 ) AS approveSignature,
+				(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.userId LIMIT 1 ) AS user_name,
+				(SELECT  u.signature_pic FROM rms_users AS u WHERE u.id=rq.userId LIMIT 1 ) AS userRequestSignature
 
 			FROM st_request_po AS rq WHERE 1 ";
 		$sql.=" AND rq.status = 1 ";
@@ -220,11 +224,11 @@ class Report_Model_DbTable_DbStockMg extends Zend_Db_Table_Abstract
 				,COALESCE(pod.unitPrice,0) AS unitPrice
 				,GROUP_CONCAT(rst.dnNumber) AS dnNumber
 				,COALESCE(SUM(rsd.qtyReceive),0) AS qtyReceive
+				,COALESCE(SUM(rsd.isClosed),0) AS isCompletedReceive
 				,p.proName
 				,p.proCode
 				,(SELECT COALESCE(pl.qty,0) FROM st_product_location AS pl WHERE pl.proId=rd.proId AND pl.projectId= r.projectId LIMIT 1) AS currentQty
 				
-				,rsd.isClosed AS isCompletedReceive
 				,rd.* 
 			FROM `st_request_po_detail` AS rd 
 				JOIN `st_request_po` AS r ON r.id = rd.requestId

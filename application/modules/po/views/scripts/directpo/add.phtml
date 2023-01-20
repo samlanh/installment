@@ -134,34 +134,76 @@
 						</div>
 						
 					</div>
-					
-					<table class="collape responsiveTable"  >
-				    	<thead>
-							<tr id="head-title" class="head-td" align="center">
-								<th scope="col"><?php echo $tr->translate("DEL");?></th>
-								<th scope="col"><?php echo $tr->translate("N_O");?></th>
-								<th scope="col" width="20%"><?php echo $tr->translate("PRODUCT_NAME");?></th>
-								<th scope="col" class="currentQty"><?php echo $tr->translate("STOCK_REMAIN");?></th>
-								<th scope="col" width="10%"><?php echo $tr->translate("QTY");?></th>
-								<th scope="col" width="5%"><?php echo $tr->translate("UNIT_PRICE");?></th>
-								<th scope="col" width="5%"><?php echo $tr->translate("DISCOUNT")." ".$tr->translate("CURRENCY_SIGN");?></th>
-								<th scope="col" width="10%"><?php echo $tr->translate("SUB_TOTAL");?></th>
-								<th scope="col" width="20%"><?php echo $tr->translate("DATE_ENTRY");?></th>
-								<th scope="col" width="20%"><?php echo $tr->translate("NOTE");?></th>
+
+					<div class="card-box">
+						<ul class="nav  md-pills pills-primary nav-tab" role="tablist">
+							<li class="nav-item active">
+								<a class="nav-link " data-toggle="tab" href="#panel21" role="tab">
+									<i class="fa fa-tasks ml-2"></i>
+								 <?php echo $tr->translate("PRODUCT");?></a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" data-toggle="tab" href="#panel22" role="tab">
+								<i class="fa fa fa-calendar ml-2"></i> <?php echo $tr->translate("SCEDULE");?>
+								</a>
+							</li>
+						</ul>
+					</div>
+					<div class="tab-content vertical">
+						<div class="tab-pane fade in active" id="panel21" role="tabpanel">
+									<table class="collape responsiveTable"  >
+									<thead>
+										<tr id="head-title" class="head-td" align="center">
+											<th scope="col"><?php echo $tr->translate("DEL");?></th>
+											<th scope="col"><?php echo $tr->translate("N_O");?></th>
+											<th scope="col" width="20%"><?php echo $tr->translate("PRODUCT_NAME");?></th>
+											<th scope="col" class="currentQty"><?php echo $tr->translate("STOCK_REMAIN");?></th>
+											<th scope="col" width="10%"><?php echo $tr->translate("QTY");?></th>
+											<th scope="col" width="5%"><?php echo $tr->translate("UNIT_PRICE");?></th>
+											<th scope="col" width="5%"><?php echo $tr->translate("DISCOUNT")." ".$tr->translate("CURRENCY_SIGN");?></th>
+											<th scope="col" width="10%"><?php echo $tr->translate("SUB_TOTAL");?></th>
+											<th scope="col" width="20%"><?php echo $tr->translate("DATE_ENTRY");?></th>
+											<th scope="col" width="20%"><?php echo $tr->translate("NOTE");?></th>
+											
+										</tr>
+									</thead>
+									<tbody id="table_row">
+									</tbody>
+								</table>
 								
-							</tr>
-						</thead>
-						<tbody id="table_row">
-						</tbody>
-					</table>
+								<input type="hidden" name="identity" id="identity" dojoType="dijit.form.TextBox" value="" >
+								<div class="form-group" style="margin-bottom: 0;">
+									<label class="control-label bold col-md-7 col-sm-7 col-xs-12" style="text-align:right;"><?php echo $tr->translate("TOTAL")." ".$tr->translate("CURRENCY_SIGN");?> </label>
+									<div class="col-md-5 col-sm-5 col-xs-12">
+										<?php echo $frm->getElement("total");?>
+									</div>
+								</div>
+
+						</div>
+
+						<div class="tab-pane fade in " id="panel22" role="tabpanel">
+								<table class="collape responsiveTable" >
+									<thead>
+										<tr id="head-title" class="head-td" align="center">
+											<th scope="col"><?php echo $tr->translate("DEL");?></th>
+											<th scope="col"><?php echo $tr->translate("N_O");?></th>
+											<th scope="col" width="20%"><?php echo $tr->translate("PRODUCT_NAME");?></th>
+											<th scope="col" width="20%"><?php echo $tr->translate("SCHEDULE_BUTTON");?></th>
+											<th scope="col" width="20%"><?php echo $tr->translate("DATE_ENTRY");?></th>
+											<th scope="col" width="20%"><?php echo $tr->translate("NOTE");?></th>
+											
+										</tr>
+									</thead>
+									<tbody id="table_schedule_row">
+									</tbody>
+								</table>
+								<input type="hidden" name="identity_schedule" id="identity_schedule" dojoType="dijit.form.TextBox" value="" >
+								
+						</div>
+					</div>
+
 					
-					<input type="hidden" name="identity" id="identity" dojoType="dijit.form.TextBox" value="" >
-					<div class="form-group" style="margin-bottom: 0;">
-		                <label class="control-label bold col-md-7 col-sm-7 col-xs-12" style="text-align:right;"><?php echo $tr->translate("TOTAL")." ".$tr->translate("CURRENCY_SIGN");?> </label>
-		                <div class="col-md-5 col-sm-5 col-xs-12">
-		                	<?php echo $frm->getElement("total");?>
-		                </div>
-		             </div>
+					
 				</div>
 				<div class="clearfix"></div>
 			</div>
@@ -312,7 +354,6 @@
 		}
 		col++;no++;
 		
-		
 		dojo.xhrPost({
 			url:urlGetProductInfo,	
 			content:{ 
@@ -343,12 +384,18 @@
 				});
 				dijit.byId('productId').reset();
 				netTotal();
+
+				addRowProductSchetdule(data.proName, data.id);
+				
 			},
 			error: function(err) {
 			}
 		});
 	}
+
 	
+
+
 	function calculateTotal(index){
 		unitPrice = dijit.byId('unitPrice'+index).get('value');
 		unitPrice=isNaN(unitPrice)?0:unitPrice;
@@ -400,6 +447,46 @@
 		netTotal();
 	}
 
+
+	var col1= 0; var no1=0;
+	var title1 = 0;
+	var urlGetProductScedule = '<?php echo $this->url(array('module'=>'requesting','controller'=>'request','action'=>'productinfo')); ?>';
+	function addRowProductSchetdule(pro_name, pro_id){
+		
+		template='';
+		temp = "";
+	
+		
+	
+		var iden = $("#identity_schedule").val();
+		var arrays = iden.split(',');
+		
+		
+		
+	
+		col1++;no1++;
+				template+='<td class="numberRecord" align="center"><span title="<?php echo $tr->translate("REMOVE_RECORD");?>" class="removeRow" onclick="deleteRecord('+col1+');"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></span></td>';
+				template+='<td align="center" class="numberRecord" data-label="<?php echo $tr->translate("N_O");?>">'+no1+'</td>';
+				template+='<td align="center" data-label="<?php echo $tr->translate("PRODUCT_NAME");?>" class="productName" >'+pro_name+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="pro_id'+col1+'" name="pro_id'+col1+'" value="'+pro_id+'" type="text"  ></td>';
+				template+='<td align="center"  data-label="<?php echo $tr->translate("SCHEDULE");?>"><input  type="button" id="add_schedule" name="add_schedule" value="add Schedule" onClick=" productSchedule('+pro_id+', '+col1+') "> </td>';	
+				template+='<td align="center"  data-label="<?php echo $tr->translate("SCHEDULE");?>"> <table> <tbody id="table_schedule'+col1+'"> </tbody> </table> <input type="text" name="identity_schedule_pro'+col1+'" id="identity_schedule_pro'+col1+'" dojoType="dijit.form.TextBox" value="" ></td>';	
+				template+='<td data-label="<?php echo $tr->translate("DATE_ENTRY");?>"><input required dojoType="dijit.form.DateTextBox" class="fullside" constraints="{datePattern:'+"'dd/MM/yyyy'"+'}" id="Schedule_Date'+col+'" name="Schedule_Date'+col1+'" placeholder="'+'<?php echo $tr->translate("DATE_ENTRY");?> " value="now" type="text"  ></td>';	
+				template+='<td data-label="<?php echo $tr->translate("NOTE");?>"><input dojoType="dijit.form.TextBox" class="fullside" id="note_sched'+col1+'" name="note_sched'+col1+'" placeholder="'+'<?php echo $tr->translate("NOTE");?> " value="" type="text"  ></td>';	
+				tmp='<tr class="rowData" id="row_schedule'+col1+'">';
+				tmp+="</tr>";
+				dojo.query("#table_schedule_row").append(tmp);
+				if($("#identity_schedule").val()!="") {
+					var identity = $("#identity_schedule").val();
+					$("#identity_schedule").val(identity+','+col1);
+				} else {$("#identity_schedule").val(col1);}
+				dojo.html.set(dojo.byId("row_schedule"+col1),template , {
+					 parseContent: true,
+				});
+			
+		
+	}
+
+
 	function addNewSupplier(){
 		categoryId = dijit.byId('supplierId').get('value');
 		if(categoryId==-1){
@@ -422,6 +509,32 @@
 			error: function(err){
 			}
 		});
+		
+	}
+
+	var col_sub= 0; 
+	function productSchedule(pro_id, col){
+		template='';
+		temp = "";
+	
+		var iden = $("#identity_schedule_pro"+col).val();
+		var arrays = iden.split(',')
+		col_sub++;
+				
+				template+='<td data-label="<?php echo $tr->translate("DATE_ENTRY");?>"><input required dojoType="dijit.form.DateTextBox" class="fullside" constraints="{datePattern:'+"'dd/MM/yyyy'"+'}" id="Schedule_Date'+col+'_'+col_sub+'" name="Schedule_Date'+col+'_'+col_sub+'" placeholder="'+'<?php echo $tr->translate("DATE_ENTRY");?> " value="now" type="text"  ></td>';	
+				template+='<td data-label="<?php echo $tr->translate("NOTE");?>" class="" ><input  type="text" name="note'+col+'_'+col_sub+'" id="note'+col+'_'+col_sub+'" dojoType="dijit.form.TextBox" class="fullside"   ></td>';	
+				tmp='<tr class="rowData" id="row_pro'+col_sub+'">';
+				tmp+="</tr>";
+
+				dojo.query("#table_schedule"+col).append(tmp);
+				if($("#identity_schedule_pro"+col).val()!="") {
+					var identity = $("#identity_schedule_pro"+col).val();
+					$("#identity_schedule_pro"+col).val(identity+','+col_sub);
+				} else {$("#identity_schedule_pro"+col).val(col_sub);}
+				dojo.html.set(dojo.byId("row_pro"+col_sub),template , {
+					 parseContent: true,
+				});
+			
 		
 	}
 	

@@ -141,6 +141,11 @@
 				span.poRow span.titlePo {
 					min-width: 35%;
 				}
+				.signatureImg{
+					height:50px;
+					position:relative;
+					margin-bottom: -15px;
+				}
 			</style>
 				
 			<table class="tableTop" width="100%" >
@@ -366,8 +371,20 @@
 								</td>
 							</tr>
 							<tr>
-								<td colspan="3" style="height:80px;" >
+								<td colspan="2" style="height:80px;" >
 									&nbsp;
+								</td>
+								<td style="height:80px; text-align:center;" >
+									<?php 
+									if (!empty($this->row['userSignature'])){
+										if (file_exists(PUBLIC_PATH."/images/photo/signature/".$this->row['userSignature'])){
+											$images = $this->baseUrl().'/images/photo/signature/'.$this->row['userSignature'];
+									?>
+									<img class="signatureImg" src="<?php echo $images;?>" />
+									<?php } 
+									}else{?>
+									&nbsp;
+									<?php } ?>
 								</td>
 							</tr>
 							<tr>

@@ -141,6 +141,7 @@ class Report_Model_DbTable_DbAccountant extends Zend_Db_Table_Abstract
 				(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.approveBy LIMIT 1 ) AS approveByName,
 				(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.userId LIMIT 1 ) AS requestName,
 				(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=po.userId LIMIT 1 ) AS byUser
+				,(SELECT  u.signature_pic FROM rms_users AS u WHERE u.id=po.userId LIMIT 1 ) AS userSignature
 			FROM $this->_name AS po JOIN `st_supplier` AS spp ON spp.id = po.supplierId 
 					LEFT JOIN st_request_po AS rq ON rq.id =po.requestId 
 			WHERE po.id=".$recordId;
@@ -365,7 +366,9 @@ class Report_Model_DbTable_DbAccountant extends Zend_Db_Table_Abstract
 				(SELECT vi.name_kh FROM `ln_view` AS vi WHERE vi.type=2 AND vi.key_code=pt.`paymentMethod` LIMIT 1) AS paymentMethodTitle,
 				(SELECT ba.bank_name FROM `st_bank` AS ba WHERE ba.id=pt.`bankId` LIMIT 1) AS bankName
 			";
-		$sql.=",(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=pt.userId LIMIT 1 ) AS byUser";
+		$sql.=",(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=pt.userId LIMIT 1 ) AS byUser
+			,(SELECT  u.signature_pic FROM rms_users AS u WHERE u.id=pt.userId LIMIT 1 ) AS userSignature
+		";
 		$sql.=" FROM `st_payment` AS pt
 					LEFT JOIN `st_supplier` AS spp ON spp.id = pt.supplierId 
 				WHERE pt.id = $paymentId
@@ -583,6 +586,7 @@ class Report_Model_DbTable_DbAccountant extends Zend_Db_Table_Abstract
 				(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.approveBy LIMIT 1 ) AS approveByName,
 				(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.userId LIMIT 1 ) AS requestName,
 				(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=inv.userId LIMIT 1 ) AS byUser
+				,(SELECT  u.signature_pic FROM rms_users AS u WHERE u.id=inv.userId LIMIT 1 ) AS userSignature
 			";
 			$sql.=" 
 				FROM $this->_name AS inv 

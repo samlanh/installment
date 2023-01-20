@@ -206,7 +206,9 @@ input.btn_borwse_image {
 									   <?php 
 										$images = $this->baseUrl().'/images/no-photo.png';
 										if (!empty($this->user_edit['signature_pic'])){
-											$images = $this->baseUrl().'/images/'.$this->user_edit['signature_pic'];
+											if (file_exists(PUBLIC_PATH."/images/photo/signature/".$this->user_edit['signature_pic'])){
+												$images = $this->baseUrl().'/images/photo/signature/'.$this->user_edit['signature_pic'];
+											}
 										}
 										?>
 										<div class="account-image" >
