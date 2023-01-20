@@ -242,6 +242,22 @@ class Report_Model_DbTable_DbStockMg extends Zend_Db_Table_Abstract
     	
     	$where.= " AND ".$from_date." AND ".$to_date;
     	$where.= " AND r.status = 1 ";
+		
+		if(!empty($search['adv_search'])){
+    		$s_where = array();
+    		$s_search = (trim($search['adv_search']));
+    		$s_where[] = " r.requestNo LIKE '%{$s_search}%'";
+    		$s_where[] = " r.purpose LIKE '%{$s_search}%'";
+    		$s_where[] = " po.purchaseNo LIKE '%{$s_search}%'";
+    		$s_where[] = " p.proName LIKE '%{$s_search}%'";
+    		$s_where[] = " p.proCode LIKE '%{$s_search}%'";
+    		$s_where[] = " rd.qtyRequest LIKE '%{$s_search}%'";
+    		$s_where[] = " rd.qtyAdjust LIKE '%{$s_search}%'";
+    		$s_where[] = " rd.qtyVerify LIKE '%{$s_search}%'";
+    		$s_where[] = " rd.qtyApproved LIKE '%{$s_search}%'";
+    		$where .=' AND ( '.implode(' OR ',$s_where).')';
+    	}
+		
 		if(!empty($search['requestStatusCheck'])){
 			if($search['requestStatusCheck']==1){
 				$where.="
@@ -275,6 +291,10 @@ class Report_Model_DbTable_DbStockMg extends Zend_Db_Table_Abstract
 				";
 			}
     		
+    	}
+		
+		if(($search['branch_id'])>0){
+    		$where.= " AND r.projectId = ".$search['branch_id'];
     	}
 		$order=' GROUP BY r.projectId,rd.requestId,pod.purchaseId,rd.proId  ORDER BY rd.proId ASC,po.id ASC,rst.id ASC ';
     	$where.=$dbGb->getAccessPermission("r.projectId");
