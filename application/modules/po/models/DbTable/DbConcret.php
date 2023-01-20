@@ -78,7 +78,7 @@ class Po_Model_DbTable_DbConcret extends Zend_Db_Table_Abstract
     				'date'				=>$data['date'],
     				'note'				=>$data['note'],
     				'workType'			=>$data['workType'],
-    				'processingStatus'	=>1,
+    				'processingStatus'	=>1,//completed po
     				'status'			=>1,
     				'createDate'		=>date("Y-m-d H:i:s"),
     				'modifyDate'		=>date("Y-m-d H:i:s"),
@@ -100,7 +100,7 @@ class Po_Model_DbTable_DbConcret extends Zend_Db_Table_Abstract
     						'unitPrice'			=> $data['unitPrice'.$i],
     						'discountAmount'	=> 0,
     						'subTotal'			=> $data['total'.$i],
-    						'isClosed'			=> 1,
+    						'isClosed'			=> 1,//finish buy this item
     						'note'				=> $data['note'.$i],
     				);
     				$this->_name='st_purchasing_detail';
@@ -117,7 +117,6 @@ class Po_Model_DbTable_DbConcret extends Zend_Db_Table_Abstract
     						'note'=>$data['note'],
     						'userId'=>$this->getUserId(),
     						'createDate'=>date('Y-m-d'),
-    						'isClosed'	=>1,
 //     						'verifiedBy'=>$this->getUserId(),
     						// 'staffCounter'=>$data['counter'],
     						// 'driverName'=>$data['driver'],
@@ -141,7 +140,7 @@ class Po_Model_DbTable_DbConcret extends Zend_Db_Table_Abstract
     				
     				$this->_name='st_receive_stock_detail';
     				$id = $this->insert($arr);
-    				$dbs->addProductHistoryQty($data['branch_id'],$data['proId'.$i],2,$data['qty'.$i],$id);//movement'
+    				$dbs->addProductHistoryQty($data['branch_id'],$data['proId'.$i],8,$data['qty'.$i],$id,1);//movement'
     				
 //     				$param = array(
 //     					'budgetExpenseId'=>$budgetExpenseId,
@@ -247,8 +246,12 @@ class Po_Model_DbTable_DbConcret extends Zend_Db_Table_Abstract
 	    				$where = " receiveId=".$dnId;
 	    				$this->update($arr, $where);
 	    				
-	    				$dbs->addProductHistoryQty($data['branch_id'],$data['proId'.$i],2,$data['qty'.$i],$id);//movement'
-	    		
+	    				$sql="SELECT id FROM st_receive_stock_detail WHERE receiveId =".$dnId;
+	    				$sql.=" LIMIT 1";
+	    				$dnDetailId = $db->fetchOne($sql);
+	    				if(!empty($dnDetailId)){
+	    					$dbs->addProductHistoryQty($data['branch_id'],$data['proId'.$i],8,$data['qty'.$i],$dnDetailId);//movement'
+	    				} 		
 	    			}
 	    		}
     		}

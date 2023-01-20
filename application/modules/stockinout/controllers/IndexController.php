@@ -23,6 +23,7 @@ class Stockinout_IndexController extends Zend_Controller_Action {
 					'end_date'=>date('Y-m-d'),
 				);
 			}
+			$search['transactionType']=1;
 			
 			$rs_rows= $db->getAllReceiveStock($search);
 			

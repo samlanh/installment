@@ -56,6 +56,10 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
     	if($search['supplierId']>0){
     		$where.= " AND r.supplierId = ".$search['supplierId'];
     	}
+    	if(isset($search['transactionType'])){
+    		$where.= " AND r.transactionType = ".$search['transactionType'];
+    	}
+    	
     	$dbg = new Application_Model_DbTable_DbGlobal();
     	$where.= $dbg->getAccessPermission('r.projectId');
     	
