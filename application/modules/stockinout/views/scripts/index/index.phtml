@@ -58,9 +58,10 @@
 <?php 
 	$edit_Text = $tr->translate("EDIT");
 	$verifyText = $tr->translate("VERIFY");
+	$view = $tr->translate("DELIVERY_NOTE");
 	$urlEdit = $this->baseUrl()."/stockinout/index/edit/id/";
 	$urlVerify = $this->baseUrl()."/stockinout/index/verify/id/";
-	
+	$urlView = $this->baseUrl()."/report/stockreport/rpt-receivestockdetail/id/";
 ?>
 <script>
 	dojo.require("dijit.form.DateTextBox");
@@ -72,15 +73,19 @@ $(function(){
 		selector: '.context-menu-one', 
 		callback: function(key, options) {
 			var m = "clicked: " + key;
-			if(key=="edit"){
+			if(key=="view"){
+				url='<?php echo $urlView;?>';
+			}
+			else if(key=="edit"){
 				url='<?php echo $urlEdit;?>';
 			}
-			if(key=="verify"){
+			else if(key=="verify"){
 				url='<?php echo $urlVerify;?>';
 			}
 			gotoAction();
 		},
 		items: {
+			"view": {name: "<?php echo $view;?>", icon: "fa-file-text", accesskey: "e"},
 			"edit": {name: "<?php echo $edit_Text;?>", icon: "edit", accesskey: "e"},
 			"verify": {name: "<?php echo $verifyText;?>", icon: "fa-check-square", accesskey: "e"},
 		}

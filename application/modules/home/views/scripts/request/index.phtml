@@ -231,22 +231,21 @@
 								</span>
 							</p>
 								<ul class="stepInfoList">
-									<li >
-										<?php echo $rs['isCompletedPO'];?>
-									</li>
+									<li><?php echo $rs['isCompletedPO'];?></li>
 									<li >
 										<?php if(!empty($rs['purchaseNoList'])){ 
 											$poExpl = explode(",",$rs['purchaseNoList']);
+											$poIdList = explode(",",$rs['purchaseIdList']);
 											$poExplDate = explode(",",$rs['purchaseDateList']);
 											foreach ($poExpl as $key=> $purchaseNo){
 										?>
-												<span class="smallValue">
-												<?php echo $purchaseNo." <span>".$poExplDate[$key]."</span>";?>
-												</span>
+												<a href="<?php echo $this->url(array('module'=>'report','controller'=>'stockmg','action'=>'purchase-letter'))."/id/".$poIdList[$key];?>"><span class="smallValue">
+													<?php echo $purchaseNo." <span>".$poExplDate[$key]."</span>";?>
+													</span>
+												</a>
 											<?php } ?>
 										<?php }else { echo "_________";}?>
 									</li>
-									
 								</ul>
 							<p class="text-muted info-list font-13">
 								<span class="title-info">
@@ -260,23 +259,22 @@
 									<li >
 										<?php if(!empty($rs['dnNumberList'])){ 
 											$dnNumberListExpl = explode(",",$rs['dnNumberList']);
+											$dnIdList = explode(",",$rs['dnIdList']);
 											$dnNumberExplDate = explode(",",$rs['receiveDateList']);
 											foreach ($dnNumberListExpl as $key=> $dnNumber){
 										?>
-												<span class="smallValue">
-												<?php echo $dnNumber." <span>".$dnNumberExplDate[$key]."</span>";?>
-												</span>
+												<a href="<?php echo $this->url(array('module'=>'report','controller'=>'stockreport','action'=>'rpt-receivestockdetail'))."/id/".$dnIdList[$key];?>">
+													<span class="smallValue">
+													<?php echo $dnNumber." <span>".$dnNumberExplDate[$key]."</span>";?>
+													</span>
+												</a>
 											<?php } ?>
 										<?php }else { echo "_________";}?>
 									</li>
-									
 								</ul>
 					   </div>
                        <div class="clearfix"></div>
-						 
-                       
                      </div>
-                   
                </div>
             </div>
             <?php }?>

@@ -436,7 +436,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		);
 		return $optCatType;
 	}
-	function addProductHistoryQty($projectId,$proId,$tranType,$Qty,$tranId=0){
+	function addProductHistoryQty($projectId,$proId,$tranType,$Qty,$tranId=0,$isUpdate=null){
 		$this->_name='st_product_story';
 		$arr = array(
 				'projectId'=>$projectId,
@@ -447,7 +447,12 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 				'userId'=>$this->getUserId(),
 				'transDate'=>date("Y-m-d"),
 		);
-		$this->insert($arr);
+		if($isUpdate!=null AND $tranId!=0){
+			$where="transId = ".$tranId." AND tranType=".$tranType;
+			$this->update($arr, $where);
+		}else{
+			$this->insert($arr);
+		}
 	}
 	function DeleteProductHistoryQty($tranId){
 		$this->_name='st_product_story';
