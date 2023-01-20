@@ -34,7 +34,8 @@
 		//$arrNotify = array('forWarehouse'=>1);
 		$arrNotify = array();
 		$notifyForWarehouse = $db->getNotifyRequest($arrNotify);
-		
+		$param = array('verified'=>0,'transactionType'=>'2');
+		$countVerifyDNConcrete = $db->getCountDNConcrete($param);
 		/*
 		$arrNotify = array('forPurchaseDept'=>1);
 		$notifyForPurchaseDept = $db->getNotifyRequest($arrNotify);
@@ -249,7 +250,14 @@
 						<span id="countRequest" class="badge bg-green"><?php if (count($notifyForWarehouse)>0){ echo count($notifyForWarehouse);}?></span>
 					</a>
 					<ul id="menu1" class="notify-main dropdown-menu list-unstyled requestNotify " role="menu">
-						
+				    </ul>
+				</li>
+				<li role="presentation" class="dropdown ">
+					<a  href="javascript:;"  class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="true">
+						<i class="fa fa-file-text"></i>
+						<span id="countDNnotification" class="badge bg-green"><?php if (count($countVerifyDNConcrete)>0){ echo count($countVerifyDNConcrete);}?></span>
+					</a>
+					<ul id="menu1" class="notify-main dropdown-menu list-unstyled requestNotifyDN " role="menu">
 				    </ul>
 				</li>
 				

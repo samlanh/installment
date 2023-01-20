@@ -375,4 +375,13 @@ class IndexController extends Zend_Controller_Action
     		exit();
     	}
 	}
+	function notifdnconcreteAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$dbGn = new Application_Model_DbTable_DbStockSystemNotify();
+			$row = $dbGn->getNotifyDNConcreteHtml($data);
+			print_r(Zend_Json::encode($row));
+			exit();
+		}
+	}
 }
