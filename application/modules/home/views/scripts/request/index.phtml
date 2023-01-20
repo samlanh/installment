@@ -143,18 +143,19 @@
 							<p class="text-muted info-list font-13">
 								<span class="title-info">
 									<?php
-									 if($rs['checkingStatus']=="យល់ព្រម" OR $rs['checkingStatus']=="APPROVED"){ ?>
+									$classCheckingStatus="";
+									 if($rs['checkingStatus']==1){ ?>
 										<i class="fa fa-check-circle text-success " aria-hidden="true"></i>
 										
-									<?php }elseif($rs['checkingStatus']=="បដិសេធ" OR $rs['checkingStatus']=="REJECTED"){?>
+									<?php }elseif($rs['checkingStatus']==2){ $classCheckingStatus="red";?>
 										<i class="fa fa-times-circle text-danger " aria-hidden="true"></i>
 										<?php } ?>
 									<?php echo $tr->translate('CHECKING_INFO');?>
 								</span>
 							</p>
 								<ul class="stepInfoList">
-									<li>
-										<?php echo !empty($rs['checkingStatus'])?$rs['checkingStatus']:"_________";?>
+									<li class="<?php echo $classCheckingStatus;?>" >
+										<?php echo !empty($rs['checkingStatus'])?$rs['checkingStatusTitle']:"_________";?>
 									</li>
 									<li>
 										<?php echo !empty($rs['checkingByName'])?date($montFomat,strtotime($rs["checkingDate"])):"_________";?>
@@ -169,10 +170,11 @@
 							 <p class="text-muted info-list font-13">
 								<span class="title-info">
 									<?php
-									 if($rs['pCheckingStatus']=="យល់ព្រម" OR $rs['pCheckingStatus']=="APPROVED"){ ?>
+									$classPCheckingStatus="";
+									 if($rs['pCheckingStatus']==1){ ?>
 										<i class="fa fa-check-circle text-success " aria-hidden="true"></i>
 										
-									<?php }elseif($rs['pCheckingStatus']=="បដិសេធ" OR $rs['pCheckingStatus']=="REJECTED"){?>
+									<?php }elseif($rs['pCheckingStatus']==2){ $classPCheckingStatus="red";?>
 										<i class="fa fa-times-circle text-danger " aria-hidden="true"></i>
 									<?php } ?>
 									
@@ -180,8 +182,8 @@
 								</span>
 							 </p>
 								<ul class="stepInfoList">
-									<li>
-										<?php echo !empty($rs['pCheckingStatus'])?$rs['pCheckingStatus']:"_________";?>
+									<li class="<?php echo $classPCheckingStatus;?>">
+										<?php echo !empty($rs['pCheckingStatus'])?$rs['pCheckingStatusTitle']:"_________";?>
 									</li>
 									<li>
 										<?php echo !empty($rs['pCheckingDate'])?date($montFomat,strtotime($rs["pCheckingDate"])):"_________";?>
@@ -197,18 +199,18 @@
 					   </div>
 					   <div class="col-md-6 col-sm-6 col-xs-12">
 							<p class="text-muted info-list font-13">
-								<?php
-									 if($rs['approveStatus']=="យល់ព្រម" OR $rs['approveStatus']=="APPROVED"){ ?>
+								<?php 
+									$classApproveStatus="";
+									 if($rs['approveStatus']==1){ ?>
 										<i class="fa fa-check-circle text-success " aria-hidden="true"></i>
-										
-									<?php }elseif($rs['approveStatus']=="បដិសេធ" OR $rs['approveStatus']=="REJECTED"){?>
+									<?php }elseif($rs['approveStatus']==2){ $classApproveStatus="red";?>
 										<i class="fa fa-times-circle text-danger " aria-hidden="true"></i>
 									<?php } ?>
 								<span class="title-info"><?php echo $tr->translate('APPROVED_INFO');?></span>
 							 </p>
 								<ul class="stepInfoList">
-									<li>
-										<?php echo !empty($rs['approveStatus'])?$rs['approveStatus']:"_________";?>
+									<li class="<?php echo $classApproveStatus;?>">
+										<?php echo !empty($rs['approveStatus'])?$rs['approveStatusTitle']:"_________";?>
 									</li>
 									<li>
 										<?php echo !empty($rs['approveDate'])?date($montFomat,strtotime($rs["approveDate"])):"_________";?>

@@ -16,21 +16,21 @@ public function getAllRequestPO($search){
 					WHEN  rq.checkingStatus= 0 THEN '".$tr->translate("PENDING")."'
 					WHEN  rq.checkingStatus = 1 THEN '".$tr->translate("APPROVED")."'
 					WHEN  rq.checkingStatus = 2 THEN '".$tr->translate("REJECTED")."'
-				END AS checkingStatus,
+				END AS checkingStatusTitle,
 				(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.checkingBy LIMIT 1 ) AS checkingByName,
 				
 				CASE
 					WHEN  rq.pCheckingStatus= 0 THEN '".$tr->translate("PENDING")."'
 					WHEN  rq.pCheckingStatus = 1 THEN '".$tr->translate("APPROVED")."'
 					WHEN  rq.pCheckingStatus = 2 THEN '".$tr->translate("REJECTED")."'
-				END AS pCheckingStatus,
+				END AS pCheckingStatusTitle,
 				(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.pCheckingBy LIMIT 1 ) AS pCheckingByName,
 				
 				CASE
 					WHEN  rq.approveStatus= 0 THEN '".$tr->translate("PENDING")."'
 					WHEN  rq.approveStatus = 1 THEN '".$tr->translate("APPROVED")."'
 					WHEN  rq.approveStatus = 2 THEN '".$tr->translate("REJECTED")."'
-				END AS approveStatus,
+				END AS approveStatusTitle,
 				(SELECT  CONCAT(COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.approveBy LIMIT 1 ) AS approveByName,
 				
 				

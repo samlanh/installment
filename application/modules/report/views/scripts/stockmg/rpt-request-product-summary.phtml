@@ -13,6 +13,10 @@
 	
 	$branch_title = $tr->translate("BRAND_TITLE");
 	$titleReport = $tr->translate('RPT_REQUEST_PRODUCT_SUMMARY');
+	
+	$requestLetter = $this->baseUrl()."/report/stockmg/request-letter/id/";
+	$requestInfor = $this->baseUrl()."/report/stockmg/request-info/id/";
+	
 ?>
 <title><?php echo $titleReport;?></title>
 <script>
@@ -362,7 +366,7 @@
 									
 									
 								?>
-				                <tr class="style <?php echo $classRow;?> " style="white-space:nowrap; ">
+				                <tr oncontextmenu="setrowdata(<?php echo $rs['requestId'];?>);return false;" class="context-menu-one style <?php echo $classRow;?> " style="white-space:nowrap; ">
 				               		<td data-label="<?php echo $tr->translate("NUM");?>"  style="text-align: center;"><?php echo $i++; ?></td>
 				               		
 									<td data-label="<?php echo $tr->translate("BRANCH_NAME");?>"><?php echo $rs["branch_name"];?></td>
@@ -469,5 +473,35 @@ function getBranchInfo(){
 		error: function(e) {
 		}
 	});
+}
+
+
+
+var row=0;
+var url="";
+$(function(){
+	$.contextMenu({
+		selector: '.context-menu-one', 
+		callback: function(key, options) {
+			var m = "clicked: " + key;
+			if(key=="requestLetter"){
+				url='<?php echo $requestLetter;?>';
+			}else if(key=="requestInfor"){
+				url='<?php echo $requestInfor;?>';
+			}
+			gotoAction();
+		},
+		items: {
+			"requestLetter": {name: "<?php echo $tr->translate("REQUEST_LETTER");?>", icon: "fa-file-text", accesskey: "c"},
+			"requestInfor": {name: "<?php echo $tr->translate("REQUEST_INFO_DETAIL");?>", icon: "fa-file-text"},
+		}
+	});
+});
+function setrowdata(index){
+	row = index;
+}
+var recordid ='';
+function gotoAction(){
+	 window.open(url+row, '_blank');
 }
 </script>
