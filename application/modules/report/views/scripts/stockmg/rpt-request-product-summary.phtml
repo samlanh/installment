@@ -47,16 +47,7 @@
 				</div>
 				<div class="form-group">
 					<label class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frm->getElement("checkingStatus");?>
-					</label>
-					<label class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frm->getElement("pCheckingStatus");?>
-					</label>
-					<label class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frm->getElement("approveStatus");?>
-					</label>
-					<label class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frm->getElement("processingStatus");?>
+						<?php echo $frm->getElement("requestStatusCheck");?>
 					</label>
 					<label class="col-md-2 col-sm-2 col-xs-12">
 						<button class="button-class button-primary" iconClass="glyphicon glyphicon-search"dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
@@ -125,8 +116,9 @@
 					table.tb-footer tr{
 					 line-height: 14px; font-size:11px; padding:2px 0px; height: 25px;
 					}
+					table.content-data  tr td.styleTitle,
 					table tr td{
-						padding:0 2px;
+						padding:0 5px;
 					}
 					tr.voidclass {
 						background: #fff7f7;
@@ -144,7 +136,12 @@
 					.boldText {
 						font-weight: 600;
 					}
-					
+					.greenClass {
+						color: #017236;
+					}
+					tr.style.rejected {
+						background: #ffe5e5;
+					}
 				</style>
 				<table width="100%">
 					<tr>
@@ -163,25 +160,28 @@
 					                </tr>
 					                <tr class="style" align="center" >
 					                    <td scope="col"  rowspan="2" class="center"><?php echo $tr->translate("NUM");?></td>
+										<td scope="col"  colspan="3" class="center"><?php echo $tr->translate("REQUEST_INFO");?></td>
 					                    <td scope="col"  colspan="8" class="center"><?php echo $tr->translate("PRODUCT_INFO");?></td>    
-					                    <td scope="col"  colspan="2" class="center"><?php echo $tr->translate("REQUEST_INFO");?></td>    
+					                       
 					                    <td scope="col"  colspan="2" class="center"><?php echo $tr->translate("PURCHASING_AND_DN_INFO");?></td>    
 					                   
 								   </tr>
 					                <tr class="style" align="center">
 					                   
-										
 										<td scope="col"  style="padding:1px;"><?php echo $tr->translate("BRANCH_NAME");?></td>
+										<td scope="col"  style="padding:1px;"><?php echo $tr->translate("REQUEST_NO");?></td>
+					                    <td scope="col"  style="padding:1px;"><?php echo $tr->translate("DATE");?></td>
+										
 										<td scope="col"  style="padding:1px;"><?php echo $tr->translate("QTY_REQUEST");?></td>
 					                    <td scope="col"  style="padding:1px;"><?php echo $tr->translate("QTY_APPROVED");?></td>
 					                    <td scope="col"  style="padding:1px;"><?php echo $tr->translate("QTY_PO");?></td>
 					                    <td scope="col"  style="padding:1px;"><?php echo $tr->translate("QTY_RECEIVE");?></td>
 					                    <td scope="col"  style="padding:1px;"><?php echo $tr->translate("QTY_REMAIN");?></td>
 										<td scope="col"  style="padding:1px;"><?php echo $tr->translate("UNIT_PRICE");?></td>
-										<td scope="col"  style="padding:1px;"><?php echo $tr->translate("TOTAL");?></td>
+										<td scope="col"  style="padding:1px;"><?php echo $tr->translate("TOTAL")." ".$tr->translate("CURRENCY_SIGN");?></td>
+										<td scope="col"  style="padding:1px;"><?php echo $tr->translate("IN_STOCK");?></td>
 										
-										 <td scope="col"  style="padding:1px;"><?php echo $tr->translate("REQUEST_NO");?></td>
-					                    <td scope="col"  style="padding:1px;"><?php echo $tr->translate("DATE");?></td>
+										
 					                   
 					                   
 										
@@ -195,36 +195,53 @@
 				                <?php 
 								$projectId="";
 								
-								$i=0;
+								$i=1;
 								$productId="";
 								$productNo=0;
 								
+								$itemsTotalRequest=0;
+								$itemsTotalApproved=0;
 								$itemsTotalPrice=0;
 								$itemsTotalQtyPO=0;
 								$itemsTotalQtyRececive=0;
+								$itemsTotalQtRemain=0;
 								
 								$rowRequestId=0;
+								
+								
+								$GTotalRequest=0;
+								$GTotalApproved=0;
+								$GTotalPrice=0;
+								$GTotalQtyPO=0;
+								$GTotalQtyRececive=0;
+								$GTotalQtyRemain=0;
 				                if(!empty($this->row)) foreach ($this->row as $index => $rs){
-									$classRow="";
+									
 								?>
 								<?php if($productId!=$rs["proId"]){ $productNo++;?>
 								
 									<?php if($index>0){?>
 										<tr class="style " style="white-space:nowrap; ">
 											<td colspan="4"></td>
+											<td class="styleTitle centerRight boldText"><?php echo number_format($itemsTotalRequest,2);?></td>
+											<td class="styleTitle centerRight boldText"><?php echo number_format($itemsTotalApproved,2);?></td>
 											<td class="styleTitle centerRight boldText"><?php echo number_format($itemsTotalQtyPO,2);?></td>
 											<td class="styleTitle centerRight boldText"><?php echo number_format($itemsTotalQtyRececive,2);?></td>
-											<td class="styleTitle centerRight boldText" colspan="3"><?php echo number_format($itemsTotalPrice,2);?></td>
+											<td class="styleTitle centerRight boldText"><?php echo number_format($itemsTotalQtRemain,2);?></td>
+											<td class="styleTitle centerRight boldText" colspan="2"><?php echo number_format($itemsTotalPrice,2);?></td>
 										</tr>
 									<?php 
+										$$itemsTotalRequest =0; 
+										$itemsTotalApproved =0; 
 										$itemsTotalPrice =0; 
 										$itemsTotalQtyPO=0;
 										$itemsTotalQtyRececive=0;
+										$itemsTotalQtRemain=0;
 									}?>
 									
 									  <tr class="style " style="white-space:nowrap; ">
-										<td colspan="15" class="">
-											<strong><?php echo $productNo." ".$rs["proName"];?></strong>
+										<td colspan="15" class="styleTitle">
+											<strong><?php echo $productNo.".) ".$rs["proCode"]." - ".$rs["proName"];?></strong>
 										</td>
 									  </tr>
 								<?php }?>
@@ -233,31 +250,135 @@
 									$rowTotalPrice = $rs["qtyReceive"]*$rs["unitPrice"];
 									$itemsTotalPrice = $itemsTotalPrice+$rowTotalPrice;
 									
+									
+									
+									
 									$itemsTotalQtyPO = $itemsTotalQtyPO+$rs["qtyPO"];
 									$itemsTotalQtyRececive = $itemsTotalQtyRececive+$rs["qtyReceive"];
 									
-									$qtyApproved = $rs["qtyApproved"];
+									$qtyRemain = $rs["qtyApproved"]-$rs["qtyReceive"];
+									if($rs["qtyPO"]>0){
+										$qtyRemain = $rs["qtyPO"]-$rs["qtyReceive"];
+									}
+									
+									$qtyRemainForCal = $qtyRemain;
+									$completed="";
+									if( ($rs["isCompletedReceive"]==1) OR ($qtyRemain==0) ){
+										$completed = "greenClass";
+										$qtyRemain="បានទទួលគ្រប់";
+										$qtyRemainForCal=0;
+									}
+									
+									
+									
+									$classRow="";
+									
+									$qtyRequest = $rs["qtyRequest"];
+									$qtyRequestForCal = $qtyRequest;
+									
+									$qtyApproved=$rs["qtyAdjust"];
+									$qtyApprovedForCal=$qtyApproved;
+									
+									$qtyPO=$rs["qtyPO"];
+									$qtyReceive=$rs["qtyReceive"];
+									$unitPrice=$rs["unitPrice"];
+									$rowTotalPrice = number_format($rowTotalPrice,2);
+									
+									if($rs["checkingStatus"]==2){
+										$classRow="rejected";
+										$qtyApproved="SD: Recjected (Full)";
+										$qtyPO="-";
+										$qtyReceive="-";
+										$unitPrice="-";
+										$rowTotalPrice="-";
+										$qtyRemain="-";
+									}else if($rs["pCheckingStatus"]==2){
+										$classRow="rejected";
+										$qtyApproved="PO: Recjected (Full)";
+										$qtyPO="-";
+										$qtyReceive="-";
+										$unitPrice="-";
+										$rowTotalPrice="-";
+										$qtyRemain="-";
+									}else if($rs["approveStatus"]==2){
+										$classRow="rejected";
+										$qtyApproved="Boss: Recjected (Full)";
+										$qtyPO="-";
+										$qtyReceive="-";
+										$unitPrice="-";
+										$rowTotalPrice="-";
+										$qtyRemain="-";
+									}else if($rs["adjustStatus"]==2){
+										$classRow="rejected";
+										$qtyApproved="SD: Recjected";
+										$qtyPO="-";
+										$qtyReceive="-";
+										$unitPrice="-";
+										$rowTotalPrice="-";
+										$qtyRemain="-";
+									}else if($rs["verifyStatus"]==2){
+										$classRow="rejected";
+										$qtyApproved="PO: Recjected";
+										$qtyPO="-";
+										$qtyReceive="-";
+										$unitPrice="-";
+										$rowTotalPrice="-";
+										$qtyRemain="-";
+									}else if($rs["approvedStatus"]==2){
+										$classRow="rejected";
+										$qtyApproved="Boss: Recjected";
+										$qtyPO="-";
+										$qtyReceive="-";
+										$unitPrice="-";
+										$rowTotalPrice="-";
+										$qtyRemain="-";
+									}else if($rs["approvedStatus"]==1){
+										$qtyApproved=$rs["qtyApproved"];
+										$qtyApprovedForCal=$rs["qtyApproved"];
+									}
+									
 									if( ($productId == $rs["proId"]) AND ($rowRequestId == $rs["requestId"]) ){
 										$qtyApproved="-";
+										$qtyRequest="-";
+										
+										$qtyApprovedForCal=0;
+										$qtyRequestForCal=0;
 									}
+									$currentQty = $rs["currentQty"];
+									
+									$itemsTotalRequest = $itemsTotalRequest+$qtyRequestForCal;
+									$itemsTotalApproved = $itemsTotalApproved+$qtyApprovedForCal;
+									$itemsTotalQtRemain = $itemsTotalQtRemain+$qtyRemainForCal;
+									
+									$GTotalRequest = $GTotalRequest+$qtyRequestForCal;
+									$GTotalApproved = $GTotalApproved+$qtyApprovedForCal;
+									$GTotalPrice = $GTotalPrice+$rowTotalPrice;
+									$GTotalQtyPO = $GTotalQtyPO+$rs["qtyPO"];
+									$GTotalQtyRececive = $GTotalQtyRececive+$rs["qtyReceive"];
+									$GTotalQtyRemain = $GTotalQtyRemain+$qtyRemainForCal;
 									
 									$rowRequestId =$rs["requestId"];
 									$productId=$rs["proId"];
+									
+									
 								?>
 				                <tr class="style <?php echo $classRow;?> " style="white-space:nowrap; ">
 				               		<td data-label="<?php echo $tr->translate("NUM");?>"  style="text-align: center;"><?php echo $i++; ?></td>
-				               		<td data-label="<?php echo $tr->translate("BRANCH_NAME");?>"><?php echo $rs["branch_name"];?></td>
-									
-									<td data-label="<?php echo $tr->translate("QTY_REQUEST");?>"  class="centerText"><?php echo $rs["qtyRequest"];?></td>
-									<td data-label="<?php echo $tr->translate("QTY_APPROVED");?>"  class="centerText boldText"><?php echo $qtyApproved;?></td>
-									<td data-label="<?php echo $tr->translate("QTY_PO");?>"  class="centerText boldText"><?php echo $rs["qtyPO"];?></td>
-									<td data-label="<?php echo $tr->translate("QTY_RECEIVE");?>"  class="centerText boldText"><?php echo $rs["qtyReceive"];?></td>
-									<td data-label="<?php echo $tr->translate("QTY_REMAIN");?>"  class="centerText"><?php echo 0;?></td>
-									<td data-label="<?php echo $tr->translate("UNIT_PRICE");?>"  class="centerText"><?php echo $rs["unitPrice"];?></td>
-									<td data-label="<?php echo $tr->translate("TOTAL");?>"  class="centerText"><?php echo number_format($rowTotalPrice,2);?></td>
-									
-				               		<td data-label="<?php echo $tr->translate("REQUEST_NO");?>"  class="redBold"><?php echo $rs["requestNo"];?></td>                 		
+				               		
+									<td data-label="<?php echo $tr->translate("BRANCH_NAME");?>"><?php echo $rs["branch_name"];?></td>
+									<td data-label="<?php echo $tr->translate("REQUEST_NO");?>"  class="redBold"><?php echo $rs["requestNo"];?></td>                 		
 				               		<td data-label="<?php echo $tr->translate("DATE");?>" ><?php echo date($montFomat,strtotime($rs["requestDate"]));?></td>
+				               	
+								
+									<td data-label="<?php echo $tr->translate("QTY_REQUEST");?>"  class="centerText"><?php echo $qtyRequest;?></td>
+									<td data-label="<?php echo $tr->translate("QTY_APPROVED");?>"  class="centerText boldText"><?php echo $qtyApproved;?></td>
+									<td data-label="<?php echo $tr->translate("QTY_PO");?>"  class="centerText boldText"><?php echo $qtyPO;?></td>
+									<td data-label="<?php echo $tr->translate("QTY_RECEIVE");?>"  class="centerText boldText"><?php echo $qtyReceive;?></td>
+									<td data-label="<?php echo $tr->translate("QTY_REMAIN");?>"  class="centerText boldText <?php echo $completed; ?>"><?php echo $qtyRemain;?></td>
+									<td data-label="<?php echo $tr->translate("UNIT_PRICE");?>"  class="centerText"><?php echo $unitPrice;?></td>
+									<td data-label="<?php echo $tr->translate("TOTAL")." ".$tr->translate("CURRENCY_SIGN");?>"  class="centerText"><?php echo $rowTotalPrice;?></td>
+									<td data-label="<?php echo $tr->translate("IN_STOCK");?>"  class="centerText boldText greenClass"><?php echo $currentQty;?></td>
+									
 				               	
 									
 									
@@ -269,13 +390,37 @@
 								
 				                <?php }?>
 				               <tr class="style " style="white-space:nowrap; ">
-									<td colspan="4"></td>
+									<td colspan="4" style="border-bottom: none;border-left: solid 1px #fff;" ></td>
+									<td class="styleTitle centerRight boldText"><?php echo number_format($itemsTotalRequest,2);?></td>
+									<td class="styleTitle centerRight boldText"><?php echo number_format($itemsTotalApproved,2);?></td>
 									<td class="styleTitle centerRight boldText"><?php echo number_format($itemsTotalQtyPO,2);?></td>
 									<td class="styleTitle centerRight boldText"><?php echo number_format($itemsTotalQtyRececive,2);?></td>
-									<td class="styleTitle centerRight boldText" colspan="3"><?php echo number_format($itemsTotalPrice,2);?></td>
+									<td class="styleTitle centerRight boldText"><?php echo number_format($itemsTotalQtRemain,2);?></td>
+									<td class="styleTitle centerRight boldText" colspan="2"><?php echo number_format($itemsTotalPrice,2);?></td>
+									<td colspan="3" style="border-bottom: none;border-right: solid 1px #fff;" ></td>
+								</tr>
+								<tr class="style " style="white-space:nowrap; ">
+									<td colspan="4" style=" border-top: none; border-bottom: none;border-left: solid 1px #fff;"></td>
+									<td class="styleTitle centerRight boldText"><?php echo $tr->translate("QTY_TOTAL_REQUEST");?></td>
+									<td class="styleTitle centerRight boldText"><?php echo $tr->translate("QTY_TOTAL_APPROVED");?></td>
+									<td class="styleTitle centerRight boldText"><?php echo $tr->translate("QTY_TOTAL_PO");?></td>
+									<td class="styleTitle centerRight boldText"><?php echo $tr->translate("QTY_TOTAL_RECEIVED");?></td>
+									<td class="styleTitle centerRight boldText"><?php echo $tr->translate("QTY_TOTAL_REMAIN");?></td>
+									<td colspan="2" class="styleTitle centerRight boldText"><?php echo $tr->translate("TOTAL")." ".$tr->translate("CURRENCY_SIGN");?></td>
+									<td colspan="3" style=" border-top: none; border-bottom: none;border-right: solid 1px #fff;"></td>
+								</tr>
+								<tr class="style " style="white-space:nowrap; ">
+									<td colspan="4" style="border-top: none; border-bottom: solid 1px #fff; border-left: solid 1px #fff;" ></td>
+									<td class="centerRight boldText"><?php echo $GTotalRequest;?></td>
+									<td class="centerRight boldText"><?php echo $GTotalApproved;?></td>
+									<td class="centerRight boldText"><?php echo $GTotalQtyPO;?></td>
+									<td class="centerRight boldText"><?php echo $GTotalQtyRececive;?></td>
+									<td class="centerRight boldText"><?php echo $GTotalQtyRemain;?></td>
+									<td colspan="2" class="centerRight boldText"><?php echo number_format($GTotalPrice,2);?></td>
+									<td colspan="3" style="border-top: none; border-bottom: solid 1px #fff; border-right: solid 1px #fff;"></td>
 								</tr>
 				            </table>
-				          
+							<br />
 				              <?php echo $this->footerReport;?>
 				    	</td>
 				    </tr>

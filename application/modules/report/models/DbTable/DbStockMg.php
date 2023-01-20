@@ -210,6 +210,9 @@ class Report_Model_DbTable_DbStockMg extends Zend_Db_Table_Abstract
 				,r.requestNoLetter  AS requestNoLetter 
 				,r.date AS requestDate
 				,r.note AS requestNote
+				,r.checkingStatus
+				,r.pCheckingStatus
+				,r.approveStatus
 				
 				,po.id AS poId
 				,po.purchaseNo
@@ -218,6 +221,10 @@ class Report_Model_DbTable_DbStockMg extends Zend_Db_Table_Abstract
 				,GROUP_CONCAT(rst.dnNumber) AS dnNumber
 				,COALESCE(SUM(rsd.qtyReceive),0) AS qtyReceive
 				,p.proName
+				,p.proCode
+				,(SELECT COALESCE(pl.qty,0) FROM st_product_location AS pl WHERE pl.proId=rd.proId AND pl.projectId= r.projectId LIMIT 1) AS currentQty
+				
+				,rsd.isClosed AS isCompletedReceive
 				,rd.* 
 			FROM `st_request_po_detail` AS rd 
 				JOIN `st_request_po` AS r ON r.id = rd.requestId
@@ -235,8 +242,22 @@ class Report_Model_DbTable_DbStockMg extends Zend_Db_Table_Abstract
     	
     	$where.= " AND ".$from_date." AND ".$to_date;
     	$where.= " AND r.status = 1 ";
-		
-		$order=' GROUP BY r.projectId,pod.purchaseId,rd.proId  ORDER BY rd.proId ASC,po.id ASC,rst.id ASC ';
+		if(!empty($search['requestStatusCheck'])){
+			if($search['requestStatusCheck']==1){
+				/*
+					$where.= " AND r.checkingStatus = 1 ";
+					$where.= " AND r.pCheckingStatus = 1 ";
+					$where.= " AND r.approveStatus = 1 ";
+					$where.= " AND rd.adjustStatus = 1 ";
+					$where.= " AND rd.verifyStatus = 1 ";
+					$where.= " AND rd.approvedStatus = 1 ";
+				*/
+			}else if($search['requestStatusCheck']==2){
+				
+			}
+    		
+    	}
+		$order=' GROUP BY r.projectId,rd.requestId,pod.purchaseId,rd.proId  ORDER BY rd.proId ASC,po.id ASC,rst.id ASC ';
     	$where.=$dbGb->getAccessPermission("r.projectId");
     	return $db->fetchAll($sql.$where.$order);
 		
