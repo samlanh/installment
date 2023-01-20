@@ -41,13 +41,24 @@ class Budget_ItemController extends Zend_Controller_Action {
 		
 	}
 	function addAction(){
+		$isadditem = $this->getRequest()->getParam('isAddBudgetItem');
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
-			try {		
+			try {	
+					
 				$db = new Budget_Model_DbTable_DbbudgetItem();
 				$db->addBudgetItem($_data);
-				//Application_Form_FrmMessage::message("INSERT_SUCCESS");
-				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/budget/item/");
+				if(!empty($isadditem)){
+					Application_Form_FrmMessage::message("INSERT_SUCCESS");
+					echo "<script> alert('INSERT_SUCCESS');</script>";
+		    		echo "<script>window.close();</script>";
+
+				}else{
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/budget/item/");
+
+				}
+				
+				
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
