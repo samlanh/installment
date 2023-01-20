@@ -198,7 +198,8 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 					u.`active`, 
 					u.`id`,
 					u.`branch_list`,
-					u.`systemAccess` 
+					u.`systemAccess`,
+					u.`signature_pic`  
 					
 				FROM `rms_users` AS u
 				WHERE u.id = ".$id;	
@@ -268,7 +269,7 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
     		$photo_name = $_FILES['photo']['name'];
     		if (!empty($photo_name)){
     			$tem =explode(".", $photo_name);
-    			$image_name = "signature_".date("Y").date("m").date("d").time().".".end($tem);
+    			$image_name = "user_sign_".date("Y").date("m").date("d").time().".".end($tem);
     			$tmp = $_FILES['photo']['tmp_name'];
     			if(move_uploaded_file($tmp, $part.$image_name)){
     				move_uploaded_file($tmp, $part.$image_name);
@@ -279,7 +280,7 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 			
 			return  $this->insert($_user_data);
 		}catch (Exception $e){
-			Application_Form_FrmMessage::message($this->tr->translate("INSERT_SUCCSS"));
+			Application_Form_FrmMessage::message("INSERT_SUCCSS");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}
 	}
@@ -312,7 +313,23 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 				'active'=> $status,
 				'branch_list'=>$branchList,
 				'systemAccess'=>$systemList,
-		    );    	   
+		    ); 
+			$part= PUBLIC_PATH.'/images/';
+    		$photo_name = $_FILES['photo']['name'];
+    		if (!empty($photo_name)){
+    			$tem =explode(".", $photo_name);
+    			$image_name = "user_sign_".date("Y").date("m").date("d").time().".".end($tem);
+    			$tmp = $_FILES['photo']['tmp_name'];
+    			if(move_uploaded_file($tmp, $part.$image_name)){
+    				move_uploaded_file($tmp, $part.$image_name);
+    				$photo = $image_name;
+    				$_user_data['signature_pic']=$photo;
+    			}
+    		}
+			if(!empty($photo_name) AND file_exists($part.$data['old_sign'])){//delelete old file
+    			unlink($part.$data['old_sign']);
+    		}
+			
 			if (!empty($data['check_change'])){
 				$_user_data['password']= md5($data['password']);
 			}

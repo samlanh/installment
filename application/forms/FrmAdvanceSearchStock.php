@@ -293,6 +293,17 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 		$reqPOStatus->setMultiOptions($reqPOStatusOpt);
 		$reqPOStatus->setValue($request->getParam("reqPOStatus"));
 		
+		
+		$requestStatusCheck=  new Zend_Dojo_Form_Element_FilteringSelect('requestStatusCheck');
+		$requestStatusCheck->setAttribs(array('dojoType'=>$this->filter,'class'=>'fullside'));
+		$_optsRequestStatusCheck = array(
+				0=>$this->tr->translate("ALL"),
+				1=>$this->tr->translate("APPROVED"),
+				2=>$this->tr->translate("REJECTED"),
+				);
+		$requestStatusCheck->setMultiOptions($_optsRequestStatusCheck);
+		$requestStatusCheck->setValue($request->getParam("requestStatusCheck"));
+		
 		$this->addElements(
 			array(
 				$verifyStatus,
@@ -320,6 +331,7 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 				$supplierType,
 				$isPaidStatus,
 				$reqPOStatus
+				,$requestStatusCheck
 				
 			)
 		);

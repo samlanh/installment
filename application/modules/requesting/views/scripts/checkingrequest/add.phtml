@@ -213,13 +213,13 @@
 		template+='<td rowspan="2" align="left" data-label="<?php echo $tr->translate("STOCK_REMAIN");?>" class=" infoCol"  >';
 			template+='<span class="stkInfo"><?php echo $tr->translate("CURRENT_BRANCH")." : ".$rs['currentQty'];?> ('+measureTitleString+')</span>';	
 			template+='<span class="stkInfo"><?php echo $tr->translate("ALL_BRANCH")." : ".$rs['currentQtyAllBranch'];?> ('+measureTitleString+')</span>';	
-			template+='<span class="stkInfo "><a target="_blank" href="<?php echo $this->baseUrl()."/report/stockreport/rpt-currentstock"; ?>"><?php echo $tr->translate("MORE_DETAIL");?></a></span>';	
+			template+='<span class="stkInfo "><a target="_blank" href="<?php echo $this->baseUrl()."/product/index/view/id/".$rs['proId']; ?>"><?php echo $tr->translate("MORE_DETAIL");?></a></span>';	
 			
 		template+='</td>';	
 		template+='<td  data-label="<?php echo $tr->translate("QTY_REQUEST");?>"><input readOnly data-dojo-props="constraints:{min:0.01},rangeMessage:'+"'<?php echo $tr->translate("MINIMUM_VALUE_IS_ZEROONE");?>'"+'" dojoType="dijit.form.NumberTextBox" class="fullside" id="qtyRequest'+col+'" name="qtyRequest'+col+'" placeholder="'+'<?php echo $tr->translate("QTY_REQUEST");?> " value="<?php echo $rs['qtyRequest'];?>" type="text"  ></td>';	
 		template+='<td  data-label="<?php echo $tr->translate("QTY_APPROVED");?>"><input required dojoType="dijit.form.NumberTextBox" data-dojo-props="constraints:{min:0.01},rangeMessage:'+"'<?php echo $tr->translate("MINIMUM_VALUE_IS_ZEROONE");?>'"+'" class="fullside" id="qtyAdjust'+col+'" name="qtyAdjust'+col+'" placeholder="'+'<?php echo $tr->translate("QTY_APPROVED");?> " value="<?php echo $rs['qtyAdjust'];?>" type="text"  ></td>';	
 		template+='<td  data-label="<?php echo $tr->translate("DATE_ENTRY");?>"><input required dojoType="dijit.form.DateTextBox" class="fullside" constraints="{datePattern:'+"'dd/MM/yyyy'"+'}" id="dateReqStockIn'+col+'" name="dateReqStockIn'+col+'" placeholder="'+'<?php echo $tr->translate("DATE_ENTRY");?> " value="<?php echo date("Y-m-d",strtotime($rs['dateReqStockIn']));?>" type="text"  ></td>';	
-		template+='<td  data-label="<?php echo $tr->translate("STATUS");?>"><select class="fullside" name="adjustStatus'+col+'" id="adjustStatus'+col+'" dojoType="dijit.form.FilteringSelect" ><option value="1" <?php if($rs['adjustStatus']==1){echo "selected";} ?> ><?php echo $tr->translate("APPROVED");?></option><option value="2" <?php if($rs['adjustStatus']==2){echo "selected";} ?>><?php echo $tr->translate("REJECTED");?></option></select></td>';
+		template+='<td  data-label="<?php echo $tr->translate("STATUS");?>"><select onChange="rowControlCheck('+col+');" class="fullside" name="adjustStatus'+col+'" id="adjustStatus'+col+'" dojoType="dijit.form.FilteringSelect" ><option value="1" <?php if($rs['adjustStatus']==1){echo "selected";} ?> ><?php echo $tr->translate("APPROVED");?></option><option value="2" <?php if($rs['adjustStatus']==2){echo "selected";} ?>><?php echo $tr->translate("REJECTED");?></option></select></td>';
 		
 		templateii='';
 		templateii+='<td colspan="4" data-label="<?php echo $tr->translate("NOTE");?>"><input style="font-family: inherit;  min-height:40px !important; max-width:99%;" dojoType="dijit.form.Textarea" class="fullside" id="note'+col+'" name="note'+col+'" placeholder="'+'<?php echo $tr->translate("NOTE");?> " value="'+itemsNoteString+'" type="text"  ></td>';	
@@ -242,7 +242,16 @@
 		});
 		<?php }?>
 	}
-	
+	function rowControlCheck(indexKey){
+		adjustStatus = dijit.byId('adjustStatus'+indexKey).get('value');
+		dijit.byId("qtyAdjust"+indexKey).set("readOnly",false);
+		if(adjustStatus==2){
+			qtyRequest = dijit.byId('qtyRequest'+indexKey).get('value');
+			dijit.byId('qtyAdjust'+indexKey).set('value', qtyRequest);
+			dijit.byId("qtyAdjust"+indexKey).set("readOnly",true);
+			dijit.byId("dateReqStockIn"+indexKey).set("readOnly",true);
+		}
+	}
 	var urlGetRequestInfo = '<?php echo $this->url(array('module'=>'requesting','controller'=>'request','action'=>'get-requestinfohtml')); ?>';
 	function getRequestInfo(){
 		
