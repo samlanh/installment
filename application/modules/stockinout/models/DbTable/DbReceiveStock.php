@@ -551,7 +551,7 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
     	$sql.=" LIMIT 1";
     	return $db->fetchRow($sql);
     }
-    function getDNById($recordId){
+    function getDNById($data=array()){
     	$db = $this->getAdapter();
     	$sql=" SELECT r.id,r.projectId,
 				(SELECT project_name FROM `ln_project` WHERE br_id=r.projectId LIMIT 1) AS projectName,
@@ -571,7 +571,17 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
 				(SELECT first_name FROM rms_users WHERE id=r.userId LIMIT 1 ) AS user_name,
 				(SELECT first_name FROM rms_users WHERE id=r.verifiedBy LIMIT 1 ) AS verifiedBy
 				
-			FROM `st_receive_stock` r WHERE r.id=".$recordId;
+			FROM `st_receive_stock` r WHERE 1 ";
+    	if(!empty($data['dnId']))
+    	{
+    		$sql.=" AND r.id=".$data['dnId'];
+    	}
+    	if(!empty($data['transactionType']))
+    	{
+    		$sql.=" AND r.transactionType=".$data['transactionType'];
+    	}
+    	$dbg = new Application_Model_DbTable_DbGlobal();
+    	$sql.= $dbg->getAccessPermission('r.projectId');
     	return $db->fetchRow($sql);
     }
     function getDNDetailById($recordId){

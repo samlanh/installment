@@ -46,7 +46,7 @@ class Po_ConcretController extends Zend_Controller_Action {
 	function addAction(){
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
-			try {		
+			try{		
 				$db = new Po_Model_DbTable_DbConcret();
 				$db->addReceiveStock($_data);
 				if(isset($_data['save_new'])){
@@ -69,7 +69,7 @@ class Po_ConcretController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {
-				$db->addReceiveStock($_data);
+				$db->updateConcreteReceive($_data);
 				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL);
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");

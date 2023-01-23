@@ -165,7 +165,11 @@ public function rptUsageAction(){
 	  try{
 	    	$id = $this->getRequest()->getParam('id');
 			$id = empty($id)?0:$id;
-			$rs = $db->getDNById($id);
+			$param = array(
+					'dnId'=>$id,
+					'transactionType'=>1,//dn request
+			);
+			$rs = $db->getDNById($param);
 			if(empty($id) OR empty($rs)){
 				Application_Form_FrmMessage::Sucessfull("NO_DATA","/report/stockreport/rpt-receivestock",2);
 			}
@@ -184,6 +188,35 @@ public function rptUsageAction(){
 	  	  $frmpopup = new Application_Form_FrmPopupGlobal();
 	  	  $this->view->footerReport = $frmpopup->getFooterReport();
 	  	  $this->view->headerReport = $frmpopup->getLetterHeadReport();
+	}
+	public function rptConcretednAction(){
+		$db = new Stockinout_Model_DbTable_DbReceiveStock();
+		try{
+			$id = $this->getRequest()->getParam('id');
+			$id = empty($id)?0:$id;
+			$param = array(
+					'dnId'=>$id,
+					'transactionType'=>2,
+					);
+			$rs = $db->getDNById($param);
+			if(empty($id) OR empty($rs)){
+				Application_Form_FrmMessage::Sucessfull("NO_DATA","/po/concret/index",2);
+			}
+			 
+		}catch (Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+		}
+		 
+		$this->view->rsRow = $rs;
+		$this->view->dnDetail = $db->getDNDetailById($id);
+	
+		$frmpopup = new Application_Form_FrmPopupGlobal();
+		$this->view->printByFormat = $frmpopup->printByFormat();
+	
+		$frmpopup = new Application_Form_FrmPopupGlobal();
+		$this->view->footerReport = $frmpopup->getFooterReport();
+		$this->view->headerReport = $frmpopup->getLetterHeadReport();
 	}
 
 	public function rptSummarystockAction(){

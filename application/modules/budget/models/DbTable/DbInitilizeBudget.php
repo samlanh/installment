@@ -104,7 +104,13 @@ class Budget_Model_DbTable_DbInitilizeBudget extends Zend_Db_Table_Abstract
 					'userId'=>$this->getUserId(),
 			);
 			$this->_name='st_budget_expense';
-			return $this->insert($arr);
+			if(isset($data['update'])){
+				$where=" transactionId=".$data['transactionId']." AND type=".$data['type'];
+				$this->update($arr, $where);
+			}else{
+				return $this->insert($arr);
+			}
+			
 		}
 		
 		function addBudgetExpenseDetail($data){

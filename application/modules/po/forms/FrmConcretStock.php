@@ -101,6 +101,8 @@ class Po_Form_FrmConcretStock extends Zend_Dojo_Form
 		}
 		$supplierId->setMultiOptions($optSpp);
 		
+		$id = new Zend_Form_Element_Hidden('id');
+		
     	if(!empty($data)){
 			
 			$branch_id->setValue($data["projectId"]);
@@ -115,9 +117,11 @@ class Po_Form_FrmConcretStock extends Zend_Dojo_Form
 				'readOnly'=>'readOnly',
 			));
 			$_status->setValue($data["status"]);
+			$id->setValue($data["id"]);
     	}
     	
     	$this->addElements(array(
+    			$id,
     			$supplierId,
     			$branch_id,
     			$categoryId,
