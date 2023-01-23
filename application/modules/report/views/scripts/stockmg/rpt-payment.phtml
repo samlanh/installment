@@ -19,6 +19,8 @@
 			'typeKeyIndex'=>1,
 		);
 	$purchaseType = $dbGBstock->purchasingTypeKey($arrStep);
+	
+	$paymentLetter = $this->baseUrl()."/report/stockmg/payment-letter/id/";
 ?>
 <title><?php echo $tr->translate("RPT_PAYMENT_LIST");?></title>
 <script>
@@ -265,7 +267,7 @@
 										$gTotal =$gTotal+$rs["totalAmount"];
 									}
 								?>
-				                <tr class=" style <?php echo $class;?>" style="font-family: 'Khmer OS Content'; white-space:nowrap; ">
+				                <tr oncontextmenu="setrowdata(<?php echo $rs['id'];?>);return false;" class=" context-menu-one style <?php echo $class;?>" style="font-family: 'Khmer OS Content'; white-space:nowrap; ">
 				               		<td data-label="<?php echo $tr->translate("NUM");?>" style="text-align: center;"><?php echo $i++; ?></td>
 				               		<td data-label="<?php echo $tr->translate("BRANCH_NAME");?>" ><?php echo $rs["branch_name"];?></td>
 				               		<td data-label="<?php echo $tr->translate("PAYMENT_NO");?>"  class="centerText redBold"><?php echo $rs["paymentNo"];?></td>      
@@ -385,5 +387,30 @@ function getBranchInfo(){
 		error: function(e) {
 		}
 	});
+}
+
+var row=0;
+var url="";
+$(function(){
+	$.contextMenu({
+		selector: '.context-menu-one', 
+		callback: function(key, options) {
+			var m = "clicked: " + key;
+			if(key=="paymentLetter"){
+				url='<?php echo $paymentLetter;?>';
+			}
+			gotoAction();
+		},
+		items: {
+			"paymentLetter": {name: "<?php echo $tr->translate("PAYMENT_LETTER");?>", icon: "fa-file-text", accesskey: "c"},
+		}
+	});
+});
+function setrowdata(index){
+	row = index;
+}
+var recordid ='';
+function gotoAction(){
+	 window.open(url+row, '_blank');
 }
 </script>
