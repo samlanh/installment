@@ -55,7 +55,7 @@ public function getAllRequestPO($search){
 					WHEN  rqd.isCompletedPO = 1 THEN '".$tr->translate("COMPLETED_PO")."'
 					ELSE   '".$tr->translate("UPCOMPLETED_PO")."'
 					END 
-				FROM `st_request_po_detail` AS rqd WHERE rqd.requestId =rq.id AND rqd.approvedStatus=1 ORDER BY rqd.isCompletedPO ASC LIMIT 1 ) AS isCompletedPO  ";
+				FROM `st_request_po_detail` AS rqd WHERE rqd.requestId =rq.id AND rqd.approvedStatus=1 ORDER BY rqd.isCompletedPO ASC LIMIT 1 ) AS isCompletedPOTitle  ";
 				
 		$sql.=" FROM `st_request_po` AS rq WHERE 1 ";
 		
