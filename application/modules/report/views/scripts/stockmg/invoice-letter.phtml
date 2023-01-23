@@ -5,7 +5,7 @@
 	
 	$month = array("01"=>"មករា","02"=>"កុម្ភៈ","03"=>"មីនា","04"=>"មេសា","05"=>"ឧសភា","06"=>"មិថុនា","07"=>"កក្កដា","08"=>"សីហា","09"=>"កញ្ញា","10"=>"តុលា","11"=>"វិច្ឆិកា","12"=>"ធ្នូ",);
 	$dbparmeter = new Report_Model_DbTable_DbParamater();
-
+	$urlDnLetter = $this->baseUrl()."/report/stockreport/rpt-receivestockdetail/id/";
 ?>
 <div class="reportblog">
 	<div class="card-box">
@@ -112,7 +112,9 @@
 				span.gtotalVal.mainTotal {
 					font-size: 14px;
 				}
-				
+				a.colorInherit {
+					color: inherit;
+				}
 				.signatureImg{
 					height:50px;
 					position:relative;
@@ -350,7 +352,20 @@
 							<tr>
 								<td style="vertical-align: top;padding: 2px 5px;height: 80px; line-height: 16px;">
 									<span style="font-weight: 600; display: block;text-decoration: underline;">ព៏ត៌មានការដឹញ្ជូន / Delivery Information ៖</span>
-									<span style="font-weight: 600; display: block; font-size:11px;"><?php echo $this->DNList['DNNumberList'];?><span>
+									<span style="font-weight: 600; display: block; font-size:11px;">
+									<?php if(!empty($this->DNList['DNNumberList'])){ 
+										
+										$dnNumberListExpl = explode(",",$this->DNList['DNNumberList']);
+											$dnIdList = explode(",",$this->DNList['DNIdList']);
+											foreach ($dnNumberListExpl as $keyInd=> $dnNumber){
+												if($keyInd>0){
+													echo ",";
+												}
+										?>
+										<a class="colorInherit" title="<?php echo $dnNumber;?>" target="_blank" href="<?php echo $urlDnLetter."".$dnIdList[$keyInd]; ?>"><?php echo $dnNumber;?></a>
+									<?php }
+									}  ?>
+									<span>
 								</td>
 							</tr>
 							<tr>

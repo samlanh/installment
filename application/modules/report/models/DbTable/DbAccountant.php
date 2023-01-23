@@ -625,7 +625,7 @@ class Report_Model_DbTable_DbAccountant extends Zend_Db_Table_Abstract
 	}
 	function getDNByListOfInvoice($dnList){
 		$db = $this->getAdapter();
-		$sql="SELECT GROUP_CONCAT(rst.dnNumber)	AS DNNumberList
+		$sql="SELECT GROUP_CONCAT(rst.dnNumber)	AS DNNumberList,GROUP_CONCAT(rst.id) AS DNIdList
 			FROM st_receive_stock AS rst 
 			 WHERE rst.status=1 
 			AND rst.id  IN ($dnList) LIMIT 1";

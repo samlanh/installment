@@ -676,6 +676,10 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 			);
 			$purchaseType = $this->purchasingTypeKey($arrStep);
 			$sql.=" AND po.purchaseType=".$purchaseType;
+			if($purchaseType==1 || $purchaseType==2 ){ 
+				// Query PO has received And verified Only
+				$sql.=" AND COALESCE((SELECT rst.poId FROM  `st_receive_stock` AS rst WHERE rst.poId = po.id AND rst.status=1 AND rst.verified=1 LIMIT 1),0)  !=0 ";
+			}
 			if(!empty($_data['purchaseId'])){
 				$sql.=" OR po.id=".$_data['purchaseId'];
 			}

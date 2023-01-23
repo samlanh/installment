@@ -16,6 +16,8 @@
 	
 	$requestLetter = $this->baseUrl()."/report/stockmg/request-letter/id/";
 	$requestInfor = $this->baseUrl()."/report/stockmg/request-info/id/";
+	$purchaseLetter = $this->baseUrl()."/report/stockmg/purchase-letter/id/";
+	$urlDnLetter = $this->baseUrl()."/report/stockreport/rpt-receivestockdetail/id/";
 	
 ?>
 <title><?php echo $titleReport;?></title>
@@ -145,6 +147,9 @@
 					}
 					tr.style.rejected {
 						background: #ffe5e5;
+					}
+					a.colorInherit {
+						color: inherit;
 					}
 				</style>
 				<table width="100%">
@@ -370,7 +375,7 @@
 				               		<td data-label="<?php echo $tr->translate("NUM");?>"  style="text-align: center;"><?php echo $i++; ?></td>
 				               		
 									<td data-label="<?php echo $tr->translate("BRANCH_NAME");?>"><?php echo $rs["branch_name"];?></td>
-									<td data-label="<?php echo $tr->translate("REQUEST_NO");?>"  class="redBold"><?php echo $rs["requestNo"];?></td>                 		
+									<td data-label="<?php echo $tr->translate("REQUEST_NO");?>"  class="redBold"><a class="colorInherit" title="<?php echo $tr->translate("REQUEST_LETTER")." - ".$rs["requestNo"];?>" target="_blank" href="<?php echo $requestInfor."".$rs['requestId']; ?>"><?php echo $rs["requestNo"];?></a></td>                 		
 				               		<td data-label="<?php echo $tr->translate("DATE");?>" ><?php echo date($montFomat,strtotime($rs["requestDate"]));?></td>
 				               	
 								
@@ -386,7 +391,7 @@
 				               	
 									
 									
-									<td data-label="<?php echo $tr->translate("PO_NO");?>"  class="centerText"><?php echo $rs["purchaseNo"];?></td>
+									<td data-label="<?php echo $tr->translate("PO_NO");?>"  class="centerText"><a class="colorInherit" title="<?php echo $tr->translate("PURCHASE_LETTER")." - ".$rs["purchaseNo"];?>" target="_blank" href="<?php echo $purchaseLetter.$rs['poId']; ?>"><?php echo $rs["purchaseNo"];?></a></td>
 									
 									<td data-label="<?php echo $tr->translate("DN_NO");?>"  class="centerText"><?php echo $rs["dnNumber"];?></td>
 									

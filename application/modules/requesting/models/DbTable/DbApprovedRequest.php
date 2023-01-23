@@ -90,7 +90,7 @@ class Requesting_Model_DbTable_DbApprovedRequest extends Zend_Db_Table_Abstract
 						
 						$approveStatus = $data['approvedStatus'.$i];
 						if($data['approveStatus']==2){ //REJECTED
-							$approveStatus = $data['approvedStatus'];
+							$approveStatus = $data['approveStatus'];
 						}
 						
 						$arr = array(
