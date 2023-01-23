@@ -651,7 +651,9 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		$sql.=" FROM `st_purchasing` AS po 
 					LEFT JOIN `st_supplier` AS spp ON spp.id = po.supplierId "; 
 		if(!empty($_data['invoiceType'])){ // only Deposit 1 time
-			$sql.=" LEFT JOIN `st_invoice` AS inv ON po.id = inv.purId AND inv.ivType=2 AND inv.status=1 "; 
+			if($_data['invoiceType']==2){
+				$sql.=" LEFT JOIN `st_invoice` AS inv ON po.id = inv.purId AND inv.ivType=2 AND inv.status=1 "; 
+			}		
 		}		
 		$sql.=" WHERE po.status=1 AND po.isInvoiced !=1 "; 
 			
@@ -661,11 +663,13 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		if(isset($_data['processingStatus'])){
 			$sql.=" AND po.processingStatus=".$_data['processingStatus'];
 		}
+		$normalInvoice=1;
 		if(!empty($_data['invoiceType'])){ 
 			// only Deposit 1 time
 			if($_data['invoiceType']==2){
 				//Deposit Invoice
 				$sql.=" AND inv.purId IS NULL "; 
+				$normalInvoice=2;
 			}
 		}
 		if(!empty($_data['purchaseType'])){//Type Of Purchase
@@ -677,8 +681,10 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 			$purchaseType = $this->purchasingTypeKey($arrStep);
 			$sql.=" AND po.purchaseType=".$purchaseType;
 			if($purchaseType==1 || $purchaseType==2 ){ 
+				if($normalInvoice==1){
 				// Query PO has received And verified Only
 				$sql.=" AND COALESCE((SELECT rst.poId FROM  `st_receive_stock` AS rst WHERE rst.poId = po.id AND rst.status=1 AND rst.verified=1 LIMIT 1),0)  !=0 ";
+				}
 			}
 			if(!empty($_data['purchaseId'])){
 				$sql.=" OR po.id=".$_data['purchaseId'];
