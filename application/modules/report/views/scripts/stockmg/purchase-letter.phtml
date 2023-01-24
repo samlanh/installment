@@ -6,6 +6,9 @@
 	$month = array("01"=>"មករា","02"=>"កុម្ភៈ","03"=>"មីនា","04"=>"មេសា","05"=>"ឧសភា","06"=>"មិថុនា","07"=>"កក្កដា","08"=>"សីហា","09"=>"កញ្ញា","10"=>"តុលា","11"=>"វិច្ឆិកា","12"=>"ធ្នូ",);
 	$dbparmeter = new Report_Model_DbTable_DbParamater();
 	$requestInfor = $this->baseUrl()."/report/stockmg/request-info/id/";
+	
+	$row = $this->row;
+	$purchaseType = $row['purchaseType'];
 ?>
 <div class="reportblog">
 	<div class="card-box">
@@ -133,7 +136,7 @@
 					<td width="40%" valign="top" style=" padding-bottom: 40px;">
 					</td>
 					<td width="30%" align="right" style="vertical-align:top; position: relative;">
-						<span class="project-name" id="projectName">(<?php echo $this->row["branch_name"];?>)</span>
+						<span class="project-name" id="projectName">(<?php echo $row["branch_name"];?>)</span>
 						<?php echo $this->printByFormat;?>
 					</td>
 				</tr> 
@@ -155,14 +158,14 @@
 										អ្នកផ្គត់ផ្គង់ : 
 										<small>Supplier : </small>
 									</span>
-									<span><?php echo $this->row["supplierName"];?></span></td>
+									<span><?php echo $row["supplierName"];?></span></td>
 								<td width="30%">
-									<?php if(!empty($this->row["requestId"])){?>
+									<?php if(!empty($row["requestId"])){?>
 									<span class="lbTitle">
 										លេខសំណើ : 
 										<small>Request N<sup>o</sup> : </small>
 									</span>
-									<span class="bold redColor" ><a class="colorInherit" title="<?php echo $tr->translate("REQUEST_INFO")." - ".$this->row["requestNo"];?>" target="_blank" href="<?php echo $requestInfor."".$this->row["requestId"]; ?>"><?php echo $this->row["requestNo"];?></a></span>
+									<span class="bold redColor" ><a class="colorInherit" title="<?php echo $tr->translate("REQUEST_INFO")." - ".$row["requestNo"];?>" target="_blank" href="<?php echo $requestInfor."".$row["requestId"]; ?>"><?php echo $row["requestNo"];?></a></span>
 									<?php }else{?>
 									&nbsp;
 									<?php }?>
@@ -172,7 +175,7 @@
 										លេខបញ្ជាទិញ : 
 										<small>Purchase N<sup>o</sup> : </small>
 									</span>
-									<span class="bold redColor" ><?php echo $this->row["purchaseNo"];?></span>
+									<span class="bold redColor" ><?php echo $row["purchaseNo"];?></span>
 								</td>
 								
 							</tr>
@@ -184,14 +187,14 @@
 										<small>Contact Name : </small>
 									</span>
 									<span>
-								<?php echo $this->row["contactName"];?></span></td>
+								<?php echo $row["contactName"];?></span></td>
 								<td >
-									<?php if(!empty($this->row["requestId"])){?>
+									<?php if(!empty($row["requestId"])){?>
 										<span class="lbTitle">
 											កាលបរិច្ឆេទស្នើ : 
 											<small>Request Date : </small>
 										</span>
-										<span class="bold"><?php echo date(DATE_FORMAT_FOR_PHP,strtotime($this->row["requestDate"]));?></span>
+										<span class="bold"><?php echo date(DATE_FORMAT_FOR_PHP,strtotime($row["requestDate"]));?></span>
 									<?php }?>
 								</td>
 								<td >
@@ -199,7 +202,7 @@
 										កាលបរិច្ឆេទបញ្ជាទិញ : 
 										<small>Purchase Date : </small>
 									</span>
-									<span class="bold"><?php echo date(DATE_FORMAT_FOR_PHP,strtotime($this->row["date"]));?></span>
+									<span class="bold"><?php echo date(DATE_FORMAT_FOR_PHP,strtotime($row["date"]));?></span>
 								</td>
 							</tr>
 							<tr>
@@ -209,14 +212,14 @@
 										លេខទូរសព្ទ : 
 										<small>Tel : </small>
 									</span>
-									<span><?php echo $this->row["supplierTel"];?></span></td>
+									<span><?php echo $row["supplierTel"];?></span></td>
 								<td >
-									<?php if(!empty($this->row["requestName"])){?>
+									<?php if(!empty($row["requestName"])){?>
 										<span class="lbTitle">
 											ស្នើដោយ : 
 											<small>Request By : </small>
 										</span>
-										<span><?php echo $this->row["requestName"];?></span>
+										<span><?php echo $row["requestName"];?></span>
 									<?php }?>
 								</td>
 								<td >
@@ -230,7 +233,7 @@
 										អាសយដ្ឋាន : 
 										<small>Address : </small>
 									</span>
-									<span><?php echo $this->row["address"];?></span></td>
+									<span><?php echo $row["address"];?></span></td>
 								<td ></td>
 								<td >
 									
@@ -322,7 +325,7 @@
 							<tr>
 								<td style="vertical-align: top;padding: 2px 5px;height: 80px; line-height: 16px;">
 									<span style="font-weight: 600; display: block;text-decoration: underline;">សម្គាល់ / Note ៖</span>
-									<span style="display: block; font-size:11px;"><?php echo $this->row["note"];?><span>
+									<span style="display: block; font-size:11px;"><?php echo $row["note"];?><span>
 								</td>
 							</tr>
 						</table>
@@ -353,8 +356,8 @@
 								<td style="height:80px; text-align:center;" >
 									<?php 
 									if (!empty($this->row['userSignature'])){
-										if (file_exists(PUBLIC_PATH."/images/photo/signature/".$this->row['userSignature'])){
-											$images = $this->baseUrl().'/images/photo/signature/'.$this->row['userSignature'];
+										if (file_exists(PUBLIC_PATH."/images/photo/signature/".$row['userSignature'])){
+											$images = $this->baseUrl().'/images/photo/signature/'.$row['userSignature'];
 									?>
 									<img class="signatureImg" src="<?php echo $images;?>" />
 									<?php } 
@@ -365,14 +368,14 @@
 							</tr>
 							<tr>
 								<td style="text-align:center;">
-									<span style="font-weight: 600; display: block; line-height: 16px;"><?php echo $this->row["supplierName"];?></span>
+									<span style="font-weight: 600; display: block; line-height: 16px;"><?php echo $row["supplierName"];?></span>
 								</td>
 								<td style="text-align:center;">
 									
 								</td>
 								
 								<td style="text-align:center;">
-									<span style="font-weight: 600; display: block; line-height: 16px;"><?php echo $this->row["byUser"];?></span>
+									<span style="font-weight: 600; display: block; line-height: 16px;"><?php echo $row["byUser"];?></span>
 								</td>
 							</tr>
 						</table>
@@ -392,7 +395,7 @@ require(["dojo/ready"], function(ready){
 		
 function getBranchInfo(){
 	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
-	branch_id = '<?php echo empty($this->row['projectId'])?0:$this->row['projectId'];?>';
+	branch_id = '<?php echo empty($row['projectId'])?0:$row['projectId'];?>';
 	if(branch_id=="" || branch_id<=0){
 		return false;
 	}

@@ -306,4 +306,98 @@ class Report_Model_DbTable_DbStockMg extends Zend_Db_Table_Abstract
     	return $db->fetchAll($sql.$where.$order);
 		
 	}
+	
+	function getProductPoSummary($search){
+		$db = $this->getAdapter();
+		$dbGb = new Application_Model_DbTable_DbGlobal();
+		$dbGbSt = new Application_Model_DbTable_DbGlobalStock();
+		$sql="
+			SELECT 
+			
+				(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = po.projectId LIMIT 1) AS branch_name
+				,r.projectId
+				,r.requestNo
+				,r.purpose AS purposeRequest
+				,r.requestNoLetter  AS requestNoLetter 
+				,r.date AS requestDate
+				,r.note AS requestNote
+				,r.checkingStatus
+				,r.pCheckingStatus
+				,r.approveStatus
+				,rd.qtyRequest
+				,rd.qtyAdjust
+				,rd.qtyVerify
+				,rd.qtyApproved
+				,rd.adjustStatus 
+				,rd.verifyStatus 
+				,rd.approvedStatus 
+				,rd.requestId  
+			
+				
+				,po.id AS poId
+				,po.purchaseNo
+				,po.purchaseType
+				,po.date AS poDate
+				,po.processingStatus
+				
+				,COALESCE(pod.qty,0) AS qtyPO
+				,COALESCE(pod.unitPrice,0) AS unitPrice
+				,GROUP_CONCAT(rst.dnNumber) AS dnNumberList
+				,GROUP_CONCAT(rst.receiveDate) AS receiveDateList
+				,COALESCE(SUM(rsd.qtyReceive),0) AS qtyReceive
+				,COALESCE(SUM(rsd.isClosed),0) AS isCompletedReceive
+				,p.proName
+				,p.proCode
+				,(SELECT COALESCE(pl.qty,0) FROM st_product_location AS pl WHERE pl.proId=pod.proId AND pl.projectId= po.projectId LIMIT 1) AS currentQty
+				
+				,pod.* 
+			
+		";
+		$arrStep = array(
+			'keyIndex'=>"po.purchaseType",
+			'typeKeyIndex'=>3,
+		);
+		$sql.= $dbGbSt->purchasingTypeKey($arrStep);
+		$sql.= " FROM  `st_purchasing_detail` AS pod JOIN `st_purchasing` AS po ON po.id = pod.purchaseId		
+				LEFT JOIN `st_product` AS p  ON p.proId = pod.proId 
+				LEFT JOIN (`st_request_po_detail` AS rd  JOIN `st_request_po` AS r ON r.id = rd.requestId ) 
+					ON po.requestId = rd.requestId AND rd.proId = pod.proId
+				LEFT JOIN (st_receive_stock_detail AS rsd JOIN st_receive_stock AS rst ON rst.id = rsd.receiveId)
+					ON po.id = rst.poId AND pod.proId = rsd.proId 
+			WHERE 1 
+			AND po.status = 1 AND po.purchaseType!=3 ";
+		
+		$where = "";
+    	$from_date =(empty($search['start_date']))? '1': " po.date >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " po.date <= '".$search['end_date']." 23:59:59'";
+    	
+    	$where.= " AND ".$from_date." AND ".$to_date;
+    	$where.= " AND po.status = 1 ";
+		
+		if(!empty($search['adv_search'])){
+    		$s_where = array();
+    		$s_search = (trim($search['adv_search']));
+    		$s_where[] = " r.requestNo LIKE '%{$s_search}%'";
+    		$s_where[] = " r.purpose LIKE '%{$s_search}%'";
+    		$s_where[] = " po.purchaseNo LIKE '%{$s_search}%'";
+    		$s_where[] = " p.proName LIKE '%{$s_search}%'";
+    		$s_where[] = " p.proCode LIKE '%{$s_search}%'";
+    		$s_where[] = " rd.qtyRequest LIKE '%{$s_search}%'";
+    		$s_where[] = " rd.qtyAdjust LIKE '%{$s_search}%'";
+    		$s_where[] = " rd.qtyVerify LIKE '%{$s_search}%'";
+    		$s_where[] = " rd.qtyApproved LIKE '%{$s_search}%'";
+    		$where .=' AND ( '.implode(' OR ',$s_where).')';
+    	}
+		if(!empty($search['purchaseType'])){
+			$where.= " AND po.purchaseType = ".$search['purchaseType'];
+		}
+		
+		if(($search['branch_id'])>0){
+    		$where.= " AND po.projectId = ".$search['branch_id'];
+    	}
+		$order=' GROUP BY po.projectId,pod.purchaseId,pod.proId  ORDER BY pod.proId ASC,po.id ASC,rst.id ASC ';
+    	$where.=$dbGb->getAccessPermission("po.projectId");
+    	return $db->fetchAll($sql.$where.$order);
+		
+	}
 }

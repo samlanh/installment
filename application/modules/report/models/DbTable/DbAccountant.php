@@ -682,5 +682,21 @@ class Report_Model_DbTable_DbAccountant extends Zend_Db_Table_Abstract
 			";
 		return $db->fetchAll($sql);
 	}
+	
+	function getPOScheduleItem($data=array()){
+		$db = $this->getAdapter();
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$purchaseId = empty($data['purchaseId'])?0:$data['purchaseId'];
+		$proId = empty($data['proId'])?0:$data['proId'];
+		$sql="
+			SELECT pms.* 
+				FROM `st_purchase_item_schedule` AS pms 
+			WHERE 
+				pms.purchaseId =$purchaseId 
+				AND pms.proId =$proId 
+			ORDER BY pms.schedule ASC
+			";
+		return $db->fetchAll($sql);
+	}
 
 }

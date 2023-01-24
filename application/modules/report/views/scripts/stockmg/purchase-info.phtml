@@ -9,6 +9,14 @@
 	$dbparmeter = new Report_Model_DbTable_DbParamater();
 	$requestInfor = $this->baseUrl()."/report/stockmg/request-info/id/";
 	$urlDnLetter = $this->baseUrl()."/report/stockreport/rpt-receivestockdetail/id/";
+	
+	$row = $this->row;
+	$purchaseType = $row['purchaseType'];
+	
+	$dbAcc = new Report_Model_DbTable_DbAccountant();
+	$arrFilter = array(
+		'purchaseId'=>$row["id"]
+	);
 ?>
 <div class="reportblog">
 	<div class="card-box">
@@ -131,6 +139,9 @@
 				.greenClass {
 					color: #017236;
 				}
+				.centerText{
+					text-align: center;
+				}
 				.signatureImg{
 					height:50px;
 					position:relative;
@@ -148,7 +159,7 @@
 					<td width="40%" valign="top" style=" padding-bottom: 40px;">
 					</td>
 					<td width="30%" align="right" style="vertical-align:top; position: relative;">
-						<span class="project-name" id="projectName">(<?php echo $this->row["branch_name"];?>)</span>
+						<span class="project-name" id="projectName">(<?php echo $row["branch_name"];?>)</span>
 						<?php echo $this->printByFormat;?>
 					</td>
 				</tr> 
@@ -170,14 +181,14 @@
 										អ្នកផ្គត់ផ្គង់ : 
 										<small>Supplier : </small>
 									</span>
-									<span><?php echo $this->row["supplierName"];?></span></td>
+									<span><?php echo $row["supplierName"];?></span></td>
 								<td width="30%">
-									<?php if(!empty($this->row["requestId"])){?>
+									<?php if(!empty($row["requestId"])){?>
 									<span class="lbTitle">
 										លេខសំណើ : 
 										<small>Request N<sup>o</sup> : </small>
 									</span>
-									<span class="bold redColor" ><a class="colorInherit" title="<?php echo $tr->translate("REQUEST_INFO")." - ".$this->row["requestNo"];?>" target="_blank" href="<?php echo $requestInfor."".$this->row["requestId"]; ?>"><?php echo $this->row["requestNo"];?></a></span>
+									<span class="bold redColor" ><a class="colorInherit" title="<?php echo $tr->translate("REQUEST_INFO")." - ".$row["requestNo"];?>" target="_blank" href="<?php echo $requestInfor."".$row["requestId"]; ?>"><?php echo $row["requestNo"];?></a></span>
 									<?php }else{?>
 									&nbsp;
 									<?php }?>
@@ -187,7 +198,7 @@
 										លេខបញ្ជាទិញ : 
 										<small>Purchase N<sup>o</sup> : </small>
 									</span>
-									<span class="bold redColor" ><?php echo $this->row["purchaseNo"];?></span>
+									<span class="bold redColor" ><?php echo $row["purchaseNo"];?></span>
 								</td>
 								
 							</tr>
@@ -199,14 +210,14 @@
 										<small>Contact Name : </small>
 									</span>
 									<span>
-								<?php echo $this->row["contactName"];?></span></td>
+								<?php echo $row["contactName"];?></span></td>
 								<td >
-									<?php if(!empty($this->row["requestId"])){?>
+									<?php if(!empty($row["requestId"])){?>
 										<span class="lbTitle">
 											កាលបរិច្ឆេទស្នើ : 
 											<small>Request Date : </small>
 										</span>
-										<span class="bold"><?php echo date(DATE_FORMAT_FOR_PHP,strtotime($this->row["requestDate"]));?></span>
+										<span class="bold"><?php echo date(DATE_FORMAT_FOR_PHP,strtotime($row["requestDate"]));?></span>
 									<?php }?>
 								</td>
 								<td >
@@ -214,7 +225,7 @@
 										កាលបរិច្ឆេទបញ្ជាទិញ : 
 										<small>Purchase Date : </small>
 									</span>
-									<span class="bold"><?php echo date(DATE_FORMAT_FOR_PHP,strtotime($this->row["date"]));?></span>
+									<span class="bold"><?php echo date(DATE_FORMAT_FOR_PHP,strtotime($row["date"]));?></span>
 								</td>
 							</tr>
 							<tr>
@@ -224,14 +235,14 @@
 										លេខទូរសព្ទ : 
 										<small>Tel : </small>
 									</span>
-									<span><?php echo $this->row["supplierTel"];?></span></td>
+									<span><?php echo $row["supplierTel"];?></span></td>
 								<td >
-									<?php if(!empty($this->row["requestName"])){?>
+									<?php if(!empty($row["requestName"])){?>
 										<span class="lbTitle">
 											ស្នើដោយ : 
 											<small>Request By : </small>
 										</span>
-										<span><?php echo $this->row["requestName"];?></span>
+										<span><?php echo $row["requestName"];?></span>
 									<?php }?>
 								</td>
 								<td >
@@ -245,7 +256,7 @@
 										អាសយដ្ឋាន : 
 										<small>Address : </small>
 									</span>
-									<span><?php echo $this->row["address"];?></span></td>
+									<span><?php echo $row["address"];?></span></td>
 								<td ></td>
 								<td >
 									
@@ -263,7 +274,11 @@
 										<span>ល.រ</span>
 										<small>N<sup>o</sup></small>
 									</td>
-									<td colspan="7" scope="col" class="center">
+									<td colspan="3" scope="col" class="center">
+										<span>ព័ត៌មានទំនិញ</span>
+										<small>Product Information</small>
+									</td>
+									<td colspan="3" scope="col" class="center">
 										<span>ព័ត៌មានការបញ្ជាទិញ</span>
 										<small>Purchase Information</small>
 									</td>
@@ -271,7 +286,12 @@
 										<span>ព័ត៌មានទំនិញចូល</span>
 										<small>Incoming Product Information</small>
 									</td>
-									
+									<?php if($purchaseType==2){?>
+									<td rowspan="2" scope="col" class="center">
+										<span>កាលបរិច្ឆេទទំនិញចូល</span>
+										<small>Incoming Date</small>
+									</td>
+									<?php } ?>
 								</tr>
 								<tr class="style headRow" align="center" >
 									
@@ -299,10 +319,7 @@
 										<span>សរុប (USD)</span>
 										<small>Sub Total</small>
 									</td>
-									<td scope="col" class="center" style="width:200px;">
-										<span>ផ្សេងៗ</span>
-										<small>Other</small>
-									</td>
+									
 									
 									<td scope="col" class="center">
 										<span>បរិមាណ</span>
@@ -351,14 +368,14 @@
 									<?php echo empty($rs["categoryTitle"])?"":"<br />".$rs["categoryTitle"];?>
 									
 								</td>
-								<td data-label="បរិមាណ/Qty" align="center"><?php echo $PoQty;?></td>
+								<td data-label="បរិមាណ/Qty" align="center" class="bold"><?php echo $PoQty;?></td>
 								<td data-label="ឯកតា (USD)/Unit" align="center"><?php echo $rs["measureTitle"];?></td>
 								<td data-label="តម្លៃ/ឯកតា (USD)/Unit Price" align="center"><?php echo $rs["unitPrice"];?></td>
 								<td data-label="បញ្ចុះតម្លៃ (USD)/Discount Amount" align="center"><?php echo number_format($rs["discountAmount"],2);?></td>
 								<td data-label="សរុប (USD)/Sub Total" align="right"><?php echo number_format($rs["subTotal"],2);?></td>
-								<td data-label="ផ្សេងៗ/Other" style="font-size: 9px;"><?php echo $rs["note"];?></td>
 								
-								<td data-label="បរិមាណ/Qty Received" align="center"><?php echo $receivedQty;?></td>
+								
+								<td data-label="បរិមាណ/Qty Received" align="center" class="bold"><?php echo $receivedQty;?></td>
 								<td data-label="បរិមាណនៅសល់/Qty Remain" align="center" class="<?php echo $completed;?>"><?php echo $remainQty;?></td>
 								<td data-label="លេខទទួល /DN No ">
 									<?php if(!empty($rs['dnNumberList'])){
@@ -368,8 +385,28 @@
 											foreach ($dnNumberListExpl as $keyInd=> $dnNumber){
 									?>
 									<span class="rowValue "><span class="bold redColor"><a class="colorInherit" title="<?php echo $tr->translate("DELIVERY_NOTE")." - ".$dnNumber;?>" target="_blank" href="<?php echo $urlDnLetter."".$dnIdList[$keyInd]; ?>"><?php echo $dnNumber;?></a></span> <span ><?php echo $dnReceiveDateListExpl[$keyInd];?></span></span>
-									<?php }}?>
+									<?php }}else{?>
+									<span class="rowValue centerText">-</span>
+									<?php } ?>
 								</td>
+								<?php if($purchaseType==2){ 
+									$arrFilter['proId'] = $rs['proId'];
+									$proSche = $dbAcc->getPOScheduleItem($arrFilter);
+								?>
+								<td data-label="កាលបរិច្ឆេទទំនិញចូល /Incoming Date ">
+									<?php if(!empty($proSche)){ foreach($proSche AS $schIndex => $schedule){
+										$completedSub=$completed;
+										if(empty($completed)){
+											$completedSub="";
+											if(date("Y-m-d")>date("Y-m-d",strtotime($schedule['schedule']))){
+												$completedSub = "redColor";
+											}
+										}
+									?>
+									<span class="rowValue bold <?php echo $completedSub;?>"><span class=" greenClass"><?php echo ($schIndex+1).".)"; ?></span> <?php echo date(DATE_FORMAT_FOR_PHP,strtotime($schedule['schedule']));?></span>
+									<?php }} ?>
+								</td>
+								<?php } ?>
 							</tr>
 							<?php } ?>
 							<?php for ($i = $i; $i <= $minimumRow; $i++) { ?>
@@ -389,7 +426,7 @@
 							<tr>
 								<td style="vertical-align: top;padding: 2px 5px;height: 80px; line-height: 16px;">
 									<span style="font-weight: 600; display: block;text-decoration: underline;">សម្គាល់ / Note ៖</span>
-									<span style="display: block; font-size:11px;"><?php echo $this->row["note"];?><span>
+									<span style="display: block; font-size:11px;"><?php echo $row["note"];?><span>
 								</td>
 							</tr>
 						</table>
@@ -419,9 +456,9 @@
 								</td>
 								<td style="height:80px; text-align:center;" >
 									<?php 
-									if (!empty($this->row['userSignature'])){
-										if (file_exists(PUBLIC_PATH."/images/photo/signature/".$this->row['userSignature'])){
-											$images = $this->baseUrl().'/images/photo/signature/'.$this->row['userSignature'];
+									if (!empty($row['userSignature'])){
+										if (file_exists(PUBLIC_PATH."/images/photo/signature/".$row['userSignature'])){
+											$images = $this->baseUrl().'/images/photo/signature/'.$row['userSignature'];
 									?>
 									<img class="signatureImg" src="<?php echo $images;?>" />
 									<?php } 
@@ -432,14 +469,14 @@
 							</tr>
 							<tr>
 								<td style="text-align:center;">
-									<span style="font-weight: 600; display: block; line-height: 16px;"><?php echo $this->row["supplierName"];?></span>
+									<span style="font-weight: 600; display: block; line-height: 16px;"><?php echo $row["supplierName"];?></span>
 								</td>
 								<td style="text-align:center;">
 									
 								</td>
 								
 								<td style="text-align:center;">
-									<span style="font-weight: 600; display: block; line-height: 16px;"><?php echo $this->row["byUser"];?></span>
+									<span style="font-weight: 600; display: block; line-height: 16px;"><?php echo $row["byUser"];?></span>
 								</td>
 							</tr>
 						</table>
@@ -459,7 +496,7 @@ require(["dojo/ready"], function(ready){
 		
 function getBranchInfo(){
 	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
-	branch_id = '<?php echo empty($this->row['projectId'])?0:$this->row['projectId'];?>';
+	branch_id = '<?php echo empty($row['projectId'])?0:$row['projectId'];?>';
 	if(branch_id=="" || branch_id<=0){
 		return false;
 	}

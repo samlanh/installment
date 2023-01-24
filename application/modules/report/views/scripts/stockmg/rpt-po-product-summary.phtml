@@ -2,7 +2,8 @@
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$frm = $this->frm_search;
 	$dbGB = new Application_Model_DbTable_DbGlobal();
-
+	$dbAcc = new Report_Model_DbTable_DbAccountant();
+	
 	$montFomat=DATE_FORMAT_FOR_PHP;
 	
 	$headerReportType = REPORT_LETER_HEAD;
@@ -12,11 +13,12 @@
 	}
 	
 	$branch_title = $tr->translate("BRAND_TITLE");
-	$titleReport = $tr->translate('RPT_REQUEST_PRODUCT_SUMMARY');
+	$titleReport = $tr->translate('RPT_PO_PRODUCT_SUMMARY');
 	
 	$requestLetter = $this->baseUrl()."/report/stockmg/request-letter/id/";
 	$requestInfor = $this->baseUrl()."/report/stockmg/request-info/id/";
 	$purchaseLetter = $this->baseUrl()."/report/stockmg/purchase-letter/id/";
+	$purchaseInfo = $this->baseUrl()."/report/stockmg/purchase-info/id/";
 	$urlDnLetter = $this->baseUrl()."/report/stockreport/rpt-receivestockdetail/id/";
 	
 ?>
@@ -53,7 +55,7 @@
 				</div>
 				<div class="form-group">
 					<div class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frm->getElement("requestStatusCheck");?>
+						<?php echo $frm->getElement("purchaseType");?>
 					</div>
 					<div class="col-md-2 col-sm-2 col-xs-12">
 						<?php echo $frm->getElement("recivedProPO");?>
@@ -116,6 +118,10 @@
 						background: #c1d0f3;
 						font-weight:600;
 					}
+					table.content-data td small {
+						line-height: 14px;
+						font-size: 75%;
+					}
 					table.tb-footer{
 						border-collapse:collapse;
 						border:1px solid #000; 
@@ -129,6 +135,15 @@
 					table tr td{
 						padding:0 5px;
 					}
+					
+					span.rowValue {
+						display: block;
+						line-height: 14px !important;
+					}
+
+					span.rowValue span {
+						line-height: inherit;
+					}
 					tr.voidclass {
 						background: #fff7f7;
 					}
@@ -140,7 +155,7 @@
 					}
 					.redBold {
 						font-weight: 600;
-						color: #f80000;
+						color: #f80000 !important;
 					}
 					.boldText {
 						font-weight: 600;
@@ -148,12 +163,17 @@
 					.greenClass {
 						color: #017236;
 					}
+					.redColor {
+						color: #f80000;
+					}
 					tr.style.rejected {
 						background: #ffe5e5;
 					}
 					a.colorInherit {
 						color: inherit;
-						text-decoration:none;
+						text-decoration: none;
+						display: block;
+						line-height: inherit;
 					}
 					td.qtyInfo {
 						background: #f4f5ff;
@@ -176,17 +196,20 @@
 					                </tr>
 					                <tr class="style" align="center" >
 					                    <td scope="col"  rowspan="2" class="center"><?php echo $tr->translate("NUM");?></td>
-										<td scope="col"  colspan="3" class="center"><?php echo $tr->translate("REQUEST_INFO");?></td>
-					                    <td scope="col"  colspan="8" class="center"><?php echo $tr->translate("PRODUCT_INFO");?></td>    
+										<td scope="col"  colspan="4" class="center"><?php echo $tr->translate("PURCHASE_INFO");?></td>
+										<td scope="col"  colspan="8" class="center"><?php echo $tr->translate("PRODUCT_INFO");?></td>    
 					                       
-					                    <td scope="col"  colspan="2" class="center"><?php echo $tr->translate("PURCHASING_AND_DN_INFO");?></td>    
-					                   
+					                    <td scope="col"  colspan="3" class="center"><?php echo $tr->translate("DN_INFO_AND_REQUEST_INFO");?></td>    
+					                  
 								   </tr>
 					                <tr class="style" align="center">
 					                   
 										<td scope="col"  style="padding:1px;"><?php echo $tr->translate("BRANCH_NAME");?></td>
-										<td scope="col"  style="padding:1px;"><?php echo $tr->translate("REQUEST_NO");?></td>
-					                    <td scope="col"  style="padding:1px;"><?php echo $tr->translate("DATE");?></td>
+										<td scope="col"  style="padding:1px;"><?php echo $tr->translate("PO_NO");?></td>
+										<td scope="col"  style="padding:1px;"><?php echo $tr->translate("DATE");?></td>
+										<td scope="col"  style="padding:1px;"><?php echo $tr->translate("INCOMING_SCHEDULE");?></td>
+										 
+										
 										
 										<td scope="col"  style="padding:1px;"><?php echo $tr->translate("QTY_REQUEST");?></td>
 					                    <td scope="col"  style="padding:1px;"><?php echo $tr->translate("QTY_APPROVED");?></td>
@@ -197,12 +220,10 @@
 										<td scope="col"  style="padding:1px;"><?php echo $tr->translate("TOTAL")." ".$tr->translate("CURRENCY_SIGN");?></td>
 										<td scope="col"  style="padding:1px;"><?php echo $tr->translate("IN_STOCK");?></td>
 										
-										
-					                   
-					                   
-										
-					                    <td scope="col"  style="padding:1px;"><?php echo $tr->translate("PO_NO");?></td>
-										 <td scope="col"  style="padding:1px;"><?php echo $tr->translate("DN_NO");?></td>
+					                    
+										<td scope="col"  style="padding:1px;"><?php echo $tr->translate("DN_NO");?></td>
+										<td scope="col"  style="padding:1px;"><?php echo $tr->translate("REQUEST_NO");?></td>
+					                    <td scope="col"  style="padding:1px;"><?php echo $tr->translate("DATE");?></td>
 					                 
 					                   
 					                </tr>
@@ -238,7 +259,7 @@
 								
 									<?php if($index>0){?>
 										<tr class="style " style="white-space:nowrap; ">
-											<td colspan="4"></td>
+											<td colspan="5"></td>
 											<td class="styleTitle centerRight boldText"><?php echo number_format($itemsTotalRequest,2);?></td>
 											<td class="styleTitle centerRight boldText"><?php echo number_format($itemsTotalApproved,2);?></td>
 											<td class="styleTitle centerRight boldText"><?php echo number_format($itemsTotalQtyPO,2);?></td>
@@ -256,7 +277,7 @@
 									}?>
 									
 									  <tr class="style " style="white-space:nowrap; ">
-										<td colspan="15" class="styleTitle">
+										<td colspan="16" class="styleTitle">
 											<strong><?php echo $productNo.".) ".$rs["proCode"]." - ".$rs["proName"];?></strong>
 										</td>
 									  </tr>
@@ -376,16 +397,41 @@
 									$rowRequestId =$rs["requestId"];
 									$productId=$rs["proId"];
 									
-									
 								?>
-				                <tr oncontextmenu="setrowdata(<?php echo $rs['requestId'];?>);return false;" class="context-menu-one style <?php echo $classRow;?> " style="white-space:nowrap; ">
+				                <tr oncontextmenu="setrowdata(<?php echo $rs['poId'];?>);return false;" class="context-menu-one style <?php echo $classRow;?> " style="white-space:nowrap; ">
 				               		<td data-label="<?php echo $tr->translate("NUM");?>"  style="text-align: center;"><?php echo $i++; ?></td>
 				               		
 									<td data-label="<?php echo $tr->translate("BRANCH_NAME");?>"><?php echo $rs["branch_name"];?></td>
-									<td data-label="<?php echo $tr->translate("REQUEST_NO");?>"  class="redBold"><a class="colorInherit" title="<?php echo $tr->translate("REQUEST_INFO")." - ".$rs["requestNo"];?>" target="_blank" href="<?php echo $requestInfor."".$rs['requestId']; ?>"><?php echo $rs["requestNo"];?></a></td>                 		
-				               		<td data-label="<?php echo $tr->translate("DATE");?>" ><?php echo date($montFomat,strtotime($rs["requestDate"]));?></td>
-				               	
-								
+									<td data-label="<?php echo $tr->translate("PO_NO");?>"  class=" centerText">
+										<a class="colorInherit redBold" title="<?php echo $tr->translate("PURCHASE_LETTER")." - ".$rs["purchaseNo"];?>" target="_blank" href="<?php echo $purchaseLetter.$rs['poId']; ?>"><?php echo $rs["purchaseNo"];?></a>
+										<small><?php echo $rs["purchaseTypeTitle"];?></small>
+									</td>
+									<td data-label="<?php echo $tr->translate("DATE");?>" ><?php echo date($montFomat,strtotime($rs["poDate"]));?></td>
+									
+									<?php 
+										if($rs["purchaseType"]==2){
+										$arrFilter = array(
+											'purchaseId'=>$rs["poId"]
+											,'proId'=>$rs["proId"]
+										);
+										$proSche = $dbAcc->getPOScheduleItem($arrFilter);
+									?>
+									<td data-label="<?php echo $tr->translate("INCOMING_SCHEDULE");?>">
+									<?php if(!empty($proSche)){ foreach($proSche AS $schIndex => $schedule){
+										$completedSub=$completed;
+										if(empty($completed)){
+											$completedSub="";
+											if(date("Y-m-d")>date("Y-m-d",strtotime($schedule['schedule']))){
+												$completedSub = "redColor";
+											}
+										}
+									?>
+									<span class="rowValue bold <?php echo $completedSub;?>"><span class=" greenClass"><?php echo ($schIndex+1).".)"; ?></span> <?php echo date(DATE_FORMAT_FOR_PHP,strtotime($schedule['schedule']));?></span>
+									<?php }} ?>
+									</td>
+									<?php }else{ ?>
+									<td data-label="<?php echo $tr->translate("INCOMING_SCHEDULE");?>" class="centerText">-</td>
+									<?php } ?>
 									<td data-label="<?php echo $tr->translate("QTY_REQUEST");?>"  class="centerText qtyInfo"><?php echo $qtyRequest;?></td>
 									<td data-label="<?php echo $tr->translate("QTY_APPROVED");?>"  class="centerText boldText qtyInfo"><?php echo $qtyApproved;?></td>
 									<td data-label="<?php echo $tr->translate("QTY_PO");?>"  class="centerText boldText qtyInfo"><?php echo $qtyPO;?></td>
@@ -395,45 +441,54 @@
 									<td data-label="<?php echo $tr->translate("TOTAL")." ".$tr->translate("CURRENCY_SIGN");?>"  class="centerText qtyInfo"><?php echo $rowTotalPrice;?></td>
 									<td data-label="<?php echo $tr->translate("IN_STOCK");?>"  class="centerText boldText greenClass qtyInfo"><?php echo $currentQty;?></td>
 									
-				               	
 									
-									
-									<td data-label="<?php echo $tr->translate("PO_NO");?>"  class="centerText"><a class="colorInherit" title="<?php echo $tr->translate("PURCHASE_LETTER")." - ".$rs["purchaseNo"];?>" target="_blank" href="<?php echo $purchaseLetter.$rs['poId']; ?>"><?php echo $rs["purchaseNo"];?></a></td>
-									
-									<td data-label="<?php echo $tr->translate("DN_NO");?>"  class="centerText"><?php echo $rs["dnNumber"];?></td>
-									
+									<td data-label="<?php echo $tr->translate("DN_NO");?>"  class="centerText">
+									<?php if(!empty($rs["dnNumberList"])){ ?>
+										<span class="rowValue"><?php echo $rs["dnNumberList"];?></span>
+										<span class="rowValue"><?php echo $rs["receiveDateList"];?></span>
+									<?php }else{?>
+									-
+									 <?php }?>
+									</td>
+									<?php if(!empty($rs['requestId'])){ ?>
+									<td data-label="<?php echo $tr->translate("REQUEST_NO");?>"  class="bold"><a class="colorInherit" title="<?php echo $tr->translate("REQUEST_INFO")." - ".$rs["requestNo"];?>" target="_blank" href="<?php echo $requestInfor."".$rs['requestId']; ?>"><?php echo $rs["requestNo"];?></a></td>                 		
+				               		<td data-label="<?php echo $tr->translate("DATE");?>" ><?php echo date($montFomat,strtotime($rs["requestDate"]));?></td>
+									<?php }else{?>
+									<td data-label="<?php echo $tr->translate("REQUEST_NO");?>" class="centerText">-</td>                 		
+				               		<td data-label="<?php echo $tr->translate("DATE");?>" class="centerText">-</td>
+									 <?php }?>
 								</tr>
 								
 				                <?php }?>
 				               <tr class="style " style="white-space:nowrap; ">
-									<td colspan="4" style="border-bottom: none;border-left: solid 1px #fff;" ></td>
+									<td colspan="5" style="border-bottom: none;border-left: solid 1px #fff;" ></td>
 									<td class="styleTitle centerRight boldText"><?php echo number_format($itemsTotalRequest,2);?></td>
 									<td class="styleTitle centerRight boldText"><?php echo number_format($itemsTotalApproved,2);?></td>
 									<td class="styleTitle centerRight boldText"><?php echo number_format($itemsTotalQtyPO,2);?></td>
 									<td class="styleTitle centerRight boldText"><?php echo number_format($itemsTotalQtyRececive,2);?></td>
 									<td class="styleTitle centerRight boldText"><?php echo number_format($itemsTotalQtRemain,2);?></td>
 									<td class="styleTitle centerRight boldText" colspan="2"><?php echo number_format($itemsTotalPrice,2);?></td>
-									<td colspan="3" style="border-bottom: none;border-right: solid 1px #fff;" ></td>
+									<td colspan="4" style="border-bottom: none;border-right: solid 1px #fff;" ></td>
 								</tr>
 								<tr class="style " style="white-space:nowrap; ">
-									<td colspan="4" style=" border-top: none; border-bottom: none;border-left: solid 1px #fff;"></td>
+									<td colspan="5" style=" border-top: none; border-bottom: none;border-left: solid 1px #fff;"></td>
 									<td class="styleTitle centerRight boldText"><?php echo $tr->translate("QTY_TOTAL_REQUEST");?></td>
 									<td class="styleTitle centerRight boldText"><?php echo $tr->translate("QTY_TOTAL_APPROVED");?></td>
 									<td class="styleTitle centerRight boldText"><?php echo $tr->translate("QTY_TOTAL_PO");?></td>
 									<td class="styleTitle centerRight boldText"><?php echo $tr->translate("QTY_TOTAL_RECEIVED");?></td>
 									<td class="styleTitle centerRight boldText"><?php echo $tr->translate("QTY_TOTAL_REMAIN");?></td>
 									<td colspan="2" class="styleTitle centerRight boldText"><?php echo $tr->translate("TOTAL")." ".$tr->translate("CURRENCY_SIGN");?></td>
-									<td colspan="3" style=" border-top: none; border-bottom: none;border-right: solid 1px #fff;"></td>
+									<td colspan="4" style=" border-top: none; border-bottom: none;border-right: solid 1px #fff;"></td>
 								</tr>
 								<tr class="style " style="white-space:nowrap; ">
-									<td colspan="4" style="border-top: none; border-bottom: solid 1px #fff; border-left: solid 1px #fff;" ></td>
+									<td colspan="5" style="border-top: none; border-bottom: solid 1px #fff; border-left: solid 1px #fff;" ></td>
 									<td class="centerRight boldText"><?php echo $GTotalRequest;?></td>
 									<td class="centerRight boldText"><?php echo $GTotalApproved;?></td>
 									<td class="centerRight boldText"><?php echo $GTotalQtyPO;?></td>
 									<td class="centerRight boldText"><?php echo $GTotalQtyRececive;?></td>
 									<td class="centerRight boldText"><?php echo $GTotalQtyRemain;?></td>
 									<td colspan="2" class="centerRight boldText"><?php echo number_format($GTotalPrice,2);?></td>
-									<td colspan="3" style="border-top: none; border-bottom: solid 1px #fff; border-right: solid 1px #fff;"></td>
+									<td colspan="4" style="border-top: none; border-bottom: solid 1px #fff; border-right: solid 1px #fff;"></td>
 								</tr>
 				            </table>
 							<br />
@@ -496,16 +551,16 @@ $(function(){
 		selector: '.context-menu-one', 
 		callback: function(key, options) {
 			var m = "clicked: " + key;
-			if(key=="requestLetter"){
-				url='<?php echo $requestLetter;?>';
-			}else if(key=="requestInfor"){
-				url='<?php echo $requestInfor;?>';
+			if(key=="purchaseLetter"){
+				url='<?php echo $purchaseLetter;?>';
+			}else if(key=="purchaseInfo"){
+				url='<?php echo $purchaseInfo;?>';
 			}
 			gotoAction();
 		},
 		items: {
-			"requestLetter": {name: "<?php echo $tr->translate("REQUEST_LETTER");?>", icon: "fa-file-text", accesskey: "c"},
-			"requestInfor": {name: "<?php echo $tr->translate("REQUEST_INFO_DETAIL");?>", icon: "fa-file-text"},
+			"purchaseLetter": {name: "<?php echo $tr->translate("PURCHASE_LETTER");?>", icon: "fa-file-text", accesskey: "c"},
+			"purchaseInfo": {name: "<?php echo $tr->translate("PURCHASE_INFO_DETAIL");?>", icon: "fa-file-text"},
 		}
 	});
 });

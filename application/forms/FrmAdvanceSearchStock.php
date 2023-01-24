@@ -304,6 +304,17 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 		$requestStatusCheck->setMultiOptions($_optsRequestStatusCheck);
 		$requestStatusCheck->setValue($request->getParam("requestStatusCheck"));
 		
+		$recivedProPO=  new Zend_Dojo_Form_Element_FilteringSelect('recivedProPO');
+		$recivedProPO->setAttribs(array('dojoType'=>$this->filter,'class'=>'fullside'));
+		$_optsRecivedProPO = array(
+				0=>$this->tr->translate("ALL"),
+				1=>$this->tr->translate("PENDING"),
+				2=>$this->tr->translate("SOME_RECEIVED"),
+				3=>$this->tr->translate("COMPLETED_RECEIVED"),
+				);
+		$recivedProPO->setMultiOptions($_optsRecivedProPO);
+		$recivedProPO->setValue($request->getParam("recivedProPO"));
+		
 		$this->addElements(
 			array(
 				$verifyStatus,
@@ -332,6 +343,7 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 				$isPaidStatus,
 				$reqPOStatus
 				,$requestStatusCheck
+				,$recivedProPO
 				
 			)
 		);
