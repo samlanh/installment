@@ -100,7 +100,7 @@ class Stockinout_IndexController extends Zend_Controller_Action {
 		$db = new Stockinout_Model_DbTable_DbReceiveStock();
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
-			try {
+			try{
 				$db->verifyDN($_data);
 				Application_Form_FrmMessage::Sucessfull("VERIFIED_SUCCESSED","/stockinout/index");
 			}catch(Exception $e){
@@ -114,8 +114,9 @@ class Stockinout_IndexController extends Zend_Controller_Action {
 		if(empty($id)){
 			Application_Form_FrmMessage::Sucessfull("NO_DATA","//",2);
 		}
-		
-		$rs = $db->getDNById($id);
+		$param = array(
+				'dnId'=>$id);
+		$rs = $db->getDNById($param);
 		$this->view->rsRow = $rs;
 		
 		$this->view->dnDetail = $db->getDNDetailById($id);

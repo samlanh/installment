@@ -136,6 +136,7 @@ class Application_Model_DbTable_DbStockSystemNotify extends Zend_Db_Table_Abstra
 					<div class="media-body">
 						<small>'.$result['branch_name'].'</small><br />
 						<span class="title" ><a class="letter-link" title="'.$result['branch_name'].' - '.$result['requestNo'].'" href="'.$requestLetter.'">'.$result['requestNo'].'</a></span>
+						<p><strong><i class="fa fa-bullseye "></i> '.$result['requestNoLetter'].'</strong>  </p>
 						<p><strong><i class="fa fa-newspaper-o"></i> '.$result['purpose'].'</strong>  </p>
 						<p><strong></strong> <i class="fa fa-calendar"></i> '.date("d/m/Y",strtotime($result['date'])).'</p>
 						<p><strong></strong> <i class="fa fa-user"></i> '.$result['user_name'].'</p>

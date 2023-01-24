@@ -376,5 +376,21 @@ class Invpayment_Model_DbTable_DbPayment extends Zend_Db_Table_Abstract
 		";
     	return $db->fetchRow($sql);
     }
-   
+   /*
+	* Use In Invoice And Deposit Invoce (Page Edit)
+	* Checking Edit Condiction For Invoice
+	*/
+	function checkingInvoiceHavePayment($invoiceId){
+		$db = $this->getAdapter();
+		$invoiceId = empty($invoiceId)?0:$invoiceId;
+		$sql="SELECT 
+				pmtd.*
+			FROM 
+				`st_payment_detail` AS pmtd 
+				JOIN `st_payment` AS pmt ON pmt.id = pmtd.paymentId 
+			WHERE pmt.status=1 
+				AND pmtd.invoiceId = $invoiceId 
+			LIMIT 1";
+		return $db->fetchRow($sql);
+	}
 }

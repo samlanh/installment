@@ -237,7 +237,7 @@
 									$gTotalAmount=$gTotalAmount+$rs["total"];
 									
 								?>
-				                <tr class=" style " style="font-family: 'Khmer OS Content'; white-space:nowrap; ">
+				                <tr oncontextmenu="setrowdata(<?php echo $rs['id'];?>);return false;" class="context-menu-one style " style="font-family: 'Khmer OS Content'; white-space:nowrap; ">
 				               		<td data-label="<?php echo $tr->translate("NUM");?>"  style="text-align: center;"><?php echo $i++; ?></td>
 				               		<td data-label="<?php echo $tr->translate("BRANCH_NAME");?>" ><?php echo $rs["branch_name"];?></td>
 				               		<td data-label="<?php echo $tr->translate("PO_NO");?>"  class="centerText redBold"><?php echo $rs["purchaseNo"];?></td>      
@@ -311,6 +311,10 @@
 	</div>
 </div>
 <script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
+<?php 
+	$urlPurchaseletter = $this->baseUrl()."/report/stockmg/purchase-letter/id/";
+	$urlPurchaseInfo = $this->baseUrl()."/report/stockmg/purchase-info/id/";
+?>
 <script>
 	dojo.require("dojo.data.ItemFileWriteStore"); 
 	require(["dojo/ready"], function(ready){
@@ -350,5 +354,37 @@ function getBranchInfo(){
 		error: function(e) {
 		}
 	});
+}
+
+
+var row=0;
+var poType=0;
+var url="";
+$(function(){
+	$.contextMenu({
+		selector: '.context-menu-one', 
+		callback: function(key, options) {
+			
+			var m = "clicked: " + key;
+			if(key=="purchaseLetter"){
+				url='<?php echo $urlPurchaseletter;?>';
+			}else if(key=="purchaseInfo"){
+				url='<?php echo $urlPurchaseInfo;?>';
+			}
+			gotoAction();
+		},
+		items: {
+			"purchaseLetter": {name: "<?php echo $tr->translate("PURCHASE_LETTER");?>", icon: "fa-file-text", accesskey: "c"},
+			"purchaseInfo": {name: "<?php echo $tr->translate("PURCHASE_INFO_DETAIL");?>", icon: "fa-file-text"},
+		}
+	});
+});
+function setrowdata(index){
+	
+	row = index;
+}
+var recordid ='';
+function gotoAction(){
+	 window.open(url+row, '_blank');
 }
 </script>

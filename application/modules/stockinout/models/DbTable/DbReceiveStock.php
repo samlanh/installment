@@ -12,7 +12,7 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
 				(SELECT project_name FROM `ln_project` WHERE br_id=r.projectId LIMIT 1) AS projectName,
 				(SELECT name_kh FROM `st_view` WHERE type=4 AND key_code=r.dnType LIMIT 1) dnType,
 				r.dnNumber,
-				(SELECT name_kh FROM `st_view` WHERE type=5 AND key_code=r.verified LIMIT 1) isIssueInvoice,
+				(SELECT name_kh FROM `st_view` WHERE type=5 AND key_code=r.verified LIMIT 1) isVerified,
 				r.plateNo,
 				r.driverName,
 				r.staffCounter,
@@ -437,8 +437,8 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
     			'verified'=>1,
     			'verifiedBy'=>$this->getUserId(),
     			'verifiedDate'=>date('Y-m-d')
-    			);
-    	$where= "id=".$data['purchaseId'];
+    		);
+    	$where= "id=".$data['dnId'];
     	$this->update($arr, $where);
     }
    
@@ -480,8 +480,6 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
 	    		$note = $result['note'];
 	    		$row['qtyReceive'] = $qtyReceived;
 	    		$row['qtyAfter'] = $row['qtyAfter']+$qtyReceived;
-	    		
-	    		
 	    	}
 	    	
 	    	$Message="rangeMessage:'".$tr->translate('CAN_NOT_RECEIVE_OVER')."'";
@@ -514,15 +512,21 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
 	    	$data['isClosed']=-1;
 	    	$rowData = $db->getProductPOInfo($data);
 	    	
+	    	$baseUrl = Zend_Controller_Front::getInstance()->getBaseUrl();
+	    	
+	    	$urlPO = $baseUrl."/report/stockmg/purchase-letter/id/";
+	    	$urlRequest = $baseUrl."/report/stockmg/request-letter/id/";
+	    	
 	    	$strPOInfo = '
 	    		<div class="form-group" style="padding: 4px !important;">
 	             	<span class="note_score">&nbsp;&nbsp; <i class="fa fa-file-text-o" aria-hidden="true"></i>&nbsp;&nbsp;
 	                   	'.$tr->translate("PURCHASING_INFO").'</span>
                    		 <ul>
                    		 	<li><span class="lbl-tt">'.$tr->translate("PO_DATE").'</span>: <span class="red">'.$rowData['createDate'].'</span></li>
-                   		 	<li><span class="lbl-tt">'.$tr->translate("PO_NO").'</span>: <span class="red">'.$rowData['purchaseNo'].'</span></li>
+                   		 	<li><span class="lbl-tt">'.$tr->translate("PO_NO").'</span>: <span class="red"><a target="_blank" href="'.$urlPO.$rowData['id'].'">'.$rowData['purchaseNo'].'</a></span></li>
                    		 	<li><span class="lbl-tt">'.$tr->translate("SUPPLIER_NAME").'</span>: <span class="red">'.$rowData['supplierName'].'</span></li>
-                   			<li><span class="lbl-tt">'.$tr->translate("REQUEST_NO").'</span>: <span class="red">'.$rowData['requestNo'].'</span></li>
+                   		 	<li><span class="lbl-tt">'.$tr->translate("REQUEST_DATE").'</span>: <span class="red">'.$rowData['requestDate'].'</span></li>
+                   			<li><span class="lbl-tt">'.$tr->translate("REQUEST_NO").'</span>: <span class="red"><a target="_blank" href="'.$urlRequest.$rowData['requestId'].'">'.$rowData['requestNo'].'</a></span></li>
                    		</ul>
              	</div>';
     	
@@ -555,6 +559,7 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	$sql=" SELECT r.id,r.projectId,
 				(SELECT project_name FROM `ln_project` WHERE br_id=r.projectId LIMIT 1) AS projectName,
+				(SELECT p.purchaseNo FROM `st_purchasing` p WHERE p.id=r.poId LIMIT 1) purchaseNo,
 				(SELECT name_kh FROM `st_view` WHERE type=4 AND key_code=r.dnType LIMIT 1) dnType,
 				r.dnNumber,
 				r.plateNo,
@@ -562,6 +567,11 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
 				r.staffCounter,
 				r.note,
 				r.verified,
+				r.poId,
+				r.requestId,
+				r.photoDn,
+				r.fileDn,
+				r.poId AS purId,
 				DATE_FORMAT(r.receiveDate,'%d-%m-%Y') receiveDate,
 				(SELECT s.supplierName FROM st_supplier s WHERE s.id=r.supplierId LIMIT 1) AS supplierName,
 				(SELECT purchaseNo FROM `st_purchasing` as p WHERE p.id=r.poId LIMIT 1) AS purchaseNo,
@@ -569,7 +579,11 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
 				(SELECT requestNo FROM `st_request_po` AS s WHERE s.id=r.requestId LIMIT 1) AS requestNo,
 				(SELECT DATE_FORMAT(createDate,'%d-%m-%Y') FROM `st_request_po` AS s WHERE s.id=r.requestId LIMIT 1) requestDate,
 				(SELECT first_name FROM rms_users WHERE id=r.userId LIMIT 1 ) AS user_name,
-				(SELECT first_name FROM rms_users WHERE id=r.verifiedBy LIMIT 1 ) AS verifiedBy
+				(SELECT first_name FROM rms_users WHERE id=r.verifiedBy LIMIT 1 ) AS verifiedBy,
+				DATE_FORMAT(r.verifiedDate,'%d-%m-%Y') verifiedDate,
+				(SELECT  u.signature_pic FROM rms_users AS u WHERE u.id=r.userId LIMIT 1 ) AS userSignature,
+				(SELECT first_name FROM rms_users WHERE id=r.verifiedBy LIMIT 1 ) AS verifiedBy,
+				(SELECT u.signature_pic FROM rms_users AS u WHERE u.id=r.verifiedBy LIMIT 1 ) AS verifiedSignature
 				
 			FROM `st_receive_stock` r WHERE 1 ";
     	if(!empty($data['dnId']))

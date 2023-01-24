@@ -99,6 +99,13 @@ class Invpayment_DepositinvController extends Zend_Controller_Action {
     		exit();
     	}
 		
+		$dbPMT = new Invpayment_Model_DbTable_DbPayment();
+		$checkingPayment = $dbPMT->checkingInvoiceHavePayment($id);
+		if (!empty($checkingPayment)){
+    		Application_Form_FrmMessage::Sucessfull($tr->translate('HAS_IN_PAYMENT_READY'), self::REDIRECT_URL."/index",2);
+    		exit();
+    	}
+		
 		$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
 		$arrStep = array(
 				'keyIndex'=>self::INVOICE_TYPE,

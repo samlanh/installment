@@ -804,9 +804,10 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 			$db = $this->getAdapter();
 			$sql="SELECT
 						p.id,
-						(SELECT r.requestNo from `st_request_po` r where r.id = p.requestId) as requestNo,
+						(SELECT r.requestNo FROM `st_request_po` r WHERE r.id = p.requestId LIMIT 1) as requestNo,
+						(SELECT DATE_FORMAT(r.date,'%d-%m-%Y') FROM `st_request_po` r WHERE r.id = p.requestId LIMIT 1) as requestDate,
 						p.purchaseNo,
-						DATE_FORMAT(p.createDate,'%d-%m-%Y') createDate,
+						DATE_FORMAT(p.date,'%d-%m-%Y') createDate,
 						p.processingStatus,
 						p.supplierId,
 						p.requestId,
