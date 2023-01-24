@@ -277,7 +277,24 @@ class Report_Model_DbTable_DbAccountant extends Zend_Db_Table_Abstract
       		}
       	}
       }
-	  
+	  function submitUnclosingPayment($data){
+      	$db = $this->getAdapter();
+      	if(!empty($data['id_selected'])){
+      		$ids = explode(',', $data['id_selected']);
+      		$key = 1;
+      		$arr = array(
+      				"isClosed"=>0,
+      		);
+      		foreach ($ids as $i){
+      			$this->_name="st_payment";
+      			//if (!empty($data['note_'.$i])){
+      				//$arr['closing_note']=$data['note_'.$i];
+      			//}
+      			$where="id= ".$data['id_'.$i];
+      			$this->update($arr, $where);
+      		}
+      	}
+      }
 	 function getAllIssueChequePayment($search){
     	$db = $this->getAdapter();
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
