@@ -562,6 +562,7 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
 				r.staffCounter,
 				r.note,
 				r.verified,
+				r.poId AS purId,
 				DATE_FORMAT(r.receiveDate,'%d-%m-%Y') receiveDate,
 				(SELECT s.supplierName FROM st_supplier s WHERE s.id=r.supplierId LIMIT 1) AS supplierName,
 				(SELECT purchaseNo FROM `st_purchasing` as p WHERE p.id=r.poId LIMIT 1) AS purchaseNo,
