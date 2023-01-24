@@ -569,7 +569,9 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
 				(SELECT requestNo FROM `st_request_po` AS s WHERE s.id=r.requestId LIMIT 1) AS requestNo,
 				(SELECT DATE_FORMAT(createDate,'%d-%m-%Y') FROM `st_request_po` AS s WHERE s.id=r.requestId LIMIT 1) requestDate,
 				(SELECT first_name FROM rms_users WHERE id=r.userId LIMIT 1 ) AS user_name,
-				(SELECT first_name FROM rms_users WHERE id=r.verifiedBy LIMIT 1 ) AS verifiedBy
+				(SELECT  u.signature_pic FROM rms_users AS u WHERE u.id=r.userId LIMIT 1 ) AS userSignature,
+				(SELECT first_name FROM rms_users WHERE id=r.verifiedBy LIMIT 1 ) AS verifiedBy,
+				(SELECT u.signature_pic FROM rms_users AS u WHERE u.id=r.verifiedBy LIMIT 1 ) AS verifiedSignature
 				
 			FROM `st_receive_stock` r WHERE 1 ";
     	if(!empty($data['dnId']))

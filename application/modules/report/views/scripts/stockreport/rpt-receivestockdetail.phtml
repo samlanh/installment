@@ -114,7 +114,11 @@
 				span.gtotalVal.mainTotal {
 					font-size: 14px;
 				}
-				
+				.signatureImg{
+					height:50px;
+					position:relative;
+					margin-bottom: -15px;
+				}
 			</style>
 				
 			<table class="tableTop" width="100%" >
@@ -298,8 +302,21 @@
 								</td>
 							</tr>
 							<tr>
-								<td colspan="3" style="height:80px;" >
+								<td colspan="2" style="height:80px;" >
 									&nbsp;
+								</td>
+								
+								<td style="text-align:center;" >
+									<?php 
+									if (!empty($rs['verifiedSignature'])){
+										if (file_exists(PUBLIC_PATH."/images/photo/signature/".$rs['verifiedSignature'])){
+											$images = $this->baseUrl().'/images/photo/signature/'.$rs['verifiedSignature'];
+									?>
+									<img class="signatureImg" src="<?php echo $images;?>" />
+									<?php } 
+									}else{?>
+									&nbsp;
+									<?php } ?>
 								</td>
 							</tr>
 							<tr>
