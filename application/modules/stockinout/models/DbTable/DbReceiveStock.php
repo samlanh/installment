@@ -571,6 +571,7 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
 				r.requestId,
 				r.photoDn,
 				r.fileDn,
+				r.poId AS purId,
 				DATE_FORMAT(r.receiveDate,'%d-%m-%Y') receiveDate,
 				(SELECT s.supplierName FROM st_supplier s WHERE s.id=r.supplierId LIMIT 1) AS supplierName,
 				(SELECT purchaseNo FROM `st_purchasing` as p WHERE p.id=r.poId LIMIT 1) AS purchaseNo,
@@ -579,7 +580,10 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
 				(SELECT DATE_FORMAT(createDate,'%d-%m-%Y') FROM `st_request_po` AS s WHERE s.id=r.requestId LIMIT 1) requestDate,
 				(SELECT first_name FROM rms_users WHERE id=r.userId LIMIT 1 ) AS user_name,
 				(SELECT first_name FROM rms_users WHERE id=r.verifiedBy LIMIT 1 ) AS verifiedBy,
-				DATE_FORMAT(r.verifiedDate,'%d-%m-%Y') verifiedDate
+				DATE_FORMAT(r.verifiedDate,'%d-%m-%Y') verifiedDate,
+				(SELECT  u.signature_pic FROM rms_users AS u WHERE u.id=r.userId LIMIT 1 ) AS userSignature,
+				(SELECT first_name FROM rms_users WHERE id=r.verifiedBy LIMIT 1 ) AS verifiedBy,
+				(SELECT u.signature_pic FROM rms_users AS u WHERE u.id=r.verifiedBy LIMIT 1 ) AS verifiedSignature
 				
 			FROM `st_receive_stock` r WHERE 1 ";
     	if(!empty($data['dnId']))
