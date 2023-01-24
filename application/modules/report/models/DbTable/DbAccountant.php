@@ -157,6 +157,12 @@ class Report_Model_DbTable_DbAccountant extends Zend_Db_Table_Abstract
 					(SELECT c.categoryName FROM st_category AS c WHERE c.id = p.categoryId LIMIT 1 ) AS categoryTitle,
 					(SELECT pl.qty FROM st_product_location AS pl WHERE pl.proId=p.proId AND pl.projectId= po.projectId LIMIT 1) AS currentQty,
 					p.measureLabel AS measureTitle
+					
+					,(SELECT SUM(rstDe.qtyReceive) FROM st_receive_stock AS rst,st_receive_stock_detail AS rstDe WHERE rst.id = rstDe.receiveId AND rst.poId=po.id AND rstDe.proId = pod.proId AND rst.status =1 ) AS receivedQty
+					,(SELECT SUM(rstDe.isClosed) FROM st_receive_stock AS rst,st_receive_stock_detail AS rstDe WHERE rst.id = rstDe.receiveId AND rst.poId=po.id AND rstDe.proId = pod.proId AND rst.status =1 ) AS isCompletedReceive
+					,(SELECT GROUP_CONCAT(rst.dnNumber) FROM st_receive_stock AS rst,st_receive_stock_detail AS rstDe WHERE rst.id = rstDe.receiveId AND rst.poId=po.id AND rstDe.proId = pod.proId AND rst.status =1 ) AS dnNumberList
+					,(SELECT GROUP_CONCAT(rst.id) FROM st_receive_stock AS rst,st_receive_stock_detail AS rstDe WHERE rst.id = rstDe.receiveId AND rst.poId=po.id AND rstDe.proId = pod.proId AND rst.status =1 ) AS dnIdList
+					,(SELECT GROUP_CONCAT(DATE_FORMAT(rst.receiveDate,'".DATE_FORMAT_FOR_SQL."'))  FROM st_receive_stock AS rst,st_receive_stock_detail AS rstDe WHERE rst.id = rstDe.receiveId AND rst.poId=po.id AND rstDe.proId = pod.proId AND rst.status =1 ) AS dnReceiveDateList
 					";
 		$sql.="
 				,

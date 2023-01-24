@@ -143,6 +143,28 @@ class Report_StockmgController extends Zend_Controller_Action {
 		$this->view->printByFormat = $frmpopup->printByFormat();
 	}
 	
+	public function purchaseInfoAction(){
+		try{
+			$db = new Report_Model_DbTable_DbAccountant();
+			$id=$this->getRequest()->getParam('id');
+    		$id = empty($id)?0:$id;
+			$row = $db->getPurchasingById($id);
+			if (empty($row)){
+				Application_Form_FrmMessage::Sucessfull("NO_RECORD", "/po/index",2);
+				exit();
+			}
+			$this->view->row = $row;
+			$this->view->rowdetail = $db->getPODetailById($id);
+		
+		}catch (Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+		}
+		
+		$frmpopup = new Application_Form_FrmPopupGlobal();
+		$this->view->printByFormat = $frmpopup->printByFormat();
+	}
+	
 	public function rptPaymentAction(){
 		try{
 			if($this->getRequest()->isPost()){
