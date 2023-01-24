@@ -64,6 +64,7 @@
 						<span style='font-family: "Times New Roman","Khmer OS Muol Light";' >
 							<?php echo $tr->translate("VERIFY_DN");?>
 						</span><br />
+						(ស្នើ/REQUEST)<br />
 						<span style='font-family: "Times New Roman","Khmer OS Muol Light";' >
 							<br /><?php echo $rs['projectName'];?>
 						</span>
@@ -71,7 +72,7 @@
 				</tr>
 				<tr>
 					<td colspan="3" style="position:relative;" >
-						<table class="requestInfo">
+						<table class="requestInfo" border="1">
 							<tr>
 								<td width="40%">
 									<div id="request-info">
@@ -80,13 +81,13 @@
 												<span class="lbl-tt"><?php echo $tr->translate("STATUS");?></span>: <span class="red"><?php echo ($rs['verified']==1)?'<i class="fa fa-check-square" aria-hidden="true"></i> '.$tr->translate("APPROVED"):'<i class="fa fa-spinner" aria-hidden="true"></i> '.$tr->translate("PENDING");?></span>
 											</li>
 											<li>
-												<span class="lbl-tt"><?php echo $tr->translate("REQUEST_NO");?></span>: <span><?php echo $rs['requestNo'];?></span>
+												<span class="lbl-tt"><?php echo $tr->translate("REQUEST_NO");?></span>: <a target="_blank" href="<?php echo $this->baseUrl()."/report/stockmg/request-letter/id/".$rs['requestId'];?>"><span><?php echo $rs['requestNo'];?></span></a>
 											</li>
 											<li>
 												<span class="lbl-tt"><?php echo $tr->translate("REQUEST_DATE");?></span>: <span><?php echo $rs['requestDate'];?></span>
 											</li>
 											<li>
-												<span class="lbl-tt"><?php echo $tr->translate("PO_NO");?></span>: <span><?php echo $rs['purchaseNo'];?></span>
+												<span class="lbl-tt"><?php echo $tr->translate("PO_NO");?></span>: <a target="_blank" href="<?php echo $this->baseUrl()."/report/stockmg/purchase-letter/id/".$rs['poId'];?>"><span><?php echo $rs['purchaseNo'];?></span></a>
 											</li>
 											<li>
 												<span class="lbl-tt"><?php echo $tr->translate("PO_DATE");?></span>: <span><?php echo $rs['purchaseDate'];?></span>
@@ -97,7 +98,21 @@
 										</ul>
 									</div>
 								</td>
-								<td width="20%">&nbsp;</td>
+								<td width="20%">&nbsp;
+									<div id="request-info">
+										<ul>
+											<li>
+												<span class="lbl-tt">ឯកសារភ្ជាប់</span> <span class="red"></span>
+											</li>
+											<li>
+												<span class="lbl-tt"><?php echo $tr->translate("PICTURE_GOODS");?></span>: <span><?php if(!empty($rs['photoDn'])){ ?><a target="_blank" href="<?php echo $this->baseUrl()."/images/dndocument/".$rs['photoDn'];?>">Download</a><?php }else{echo "N/A";};?></span>
+											</li>
+											<li>
+												<span class="lbl-tt"><?php echo $tr->translate("FILE_DN");?></span>: <span><?php if(!empty($rs['fileDn'])){ ?><a target="_blank" href="<?php echo $this->baseUrl()."/images/dndocument/".$rs['fileDn'];?>">Download</a><?php }else{echo "N/A";};?></span>
+											</li>
+										</ul>
+									</div>
+								</td>
 								<td width="40%">
 									<div id="request-info">
 										<ul>
@@ -163,7 +178,7 @@
 							<tr>
 								<td style="vertical-align: top;padding: 2px 5px;height: 80px; line-height: 16px;font-size:12px;">
 									<span style="font-weight: 600; display: block;text-decoration: underline;"><?php echo $tr->translate("NOTE");?> ៖</span>
-									<span style="display: block; font-size:11px;"><?php echo $rs["note"];?><span>
+									<span style="display: block; font-size:11px;"><?php echo $rs["note"];?></span>
 								</td>
 							</tr>
 						</table>
@@ -193,11 +208,11 @@
 					 <?php $link = $this->url(array('module'=>'stockinout','controller'=>'index','action'=>'index'),null, true);?>
 				<input onclick="window.open('<?php echo $link;?>','_self');" tabindex="1" label="<?php echo $tr->translate('GO_BACK');?>"  dojoType="dijit.form.Button" name="save_close"
 					class="button-class button-primary" iconClass="	glyphicon glyphicon-repeat" /> 
-				<input type="submit" <?php if($rs['verified']==1)echo'Disabled="Disabled"';?> value="SAVE_NEW" tabindex="2" label="<?php echo $tr->translate('VERIFYED');?>" id="save_new" dojoType="dijit.form.Button" name="save_new"
+				<input type="submit" <?php if($rs['verified']==1){ echo'Disabled="Disabled"';}?> value="SAVE_NEW" tabindex="2" label="<?php echo $tr->translate('VERIFYED');?>" id="save_new" dojoType="dijit.form.Button" name="save_new"
 					class="button-class button-primary" iconClass="glyphicon glyphicon-check"/> 
 				<input type="button" onclick="doPrint();"  value="SAVE_NEW" tabindex="3" label="<?php echo $tr->translate('PRINT');?>"  dojoType="dijit.form.Button" name="save_new"
 						class="button-class button-primary" iconClass="	glyphicon glyphicon-print"/> 
-					<input type="hidden" name="purchaseId" value="<?php echo $rs['id'];?>" />
+					<input type="hidden" name="dnId" value="<?php echo $rs['id'];?>" />
 			</form>
     	</div>
 	</div>
