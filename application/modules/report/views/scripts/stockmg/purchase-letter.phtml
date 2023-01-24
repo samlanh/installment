@@ -5,7 +5,7 @@
 	
 	$month = array("01"=>"មករា","02"=>"កុម្ភៈ","03"=>"មីនា","04"=>"មេសា","05"=>"ឧសភា","06"=>"មិថុនា","07"=>"កក្កដា","08"=>"សីហា","09"=>"កញ្ញា","10"=>"តុលា","11"=>"វិច្ឆិកា","12"=>"ធ្នូ",);
 	$dbparmeter = new Report_Model_DbTable_DbParamater();
-
+	$requestInfor = $this->baseUrl()."/report/stockmg/request-info/id/";
 ?>
 <div class="reportblog">
 	<div class="card-box">
@@ -112,6 +112,10 @@
 				span.gtotalVal.mainTotal {
 					font-size: 14px;
 				}
+				a.colorInherit {
+					color: inherit;
+					text-decoration:none;
+				}
 				.signatureImg{
 					height:50px;
 					position:relative;
@@ -158,7 +162,7 @@
 										លេខសំណើ : 
 										<small>Request N<sup>o</sup> : </small>
 									</span>
-									<span class="bold redColor" ><?php echo $this->row["requestNo"];?></span>
+									<span class="bold redColor" ><a class="colorInherit" title="<?php echo $tr->translate("REQUEST_INFO")." - ".$this->row["requestNo"];?>" target="_blank" href="<?php echo $requestInfor."".$this->row["requestId"]; ?>"><?php echo $this->row["requestNo"];?></a></span>
 									<?php }else{?>
 									&nbsp;
 									<?php }?>

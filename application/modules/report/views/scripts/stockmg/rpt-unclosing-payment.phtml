@@ -20,8 +20,10 @@
 			'typeKeyIndex'=>1,
 		);
 	$purchaseType = $dbGBstock->purchasingTypeKey($arrStep);
+	
+	$titleReport = $tr->translate("RPT_UNCLOSING_PAYMENT");
 ?>
-<title><?php echo $tr->translate("RPT_CLOSING_PAYMENT");?></title>
+<title><?php echo $titleReport;?></title>
 <script>
      dojo.require("dijit.form.DateTextBox");
 </script>
@@ -29,7 +31,7 @@
 		<div class="card-box">
 	       	<div class="col-sm-12 border-botom">
 		   		<div class="col-sm-8 pd-0">
-		    		<h4 class="m-b-0"><i class="fa fa-file-text" aria-hidden="true"></i> <?php echo $tr->translate('RPT_CLOSING_PAYMENT');?></h4>
+		    		<h4 class="m-b-0"><i class="fa fa-file-text" aria-hidden="true"></i> <?php echo $tr->translate('RPT_UNCLOSING_PAYMENT');?></h4>
 	    		</div>
 	    		<div class="col-sm-4 text-right">
 	    		</div>
@@ -83,7 +85,7 @@
 				.hideblog{display: block !important;;border: 1px solid #fff; border-bottom: 1px solid #000;}
 				.hiddenblog{display: block !important;}
 			</style>
-	<form id="list" name="list" action="<?php echo $this->url(array('module'=>'report','controller'=>'stockmg','action'=>'closingpayment')); ?>" dojoType="dijit.form.Form" method="post">
+	<form id="list" name="list" action="<?php echo $this->url(array('module'=>'report','controller'=>'stockmg','action'=>'unclosingpayment')); ?>" dojoType="dijit.form.Form" method="post">
 		<script type="dojo/method" event="onSubmit" >			
 					id_selected = dijit.byId('id_selected').get('value');
 					if(id_selected==''){
@@ -365,7 +367,7 @@
 				<table width="100%">
 					<tr>
 						<td align="center">
-							<br><button class="button-class button-primary" iconclass="glyphicon glyphicon-ok-circle" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("CLOSING");?></button>
+							<br><button class="button-class button-primary" iconclass="glyphicon glyphicon-remove-circle" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("UNCLOSING");?></button>
 						</td>
 					</tr>	
 				</table>
@@ -383,8 +385,12 @@
 			 getBranchInfo();
 			 
 			 document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
-			 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("RPT_CLOSING_PAYMENT");?>';
+			 document.getElementById('reportTitle').innerHTML = '<?php echo $titleReport;?>';
 			 document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date(DATE_FORMAT_FOR_PHP); }else{ echo date(DATE_FORMAT_FOR_PHP,strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date(DATE_FORMAT_FOR_PHP,strtotime($this->search['end_date'])); }?>';
+		
+			<?php if( $this->search['closingStatus']>-1 ){?>
+				dijit.byId('closingStatus').set('value','<?php echo $this->search['closingStatus']; ?>');
+			<?php  } ?>
 		});
 		
 	});
