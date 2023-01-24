@@ -98,16 +98,14 @@ class Po_Model_DbTable_DbDirectPO extends Zend_Db_Table_Abstract
     				);
     		$this->_name='st_purchasing';
     		$id = $this->insert($arr);
-			
-					
+						
 			if(!empty($data['identity'])){
 				$ids = explode(',', $data['identity']);
 				foreach ($ids as $i){
 					
 					$arr = array(
 							'purchaseId'		=>$id,
-							'proId'				=>$data['proId'.$i],
-								
+							'proId'				=>$data['proId'.$i],	
 							'qty'				=>$data['qty'.$i],
 							'qtyAfter'			=>$data['qty'.$i],
 							'unitPrice'			=>$data['unitPrice'.$i],
@@ -118,6 +116,28 @@ class Po_Model_DbTable_DbDirectPO extends Zend_Db_Table_Abstract
 						);
 					$this->_name='st_purchasing_detail';	
 					$this->insert($arr);
+				}
+    		}
+
+			if(!empty($data['identity_product_schedule'])){
+				$idp = explode(',', $data['identity_product_schedule']);
+				foreach ($idp as $j){
+
+					if(!empty($data['identity_schedule'.$j])){
+						$id_schedule = explode(',', $data['identity_schedule'.$j]);
+						foreach($id_schedule as $k){
+							$arr = array(
+								'purchaseId'		=>$id,
+								'proId'				=>$data['pro_id'.$j],	
+								'schedule'			=>$data['schedule_date'.$j.'_'.$k],
+								'note'				=>$data['schedule_note'.$j.'_'.$k],
+							);
+						$this->_name='st_purchase_item_schedule';	
+						$this->insert($arr);
+
+						}
+						
+					}
 				}
     		}
 			
@@ -252,6 +272,13 @@ class Po_Model_DbTable_DbDirectPO extends Zend_Db_Table_Abstract
 					LEFT JOIN `st_product` AS p  ON p.proId = pod.proId 
 			";
 		$sql.=" WHERE pod.purchaseId = $recordId";
+		return $db->fetchAll($sql);
+	}
+
+	function getPOScheduleDetailById($recordId, $proId){
+		$db = $this->getAdapter();
+		$sql=" SELECT * FROM `st_purchase_item_schedule` WHERE proId=".$proId;
+		$sql.=" AND purchaseId =".$recordId;
 		return $db->fetchAll($sql);
 	}
 	

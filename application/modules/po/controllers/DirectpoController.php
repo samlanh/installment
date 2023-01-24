@@ -118,8 +118,6 @@ class Po_DirectpoController extends Zend_Controller_Action {
     		exit();
     	}
 		$this->view->rowdetail = $db->getPODetailById($id);
-		
-		
 		$frm = new Po_Form_FrmPurchase();
     	$frm->FrmPurchase($row);
     	Application_Model_Decorator::removeAllDecorator($frm);
