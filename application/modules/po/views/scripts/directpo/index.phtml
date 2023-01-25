@@ -1,5 +1,6 @@
 <?php
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage ();
+	$urlCopy = $this->baseUrl()."/po/directpo/copy/id/";
 	$urlEdit = $this->baseUrl()."/po/directpo/edit/id/";
 	$urlReprint = $this->baseUrl()."/report/stockmg/purchase-letter/id/";
 	$urlPurchaseInfo = $this->baseUrl()."/report/stockmg/purchase-info/id/";
@@ -69,8 +70,11 @@
 			selector: '.context-menu-one', 
 			callback: function(key, options) {
 				var m = "clicked: " + key;
+
 				if(key=="edit"){
 					url='<?php echo $urlEdit;?>';
+				}else if(key=="copy"){
+					url='<?php echo $urlCopy;?>';
 				}else if(key=="reprint"){
 					url='<?php echo $urlReprint;?>';
 				}else if(key=="purchaseInfo"){
@@ -81,6 +85,7 @@
 			items: {
 				
 				"edit": {name: "<?php echo $tr->translate("EDIT");?>", icon: "fa-edit", accesskey: "e"},
+				"copy": {name: "<?php echo $tr->translate("COPY");?>", icon: "fa-copy", accesskey: "e"},
 				"reprint": {name: "<?php echo $tr->translate("PURCHASE_LETTER");?>", icon: "fa-print", accesskey: "e"},
 				"purchaseInfo": {name: "<?php echo $tr->translate("PURCHASE_INFO_DETAIL");?>", icon: "fa-print", accesskey: "e"},
 				

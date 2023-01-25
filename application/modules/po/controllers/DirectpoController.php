@@ -123,6 +123,61 @@ class Po_DirectpoController extends Zend_Controller_Action {
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm = $frm;
 	}
+
+	function copyAction(){
+		
+		$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+		$db = new Po_Model_DbTable_DbDirectPO();
+		if($this->getRequest()->isPost()){
+			$_data = $this->getRequest()->getPost();
+			try {
+				$_data['purchaseType']=self::PURCHASE_TYPE;
+				$db->addDirectedPO($_data);
+				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS",self::REDIRECT_URL."/index");
+			}catch(Exception $e){
+				Application_Form_FrmMessage::message("INSERT_FAIL");
+				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			}
+		}
+		
+		$id = $this->getRequest()->getParam('id');
+		$id = empty($id)?0:$id;
+		if(empty($id)){
+			Application_Form_FrmMessage::Sucessfull("NO_DATA",self::REDIRECT_URL."/index",2);
+			exit();
+		}
+		
+		$row = $db->getDataRow($id);
+		$this->view->row = $row;
+		if(empty($row)){
+			Application_Form_FrmMessage::Sucessfull($tr->translate('NO_DATA'), self::REDIRECT_URL."/index",2);
+			exit();
+		}
+		if ($row['status']==0){
+    		Application_Form_FrmMessage::Sucessfull($tr->translate('ALREADY_VOID'), self::REDIRECT_URL."/index",2);
+    		exit();
+    	}
+		if (!empty($row['inDepositInvoice'])){
+    		Application_Form_FrmMessage::Sucessfull($tr->translate('ALREADY_DEPOSIT'), self::REDIRECT_URL."/index",2);
+    		exit();
+    	}
+		$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
+		$arrStep = array(
+				'keyIndex'=>self::PURCHASE_TYPE,
+				'typeKeyIndex'=>1,
+			);
+		$purchaseType = $dbGBstock->purchasingTypeKey($arrStep);
+		
+		if ($row['purchaseType']!=$purchaseType){
+    		Application_Form_FrmMessage::Sucessfull($tr->translate('NO_DATA'), self::REDIRECT_URL."/index",2);
+    		exit();
+    	}
+		$this->view->rowdetail = $db->getPODetailById($id);
+		$frm = new Po_Form_FrmPurchase();
+    	$frm->FrmPurchase($row);
+    	Application_Model_Decorator::removeAllDecorator($frm);
+    	$this->view->frm = $frm;
+	}
 	
 	function podetailAction(){
 		if($this->getRequest()->isPost()){

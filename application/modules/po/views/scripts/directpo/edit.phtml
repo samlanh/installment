@@ -195,7 +195,6 @@
 										<tr id="head-title" class="head-td" align="center">
 											<th scope="col"><?php echo $tr->translate("N_O");?></th>
 											<th scope="col" width="40%"><?php echo $tr->translate("PRODUCT_NAME");?></th>
-											<th scope="col" ><?php echo $tr->translate("SCHEDULE_BUTTON");?></th>
 											<th scope="col" width="40%"><?php echo $tr->translate("DATE_ENTRY");?></th>	
 										</tr>
 									</thead>
@@ -506,9 +505,8 @@
 		template='';
 		temp = "";
 		template+='<td align="center" class="numberRecord" data-label="<?php echo $tr->translate("N_O");?>">'+no1+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="pro_scheduleId'+col1+'" name="pro_scheduleId'+col1+'" value="<?php echo $rs['id'];?>" type="text"  ></td>';
-		template+='<td width="30%" align="center" data-label="<?php echo $tr->translate("PRODUCT_NAME");?>" class="productName" ><?php echo $rs['proName'];?><input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="pro_id'+col1+'" name="pro_id'+col1+'" value="<?php echo $rs['proId'];?>" type="text"  ></td>';
-		template+='<td align="center"  data-label="<?php echo $tr->translate("SCHEDULE_BUTTON");?>"><input  type="button" class="button-class button-primary" iconClass="glyphicon glyphicon-sort-by-attributes" dojoType="dijit.form.Button"  label="<?php echo $tr->translate("ADD_SCHEDULE");?>" onClick=" productSchedule('+<?php echo $rs['proId'];?>+', '+col1+') "> </td>';	
-		template+='<td width="50%" align="center"  data-label="<?php echo $tr->translate("SCHEDULE");?>"> <table> <tbody id="schedule_row'+col1+'"> </tbody> </table> <input type="hidden" name="identity_schedule'+col1+'" id="identity_schedule'+col1+'" dojoType="dijit.form.TextBox" value="" ></td>';
+		template+='<td width="30%" align="center" data-label="<?php echo $tr->translate("PRODUCT_NAME");?>" class="productName" ><?php echo $rs['proName'];?><input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="pro_id'+col1+'" name="pro_id'+col1+'" value="<?php echo $rs['proId'];?>" type="text"  ></td>';	
+		template+='<td width="50%" align="left"  data-label="<?php echo $tr->translate("SCHEDULE");?>"> <table> <tbody id="schedule_row'+col1+'"> </tbody> </table> <input type="hidden" name="identity_schedule'+col1+'" id="identity_schedule'+col1+'" dojoType="dijit.form.TextBox" value="" ><input  type="button" class="button-class button-primary" iconClass="glyphicon glyphicon-sort-by-attributes" dojoType="dijit.form.Button"  label="<?php echo $tr->translate("ADD_SCHEDULE");?>" onClick=" productSchedule('+<?php echo $rs['proId'];?>+', '+col1+') "></td>';
 		
 		tmp='<tr class="rowData" id="row_schedule'+col1+'">';
 		tmp+="</tr>";
@@ -562,8 +560,7 @@
 				
 				template+='<td align="center" class="numberRecord" data-label="<?php echo $tr->translate("N_O");?>">'+no1+'</td>';
 				template+='<td width="30%" align="center" data-label="<?php echo $tr->translate("PRODUCT_NAME");?>" class="productName" >'+pro_name+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="pro_id'+col1+'" name="pro_id'+col1+'" value="'+pro_id+'" type="text"  ></td>';
-				template+='<td align="center"  data-label="<?php echo $tr->translate("SCHEDULE_BUTTON");?>"><input  type="button" class="button-class button-primary" iconClass="glyphicon glyphicon-sort-by-attributes" dojoType="dijit.form.Button"  label="<?php echo $tr->translate("ADD_SCHEDULE");?>" onClick=" productSchedule('+pro_id+', '+col1+') "> </td>';	
-				template+='<td width="50%" align="center"  data-label="<?php echo $tr->translate("SCHEDULE");?>"> <table> <tbody id="schedule_row'+col1+'"> </tbody> </table> <input type="hidden" name="identity_schedule'+col1+'" id="identity_schedule'+col1+'" dojoType="dijit.form.TextBox" value="" ></td>';	
+				template+='<td width="50%" align="left"  data-label="<?php echo $tr->translate("SCHEDULE");?>"> <table> <tbody id="schedule_row'+col1+'"> </tbody> </table> <input type="hidden" name="identity_schedule'+col1+'" id="identity_schedule'+col1+'" dojoType="dijit.form.TextBox" value="" ><input  type="button" class="button-class button-primary" iconClass="glyphicon glyphicon-sort-by-attributes" dojoType="dijit.form.Button"  label="<?php echo $tr->translate("ADD_SCHEDULE");?>" onClick=" productSchedule('+pro_id+', '+col1+') "></td>';	
 				tmp='<tr class="rowData" id="row_schedule'+col1+'">';
 				tmp+="</tr>";
 				dojo.query("#table_product_schedule").append(tmp);
