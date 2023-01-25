@@ -111,7 +111,6 @@ class Po_Model_DbTable_DbDirectPO extends Zend_Db_Table_Abstract
 							'unitPrice'			=>$data['unitPrice'.$i],
 							'discountAmount'	=>$data['discountAmount'.$i],
 							'subTotal'			=>$data['subTotal'.$i],
-							'requestInDate'		=>$data['requestInDate'.$i],
 							'note'				=>$data['note'.$i],
 						);
 					$this->_name='st_purchasing_detail';	
@@ -211,7 +210,6 @@ class Po_Model_DbTable_DbDirectPO extends Zend_Db_Table_Abstract
 								'unitPrice'			=>$data['unitPrice'.$i],
 								'discountAmount'	=>$data['discountAmount'.$i],
 								'subTotal'			=>$data['subTotal'.$i],
-								'requestInDate'		=>$data['requestInDate'.$i],
 								'note'				=>$data['note'.$i],
 							);
 							$this->_name='st_purchasing_detail';
@@ -228,7 +226,6 @@ class Po_Model_DbTable_DbDirectPO extends Zend_Db_Table_Abstract
 								'unitPrice'			=>$data['unitPrice'.$i],
 								'discountAmount'	=>$data['discountAmount'.$i],
 								'subTotal'			=>$data['subTotal'.$i],
-								'requestInDate'		=>$data['requestInDate'.$i],
 								'note'				=>$data['note'.$i],
 							);
 							$this->_name='st_purchasing_detail';	
@@ -300,34 +297,9 @@ class Po_Model_DbTable_DbDirectPO extends Zend_Db_Table_Abstract
 
 								}
 								
-		
 							}		
 						}
-						
-						
-						/*
-						else{
-
-							if(!empty($data['identity_schedule'.$j])){
-								$id_schedule = explode(',', $data['identity_schedule'.$j]);
-								foreach($id_schedule as $k){
-									$arr = array(
-										'purchaseId'		=>$id,
-										'proId'				=>$data['pro_id'.$j],	
-										'schedule'			=>$data['schedule_date'.$j.'_'.$k],
-										'note'				=>$data['schedule_note'.$j.'_'.$k],
-									);
-								$this->_name='st_purchase_item_schedule';	
-								$this->insert($arr);
-		
-								}
 								
-							}
-
-
-						}
-						*/
-							
 					}
 				}
 				

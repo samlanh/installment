@@ -66,6 +66,15 @@
 										</div>
 									 </div>
 									 <div class="form-group">
+										<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("SUPPLIER");?> </label>
+										<div class="col-md-4 col-sm-4 col-xs-12">
+											<?php echo $frm->getElement("supplierId");?>
+										</div>
+										<div class="col-md-3 col-sm-3 col-xs-12">
+											<input type="button" class="button-class button-primary" iconClass="glyphicon glyphicon-refresh" dojoType="dijit.form.Button"  label="<?php echo $tr->translate("GET_DATA");?>" onclick="getRefreshData();" />
+										</div>
+									 </div>
+									 <div class="form-group">
 										<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("PO_NO");?> </label>
 										<div class="col-md-7 col-sm-7 col-xs-12">
 											<?php echo $frm->getElement("purchaseNo");?>
@@ -77,12 +86,7 @@
 											<?php echo $frm->getElement("date");?>
 										</div>
 									 </div>
-									 <div class="form-group">
-										<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("SUPPLIER");?> </label>
-										<div class="col-md-7 col-sm-7 col-xs-12">
-											<?php echo $frm->getElement("supplierId");?>
-										</div>
-									 </div>
+									
 									<div class="form-group">
 										<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("STATUS");?> </label>
 										<div class="col-md-7 col-sm-7 col-xs-12">
@@ -167,7 +171,6 @@
 											<th scope="col" width="5%"><?php echo $tr->translate("UNIT_PRICE");?></th>
 											<th scope="col" width="5%"><?php echo $tr->translate("DISCOUNT")." ".$tr->translate("CURRENCY_SIGN");?></th>
 											<th scope="col" width="10%"><?php echo $tr->translate("SUB_TOTAL");?></th>
-											<th scope="col" width="20%"><?php echo $tr->translate("DATE_ENTRY");?></th>
 											<th scope="col" width="20%"><?php echo $tr->translate("NOTE");?></th>
 											
 										</tr>
@@ -281,6 +284,31 @@
 		getAllProductStoreFunction(urlGetAllProduct,objectContentFilter);
 		
 	}
+
+	function addNewSupplier(){
+		categoryId = dijit.byId('supplierId').get('value');
+		if(categoryId==-1){
+			window.open('<?php echo $this->url(array('module'=>'po','controller'=>'supplier','action'=>'add'))?>');
+		}
+	}
+
+	var urlGetAllSuppilyer = '<?php echo $this->url(array('module'=>'po','controller'=>'supplier','action'=>'getallsupplier')); ?>';
+	function getRefreshData(){
+			
+		dojo.xhrPost({
+			url:urlGetAllSuppilyer,	
+			handleAs:"json",
+			load: function(data) {
+				supplierStore  = getDataStorefromJSON('id','name', data);	
+			    dijit.byId('supplierId').set('store',supplierStore);
+				
+				
+			},
+			error: function(err){
+			}
+		});
+		
+	}
 	
 	var col= 0; var no=0;
 	var title = 0;
@@ -337,7 +365,6 @@
 				template+='<td data-label="<?php echo $tr->translate("UNIT_PRICE");?>"><input required dojoType="dijit.form.NumberTextBox" class="fullside" data-dojo-props="constraints:{min:0.01},rangeMessage:'+"'<?php echo $tr->translate("MINIMUM_VALUE_IS_ZEROONE");?>'"+'" onKeyup="calculateTotal('+col+');" id="unitPrice'+col+'" name="unitPrice'+col+'" placeholder="'+'<?php echo $tr->translate("UNIT_PRICE");?> " value="1" type="text"  ></td>';	
 				template+='<td data-label="<?php echo $tr->translate("DISCOUNT")." ".$tr->translate("CURRENCY_SIGN");?>"><input dojoType="dijit.form.NumberTextBox" class="fullside"  onKeyup="calculateTotal('+col+');" id="discountAmount'+col+'" name="discountAmount'+col+'" placeholder="'+'<?php echo $tr->translate("DISCOUNT")." ".$tr->translate("CURRENCY_SIGN");?> " value="0" type="text"  ></td>';	
 				template+='<td data-label="<?php echo $tr->translate("SUB_TOTAL");?>"><input readOnly dojoType="dijit.form.NumberTextBox" class="fullside"   id="subTotal'+col+'" name="subTotal'+col+'" placeholder="'+'<?php echo $tr->translate("SUB_TOTAL");?> " value="1" type="text"  ></td>';	
-				template+='<td data-label="<?php echo $tr->translate("DATE_ENTRY");?>"><input required dojoType="dijit.form.DateTextBox" class="fullside" constraints="{datePattern:'+"'dd/MM/yyyy'"+'}" id="requestInDate'+col+'" name="requestInDate'+col+'" placeholder="'+'<?php echo $tr->translate("DATE_ENTRY");?> " value="now" type="text"  ></td>';	
 				template+='<td data-label="<?php echo $tr->translate("NOTE");?>"><input dojoType="dijit.form.TextBox" class="fullside" id="note'+col+'" name="note'+col+'" placeholder="'+'<?php echo $tr->translate("NOTE");?> " value="" type="text"  ></td>';	
 		
 				tmp='<tr class="rowData" id="row'+col+'">';
@@ -430,7 +457,6 @@
 		template+='<td data-label="<?php echo $tr->translate("UNIT_PRICE");?>"><input required data-dojo-props="constraints:{min:0.01},rangeMessage:'+"'<?php echo $tr->translate("MINIMUM_VALUE_IS_ZEROONE");?>'"+'" dojoType="dijit.form.NumberTextBox" class="fullside"  onKeyup="calculateTotal('+col+');" id="unitPrice'+col+'" name="unitPrice'+col+'" placeholder="'+'<?php echo $tr->translate("UNIT_PRICE");?> " value="<?php echo $rs['unitPrice'];?>" type="text"  ></td>';	
 		template+='<td data-label="<?php echo $tr->translate("DISCOUNT")." ".$tr->translate("CURRENCY_SIGN");?>"><input dojoType="dijit.form.NumberTextBox" class="fullside"  onKeyup="calculateTotal('+col+');" id="discountAmount'+col+'" name="discountAmount'+col+'" placeholder="'+'<?php echo $tr->translate("DISCOUNT")." ".$tr->translate("CURRENCY_SIGN");?> " value="<?php echo $rs['discountAmount'];?>" type="text"  ></td>';	
 		template+='<td data-label="<?php echo $tr->translate("SUB_TOTAL");?>"><input readOnly dojoType="dijit.form.NumberTextBox" class="fullside"  id="subTotal'+col+'" name="subTotal'+col+'" placeholder="'+'<?php echo $tr->translate("SUB_TOTAL");?> " value="<?php echo $rs['subTotal'];?>" type="text"  ></td>';	
-		template+='<td data-label="<?php echo $tr->translate("DATE_ENTRY");?>"><input required dojoType="dijit.form.DateTextBox" class="fullside" constraints="{datePattern:'+"'dd/MM/yyyy'"+'}" id="requestInDate'+col+'" name="requestInDate'+col+'" placeholder="'+'<?php echo $tr->translate("DATE_ENTRY");?> " value="<?php echo date("Y-m-d",strtotime($rs['requestInDate']));?>" type="text"  ></td>';	
 		template+='<td data-label="<?php echo $tr->translate("NOTE");?>"><input dojoType="dijit.form.TextBox" class="fullside" id="note'+col+'" name="note'+col+'" placeholder="'+'<?php echo $tr->translate("NOTE");?> " value="'+itemsNoteString+'" type="text"  ></td>';	
 		
 		tmp='<tr class="rowData" id="row'+col+'">';
@@ -548,6 +574,7 @@
 				dojo.html.set(dojo.byId("row_schedule"+col1),template , {
 					 parseContent: true,
 				});	
+				productSchedule(pro_id, col1);
 	}
 
 	function deleteProductSceduleRow(index){
