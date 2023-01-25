@@ -324,7 +324,6 @@ class Report_Model_DbTable_DbStockMg extends Zend_Db_Table_Abstract
     		$where.= " AND r.projectId = ".$search['branch_id'];
     	}
 		$order=' GROUP BY r.projectId,rd.requestId,pod.purchaseId,rd.proId  ORDER BY rd.proId ASC,po.id ASC,rst.id ASC ';
-		//echo $sql.$where.$order;exit();
     	$where.=$dbGb->getAccessPermission("r.projectId");
     	return $db->fetchAll($sql.$where.$order);
 		
@@ -381,20 +380,45 @@ class Report_Model_DbTable_DbStockMg extends Zend_Db_Table_Abstract
 			'typeKeyIndex'=>3,
 		);
 		$sql.= $dbGbSt->purchasingTypeKey($arrStep);
+		
+		
 		$sql.= " FROM  `st_purchasing_detail` AS pod JOIN `st_purchasing` AS po ON po.id = pod.purchaseId		
 				LEFT JOIN `st_product` AS p  ON p.proId = pod.proId 
 				LEFT JOIN (`st_request_po_detail` AS rd  JOIN `st_request_po` AS r ON r.id = rd.requestId ) 
 					ON po.requestId = rd.requestId AND rd.proId = pod.proId
 				LEFT JOIN (st_receive_stock_detail AS rsd JOIN st_receive_stock AS rst ON rst.id = rsd.receiveId)
 					ON po.id = rst.poId AND pod.proId = rsd.proId 
-			WHERE 1 
+			 ";
+		
+		$from_date =(empty($search['start_date']))? '1': " po.date >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " po.date <= '".$search['end_date']." 23:59:59'";
+    	
+    	$whereDate = " AND ".$from_date." AND ".$to_date;
+		
+		$groupByItemSch="";
+		if(!empty($search['dateFilterOpt'])){
+			if(($search['dateFilterOpt'])==1){ //BY_PRODUCT_DATE_INCOMING
+				$sql.=" 
+					LEFT JOIN `st_purchase_item_schedule` AS pItSch  ON pItSch.proId = pod.proId AND pItSch.purchaseId = pod.purchaseId	
+				";
+				$from_date =(empty($search['start_date']))? '1': " pItSch.schedule >= '".$search['start_date']." 00:00:00'";
+				$to_date = (empty($search['end_date']))? '1': " pItSch.schedule <= '".$search['end_date']." 23:59:59'";
+				$whereDate = " AND ".$from_date." AND ".$to_date;
+				$whereDate.= " AND po.purchaseType =2 ";
+				
+				$groupByItemSch=",pItSch.id";
+			}
+			
+		}
+		
+		$sql.= " WHERE 1 
 			AND po.status = 1 AND po.purchaseType!=3 ";
 		
 		$where = "";
-    	$from_date =(empty($search['start_date']))? '1': " po.date >= '".$search['start_date']." 00:00:00'";
-    	$to_date = (empty($search['end_date']))? '1': " po.date <= '".$search['end_date']." 23:59:59'";
     	
-    	$where.= " AND ".$from_date." AND ".$to_date;
+		
+		$where.= $whereDate;
+			
     	$where.= " AND po.status = 1 ";
 		
 		if(!empty($search['adv_search'])){
@@ -442,7 +466,7 @@ class Report_Model_DbTable_DbStockMg extends Zend_Db_Table_Abstract
 			
 			}
 		}
-		$order=' GROUP BY po.projectId,pod.purchaseId,pod.proId  ORDER BY pod.proId ASC,po.id ASC,rst.id ASC ';
+		$order=' GROUP BY po.projectId,pod.purchaseId,pod.proId'.$groupByItemSch.'  ORDER BY pod.proId ASC,po.id ASC,rst.id ASC ';
     	$where.=$dbGb->getAccessPermission("po.projectId");
     	return $db->fetchAll($sql.$where.$order);
 		

@@ -21,6 +21,9 @@
 	$purchaseInfo = $this->baseUrl()."/report/stockmg/purchase-info/id/";
 	$urlDnLetter = $this->baseUrl()."/report/stockreport/rpt-receivestockdetail/id/";
 	
+	$dateFilterOpt = empty($this->search['dateFilterOpt'])?0:$this->search['dateFilterOpt'];
+	$endDate = empty($this->search['end_date'])?date("Y-m-d"): date("Y-m-d",strtotime($this->search['end_date']));
+
 ?>
 <title><?php echo $titleReport;?></title>
 <script>
@@ -255,8 +258,16 @@
 								$GTotalQtyPO=0;
 								$GTotalQtyRececive=0;
 								$GTotalQtyRemain=0;
+								
+								$poAndProId = "";
 				                if(!empty($this->row)) foreach ($this->row as $index => $rs){
-									
+									if($dateFilterOpt==1){
+										
+										$currentItem = $rs['poId'].$rs["proId"];
+										if($poAndProId==$currentItem){
+											continue;
+										}
+									}
 								?>
 								<?php if($productId!=$rs["proId"]){ $productNo++;?>
 								
@@ -424,7 +435,11 @@
 										$completedSub=$completed;
 										if(empty($completed)){
 											$completedSub="";
-											if(date("Y-m-d")>date("Y-m-d",strtotime($schedule['schedule']))){
+											$dateCheck =date("Y-m-d");
+											if($dateFilterOpt==1){
+												$dateCheck = $endDate;
+											}
+											if($dateCheck > date("Y-m-d",strtotime($schedule['schedule']))){
 												$completedSub = "redColor";
 											}
 										}
@@ -462,7 +477,10 @@
 									 <?php }?>
 								</tr>
 								
-				                <?php }?>
+				                <?php 
+								$poAndProId = $rs['poId'].$rs["proId"]; 
+								}
+								?>
 				               <tr class="style " style="white-space:nowrap; ">
 									<td colspan="5" style="border-bottom: none;border-left: solid 1px #fff;" ></td>
 									<td class="styleTitle centerRight boldText"><?php echo number_format($itemsTotalRequest,2);?></td>
