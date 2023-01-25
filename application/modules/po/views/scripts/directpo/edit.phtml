@@ -199,7 +199,7 @@
 									<tbody id="table_product_schedule">
 									</tbody>
 								</table>
-								<input type="text" name="identity_product_schedule" id="identity_product_schedule" dojoType="dijit.form.TextBox" value="" >
+								<input type="hidden" name="identity_product_schedule" id="identity_product_schedule" dojoType="dijit.form.TextBox" value="" >
 								
 						</div>
 					</div>
@@ -417,7 +417,6 @@
 		template='';
 		temp = "";
 		
-		
 		var proCodeString = $( '#proCode'+'<?php echo $key;?>').html();
 		var productNameString = $( '#productName'+'<?php echo $key;?>').html();
 		var measureTitleString = $( '#measureTitle'+'<?php echo $key;?>').html();
@@ -457,7 +456,7 @@
 		var iden = $("#identity_schedule"+col).val();
 		var arrays = iden.split(',')
 		col_sub++;
-		template+='<td class="numberRecord" align="center"><span title="<?php echo $tr->translate("REMOVE_RECORD");?>" class="removeRow" onclick="deleteScheduleRecord('+col_sub+', '+col+');"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></span></td>';
+				template+='<td class="numberRecord" align="center"><span title="<?php echo $tr->translate("REMOVE_RECORD");?>" class="removeRow" onclick="deleteScheduleRecord('+col_sub+', '+col+');"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></span></td>';
 				template+='<td data-label="<?php echo $tr->translate("DATE_ENTRY");?>"><input required dojoType="dijit.form.DateTextBox" class="fullside" constraints="{datePattern:'+"'dd/MM/yyyy'"+'}" id="schedule_date'+col+'_'+col_sub+'" name="schedule_date'+col+'_'+col_sub+'" placeholder="'+'<?php echo $tr->translate("DATE_ENTRY");?> " value="now" type="text"  ></td>';	
 				template+='<td data-label="<?php echo $tr->translate("NOTE");?>" ><input  type="text" name="schedule_note'+col+'_'+col_sub+'" id="schedule_note'+col+'_'+col_sub+'" dojoType="dijit.form.TextBox" class="fullside" placeholder="'+'<?php echo $tr->translate("NOTE");?> " value=""  ></td>';	
 				tmp='<tr class="rowData" id="row_pro'+col_sub+'">';
@@ -477,11 +476,10 @@
 		
 		<?php if (!empty($this->rowdetail)) foreach ($this->rowdetail as $rs){?>
 		
-
 		col1++;no1++;
 		template='';
 		temp = "";
-		template+='<td align="center" class="numberRecord" data-label="<?php echo $tr->translate("N_O");?>">'+no1+'</td>';
+		template+='<td align="center" class="numberRecord" data-label="<?php echo $tr->translate("N_O");?>">'+no1+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="pro_scheduleId'+col1+'" name="pro_scheduleId'+col1+'" value="<?php echo $rs['id'];?>" type="text"  ></td>';
 		template+='<td width="30%" align="center" data-label="<?php echo $tr->translate("PRODUCT_NAME");?>" class="productName" ><?php echo $rs['proName'];?><input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="pro_id'+col1+'" name="pro_id'+col1+'" value="<?php echo $rs['proId'];?>" type="text"  ></td>';
 		template+='<td align="center"  data-label="<?php echo $tr->translate("SCHEDULE_BUTTON");?>"><input  type="button" class="button-class button-primary" iconClass="glyphicon glyphicon-sort-by-attributes" dojoType="dijit.form.Button"  label="<?php echo $tr->translate("ADD_SCHEDULE");?>" onClick=" productSchedule('+<?php echo $rs['proId'];?>+', '+col1+') "> </td>';	
 		template+='<td width="50%" align="center"  data-label="<?php echo $tr->translate("SCHEDULE");?>"> <table> <tbody id="schedule_row'+col1+'"> </tbody> </table> <input type="hidden" name="identity_schedule'+col1+'" id="identity_schedule'+col1+'" dojoType="dijit.form.TextBox" value="" ></td>';
@@ -500,27 +498,25 @@
 		<?php
 		$row = $db->getPOScheduleDetailById($rs['purchaseId'] , $rs['proId']);  
 		if(!empty($row)) foreach($row as $rr){  ?>
-		/*
-
+	
 			template='';
 			temp = "";
 			col_sub++;
-			template+='<td class="numberRecord" align="center"><span title="<?php echo $tr->translate("REMOVE_RECORD");?>" class="removeRow" onclick="deleteScheduleRecord('+col_sub+', '+col+');"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></span></td>';
-			template+='<td data-label="<?php echo $tr->translate("DATE_ENTRY");?>"><input required dojoType="dijit.form.DateTextBox" class="fullside" constraints="{datePattern:'+"'dd/MM/yyyy'"+'}" id="schedule_date'+col+'_'+col_sub+'" name="schedule_date'+col+'_'+col_sub+'" placeholder="'+'<?php echo $tr->translate("DATE_ENTRY");?> " value="<?php echo $rr['schedule']; ?>" type="text"  ></td>';	
-			template+='<td data-label="<?php echo $tr->translate("NOTE");?>" ><input  type="text" name="schedule_note'+col+'_'+col_sub+'" id="schedule_note'+col+'_'+col_sub+'" dojoType="dijit.form.TextBox" class="fullside" placeholder="'+'<?php echo $tr->translate("NOTE");?> " value="<?php echo $rr['note']; ?>"  ></td>';	
+			template+='<td class="numberRecord" align="center"><span title="<?php echo $tr->translate("REMOVE_RECORD");?>" class="removeRow" onclick="deleteScheduleRecord('+col_sub+', '+col1+');"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></span><input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="scheduleId'+col1+'_'+col_sub+'" name="scheduleId'+col1+'_'+col_sub+'" value="<?php echo $rr['id'];?>" ></td>';
+			template+='<td data-label="<?php echo $tr->translate("DATE_ENTRY");?>"><input required dojoType="dijit.form.DateTextBox" class="fullside" constraints="{datePattern:'+"'dd/MM/yyyy'"+'}" id="schedule_date'+col1+'_'+col_sub+'" name="schedule_date'+col1+'_'+col_sub+'" placeholder="'+'<?php echo $tr->translate("DATE_ENTRY");?> " value="<?php echo $rr['schedule']; ?>" type="text"  ></td>';	
+			template+='<td data-label="<?php echo $tr->translate("NOTE");?>" ><input  type="text" name="schedule_note'+col1+'_'+col_sub+'" id="schedule_note'+col1+'_'+col_sub+'" dojoType="dijit.form.TextBox" class="fullside" placeholder="'+'<?php echo $tr->translate("NOTE");?> " value="<?php echo $rr['note']; ?>"  ></td>';	
 			tmp='<tr class="rowData" id="row_pro'+col_sub+'">';
 			tmp+="</tr>";
 
-			dojo.query("#schedule_row"+col).append(tmp);
-			if($("#identity_schedule"+col).val()!="") {
-				var identity = $("#identity_schedule"+col).val();
-					$("#identity_schedule"+col).val(identity+','+col_sub);
-				} else {$("#identity_schedule"+col).val(col_sub);}
+			dojo.query("#schedule_row"+col1).append(tmp);
+			if($("#identity_schedule"+col1).val()!="") {
+				var identity = $("#identity_schedule"+col1).val();
+					$("#identity_schedule"+col1).val(identity+','+col_sub);
+				} else {$("#identity_schedule"+col1).val(col_sub);}
 				dojo.html.set(dojo.byId("row_pro"+col_sub),template , {
 					 parseContent: true,
 			});	
-			*/
-
+		
 		<?php }  
 		}?>	
 		
@@ -553,8 +549,6 @@
 					 parseContent: true,
 				});	
 	}
-
-
 
 	function deleteProductSceduleRow(index){
 		var identity = $('#identity_product_schedule').val();

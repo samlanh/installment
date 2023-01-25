@@ -193,7 +193,7 @@ class Po_Model_DbTable_DbDirectPO extends Zend_Db_Table_Abstract
 				$this->_name='st_purchasing_detail';
 				$whereDl = 'purchaseId = '.$id;
 				if (!empty($detailId)){
-					$whereDl.=" AND id NOT IN ($detailId) ";
+					$whereDl.=" AND id NOT IN ($detailId)";
 				}
 				$this->delete($whereDl);
 				
@@ -236,6 +236,103 @@ class Po_Model_DbTable_DbDirectPO extends Zend_Db_Table_Abstract
 						}
 					}
 				}
+				$identity_schedule = explode(',',$data['identity_product_schedule']);
+				$scheduleId="";
+				if (!empty($identity_schedule)){
+					foreach ($identity_schedule as $i){
+						
+						if(!empty($data['identity_schedule'.$i])){
+							$id_schedule = explode(',', $data['identity_schedule'.$i]);
+							foreach($id_schedule as $j){
+								if(empty($scheduleId)){
+									if(!empty($data['scheduleId'.$i.'-'.$j])){
+										$scheduleId = $data['scheduleId'.$i.'-'.$j];
+									}
+
+								}else{
+									if(!empty($data['scheduleId'.$i.'-'.$j])){
+
+										$scheduleId= $scheduleId.",".$data['scheduleId'.$i.'-'.$j];
+
+									}
+								}
+
+							}
+						}
+
+					}
+				}
+				$this->_name='st_purchase_item_schedule';
+				$whereDel = 'purchaseId = '.$id;
+				if (!empty($scheduleId)){
+					$whereDel.=" AND id NOT IN ($scheduleId) ";
+				}
+				$this->delete($whereDel);
+
+
+				if(!empty($data['identity_product_schedule'])){
+					$idp = explode(',', $data['identity_product_schedule']);
+					foreach ($idp as $j){
+						if(!empty($data['identity_schedule'.$j])){
+							$id_schedule = explode(',', $data['identity_schedule'.$j]);
+							foreach($id_schedule as $k){
+								if(!empty($data['scheduleId'.$j.'_'.$K])){
+									$arr = array(
+										'purchaseId'		=>$id,
+										'proId'				=>$data['pro_id'.$j],	
+										'schedule'			=>$data['schedule_date'.$j.'_'.$k],
+										'note'				=>$data['schedule_note'.$j.'_'.$k],
+									);
+									$this->_name='st_purchase_item_schedule';	
+									$where =" id =".$data['scheduleId'.$j.'_'.$K];
+									$this->update($arr, $where);
+
+								}else{
+
+									$arr = array(
+										'purchaseId'		=>$id,
+										'proId'				=>$data['pro_id'.$j],	
+										'schedule'			=>$data['schedule_date'.$j.'_'.$k],
+										'note'				=>$data['schedule_note'.$j.'_'.$k],
+									);
+									$this->_name='st_purchase_item_schedule';	
+									$this->insert($arr);
+
+								}
+								
+		
+							}		
+						}
+						
+						
+						/*
+						else{
+
+							if(!empty($data['identity_schedule'.$j])){
+								$id_schedule = explode(',', $data['identity_schedule'.$j]);
+								foreach($id_schedule as $k){
+									$arr = array(
+										'purchaseId'		=>$id,
+										'proId'				=>$data['pro_id'.$j],	
+										'schedule'			=>$data['schedule_date'.$j.'_'.$k],
+										'note'				=>$data['schedule_note'.$j.'_'.$k],
+									);
+								$this->_name='st_purchase_item_schedule';	
+								$this->insert($arr);
+		
+								}
+								
+							}
+
+
+						}
+						*/
+							
+					}
+				}
+				
+
+				
 			}
     		$db->commit();
     	}catch (Exception $e){
