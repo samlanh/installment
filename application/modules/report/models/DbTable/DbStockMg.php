@@ -297,11 +297,34 @@ class Report_Model_DbTable_DbStockMg extends Zend_Db_Table_Abstract
 			}
     		
     	}
-		
+		if(!empty($search['recivedProPO'])){
+			if(($search['recivedProPO'])==1){
+				$where.="
+					AND COALESCE((SELECT COALESCE(SUM(rsd1.isClosed),0) FROM st_receive_stock_detail AS rsd1 JOIN st_receive_stock AS rst1 ON rst1.id = rsd1.receiveId   WHERE po.id = rst1.poId AND pod.proId = rsd1.proId  ),0) = 0
+					AND COALESCE((SELECT COALESCE(SUM(rsd1.qtyReceive),0) FROM st_receive_stock_detail AS rsd1 JOIN st_receive_stock AS rst1 ON rst1.id = rsd1.receiveId  WHERE po.id = rst1.poId AND pod.proId = rsd1.proId  ),0) = 0
+				";
+				
+			}else if(($search['recivedProPO'])==2){
+				$where.="
+					AND COALESCE((SELECT COALESCE(SUM(rsd1.isClosed),0) FROM st_receive_stock_detail AS rsd1 JOIN st_receive_stock AS rst1 ON rst1.id = rsd1.receiveId   WHERE po.id = rst1.poId AND pod.proId = rsd1.proId  ),0) = 0
+					AND COALESCE((SELECT COALESCE(SUM(rsd1.qtyReceive),0) FROM st_receive_stock_detail AS rsd1 JOIN st_receive_stock AS rst1 ON rst1.id = rsd1.receiveId  WHERE po.id = rst1.poId AND pod.proId = rsd1.proId  ),0) > 0
+					AND COALESCE((SELECT COALESCE(pod1.qty,0) - COALESCE(SUM(rsd1.qtyReceive),0) FROM st_receive_stock_detail AS rsd1 JOIN st_receive_stock AS rst1 ON rst1.id = rsd1.receiveId LEFT JOIN (`st_purchasing_detail` AS pod1 JOIN `st_purchasing` AS po1 ON po1.id = pod1.purchaseId) ON po1.id = rst1.poId AND pod1.proId = rsd1.proId  AND po1.status = 1  WHERE po.id = rst1.poId AND pod.proId = rsd1.proId GROUP BY po1.projectId,pod1.purchaseId,pod1.proId ),0) >0
+				";
+			}else if(($search['recivedProPO'])==3){
+				$where.="
+					AND COALESCE((SELECT COALESCE(SUM(rsd1.qtyReceive),0) FROM st_receive_stock_detail AS rsd1 JOIN st_receive_stock AS rst1 ON rst1.id = rsd1.receiveId  WHERE po.id = rst1.poId AND pod.proId = rsd1.proId  ),0) > 0
+					AND (COALESCE((SELECT COALESCE(SUM(rsd1.isClosed),0) FROM st_receive_stock_detail AS rsd1 JOIN st_receive_stock AS rst1 ON rst1.id = rsd1.receiveId   WHERE po.id = rst1.poId AND pod.proId = rsd1.proId  ),0) = 1
+						OR COALESCE((SELECT COALESCE(pod1.qty,0) - COALESCE(SUM(rsd1.qtyReceive),0) FROM st_receive_stock_detail AS rsd1 JOIN st_receive_stock AS rst1 ON rst1.id = rsd1.receiveId LEFT JOIN (`st_purchasing_detail` AS pod1 JOIN `st_purchasing` AS po1 ON po1.id = pod1.purchaseId) ON po1.id = rst1.poId AND pod1.proId = rsd1.proId  AND po1.status = 1  WHERE po.id = rst1.poId AND pod.proId = rsd1.proId GROUP BY po1.projectId,pod1.purchaseId,pod1.proId ),0) =0
+					)
+				";
+			
+			}
+		}
 		if(($search['branch_id'])>0){
     		$where.= " AND r.projectId = ".$search['branch_id'];
     	}
 		$order=' GROUP BY r.projectId,rd.requestId,pod.purchaseId,rd.proId  ORDER BY rd.proId ASC,po.id ASC,rst.id ASC ';
+		//echo $sql.$where.$order;exit();
     	$where.=$dbGb->getAccessPermission("r.projectId");
     	return $db->fetchAll($sql.$where.$order);
 		
@@ -395,6 +418,30 @@ class Report_Model_DbTable_DbStockMg extends Zend_Db_Table_Abstract
 		if(($search['branch_id'])>0){
     		$where.= " AND po.projectId = ".$search['branch_id'];
     	}
+		
+		if(!empty($search['recivedProPO'])){
+			if(($search['recivedProPO'])==1){
+				$where.="
+					AND COALESCE((SELECT COALESCE(SUM(rsd1.isClosed),0) FROM st_receive_stock_detail AS rsd1 JOIN st_receive_stock AS rst1 ON rst1.id = rsd1.receiveId   WHERE po.id = rst1.poId AND pod.proId = rsd1.proId  ),0) = 0
+					AND COALESCE((SELECT COALESCE(SUM(rsd1.qtyReceive),0) FROM st_receive_stock_detail AS rsd1 JOIN st_receive_stock AS rst1 ON rst1.id = rsd1.receiveId  WHERE po.id = rst1.poId AND pod.proId = rsd1.proId  ),0) = 0
+				";
+				
+			}else if(($search['recivedProPO'])==2){
+				$where.="
+					AND COALESCE((SELECT COALESCE(SUM(rsd1.isClosed),0) FROM st_receive_stock_detail AS rsd1 JOIN st_receive_stock AS rst1 ON rst1.id = rsd1.receiveId   WHERE po.id = rst1.poId AND pod.proId = rsd1.proId  ),0) = 0
+					AND COALESCE((SELECT COALESCE(SUM(rsd1.qtyReceive),0) FROM st_receive_stock_detail AS rsd1 JOIN st_receive_stock AS rst1 ON rst1.id = rsd1.receiveId  WHERE po.id = rst1.poId AND pod.proId = rsd1.proId  ),0) > 0
+					AND COALESCE((SELECT COALESCE(pod1.qty,0) - COALESCE(SUM(rsd1.qtyReceive),0) FROM st_receive_stock_detail AS rsd1 JOIN st_receive_stock AS rst1 ON rst1.id = rsd1.receiveId LEFT JOIN (`st_purchasing_detail` AS pod1 JOIN `st_purchasing` AS po1 ON po1.id = pod1.purchaseId) ON po1.id = rst1.poId AND pod1.proId = rsd1.proId  AND po1.status = 1  WHERE po.id = rst1.poId AND pod.proId = rsd1.proId GROUP BY po1.projectId,pod1.purchaseId,pod1.proId ),0) >0
+				";
+			}else if(($search['recivedProPO'])==3){
+				$where.="
+					AND COALESCE((SELECT COALESCE(SUM(rsd1.qtyReceive),0) FROM st_receive_stock_detail AS rsd1 JOIN st_receive_stock AS rst1 ON rst1.id = rsd1.receiveId  WHERE po.id = rst1.poId AND pod.proId = rsd1.proId  ),0) > 0
+					AND (COALESCE((SELECT COALESCE(SUM(rsd1.isClosed),0) FROM st_receive_stock_detail AS rsd1 JOIN st_receive_stock AS rst1 ON rst1.id = rsd1.receiveId   WHERE po.id = rst1.poId AND pod.proId = rsd1.proId  ),0) = 1
+						OR COALESCE((SELECT COALESCE(pod1.qty,0) - COALESCE(SUM(rsd1.qtyReceive),0) FROM st_receive_stock_detail AS rsd1 JOIN st_receive_stock AS rst1 ON rst1.id = rsd1.receiveId LEFT JOIN (`st_purchasing_detail` AS pod1 JOIN `st_purchasing` AS po1 ON po1.id = pod1.purchaseId) ON po1.id = rst1.poId AND pod1.proId = rsd1.proId  AND po1.status = 1  WHERE po.id = rst1.poId AND pod.proId = rsd1.proId GROUP BY po1.projectId,pod1.purchaseId,pod1.proId ),0) =0
+					)
+				";
+			
+			}
+		}
 		$order=' GROUP BY po.projectId,pod.purchaseId,pod.proId  ORDER BY pod.proId ASC,po.id ASC,rst.id ASC ';
     	$where.=$dbGb->getAccessPermission("po.projectId");
     	return $db->fetchAll($sql.$where.$order);

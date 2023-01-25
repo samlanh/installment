@@ -307,13 +307,22 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 		$recivedProPO=  new Zend_Dojo_Form_Element_FilteringSelect('recivedProPO');
 		$recivedProPO->setAttribs(array('dojoType'=>$this->filter,'class'=>'fullside'));
 		$_optsRecivedProPO = array(
-				0=>$this->tr->translate("ALL"),
+				0=>$this->tr->translate("PRODUCT_RECEIVED_STATUS"),
 				1=>$this->tr->translate("PENDING"),
 				2=>$this->tr->translate("SOME_RECEIVED"),
 				3=>$this->tr->translate("COMPLETED_RECEIVED"),
 				);
 		$recivedProPO->setMultiOptions($_optsRecivedProPO);
 		$recivedProPO->setValue($request->getParam("recivedProPO"));
+		
+		$dateFilterOpt=  new Zend_Dojo_Form_Element_FilteringSelect('dateFilterOpt');
+		$dateFilterOpt->setAttribs(array('dojoType'=>$this->filter,'class'=>'fullside'));
+		$_optsDateFilterOpt = array(
+				0=>$this->tr->translate("NORMALE"),
+				1=>$this->tr->translate("BY_INCOMING_PRODUCT"),
+				);
+		$dateFilterOpt->setMultiOptions($_optsDateFilterOpt);
+		$dateFilterOpt->setValue($request->getParam("dateFilterOpt"));
 		
 		$this->addElements(
 			array(
@@ -343,7 +352,9 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 				$isPaidStatus,
 				$reqPOStatus
 				,$requestStatusCheck
+				
 				,$recivedProPO
+				,$dateFilterOpt
 				
 			)
 		);
