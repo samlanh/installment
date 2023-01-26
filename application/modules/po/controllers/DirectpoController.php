@@ -133,7 +133,7 @@ class Po_DirectpoController extends Zend_Controller_Action {
 			try {
 				$_data['purchaseType']=self::PURCHASE_TYPE;
 				$db->addDirectedPO($_data);
-				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS",self::REDIRECT_URL."/index");
+				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL."/index");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
