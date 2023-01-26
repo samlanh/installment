@@ -209,7 +209,7 @@ class Application_Form_Frmtable
     	$col_str.='</tr></thead>';
     	$row_str='<tbody>';
     	//add element rows	
-    	if($rows==NULL) return $head.$col_str.'</table></div><center style="font-size:18pt;"><label id="data_table">No record</label></center></form>';
+    	if($rows==NULL) return $head.$col_str.'</table></div><center style="font-size:18pt;"><label id="data_table">'.$tr->translate("NO_DATA").'</label></center></form>';
     	$temp=0;
     	/*------------------------Check param id----------------------------------*/
 

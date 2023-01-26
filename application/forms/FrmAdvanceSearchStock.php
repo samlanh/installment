@@ -318,7 +318,7 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 		$dateFilterOpt=  new Zend_Dojo_Form_Element_FilteringSelect('dateFilterOpt');
 		$dateFilterOpt->setAttribs(array('dojoType'=>$this->filter,'class'=>'fullside'));
 		$_optsDateFilterOpt = array(
-				0=>$this->tr->translate("NORMALE"),
+				0=>$this->tr->translate("NORMAL"),
 				1=>$this->tr->translate("BY_PRODUCT_DATE_INCOMING"),
 				);
 		$dateFilterOpt->setMultiOptions($_optsDateFilterOpt);

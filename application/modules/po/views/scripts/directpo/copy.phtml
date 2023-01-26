@@ -86,13 +86,6 @@
 											<?php echo $frm->getElement("date");?>
 										</div>
 									 </div>
-									
-									<div class="form-group">
-										<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("STATUS");?> </label>
-										<div class="col-md-7 col-sm-7 col-xs-12">
-											<?php echo $frm->getElement("status");?>
-										</div>
-									</div>
 								</div>
 							</div>
 						</div>
@@ -262,8 +255,50 @@
 		
 		
 		getAllProduct();
+		getPurchaseNoByBranch();
 	
 	}
+	var urlGetRequestNo = '<?php echo $this->url(array('module'=>'po','controller'=>'index','action'=>'getpurchaseno')); ?>';
+	function getPurchaseNoByBranch(){
+		
+		branch_id = dijit.byId('branch_id').get('value');
+		if(branch_id=='' || branch_id<=0){
+			return false;
+		}
+		dateRequest = dijit.byId('date').get('value');
+		if(dateRequest==''){
+			infoMessageAlert('<?php echo $tr->translate('PLEASE_SELECT_DATE');?>');
+			dijit.byId('date').focus();
+			return false;
+		}
+			var a = new Date(dateRequest);
+			mm = a.getMonth()+1;
+			var dd = a.getDate();
+			 if(dd<10){
+				 dd = "0"+dd;
+			}
+			//month = returnMOnth(mm);
+			month=mm;
+			if(mm<10){
+				 month = "0"+mm;
+			}
+			
+			var y = a.getFullYear();
+			var dateRequest = dd +'-'+month+'-'+y ;
+	
+		dojo.xhrPost({
+			url:urlGetRequestNo,	
+			content:{ 
+				'branch_id':branch_id,'dateRequest':dateRequest
+			},		    
+			handleAs:"json",
+			load: function(data) {
+				dijit.byId('purchaseNo').set('value', data);
+			},
+			error: function(err) {
+			}
+		});
+	} 	
 	
 	var urlGetAllProduct = '<?php echo $this->url(array('module'=>'requesting','controller'=>'request','action'=>'getallproduct')); ?>';
 	function getAllProduct(){

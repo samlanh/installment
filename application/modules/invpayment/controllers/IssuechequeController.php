@@ -28,7 +28,7 @@ class Invpayment_IssuechequeController extends Zend_Controller_Action {
 			
 			
 			$list = new Application_Form_Frmtable();
-    		$collumns = array("PROJECT_NAME","DATE","RECEIVED_CHEQUE_NAME","PAYMENT_NO","SUPPLIER","WITHDRAW_STATUS","STATUS","BY");
+    		$collumns = array("PROJECT_NAME","DATE","RECEIVED_CHEQUE_NAME","PAYMENT_NO","SUPPLIER","WITHDRAW_CHEQUE_STATUS","STATUS","BY");
     		$link=array(
     				'module'=>'invpayment','controller'=>'issuecheque','action'=>'edit',
     		);
