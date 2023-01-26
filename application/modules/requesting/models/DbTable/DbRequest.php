@@ -343,7 +343,7 @@ class Requesting_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 					<div class="col-md-6 col-sm-6 col-xs-12">
 						<ul>
 							<li title="'.$tr->translate("BRANCH_NAME").'"><span class="lbl-tt"><i class="fa fa-map-marker" aria-hidden="true"></i> '.$tr->translate("BRANCH_NAME").'</span>: <span class="colorValue">'.$_row['branch_name'].'</span></li>
-							<li title="'.$tr->translate("REQUEST_NO").'"><span class="lbl-tt"><i class="fa fa-list-alt" aria-hidden="true"></i> '.$tr->translate("REQUEST_NO").'</span>: <span class="colorValue"><a target="_blank" href="'.$urlInfo.'">'.$_row['requestNo'].'<a></span></li>
+							<li title="'.$tr->translate("REQUEST_NO").'"><span class="lbl-tt"><i class="fa fa-list-alt" aria-hidden="true"></i> '.$tr->translate("REQUEST_NO").'</span>: <span class="colorValue"><a title="'.$tr->translate("REQUEST_INFO_DETAIL").' - '.$_row['requestNo'].'" target="_blank" href="'.$urlInfo.'">'.$_row['requestNo'].'<a></span></li>
 							<li title="'.$tr->translate("REQUEST_NO_FROM").'"><span class="lbl-tt"><i class="fa fa-file-text-o" aria-hidden="true"></i> '.$tr->translate("REQUEST_NO_FROM").'</span>: <span class="colorValue">'.$_row['requestNoLetter'].'</span></li>
 							<li title="'.$tr->translate("REQUEST_DATE").'"><span class="lbl-tt"><i class="fa fa-calendar" aria-hidden="true"></i></span>: <span class="colorValue">'.date(DATE_FORMAT_FOR_PHP,strtotime($_row['date'])).'</span></li>
 							<li title="'.$tr->translate("REQUEST_BY").'"><span class="lbl-tt"><i class="fa fa-user" aria-hidden="true"></i></span>: <span class="colorValue">'.$_row['requestByname'].'</span></li>
