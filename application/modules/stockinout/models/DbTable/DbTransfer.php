@@ -35,8 +35,9 @@ class Stockinout_Model_DbTable_DbTransfer extends Zend_Db_Table_Abstract
 					(SELECT project_name FROM `ln_project` WHERE br_id=t.fromProjectId LIMIT 1) AS projectName,
 					t.transferNo,
 					t.transferDate,
-					t.deliverId,
-					t.driverName,
+					
+					t.driver,
+					t.transferer,
 					(SELECT project_name FROM `ln_project` WHERE br_id=t.toProjectId LIMIT 1) AS toProjectId,
 					t.receiverId,
 					t.userFor,
@@ -102,15 +103,16 @@ class Stockinout_Model_DbTable_DbTransfer extends Zend_Db_Table_Abstract
     		$arr = array(
     			'fromProjectId'=>$data['branch_id'],
     			'transferNo'=>$requestStock,
-    			'driverName'=>$data['driver'],
-    			'deliverId'=>$data['transferer'],
+    			'driver'=>$data['driver'],
+    			'transferer'=>$data['transferer'],
     			'transferDate'=>$data['transferDate'],
     				
     			'toProjectId'=>$data['toProjectId'],
     			'receiverId'=>$data['receiver'],
     			'userFor'=>$data['useFor'],
     			'note'=>$data['note'],
-    			'createDate'=>date('Y-m-d'),
+    			'createDate'=>date('Y-m-d H:i:s'),
+    			'modifyDate'=>date('Y-m-d H:i:s'),
     			'status'=>1,
     			'userId'=>$this->getUserId(),
     			);
@@ -142,9 +144,12 @@ class Stockinout_Model_DbTable_DbTransfer extends Zend_Db_Table_Abstract
     					'transferId'=>$transferId,
     					'proId'=>$data['proId'.$i],
     					'qtyRequest'=>$data['qtyRequest'.$i],
+    					'qtyApproved'=>$data['qtyRequest'.$i],
     					'qtyAppAfter'=>$data['qtyRequest'.$i],
     					'unitPrice'=>$data['costing'.$i],
     					'note'=>$data['note'.$i],
+						'createDate'=>date('Y-m-d H:i:s'),
+						'modifyDate'=>date('Y-m-d H:i:s'),
     				);
     				$this->_name='st_transferstock_detail';
     				$id = $this->insert($arr);
@@ -178,7 +183,8 @@ class Stockinout_Model_DbTable_DbTransfer extends Zend_Db_Table_Abstract
     				$dbs->updateProductLocation($param);//Update Stock qty and new costing
     				$dbs->addProductHistoryQty($data['branch_id'],$data['proId'.$i],5,$data['qtyRequest'.$i],$id);//movement'
     				
-    				$param = array(
+    				/*
+					$param = array(
     					'EntyQty'=> $data['qtyRequest'.$i],
     					'branch_id'=> $data['toProjectId'],
     					'productId'=> $data['proId'.$i],
@@ -186,6 +192,7 @@ class Stockinout_Model_DbTable_DbTransfer extends Zend_Db_Table_Abstract
     				);
     				$dbs->updateProductLocation($param);//Update Stock qty and new costing
     				$dbs->addProductHistoryQty($data['toProjectId'],$data['proId'.$i],5,$data['qtyRequest'.$i],$id);//movement'
+					*/
     			}
     		}
     		$db->commit();

@@ -303,6 +303,30 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		}
 		return $pre.$new_acc_no;
 	}
+	function generateReceiveTransferNo($_data=null){
+	
+		$this->_name='st_transfer_receive';
+		$dbgb = new Application_Model_DbTable_DbGlobal();
+		$pre = "";
+	
+		$branch_id = empty($_data['branch_id'])?0:$_data['branch_id'];
+		$pre = $dbgb->getPrefixCode($branch_id);
+	
+		$db = $this->getAdapter();
+		$sql=" SELECT t.id  FROM $this->_name AS t WHERE t.projectId = $branch_id  ORDER BY t.id DESC LIMIT 1 ";
+		$acc_no = $db->fetchOne($sql);
+		$new_acc_no= (int)$acc_no+1;
+	
+		$dateRequest = empty($_data['createDate'])?date("Y-m-d"):$_data['createDate'];
+	
+		$pre=$pre.date("dmy",strtotime($dateRequest));
+		$pre=$pre."R";
+		$numberLenght= strlen((int)$new_acc_no);
+		for($i = $numberLenght;$i<4;$i++){
+			$pre.='0';
+		}
+		return $pre.$new_acc_no;
+	}
 	function dataExisting($tbName,$where){
 			$db = $this->getAdapter();
 			$sql=" SELECT * FROM $tbName WHERE $where LIMIT 1";
@@ -1058,5 +1082,35 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		return $rows;
 	}
 	
+	
+	function getAllTransferOut($_data=null){
+		
+		$db=$this->getAdapter();
+		$dbGb = new Application_Model_DbTable_DbGlobal();
+		$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+    	$sql="
+			SELECT 
+				trs.id,
+				CONCAT(COALESCE(trs.transferNo,''),' ',COALESCE(trs.transferNo,'')) AS name			
+		";
+		$sql.=" FROM `st_transferstock` AS trs 
+					 "; 
+				
+		$sql.=" WHERE trs.status=1 "; 
+
+		//checking Items In Request For Available to receive
+		$sql.=" AND (SELECT trsd.isCompleted FROM `st_transferstock_detail` AS trsd WHERE trsd.transferId =trs.id  ORDER BY trsd.isCompleted ASC LIMIT 1 )=0 ";
+			
+		if(!empty($_data['fromProjectId'])){
+			$sql.=" AND trs.fromProjectId=".$_data['fromProjectId'];
+		}
+		
+		if(!empty($_data['transferId'])){
+			$sql.=" OR trs.id=".$_data['transferId'];
+		}
+		$row = $db->fetchAll($sql);
+		return $row;
+		
+	}
 }
 ?>
