@@ -2,7 +2,7 @@
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$this->headTitle($tr->translate("DELIVERY_NOTE")); 
 	echo $this->headTitle();
-	$purchaseLetter = $this->baseUrl()."/report/stockmg/purchase-letter/id/";
+	$requestUrl = $this->baseUrl()."/report/stockmg/request-letter/id/";
 ?>
 <div class="reportblog">
 	<div class="card-box">
@@ -165,7 +165,7 @@
 										លេខបញ្ជាទិញ : 
 										<small>Purchase N<sup>o</sup> : </small>
 									</span>
-									<span class="bold redColor" ><a class="colorInherit" title="<?php echo $tr->translate("PURCHASE_LETTER")." - ".$rs["purchaseNo"];?>" target="_blank" href="<?php echo $purchaseLetter.$rs["purId"]; ?>"><?php echo $rs["purchaseNo"];?></a></span>
+									<span class="bold redColor" ><a class="colorInherit" target="_blank" href="<?php echo $this->baseUrl()."/report/stockmg/purchase-letter/id/".$rs["poId"]; ?>"><?php echo $rs["purchaseNo"];?></a></span>
 								</td>
 								<td width="30%">
 									<span class="lbTitle">
@@ -207,7 +207,12 @@
 									</span>
 									<span class="bold"><?php echo $rs['plateNo']?></span>
 								</td>
-								<td></td>
+								<td>
+									<span class="lbTitle">
+									ឯកសារភ្ជាប់: 
+										<small>Document Attached : </small>
+									</span>
+									</td>
 								<td >
 									<span class="lbTitle">
 									លេខប័ណ្ណទទួល/វិក្កយបត្រ : 
@@ -224,7 +229,12 @@
 									</span>
 									<span class="bold"><?php echo $rs['staffCounter']?></span>
 								</td>
-								<td></td>
+								<td>
+									<span class="lbTitle">
+									<?php echo $tr->translate("PICTURE_GOODS");?> : 
+										<small>Goods Picture : <span><?php if(!empty($rs['photoDn'])){ ?><a target="_blank" href="<?php echo $this->baseUrl()."/images/dndocument/".$rs['photoDn'];?>">Download</a><?php }else{echo "N/A";};?></span></small>
+									</span>
+								</td>
 								<td>
 									<span class="lbTitle">
 									កាលបរិច្ឆេទ ទទួល : 
@@ -232,17 +242,22 @@
 									</span>
 									<span class="bold"><?php echo $rs['receiveDate']?></span>
 								</td>
-								purchaseNo
 							</tr>
 							<tr>
+								
 								<td >
 									<span class="lbTitle">
-									លេខបញ្ជាទិញ : 
-										<small>Purchase No. : </small>
+										លេខសំណើ : 
+										<small>Request N<sup>o</sup> : </small>
 									</span>
-									<span class="bold"><a target="_blank" href="<?php echo $this->baseUrl()."/report/stockmg/purchase-letter/id/".$rs['poId'];?>"><?php echo $rs['purchaseNo']?></a></span>
+									<span class="bold redColor" ><a class="colorInherit" target="_blank" href="<?php echo $requestUrl.$rs["requestId"]; ?>"><?php echo $rs["requestNo"];?></a></span>
 								</td>
-								<td></td>
+								<td>
+									<span class="lbTitle">
+									<?php echo $tr->translate("FILE_DN");?> : 
+										<small>DN File. : <span><?php if(!empty($rs['fileDn'])){ ?><a target="_blank" href="<?php echo $this->baseUrl()."/images/dndocument/".$rs['fileDn'];?>">Download</a><?php }else{echo "N/A";};?></span></small>
+									</span>
+								</td>
 								<td>
 								</td>
 								

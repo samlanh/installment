@@ -169,15 +169,17 @@ public function rptUsageAction(){
 					'dnId'=>$id,
 					'transactionType'=>1,//dn request
 			);
-			$rs = $db->getDNById($param);
-			if(empty($id) OR empty($rs)){
-				Application_Form_FrmMessage::Sucessfull("NO_DATA","/report/stockreport/rpt-receivestock",2);
-			}
 	  
 	  }catch (Exception $e){
 	    Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 	    Application_Form_FrmMessage::message("APPLICATION_ERROR");
 	  }
+	  
+	  $rs = $db->getDNById($param);
+	  if(empty($id) OR empty($rs)){
+	  	Application_Form_FrmMessage::Sucessfull("NO_DATA","/report/stockreport/rpt-receivestock",2);
+	  }
+	  
 	  
 		  $this->view->rsRow = $rs;
 		  $this->view->dnDetail = $db->getDNDetailById($id);

@@ -552,7 +552,7 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
     	$sql=" SELECT * FROM $this->_name WHERE id=".$recordId;
     	$dbg = new Application_Model_DbTable_DbGlobal();
     	$sql.= $dbg->getAccessPermission('projectId');
-    	$sql.=" LIMIT 1";
+    	$sql.=" AND verified = 0 LIMIT 1";
     	return $db->fetchRow($sql);
     }
     function getDNById($data=array()){
