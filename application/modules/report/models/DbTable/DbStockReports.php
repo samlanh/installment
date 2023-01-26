@@ -556,7 +556,7 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
 		    	bp.totalBudget
 		    	FROM 
 		    		st_budget_item AS bi,
-		    		st_budget_project bp
+		    		st_budget_project_item bp
     		WHERE bi.id=bp.budgetId ";
     	 
     	 

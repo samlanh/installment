@@ -2,7 +2,7 @@
 
 class Budget_Model_DbTable_DbInitilizeBudget extends Zend_Db_Table_Abstract
 {
-    protected $_name = 'st_budget_project';
+    protected $_name = 'st_budget_project_item';
     public function getUserId(){
     	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
     	return $session_user->user_id;
