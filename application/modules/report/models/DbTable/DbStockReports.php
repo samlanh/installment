@@ -280,7 +280,7 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
 				costing
 		    	
     		FROM `st_closing` cl,
-			`st_closing_detail` AS cd
+				`st_closing_detail` AS cd
     		 WHERE cl.id=cd.closingId ";
     	
 //     	$from_date =(empty($search['start_date']))? '1': " cl.closingDate >= '".$search['start_date']." 00:00:00'";
