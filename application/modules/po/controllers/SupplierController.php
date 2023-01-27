@@ -44,7 +44,8 @@ class Po_SupplierController extends Zend_Controller_Action {
 		
 	}
 	function addAction(){
-
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$isaddsupplier = $this->getRequest()->getParam('isAddSupplier');
 		$db = new Po_Model_DbTable_DbSupplier();
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
@@ -52,7 +53,18 @@ class Po_SupplierController extends Zend_Controller_Action {
 				
 				
 				$db->addSupplier($_data);
-	    		Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL."/index");
+
+				if(!empty($isaddsupplier)){
+					
+					$alert = $tr->translate("INSERT_SUCCESS");
+					echo "<script> alert('".$alert."');</script>";
+		    		echo "<script>window.close();</script>";
+
+				}else{
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL."/index");
+
+				}
+	    		
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());

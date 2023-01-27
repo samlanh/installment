@@ -38,16 +38,17 @@ class Product_CategoryController extends Zend_Controller_Action {
 		
 	}
 	function addAction(){
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		$isaddcat = $this->getRequest()->getParam('isAddCategory');
-
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {		
 				$db = new Product_Model_DbTable_DbCategory();
 				$db->addCategory($_data);
 				if(!empty($isaddcat)){
-					Application_Form_FrmMessage::message("INSERT_SUCCESS");
-					echo "<script> alert('INSERT_SUCCESS');</script>";
+					
+					$alert = $tr->translate("INSERT_SUCCESS");
+					echo "<script> alert('".$alert."');</script>";
 		    		echo "<script>window.close();</script>";
 
 				}else{

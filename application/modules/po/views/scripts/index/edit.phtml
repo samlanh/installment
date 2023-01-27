@@ -116,8 +116,11 @@
 									</div>
 									 <div class="form-group">
 										<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("SUPPLIER");?> </label>
-										<div class="col-md-7 col-sm-7 col-xs-12">
+										<div class="col-md-4 col-sm-4 col-xs-12">
 											<?php echo $frm->getElement("supplierId");?>
+										</div>
+										<div class="col-md-3 col-sm-3 col-xs-12">
+											<input type="button" class="button-class button-primary" iconClass="glyphicon glyphicon-refresh" dojoType="dijit.form.Button" onclick="getRefreshData();" label="<?php echo $tr->translate("GET_DATA");?>"  />
 										</div>
 									 </div>
 									 <div class="form-group">
@@ -251,6 +254,33 @@
 		//getAllProduct();
 		//getPurchaseNoByBranch();
 	}
+
+	function addNewSupplier(){
+		supplierId = dijit.byId('supplierId').get('value');
+		if(supplierId==-1){
+			window.open('<?php echo $this->baseUrl();?>/po/supplier/add?isAddSupplier=1');
+			dijit.byId('supplierId').reset();
+		}
+	}
+
+	var urlGetAllSuppilyer = '<?php echo $this->url(array('module'=>'po','controller'=>'supplier','action'=>'getallsupplier')); ?>';
+	function getRefreshData(){
+			
+		dojo.xhrPost({
+			url:urlGetAllSuppilyer,	
+			handleAs:"json",
+			load: function(data) {
+				supplierStore  = getDataStorefromJSON('id','name', data);	
+			    dijit.byId('supplierId').set('store',supplierStore);
+				
+				
+			},
+			error: function(err){
+			}
+		});
+		
+	}
+
 	var urlGetAllApprovedRequest = '<?php echo $this->url(array('module'=>'requesting','controller'=>'request','action'=>'getallapprovedrequest')); ?>';
 	function getAllApprovedRequest(){
 		dijit.byId('requestId').reset();

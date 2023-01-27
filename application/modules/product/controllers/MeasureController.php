@@ -31,6 +31,7 @@ class Product_MeasureController extends Zend_Controller_Action {
 		
 	}
 	function addAction(){
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		$isAddMeasure = $this->getRequest()->getParam('isAddMeasure');
 
 		if($this->getRequest()->isPost()){
@@ -39,8 +40,8 @@ class Product_MeasureController extends Zend_Controller_Action {
 				$db = new Product_Model_DbTable_DbMeasure();
 				$db->addMeasure($_data);
 				if(!empty($isAddMeasure)){
-					Application_Form_FrmMessage::message("INSERT_SUCCESS");
-					echo "<script> alert('INSERT_SUCCESS');</script>";
+					$alert = $tr->translate("INSERT_SUCCESS");
+					echo "<script> alert('".$alert."');</script>";
 		    		echo "<script>window.close();</script>";
 				}else{
 					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/product/measure/add");

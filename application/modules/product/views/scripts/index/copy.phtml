@@ -367,7 +367,8 @@ function bs_input_file() {
 			return false;
 		}else if(measureId==-1){
 			dijit.byId('isConvert').set("checked", false);
-			window.open('<?php echo $this->url(array('module'=>'product','controller'=>'measure','action'=>'add'))?>');
+			window.open('<?php echo $this->baseUrl();?>/product/measure/add?isAddMeasure=1');
+			dijit.byId('measureId').reset();
 		}
 		
 		measureLable = measure.attr('displayedValue');
@@ -394,13 +395,15 @@ function bs_input_file() {
 	function addNewCategory(){
 		categoryId = dijit.byId('categoryId').get('value');
 		if(categoryId==-1){
-			window.open('<?php echo $this->url(array('module'=>'product','controller'=>'category','action'=>'add'))?>');
+			window.open('<?php echo $this->baseUrl();?>/product/category/add?isAddCategory=1');
+			dijit.byId('categoryId').reset();
 		}
 	}
 	function addNewBudgetItem(){
 		budgetItem = dijit.byId('budgetItem').get('value');
 		if(budgetItem==-1){
-			window.open('<?php echo $this->url(array('module'=>'budget','controller'=>'item','action'=>'add'))?>');
+			window.open('<?php echo $this->baseUrl();?>/budget/item/add?isAddBudgetItem=1');
+			dijit.byId('budgetItem').reset();
 		}
 	}
 	function getRefreshData(){

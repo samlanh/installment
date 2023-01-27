@@ -9,8 +9,8 @@ class Product_Model_DbTable_DbCategory extends Zend_Db_Table_Abstract
     }
     function getAllCategory($search){
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-		$normal=$tr->translate('NOMAL');
-		$material=$tr->translate('MATERIAL');
+		$normal=$tr->translate('NORMAL');
+		$material=$tr->translate('IS_MATERIAL');
     	$sql="SELECT c.id,
     		(SELECT p.categoryName FROM $this->_name As p WHERE p.id=c.parentId LIMIT 1) AS parentTitle,
 	    	c.categoryName,
