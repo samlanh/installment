@@ -123,22 +123,35 @@ Class Stockinout_Form_FrmTransfer extends Zend_Dojo_Form {
 		$id =  new Zend_Form_Element_Hidden('id');
 		
 		if(!empty($_data)){
-			$_branch_id->setValue($_data['projectId']);
-			$requestNo->setValue($_data['requestNo']);
-			$useFor->setValue($_data['reqOutNo']);
-			$transferDate->setValue($_data['workerName']);
-			$toProjectId->setValue($_data['houseType']);
-			$transferer->setValue($_data['typeofWork']);
-			$driver->setValue($_data['requestDate']);
-			$id->setValue($_data['id']);
-			$receiver->setValue($_data['workType']);
+			
+			
+			$useFor->setValue($_data['userFor']);
+			$receiver->setValue($_data['receiverId']);
+			$transferer->setValue($_data['transferer']);
+			$driver->setValue($_data['driver']);
+			$transferDate->setValue($_data['transferDate']);
+			$_branch_id->setValue($_data['fromProjectId']);
+			$toProjectId->setValue($_data['toProjectId']);
+			$requestNo->setValue($_data['transferNo']);
 			$_status->setValue($_data['status']);
+			$id->setValue($_data['id']);
 			$_note->setValue($_data['note']);
 		}
-		$this->addElements(array($categoryId,$useFor,$receiver,
-				$transferer,$driver,$transferDate,$_branch_id,
-				$toProjectId,$requestNo,$_status,$id,$_note,
-			));
+		$this->addElements(array(
+			$categoryId
+			,$useFor
+			,$receiver
+			,$transferer
+			,$driver
+			,$transferDate
+			,$_branch_id
+			,$toProjectId
+			,$requestNo
+			,$_status
+			,$id
+			,$_note
+			)
+		);
 		
 		return $this;
 	}

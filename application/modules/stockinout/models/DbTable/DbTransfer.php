@@ -31,6 +31,10 @@ class Stockinout_Model_DbTable_DbTransfer extends Zend_Db_Table_Abstract
     	return $pre.$new_acc_no;
     }
     function getAllTransfer($search){
+		
+		$dbGb = new Application_Model_DbTable_DbGlobal();
+		$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+		
     	$sql="SELECT t.id,
 					(SELECT project_name FROM `ln_project` WHERE br_id=t.fromProjectId LIMIT 1) AS projectName,
 					t.transferNo,
@@ -41,12 +45,15 @@ class Stockinout_Model_DbTable_DbTransfer extends Zend_Db_Table_Abstract
 					(SELECT project_name FROM `ln_project` WHERE br_id=t.toProjectId LIMIT 1) AS toProjectId,
 					t.receiverId,
 					t.userFor,
-					(SELECT first_name FROM rms_users AS u WHERE u.id = t.userId LIMIT 1) AS byUser ,
-					(SELECT name_en FROM ln_view WHERE TYPE=3 AND key_code = t.status LIMIT 1) AS `status`,
-					t.isCompleted
+					(SELECT first_name FROM rms_users AS u WHERE u.id = t.userId LIMIT 1) AS byUser
+					,CASE
+						WHEN  COALESCE((SELECT trsd.isCompleted FROM `st_transferstock_detail` AS trsd WHERE trsd.transferId =t.id   ORDER BY trsd.isCompleted ASC LIMIT 1 ),0) = 1 THEN '".$tr->translate("RECEIVED")."'
+						ELSE   '".$tr->translate("PENDING")."'
+					END AS isCompleted
 					
-				FROM `st_transferstock` t WHERE 1 ";
-    	
+				";
+    	$sql.=$dbGb->caseStatusShowImage("t.status");
+    	$sql.=" FROM `st_transferstock` t WHERE 1  ";
     	$from_date =(empty($search['start_date']))? '1': " t.transferDate >= '".$search['start_date']." 00:00:00'";
     	$to_date = (empty($search['end_date']))? '1': " t.transferDate <= '".$search['end_date']." 23:59:59'";
     	
@@ -286,10 +293,12 @@ class Stockinout_Model_DbTable_DbTransfer extends Zend_Db_Table_Abstract
     }
     function getDataRow($recordId){
     	$db = $this->getAdapter();
-    	$sql=" SELECT * FROM $this->_name WHERE id=".$recordId;
+    	$sql=" SELECT trs.*,
+			COALESCE((SELECT trsd.isCompleted FROM `st_transferstock_detail` AS trsd WHERE trsd.transferId =trs.id   ORDER BY trsd.isCompleted ASC LIMIT 1 ),0) AS isCompletedReceive
+		FROM $this->_name AS trs WHERE trs.id=".$recordId;
     	
     	$dbg = new Application_Model_DbTable_DbGlobal();
-    	$sql.= $dbg->getAccessPermission('projectId');
+    	$sql.= $dbg->getAccessPermission('trs.fromProjectId');
     	
     	$sql.=" LIMIT 1";
     	return $db->fetchRow($sql);
@@ -303,5 +312,32 @@ class Stockinout_Model_DbTable_DbTransfer extends Zend_Db_Table_Abstract
 					 (SELECT `proName` FROM `st_product` where st_product.`proId`=sd.proId LIMIT 1) AS proName
     		FROM $this->_name as sd WHERE sd.stockoutId=".$recordId." ";
     	return $db->fetchAll($sql);
+    }
+	
+	
+	function getDataRowDetail($recordId){
+    	$db = $this->getAdapter();
+    	$this->_name='st_transferstock_detail';
+    	$sql=" SELECT 
+    				 sd.*,
+    				 (SELECT `proCode` FROM `st_product` where st_product.`proId`=sd.proId LIMIT 1) AS proCode
+					 ,(SELECT `proName` FROM `st_product` where st_product.`proId`=sd.proId LIMIT 1) AS proName
+					 ,(SELECT `measureLabel` FROM `st_product` where st_product.`proId`=sd.proId LIMIT 1) AS measureTitle 
+					 ,(SELECT COALESCE(pl.qty,0) FROM st_product_location AS pl WHERE pl.proId=sd.proId AND pl.projectId= s.fromProjectId LIMIT 1) AS currentQty
+					
+    		FROM $this->_name as sd 
+				JOIN st_transferstock AS s ON s.id = sd.transferId
+			WHERE sd.transferId=".$recordId." ";
+    	return $db->fetchAll($sql);
+    }
+	
+	function checkTransferInReceived($recordId){
+    	$db = $this->getAdapter();
+    	$this->_name='st_transfer_receive';
+    	$sql=" SELECT 
+    				 sd.*
+    		FROM $this->_name as sd 
+			WHERE sd.transferId=".$recordId." AND sd.status=1 LIMIT 1 ";
+    	return $db->fetchRow($sql);
     }
 }
