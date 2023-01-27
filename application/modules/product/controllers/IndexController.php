@@ -57,6 +57,7 @@ class Product_IndexController extends Zend_Controller_Action {
 	}
 
 	function addAction(){
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		$isservice=$this->getRequest()->getParam('isservice');
 		$this->view->isserice = $isservice;
 
@@ -65,7 +66,16 @@ class Product_IndexController extends Zend_Controller_Action {
 			try {		
 				$db = new Product_Model_DbTable_DbProduct();
 				$db->addNewProduct($_data);
-				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/product/index/add");
+				if(!empty($isservice)){
+					$alert = $tr->translate("INSERT_SUCCESS");
+					echo "<script> alert('".$alert."');</script>";
+		    		echo "<script>window.close();</script>";
+
+				}else{
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/product/index/add");
+
+				}
+				
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
