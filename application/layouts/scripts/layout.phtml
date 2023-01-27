@@ -61,6 +61,9 @@
 	$controller=$request->getControllerName();
 	$module=$request->getModuleName();
 	
+	$userAccessTrn = $db_user->getAccessUrl("stockinout","transferin",'add');
+	$userConcreteCheck = $db_user->getAccessUrl("po","directpo",'check');
+	
 
 	
 	
@@ -299,8 +302,7 @@
 							    	<div class="col-sm-12">
 							    	<?php }?>
 							<?php 
-								$db = new Application_Model_DbTable_DbUsers();
-	            				$rs = $db->getAccessUrl($module,$controller,$action);
+	            				$rs = $db_user->getAccessUrl($module,$controller,$action);
 // 	            				echo $this->layout()->content;
 		            			if(!empty($rs) OR $action=='changepassword' OR $controller=='testsale'){
 		            				echo $this->layout()->content;
@@ -369,13 +371,18 @@ $(document).ready(function(){
 	});
 	
 	<?php if($systemType==2){?>
-	loadRequestNotification();
-	loadRequestNotificationConcrete();
-	loadTransferStock();
-	 setInterval(function(){ 
-		//loadRequestNotification();
-		//loadRequestNotificationConcrete();
-	 }, 5000);
+		loadRequestNotification();
+		<?php if(!empty($userConcreteCheck)){ ?>
+		loadRequestNotificationConcrete();
+		<?php } ?>
+		<?php if(!empty($userAccessTrn)){ ?>
+		loadTransferStock();
+		<?php } ?>
+		
+		 setInterval(function(){ 
+			//loadRequestNotification();
+			//loadRequestNotificationConcrete();
+		 }, 5000);
 	<?php } ?>
 
 	<?php if($module=="loan" AND $action=="add"){ ?>
@@ -471,60 +478,66 @@ function loadRequestNotification(view = '')
 	});
 	
  }
-var urlRequestNotifDn = '<?php echo $this->url(array('module'=>'default','controller'=>'index','action'=>'notifdnconcrete'));?> ';
-function loadRequestNotificationConcrete(view = '')
- {
-	 
-	 jQuery.ajax({
-		url: urlRequestNotifDn,
-		type: "post",
-		data:{'view':view},
-		dataType:"json",
-		success: function(datadN){
-			if(datadN.counting >= 0)
-			{
-			 jQuery('.requestNotifyDN').html(datadN.notification);
-			 if(datadN.counting==0){
-				 jQuery('#countDNnotification').html("");
-			 }else{
-				 jQuery('#countDNnotification').html(datadN.counting);
-			 }
-			 
+ 
+<?php if(!empty($userConcreteCheck)){ ?>
+	var urlRequestNotifDn = '<?php echo $this->url(array('module'=>'default','controller'=>'index','action'=>'notifdnconcrete'));?> ';
+	function loadRequestNotificationConcrete(view = '')
+	 {
+		 
+		 jQuery.ajax({
+			url: urlRequestNotifDn,
+			type: "post",
+			data:{'view':view},
+			dataType:"json",
+			success: function(datadN){
+				if(datadN.counting >= 0)
+				{
+				 jQuery('.requestNotifyDN').html(datadN.notification);
+				 if(datadN.counting==0){
+					 jQuery('#countDNnotification').html("");
+				 }else{
+					 jQuery('#countDNnotification').html(datadN.counting);
+				 }
+				 
+				}
+			},
+			error:function(err){
+				
 			}
-		},
-		error:function(err){
-			
-		}
-	});
-	
- }
-var urlNotifTrnStk = '<?php echo $this->url(array('module'=>'default','controller'=>'index','action'=>'notiftrnstk'));?> ';
-function loadTransferStock(view = '')
- {
-	 
-	 jQuery.ajax({
-		url: urlNotifTrnStk,
-		type: "post",
-		data:{'view':view},
-		dataType:"json",
-		success: function(datadN){
-			if(datadN.counting >= 0)
-			{
-			 jQuery('.transferStock').html(datadN.notification);
-			 if(datadN.counting==0){
-				 jQuery('#countTrnStknotification').html("");
-			 }else{
-				 jQuery('#countTrnStknotification').html(datadN.counting);
-			 }
-			 
+		});
+		
+	 }
+ <?php } ?>
+<?php if(!empty($userAccessTrn)){ ?>
+	var urlNotifTrnStk = '<?php echo $this->url(array('module'=>'default','controller'=>'index','action'=>'notiftrnstk'));?> ';
+	function loadTransferStock(view = '')
+	 {
+		 
+		 jQuery.ajax({
+			url: urlNotifTrnStk,
+			type: "post",
+			data:{'view':view},
+			dataType:"json",
+			success: function(datadN){
+				if(datadN.counting >= 0)
+				{
+				 jQuery('.transferStock').html(datadN.notification);
+				 if(datadN.counting==0){
+					 jQuery('#countTrnStknotification').html("");
+				 }else{
+					 jQuery('#countTrnStknotification').html(datadN.counting);
+				 }
+				 
+				}
+			},
+			error:function(err){
+				
 			}
-		},
-		error:function(err){
-			
-		}
-	});
-	
- }
+		});
+		
+	 }
+<?php } ?>
+
 <?php } ?>
 
 jQuery(function () {

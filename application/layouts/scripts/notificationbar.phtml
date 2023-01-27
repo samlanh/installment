@@ -47,6 +47,10 @@
 	
 	$db_user=new Application_Model_DbTable_DbUsers();
 	$user_info = $db_user->getUserInfo($user_id);
+	
+	$userAccessTrn = $db_user->getAccessUrl("stockinout","transferin",'add');
+	$userConcreteCheck = $db_user->getAccessUrl("po","directpo",'check');
+	
 	?>
 	<?php if($systemType==1){?>
 			   <?php if (empty($user_info['staff_id'])){?>
@@ -252,6 +256,7 @@
 					<ul id="menu1" class="notify-main dropdown-menu list-unstyled requestNotify " role="menu">
 				    </ul>
 				</li>
+				<?php if(!empty($userConcreteCheck)){?>
 				<li title="<?php echo $tr->translate("DN_CONCRETE");?>" role="presentation" class="dropdown ">
 					<a  href="javascript:;"  class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="true">
 						<i class="fa fa-file-text"></i>
@@ -260,6 +265,8 @@
 					<ul id="menu1" class="notify-main dropdown-menu list-unstyled requestNotifyDN " role="menu">
 				    </ul>
 				</li>
+				<?php }?>
+				<?php if(!empty($userAccessTrn)){?>
 				<li title="<?php echo $tr->translate("TRANSFER_STOCK");?>" role="presentation" class="dropdown ">
 					<a  href="javascript:;"  class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="true">
 						<i class=" glyphicon glyphicon-cd"></i>
@@ -268,5 +275,5 @@
 					<ul id="menu1" class="notify-main dropdown-menu list-unstyled transferStock " role="menu">
 				    </ul>
 				</li>
-				
+				<?php }?>
 		<?php }?>
