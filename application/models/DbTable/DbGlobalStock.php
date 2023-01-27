@@ -1096,10 +1096,10 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		$sql.=" FROM `st_transferstock` AS trs 
 					 "; 
 				
-		$sql.=" WHERE trs.status=1 "; 
+		$sql.=" WHERE trs.status=1 AND trs.isApproved=1 "; 
 
 		//checking Items In Request For Available to receive
-		$sql.=" AND (SELECT trsd.isCompleted FROM `st_transferstock_detail` AS trsd WHERE trsd.transferId =trs.id  ORDER BY trsd.isCompleted ASC LIMIT 1 )=0 ";
+		$sql.=" AND (SELECT trsd.isCompleted FROM `st_transferstock_detail` AS trsd WHERE trsd.transferId =trs.id ORDER BY trsd.isCompleted ASC LIMIT 1 )=0 ";
 			
 		if(!empty($_data['fromProjectId'])){
 			$sql.=" AND trs.fromProjectId=".$_data['fromProjectId'];

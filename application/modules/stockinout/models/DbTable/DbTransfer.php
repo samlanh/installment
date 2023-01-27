@@ -98,7 +98,7 @@ class Stockinout_Model_DbTable_DbTransfer extends Zend_Db_Table_Abstract
     	try
     	{
     		$dbs = new Application_Model_DbTable_DbGlobalStock();
-    		$requestStock = $dbs->generateTransferNo($data['branch_id']);
+    		$requestStock = $dbs->generateTransferNo($data);
     		
     		$arr = array(
     			'fromProjectId'=>$data['branch_id'],
@@ -111,9 +111,11 @@ class Stockinout_Model_DbTable_DbTransfer extends Zend_Db_Table_Abstract
     			'receiverId'=>$data['receiver'],
     			'userFor'=>$data['useFor'],
     			'note'=>$data['note'],
+    			
     			'createDate'=>date('Y-m-d H:i:s'),
     			'modifyDate'=>date('Y-m-d H:i:s'),
     			'status'=>1,
+				'isApproved'=>$data['isApproved'],
     			'userId'=>$this->getUserId(),
     			);
     		$transferId = $this->insert($arr);

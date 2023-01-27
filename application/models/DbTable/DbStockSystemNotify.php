@@ -219,5 +219,65 @@ class Application_Model_DbTable_DbStockSystemNotify extends Zend_Db_Table_Abstra
 		);
 		return $arrNoti;
 	}
+	
+	
+	function getAllTransferStock($_data=array()){
+		$db=$this->getAdapter();
+		$dbGb = new Application_Model_DbTable_DbGlobal();
+		$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+		$sql="SELECT 
+				trs.id
+				,(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = trs.fromProjectId LIMIT 1) AS projectName
+				,(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = trs.toProjectId LIMIT 1) AS toProjectName
+				,trs.transferNo
+				,trs.driver
+				,trs.transferer
+				,trs.transferDate
+				,DATE_FORMAT(trs.transferDate,'".DATE_FORMAT_FOR_SQL."') As transferDateFormat
+			FROM `st_transferstock` AS trs  WHERE trs.status=1 AND trs.isApproved=1 ";
+		$sql.=" AND (SELECT trsd.isCompleted FROM `st_transferstock_detail` AS trsd WHERE trsd.transferId =trs.id   ORDER BY trsd.isCompleted ASC LIMIT 1 )=0 ";
+	
+	
+		$sql.=$dbGb->getAccessPermission("trs.toProjectId");
+		$sql.=" ORDER BY trs.id DESC ";
+		return $db->fetchAll($sql);
+	}
+	
+	function getNotifyTransferStockHtml($_data=array()){
+		$row = $this->getAllTransferStock($_data);
+		$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+		$baseUrls = Zend_Controller_Front::getInstance()->getBaseUrl();
+	
+		$count = count($row);
+		$string='
+		<li class=" event title">
+		<h4><i class="fa fa-random"></i> '.$tr->translate("TRANSFER_STOCK").'</h4>
+		</li>
+		';
+		if(!empty($row)) foreach($row as $key=> $result){
+			$url="";
+			$url=$baseUrls."/stockinout/transferin/add/id/".$result['id'];
+		
+			$title=$tr->translate("RECEIVE_NOW");
+				
+			$string.='
+			<li class=" event" title="'.$result['projectName'].' => '.$result['toProjectName'].' '.$result['transferNo'].'">
+				<div class="media-body">
+					<small>'.$result['projectName'].' <i class="fa fa-long-arrow-right" aria-hidden="true"></i> <span class="text-info bold">'.$result['toProjectName'].'<span></small><br />
+					<span class="title" >'.$result['transferNo'].'</span>
+					<p><strong></strong> <i class="fa fa-calendar"></i> '.$result['transferDateFormat'].'</p>
+					<p><strong></strong> <i class="fa fa-truck"></i> <i class="fa fa-user"></i> '.$result['driver'].'</p>
+					<p><strong></strong> <i class="fa fa-user"></i> '.$result['transferer'].'</p>
+					
+					<a class="btn-go" href="'.$url.'"><i class="glyphicon glyphicon-save-file" ></i> '.$title.'</a>
+				</div>
+			</li>';
+		}
+		$arrNoti = array(
+				'notification' => $string,
+				'counting'  => $count
+		);
+		return $arrNoti;
+	}
 }
 ?>

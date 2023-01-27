@@ -370,9 +370,11 @@ $(document).ready(function(){
 	
 	<?php if($systemType==2){?>
 	loadRequestNotification();
+	loadRequestNotificationConcrete();
+	loadTransferStock();
 	 setInterval(function(){ 
-		loadRequestNotification();
-		loadRequestNotificationConcrete();
+		//loadRequestNotification();
+		//loadRequestNotificationConcrete();
 	 }, 5000);
 	<?php } ?>
 
@@ -496,7 +498,33 @@ function loadRequestNotificationConcrete(view = '')
 	});
 	
  }
-
+var urlNotifTrnStk = '<?php echo $this->url(array('module'=>'default','controller'=>'index','action'=>'notiftrnstk'));?> ';
+function loadTransferStock(view = '')
+ {
+	 
+	 jQuery.ajax({
+		url: urlNotifTrnStk,
+		type: "post",
+		data:{'view':view},
+		dataType:"json",
+		success: function(datadN){
+			if(datadN.counting >= 0)
+			{
+			 jQuery('.transferStock').html(datadN.notification);
+			 if(datadN.counting==0){
+				 jQuery('#countTrnStknotification').html("");
+			 }else{
+				 jQuery('#countTrnStknotification').html(datadN.counting);
+			 }
+			 
+			}
+		},
+		error:function(err){
+			
+		}
+	});
+	
+ }
 <?php } ?>
 
 jQuery(function () {

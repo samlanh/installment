@@ -1,5 +1,6 @@
 <?php
 class Stockinout_TransferinController extends Zend_Controller_Action {
+	const REDIRECT_URL = '/stockinout/transferin';
 	public function init()
 	{
 		header('content-type: text/html; charset=utf8');
@@ -48,7 +49,7 @@ class Stockinout_TransferinController extends Zend_Controller_Action {
 			try {		
 				$db = new Stockinout_Model_DbTable_DbReceiveTransfer();
 				$db->addReceiveTransferStock($_data);
-				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/stockinout/transferin");
+				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL);
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -58,6 +59,50 @@ class Stockinout_TransferinController extends Zend_Controller_Action {
 		$frm = $fm->FrmTransferReceive();
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm = $frm;
+		
+		
+		$id = $this->getRequest()->getParam('id');
+		$id = empty($id)?0:$id;
+		$dbTr = new Stockinout_Model_DbTable_DbTransfer();
+		$row = $dbTr->getDataRow($id);
+		
+		$this->view->rowTr = $row;
+		
+	}
+	function editAction(){
+		$db = new Stockinout_Model_DbTable_DbReceiveTransfer();
+		if($this->getRequest()->isPost()){
+			$_data = $this->getRequest()->getPost();
+			try {		
+				
+				$db->editReceiveTransferStock($_data);
+				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS",self::REDIRECT_URL);
+			}catch(Exception $e){
+				Application_Form_FrmMessage::message("EDIT_FAIL");
+				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			}
+		}else{
+			$id = $this->getRequest()->getParam('id');
+			$id = empty($id)?0:$id;
+			$row = $db->getDataRow($id);
+			$this->view->row = $row;
+			
+			if(empty($row)){
+				Application_Form_FrmMessage::Sucessfull("NO_DATA", self::REDIRECT_URL,2);
+				exit();
+			}else if ($row['status']==0){
+				Application_Form_FrmMessage::Sucessfull("ALREADY_DEACTIVE", self::REDIRECT_URL,2);
+				exit();
+			}else if ($row['isClose']==1){
+				Application_Form_FrmMessage::Sucessfull("ALREADY_CLOSING_ENTRY", self::REDIRECT_URL,2);
+				exit();
+			}
+			
+			$fm = new Stockinout_Form_FrmTransfer();
+			$frm = $fm->FrmTransferReceive($row);
+			Application_Model_Decorator::removeAllDecorator($frm);
+			$this->view->frm = $frm;
+		}
 		
 	}
 	

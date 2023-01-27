@@ -45,6 +45,7 @@ class Stockinout_TransferoutController extends Zend_Controller_Action {
 			$_data = $this->getRequest()->getPost();
 			try {		
 				$db = new Stockinout_Model_DbTable_DbTransfer();
+				$_data['isApproved']=1;
 				$db->addTransferStock($_data);
 				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/stockinout/transferout");
 			}catch(Exception $e){

@@ -61,6 +61,29 @@ class Stockinout_Model_DbTable_DbReceiveTransfer extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	return $db->fetchAll($sql.$where.$where_date.$order);
     }
+	function getDataRow($recordId){
+		$db = $this->getAdapter();
+    	$sql=" SELECT * FROM $this->_name WHERE id=".$recordId;
+    	$dbg = new Application_Model_DbTable_DbGlobal();
+    	$sql.= $dbg->getAccessPermission('projectId');
+    	return $db->fetchRow($sql);
+	}
+	 function getReceiveDetailById($recordId){
+    	$db = $this->getAdapter();
+    	$sql=" SELECT 
+    				sd.*,
+    				sd.proId,
+					(SELECT p.proName FROM st_product p WHERE p.proId=sd.proId LIMIT 1) proName,
+					(SELECT p.proCode FROM st_product p WHERE p.proId=sd.proId LIMIT 1) proCode,
+					(SELECT p.measureLabel FROM st_product p WHERE p.proId=sd.proId LIMIT 1) measureLabel,
+					sd.qtyReceive,
+					sd.qtyAfterReceive,
+					sd.isClosed,
+					sd.note
+				FROM `st_transfer_receive_detail` AS sd
+				WHERE sd.receiveId=".$recordId;
+    	return $db->fetchAll($sql);
+    }
 	function addReceiveTransferStock($data){
     	$db = $this->getAdapter();
     	$db->beginTransaction();
@@ -133,7 +156,7 @@ class Stockinout_Model_DbTable_DbReceiveTransfer extends Zend_Db_Table_Abstract
     				);
     				
     				$dbs->updateStockbyBranchAndProductId($param);//Update Stock qty and new costing
-    				$dbs->addProductHistoryQty($data['branch_id'],$data['productId'.$i],2,$data['qtyReceive'.$i],$id);//movement'
+    				$dbs->addProductHistoryQty($data['branch_id'],$data['productId'.$i],5,$data['qtyReceive'.$i],$id);//movement'
     			}
     		}
     		
@@ -143,6 +166,145 @@ class Stockinout_Model_DbTable_DbReceiveTransfer extends Zend_Db_Table_Abstract
     		$db->rollBack();
     		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL","/stockinout/index/add",2);
     	}
+    }
+	
+	function editReceiveTransferStock($data){
+    	$db = $this->getAdapter();
+    	$db->beginTransaction();
+    	try
+    	{
+    		$dbs = new Application_Model_DbTable_DbGlobalStock();
+		
+			
+    		$transferId = $data['transferId'];
+			$arr = array(
+				'fromProjectId'	=>$data['fromProjectId'],
+				'transferId'	=>$data['transferId'],
+				
+				'projectId'		=>$data['branch_id'],
+				'receiveDate'	=>$data['receiveDate'],
+				
+				'note'			=>$data['note'],
+				'status'			=>$data['status'],
+				'userId'		=>$this->getUserId(),
+				
+				'modifyDate'	=>date('Y-m-d H:i:s'),
+			);
+    		$this->_name='st_transfer_receive';
+			$receivedId = $data['id'];
+    		$where="id=".$receivedId;
+			$this->update($arr,$where);
+			
+			$this->reverseReceivedTransaction($receivedId,$data['transferId'],$data['branch_id']);//reverse 
+			
+			if($data['status']==0){
+    			$db->commit();
+    			return true;
+    		}
+			
+    		$ids = explode(',',$data['identity']);
+    		if(!empty($ids)){
+    			foreach($ids as $i){
+					
+					$isClosed=0;
+					if($data['receiveStatus'.$i]==1){
+						$isClosed=1;
+					}else{
+						if($data['qtyReceive'.$i]>=$data['qtyAfter'.$i]){
+							$isClosed=1;
+						}
+					}
+					
+					$qtyAfterReceive = $data['qtyAfter'.$i]-$data['qtyReceive'.$i];
+					$arrTransferDetail = array(
+							'isCompleted'	=>$isClosed,
+							'qtyAppAfter'	=>$qtyAfterReceive,
+							'modifyDate'	=>date("Y-m-d H:i:s"),
+						);
+					$this->_name='st_transferstock_detail';	
+					$whereTransferDetail=" transferId = $transferId AND proId=".$data['productId'.$i];
+					$this->update($arrTransferDetail,$whereTransferDetail);
+					
+    				$arr = array(
+    					'receiveId'=>$receivedId,
+    					'proId'=>$data['productId'.$i],
+    					'qtyReceive'=>$data['qtyReceive'.$i],
+    					'qtyAfterReceive'=>$qtyAfterReceive,
+    					'price'=>$data['price'.$i],
+    					'totalDiscount'=>$data['discountAmount'.$i]/$data['qtyTransfer'.$i]*$data['qtyReceive'.$i],
+						
+    					'subTotal'=>$data['qtyReceive'.$i]*$data['price'.$i],
+    					'isClosed'=>$isClosed,
+    					'note'=>$data['note'.$i],
+    				);
+    				
+    				$this->_name='st_transfer_receive_detail';
+    				$id = $this->insert($arr);
+					
+    				$param = array(
+    					'branch_id'	=> $data['branch_id'],
+    					'productId'	=> $data['productId'.$i],
+    					'EntyQty'	=> $data['qtyReceive'.$i],
+    					'EntyPrice'	=> $data['price'.$i]
+    				);
+    				
+    				$dbs->updateStockbyBranchAndProductId($param);//Update Stock qty and new costing
+    				$dbs->addProductHistoryQty($data['branch_id'],$data['productId'.$i],5,$data['qtyReceive'.$i],$id);//movement'
+    			}
+    		}
+    		
+    		$db->commit();
+    	}catch(Exception $e){
+    		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+    		$db->rollBack();
+    		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL","/stockinout/index/add",2);
+    	}
+    }
+	
+	function reverseReceivedTransaction($receivedId,$transferId,$branchId){
+    	$dbs = new Application_Model_DbTable_DbGlobalStock();
+    	$results = $this->getReceiveDetailById($receivedId);
+    	if(!empty($results)){foreach ($results as $result){
+	    		$paramPro = array(
+    				'fetchRow'=>1,
+    				'isClosed'=>-1,
+    				'transferId'=>$transferId,
+    				'proId'=>$result['proId']
+	    		);
+	    		
+	    		$poProduct = $this->getTransferProductInfo($paramPro);
+	    		if(!empty($poProduct)){//update po product detail and po
+	    				
+	    			$currentAfter = $poProduct['qtyAppAfter'];
+	    			$Receiveqty = $result['qtyReceive'];
+	    			
+	    			$arr =array(
+    					'qtyAppAfter'=>$currentAfter+$Receiveqty,
+    					'isCompleted'=>0
+	    			);
+	    				
+	    			$where= "transferId = ".$transferId." AND proId=".$poProduct['proId'];
+	    			$this->_name='st_transferstock_detail';
+	    			$this->update($arr, $where);
+	    			
+	    			$param = array(
+	    					'EntyQty'=> -$result['qtyReceive'],
+	    					'branch_id'=> $branchId,
+	    					'productId'=> $result['proId'],
+	    			);
+	    			$dbs->updateProductLocation($param);
+	    			
+	    		}
+	    		
+	    		$dbs->DeleteProductHistoryQty($result['id']);
+	    	}
+	    	
+	    	$where= "receiveId = ".$receivedId;
+	    	$this->_name='st_transfer_receive_detail';
+	    	$this->delete($where);
+	    	
+    	}
+    				
     }
 	function getTransferProductInfo($data){
 			$db = $this->getAdapter();
@@ -209,6 +371,7 @@ class Stockinout_Model_DbTable_DbReceiveTransfer extends Zend_Db_Table_Abstract
     	$string='';
     	$no = $data['keyindex'];
     	$identity='';
+		$identityCheck='';
     	$strPOInfo='';
     	
     	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
@@ -229,22 +392,31 @@ class Stockinout_Model_DbTable_DbReceiveTransfer extends Zend_Db_Table_Abstract
 	    	$qtyReceived=0;
 	    	$row['qtyReceive']=$row['qtyAppAfter'];
 	    	$note='';
+			$checked = "";
 	    	if(!empty($data['receiveId'])){
 	    		$param = array(
 	    			'proId'=>$row['proId'],
 	    			'receiveId'=>$data['receiveId']
 	    			);
 	    		$result = $this->getQtyReceivedByProId($param);
-	    		$qtyReceived = $result['qtyReceive'];
+	    		$qtyReceived = empty($result['qtyReceive'])?0:$result['qtyReceive'];
 	    		$note = $result['note'];
 	    		$row['qtyReceive'] = $qtyReceived;
 	    		$row['qtyAppAfter'] = $row['qtyAppAfter']+$qtyReceived;
+				if($qtyReceived>0){
+					$checked = "checked";
+					if (empty($identityCheck)){
+						$identityCheck=$no;
+					}else{
+						$identityCheck=$identityCheck.",".$no;
+					}
+				}
 	    	}
 	    	
 	    	$Message="rangeMessage:'".$tr->translate('CAN_NOT_RECEIVE_OVER')."'";
 	    		$string.='
 		    		<tr id="row'.$no.'" class="rowData '.$classRowBg.'" >
-			    		<td align="center" style="padding: 0 10px;"><input OnChange="CheckAllTotal('.$no.')" style="vertical-align: top; height: initial;" type="checkbox" class="checkbox" id="mfdid_'.$no.'" value="'.$no.'"  name="selector[]"/></td>
+			    		<td align="center" style="padding: 0 10px;"><input '.$checked.' OnChange="CheckAllTotal('.$no.')" style="vertical-align: top; height: initial;" type="checkbox" class="checkbox" id="mfdid_'.$no.'" value="'.$no.'"  name="selector[]"/></td>
 			    		<td class="textCenter">'.($key+1).'</td>
 			    		<td class="textCenter">'.$row['proName'].'('.$row['measureLabel'].')</td>
 		    			<td>
@@ -289,7 +461,7 @@ class Stockinout_Model_DbTable_DbReceiveTransfer extends Zend_Db_Table_Abstract
                    		</ul>
              	</div>';
     	
-    	$array = array('stringrow'=>$string,'POInfoDataBlog'=>$strPOInfo,'keyindex'=>$no,'identity'=>$identity,'tranferInfo'=>$rowData);
+    	$array = array('stringrow'=>$string,'POInfoDataBlog'=>$strPOInfo,'keyindex'=>$no,'identity'=>$identity,'identityCheck'=>$identityCheck,'tranferInfo'=>$rowData);
     	return $array;
     }
 }

@@ -163,6 +163,10 @@
 	var productStore  = getDataStorefromJSON('id','name', null );
     require(["dojo/ready"], function(ready){
 		ready(function(){
+			
+			<?php if($this->rowTr['fromProjectId']){ ?>
+				dijit.byId('fromProjectId').attr('value','<?php echo $this->rowTr['fromProjectId'];?>');
+			<?php } ?>
 			getDataByBranch();
 			getDataByFromBranch();
 			dijit.byId("branch_id").set("readOnly",true);
@@ -267,6 +271,12 @@
 	
 		objectContentFilter = {'fromProjectId':fromProjectId};
 		getAllTransferinFunction(urlGetAllTr,objectContentFilter);
+		
+		<?php if($this->rowTr['id']){ ?>
+				setTimeout(function () {
+					dijit.byId('transferId').attr('value','<?php echo $this->rowTr['id'];?>');
+				}, 800);
+		<?php } ?>
 	}
 	
 	var urlGetRowItem = '<?php echo $this->url(array('module'=>'stockinout','controller'=>'transferin','action'=>'getallproductbytransfer')); ?>';
