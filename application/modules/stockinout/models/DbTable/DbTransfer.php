@@ -291,10 +291,145 @@ class Stockinout_Model_DbTable_DbTransfer extends Zend_Db_Table_Abstract
     		$this->delete($where);	
     	}
     }
+	
+	function updateTransferStock($data){
+    	$db = $this->getAdapter();
+    	$db->beginTransaction();
+    	try
+    	{
+    		$dbs = new Application_Model_DbTable_DbGlobalStock();
+    		
+    		$arr = array(
+    			'fromProjectId'		=>$data['branch_id'],
+    			'driver'			=>$data['driver'],
+    			'transferer'		=>$data['transferer'],
+    			'transferDate'		=>$data['transferDate'],
+    				
+    			'toProjectId'		=>$data['toProjectId'],
+    			'receiverId'		=>$data['receiver'],
+    			'userFor'			=>$data['useFor'],
+    			'note'				=>$data['note'],
+    			
+    			'modifyDate'		=>date('Y-m-d H:i:s'),
+    			'status'			=>$data['status'],
+    			'userId'			=>$this->getUserId(),
+    			);
+			$transferId = $data['id'];
+    		$where="id=".$transferId;
+			$this->update($arr,$where);
+			
+    		//reverst 
+			$dbb = new Budget_Model_DbTable_DbInitilizeBudget();
+			
+			$dbb->reverBudgetExpense($transferId);
+			$rowDetail = $this->getDataRowDetail($transferId);
+			if(!empty($rowDetail)) foreach($rowDetail AS $detail){
+				$param = array(
+    					'EntyQty'=> $detail['qtyRequest'],
+    					'branch_id'=> $data['branch_id'],
+    					'productId'=> $detail['proId'],
+    				);
+    				$dbs->updateProductLocation($param);//Update Stock qty and new costing
+					$dbs->DeleteProductHistoryQty($detail['id']);
+    				
+			}
+			$whereDetail= "transferId = ".$transferId;
+	    	$this->_name='st_transferstock_detail';
+	    	$this->delete($whereDetail);
+			
+			if($data['status']==0){
+    			$db->commit();
+    			return true;
+    		}
+    		
+    		
+    		$param = array(
+    			'branch_id'=>$data['branch_id'],
+    			'type'=>3,
+    			'transactionId'=>$transferId,
+    		);
+    		
+    		$budgetExpenseId = $dbb->addBudgetExpense($param);
+    		
+    		$param = array(
+    				'branch_id'=>$data['toProjectId'],
+    				'type'=>4,
+    				'transactionId'=>$transferId,
+    		);
+    		
+    		$budgetExpenseId1 = $dbb->addBudgetExpense($param);
+    		
+    		
+    		$ids = explode(',',$data['identity']);
+    		if(!empty($ids)){
+    			foreach($ids as $i){
+    				$arr = array(
+    					'transferId'=>$transferId,
+    					'proId'=>$data['proId'.$i],
+    					'qtyRequest'=>$data['qtyRequest'.$i],
+    					'qtyApproved'=>$data['qtyRequest'.$i],
+    					'qtyAppAfter'=>$data['qtyRequest'.$i],
+    					'unitPrice'=>$data['costing'.$i],
+    					'note'=>$data['note'.$i],
+						'createDate'=>date('Y-m-d H:i:s'),
+						'modifyDate'=>date('Y-m-d H:i:s'),
+    				);
+    				$this->_name='st_transferstock_detail';
+    				$id = $this->insert($arr);
+    				
+    				$param = array(
+    					'budgetExpenseId'=>$budgetExpenseId,
+    					'subtransactionId'=>$id,
+    					'productId'=>$data['proId'.$i],
+    					'price'=>$data['costing'.$i],
+    					'qty'=>$data['qtyRequest'.$i],
+    					'totalDiscount'=>0
+    				);
+    				$dbb->addBudgetExpenseDetail($param);
+    				
+    				$param = array(
+    					'budgetExpenseId'=>$budgetExpenseId1,
+    					'subtransactionId'=>$id,
+    					'productId'=>$data['proId'.$i],
+    					'price'=>$data['costing'.$i],
+    					'qty'=>$data['qtyRequest'.$i],
+    					'totalDiscount'=>0
+    				);
+    				$dbb->addBudgetExpenseDetail($param);
+    				
+    				
+    				$param = array(
+    					'EntyQty'=> -$data['qtyRequest'.$i],
+    					'branch_id'=> $data['branch_id'],
+    					'productId'=> $data['proId'.$i],
+    				);
+    				$dbs->updateProductLocation($param);//Update Stock qty and new costing
+    				$dbs->addProductHistoryQty($data['branch_id'],$data['proId'.$i],5,$data['qtyRequest'.$i],$id);//movement'
+    				
+    				/*
+					$param = array(
+    					'EntyQty'=> $data['qtyRequest'.$i],
+    					'branch_id'=> $data['toProjectId'],
+    					'productId'=> $data['proId'.$i],
+    					'costing'=> $data['costing'.$i],
+    				);
+    				$dbs->updateProductLocation($param);//Update Stock qty and new costing
+    				$dbs->addProductHistoryQty($data['toProjectId'],$data['proId'.$i],5,$data['qtyRequest'.$i],$id);//movement'
+					*/
+    			}
+    		}
+    		$db->commit();
+    	}catch (Exception $e){
+    		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+    		$db->rollBack();
+    		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL", "/stockinout/transferout/add",2);
+    	}
+    }
+	
     function getDataRow($recordId){
     	$db = $this->getAdapter();
     	$sql=" SELECT trs.*,
-			COALESCE((SELECT trsd.isCompleted FROM `st_transferstock_detail` AS trsd WHERE trsd.transferId =trs.id   ORDER BY trsd.isCompleted ASC LIMIT 1 ),0) AS isCompletedReceive
+			COALESCE((SELECT trsd.isCompleted FROM `st_transferstock_detail` AS trsd WHERE trsd.transferId =trs.id  ORDER BY trsd.isCompleted ASC LIMIT 1 ),0) AS isCompletedReceive
 		FROM $this->_name AS trs WHERE trs.id=".$recordId;
     	
     	$dbg = new Application_Model_DbTable_DbGlobal();
