@@ -139,4 +139,19 @@ function getAllCategory(urlGetCategory){
 		})
 		
 	}
-
+	function getAllTransferinFunction(urlGetAllItems,objectContentFilter){
+		dijit.byId('transferId').reset();
+		itemsStore  = getDataStorefromJSON('id','name', [] );
+		dijit.byId('transferId').set('store', itemsStore);
+		dojo.xhrPost({
+			url:urlGetAllItems,	
+			content:objectContentFilter,		    
+			handleAs:"json",
+			load: function(data) {
+				itemsStore  = getDataStorefromJSON('id','name', data);		
+				dijit.byId('transferId').set('store', itemsStore);
+			},
+			error: function(err) {
+			}
+		});
+	}
