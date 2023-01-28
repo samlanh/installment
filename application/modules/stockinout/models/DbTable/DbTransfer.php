@@ -64,8 +64,8 @@ class Stockinout_Model_DbTable_DbTransfer extends Zend_Db_Table_Abstract
     		$s_where = array();
     		$s_search = (trim($search['adv_search']));
     		$s_where[] = " t.transferNo LIKE '%{$s_search}%'";
-    		$s_where[] = " t.deliverId LIKE '%{$s_search}%'";
-    		$s_where[] = " t.driverName LIKE '%{$s_search}%'";
+    		$s_where[] = " t.driver LIKE '%{$s_search}%'";
+    		$s_where[] = " t.transferer LIKE '%{$s_search}%'";
     		$s_where[] = " t.receiverId LIKE '%{$s_search}%'";
     		$s_where[] = " t.userFor LIKE '%{$s_search}%'";
     		

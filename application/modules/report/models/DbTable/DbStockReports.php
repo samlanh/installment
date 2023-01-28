@@ -470,23 +470,30 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
     }
     
     function getTransferAllReport($data){
+		
     	$DATE_FORMAT = DATE_FORMAT_FOR_SQL;
+		$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+		
     	$sql="
 	    	SELECT 
 				t.id,
-				(SELECT project_name from `ln_project` WHERE br_id=fromProjectId LIMIT 1) fromProject,
-				transferNo,
-				driverName,
-				deliverId,
+				(SELECT project_name from `ln_project` WHERE br_id=t.fromProjectId LIMIT 1) fromProject,
+				t.transferNo,
+				t.driver AS driverName,
+				t.transferer,
 				DATE_FORMAT(t.transferDate,'$DATE_FORMAT') as transferDate,
 				(SELECT project_name from `ln_project` WHERE br_id=toProjectId LIMIT 1) toProject,
-				receiverId,
-				useFor,
-				isCompleted,
-				isApproved,
+				t.receiverId,
+				t.userFor AS useFor,
+				t.isCompleted,
+				t.isApproved,
 				t.note,
 				proId,
-				qtyRequest
+				td.qtyRequest
+				,CASE
+						WHEN  COALESCE((SELECT trsd.isCompleted FROM `st_transferstock_detail` AS trsd WHERE trsd.transferId =t.id   ORDER BY trsd.isCompleted ASC LIMIT 1 ),0) = 1 THEN '".$tr->translate("RECEIVED")."'
+						ELSE   '".$tr->translate("PENDING")."'
+					END AS isCompleted
 			FROM 
 				`st_transferstock` t,
 				`st_transferstock_detail` td
@@ -494,7 +501,7 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
     	";
     	if(!empty($data['start_date'])){
     		$from_date =(empty($data['start_date']))? '1': " t.transferDate >= '".$data['start_date']." 00:00:00'";
-    		$to_date = (empty($data['end_date']))? '1': " t.transferDate < '".$data['end_date']." 00:00:00'";
+    		$to_date = (empty($data['end_date']))? '1': " t.transferDate <= '".$data['end_date']." 00:00:00'";
     		$sql.= " AND ".$from_date." AND ".$to_date;
     	}
     	
@@ -504,10 +511,8 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
     	if(!empty($data['toProjectId'])){//received
     		$sql.= " AND t.toProjectId=".$data['toProjectId'];
     	}
-//     	if(!empty($data['proId'])){
-//     		$sql.= " AND td.proId=".$data['proId'];
-//     	}
-    	$sql.=" GROUP BY t.id ";
+
+    	$sql.=" GROUP BY t.id DESC";
     	return $this->getAdapter()->fetchAll($sql);
     }
 
@@ -516,15 +521,20 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
 	function getTransferRow($recordId){
     	$db = $this->getAdapter();
     	$this->_name='st_transferstock';
-    	$sql="SELECT id,tr.fromProjectID,
-		(SELECT project_name FROM `ln_project` WHERE br_id=tr.fromProjectID LIMIT 1) AS projectName,
-		(SELECT project_name FROM `ln_project` WHERE br_id=tr.toProjectID LIMIT 1) AS ReceiveBranch,				
-		tr.transferNo, tr.ReceiverId,
-		DATE_FORMAT(tr.transferDate,'%d-%m-%Y') AS TransferDate, tr.useFor, tr.deliverId, tr.driverName				
+    	$sql="SELECT 
+			id,tr.fromProjectID
+			,(SELECT project_name FROM `ln_project` WHERE br_id=tr.fromProjectID LIMIT 1) AS projectName
+			,(SELECT project_name FROM `ln_project` WHERE br_id=tr.toProjectID LIMIT 1) AS ReceiveBranch
+			,tr.transferNo
+			, tr.ReceiverId,
+			DATE_FORMAT(tr.transferDate,'%d-%m-%Y') AS TransferDate
+			,tr.userFor
+			,tr.transferer
+			,tr.driver AS driverName				
 		FROM `st_transferstock` AS tr WHERE tr.status=1 AND tr.id=".$recordId;
     	
     	$dbg = new Application_Model_DbTable_DbGlobal();
-    	$sql.= $dbg->getAccessPermission('projectId');
+    	$sql.= $dbg->getAccessPermission('tr.fromProjectId');
     	
     	$sql.=" LIMIT 1";
     	
@@ -651,4 +661,36 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
     		}
     
     	}
+	
+	function getReceivedTransferRow($recordId){
+    	$db = $this->getAdapter();
+		
+		$DATE_FORMAT = DATE_FORMAT_FOR_SQL;
+		
+    	$this->_name='st_transferstock';
+    	$sql="
+			SELECT 
+				rtr.*
+				,(SELECT project_name FROM `ln_project` WHERE br_id=rtr.projectId LIMIT 1) AS projectName
+				,(SELECT project_name FROM `ln_project` WHERE br_id=rtr.fromProjectId LIMIT 1) AS fromProjectName
+				,DATE_FORMAT(tr.receiveDate,'".$DATE_FORMAT."') AS receiveDateFormate
+			
+				,tr.transferNo
+				,tr.ReceiverId
+				,DATE_FORMAT(tr.transferDate,'".$DATE_FORMAT."') AS TransferDateFormate
+				,tr.userFor
+				,tr.transferer
+				,tr.driver AS driverName				
+			FROM 
+				`st_transfer_receive` AS rtr 
+				LEFT JOIN st_transferstock AS tr ON tr.id = rtr.transferId
+			WHERE rtr.status=1 AND rtr.id=".$recordId;
+    	
+    	$dbg = new Application_Model_DbTable_DbGlobal();
+    	$sql.= $dbg->getAccessPermission('rtr.projectId');
+    	
+    	$sql.=" LIMIT 1";
+    	
+    	return $db->fetchRow($sql);
+    }
 }
