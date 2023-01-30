@@ -410,6 +410,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		if(!empty($_data['requestId'])){//For Get In Purchase Edit
 			$sql.=" OR rq.id=".$_data['requestId'];
 		}
+		$sql.=$dbGb->getAccessPermission("rq.projectId");
 		$row = $db->fetchAll($sql);
 		return $row;
 		
@@ -714,7 +715,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 				$sql.=" OR po.id=".$_data['purchaseId'];
 			}
 		}
-		
+		$sql.=$dbGb->getAccessPermission("po.projectId");
 		$row = $db->fetchAll($sql);
 		return $row;
 		
@@ -971,6 +972,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 				$sql.=" OR pt.id= ".$_data['currentPaymentId'];
 			}
 		}
+		$sql.=$dbGb->getAccessPermission("pt.projectId");
 		$row = $db->fetchAll($sql);
 		return $row;
 		
@@ -1108,6 +1110,8 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		if(!empty($_data['transferId'])){
 			$sql.=" OR trs.id=".$_data['transferId'];
 		}
+		
+    	$sql.=$dbGb->getAccessPermission("trs.toProjectId");
 		$row = $db->fetchAll($sql);
 		return $row;
 		
