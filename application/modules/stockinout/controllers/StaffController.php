@@ -39,12 +39,23 @@ class Stockinout_StaffController extends Zend_Controller_Action {
 			$this->view->frm_search = $frm;
 	}
 	function addAction(){
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$isaddstaff= $this->getRequest()->getParam('isAddStaffWithdraw');
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {		
 				$db = new Stockinout_Model_DbTable_DbWorker();
 				$db->addWorker($_data);
-				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/stockinout/staff/add");
+				if(!empty($isaddstaff)){
+					
+					$alert = $tr->translate("INSERT_SUCCESS");
+					echo "<script> alert('".$alert."');</script>";
+		    		echo "<script>window.close();</script>";
+
+				}else{
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/stockinout/staff/add");
+				}
+				
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());

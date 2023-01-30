@@ -39,12 +39,24 @@ class Stockinout_ContractorController extends Zend_Controller_Action {
 			$this->view->frm_search = $frm;
 	}
 	function addAction(){
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$isaddcont= $this->getRequest()->getParam('isAddContractor');
+
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {		
 				$db = new Stockinout_Model_DbTable_DbContractor();
 				$db->addWorker($_data);
-				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/stockinout/contractor/add");
+				if(!empty($isaddcont)){
+					
+					$alert = $tr->translate("INSERT_SUCCESS");
+					echo "<script> alert('".$alert."');</script>";
+		    		echo "<script>window.close();</script>";
+
+				}else{		
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/stockinout/contractor/add");
+				}
+
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());

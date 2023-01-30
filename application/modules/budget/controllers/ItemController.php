@@ -41,6 +41,7 @@ class Budget_ItemController extends Zend_Controller_Action {
 		
 	}
 	function addAction(){
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		$isadditem = $this->getRequest()->getParam('isAddBudgetItem');
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
@@ -49,8 +50,8 @@ class Budget_ItemController extends Zend_Controller_Action {
 				$db = new Budget_Model_DbTable_DbbudgetItem();
 				$db->addBudgetItem($_data);
 				if(!empty($isadditem)){
-					Application_Form_FrmMessage::message("INSERT_SUCCESS");
-					echo "<script> alert('INSERT_SUCCESS');</script>";
+					$alert = $tr->translate("INSERT_SUCCESS");
+					echo "<script> alert('".$alert."');</script>";
 		    		echo "<script>window.close();</script>";
 
 				}else{
