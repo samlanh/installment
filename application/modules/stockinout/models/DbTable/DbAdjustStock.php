@@ -33,7 +33,7 @@ class Stockinout_Model_DbTable_DbAdjustStock extends Zend_Db_Table_Abstract
     		$where.= " AND sa.projectId = ".$search['branch_id'];
     	}
     	$dbg = new Application_Model_DbTable_DbGlobal();
-    	$where.= $dbg->getAccessPermission('so.projectId');
+    	$where.= $dbg->getAccessPermission('sa.projectId');
     	
     	$order=' ORDER BY sa.id DESC  ';
     	$db = $this->getAdapter();
