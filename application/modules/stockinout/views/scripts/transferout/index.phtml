@@ -2,6 +2,9 @@
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	echo $this->headTitle($tr->translate("TRANSFER_OUT"));
 	$frm = $this->frm_search;
+	
+	$transferLetter = $this->baseUrl()."/report/stockreport/rpt-transferdetail/id/";
+	$urlEdit = $this->baseUrl()."/stockinout/transferout/edit/id/";
 ?>
 <div class="card pb-10 pt-10 pl-10 pr-10">
 	<div class="card-content collapse show">
@@ -47,19 +50,7 @@
 </div>
 <script>
 dojo.require('dijit.form.DateTextBox');
-<?php 
-	/*$edit_Text = $tr->translate("RESENT");
-	$urlEdit = $this->baseUrl()."/message/index/edit/id/";
-	*/
-?>
-/*
-function checked_id(index){
-	$("#id_selected").val('');
-	 var searchIDs = $('input:checked').map(function(){
-	      return $(this).val();
-	    });
-	    $("#id_selected").val(searchIDs.get());
-}
+
 
 var row=0;
 var url="";
@@ -69,12 +60,15 @@ $(function(){
 		callback: function(key, options) {
 			var m = "clicked: " + key;
 			if(key=="edit"){
-				url='<?php //echo $urlEdit;?>';
+				url='<?php echo $urlEdit;?>';
+			}else if(key=="transferLetter"){
+				url='<?php echo $transferLetter;?>';
 			}
 			gotoAction();
 		},
 		items: {
-			"edit": {name: "<?php //echo $edit_Text;?>", icon: "edit", accesskey: "e"},
+			"edit": {name: "<?php echo $tr->translate("EDIT");?>", icon: "edit", accesskey: "e"},
+			"transferLetter": {name: "<?php echo $tr->translate("RPT_TRANSFER_DERTAIL");?>", icon: "fa-file-text"},
 		}
 	});
 });
@@ -85,5 +79,4 @@ var recordid ='';
 function gotoAction(){
 	 window.open(url+row+'?rightclick=true', '_blank');
 }
-*/
 </script>

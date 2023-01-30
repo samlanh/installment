@@ -26,8 +26,11 @@
 		);
 	$purchaseTypeOPt = $dbGBstock->purchasingTypeKey($arrStep);
 	$search=$this->search;
+	
+	$receiveLetter = $this->baseUrl()."/report/stockreport/rpt-receive-letter/id/";
+	$titlePage = $tr->translate("RPT_RECEIVING_TRANSFER");
 ?>
-<title><?php echo $tr->translate("RPT_TRANSFER");?></title>
+<title><?php echo $titlePage;?></title>
 <script>
      dojo.require("dijit.form.DateTextBox");
 </script>
@@ -35,7 +38,7 @@
 		<div class="card-box">
 	       	<div class="col-sm-12 border-botom">
 		   		<div class="col-sm-8 pd-0">
-		    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i> <?php echo $tr->translate('RPT_TRANSFER');?></h4>
+		    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i> <?php echo $titlePage;?></h4>
 	    		</div>
 	    		<div class="col-sm-4 text-right">
 	    		</div>
@@ -205,16 +208,43 @@
 					                <tr class="hide" style="border:1px solid #000;">
 					                	<td colspan="17" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
 					                </tr>
-					                <tr class="style" align="center" >
-					                    <td scope="col" class="center">
+									<tr class="style" align="center" >
+					                    <td scope="col" rowspan="2" class="center">
 											<span class="lbTitle">ល.រ</span> 
 											 <small class="lbEng">No.</small>
 										</td>
+										<td scope="col" colspan="3" class="center">
+											<span class="lbTitle">ព័ត៌មានទទួលការផ្ទេរ</span> 
+											 <small class="lbEng">Receiveing Transfer Info.</small>
+										</td>
+										<td scope="col" colspan="6" class="center">
+											<span class="lbTitle">ព័ត៌មានការផ្ទេរទំនិញ</span> 
+											 <small class="lbEng">Transfering Info.</small>
+										</td>
+										<td scope="col" rowspan="2" class="center">
+											<span class="lbTitle">សម្គាល់</span>
+											  <small class="lbEng" >note</small>
+										</td>
+									</tr>
+					                <tr class="style" align="center" >
+					                    
 										<td  scope="col" class="center">
 											<span class="lbTitle">គម្រោង</span> 
 											<small class="lbEng">Project Name</small>
 										</td>
+										<td scope="col" class="center">
+											<span class="lbTitle">លេខវេរចេញ</span> 
+											 <small class="lbEng">Receive No.</small>
+										</td>  
+										<td scope="col"  class="center">
+											<span class="lbTitle">ថ្ងៃផ្ទេរចេញ</span>
+											 <small class="lbEng">Received Date</small>
+										</td> 
 										
+										<td  scope="col" class="center">
+											<span class="lbTitle">ពីគម្រោង</span> 
+											<small class="lbEng">From Project Name</small>
+										</td>
 										<td scope="col" class="center">
 											<span class="lbTitle">លេខវេរចេញ</span> 
 											 <small class="lbEng">Transfer No.</small>
@@ -231,26 +261,12 @@
 											<span class="lbTitle">អ្នកបញ្ចេញទំនិញ</span> 
 											<small class="lbEng">Transfer</small> 
 										</td>  
-										<td scope="col"  class="center">
-											<span class="lbTitle">សាខាទទួល</span> 
-											 <small class="lbEng">Receiving Branch</small>
-										</td>  
-										<td scope="col" class="center">
-											<span class="lbTitle">អ្នកទទួល</span>
-											  <small class="lbEng" >Receiver</small>
-										</td> 
 										<td scope="col" class="center">
 											<span class="lbTitle">ប្រើសម្រាប់</span>
 											  <small class="lbEng" >Used For</small>
 										</td> 
-										<td scope="col" class="center">
-											<span class="lbTitle">សម្គាល់</span>
-											  <small class="lbEng" >note</small>
-										</td>
-										<td scope="col" class="center">
-											<span class="lbTitle">ដំណើរការណ៍</span>
-											  <small class="lbEng" >Status</small>
-										</td>
+										
+										
 					                </tr>
 					                
 					            </thead>
@@ -262,16 +278,19 @@
 								?>
 									<tr class="style context-menu-one" oncontextmenu="setrowdata(<?php echo $rs['id'];?>);return false;" style="font-family: 'Khmer OS Battambang'; white-space:nowrap; ">
 										<td align="center"><?php echo $index+1;?></td>
-										<td><?php echo $rs['fromProject'];?></td>
+										<td><?php echo $rs['projectName'];?></td>
+										<td><?php echo $rs['receiveNo'];?></td>
+										<td align="center"><?php echo date(DATE_FORMAT_FOR_PHP,strtotime($rs['receiveDate']));?></td>
+										
+										<td><?php echo $rs['fromProjectName'];?></td>
 										<td><?php echo $rs['transferNo'];?></td>
-										<td><?php echo $rs['transferDate']?></td>
-										<td><?php echo $rs['driverName']?></td>
+										<td align="center"><?php echo date(DATE_FORMAT_FOR_PHP,strtotime($rs['transferDate']));?></td>
+										<td><?php echo $rs['driver']?></td>
 										<td><?php echo $rs['transferer']?></td>
-										<td><?php echo $rs['toProject']?></td>
-										<td><?php echo $rs['receiverId']?></td>
-										<td><?php echo $rs['useFor']?></td>
+										
+										<td><?php echo $rs['userFor']?></td>
 										<td><?php echo $rs['note']?></td>
-										<td><?php echo $rs['isCompleted']?></td>
+										
 									</tr>
 								
 				                <?php }?>
@@ -295,7 +314,7 @@
 			 getBranchInfo();
 			 
 			 document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
-			 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("RPT_TRANSFER");?>';
+			 document.getElementById('reportTitle').innerHTML = '<?php echo $titlePage;?>';
 			 document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date(DATE_FORMAT_FOR_PHP); }else{ echo date(DATE_FORMAT_FOR_PHP,strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date(DATE_FORMAT_FOR_PHP,strtotime($this->search['end_date'])); }?>';
 		});
 		
@@ -336,12 +355,12 @@ $(function(){
 		callback: function(key, options) {
 			var m = "clicked: " + key;
 			if(key=="usage"){
-				url='<?php echo $this->baseUrl()."/report/stockreport/rpt-transferdetail/id/";?>';
+				url='<?php echo $receiveLetter;?>';
 			}
 			gotoAction();
 		},
 		items: {
-			"usage": {name: "<?php echo $tr->translate("TRANSFER_LETTER");?>", icon: "fa-file-text"},
+			"usage": {name: "<?php echo $tr->translate("RPT_RECEIVED_TRANSFER_LETTER");?>", icon: "fa-file-text"},
 		}
 	});
 });

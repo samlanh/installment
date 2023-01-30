@@ -43,6 +43,9 @@ class Stockinout_Model_DbTable_DbReceiveTransfer extends Zend_Db_Table_Abstract
     		$s_search = addslashes((trim($search['adv_search'])));
     		$s_where[] = " rts.receiveNo LIKE '%{$s_search}%'";
     		$s_where[] = " trs.transferNo LIKE '%{$s_search}%'";
+    		$s_where[] = " trs.driver LIKE '%{$s_search}%'";
+    		$s_where[] = " trs.transferer LIKE '%{$s_search}%'";
+    		$s_where[] = " trs.userFor LIKE '%{$s_search}%'";
     		
     		$where .=' AND ( '.implode(' OR ',$s_where).')';
     	}
