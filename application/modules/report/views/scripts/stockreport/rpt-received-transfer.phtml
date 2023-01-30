@@ -28,8 +28,9 @@
 	$search=$this->search;
 	
 	$receiveLetter = $this->baseUrl()."/report/stockreport/rpt-receive-letter/id/";
+	$titlePage = $tr->translate("RPT_RECEIVING_TRANSFER");
 ?>
-<title><?php echo $tr->translate("RPT_RECEIVING_TRANSFER");?></title>
+<title><?php echo $titlePage;?></title>
 <script>
      dojo.require("dijit.form.DateTextBox");
 </script>
@@ -37,7 +38,7 @@
 		<div class="card-box">
 	       	<div class="col-sm-12 border-botom">
 		   		<div class="col-sm-8 pd-0">
-		    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i> <?php echo $tr->translate('RPT_TRANSFER');?></h4>
+		    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i> <?php echo $titlePage;?></h4>
 	    		</div>
 	    		<div class="col-sm-4 text-right">
 	    		</div>
@@ -313,7 +314,7 @@
 			 getBranchInfo();
 			 
 			 document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
-			 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("RPT_TRANSFER");?>';
+			 document.getElementById('reportTitle').innerHTML = '<?php echo $titlePage;?>';
 			 document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date(DATE_FORMAT_FOR_PHP); }else{ echo date(DATE_FORMAT_FOR_PHP,strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date(DATE_FORMAT_FOR_PHP,strtotime($this->search['end_date'])); }?>';
 		});
 		
