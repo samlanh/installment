@@ -206,13 +206,13 @@
 										<td data-label="ឈ្មោះផលិតផល/Product Name"><?php echo $rs['productName'].'('.$rs['measureName'].')';?></td>
 										<td data-label="ដើមគ្រា/Begining Qty"><?php echo number_format($rs['qtyBegining'],2);?></td>
 										<td data-label="ទិញចូល/Purchesed"><?php echo number_format($rs['qtyReceive'],2);?></td>
-										<td data-label="ផ្ទេរចូល/Received Transfer"><?php echo number_format($rs['qtyReceivedTransfer'],2)?></td>
+										<td data-label="ផ្ទេរចូល/Received Transfer"><?php echo number_format($rs['qtyReceivedTransfer'],2);if($rs['qtyTransferInpending']>0){echo ' Pending('.number_format($rs['qtyTransferInpending'],2).')';};?></td>
 										<td data-label="ដកប្រើប្រាស់/Usage"><?php echo number_format($rs['qtyUsage'],2);?></td>
 										<td data-label="លក់ចេញ/Sell Out"><?php echo number_format($rs['qtySale'],2);?></td>
-										<td  data-label="ផ្ទេរចេញ/Transfer Out"><?php echo $rs['qtyTransferOut']?></td>
+										<td  data-label="ផ្ទេរចេញ/Transfer Out"><?php echo $rs['qtyTransferOut'];?></td>
 										<td data-label="ការធ្វើបច្ចុប្បន្នភាព/Adjust Stock"><?php echo number_format($rs['qtyAdjust'],2);?></td>
 										
-										<?php $currentQty = $rs['qtyBegining']+$rs['qtyReceive']+$rs['qtyAdjust']-$rs['qtyUsage']-$rs['qtySale'];?>
+										<?php $currentQty = $rs['qtyBegining']+$rs['qtyReceive']+$rs['qtyReceivedTransfer']+$rs['qtyAdjust']-$rs['qtyUsage']-$rs['qtySale']-$rs['qtyTransferOut'];?>
 										
 										<td data-label="ទំនិញនៅសល់ជាក់ស្តែង/Remaining Qty"><?php echo number_format($currentQty,2);?></td>
 				                <?php }?>

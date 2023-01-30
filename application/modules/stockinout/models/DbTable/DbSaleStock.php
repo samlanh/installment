@@ -223,7 +223,7 @@ class Stockinout_Model_DbTable_DbSaleStock extends Zend_Db_Table_Abstract
     			);
     			$dbs->updateProductLocation($param);
     			
-    			$dbs->DeleteProductHistoryQty($row['id']);
+    			$dbs->DeleteProductHistoryQty($row['id'],4);
     		}
     		$where ='stockoutId='.$stockId;
     		$this->delete($where);	

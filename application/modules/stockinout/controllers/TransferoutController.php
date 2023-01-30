@@ -66,19 +66,17 @@ class Stockinout_TransferoutController extends Zend_Controller_Action {
 			$_data = $this->getRequest()->getPost();
 			try {		
 				
-				$db->addTransferStock($_data);
-				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL);
+				$db->updateTransferStock($_data);
+				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS",self::REDIRECT_URL);
 			}catch(Exception $e){
-				Application_Form_FrmMessage::message("INSERT_FAIL");
+				Application_Form_FrmMessage::message("EDIT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
 		
 		$id = $this->getRequest()->getParam('id');
 		$id = empty($id)?0:$id;
-		if(empty($id)){
-			Application_Form_FrmMessage::Sucessfull("NO_DATA","//",2);
-		}
+		
 		
 		$row = $db->getDataRow($id);
 		$rowDetail = $db->getDataRowDetail($id);

@@ -415,7 +415,7 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
 	    			
 	    		}
 	    		
-	    		$dbs->DeleteProductHistoryQty($result['id']);
+	    		$dbs->DeleteProductHistoryQty($result['id'],2);
 	    	}
 	    	
 	    	$where= "receiveId = ".$dnId;

@@ -478,9 +478,9 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 			$this->insert($arr);
 		}
 	}
-	function DeleteProductHistoryQty($tranId){
+	function DeleteProductHistoryQty($tranId,$tranType=0){
 		$this->_name='st_product_story';
-		$where= "transId = ".$tranId;
+		$where= " transId = $tranId AND tranType =".$tranType ;
 		$this->delete($where);
 		
 	}
