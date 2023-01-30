@@ -1,17 +1,17 @@
 <?php
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-	$this->headTitle($tr->translate("RPT_TRANSFER_DERTAIL")); 
+	$this->headTitle($tr->translate("RPT_RECEIVED_TRANSFER_LETTER")); 
 	echo $this->headTitle();
 	
 	$month = array("01"=>"មករា","02"=>"កុម្ភៈ","03"=>"មីនា","04"=>"មេសា","05"=>"ឧសភា","06"=>"មិថុនា","07"=>"កក្កដា","08"=>"សីហា","09"=>"កញ្ញា","10"=>"តុលា","11"=>"វិច្ឆិកា","12"=>"ធ្នូ",);
 	$dbparmeter = new Report_Model_DbTable_DbParamater();
-
+	$transferLetter = $this->baseUrl()."/report/stockreport/rpt-transferdetail/id/";
 ?>
 <div class="reportblog">
 	<div class="card-box">
 		<div class="col-sm-12 border-botom">
 			<div class="col-sm-8 pd-0">
-				<h4 class="m-b-0"><i class="fa fa-file-text" aria-hidden="true"></i> <?php echo $tr->translate('RPT_TRANSFER_DERTAIL');?></h4>
+				<h4 class="m-b-0"><i class="fa fa-file-text" aria-hidden="true"></i> <?php echo $tr->translate('RPT_RECEIVED_TRANSFER_LETTER');?></h4>
 			</div>
 			<div class="col-sm-4 text-right">
 			</div>
@@ -146,8 +146,8 @@
 				</tr> 
 				<tr>
 					<td colspan="3" align="center" style="position: relative;">
-						<span style='font-family: "Times New Roman","Khmer OS Muol Light";' >ប័ណ្ណផ្ទេរទំនិញចេញ</span>
-						<span style='font-family: "Times New Roman","Khmer OS Muol Light";display: block;line-height: 16px;text-transform: uppercase;font-weight: 600;' >Transfering Letter</span>
+						<span style='font-family: "Times New Roman","Khmer OS Muol Light";' >ប័ណ្ណទទួលទំនិញផ្ទេរ</span>
+						<span style='font-family: "Times New Roman","Khmer OS Muol Light";display: block;line-height: 16px;text-transform: uppercase;font-weight: 600;' >Receiving Letter</span>
 						
 						
 					</td>
@@ -162,88 +162,70 @@
 							<tr>
 								<td width="40%">
 									<span class="lbTitle">
-										គម្រោង : 
-										<small>Project : </small>
+										សាខាទទួល : 
+										<small> Receiving Branch : </small>
 									</span>
-									<span class="bold"><?php echo $result['projectName'];?></span>
+									<span class="bold " > <?php echo $result['projectName'];?></span>
 								</td>
+								
 								<td width="30%">
 									
 								</td>
 								<td width="40%">
 									<span class="lbTitle">
-										សាខាទទួល : 
-										<small> Receiving Branch : </small>
+										គម្រោង : 
+										<small>Project : </small>
 									</span>
-									<span class="bold " > <?php echo $result['ReceiveBranch'];?></span>
+									<span class="bold"><?php echo $result['fromProjectName'];?></span>
 								</td>
 								
 							</tr>
 
 							<tr>
-								<td width="40%">
+								<td >
+									<span class="lbTitle">
+										លេខទទួល : 
+										<small>Receive N <suP>o</suP> : </small>
+									</span>
+									<span class="bold" style="color:red;"> <?php echo $result['receiveNo'];?></span>
+								</td>
+								<td >
+									
+								</td>
+								<td >
 									<span class="lbTitle">
 										លេខវេរចេញ : 
 										<small>Transfer N <suP>o</suP> : </small>
 									</span>
-									<span class="bold" style="color:red;"> <?php echo $result['transferNo'];?></span>
+									<span class="bold" style="color:red;"> <a class="colorInherit" title="<?php echo $tr->translate("RPT_TRANSFER_DERTAIL")." - ".$result['transferNo'];?>" target="_blank" href="<?php echo $transferLetter.$result['transferId']; ?>"><?php echo $result['transferNo'];?></a></span>
 								</td>
-								<td width="30%">
-									
-								</td>
-								<td width="40%">
-									<span class="lbTitle">
-										អ្នកទទួល : 
-										<small> Receiver : </small>
-									</span>
-									<span class="bold" ><?php echo $result['ReceiverId'];?></span>
-								</td>
+								
 								
 							</tr>
 
 							<tr>
-								<td width="40%">
+								<td >
 									<span class="lbTitle">
-								     ថ្ងៃផ្ទេរចេញ : 
+										ថ្ងៃទទួល : 
+										<small>Receive Date : </small>
+									</span>
+									<span class="bold"><?php echo $result['receiveDateFormat'];?></span>
+								</td>
+								<td >
+									
+								</td>
+								<td >
+									<span class="lbTitle">
+										ថ្ងៃផ្ទេរចេញ : 
 										<small>Transfer Date : </small>
 									</span>
-									<span class="bold"><?php echo $result['TransferDate'];?></span>
+									<span class="bold"><?php echo $result['transferDateFormat'];?></span>
 								</td>
-								<td width="30%">
-									
-								</td>
-								<td width="40%">
-									<span class="lbTitle">
-										ប្រើសម្រាប់ : 
-										<small> Transfer for : </small>
-									</span>
-									<span class="bold " ><?php echo $result['userFor'];?></span>
-								</td>
+								
 								
 							</tr>
 
-							<tr>
-								<td width="40%">
-								<span class="lbTitle">
-										អ្នកផ្ទេរចេញ : 
-										<small> Transfer : </small>
-									</span>
-									<span class="bold" ><?php echo $result['driverName'];?></span>
-									
-								</td>
-								<td width="30%">
-									
-								</td>
-								<td width="40%">
-									<span class="lbTitle">
-								     អ្នកដឹក : 
-										<small>Deliver: </small>
-									</span>
-									<span class="bold"><?php echo $result['transferer'];?></span>
-									
-								</td>
-								
-							</tr>
+							
 							
 						</table>
 					</td>
@@ -261,14 +243,13 @@
 										<span>ឈ្មោះទំនិញ</span>
 										<small>Product</small>
 									</td>
-									
 									<td scope="col" class="center" style="width:200px;">
-										<span>បរិមាណផ្ទេរចេញ</span>
+										<span>បរិមាណផ្ទេរ</span>
 										<small>Transfer Qty</small>
 									</td>
 									<td scope="col" class="center" style="width:200px;">
-										<span>បរិមាណបានទទួល</span>
-										<small>Received Qty</small>
+										<span>បរិមាណទទួល</span>
+										<small>Receive Qty</small>
 									</td>
 									<td scope="col" class="center" style="width:200px;">
 										<span>បរិមាណនៅសល់</span>
@@ -285,12 +266,8 @@
 							 	$i=0;
 				                if(!empty($this->rowdetail)) foreach ($this->rowdetail as $index => $rs){ 
 				                $i++;
-								$totalReceive = "-";
-								$totalReceive = empty($rs['totalReceiveQty'])?$totalReceive:$rs['totalReceiveQty'].' '.$rs['MeasureLabel'];
-								$remainQty = $rs['qtyAppAfter'];
-								$qtyTransfer = $rs['qtyRequest'];
 								
-								
+								$remainQty= $rs['qtyRequest'] - $rs['qtyReceive'];
 								$completed="";
 								if( ($rs["isCompleted"]>0) OR ($remainQty==0) ){
 									$completed = "greenClass";
@@ -301,8 +278,8 @@
 								<tr class="style" style=" white-space:nowrap;">
 					               	<td data-label="ល.រ/N.o" class="centerText"><?php echo $index+1;?></td>
 									<td data-label="ឈ្មោះទំនិញ/Product Name" class="centerText"><?php echo $rs['proName'].' '.$rs['proCode'];?></td>
-									<td data-label="បរិមាណផ្ទេរចេញ/Transfer Qty" class="centerText"><?php echo $qtyTransfer.' '.$rs['MeasureLabel'];?></td>
-									<td data-label="បរិមាណបានទទួល/Received Qty" class="centerText bold"><?php echo $totalReceive;?></td>
+									<td data-label="បរិមាណផ្ទេរ/Transfer Qty" class="centerText"><?php echo $rs['qtyRequest'].' '.$rs['MeasureLabel'];?></td>
+									<td data-label="បរិមាណទទួល/Receive Qty" class="centerText bold"><?php echo $rs['qtyReceive'].''.$rs['MeasureLabel'];?></td>
 									<td data-label="បរិមាណនៅសល់/Remain Qty" class="centerText bold <?php echo $completed;?>"><?php echo $remainQty;?></td>
 									<td data-label="សម្គាល់/Note" style="font-size: 10px;" class="centerText"><?php echo $rs['note'];?></td>
 								</tr>
@@ -313,9 +290,9 @@
 								<tr class="style" style=" white-space:nowrap;">
 					               	<td data-label="ល.រ/N.o"  class="centerText">&nbsp;<?php echo $num+1;?></td>
 									<td data-label="ឈ្មោះទំនិញ/Product Name"></td>
-									<td data-label="បរិមាណផ្ទេរចេញ/Transfer Qty"></td>
-									<td data-label="បរិមាណបានទទួល/Received Qty"></td>
-									<td data-label="បរិមាណនៅសល់/Remain Qty"></td>
+									<td data-label="បរិមាណផ្ទេរ/Transfer Qty"></td>
+									<td data-label="បរិមាណទទួល/Receive Qty"></td>
+									<td ddata-label="បរិមាណនៅសល់/Remain Qty" ></td>
 									<td ddata-label="សម្គាល់/Note" ></td>
 								</tr>
 							<?php }?>
@@ -334,14 +311,15 @@
 						<table width="100%" cellspacing="0" cellpadding="0" style="margin-top:10px;" >
 							<tr>
 								<td style="width:40%; vertical-align: top;line-height: 16px; text-align:center;">
+									<span style="font-weight: 600; display: block;">អ្នកទទួល / Receiver</span>
+								</td>
+								<td style="width:40%; vertical-align: top;line-height: 16px; text-align:center;">
 									<span style="font-weight: 600; display: block;">អ្នកផ្ទេរទំនិញចេញ/Transfer Name</span>
 								</td>
 								<td style="width:20%; vertical-align: top;line-height: 16px; text-align:center;">
 									<span style="font-weight: 600; display: block;">អ្នកដឹក/Deliver Name</span>
 								</td>
-								<td style="width:40%; vertical-align: top;line-height: 16px; text-align:center;">
-									<span style="font-weight: 600; display: block;">អ្នកទទួល / Receiver</span>
-								</td>
+								
 							</tr>
 							<tr>
 								<td colspan="3" style="height:80px;" >
@@ -350,6 +328,9 @@
 							</tr>
 							<tr>
 								<td style="text-align:center;">
+									<span style="font-weight: 600; display: block; line-height: 16px;"><?php echo $this->row["ReceiverId"];?></span>
+								</td>
+								<td style="text-align:center;">
 									<span style="font-weight: 600; display: block; line-height: 16px;"><?php echo $this->row["driverName"];?></span>
 								</td>
 								<td style="text-align:center;">
@@ -357,9 +338,7 @@
 									
 								</td>
 								
-								<td style="text-align:center;">
-									<span style="font-weight: 600; display: block; line-height: 16px;"><?php echo $this->row["ReceiverId"];?></span>
-								</td>
+								
 							</tr>
 						</table>
 						<div class="clearfix" style="clear: both !important;"></div>

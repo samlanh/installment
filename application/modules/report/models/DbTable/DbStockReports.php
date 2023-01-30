@@ -544,12 +544,21 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
 	function getTransferAllRow($recordId){
     	$db = $this->getAdapter();
     	$this->_name='st_transferstock_detail';
-    	$sql="SELECT td.*,
-		(SELECT `proCode` FROM `st_product` WHERE st_product.`proId`=td.proId LIMIT 1) AS proCode,
-		(SELECT `proName` FROM `st_product` WHERE st_product.`proId`=td.proId LIMIT 1) AS proName,
-		(SELECT `measureValue` FROM `st_product` WHERE st_product.`proId`=td.proId LIMIT 1) AS StockQty,
-		(SELECT `measureLabel` FROM `st_product` WHERE st_product.`proId`=td.proId LIMIT 1) AS MeasureLabel		
-		FROM `st_transferstock_detail` AS td WHERE transferId=".$recordId." ";
+    	$sql="SELECT 
+			td.*
+			,(SELECT `proCode` FROM `st_product` WHERE st_product.`proId`=td.proId LIMIT 1) AS proCode
+			,(SELECT `proName` FROM `st_product` WHERE st_product.`proId`=td.proId LIMIT 1) AS proName
+			
+			,(SELECT `measureLabel` FROM `st_product` WHERE st_product.`proId`=td.proId LIMIT 1) AS MeasureLabel	
+			,COALESCE(SUM(rtrd.qtyReceive),0) AS totalReceiveQty
+			,td.isCompleted
+		FROM 
+			`st_transferstock_detail` AS td 
+			LEFT JOIN ( st_transfer_receive_detail AS rtrd JOIN st_transfer_receive As rtr ON rtr.id = rtrd.receiveId AND rtr.status=1 )
+			ON td.proId = rtrd.proId AND td.transferId = rtr.transferId
+		WHERE td.transferId=".$recordId." ";
+		
+		$sql.=" GROUP BY td.proId ";
     	return $db->fetchAll($sql);
     }
     function getBudgetList($search){
@@ -662,6 +671,61 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
     
     	}
 	
+	function getAllReceiveTransferStock($search){
+		
+		
+		$dbGb = new Application_Model_DbTable_DbGlobal();
+		$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+    	$sql="
+			SELECT 
+				rts.*
+				,(SELECT project_name FROM `ln_project` WHERE br_id=rts.projectId LIMIT 1) AS projectName
+				,(SELECT project_name FROM `ln_project` WHERE br_id=rts.fromProjectId LIMIT 1) AS fromProjectName
+				,trs.transferNo
+				,trs.transferDate
+				,trs.driver
+				,trs.transferer
+				,trs.userFor
+				,(SELECT u.first_name FROM rms_users AS u WHERE u.id=rts.userId LIMIT 1 ) AS userName
+				
+			";
+    	$sql.=$dbGb->caseStatusShowImage("rts.status");
+    	$sql.="
+			FROM `st_transfer_receive` AS rts 
+				LEFT JOIN `st_transferstock` AS trs ON trs.id = rts.transferId AND trs.toProjectId =rts.projectId
+			WHERE  rts.status =1 
+		";
+    	
+    	$from_date =(empty($search['start_date']))? '1': " rts.receiveDate >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " rts.receiveDate <= '".$search['end_date']." 23:59:59'";
+    	$where='';
+    	$where_date = " AND ".$from_date." AND ".$to_date;
+    	
+    	if(!empty($search['adv_search'])){
+    		$s_where = array();
+    		$s_search = addslashes((trim($search['adv_search'])));
+    		$s_where[] = " rts.receiveNo LIKE '%{$s_search}%'";
+    		$s_where[] = " trs.transferNo LIKE '%{$s_search}%'";
+    		$s_where[] = " trs.driver LIKE '%{$s_search}%'";
+    		$s_where[] = " trs.transferer LIKE '%{$s_search}%'";
+    		$s_where[] = " trs.userFor LIKE '%{$s_search}%'";
+    		
+    		$where .=' AND ( '.implode(' OR ',$s_where).')';
+    	}
+    	
+    	
+    	if($search['branch_id']>0){
+    		$where.= " AND rts.projectId = ".$search['branch_id'];
+    	}
+    	
+    	$dbg = new Application_Model_DbTable_DbGlobal();
+    	$where.= $dbg->getAccessPermission('rts.projectId');
+    	
+    	$order=' ORDER BY rts.id DESC  ';
+    	$db = $this->getAdapter();
+    	return $db->fetchAll($sql.$where.$where_date.$order);
+    }
+	
 	function getReceivedTransferRow($recordId){
     	$db = $this->getAdapter();
 		
@@ -673,11 +737,11 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
 				rtr.*
 				,(SELECT project_name FROM `ln_project` WHERE br_id=rtr.projectId LIMIT 1) AS projectName
 				,(SELECT project_name FROM `ln_project` WHERE br_id=rtr.fromProjectId LIMIT 1) AS fromProjectName
-				,DATE_FORMAT(tr.receiveDate,'".$DATE_FORMAT."') AS receiveDateFormate
+				,DATE_FORMAT(rtr.receiveDate,'".$DATE_FORMAT."') AS receiveDateFormat
 			
 				,tr.transferNo
 				,tr.ReceiverId
-				,DATE_FORMAT(tr.transferDate,'".$DATE_FORMAT."') AS TransferDateFormate
+				,DATE_FORMAT(tr.transferDate,'".$DATE_FORMAT."') AS transferDateFormat
 				,tr.userFor
 				,tr.transferer
 				,tr.driver AS driverName				
@@ -693,4 +757,28 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
     	
     	return $db->fetchRow($sql);
     }
+	
+	
+	function getReceiveTransferDetail($recordId){
+    	$db = $this->getAdapter();
+    	$this->_name='st_transfer_receive_detail';
+    	$sql="
+		SELECT 
+			rtrd.*
+			,(SELECT `proCode` FROM `st_product` WHERE st_product.`proId`=rtrd.proId LIMIT 1) AS proCode
+			,(SELECT `proName` FROM `st_product` WHERE st_product.`proId`=rtrd.proId LIMIT 1) AS proName
+			,(SELECT `measureValue` FROM `st_product` WHERE st_product.`proId`=rtrd.proId LIMIT 1) AS StockQty
+			,(SELECT `measureLabel` FROM `st_product` WHERE st_product.`proId`=rtrd.proId LIMIT 1) AS MeasureLabel
+			,trd.qtyRequest
+			,trd.qtyAppAfter
+			,trd.isCompleted
+		FROM 
+			`st_transfer_receive_detail` AS rtrd 
+			JOIN `st_transfer_receive` AS rtr ON rtr.id = rtrd.receiveId
+			LEFT JOIN st_transferstock_detail AS trd ON trd.transferId = rtr.transferId AND trd.proId = rtrd.proId
+		WHERE rtrd.receiveId=".$recordId." ";
+    	return $db->fetchAll($sql);
+    }
+	
+
 }
