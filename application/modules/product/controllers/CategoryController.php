@@ -38,6 +38,7 @@ class Product_CategoryController extends Zend_Controller_Action {
 		
 	}
 	function addAction(){
+
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		$isaddcat = $this->getRequest()->getParam('isAddCategory');
 		if($this->getRequest()->isPost()){
