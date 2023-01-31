@@ -61,7 +61,6 @@
 	$controller=$request->getControllerName();
 	$module=$request->getModuleName();
 	
-	$userAccessTrn = $db_user->getAccessUrl("stockinout","transferin",'add');
 	$userConcreteCheck = $db_user->getAccessUrl("po","directpo",'check');
 	
 
@@ -372,17 +371,13 @@ $(document).ready(function(){
 	
 	<?php if($systemType==2){?>
 		loadRequestNotification();
-		<?php if(!empty($userConcreteCheck)){ ?>
-		loadRequestNotificationConcrete();
-		<?php } ?>
-		<?php if(!empty($userAccessTrn)){ ?>
-		loadTransferStock();
-		<?php } ?>
+		
+		
 		
 		 setInterval(function(){ 
-			//loadRequestNotification();
+			loadRequestNotification();
 			//loadRequestNotificationConcrete();
-		 }, 5000);
+		 }, 60000);
 	<?php } ?>
 
 	<?php if($module=="loan" AND $action=="add"){ ?>
@@ -508,35 +503,7 @@ function loadRequestNotification(view = '')
 		
 	 }
  <?php } ?>
-<?php if(!empty($userAccessTrn)){ ?>
-	var urlNotifTrnStk = '<?php echo $this->url(array('module'=>'default','controller'=>'index','action'=>'notiftrnstk'));?> ';
-	function loadTransferStock(view = '')
-	 {
-		 
-		 jQuery.ajax({
-			url: urlNotifTrnStk,
-			type: "post",
-			data:{'view':view},
-			dataType:"json",
-			success: function(datadN){
-				if(datadN.counting >= 0)
-				{
-				 jQuery('.transferStock').html(datadN.notification);
-				 if(datadN.counting==0){
-					 jQuery('#countTrnStknotification').html("");
-				 }else{
-					 jQuery('#countTrnStknotification').html(datadN.counting);
-				 }
-				 
-				}
-			},
-			error:function(err){
-				
-			}
-		});
-		
-	 }
-<?php } ?>
+
 
 <?php } ?>
 

@@ -159,7 +159,7 @@ class Stockinout_Model_DbTable_DbReceiveTransfer extends Zend_Db_Table_Abstract
     				);
     				
     				$dbs->updateStockbyBranchAndProductId($param);//Update Stock qty and new costing
-    				$dbs->addProductHistoryQty($data['branch_id'],$data['productId'.$i],5,$data['qtyReceive'.$i],$id);//movement'
+    				$dbs->addProductHistoryQty($data['branch_id'],$data['productId'.$i],6,$data['qtyReceive'.$i],$id);//movement'
     			}
     		}
     		
@@ -252,7 +252,7 @@ class Stockinout_Model_DbTable_DbReceiveTransfer extends Zend_Db_Table_Abstract
     				);
     				
     				$dbs->updateStockbyBranchAndProductId($param);//Update Stock qty and new costing
-    				$dbs->addProductHistoryQty($data['branch_id'],$data['productId'.$i],5,$data['qtyReceive'.$i],$id);//movement'
+    				$dbs->addProductHistoryQty($data['branch_id'],$data['productId'.$i],6,$data['qtyReceive'.$i],$id);//movement'
     			}
     		}
     		

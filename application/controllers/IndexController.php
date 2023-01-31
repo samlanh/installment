@@ -384,6 +384,7 @@ class IndexController extends Zend_Controller_Action
 			exit();
 		}
 	}
+	/*
 	function notiftrnstkAction(){
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
@@ -393,4 +394,5 @@ class IndexController extends Zend_Controller_Action
 			exit();
 		}
 	}
+	*/
 }
