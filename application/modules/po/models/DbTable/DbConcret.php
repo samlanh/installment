@@ -77,7 +77,7 @@ class Po_Model_DbTable_DbConcret extends Zend_Db_Table_Abstract
     				'supplierId'		=>$data['supplierId'],
     				'date'				=>$data['date'],
     				'note'				=>$data['note'],
-    				'workType'			=>$data['workType'],
+    				
     				'processingStatus'	=>1,//completed po
     				'status'			=>1,
     				'createDate'		=>date("Y-m-d H:i:s"),
@@ -94,6 +94,7 @@ class Po_Model_DbTable_DbConcret extends Zend_Db_Table_Abstract
     				$arr = array(
     					'purchaseId'		=> $poId,
     					'proId'				=> $data['proId'.$i],
+						'workType'			=>$data['workType'.$i],
     					'qty'				=> $data['qty'.$i],
     					'qtyAfter'			=> 0,
     					'unitPrice'			=> $data['unitPrice'.$i],

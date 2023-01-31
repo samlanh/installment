@@ -825,6 +825,31 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		return $cate_tree_array;
 	
 	}
+
+	function getWorkTypeOpt($option=null){
+
+		$db = $this->getAdapter();
+		$sql="SELECT
+				wt.id AS id,
+				wt.workTitle AS `name` ";
+		$sql.=" FROM `st_work_type` AS wt  ";
+		$sql.=" WHERE wt.status=1 ";
+		$rows = $db->fetchAll($sql);
+		if($option==null){
+			return $rows;
+		}else{
+			$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+			$options = " <option value=''>".$tr->translate("SELECT_WORKTYPE")."</option> ,
+						<option value='-1'>".$tr->translate("ADD_NEW")."</option>";
+			if(!empty($rows)){
+				foreach ($rows as $row){
+					$options .= '<option value="'.$row['id'].'" >'.htmlspecialchars($row['name'], ENT_QUOTES).'</option>';
+				}
+			}
+			return $options;
+		}
+		
+	}
 		function getProductPOInfo($data){
 			$db = $this->getAdapter();
 			$sql="SELECT

@@ -19,12 +19,19 @@
     	</div>
     	<form action="" dojoType="dijit.form.Form" method="post" enctype="multipart/form-data">
 			<script type="dojo/method" event="onSubmit">   
-	  			 if(this.validate()) {
+	  			 if(this.validate(col)) {
 					branch_id = dijit.byId('branch_id').get('value');
 					if(branch_id=='' || branch_id<=0){
 						alert('<?php echo $tr->translate('PLEASE_SELECT_BRANCH');?>');
 						dijit.byId('branch_id').focus();
 						return false;
+					}
+					workType = dijit.byId('workType'+col).get('value');
+					if(workType=='' || workType<=0){
+						alert('<?php echo $tr->translate('SELECT_WORKTYPE');?>');
+						dijit.byId('workType'+col).focus();
+						return false;
+
 					}
 					supplierId = dijit.byId('supplierId').get('value');
 					if(supplierId<=0){
@@ -80,19 +87,16 @@
 				<div class="col-md-9 col-sm-9 col-xs-12">
 					<div class="form-group" style="background: #d8e0e2;padding: 5px 15px;margin: 0;border: solid 1px #697996;border-radius: 2px;margin-top: 10px;">
 						<label style=" margin: 0; line-height: 30px; " class="control-label bold col-md-1 col-sm-1 col-xs-12"><?php echo $tr->translate("CATEGORY");?> </label>
-						<div class="col-md-2 col-sm-2 col-xs-12">
+						<div class="col-md-3 col-sm-3 col-xs-12">
 								<?php echo $frm->getElement("categoryId");?>
 						</div>
 						<label class="col-md-1 col-sm-1 col-xs-12" style=" margin: 0; line-height: 30px; text-align: center;"><?php echo $tr->translate("RECORD");?></label>
 						<div class="col-md-1 col-sm-1 col-xs-12">
 								<?php echo $frm->getElement("init");?>
 						</div>
-						<label style=" margin: 0; line-height: 30px; text-align: center;" class="control-label bold col-md-1 col-sm-1 col-xs-12"><?php echo $tr->translate("WORK_TYPE");?> </label>
-						<div class="col-md-2 col-sm-2 col-xs-12">
-							<input id="workType" />
-						</div>
+			
 						<label style=" margin: 0; line-height: 30px; text-align: center;" class="control-label bold col-md-1 col-sm-1 col-xs-12"><?php echo $tr->translate("PRODUCT");?> </label>
-						<div class="col-md-3 col-sm-3 col-xs-12">
+						<div class="col-md-4 col-sm-4 col-xs-12">
 							<input id="productId" />
 						</div>
 						
@@ -154,25 +158,7 @@ tr.rowData td {
 		ready(function(){
 			onChageFunctionByBranch();
 		});
-		new dijit.form.FilteringSelect({
-			autoComplete: false,
-			queryExpr: "*${0}*",
-			required: false,		           
-			name: "workType",
-			placeHolder:'<?php echo $tr->translate('WORK_TYPE');?>',
-			id: "workType",
-			searchAttr: "name",
-			class: 'fullside',
-			onChange: function() {
-				workType = dijit.byId('workType').get('value');
-				if(workType==-1){
-					window.open('<?php echo $this->baseUrl();?>/stockinout/worktype/add?isAddWorkType=1');
-					dijit.byId('workType').reset();
-				}
-			}
-		}, "workType");
-
-		
+	
 		new dijit.form.FilteringSelect({
 			autoComplete: false,
 			queryExpr: "*${0}*",
@@ -184,10 +170,33 @@ tr.rowData td {
 			class: 'fullside',
 			onChange: function() {
 				addRowProductRequest();
+				getWorkType();
 			}
 		}, "productId");
     });
 
+var worktype_option = '';
+urlGetWorkType ='<?php echo $this->url(array('module'=>'stockinout','controller'=>'worktype','action'=>'getworktype'))?>';
+function getWorkType(){
+	
+	dojo.xhrPost({
+		url: urlGetWorkType,
+		content:{
+			'option':1,
+			'addnew':1,
+		},
+		handleAs:"json",
+		load: function(data){
+			if(data){
+				worktype_option = data;
+			}
+			
+		},
+		error: function(err) {
+		}
+	});
+}
+/*
     function getWorkType(){
 		urlGetWorkType ='<?php echo $this->url(array('module'=>'stockinout','controller'=>'worktype','action'=>'getallworktype'))?>';
 		notinBranchId = dijit.byId('branch_id').get('value');
@@ -196,10 +205,21 @@ tr.rowData td {
     	};
 		getAllWorkType(urlGetWorkType,contentData);
     }
-    
+	*/
+
+	function addNewWorkType(col){
+		workType = dijit.byId('workType'+col).get('value');
+				if(workType==-1){
+					window.open('<?php echo $this->baseUrl();?>/stockinout/worktype/add?isAddWorkType=1');
+					dijit.byId('workType'+col).reset();
+				}
+		
+
+	}
 	function onChageFunctionByBranch(){
 		 getAllProduct();
 		 getWorkType();
+		
 		}
     
 	function getAllProduct(){
@@ -271,6 +291,7 @@ tr.rowData td {
 			temp+='<td><?php echo $tr->translate("N_O");?></td>';
 			temp+='<td width="20%"><?php echo $tr->translate("PRODUCT_NAME");?></td>';
 			temp+='<td class="currentQty"><?php echo $tr->translate("MEASURE");?></td>';
+			temp+='<td width="20%"><?php echo $tr->translate("WORK_TYPE");?></td>';
 			temp+='<td width="20%"><?php echo $tr->translate("DN_NO");?></td>';
 			temp+='<td width="5%"><?php echo $tr->translate("QTY");?></td>';
 			temp+='<td width="10%"><?php echo $tr->translate("UNIT_PRICE");?></td>';
@@ -290,8 +311,9 @@ tr.rowData td {
 			col++;no++;
 			template+='<td width="2%" align="center"><img onclick="deleteRecord('+col+');" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
 			template+='<td align="center" width="2%">'+no+'</td>';
-			template+='<td class="productName" >'+data.proCode+'<br />'+data.proName+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId'+col+'" name="proId'+col+'" value="'+data.id+'" type="text"  ></td>';	
+			template+='<td class="productName" >'+data.proCode+'<br />'+data.proName+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId'+col+'" name="proId'+col+'" value="'+data.id+'" type="text"  ></td>';
 			template+='<td class="currentQty"  width="10%">('+data.measureTitle+')</td>';	
+			template+='<td><select required placeHolder="<?php echo $tr->translate('WORK_TYPE');?>" class="fullside" onchange="addNewWorkType('+col+');" required="false" dojoType="dijit.form.FilteringSelect" name="workType'+col+'" id="workType'+col+'" >'+worktype_option+'</select></td>';	
 			template+='<td><input required="true" dojoType="dijit.form.ValidationTextBox" class="fullside" id="dnNO'+col+'" name="dnNO'+col+'" placeholder="'+'<?php echo $tr->translate("DN_INFO");?> "type="text"  ></td>';	
 			template+='<td><input onkeyup="calculateTotal('+col+');" dojoType="dijit.form.NumberTextBox" required="true" data-dojo-props="constraints:{min:0.0001},rangeMessage:'+"'<?php echo $tr->translate("MINIMUM_VALUE_IS_ONE");?>'"+'" class="fullside" id="qty'+col+'" name="qty'+col+'" placeholder="'+'<?php echo $tr->translate("QTY");?> " value="1" type="text"  ></td>';	
 			template+='<td><input onkeyup="calculateTotal('+col+');" dojoType="dijit.form.NumberTextBox" required="true" data-dojo-props="constraints:{min:0.0001},rangeMessage:'+"'<?php echo $tr->translate("MINIMUM_VALUE_IS_ONE");?>'"+'" class="fullside" id="unitPrice'+col+'" name="unitPrice'+col+'" placeholder="'+'<?php echo $tr->translate("UNIT_PRICE");?>" type="text"  ></td>';	

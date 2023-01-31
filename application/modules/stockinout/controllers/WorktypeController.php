@@ -109,5 +109,15 @@ class Stockinout_WorktypeController extends Zend_Controller_Action {
 			exit();
 		}
 	}
-}
 
+	function getworktypeAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Application_Model_DbTable_DbGlobalStock();
+			$option = empty($data['option'])?null:$data['option'];
+			$rows = $db->getWorkTypeOpt($option);
+			print_r(Zend_Json::encode($rows));
+			exit();
+		}
+	}
+}
