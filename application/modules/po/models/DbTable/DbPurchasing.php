@@ -147,7 +147,9 @@ class Po_Model_DbTable_DbPurchasing extends Zend_Db_Table_Abstract
 							'qty'				=>$data['qty'.$i],
 							'qtyAfter'			=>$data['qty'.$i],
 							'unitPrice'			=>$data['unitPrice'.$i],
+							'discountPercent'	=>$data['discountPercent'.$i],
 							'discountAmount'	=>$data['discountAmount'.$i],
+							'totalDiscount'		=>$data['totalDiscount'.$i],
 							'subTotal'			=>$data['subTotal'.$i],
 							'note'				=>$data['note'.$i],
 						);
@@ -295,8 +297,9 @@ class Po_Model_DbTable_DbPurchasing extends Zend_Db_Table_Abstract
 									'qty'				=>$data['qty'.$i],
 									'qtyAfter'			=>$data['qty'.$i],
 									'unitPrice'			=>$data['unitPrice'.$i],
+									'discountPercent'	=>$data['discountPercent'.$i],
 									'discountAmount'	=>$data['discountAmount'.$i],
-									'subTotal'			=>$data['subTotal'.$i],
+									'totalDiscount'		=>$data['totalDiscount'.$i],
 									'note'				=>$data['note'.$i],
 								);
 							$this->_name='st_purchasing_detail';
@@ -312,7 +315,9 @@ class Po_Model_DbTable_DbPurchasing extends Zend_Db_Table_Abstract
 									'qty'				=>$data['qty'.$i],
 									'qtyAfter'			=>$data['qty'.$i],
 									'unitPrice'			=>$data['unitPrice'.$i],
+									'discountPercent'	=>$data['discountPercent'.$i],
 									'discountAmount'	=>$data['discountAmount'.$i],
+									'totalDiscount'		=>$data['totalDiscount'.$i],
 									'subTotal'			=>$data['subTotal'.$i],
 									'note'				=>$data['note'.$i],
 								);
