@@ -221,12 +221,17 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
 							
 							'qtyPo'				=>$data['purchaseQty'.$i],
 							'unitPrice'			=>$data['purchaseUnitPrice'.$i],
+							'discountPercent'	=>$data['purchaseDiscountPercent'.$i],
 							'discountAmount'	=>$data['purchaseDiscountAmount'.$i],
+							'totalDiscount'		=>$data['purchaseTotalDiscount'.$i],
 							'total'				=>$data['purchaseSubTotal'.$i],
 							
 							'totalQtyReceive'			=>$data['totalQtyReceive'.$i],
 							'unitPriceReceive'			=>$data['price'.$i],
-							'totalReceiveDiscount'		=>$data['discountAmount'.$i],
+							'receiveDiscountPercent'	=>$data['discountPercent'.$i],
+							'receiveDiscountAmount'		=>$data['discountAmount'.$i],
+							'totalReceiveDiscount'		=>$data['totalDiscount'.$i],
+							
 							'totalReceive'				=>$data['subTotal'.$i],
 							
 						);
@@ -401,7 +406,7 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
 				$this->_name='st_invoice_detail';
 				$whereDl2 = 'invId = '.$id;
 				$this->delete($whereDl2);
-			
+						
 				if(!empty($data['identity'])){
 					$ids = explode(',', $data['identity']);
 					foreach ($ids as $i){
@@ -413,12 +418,16 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
 								
 								'qtyPo'				=>$data['purchaseQty'.$i],
 								'unitPrice'			=>$data['purchaseUnitPrice'.$i],
+								'discountPercent'	=>$data['purchaseDiscountPercent'.$i],
 								'discountAmount'	=>$data['purchaseDiscountAmount'.$i],
+								'totalDiscount'		=>$data['purchaseTotalDiscount'.$i],
 								'total'				=>$data['purchaseSubTotal'.$i],
 								
 								'totalQtyReceive'			=>$data['totalQtyReceive'.$i],
 								'unitPriceReceive'			=>$data['price'.$i],
-								'totalReceiveDiscount'		=>$data['discountAmount'.$i],
+								'receiveDiscountPercent'	=>$data['discountPercent'.$i],
+								'receiveDiscountAmount'		=>$data['discountAmount'.$i],
+								'totalReceiveDiscount'		=>$data['totalDiscount'.$i],
 								'totalReceive'				=>$data['subTotal'.$i],
 								
 							);
@@ -987,6 +996,7 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
 					,pod.unitPrice AS purchaseUnitPrice
 					,pod.discountAmount AS purchaseDiscountAmount
 					,pod.discountPercent AS purchaseDiscountPercent
+					,pod.totalDiscount AS purchaseTotalDiscount
 					,pod.subTotal AS purchaseSubTotal
 		";
     	$sql.=" FROM `st_receive_stock_detail` AS rstd
@@ -1029,14 +1039,19 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
 				$gTotalInternal = $gTotalInternal+$row['purchaseSubTotal'];
 				
 				$receivePrice = $row['price'];
-				$receiveDiscountAmount = $row['totalDiscount'];
+				$receiveDiscountPercent = $row['discountPercent'];
+				$receiveDiscountAmount = $row['discountAmount'];
+				$receiveTotalDiscount = $row['totalDiscount'];
 				$receiveTotalSubTotal = $row['totalSubTotal'];
+				
 				if(!empty($data['currentInvoiceId'])){
 					$data['proId'] = $row['proId'];
 					$rowInvoiceDetail = $this->getRowInvoiceDetail($data);
 					if(!empty($rowInvoiceDetail)){
 						$receivePrice = $rowInvoiceDetail['unitPriceReceive'];
-						$receiveDiscountAmount = $rowInvoiceDetail['totalReceiveDiscount'];
+						$receiveDiscountPercent = $rowInvoiceDetail['receiveDiscountPercent'];
+						$receiveDiscountAmount = $rowInvoiceDetail['receiveDiscountAmount'];
+						$receiveTotalDiscount = $rowInvoiceDetail['totalReceiveDiscount'];
 						$receiveTotalSubTotal = $rowInvoiceDetail['totalReceive'];
 					}
 				}
@@ -1054,11 +1069,16 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
 						<span>'.$row['purchaseQty'].'</span><br />
 						<input type="hidden" dojoType="dijit.form.TextBox" name="purchaseQty'.$no.'" id="purchaseQty'.$no.'" value="'.$row['purchaseQty'].'" >
 						<input type="hidden" dojoType="dijit.form.TextBox" name="purchaseUnitPrice'.$no.'" id="purchaseUnitPrice'.$no.'" value="'.$row['purchaseUnitPrice'].'" >
-						<input type="hidden" dojoType="dijit.form.TextBox" name="purchaseDiscountAmount'.$no.'" id="purchaseDiscountAmount'.$no.'" value="'.$row['purchaseUnitPrice'].'" >
+						<input type="hidden" dojoType="dijit.form.TextBox" name="purchaseDiscountPercent'.$no.'" id="purchaseDiscountPercent'.$no.'" value="'.$row['purchaseDiscountPercent'].'" >
+						<input type="hidden" dojoType="dijit.form.TextBox" name="purchaseDiscountAmount'.$no.'" id="purchaseDiscountAmount'.$no.'" value="'.$row['purchaseDiscountAmount'].'" >
+						<input type="hidden" dojoType="dijit.form.TextBox" name="purchaseTotalDiscount'.$no.'" id="purchaseTotalDiscount'.$no.'" value="'.$row['purchaseTotalDiscount'].'" >
 						<input type="hidden" dojoType="dijit.form.TextBox" name="purchaseSubTotal'.$no.'" id="purchaseSubTotal'.$no.'" value="'.$row['purchaseSubTotal'].'" >
     				</td>
 					<td class="textCenter poInfoCol">
 						<span>'.number_format($row['purchaseUnitPrice'],2).'</span><br />
+    				</td>
+					<td class="textCenter poInfoCol">
+						<span>'.number_format($row['purchaseDiscountPercent'],2).'</span><br />
     				</td>
 					<td class="textCenter poInfoCol">
 						<span>'.number_format($row['purchaseDiscountAmount'],2).'</span><br />
@@ -1070,6 +1090,11 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
 						<input readOnly type="text" class="fullside" dojoType="dijit.form.NumberTextBox" required="required" onKeyup="calculateamount('.$no.');" name="totalQtyReceive'.$no.'" id="totalQtyReceive'.$no.'" value="'.$row['totalQtyReceive'].'" style="text-align: center;" >
 					</td>
 					<td><input type="text" class="fullside" dojoType="dijit.form.NumberTextBox" required="required" onKeyup="calculateamount('.$no.');" name="price'.$no.'" id="price'.$no.'" value="'.$receivePrice.'" style="text-align: center;" ></td>
+					<td class="textCenter">
+						<input type="text" class="fullside" data-dojo-props="constraints:{min:0,max:100},rangeMessage:'."'".$tr->translate("MAX_VALUE_IS")." 100'".'" dojoType="dijit.form.NumberTextBox" required="required" onKeyup="calculateamount('.$no.');" name="discountPercent'.$no.'" id="discountPercent'.$no.'" value="'.$receiveDiscountPercent.'" style="text-align: center;" >
+						<input type="hidden" dojoType="dijit.form.TextBox" name="totalDiscount'.$no.'" id="totalDiscount'.$no.'" value="'.$receiveTotalDiscount.'" >
+						
+					</td>
 					<td class="textCenter">
 						<input type="text" class="fullside" dojoType="dijit.form.NumberTextBox" required="required" onKeyup="calculateamount('.$no.');" name="discountAmount'.$no.'" id="discountAmount'.$no.'" value="'.$receiveDiscountAmount.'" style="text-align: center;" >
 					</td>

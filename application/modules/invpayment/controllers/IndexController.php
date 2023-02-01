@@ -66,7 +66,7 @@ class Invpayment_IndexController extends Zend_Controller_Action {
     	$frm->FrmInvoices(null);
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm = $frm;
-		
+
 				
 		/*
 		$data = array(

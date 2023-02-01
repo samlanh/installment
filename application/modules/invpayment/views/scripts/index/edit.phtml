@@ -196,16 +196,23 @@
 					
 					<table class="collape tablesorter"  style="width:100%; white-space: nowrap;border:1px solid #ddd;">
 				    	<tr id="head-title" class="head-td" align="center">
-							<td width="2%"><?php echo $tr->translate("N_O");?></td>
-							<td width="20%"><?php echo $tr->translate("PRODUCT_NAME");?></td>
-							<td width="10%"><?php echo $tr->translate("PO_QTY");?></td>
-							<td width="10%"><?php echo $tr->translate("PO_UNIT_PRICE");?></td>
-							<td width="10%"><?php echo $tr->translate("PO_DISCOUNT")." ".$tr->translate("CURRENCY_SIGN");?></td>
-							<td width="10%"><?php echo $tr->translate("PO_SUB_TOTAL");?></td>
-							<td width="10%"><?php echo $tr->translate("RECEIVE_QTY");?></td>
-							<td width="10%"><?php echo $tr->translate("UNIT_PRICE");?></td>
-							<td width="10%"><?php echo $tr->translate("DISCOUNT")." ".$tr->translate("CURRENCY_SIGN");?></td>
-							<td width="10%"><?php echo $tr->translate("SUB_TOTAL");?></td>
+							<th scope="col" rowspan="2"><?php echo $tr->translate("N_O");?></th>
+							<th scope="col" colspan="6" ><?php echo $tr->translate("PURCHASING_INFO");?></th>
+							<th scope="col" colspan="5" ><?php echo $tr->translate("INVOICE_INFO");?></th>
+						</tr>
+						<tr class="head-td" align="center">
+							<th scope="col" width="15%"><?php echo $tr->translate("PRODUCT_NAME");?></th>
+							<th scope="col" width="5%"><?php echo $tr->translate("PO_QTY");?></th>
+							<th scope="col" width="10%"><?php echo $tr->translate("PO_UNIT_PRICE");?></th>
+							<th scope="col" width="5%"><?php echo $tr->translate("DISCOUNT_PERCENT");?></th>
+							<th scope="col" width="5%"><?php echo $tr->translate("PO_DISCOUNT")." ".$tr->translate("CURRENCY_SIGN");?></th>
+							<th scope="col" width="10%"><?php echo $tr->translate("PO_SUB_TOTAL");?></th>
+							
+							<th scope="col" width="5%"><?php echo $tr->translate("RECEIVE_QTY");?></th>
+							<th scope="col" width="5%"><?php echo $tr->translate("UNIT_PRICE");?></th>
+							<th scope="col" width="10%"><?php echo $tr->translate("DISCOUNT_PERCENT");?></th>
+							<th scope="col" width="10%"><?php echo $tr->translate("DISCOUNT")." ".$tr->translate("CURRENCY_SIGN");?></th>
+							<th scope="col" width="10%"><?php echo $tr->translate("SUB_TOTAL");?></th>
 						</tr>
 						<tbody id="table_row">
 						</tbody>
@@ -695,17 +702,32 @@ ul.listDn li small {
 		var discountAmount = dijit.byId('discountAmount'+index).get('value');
 		discountAmount=isNaN(discountAmount)?0:discountAmount;
 		
-		rowTotal = (totalQtyReceive*price);
-		
-		subtotal = rowTotal-discountAmount;
-		if(discountAmount>rowTotal){
-			dijit.byId('discountAmount').set('value',rowTotal);
-			subtotal=0;
-			infoMessageAlert("<?php echo $tr->translate("DISCOUNT_CAN_NOT_BIGER_THAN_SUB_TOTAL")?>"+" "+rowTotal);
-			
+		discountPercent = dijit.byId('discountPercent'+index).get('value');
+		discountPercent=isNaN(discountPercent)?0:discountPercent;
+		if(discountPercent>100){
+			discountPercent=100;
 		}
 		
+		rowTotal = (totalQtyReceive*price);
+		
+		discountPercentAmt = parseFloat(rowTotal*discountPercent/100);
+		subtotal = rowTotal-discountPercentAmt;
+		
+		if(discountAmount>subtotal){
+			dijit.byId('subTotal'+index).set('value',0);
+			dijit.byId('discountAmount'+index).set('value',subtotal);
+			infoMessageAlert("<?php echo $tr->translate("DISCOUNT_CAN_NOT_BIGER_THAN_TOTAL")?>"+" "+subtotal);
+			netTotal();
+			return false;
+		}
+		
+		
+		subtotal = subtotal-discountAmount;
 		dijit.byId('subTotal'+index).set('value',subtotal.toFixed(2));
+		
+		totalDiscount = (discountAmount+discountPercentAmt).toFixed(2);
+		dijit.byId('totalDiscount'+index).set('value',totalDiscount);
+		
 		calculateRowAmount();
 		netTotal();
 	}

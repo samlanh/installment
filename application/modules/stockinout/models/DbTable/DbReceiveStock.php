@@ -138,14 +138,26 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
     		$ids = explode(',',$data['identity']);
     		if(!empty($ids)){
     			foreach($ids as $i){
+					
+					$rowSubTotal = ($data['qtyReceive'.$i]*$data['price'.$i]);
+					$rowDisPercentAmt = ($rowSubTotal*$data['discountPercent'.$i])/100;
+					$rowDisAmt = $data['discountAmount'.$i]/$data['qtyPO'.$i]*$data['qtyReceive'.$i];
+					//$rowTotalDis =$rowDisPercentAmt+$rowDisAmt;
+					$rowTotalDis =$data['totalDiscount'.$i]/$data['qtyPO'.$i]*$data['qtyReceive'.$i];
+					
+					$rowSubTotal = $rowSubTotal - $rowTotalDis;
+					
+					
     				$arr = array(
     					'receiveId'=>$receivedId,
     					'proId'=>$data['productId'.$i],
     					'qtyReceive'=>$data['qtyReceive'.$i],
     					'qtyAfterReceive'=>$data['qtyAfter'.$i]-$data['qtyReceive'.$i],
     					'price'=>$data['price'.$i],
-    					'totalDiscount'=>$data['discountAmount'.$i]/$data['qtyPO'.$i]*$data['qtyReceive'.$i],
-    					'subTotal'=>$data['qtyReceive'.$i]*$data['price'.$i],
+    					'discountPercent'=>$data['discountPercent'.$i],
+    					'discountAmount'=>$rowDisAmt,
+    					'totalDiscount'=>$rowTotalDis,
+    					'subTotal'=>$rowSubTotal,
     					'isClosed'=>$data['receiveStatus'.$i],
     					'note'=>$data['note'.$i],
     				);
@@ -301,14 +313,24 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
     		$ids = explode(',',$data['identity']);
     		if(!empty($ids)){
     			foreach($ids as $i){
+					$rowSubTotal = ($data['qtyReceive'.$i]*$data['price'.$i]);
+					$rowDisPercentAmt = ($rowSubTotal*$data['discountPercent'.$i])/100;
+					$rowDisAmt = $data['discountAmount'.$i]/$data['qtyPO'.$i]*$data['qtyReceive'.$i];
+					//$rowTotalDis =$rowDisPercentAmt+$rowDisAmt;
+					$rowTotalDis =$data['totalDiscount'.$i]/$data['qtyPO'.$i]*$data['qtyReceive'.$i];
+					
+					$rowSubTotal = $rowSubTotal - $rowTotalDis;
+					
     				$arr = array(
     					'receiveId'=>$receivedId,
     					'proId'=>$data['productId'.$i],
     					'qtyReceive'=>$data['qtyReceive'.$i],
     					'qtyAfterReceive'=>$data['qtyAfter'.$i]-$data['qtyReceive'.$i],
     					'price'=>$data['price'.$i],
-    					'totalDiscount'=>$data['discountAmount'.$i]/$data['qtyPO'.$i]*$data['qtyReceive'.$i],
-    					'subTotal'=>$data['qtyReceive'.$i]*$data['price'.$i],
+    					'discountPercent'=>$data['discountPercent'.$i],
+    					'discountAmount'=>$rowDisAmt,
+    					'totalDiscount'=>$rowTotalDis,
+    					'subTotal'=>$rowSubTotal,
     					'isClosed'=>$data['receiveStatus'.$i],
     					'note'=>$data['note'.$i],
     				);
@@ -491,7 +513,9 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
 		    			<td><input type="text" class="fullside" readonly dojoType="dijit.form.NumberTextBox" required="required" name="qtyPO'.$no.'"  value="'.$row['qty'].'" style="text-align: center;" >
 		    				<input type="hidden" class="fullside" name="productId'.$no.'" id="productId'.$no.'" value="'.$row['proId'].'" style="text-align: center;" >
 		    				<input type="hidden" class="fullside" name="price'.$no.'" id="price'.$no.'" value="'.$row['unitPrice'].'" style="text-align: center;" >
+		    				<input type="hidden" class="fullside" name="discountPercent'.$no.'" id="discountPercent'.$no.'" value="'.$row['discountPercent'].'" style="text-align: center;" >
 		    				<input type="hidden" class="fullside" name="discountAmount'.$no.'" id="discountAmount'.$no.'" value="'.$row['discountAmount'].'" style="text-align: center;" >
+		    				<input type="hidden" class="fullside" name="totalDiscount'.$no.'" id="totalDiscount'.$no.'" value="'.$row['totalDiscount'].'" style="text-align: center;" >
 		    			</td>
 		    			<td><input type="text" class="fullside" readonly dojoType="dijit.form.NumberTextBox" required="required" name="qtyAfter'.$no.'" id="qtyAfter'.$no.'" value="'.$row['qtyAfter'].'" style="text-align: center;" ></td>
 		    			<td><input type="text" class="fullside" data-dojo-props="constraints:{min:0,max:'.$row['qtyAfter'].'},'.$Message.'" dojoType="dijit.form.NumberTextBox" required="required" name="qtyReceive'.$no.'" id="qtyReceive'.$no.'" value="'.$row['qtyReceive'].'" style="text-align: center;" ></td>
@@ -548,6 +572,7 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
     	return $db->fetchRow($sql);
     }
     function getDataRow($recordId){
+		$this->_name='st_receive_stock';
     	$db = $this->getAdapter();
     	$sql=" SELECT * FROM $this->_name WHERE id=".$recordId;
     	$dbg = new Application_Model_DbTable_DbGlobal();
