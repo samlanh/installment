@@ -100,16 +100,17 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		}
 		$sql="
 			SELECT 
-				p.proId AS id,
-				CONCAT(COALESCE(p.proCode,''),' ',COALESCE(p.proName,'')) AS `name`,
-				p.proCode,
-				p.proName,
-				p.isService,
-				p.isCountStock,
-				p.budgetId,
-				(SELECT pl.qty FROM st_product_location AS pl WHERE pl.proId=p.proId AND pl.projectId= $projectId LIMIT 1) AS currentQty,
-				(SELECT pl.costing FROM st_product_location AS pl WHERE pl.proId=p.proId AND pl.projectId= $projectId LIMIT 1) AS currentPrice,
-				p.measureLabel AS measureTitle
+				p.proId AS id
+				,CONCAT(COALESCE(p.proCode,''),' ',COALESCE(p.proName,'')) AS `name`
+				,p.proCode
+				,p.proName
+				,p.isService
+				,p.isCountStock
+				,p.budgetId
+				,(SELECT pl.qty FROM st_product_location AS pl WHERE pl.proId=p.proId AND pl.projectId= $projectId LIMIT 1) AS currentQty
+				,(SELECT pl.costing FROM st_product_location AS pl WHERE pl.proId=p.proId AND pl.projectId= $projectId LIMIT 1) AS currentPrice
+				,p.measureLabel AS measureTitle
+				,COALESCE((SELECT pod.unitPrice FROM `st_purchasing_detail` AS pod WHERE pod.proId=p.proId ORDER BY pod.purchaseId DESC LIMIT 1),1) AS latestUnitPrice
 			";
 		
 		if(!empty($_data['requestId'])){
