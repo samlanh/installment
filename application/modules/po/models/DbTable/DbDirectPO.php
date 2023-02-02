@@ -109,7 +109,9 @@ class Po_Model_DbTable_DbDirectPO extends Zend_Db_Table_Abstract
 							'qty'				=>$data['qty'.$i],
 							'qtyAfter'			=>$data['qty'.$i],
 							'unitPrice'			=>$data['unitPrice'.$i],
+							'discountPercent'	=>$data['discountPercent'.$i],
 							'discountAmount'	=>$data['discountAmount'.$i],
+							'totalDiscount'		=>$data['totalDiscount'.$i],
 							'subTotal'			=>$data['subTotal'.$i],
 							'note'				=>$data['note'.$i],
 						);
@@ -208,7 +210,9 @@ class Po_Model_DbTable_DbDirectPO extends Zend_Db_Table_Abstract
 								'qty'				=>$data['qty'.$i],
 								'qtyAfter'			=>$data['qty'.$i],
 								'unitPrice'			=>$data['unitPrice'.$i],
+								'discountPercent'	=>$data['discountPercent'.$i],
 								'discountAmount'	=>$data['discountAmount'.$i],
+								'totalDiscount'		=>$data['totalDiscount'.$i],
 								'subTotal'			=>$data['subTotal'.$i],
 								'note'				=>$data['note'.$i],
 							);
@@ -224,7 +228,9 @@ class Po_Model_DbTable_DbDirectPO extends Zend_Db_Table_Abstract
 								'qty'				=>$data['qty'.$i],
 								'qtyAfter'			=>$data['qty'.$i],
 								'unitPrice'			=>$data['unitPrice'.$i],
+								'discountPercent'	=>$data['discountPercent'.$i],
 								'discountAmount'	=>$data['discountAmount'.$i],
+								'totalDiscount'		=>$data['totalDiscount'.$i],
 								'subTotal'			=>$data['subTotal'.$i],
 								'note'				=>$data['note'.$i],
 							);
