@@ -90,6 +90,10 @@ class Po_ConcretController extends Zend_Controller_Action {
 		$this->view->rows = $db->getDNDetailById($id);
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm = $frm;
+
+		$dbg = new Application_Model_DbTable_DbGlobalStock();	
+		$work_type = $dbg->getWorkTypeOpt();
+		$this->view->worktype = $work_type;
 	}
 }
 

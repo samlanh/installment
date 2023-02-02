@@ -94,7 +94,6 @@ class Po_Model_DbTable_DbConcret extends Zend_Db_Table_Abstract
     				$arr = array(
     					'purchaseId'		=> $poId,
     					'proId'				=> $data['proId'.$i],
-						'workType'			=>$data['workType'.$i],
     					'qty'				=> $data['qty'.$i],
     					'qtyAfter'			=> 0,
     					'unitPrice'			=> $data['unitPrice'.$i],
@@ -137,6 +136,7 @@ class Po_Model_DbTable_DbConcret extends Zend_Db_Table_Abstract
     				$arr = array(
     					'receiveId'=>$receivedId,
     					'proId'=>$data['proId'.$i],
+						'workType'	=>$data['workType'.$i],
     					'qtyReceive'=>$data['qty'.$i],
     					'qtyAfterReceive'=>0,
     					'price'=>$data['unitPrice'.$i],
@@ -187,7 +187,6 @@ class Po_Model_DbTable_DbConcret extends Zend_Db_Table_Abstract
 	    				'purchaseType'		=> 3,
 	    				'supplierId'		=> $data['supplierId'],
 	    				'note'				=> $data['note'],
-	    				'workType'			=> $data['workType'],
 	    				'processingStatus'	=> 1,
 	    				'status'			=> $data['status'],
 	    				'createDate'		=> $data['date'],
@@ -250,11 +249,11 @@ class Po_Model_DbTable_DbConcret extends Zend_Db_Table_Abstract
 	    						'transactionId'=>$dnId,
 	    				);
 	    				$budgetExpenseId = $dbb->addBudgetExpense($param);
-	    				
-	    		
+
 	    				$arr = array(
 	    						'receiveId'=>$dnId,
 	    						'proId'=>$data['proId'.$i],
+								'workType'	=>$data['workType'.$i],
 	    						'qtyReceive'=>$data['qty'.$i],
 	    						'qtyAfterReceive'=>0,
 	    						'price'=>$data['unitPrice'.$i],
@@ -263,7 +262,6 @@ class Po_Model_DbTable_DbConcret extends Zend_Db_Table_Abstract
 	    						'isClosed'=>1,
 	    						'note'=>$data['note'.$i],
 	    				);
-	    		
 	    				$this->_name='st_receive_stock_detail';
 	    				
 	    				$where = " receiveId=".$dnId;
@@ -328,6 +326,7 @@ class Po_Model_DbTable_DbConcret extends Zend_Db_Table_Abstract
     	$sql=" SELECT 
     				sd.id,
     				sd.proId,
+					sd.workType,
     				sd.price,
     				sd.subTotal,
 					(SELECT p.proName FROM st_product p WHERE p.proId=sd.proId LIMIT 1) proName,
