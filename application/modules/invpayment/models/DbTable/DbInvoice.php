@@ -475,7 +475,8 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
 		$dbGb = new Application_Model_DbTable_DbGlobal();		
 			$this->_name='st_invoice';
-			$sql=" SELECT inv.*,(SELECT po.purchaseType FROM st_purchasing AS po WHERE po.id = inv.purId LIMIT 1) AS purchaseType 
+			$sql=" SELECT inv.*,(SELECT po.purchaseType FROM st_purchasing AS po WHERE po.id = inv.purId LIMIT 1) AS purchaseType
+			,(SELECT po.requestId FROM st_purchasing AS po WHERE po.id = inv.purId LIMIT 1) AS requestId 
 			
 			FROM $this->_name AS inv WHERE inv.id=".$recordId;
 			$sql.=$dbGb->getAccessPermission("inv.projectId");

@@ -89,6 +89,13 @@
 											<?php echo $frm->getElement("purchaseType");?>
 										</div>
 									</div>
+									<div class="form-group requestBlog">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("REQUEST_NO");?>
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<input id="requestId" />
+									   </div>
+									</div>
 									<div class="form-group">
 										<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("PO_NO");?> </label>
 										<div class="col-md-7 col-sm-7 col-xs-12">
@@ -343,18 +350,43 @@ ul.listDn li small {
     require(["dojo/ready"], function(ready){
 		ready(function(){
 			
+			checkingPurchaseType();
 			onChageFunctionByBranch();
 			var totalAmountExternal = dijit.byId('totalAmountExternal');
 			 totalAmountExternal.on('keyup', function(evt) {
 				 checkingDeposit();
 			});
 			initailizeService();
+			
+			var purchaseType = dijit.byId('purchaseType');
+			 purchaseType.on('change', function(evt) {
+				  checkingPurchaseType();
+				 
+			});
+			
 			dijit.byId("totalAmountExternal").set("readOnly",true);
 			dijit.byId("branch_id").set("readOnly",true);
 			dijit.byId("purchaseType").set("readOnly",true);
 			dijit.byId("purId").set("readOnly",true);
+			dijit.byId("requestId").set("readOnly",true);
 		});
 
+		var requestStore  = getDataStorefromJSON('id','name', null );
+		new dijit.form.FilteringSelect({
+			store: requestStore,
+			autoComplete: false,
+			queryExpr: "*${0}*",
+			required: false,		           
+			name: "requestId",
+			placeHolder:'<?php echo $tr->translate('REQUEST_NO');?>',
+			id: "requestId",
+			searchAttr: "name",
+			class: 'fullside',
+			onChange: function() {
+				getAllPO();
+			}
+		}, "requestId");
+		
 		new dijit.form.FilteringSelect({
 			store: purchaseStore,
 			autoComplete: false,
@@ -392,14 +424,55 @@ ul.listDn li small {
 	 });
     
 	function onChageFunctionByBranch(){
-		
+		getAllApprovedRequest();
 		getAllPO();
 		getAllProduct();
+		
 		
 	}
 	function getRefreshData(){
 		getAllProduct();
 
+	}
+	
+	function checkingPurchaseType(){
+		purchaseType = dijit.byId('purchaseType').get('value');
+		$('.requestBlog').css('display','none');
+		dijit.byId('requestId').reset();
+		if(purchaseType==1){
+			$('.requestBlog').css('display','block');
+		}
+	}
+	
+	var urlGetAllApprovedRequest = '<?php echo $this->url(array('module'=>'requesting','controller'=>'request','action'=>'getallapprovedrequest')); ?>';
+	function getAllApprovedRequest(){
+		dijit.byId('requestId').reset();
+		requestStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
+		dijit.byId('requestId').set('store', requestStore);
+		
+		branch_id = dijit.byId('branch_id').get('value');
+		if(branch_id=='' || branch_id<=0){
+			branch_id = 0;
+		}
+		dojo.xhrPost({
+			url:urlGetAllApprovedRequest,	
+			content:{ 
+				'branch_id':branch_id,
+				'requestHasPoAndPending':1,
+				'requestId':'<?php echo $this->row['requestId'];?>'
+			},		    
+			handleAs:"json",
+			load: function(data) {
+				requestStore  = getDataStorefromJSON('id','name', data);		
+				dijit.byId('requestId').set('store', requestStore);
+				
+				setTimeout(function () {
+					dijit.byId('requestId').attr('value','<?php echo $this->row['requestId'];?>');
+				}, 800);
+			},
+			error: function(err) {
+			}
+		});
 	}
 	
 	var urlGetAllProduct = '<?php echo $this->url(array('module'=>'requesting','controller'=>'request','action'=>'getallproduct')); ?>';
@@ -435,9 +508,13 @@ ul.listDn li small {
 		if(branch_id=='' || branch_id<=0){
 			branch_id = 0;
 		}
+		requestId = dijit.byId('requestId').get('value');
+		if(requestId=='' || requestId<=0){
+			requestId = 0;
+		}
 		
 		purchaseType = dijit.byId('purchaseType').get('value');
-		objectContentFilter = {'branch_id':branch_id,'purchaseType':purchaseType,'purchaseId':currentPurchaseId};
+		objectContentFilter = {'branch_id':branch_id,'requestId':requestId,'purchaseType':purchaseType,'purchaseId':currentPurchaseId};
 		getAllPObyBranch(urlGetAllPO,objectContentFilter);
 		setTimeout(function () {
 			dijit.byId('purId').attr('value',currentPurchaseId);
@@ -464,8 +541,8 @@ ul.listDn li small {
 		}
 		purId = dijit.byId('purId').get('value');
 		if(purId=='' || purId<=0){
-			infoMessageAlert('<?php echo $tr->translate('PLEASE_SELECT_PO_NO');?>');
-			dijit.byId('purId').focus();
+			//infoMessageAlert('<?php echo $tr->translate('PLEASE_SELECT_PO_NO');?>');
+			//dijit.byId('purId').focus();
 			return false;
 		}
 
