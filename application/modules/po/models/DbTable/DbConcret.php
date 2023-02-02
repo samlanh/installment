@@ -9,19 +9,21 @@ class Po_Model_DbTable_DbConcret extends Zend_Db_Table_Abstract
     }
     function getAllReceiveStockConcret($search){
     	$sql="SELECT r.id,
-				(SELECT project_name FROM `ln_project` WHERE br_id=r.projectId LIMIT 1) AS projectName,
-				(SELECT s.supplierName FROM st_supplier s WHERE s.id=r.supplierId LIMIT 1) AS supplierName,
-				r.dnNumber,
-				r.receiveDate,
-				(SELECT p.proName FROM `st_product` p WHERE p.proId=rd.proId LIMIT 1) proName,
-				rd.qtyReceive,
-				rd.price,
-				rd.subTotal,
-				rd.note,
-				(SELECT first_name FROM rms_users WHERE id=r.userId LIMIT 1 ) AS user_name,
-				(SELECT name_en FROM ln_view WHERE type=3 and key_code = r.status LIMIT 1) AS status
-				
-			FROM `st_receive_stock` r,st_receive_stock_detail rd WHERE r.id=rd.receiveId ";
+		(SELECT project_name FROM `ln_project` WHERE br_id=r.projectId LIMIT 1) AS projectName,
+		(SELECT s.supplierName FROM st_supplier s WHERE s.id=r.supplierId LIMIT 1) AS supplierName,
+		r.dnNumber,
+		r.receiveDate,
+		(SELECT p.proName FROM `st_product` p WHERE p.proId=rd.proId LIMIT 1) proName,
+		rd.qtyReceive,
+		rd.price,
+		rd.subTotal,
+		rd.note,
+		(SELECT first_name FROM rms_users WHERE id=r.userId LIMIT 1 ) AS user_name,
+		(SELECT name_en FROM ln_view WHERE TYPE=3 AND key_code = r.status LIMIT 1) AS STATUS
+		
+		FROM `st_receive_stock` AS r 
+		JOIN st_receive_stock_detail AS rd  ON r.id=rd.receiveId 
+		JOIN `st_purchasing` AS p ON p.id=r.poId WHERE  p.purchasetype = 3 ";
     	
     	
     	$from_date =(empty($search['start_date']))? '1': " r.receiveDate >= '".$search['start_date']." 00:00:00'";
