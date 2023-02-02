@@ -85,6 +85,13 @@
 	                    	<?php echo $frm->getElement('branch_id');?>
 	                   </div>
 	                </div>
+					<div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("REQUEST_NO");?>
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<input id="requestId" />
+	                   </div>
+	                </div>
 	                <div class="form-group">
 	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PO_NO");?>
 	                   </label>
@@ -227,11 +234,27 @@
 
 	  require(["dojo/ready"], function(ready){
 		ready(function(){
+			getAllApprovedRequest();
 			getAllPO();
 		}); 
 		
 	 });
-
+	var requestStore  = getDataStorefromJSON('id','name', null );
+	new dijit.form.FilteringSelect({
+		store: requestStore,
+		autoComplete: false,
+		queryExpr: "*${0}*",
+		required: false,		           
+		name: "requestId",
+		placeHolder:'<?php echo $tr->translate('REQUEST_NO');?>',
+		id: "requestId",
+		searchAttr: "name",
+		class: 'fullside',
+		onChange: function() {
+			getAllPO();
+		}
+	}, "requestId");
+		
 	 new dijit.form.FilteringSelect({
 	 	autoComplete: false,
 	 	queryExpr: "*${0}*",                       
@@ -258,11 +281,42 @@
 	     } 
 	 }, "purId");
 
+	var urlGetAllApprovedRequest = '<?php echo $this->url(array('module'=>'requesting','controller'=>'request','action'=>'getallapprovedrequest')); ?>';
+	function getAllApprovedRequest(){
+		dijit.byId('requestId').reset();
+		requestStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
+		dijit.byId('requestId').set('store', requestStore);
+		
+		branch_id = dijit.byId('branch_id').get('value');
+		if(branch_id=='' || branch_id<=0){
+			branch_id = 0;
+		}
+		dojo.xhrPost({
+			url:urlGetAllApprovedRequest,	
+			content:{ 
+				'branch_id':branch_id,
+				'requestHasPoAndPending':1
+			},		    
+			handleAs:"json",
+			load: function(data) {
+				requestStore  = getDataStorefromJSON('id','name', data);		
+				dijit.byId('requestId').set('store', requestStore);
+			},
+			error: function(err) {
+			}
+		});
+	}
+	
 	function getAllPO(){
 		var urlGetAllPO = '<?php echo $this->url(array('module'=>'po','controller'=>'index','action'=>'getallpo')); ?>';
 		branch_id = dijit.byId('branch_id').get('value');
 		if(branch_id=='' || branch_id<=0){
 			branch_id = 0;
+		}
+		
+		requestId = dijit.byId('requestId').get('value');
+		if(requestId=='' || requestId<=0){
+			requestId = 0;
 		}
 		dijit.byId('purId').attr('value','');
 		stringrow="";
@@ -271,7 +325,7 @@
 		});
 		
 		//objectContentFilter = {'branch_id':branch_id,'purchaseType':'1','processingStatus':'0'};
-		objectContentFilter = {'branch_id':branch_id,'processingStatus':'0'};
+		objectContentFilter = {'branch_id':branch_id,'requestId':requestId,'processingStatus':'0'};
 		getAllPObyBranch(urlGetAllPO,objectContentFilter);
 	}
 

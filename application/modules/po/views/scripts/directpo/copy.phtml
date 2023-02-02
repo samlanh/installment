@@ -153,19 +153,24 @@
 					</div>
 					<div class="tab-content vertical">
 						<div class="tab-pane fade in active" id="panel21" role="tabpanel">
-									<table class="collape responsiveTable"  >
+								<table class="collape responsiveTable tbPOItems"  >
 									<thead>
 										<tr id="head-title" class="head-td" align="center">
-											<th scope="col"><?php echo $tr->translate("DEL");?></th>
-											<th scope="col"><?php echo $tr->translate("N_O");?></th>
+											<th scope="col" rowspan="2"><?php echo $tr->translate("DEL");?></th>
+											<th scope="col" rowspan="2"><?php echo $tr->translate("N_O");?></th>
+											
+											<th scope="col" colspan="4" ><?php echo $tr->translate("PRODUCT_INFO");?></th>
+											<th scope="col" colspan="2" ><?php echo $tr->translate("DISCOUNT_INFO");?></th>
+											
+										</tr>
+										<tr  class="head-td" align="center">
 											<th scope="col" width="20%"><?php echo $tr->translate("PRODUCT_NAME");?></th>
 											<th scope="col" class="currentQty"><?php echo $tr->translate("STOCK_REMAIN");?></th>
 											<th scope="col" width="10%"><?php echo $tr->translate("QTY");?></th>
-											<th scope="col" width="5%"><?php echo $tr->translate("UNIT_PRICE");?></th>
-											<th scope="col" width="5%"><?php echo $tr->translate("DISCOUNT")." ".$tr->translate("CURRENCY_SIGN");?></th>
-											<th scope="col" width="10%"><?php echo $tr->translate("SUB_TOTAL");?></th>
-											<th scope="col" width="20%"><?php echo $tr->translate("NOTE");?></th>
+											<th scope="col" width="20%"><?php echo $tr->translate("UNIT_PRICE");?></th>
 											
+											<th scope="col" width="10%"><?php echo $tr->translate("DISCOUNT_PERCENT");?></th>
+											<th scope="col" width="10%"><?php echo $tr->translate("DISCOUNT")." ".$tr->translate("CURRENCY_SIGN");?></th>
 										</tr>
 									</thead>
 									<tbody id="table_row">
@@ -391,18 +396,36 @@
 			},		    
 			handleAs:"json",
 			load: function(data) {
-				template+='<td class="numberRecord" align="center"><span title="<?php echo $tr->translate("REMOVE_RECORD");?>" class="removeRow" onclick="deleteRecord('+col+');"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></span></td>';
-				template+='<td align="center" class="numberRecord" data-label="<?php echo $tr->translate("N_O");?>">'+no+'</td>';
-				template+='<td data-label="<?php echo $tr->translate("PRODUCT_NAME");?>" class="productName" >'+data.proCode+'<br />'+data.proName+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId'+col+'" name="proId'+col+'" value="'+data.id+'" type="text"  ></td>';	
-				template+='<td data-label="<?php echo $tr->translate("STOCK_REMAIN");?>" class="currentQty"  width="5%">'+data.currentQty+' ('+data.measureTitle+')</td>';	
-				template+='<td data-label="<?php echo $tr->translate("QTY");?>"><input required dojoType="dijit.form.NumberTextBox" class="fullside" data-dojo-props="constraints:{min:0.01},rangeMessage:'+"'<?php echo $tr->translate("MINIMUM_VALUE_IS_ZEROONE");?>'"+'" onKeyup="calculateTotal('+col+');" id="qty'+col+'" name="qty'+col+'" placeholder="'+'<?php echo $tr->translate("QTY");?>" value="1" type="text"  ></td>';	
-				template+='<td data-label="<?php echo $tr->translate("UNIT_PRICE");?>"><input required dojoType="dijit.form.NumberTextBox" class="fullside" data-dojo-props="constraints:{min:0.01},rangeMessage:'+"'<?php echo $tr->translate("MINIMUM_VALUE_IS_ZEROONE");?>'"+'" onKeyup="calculateTotal('+col+');" id="unitPrice'+col+'" name="unitPrice'+col+'" placeholder="'+'<?php echo $tr->translate("UNIT_PRICE");?> " value="1" type="text"  ></td>';	
-				template+='<td data-label="<?php echo $tr->translate("DISCOUNT")." ".$tr->translate("CURRENCY_SIGN");?>"><input dojoType="dijit.form.NumberTextBox" class="fullside"  onKeyup="calculateTotal('+col+');" id="discountAmount'+col+'" name="discountAmount'+col+'" placeholder="'+'<?php echo $tr->translate("DISCOUNT")." ".$tr->translate("CURRENCY_SIGN");?> " value="0" type="text"  ></td>';	
-				template+='<td data-label="<?php echo $tr->translate("SUB_TOTAL");?>"><input readOnly dojoType="dijit.form.NumberTextBox" class="fullside"   id="subTotal'+col+'" name="subTotal'+col+'" placeholder="'+'<?php echo $tr->translate("SUB_TOTAL");?> " value="1" type="text"  ></td>';	
-				template+='<td data-label="<?php echo $tr->translate("NOTE");?>"><input dojoType="dijit.form.TextBox" class="fullside" id="note'+col+'" name="note'+col+'" placeholder="'+'<?php echo $tr->translate("NOTE");?> " value="" type="text"  ></td>';	
+				var lastUnitPrice = data.latestUnitPrice;	
+				var subTotalRow = lastUnitPrice;
+				
+				template+='<td rowspan="2" class="numberRecord infoCol" align="center"><span title="<?php echo $tr->translate("REMOVE_RECORD");?>" class="removeRow" onclick="deleteRecord('+col+');"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></span></td>';
+				template+='<td rowspan="2" align="center" class="numberRecord infoCol" data-label="<?php echo $tr->translate("N_O");?>">'+no+'</td>';
+				template+='<td data-label="<?php echo $tr->translate("PRODUCT_NAME");?>" class="productName infoCol" >'+data.proCode+'<br />'+data.proName+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId'+col+'" name="proId'+col+'" value="'+data.id+'" type="text"  ></td>';	
+				template+='<td data-label="<?php echo $tr->translate("STOCK_REMAIN");?>" class="currentQty infoCol"  width="5%">'+data.currentQty+' ('+data.measureTitle+')</td>';	
+				template+='<td data-label="<?php echo $tr->translate("QTY");?>" ><input required dojoType="dijit.form.NumberTextBox" class="fullside" data-dojo-props="constraints:{min:0.01},rangeMessage:'+"'<?php echo $tr->translate("MINIMUM_VALUE_IS_ZEROONE");?>'"+'" onKeyup="calculateTotal('+col+');" id="qty'+col+'" name="qty'+col+'" placeholder="'+'<?php echo $tr->translate("QTY");?>" value="1" type="text"  ></td>';	
+				template+='<td data-label="<?php echo $tr->translate("UNIT_PRICE");?>"><input required dojoType="dijit.form.NumberTextBox" class="fullside" data-dojo-props="constraints:{min:0.01},rangeMessage:'+"'<?php echo $tr->translate("MINIMUM_VALUE_IS_ZEROONE");?>'"+'" onKeyup="calculateTotal('+col+');" id="unitPrice'+col+'" name="unitPrice'+col+'" placeholder="'+'<?php echo $tr->translate("UNIT_PRICE");?> " value="'+lastUnitPrice+'" type="text"  ></td>';	
+				
+				
+				template+='<td data-label="<?php echo $tr->translate("DISCOUNT_PERCENT");?>">';	
+				template+='<input dojoType="dijit.form.NumberTextBox" class="fullside" data-dojo-props="constraints:{min:0,max:100},rangeMessage:'+"'<?php echo $tr->translate("MAX_VALUE_IS");?> 100'"+'"  onKeyup="calculateTotal('+col+');" id="discountPercent'+col+'" name="discountPercent'+col+'" placeholder="'+'<?php echo $tr->translate("DISCOUNT_PERCENT");?> " value="0" type="text"  >';	
+				template+='</td>';	
+				template+='<td data-label="<?php echo $tr->translate("DISCOUNT");?>">';	
+					template+='<input dojoType="dijit.form.NumberTextBox" class="fullside"  onKeyup="calculateTotal('+col+');" id="discountAmount'+col+'" name="discountAmount'+col+'" placeholder="'+'<?php echo $tr->translate("DISCOUNT")." ".$tr->translate("CURRENCY_SIGN");?> " value="0" type="text"  >';	
+					template+='<input dojoType="dijit.form.TextBox" class="fullside"   id="totalDiscount'+col+'" name="totalDiscount'+col+'"  value="0" type="hidden"  >';	
+				template+='</td>';
+				
 		
+				templateii='';
+				templateii+='<td colspan="4" class="infoCol" data-label="<?php echo $tr->translate("NOTE");?>"><input dojoType="dijit.form.TextBox" class="fullside" id="note'+col+'" name="note'+col+'" placeholder="'+'<?php echo $tr->translate("NOTE");?> " value="" type="text"  ></td>';	
+				templateii+='<td colspan="4" class="red bold" data-label="<?php echo $tr->translate("SUB_TOTAL");?>"><input readOnly dojoType="dijit.form.NumberTextBox" class="fullside"   id="subTotal'+col+'" name="subTotal'+col+'" placeholder="'+'<?php echo $tr->translate("SUB_TOTAL");?> " value="'+subTotalRow+'" type="text"  ></td>';	
+			
+			
 				tmp='<tr class="rowData" id="row'+col+'">';
 				tmp+="</tr>";
+				tmp+='<tr class="rowData" id="rowii'+col+'">';
+				tmp+="</tr>";
+				
 				dojo.query("#table_row").append(tmp);
 				if($("#identity").val()!="") {
 					var identity = $("#identity").val();
@@ -411,6 +434,11 @@
 				dojo.html.set(dojo.byId("row"+col),template , {
 					 parseContent: true,
 				});
+				
+				dojo.html.set(dojo.byId("rowii"+col),templateii , {
+					 parseContent: true,
+				});
+				
 				dijit.byId('productId').reset();
 				netTotal();
 				addRowProductSchetdule(data.proName, data.id);
@@ -427,12 +455,20 @@
 		discountAmount = dijit.byId('discountAmount'+index).get('value');
 		discountAmount=isNaN(discountAmount)?0:discountAmount;
 		
+		discountPercent = dijit.byId('discountPercent'+index).get('value');
+		discountPercent=isNaN(discountPercent)?0:discountPercent;
+		if(discountPercent>100){
+			discountPercent=100;
+		}
+		
 		qty = dijit.byId('qty'+index).get('value');
 		qty=isNaN(qty)?0:qty;
 		
 		var subtotal=0;
 		subtotal = (qty*unitPrice);
 		
+		discountPercentAmt = parseFloat(subtotal*discountPercent/100);
+		subtotal = subtotal-discountPercentAmt;
 		if(discountAmount>subtotal){
 			dijit.byId('subTotal'+index).set('value',0);
 			dijit.byId('discountAmount'+index).set('value',subtotal);
@@ -441,6 +477,9 @@
 			return false;
 		}
 		subtotal=subtotal-discountAmount;
+		totalDiscount = (discountAmount+discountPercentAmt).toFixed(2);
+		dijit.byId('totalDiscount'+index).set('value',totalDiscount);
+		
 		dijit.byId('subTotal'+index).set('value',subtotal);
 		netTotal();
 	}
@@ -468,6 +507,7 @@
 		var strings = arrays.join(',');
 		$('#identity').val(strings);
 		dojo.query("#row"+index).remove();
+		dojo.query("#rowii"+index).remove();
 		netTotal();
 		deleteProductSceduleRow(index);
 	}
@@ -483,18 +523,31 @@
 		var measureTitleString = $( '#measureTitle'+'<?php echo $key;?>').html();
 		var itemsNoteString = $( '#itemsNote'+'<?php echo $key;?>').html();
 		
-		template+='<td class="numberRecord" align="center"><span title="<?php echo $tr->translate("REMOVE_RECORD");?>" class="removeRow" onclick="deleteRecord('+col+');"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></span></td>';
-		template+='<td align="center" class="numberRecord" data-label="<?php echo $tr->translate("N_O");?>">'+no+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="detailId'+col+'" name="detailId'+col+'" value="<?php echo $rs['id'];?>" type="text"  ></td>';
-		template+='<td data-label="<?php echo $tr->translate("PRODUCT_NAME");?>" class="productName" >'+proCodeString+'<br />'+productNameString+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId'+col+'" name="proId'+col+'" value="<?php echo $rs['proId'];?>" type="text"  ></td>';	
-		template+='<td data-label="<?php echo $tr->translate("STOCK_REMAIN");?>" class="currentQty"  ><?php echo $rs['currentQty'];?> ('+measureTitleString+')</td>';	
+		template+='<td rowspan="2" class="numberRecord infoCol" align="center"><span title="<?php echo $tr->translate("REMOVE_RECORD");?>" class="removeRow" onclick="deleteRecord('+col+');"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></span></td>';
+		template+='<td rowspan="2" align="center" class="numberRecord infoCol" data-label="<?php echo $tr->translate("N_O");?>">'+no+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="detailId'+col+'" name="detailId'+col+'" value="<?php echo $rs['id'];?>" type="text"  ></td>';
+		template+='<td data-label="<?php echo $tr->translate("PRODUCT_NAME");?>" class="productName infoCol" >'+proCodeString+'<br />'+productNameString+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId'+col+'" name="proId'+col+'" value="<?php echo $rs['proId'];?>" type="text"  ></td>';	
+		template+='<td data-label="<?php echo $tr->translate("STOCK_REMAIN");?>" class="currentQty infoCol"  ><?php echo $rs['currentQty'];?> ('+measureTitleString+')</td>';	
 		template+='<td data-label="<?php echo $tr->translate("QTY");?>"><input required data-dojo-props="constraints:{min:0.01},rangeMessage:'+"'<?php echo $tr->translate("MINIMUM_VALUE_IS_ZEROONE");?>'"+'" dojoType="dijit.form.NumberTextBox" class="fullside"  onKeyup="calculateTotal('+col+');" id="qty'+col+'" name="qty'+col+'" placeholder="'+'<?php echo $tr->translate("QTY");?>" value="<?php echo $rs['qty'];?>" type="text"  ></td>';	
 		template+='<td data-label="<?php echo $tr->translate("UNIT_PRICE");?>"><input required data-dojo-props="constraints:{min:0.01},rangeMessage:'+"'<?php echo $tr->translate("MINIMUM_VALUE_IS_ZEROONE");?>'"+'" dojoType="dijit.form.NumberTextBox" class="fullside"  onKeyup="calculateTotal('+col+');" id="unitPrice'+col+'" name="unitPrice'+col+'" placeholder="'+'<?php echo $tr->translate("UNIT_PRICE");?> " value="<?php echo $rs['unitPrice'];?>" type="text"  ></td>';	
-		template+='<td data-label="<?php echo $tr->translate("DISCOUNT")." ".$tr->translate("CURRENCY_SIGN");?>"><input dojoType="dijit.form.NumberTextBox" class="fullside"  onKeyup="calculateTotal('+col+');" id="discountAmount'+col+'" name="discountAmount'+col+'" placeholder="'+'<?php echo $tr->translate("DISCOUNT")." ".$tr->translate("CURRENCY_SIGN");?> " value="<?php echo $rs['discountAmount'];?>" type="text"  ></td>';	
-		template+='<td data-label="<?php echo $tr->translate("SUB_TOTAL");?>"><input readOnly dojoType="dijit.form.NumberTextBox" class="fullside"  id="subTotal'+col+'" name="subTotal'+col+'" placeholder="'+'<?php echo $tr->translate("SUB_TOTAL");?> " value="<?php echo $rs['subTotal'];?>" type="text"  ></td>';	
-		template+='<td data-label="<?php echo $tr->translate("NOTE");?>"><input dojoType="dijit.form.TextBox" class="fullside" id="note'+col+'" name="note'+col+'" placeholder="'+'<?php echo $tr->translate("NOTE");?> " value="'+itemsNoteString+'" type="text"  ></td>';	
 		
+		template+='<td data-label="<?php echo $tr->translate("DISCOUNT_PERCENT");?>">';	
+		template+='<input dojoType="dijit.form.NumberTextBox" class="fullside" data-dojo-props="constraints:{min:0,max:100},rangeMessage:'+"'<?php echo $tr->translate("MAX_VALUE_IS");?> 100'"+'"  onKeyup="calculateTotal('+col+');" id="discountPercent'+col+'" name="discountPercent'+col+'" placeholder="'+'<?php echo $tr->translate("DISCOUNT_PERCENT");?> " value="<?php echo $rs['discountPercent'];?>" type="text"  >';	
+		template+='</td>';	
+		template+='<td data-label="<?php echo $tr->translate("DISCOUNT");?>">';	
+			template+='<input dojoType="dijit.form.NumberTextBox" class="fullside"  onKeyup="calculateTotal('+col+');" id="discountAmount'+col+'" name="discountAmount'+col+'" placeholder="'+'<?php echo $tr->translate("DISCOUNT")." ".$tr->translate("CURRENCY_SIGN");?> " value="<?php echo $rs['discountAmount'];?>" type="text"  >';	
+			template+='<input dojoType="dijit.form.TextBox" class="fullside"   id="totalDiscount'+col+'" name="totalDiscount'+col+'"  value="<?php echo $rs['totalDiscount'];?>" type="hidden"  >';	
+		template+='</td>';
+				
+		templateii='';
+		templateii+='<td colspan="4" class="infoCol" data-label="<?php echo $tr->translate("NOTE");?>"><input dojoType="dijit.form.TextBox" class="fullside" id="note'+col+'" name="note'+col+'" placeholder="'+'<?php echo $tr->translate("NOTE");?> " value="'+itemsNoteString+'" type="text"  ></td>';	
+		templateii+='<td colspan="4" class="red bold" data-label="<?php echo $tr->translate("SUB_TOTAL");?>"><input readOnly dojoType="dijit.form.NumberTextBox" class="fullside"  id="subTotal'+col+'" name="subTotal'+col+'" placeholder="'+'<?php echo $tr->translate("SUB_TOTAL");?> " value="<?php echo $rs['subTotal'];?>" type="text"  ></td>';	
+			
+			
 		tmp='<tr class="rowData" id="row'+col+'">';
 		tmp+="</tr>";
+		tmp+='<tr class="rowData" id="rowii'+col+'">';
+		tmp+="</tr>";
+		
 		dojo.query("#table_row").append(tmp);
 		if($("#identity").val()!="") {
 			var identity = $("#identity").val();
@@ -503,6 +556,11 @@
 		dojo.html.set(dojo.byId("row"+col),template , {
 		     parseContent: true,
 		});
+		
+		dojo.html.set(dojo.byId("rowii"+col),templateii , {
+			 parseContent: true,
+		});
+		
 		<?php }?>
 		initailizeScheduleProduct()
 
