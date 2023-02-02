@@ -1,0 +1,201 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage ();
+	
+	$frm = $this->frm_search;
+	$montFomat=DATE_FORMAT_FOR_PHP;
+	
+	$requestInfor = $this->baseUrl()."/report/stockmg/request-info/id/";
+?>
+<title><?php echo $tr->translate("CLOSING_ITEMS_FOR_PO");?></title>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
+<meta charset="utf-8">
+<div class="card pb-10 pt-10 pl-10 pr-10">
+	<div class="card-content collapse show">
+		<div class="card-box">
+       		<div class="col-sm-12 border-botom">
+		    	<div class="col-sm-8 pd-0">
+	    			<h4 class="m-b-0"><i class="fa fa-server " aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('CLOSING_ITEMS_FOR_PO');?></h4>
+    			</div>
+    			<div class="col-sm-4 text-right">
+    			</div>
+    		</div>
+    	</div>
+		<div class="card-box">
+			<form action=" " dojoType="dijit.form.Form" method="post">
+				<div class="form-group">
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement("adv_search");?>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement("branch_id");?>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement("start_date");?>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement("end_date");?>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement("btn_search");?>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="card-box">
+			<style type="text/css">
+					.style{
+						line-height: 20px;font-size: 14px !important;
+						font-family: 'Times New Roman','Khmer OS Battambang';
+					}
+					.hideblog{display: none;}
+					.hiddenblog{display: block !important;}
+					.style1:hover{ background: #ccc; }
+					table tr td ul li{text-align: center;list-style: none;line-height: 25px; }
+					table { page-break-inside:auto }
+					tr{ page-break-inside:avoid; page-break-after:auto; }
+					#header {
+					  display: table-header-group;
+					  page-break-inside:avoid; page-break-after:auto;
+					  margin-top: 100px;
+					}
+					
+					.center{text-align: center !important;}
+					table.content-data{
+						border-collapse:collapse;
+						border:1px solid #000; 
+						font-size:12px;
+					}
+					table.content-data thead tr.style {
+					   line-height: 25px; font-size:14px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
+						background: #c1d0f3;
+						font-weight:600;
+					}
+					
+					table tr td{
+						padding:0 2px;
+					}
+					tr.voidclass {
+						background: #fff7f7;
+					}
+					td.centerText{
+						text-align: center;
+					}
+					.redBold {
+						font-weight: 600;
+						color: #f80000;
+					}
+					
+				</style>
+				
+			<form id="list" name="list" action="<?php echo $this->url(array('module'=>'po','controller'=>'requestitems','action'=>'add')); ?>" dojoType="dijit.form.Form" method="post">
+				<script type="dojo/method" event="onSubmit" >			
+					id_selected = dijit.byId('id_selected').get('value');
+					if(id_selected==''){
+						alert('No record to close !!! ');
+						return false;
+					}
+					return true;
+				</script>
+				<table class="content-data" width="100%" border="1"  cellspacing="0" cellpadding="0">
+					<thead>
+						<tr class="hide" style="border:1px solid #000;">
+							<td colspan="17" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
+						</tr>
+						<tr  class="style" align="center" >
+							<td scope="col" rowspan="2" class="center">
+								<input type="checkBox" onclick="checkAll('<?php echo count($this->row);?>');" name="checkall" id="checkall" />
+								<input type="hidden" name="id_selected" id="id_selected" dojoType="dijit.form.TextBox" />
+							</td>
+							<td scope="col" rowspan="2" class="center"><?php echo $tr->translate("NUM");?></td>
+							<td scope="col" colspan="2" class="center"><?php echo $tr->translate("PRODUCT_INFO");?></td>    
+							<td scope="col" colspan="3" class="center"><?php echo $tr->translate("REQUEST_INFO");?></td>    
+						  
+						 
+						</tr>
+						<tr class="style" align="center">
+							<td scope="col"  ><?php echo $tr->translate("PRODUCT_NAME");?></td>                   
+							<td scope="col"  ><?php echo $tr->translate("QTY");?></td>
+							
+							
+							<td scope="col"  ><?php echo $tr->translate("BRANCH_NAME");?></td>                   
+							<td scope="col"  ><?php echo $tr->translate("REQUEST_NO");?></td>
+							<td scope="col"  ><?php echo $tr->translate("DATE");?></td>
+						</tr>
+					</thead>
+					<tbody>
+						<?php 
+							$i=0;
+							if(!empty($this->row)) foreach ($this->row as $index => $rs){
+						?>
+						<tr>
+								<td style="text-align: center;">
+									<input style="height: 15px;margin-top: 5px;" type="checkBox" onClick="checked_id(<?php echo $index+1;?>)" name="check_box<?php echo $index+1;?>" id="check_box<?php echo $index+1;?>" />
+									<input type="hidden" id="id_<?php echo $index+1;?>" name="id_<?php echo $index+1;?>" value="<?php echo $rs['id'];?>" dojoType="dijit.form.TextBox" />
+								</td>
+								<td data-label="<?php echo $tr->translate("NUM");?>" style="text-align: center;"><?php echo $i++; ?></td>
+								
+								<td data-label="<?php echo $tr->translate("PRODUCT_NAME");?>" ><?php echo $rs["proName"];?></td>
+								<td data-label="<?php echo $tr->translate("QTY");?>" ><?php echo $rs["qtyApprovedAfter"];?></td>
+								
+								<td data-label="<?php echo $tr->translate("BRANCH_NAME");?>" ><?php echo $rs["projectName"];?></td>
+								<td data-label="<?php echo $tr->translate("REQUEST_NO");?>"  class="redBold"><a class="colorInherit" title="<?php echo $tr->translate("REQUEST_INFO")." - ".$rs["requestNo"];?>" target="_blank" href="<?php echo $requestInfor."".$rs["requestId"]; ?>"><?php echo $rs["requestNo"];?></a></td>                 		
+								<td data-label="<?php echo $tr->translate("DATE");?>" class="centerText" ><?php echo date($montFomat,strtotime($rs["requestDate"]));?></td>
+				               		
+						</tr>
+						<?php 
+							}
+						?>
+					</tbody>
+				</table>
+				<table width="100%">
+					<tr>
+						<td align="center">
+							<br><button class="button-class button-primary" iconclass="glyphicon glyphicon-ok-circle" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("CLOSING_FOR_PO");?></button>
+						</td>
+					</tr>	
+				</table>
+			</form>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	dojo.require("dojo.data.ItemFileWriteStore");  
+	dojo.require("dijit.form.DateTextBox");
+	
+	function checkAll(array_length){
+		dijit.byId('id_selected').attr('value','');
+		if(dojo.byId('checkall').checked){
+			for(var j=1;j<=array_length;j++){
+				$('#check_box'+j).each(function() { 
+					this.checked = true;  
+				});
+				checked_id(j);
+			}
+		}else{
+			for(var j=1;j<=array_length;j++){
+				$("#check_box"+j).removeAttr("checked");
+				checked_id(j);
+			}
+		}
+	}
+
+	function checked_id(index){
+		row_id = index;//dijit.byId('id_'+index).get('value');
+		if(dojo.byId('check_box'+index).checked){
+			if($("#id_selected").val()!="") {
+				var identity = $("#id_selected").val();
+				$("#id_selected").val(identity+','+row_id);
+			}else{
+				$("#id_selected").val(row_id);
+			}
+		}else{
+			var identity = $('#id_selected').val();
+			var arrays = identity.split(',');
+			for(var i=0;i<arrays.length;i++) {
+			if(arrays[i] == row_id) arrays.splice(i,1);
+			}
+			var strings = arrays.join(',');
+			$('#id_selected').val(strings);
+		}
+	}
+</script>
