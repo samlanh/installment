@@ -413,4 +413,50 @@ public function rptUsageAction(){
 	}
 
 
+	public function rptAdjustDraftAction(){
+  
+        if($this->getRequest()->isPost()){
+            $search = $this->getRequest()->getPost();
+          }
+          else{
+           $search = array(
+				'adv_search'=>'',
+				'branch_id'=>-1,
+				'isCountStock'=>-1,
+				'categoryId'=>0,
+				'budgetItem'=>0,
+				'measureId'=>0,
+				'status'=>-1,
+           		'start_date'=> date('Y-m-d'),
+           		'end_date'=>date('Y-m-d'),
+				);
+          }
+          	$rs_rows = array();
+          try{
+	       	 	$db = new Report_Model_DbTable_DbStockReports();
+	        	$rs_rows = $db->getAllProductLocation($search);
+	          	
+	      }catch (Exception $e){
+	        	Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+	       	 	Application_Form_FrmMessage::message("APPLICATION_ERROR");
+	      }
+	      
+      	$this->view->rows=$rs_rows;
+      	$this->view->search=$search;
+      	
+     	$frm = new Application_Form_FrmAdvanceSearchStock();
+		$frm = $frm->AdvanceSearch();
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frm_search = $frm;
+		
+		$frm = new Product_Form_Frmproduct();
+		$frm = $frm->FrmSearchProduct();
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frmSearchProduct = $frm;
+      
+	    $frmpopup = new Application_Form_FrmPopupGlobal();
+	    $this->view->footerReport = $frmpopup->getFooterReport();
+	    $this->view->headerReport = $frmpopup->getLetterHeadReport();
+}
+
 }

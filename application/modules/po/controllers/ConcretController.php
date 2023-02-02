@@ -79,10 +79,9 @@ class Po_ConcretController extends Zend_Controller_Action {
 		$id = $this->getRequest()->getParam('id');
 		$id = empty($id)?0:$id;
 		$row = $db->getDNById($id);
-		if(empty($row)){//CA
-			Application_Form_FrmMessage::Sucessfull("NO_DATA",self::REDIRECT_URL,2);
+		if(empty($id) OR empty($row) OR ($row['isIssueInvoice']==1)){
+			Application_Form_FrmMessage::Sucessfull("ALREADY_INVOICE",self::REDIRECT_URL,2);
 		}
-		
 		$fm = new Po_Form_FrmConcretStock();
 		$frm = $fm->Frmconcret($row);
 		$this->view->rs = $row;
