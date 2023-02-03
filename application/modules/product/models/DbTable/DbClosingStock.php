@@ -34,7 +34,7 @@ class Product_Model_DbTable_DbClosingStock extends Zend_Db_Table_Abstract
     	}
     	
     	$dbg = new Application_Model_DbTable_DbGlobal();
-    	$where.= $dbg->getAccessPermission('so.projectId');
+    	$where.= $dbg->getAccessPermission('cl.projectId');
     	
     	$order=' ORDER BY cl.id DESC  ';
     	$db = $this->getAdapter();
