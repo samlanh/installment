@@ -452,7 +452,7 @@ tr.rowData td small {
 			amountrow = parseFloat(dijit.byId('dueAmount'+rowIDArray[n]).get('value'));
 			
 			amountrowafterdis = amountrow ; //amount after discount
-			amountrow = parseFloat(dijit.byId('remain'+rowIDArray[n]).set('value',amountrowafterdis.toFixed(2)));
+			amountrow = parseFloat(dijit.byId('remain'+rowIDArray[n]).set('value',amountrowafterdis.toFixed(3)));
 		}
 	}
 	function calBalance() {
@@ -470,14 +470,14 @@ tr.rowData td small {
 				balance = balance + parseFloat(amountrowafterdis);
 			}
 		}
-		dijit.byId('balance').attr('value',balance.toFixed(2));
+		dijit.byId('balance').attr('value',balance.toFixed(3));
 
 	}
 	function checkAmout(){
 		amount_paid = parseFloat(dijit.byId('totalAmount').get('value'));
 		balance = parseFloat(dijit.byId('balance').get('value'));
 		if(amount_paid>=balance){
-			dijit.byId('totalAmount').set('value',balance.toFixed(2))
+			dijit.byId('totalAmount').set('value',balance.toFixed(3))
 		}
 		calculateAmountCheck();
 	}
@@ -507,15 +507,15 @@ tr.rowData td small {
 				
 				if(amount_paid>=0){
 					payment+= amountrowafterdis;
-					dijit.byId('paymentAmount'+rowIDArray[n]).set('value',amountrowafterdis.toFixed(2));
+					dijit.byId('paymentAmount'+rowIDArray[n]).set('value',amountrowafterdis.toFixed(3));
 					dijit.byId('remain'+rowIDArray[n]).set('value',0);
 					
 					due+= 0;
 				}else{
 					remain = Math.abs(amount_paid);
 					paid = parseFloat(dijit.byId('dueAmount'+rowIDArray[n]).get('value')) - parseFloat(remain);
-					dijit.byId('paymentAmount'+rowIDArray[n]).set('value',paid.toFixed(2));
-					dijit.byId('remain'+rowIDArray[n]).set('value',remain.toFixed(2));
+					dijit.byId('paymentAmount'+rowIDArray[n]).set('value',paid.toFixed(3));
+					dijit.byId('remain'+rowIDArray[n]).set('value',remain.toFixed(3));
 					payment+= paid;
 					due+= remain;
 					break;
@@ -543,8 +543,8 @@ tr.rowData td small {
 			payment+= parseFloat(dijit.byId('paymentAmount'+rowIDArray[n]).get('value'));
 			due+= parseFloat(dijit.byId('remain'+rowIDArray[n]).get('value'));
 		}
-		dijit.byId('totalPaid').attr('value',payment.toFixed(2));
-		dijit.byId('totalDue').attr('value',due.toFixed(2));
+		dijit.byId('totalPaid').attr('value',payment.toFixed(3));
+		dijit.byId('totalDue').attr('value',due.toFixed(3));
 	}
 	function calculateamount(index){
 		var due = dijit.byId('dueAmount'+index).get('value');
@@ -557,10 +557,10 @@ tr.rowData td small {
 		subtotal= parseFloat(due);
 		
 		if(paid > subtotal){
-			dijit.byId('paymentAmount'+index).set('value',subtotal.toFixed(2));
+			dijit.byId('paymentAmount'+index).set('value',subtotal.toFixed(3));
 			dijit.byId('remain'+index).set('value',0);
 		}else{
-			dijit.byId('remain'+index).set('value',(subtotal-paid).toFixed(2));
+			dijit.byId('remain'+index).set('value',(subtotal-paid).toFixed(3));
 		}
 		calBalance();
 		calculateAmountCheckByKeyup();
@@ -582,10 +582,10 @@ tr.rowData td small {
 				payment+= parseFloat(dijit.byId('paymentAmount'+rowIDArray[n]).get('value'));
 				due+= parseFloat(dijit.byId('remain'+rowIDArray[n]).get('value'));				
 			}
-		amount = parseFloat(payment).toFixed(2);
+		amount = parseFloat(payment).toFixed(3);
 		
-		dijit.byId('totalPaid').attr('value',payment.toFixed(2));
-		dijit.byId('totalDue').attr('value',due.toFixed(2));
-		dijit.byId('totalAmount').attr('value',parseFloat(amount).toFixed(2));
+		dijit.byId('totalPaid').attr('value',payment.toFixed(3));
+		dijit.byId('totalDue').attr('value',due.toFixed(3));
+		dijit.byId('totalAmount').attr('value',parseFloat(amount).toFixed(3));
 	}
 </script>

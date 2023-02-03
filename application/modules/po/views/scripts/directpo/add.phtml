@@ -451,7 +451,7 @@
 			return false;
 		}
 		subtotal=subtotal-discountAmount;
-		totalDiscount = (discountAmount+discountPercentAmt).toFixed(2);
+		totalDiscount = (discountAmount+discountPercentAmt).toFixed(3);
 		dijit.byId('totalDiscount'+index).set('value',totalDiscount);
 		
 		dijit.byId('subTotal'+index).set('value',subtotal);
@@ -464,13 +464,13 @@
 		if(rowId==''){
 			infoMessageAlert("<?php echo $tr->translate('PLEASE_SELECT_PRODUCT');?>");
 			dijit.byId("productId").focus();
-			dijit.byId('total').attr('value',netTotal.toFixed(2));
+			dijit.byId('total').attr('value',netTotal.toFixed(3));
 			return false;
 		}
 		for(var n = 0; n < rowIDArray.length; n++) {
 			netTotal += dijit.byId('subTotal'+rowIDArray[n]).get('value');
 		}
-		dijit.byId('total').attr('value',netTotal.toFixed(2));
+		dijit.byId('total').attr('value',netTotal.toFixed(3));
 	}
 	function deleteRecord(index) {
 		var identity = $('#identity').val();

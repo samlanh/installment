@@ -592,10 +592,10 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
 						<span>'.$tr->translate("PO_NO").' : '.$row['purchaseNo'].'</span>
     				</td>
 					<td class="textCenter">
-						<div id="origtotallabel'.$no.'">'.number_format($row['totalAmountExternal'],2).'</div>
+						<div id="origtotallabel'.$no.'">'.number_format($row['totalAmountExternal'],3).'</div>
 					</td>
 					<td class="textCenter">
-						<div id="duelabel'.$no.'">'.number_format($row['totalAmountExternalAfter'],2).'</div>
+						<div id="duelabel'.$no.'">'.number_format($row['totalAmountExternalAfter'],3).'</div>
 						<input type="hidden" dojoType="dijit.form.TextBox" name="dueAmount'.$no.'" id="dueAmount'.$no.'" value="'.$row['totalAmountExternalAfter'].'" >
 					</td>
 					
@@ -735,10 +735,10 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
 						</td>
 					
 						<td class="textCenter">
-							<div id="origtotallabel'.$no.'">'.number_format($rowPaymentdetail['totalAmountExternal'],2).'</div>
+							<div id="origtotallabel'.$no.'">'.number_format($rowPaymentdetail['totalAmountExternal'],3).'</div>
 						</td>
 						<td class="textCenter">
-							<div id="duelabel'.$no.'">'.number_format($dueAmount,2).'</div>
+							<div id="duelabel'.$no.'">'.number_format($dueAmount,3).'</div>
 							<input type="hidden" dojoType="dijit.form.TextBox" name="dueAmount'.$no.'" id="dueAmount'.$no.'" value="'.$dueAmount.'" >
 						</td>
 						
@@ -771,10 +771,10 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
 						</td>
 					
 						<td class="textCenter">
-							<div id="origtotallabel'.$no.'">'.number_format($row['totalAmountExternal'],2).'</div>
+							<div id="origtotallabel'.$no.'">'.number_format($row['totalAmountExternal'],3).'</div>
 						</td>
 						<td class="textCenter">
-							<div id="duelabel'.$no.'">'.number_format($row['totalAmountExternalAfter'],2).'</div>
+							<div id="duelabel'.$no.'">'.number_format($row['totalAmountExternalAfter'],3).'</div>
 							<input type="hidden" dojoType="dijit.form.TextBox" name="dueAmount'.$no.'" id="dueAmount'.$no.'" value="'.$row['totalAmountExternalAfter'].'" >
 						</td>
 						
@@ -1076,16 +1076,16 @@ class Invpayment_Model_DbTable_DbInvoice extends Zend_Db_Table_Abstract
 						<input type="hidden" dojoType="dijit.form.TextBox" name="purchaseSubTotal'.$no.'" id="purchaseSubTotal'.$no.'" value="'.$row['purchaseSubTotal'].'" >
     				</td>
 					<td class="textCenter poInfoCol">
-						<span>'.number_format($row['purchaseUnitPrice'],2).'</span><br />
+						<span>'.number_format($row['purchaseUnitPrice'],3).'</span><br />
     				</td>
 					<td class="textCenter poInfoCol">
-						<span>'.number_format($row['purchaseDiscountPercent'],2).'</span><br />
+						<span>'.number_format($row['purchaseDiscountPercent'],3).'</span><br />
     				</td>
 					<td class="textCenter poInfoCol">
-						<span>'.number_format($row['purchaseDiscountAmount'],2).'</span><br />
+						<span>'.number_format($row['purchaseDiscountAmount'],3).'</span><br />
     				</td>
 					<td class="textCenter poInfoCol">
-						<span>'.number_format($row['purchaseSubTotal'],2).'</span><br />
+						<span>'.number_format($row['purchaseSubTotal'],3).'</span><br />
     				</td>
 					<td class="textCenter">
 						<input readOnly type="text" class="fullside" dojoType="dijit.form.NumberTextBox" required="required" onKeyup="calculateamount('.$no.');" name="totalQtyReceive'.$no.'" id="totalQtyReceive'.$no.'" value="'.$row['totalQtyReceive'].'" style="text-align: center;" >
