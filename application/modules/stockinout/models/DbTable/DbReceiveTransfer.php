@@ -313,6 +313,8 @@ class Stockinout_Model_DbTable_DbReceiveTransfer extends Zend_Db_Table_Abstract
 			$db = $this->getAdapter();
 			$sql="SELECT
 						p.*
+						,(SELECT b.project_name FROM `ln_project` AS b WHERE b.br_id = p.fromProjectId LIMIT 1) AS projectName
+						,(SELECT b.project_name FROM `ln_project` AS b WHERE b.br_id = p.toProjectId LIMIT 1) AS toProjectName
 						,DATE_FORMAT(p.transferDate,'".DATE_FORMAT_FOR_SQL."') As transferDateFormat
 						,DATE_FORMAT(p.createDate,'".DATE_FORMAT_FOR_SQL."') As createDateFormat
 						
@@ -457,6 +459,7 @@ class Stockinout_Model_DbTable_DbReceiveTransfer extends Zend_Db_Table_Abstract
 	             	<span class="note_score">&nbsp;&nbsp; <i class="fa fa-file-text-o" aria-hidden="true"></i>&nbsp;&nbsp;
 	                   	'.$tr->translate("TRANSFER_INFO").'</span>
                    		 <ul>
+                   		 	<li><span class="lbl-tt">'.$rowData['projectName'].' => '.$rowData['toProjectName'].'</span></li>
                    		 	<li><span class="lbl-tt">'.$tr->translate("TRANSFER_DATE").'</span>: <span class="red">'.$rowData['transferDateFormat'].'</span></li>
                    		 	<li><span class="lbl-tt">'.$tr->translate("TRANSFER_NO").'</span>: <span class="red">'.$rowData['transferNo'].'</span></li>
                    		 	<li><span class="lbl-tt">'.$tr->translate("DRIVER").'</span>: <span class="red">'.$rowData['driver'].'</span></li>
@@ -466,5 +469,19 @@ class Stockinout_Model_DbTable_DbReceiveTransfer extends Zend_Db_Table_Abstract
     	
     	$array = array('stringrow'=>$string,'POInfoDataBlog'=>$strPOInfo,'keyindex'=>$no,'identity'=>$identity,'identityCheck'=>$identityCheck,'tranferInfo'=>$rowData);
     	return $array;
+    }
+	
+	
+	function getTransferFromDataRow($recordId){
+    	$db = $this->getAdapter();
+    	$sql=" SELECT trs.*,
+			COALESCE((SELECT trsd.isCompleted FROM `st_transferstock_detail` AS trsd WHERE trsd.transferId =trs.id  ORDER BY trsd.isCompleted ASC LIMIT 1 ),0) AS isCompletedReceive
+		FROM st_transferstock AS trs WHERE trs.id=".$recordId;
+    	
+    	$dbg = new Application_Model_DbTable_DbGlobal();
+    	$sql.= $dbg->getAccessPermission('trs.toProjectId');
+    	
+    	$sql.=" LIMIT 1";
+    	return $db->fetchRow($sql);
     }
 }

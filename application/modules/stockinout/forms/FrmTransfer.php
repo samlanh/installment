@@ -48,8 +48,15 @@ Class Stockinout_Form_FrmTransfer extends Zend_Dojo_Form {
 				'class'=>'fullside',
 				'required' =>'true',
 		));
-		
-		$toProjectId->setMultiOptions($options);
+		$arrCondiction = array(
+				'showAll'=>1
+		);
+		$rowsAllBranch = $db->getAllBranchName(null,null,$arrCondiction);
+		$optionsAllBranch=array(''=>$this->tr->translate("SELECT_BRANCH"));
+		if(!empty($rowsAllBranch))foreach($rowsAllBranch AS $row){
+			$optionsAllBranch[$row['br_id']]=$row['project_name'];
+		}
+		$toProjectId->setMultiOptions($optionsAllBranch);
 		
 		$categoryId = new Zend_Dojo_Form_Element_FilteringSelect('categoryId');
 		$categoryId->setAttribs(array(
@@ -194,7 +201,15 @@ Class Stockinout_Form_FrmTransfer extends Zend_Dojo_Form {
 				'required' =>'true',
 				'onchange'=>'getDataByFromBranch();'
 		));
-		$fromProjectId->setMultiOptions($options);
+		$arrCondiction = array(
+				'showAll'=>1
+		);
+		$rowsAllBranch = $db->getAllBranchName(null,null,$arrCondiction);
+		$optionsAllBranch=array(''=>$this->tr->translate("SELECT_BRANCH"));
+		if(!empty($rowsAllBranch))foreach($rowsAllBranch AS $row){
+			$optionsAllBranch[$row['br_id']]=$row['project_name'];
+		}
+		$fromProjectId->setMultiOptions($optionsAllBranch);
 		
 		
 		$receiveNo = new Zend_Dojo_Form_Element_TextBox('receiveNo');

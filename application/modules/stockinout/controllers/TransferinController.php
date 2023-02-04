@@ -44,10 +44,11 @@ class Stockinout_TransferinController extends Zend_Controller_Action {
 		
 	}
 	function addAction(){
+		$db = new Stockinout_Model_DbTable_DbReceiveTransfer();
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {		
-				$db = new Stockinout_Model_DbTable_DbReceiveTransfer();
+				
 				$db->addReceiveTransferStock($_data);
 				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL);
 			}catch(Exception $e){
@@ -63,8 +64,7 @@ class Stockinout_TransferinController extends Zend_Controller_Action {
 		
 		$id = $this->getRequest()->getParam('id');
 		$id = empty($id)?0:$id;
-		$dbTr = new Stockinout_Model_DbTable_DbTransfer();
-		$row = $dbTr->getDataRow($id);
+		$row = $db->getTransferFromDataRow($id);
 		
 		$this->view->rowTr = $row;
 		

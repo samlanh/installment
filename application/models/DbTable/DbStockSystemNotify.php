@@ -273,7 +273,7 @@ class Application_Model_DbTable_DbStockSystemNotify extends Zend_Db_Table_Abstra
 								</div>
 							</div>
 							<div class="media-body-right col-md-9 col-sm-9 col-xs-12">
-								
+								<p>'.$result['projectName'].' => <span class="title" >'.$result['toProjectName'].'</span></p>
 								<span class="title" >'.$result['transferNo'].'</span>
 								<p><strong></strong> <i class="fa fa-calendar"></i> '.$result['transferDateFormat'].'</p>
 								<p><strong></strong> <i class="fa fa-truck"></i> <i class="fa fa-user"></i> '.$result['driver'].'</p>

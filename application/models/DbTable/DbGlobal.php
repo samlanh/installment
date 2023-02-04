@@ -697,14 +697,17 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    	else return $_status[$id];
    }
   
-  public function getAllBranchName($branch_id=null,$opt=null){
+  public function getAllBranchName($branch_id=null,$opt=null,$moreCondiction=array()){
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
   	$db = $this->getAdapter();
   	$sql= " SELECT br_id,project_name,
   	project_type,br_address,branch_code,branch_tel,displayby
   	FROM `ln_project` WHERE project_name !='' AND status=1 ";
-  	$sql.= $this->getAccessPermission('br_id');
-  	
+	$moreCondiction['showAll'] = empty($moreCondiction['showAll'])?null:$moreCondiction['showAll'];
+	
+	if(empty($moreCondiction['showAll'])){
+		$sql.= $this->getAccessPermission('br_id');
+  	}
   	if($branch_id!=null){
   		$sql.=" AND br_id=$branch_id LIMIT 1";
   	}
