@@ -257,7 +257,7 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
    		}
    		
 	    $dbg = new Application_Model_DbTable_DbGlobal();
-	    $where.= $dbg->getAccessPermission('so.projectId');
+	    $where.= $dbg->getAccessPermission('sa.projectId');
 	     
 	    $order=' ORDER BY sa.id DESC  ';
 	    $db = $this->getAdapter();
