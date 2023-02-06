@@ -61,9 +61,8 @@ class Invpayment_StatementController extends Zend_Controller_Action {
 			}
 		}
 		
-		
-    	$frm = new Invpayment_Form_FrmInvoice();
-    	$frm->FrmInvoices(null);
+    	$frm = new Invpayment_Form_FrmStatement();
+    	$frm->FrmgetStatement(null);
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm = $frm;
 	}
@@ -164,17 +163,16 @@ class Invpayment_StatementController extends Zend_Controller_Action {
 // 		}
 // 	}
 	
-// 	function dnlistAction(){
-// 		if($this->getRequest()->isPost()){
-// 			$data = $this->getRequest()->getPost();
-// 			$db = new Invpayment_Model_DbTable_DbInvoice();
-// 			$_row =$db->getDnList($data);
+	function getalldnAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Invpayment_Model_DbTable_DbDnconcrete();
+			$_row =$db->getConcreteDnData($data);
+			print_r(Zend_Json::encode($_row));
+			exit();
 			
-// 			print_r(Zend_Json::encode($_row));
-// 			exit();
-			
-// 		}
-// 	}
+		}
+	}
 // 	function dndetailAction(){
 // 		if($this->getRequest()->isPost()){
 // 			$data = $this->getRequest()->getPost();

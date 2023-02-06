@@ -5,13 +5,13 @@
 	 
 ?>
 <script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
-<title><?php echo $this->tr->translate("ISSUE_INVOICE")?></title>
+<title><?php echo $this->tr->translate("COMPARE_STATEMENT")?></title>
  <div class="card">
 	<div class="card-content collapse show">
 		<div class="card-box">
                	<div class="col-sm-12 border-botom">
 		    		<div class="col-sm-8 pd-0">
-		    			<h4 class="m-b-0"><i class="fa fa-tasks" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('ISSUE_INVOICE');?></h4>
+		    			<h4 class="m-b-0"><i class="fa fa-tasks" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('COMPARE_STATEMENT');?></h4>
     			</div>
     			<div class="col-sm-4 text-right">
     			</div>
@@ -165,6 +165,7 @@
 						<div class="form-group" >
 							<label style=" margin: 0; line-height: 30px; text-align: center;" class="control-label bold col-md-1 col-sm-1 col-xs-12"><?php echo $tr->translate("SERVICE");?> </label>
 							<div class="col-md-6 col-sm-6 col-xs-12">
+								<input id="dnList" />
 								<input id="productId" />
 							</div>
 							<div class="col-md-2 col-sm-2 col-xs-12">
@@ -334,7 +335,7 @@ ul.listDn li small {
 			});
 			var purchaseType = dijit.byId('purchaseType');
 			 purchaseType.on('change', function(evt) {
-				 getAllPO();
+				 getAllDN();
 			});
 			dijit.byId("totalAmountExternal").set("readOnly",true);
 		});
@@ -370,14 +371,31 @@ ul.listDn li small {
 		
 			}
 		}, "productId");
+
+		new dijit.form.FilteringSelect({
+			store: productStore,
+			autoComplete: false,
+			queryExpr: "*${0}*",
+			required: false,		           
+			name: "dnList",
+			placeHolder:'<?php echo $tr->translate('SELECT_DN');?>',
+			id: "dnList",
+			searchAttr: "name",
+			class: 'fullside',
+			onChange: function() {
+				addNewService();			
+		
+			}
+		}, "dnList");
+
+		
 		
 		
 	 
 	 });
     
 	function onChageFunctionByBranch(){
-		
-		getAllPO();
+		getAllDN();
 		getInvoiceNoByBranch();
 		getAllProduct();
 		
@@ -412,19 +430,24 @@ ul.listDn li small {
 		
 	}
 	
-	function getAllPO(){
-		var urlGetAllPO = '<?php echo $this->url(array('module'=>'po','controller'=>'index','action'=>'getallpo')); ?>';
-		dijit.byId('purId').reset();
-		purchaseStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
-		dijit.byId('purId').set('store', purchaseStore);
+	function getAllDN(){
+		alert(22);
+		var urlGetAlldn = '<?php echo $this->url(array('module'=>'invpayment','controller'=>'statement','action'=>'getalldn')); ?>';
+		dijit.byId('dnList').reset();
+		//purchaseStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
+		//dijit.byId('dnList').set('store', purchaseStore);
 		branch_id = dijit.byId('branch_id').get('value');
 		if(branch_id=='' || branch_id<=0){
 			branch_id = 0;
 		}
 		
-		purchaseType = dijit.byId('purchaseType').get('value');
-		objectContentFilter = {'branch_id':branch_id,'purchaseType':purchaseType};
-		getAllPObyBranch(urlGetAllPO,objectContentFilter);
+		purchaseType =3;
+		supplierId = dijit.byId('supplierId').get('value');
+		objectContentFilter = {
+				'branch_id':branch_id,
+				'supplierId':supplierId,
+				'purchaseType':purchaseType};
+		getAllDNList(urlGetAlldn,objectContentFilter);
 	}
 	
 	var urlGetRequestNo = '<?php echo $this->url(array('module'=>'invpayment','controller'=>'index','action'=>'getinvoiceno')); ?>';
@@ -504,6 +527,7 @@ ul.listDn li small {
 				dnKeyIndex=data.dnKeyIndex;
 				$("#dnIdentity").val(data.dnIdentityChecked);
 				$("#allDNIdentity").val(data.dnIdentity);
+				alert(data.stringrow);
 				dojo.html.set(dojo.byId("dnRecord"),data.stringrow , {
 					parseContent: true,
 				});
