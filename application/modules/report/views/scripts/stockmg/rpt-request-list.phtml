@@ -12,6 +12,9 @@
 	}
 	
 	$branch_title = $tr->translate("BRAND_TITLE");
+
+	$urlReprint = $this->baseUrl()."/report/stockmg/request-letter/id/";
+	$urlReprintInfo = $this->baseUrl()."/report/stockmg/request-info/id/";
 ?>
 <title><?php echo $tr->translate("RPT_REQUEST_LIST");?></title>
 <script>
@@ -58,7 +61,7 @@
 						<?php echo $frm->getElement("processingStatus");?>
 					</label>
 					<label class="col-md-2 col-sm-2 col-xs-12">
-						<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+						<button class="button-class button-primary" iconClass="glyphicon glyphicon-search" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
 					</label>
 					
 				</div>
@@ -244,7 +247,7 @@
 										$classRow="voidclass";
 									}
 								?>
-				                <tr class="style <?php echo $classRow;?> " style="white-space:nowrap; ">
+				                <tr oncontextmenu="setrowdata(<?php echo $rs['id'];?>);return false;" class="context-menu-one style <?php echo $classRow;?> " style="white-space:nowrap; ">
 				               		<td data-label="<?php echo $tr->translate("NUM");?>"  style="text-align: center;"><?php echo $i++; ?></td>
 				               		<td data-label="<?php echo $tr->translate("BRANCH_NAME");?>" ><?php echo $rs["branch_name"];?></td>
 				               		<td data-label="<?php echo $tr->translate("REQUEST_NO");?>"  class="redBold"><?php echo $rs["requestNo"];?></td>                 		
@@ -323,5 +326,36 @@ function getBranchInfo(){
 		error: function(e) {
 		}
 	});
+}
+
+var row=0;
+var url="";
+$(function(){
+	$.contextMenu({
+		selector: '.context-menu-one', 
+		callback: function(key, options) {
+			
+			var m = "clicked: " + key;
+			if(key=="reprint"){
+				url='<?php echo $urlReprint;?>';
+			}else if(key=="reprintInfo"){
+				url='<?php echo $urlReprintInfo;?>';
+			}
+			gotoAction();
+		},
+		items: {
+			"reprint": {name: "<?php echo $tr->translate("REQUEST_LETTER");?>", icon: "fa-file-text", accesskey: "e"},
+			"reprintInfo": {name: "<?php echo $tr->translate("REQUEST_INFO_DETAIL");?>", icon: "fa-file-text", accesskey: "e"},
+			
+		}
+	});
+});
+function setrowdata(index){
+	
+	row = index;
+}
+var recordid ='';
+function gotoAction(){
+	 window.open(url+row, '_blank');
 }
 </script>

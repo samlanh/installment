@@ -2,21 +2,22 @@
      $this->tr=Application_Form_FrmLanguages::getCurrentlanguage();
      $tr = Application_Form_FrmLanguages::getCurrentlanguage();
      $result = $this->rs;
+	 print_r( $result);
 ?>
 <script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
-<title><?php echo $this->tr->translate("INITIALIZE_QTY")?></title>
+<title><?php echo $this->tr->translate("EDIT_CLOSING_STOCK")?></title>
  <div class="card">
 	<div class="card-content collapse show">
 		<div class="card-box">
                	<div class="col-sm-12 border-botom">
 		    		<div class="col-sm-8 pd-0">
-		    			<h4 class="m-b-0"><i class="fa fa-database" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('INITIALIZE_QTY');?></h4>
+		    			<h4 class="m-b-0"><i class="fa fa-database" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('EDIT_CLOSING_STOCK');?></h4>
     			</div>
     			<div class="col-sm-4 text-right">
     			</div>
     		</div>
     	</div>
-    	<form action="<?php echo $this->url(array('module'=>'product','controller'=>'initqty','action'=>'edit')); ?>" dojoType="dijit.form.Form" method="post" enctype="multipart/form-data">
+    	<form action="<?php echo $this->url(array('module'=>'product','controller'=>'closingstock','action'=>'edit')); ?>" dojoType="dijit.form.Form" method="post" enctype="multipart/form-data">
 			<script type="dojo/method" event="onSubmit">   
 	  			 if(this.validate()) {
 					loadingBlock();
@@ -26,37 +27,53 @@
 	   			}
 			</script>
 			<div class="card-box">
-				<div class="col-md-4 col-sm-4 col-xs-12">
-					<div class="form-group" >
-		                <label class="control-label bold col-md-4 col-sm-4 col-xs-12"><?php echo $tr->translate("BRANCH_NAME");?> </label>
-		                <div class="col-md-8 col-sm-8 col-xs-12">
-		                	<input dojoType="dijit.form.TextBox" readOnly value="<?php echo @$result['projectName'];?>" class="fullside" id="projectName" name="projectName" type="text">
-		                	<input dojoType="dijit.form.TextBox"  value="<?php echo @$result['id'];?>" class="fullside" id="id" name="id" type="hidden">
-		                </div>
-					</div>
-					<div class="form-group" >
-		                <label class="control-label bold col-md-4 col-sm-4 col-xs-12"><?php echo $tr->translate("PRODUCT_NAME");?> </label>
-		                <div class="col-md-8 col-sm-8 col-xs-12">
-		                	<input dojoType="dijit.form.TextBox" readOnly value="<?php echo @$result['proName'];?>" class="fullside" id="proName" name="proName" type="text">
-		                </div>
-					</div>
-					<div class="form-group" >
-		                <label class="control-label bold col-md-4 col-sm-4 col-xs-12"><?php echo $tr->translate("BEGINING_QTY");?> </label>
-		                <div class="col-md-8 col-sm-8 col-xs-12">
-		                	<input dojoType="dijit.form.NumberTextBox"  value="<?php echo @$result['qty'];?>" data-dojo-props="constraints:{min:0.00}" class="fullside" required="true" id="beginingQty" name="beginingQty" type="text">
-		                </div>
-					</div>
-					<div class="form-group" >
-		                <label class="control-label bold col-md-4 col-sm-4 col-xs-12"><?php echo $tr->translate("ALERT_QTY");?> </label>
-		                <div class="col-md-8 col-sm-8 col-xs-12">
-		                	<input dojoType="dijit.form.NumberTextBox" value="<?php echo @$result['qtyAlert'];?>" data-dojo-props="constraints:{min:0.00}" class="fullside" id="qtyAlert" name="qtyAlert" type="text">
-		                </div>
-					</div>
-					<div class="form-group" >
-		                <label class="control-label bold col-md-4 col-sm-4 col-xs-12"><?php echo $tr->translate("COSTING");?> </label>
-		                <div class="col-md-8 col-sm-8 col-xs-12">
-		                	<input dojoType="dijit.form.NumberTextBox" value="<?php echo @$result['costing'];?>" data-dojo-props="constraints:{min:0.00}" required="true" class="fullside" id="costing" name="costing" type="text">
-		                </div>
+				<div class="col-md-6 col-sm-6 col-xs-12">
+					<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+									<div class="col-md-12 col-sm-12 col-xs-12"> 
+											<div class="d-flex"> 
+												<div class="settings-main-icon ">
+													<i class="glyphicon glyphicon-object-align-right" aria-hidden="true"></i>
+												</div> 
+												<div class="col-md-10 col-sm-10 col-xs-12"> 
+													<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("CLOSING_STOCK_INFO");?></p>
+												</div> 
+											</div>
+											<div class="form-group" >
+												<label class="control-label bold col-md-4 col-sm-4 col-xs-12"><?php echo $tr->translate("BRANCH_NAME");?> </label>
+												<div class="col-md-8 col-sm-8 col-xs-12">
+													<input dojoType="dijit.form.TextBox" readOnly value="<?php echo @$result['projectName'];?>" class="fullside" id="projectName" name="projectName" type="text">
+													<input dojoType="dijit.form.TextBox"  value="<?php echo @$result['id'];?>" class="fullside" id="id" name="id" type="hidden">
+												</div>
+											</div>
+											<div class="form-group" >
+												<label class="control-label bold col-md-4 col-sm-4 col-xs-12"><?php echo $tr->translate("PRODUCT_NAME");?> </label>
+												<div class="col-md-8 col-sm-8 col-xs-12">
+													<input dojoType="dijit.form.TextBox" readOnly value="<?php echo @$result['proName'];?>" class="fullside" id="proName" name="proName" type="text">
+												</div>
+											</div>
+											<div class="form-group" >
+												<label class="control-label bold col-md-4 col-sm-4 col-xs-12"><?php echo $tr->translate("COUNT_QTY");?> </label>
+												<div class="col-md-8 col-sm-8 col-xs-12">
+													<input dojoType="dijit.form.NumberTextBox"  value="<?php echo @$result['count_qty'];?>" data-dojo-props="constraints:{min:0.00}" class="fullside" required="true" id="count_qty" name="count_qty" type="text">
+												</div>
+											</div>
+											<div class="form-group" >
+												<label class="control-label bold col-md-4 col-sm-4 col-xs-12"><?php echo $tr->translate("CLOSING_DATE");?> </label>
+												<div class="col-md-8 col-sm-8 col-xs-12">
+													<input dojoType="dijit.form.DateTextBox" value="<?php echo @$result['closing_date'];?>" data-dojo-props="constraints:{min:0.00}" class="fullside" id="closing_date" name="closing_date" type="text">
+												</div>
+											</div>
+											<div class="form-group" >
+												<label class="control-label bold col-md-4 col-sm-4 col-xs-12"><?php echo $tr->translate("NOTE");?> </label>
+												<div class="col-md-8 col-sm-8 col-xs-12">
+													<input dojoType="dijit.form.TextBox" value="<?php echo @$result['note'];?>" data-dojo-props="constraints:{min:0.00}"  class="fullside" id="note" name="note" type="text">
+												</div>
+											</div>
+									</div>
+							</div>
+						</div>
 					</div>
 				</div>
 				<div class="clearfix"></div>
@@ -66,7 +83,7 @@
                	<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
 					<div class="col-md-4 col-sm-4 col-xs-12">
 						<input type="submit" value="save_close" id="save_new" name="save_new" label="<?php echo $tr->translate("GO_EDIT");?>" dojoType="dijit.form.Button" 
-							iconClass="dijitEditorIcon dijitEditorIconSave" />
+							class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-disk"/>
 					</div>
                	</div>
              </div>
@@ -99,4 +116,6 @@ tr.rowData {
 <script type="text/javascript">
 	dojo.require("dojo.data.ItemFileWriteStore");  
     dojo.require("dijit.form.NumberTextBox");
+	dojo.require("dojo.NodeList-manipulate");
+	dojo.require("dijit.form.DateTextBox");
 </script>

@@ -1,6 +1,6 @@
 <?php 
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-	echo $this->headTitle($tr->translate("PRODUCT_LOCATION"));
+	echo $this->headTitle($tr->translate("CLOSING_STOCK"));
 	$frm = $this->frm_search;
 	$frmProduct = $this->frmSearchProduct;
 ?>
@@ -9,7 +9,7 @@
 		<div class="card-box">
                	<div class="col-sm-12 border-botom">
 		    		<div class="col-sm-8 pd-0">
-		    			<h4 class="m-b-0"><i class="fa fa-bars" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('PRODUCT_LOCATION');?></h4>
+		    			<h4 class="m-b-0"><i class="fa fa-bars" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('CLOSING_STOCK');?></h4>
     			</div>
     			<div class="col-sm-4 text-right">
     			</div>
@@ -25,13 +25,10 @@
 						<?php echo $frm->getElement('branch_id');?>
 					</label>
 					<label class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frmProduct->getElement('isCountStock');?>
+						<?php echo $frm->getElement('start_date');?>
 					</label>
 					<label class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frmProduct->getElement('categoryId');?>
-					</label>
-					<label class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frmProduct->getElement('measureId');?>
+						<?php echo $frm->getElement('end_date');?>
 					</label>
 					<label class="col-md-2 col-sm-2 col-xs-12">
 						<?php echo $frm->getElement('btn_search');?>
@@ -48,13 +45,15 @@
 </div>
 <?php 
 
-	$View = $tr->translate("PRODUCT_HISTORY");
+	$Verify = $tr->translate("VERIFY");
 	$urlView = $this->baseUrl()."/product/initqty/view/id/";
 	
 	$EDIT = $tr->translate("EDIT");
-	$urledit = $this->baseUrl()."/product/initqty/edit/id/";
+	$urledit = $this->baseUrl()."/product/closingstock/edit/id/";
 ?>
 <script>
+	dojo.require("dojo.data.ItemFileWriteStore"); 
+	dojo.require('dijit.form.DateTextBox');
 function checked_id(index){
 	$("#id_selected").val('');
 	 var searchIDs = $('input:checked').map(function(){
@@ -70,7 +69,7 @@ $(function(){
 		selector: '.context-menu-one', 
 		callback: function(key, options) {
 			var m = "clicked: " + key;
-			if(key=="view"){
+			if(key=="verify"){
 				url='<?php echo $urlView;?>';
 			}else if(key=="edit"){
 				url='<?php echo $urledit;?>';
@@ -78,7 +77,7 @@ $(function(){
 			gotoAction();
 		},
 		items: {
-			"view": {name: "<?php echo $View;?>", icon: "fa-book", accesskey: "e"},
+			"verify": {name: "<?php echo $Verify;?>", icon: "fa-book", accesskey: "e"},
 			"edit": {name: "<?php echo $EDIT;?>", icon: "edit", accesskey: "e"},
 		}
 	});

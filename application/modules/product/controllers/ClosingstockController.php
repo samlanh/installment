@@ -7,7 +7,7 @@ class Product_ClosingstockController  extends Zend_Controller_Action {
 		defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
 	}
 	public function indexAction(){
-		$db = new Product_Model_DbTable_DbinitilizeQtybyProject();
+		$db = new Product_Model_DbTable_DbPreCountProduct();
 		$rs_rows=array();
 		try{
 			if(!empty($this->getRequest()->isPost())){
@@ -15,25 +15,23 @@ class Product_ClosingstockController  extends Zend_Controller_Action {
 			}
 			else{
 				$search = array(
+					
 					'adv_search'=>'',
 					'branch_id'=>-1,
-					'isCountStock'=>-1,
-					'categoryId'=>0,
-					'budgetItem'=>0,
-					'measureId'=>0,
-					'status'=>-1,
+					'start_date'=> date('Y-m-d'),
+					'end_date'=>date('Y-m-d'),
+				
 				);
 			}
-			$rs_rows= $db->getAllProductLocation($search);
+			$rs_rows= $db->getAllProductClosing($search);
 			
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-		}
-			
+		}	
 		$list = new Application_Form_Frmtable();
-		$collumns = array("PROJECT_NAME","PRODUCT_NAME","BAR_CODE","CURRENT_QTY","MEASURE","COSTING","PRODUCT_CATEGORY");
-		$link=array('module'=>'product','controller'=>'initqty','action'=>'edit');
+		$collumns = array("PROJECT_NAME","PRODUCT_NAME","COUNT_QTY","CLOSING_DATE","NOTE");
+		$link=array('module'=>'product','controller'=>'closingstock','action'=>'edit');
 		$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array('projectName'=>$link,
 				'name'=>$link,'barCode'=>$link,'currentQty'=>$link));
 		
@@ -48,11 +46,11 @@ class Product_ClosingstockController  extends Zend_Controller_Action {
 		$this->view->frmSearchProduct = $frm;
 	}
 	function addAction(){
-		$db = new Product_Model_DbTable_DbinitilizeQtybyProject();
+		$db = new Product_Model_DbTable_DbPreCountProduct();
     	if($this->getRequest()->isPost()){
 	    	try{
 	    		$data = $this->getRequest()->getPost();
-	    		$db->addProductInitQty($data);
+	    		$db->addPreCountProduct($data);
 	    		Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL."/add");
 	    	}catch(Exception $e){
 	    		Application_Form_FrmMessage::message("APPLICATION_ERROR");
@@ -65,12 +63,12 @@ class Product_ClosingstockController  extends Zend_Controller_Action {
     	$this->view->frm = $frm;
 	}
 	function editAction(){
-		$db = new Product_Model_DbTable_DbinitilizeQtybyProject();
+		$db = new Product_Model_DbTable_DbPreCountProduct();
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {
 				$db->updateData($_data);
-				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","/product/initqty/index");
+				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","/product/closingstock/index");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -79,12 +77,14 @@ class Product_ClosingstockController  extends Zend_Controller_Action {
 		$id = $this->getRequest()->getParam('id');
 		$id = empty($id)?0:$id;
 		$row = $db->getDataRow($id);
+		/*
 		if(empty($id) OR empty($row)){
 			Application_Form_FrmMessage::Sucessfull("NO_DATA","/product/initqty/index",2);
 		}
 		if($row['recordHistory']>1){
 			Application_Form_FrmMessage::Sucessfull("Can not edit this data","/product/initqty/",2);
 		}
+		*/
 		$this->view->rs = $row;
 	}
 	function viewAction(){
