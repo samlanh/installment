@@ -403,7 +403,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		$sql.=" FROM `st_request_po` AS rq WHERE rq.status=1 AND rq.approveStatus=1  ";	
 		
 		if(!empty($_data['requestHasPoAndPending'])){
-			$sql.=" AND COALESCE((SELECT po.processingStatus FROM `st_purchasing` AS po WHERE po.requestId =rq.id ORDER BY po.processingStatus ASC LIMIT 1 ),0) = 0  ";	
+			$sql.=" AND COALESCE((SELECT po.processingStatus FROM `st_purchasing` AS po WHERE po.requestId =rq.id AND po.isInvoiced !=1 ORDER BY po.processingStatus ASC LIMIT 1 ),-1) >= 0  ";	
 			$sql.=" AND COALESCE((SELECT SUM(rqd.isCompletedPO) FROM `st_request_po_detail` AS rqd WHERE rqd.requestId =rq.id AND rqd.approvedStatus=1 ORDER BY rqd.isCompletedPO ASC LIMIT 1 ),0) >0  ";	
 		}else{
 			$sql.=" AND rq.processingStatus IN (4,5) ";
