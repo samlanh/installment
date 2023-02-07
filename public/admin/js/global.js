@@ -155,3 +155,19 @@ function getAllCategory(urlGetCategory){
 			}
 		});
 	}
+	function getAllDNList(urlGet,objectContentFilter,selected=null){
+		dojo.xhrPost({
+			url:urlGet,	
+			content:objectContentFilter,		    
+			handleAs:"json",
+			load: function(data) {
+				dnStore  = getDataStorefromJSON('id','name', data);		
+				dijit.byId('dnList').set('store', dnStore);
+				if(selected!=null){
+					dijit.byId('dnList').attr('value',selected)
+				}
+			},
+			error: function(err) {
+			}
+		});
+	}
