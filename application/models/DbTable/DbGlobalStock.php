@@ -133,9 +133,8 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 					`st_product` AS p ";
 			
 		if(!empty($projectId)){
-			$sql.=" ,st_product_location AS l";
-			$sql.=" WHERE p.status=1
-						AND p.proId=l.proId ";
+			$sql.=" LEFT JOIN st_product_location AS l ON p.proId=l.proId ";
+			$sql.=" WHERE p.status=1 ";
 				$sql.=" AND l.projectId=".$projectId;
 		}else{
 			$sql.=" WHERE p.status=1 ";
