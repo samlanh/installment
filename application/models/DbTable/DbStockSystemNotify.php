@@ -203,6 +203,7 @@ class Application_Model_DbTable_DbStockSystemNotify extends Zend_Db_Table_Abstra
 							<div class="media-body-left '.$result['recordType'].' col-md-3 col-sm-3 col-xs-12">
 								<div class="noti-left-blg ">
 									<div class="title-flex">
+										<small>'.$tr->translate("REQUESTING").'</small>
 										<small>'.$result['projectName'].'</small>
 										<i class="fa fa-file-text"></i>
 									</div>
@@ -232,6 +233,7 @@ class Application_Model_DbTable_DbStockSystemNotify extends Zend_Db_Table_Abstra
 							<div class="media-body-left '.$result['recordType'].' col-md-3 col-sm-3 col-xs-12">
 								<div class="noti-left-blg ">
 									<div class="title-flex">
+										<small>'.$tr->translate("RECEIVE_DN").'</small>
 										<small>'.$result['projectName'].'</small>
 										<i class="fa fa-truck"></i> <i class="fa fa-check-circle-o " aria-hidden="true"></i>
 									</div>
@@ -266,7 +268,8 @@ class Application_Model_DbTable_DbStockSystemNotify extends Zend_Db_Table_Abstra
 							<div class="media-body-left '.$result['recordType'].' col-md-3 col-sm-3 col-xs-12">
 								<div class="noti-left-blg ">
 									<div class="title-flex">
-										<small>'.$result['projectName'].'</small>
+										<small>'.$tr->translate("RECEIVE_TRANSFER").'</small>
+										<small>'.$result['toProjectName'].'</small>
 										<i class="fa fa-cubes"></i> <i class="fa fa-compress " aria-hidden="true"></i>
 									</div>
 									
