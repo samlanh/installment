@@ -223,7 +223,8 @@ function addRecords(data){
 				temp+='<td width="20%"><?php echo $tr->translate("PRODUCT_NAME");?></td>';
 				temp+='<td class="currentQty"><?php echo $tr->translate("MEASURE");?></td>';
 				temp+='<td width="20%"><?php echo $tr->translate("WORK_TYPE");?></td>';
-				temp+='<td width="20%"><?php echo $tr->translate("DN_NO");?></td>';
+				temp+='<td width="15%"><?php echo $tr->translate("STRENGTH");?></td>';
+				temp+='<td width="15%"><?php echo $tr->translate("DN_NO");?></td>';
 				temp+='<td width="5%"><?php echo $tr->translate("QTY");?></td>';
 				temp+='<td width="10%"><?php echo $tr->translate("UNIT_PRICE");?></td>';
 				temp+='<td width="10%"><?php echo $tr->translate("TOTAL");?></td>';
@@ -250,6 +251,7 @@ function addRecords(data){
 						template+='<option value="'+<?php echo $rswt['id']?>+'"><?php echo addslashes($rswt['name']);?></option>';
 					<?php }?>
 				template+='</select></td>';	
+				template+='<td><input required="true" dojoType="dijit.form.ValidationTextBox" class="fullside" id="strength'+col+'" name="strength'+col+'" placeholder="'+'<?php echo $tr->translate("STRENGTH");?> "type="text"  ></td>';	
 				template+='<td><input required="true" dojoType="dijit.form.ValidationTextBox" class="fullside" id="dnNO'+col+'" name="dnNO'+col+'" placeholder="'+'<?php echo $tr->translate("DN_INFO");?> "type="text"  ></td>';	
 				template+='<td><input onkeyup="calculateTotal('+col+');" dojoType="dijit.form.NumberTextBox" required="true" data-dojo-props="constraints:{min:0.0001},rangeMessage:'+"'<?php echo $tr->translate("MINIMUM_VALUE_IS_ONE");?>'"+'" class="fullside" id="qty'+col+'" name="qty'+col+'" placeholder="'+'<?php echo $tr->translate("QTY");?> " value="1" type="text"  ></td>';	
 				template+='<td><input onkeyup="calculateTotal('+col+');" dojoType="dijit.form.NumberTextBox" required="true" data-dojo-props="constraints:{min:0.0001},rangeMessage:'+"'<?php echo $tr->translate("MINIMUM_VALUE_IS_ONE");?>'"+'" class="fullside" id="unitPrice'+col+'" name="unitPrice'+col+'" placeholder="'+'<?php echo $tr->translate("UNIT_PRICE");?>" type="text"  ></td>';	
@@ -266,6 +268,7 @@ function addRecords(data){
 				dojo.html.set(dojo.byId("row"+col),template , {
 					 parseContent: true,
 				});
+				dijit.byId('strength'+col).attr('value','<?php echo $row['strength']?>');
 				dijit.byId('dnNO'+col).attr('value','<?php echo $this->rs['dnNumber']?>');
 				dijit.byId('qty'+col).attr('value','<?php echo $row['qtyReceive']?>');
 				dijit.byId('unitPrice'+col).attr('value','<?php echo $row['price']?>');
