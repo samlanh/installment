@@ -177,6 +177,7 @@ Class Invpayment_Form_FrmStatement extends Zend_Dojo_Form {
     	$supplierId->setAttribs(array(
     			'dojoType'=>'dijit.form.FilteringSelect',
     			'class'=>'fullside',
+				'onchange'=>'getAllDN();'
     	));
     	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
     	

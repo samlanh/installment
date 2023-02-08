@@ -200,7 +200,7 @@ class Invpayment_Model_DbTable_DbDnconcrete extends Zend_Db_Table_Abstract
 		(SELECT NAME FROM `st_measure`AS m WHERE m.id= (SELECT measureId FROM `st_product` WHERE proId = rd.proId)) AS measure,
 		rd.strength, 
 		(SELECT workTitle FROM `st_work_type` AS wt WHERE wt.id= rd.worktype ) AS workType,
-		rs.dnNumber,
+		rs.dnNumber,rd.strength,
 		rd.qtyReceive, rd.price, rd.subTotal
 
 		 FROM `st_receive_stock`  AS rs JOIN `st_receive_stock_detail` AS rd ON rs.id =rd.receiveId WHERE";	
