@@ -90,9 +90,10 @@ class Product_Model_DbTable_DbinitilizeQtybyProject extends Zend_Db_Table_Abstra
 						);
 						$this->_name='st_product_location';
 						$tranId = $this->insert($arr);
+						
+						$dbs->addProductHistoryQty($data['branch_id'], $data['proId'.$i], 1, $data['qtyInit'.$i],$tranId);
 					}
 					
-					$dbs->addProductHistoryQty($data['branch_id'], $data['proId'.$i], 1, $data['qtyInit'.$i],$tranId);
 				}
     		}
     		

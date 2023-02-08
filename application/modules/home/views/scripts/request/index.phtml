@@ -6,7 +6,10 @@
 	
 	$montFomat=DATE_FORMAT_FOR_PHP;
 
-
+	$dbUser=new Application_Model_DbTable_DbUsers();
+	$userAccessCheckingrequest = $dbUser->getAccessUrl("requesting","checkingrequest",'add');
+	$userAccessPcheckingrequest = $dbUser->getAccessUrl("requesting","pcheckingrequest",'add');
+	$userAccessApproved = $dbUser->getAccessUrl("requesting","approvedrequest",'add');
 ?>
 <section class="inputmask">
 	<div class="row">
@@ -68,14 +71,20 @@
 			$url="";
 							$title="";
 							if($rs['processingStatus']==1){
-								$url=$this->baseUrl()."/requesting/checkingrequest/add/id/".$rs['id'];
-								$title=$tr->translate("MAKE_CHECKING_REQUEST_PO");
+								if(!empty($userAccessCheckingrequest)){
+									$url=$this->baseUrl()."/requesting/checkingrequest/add/id/".$rs['id'];
+									$title=$tr->translate("MAKE_CHECKING_REQUEST_PO");
+								}
 							}elseif($rs['processingStatus']==2){
-								$url=$this->baseUrl()."/requesting/pcheckingrequest/add/id/".$rs['id'];
-								$title=$tr->translate("MAKE_PCHECKING_REQUEST_PO");
+								if(!empty($userAccessPcheckingrequest)){
+									$url=$this->baseUrl()."/requesting/pcheckingrequest/add/id/".$rs['id'];
+									$title=$tr->translate("MAKE_PCHECKING_REQUEST_PO");
+								}
 							}elseif($rs['processingStatus']==3){
-								$url=$this->baseUrl()."/requesting/approvedrequest/add/id/".$rs['id'];
-								$title=$tr->translate("MAKE_APPROVED_REQUEST_PO");
+								if(!empty($userAccessApproved)){
+									$url=$this->baseUrl()."/requesting/approvedrequest/add/id/".$rs['id'];
+									$title=$tr->translate("MAKE_APPROVED_REQUEST_PO");
+								}
 							}elseif($rs['processingStatus']==4){
 								$url=$this->baseUrl()."/po/index/add/id/".$rs['id'];
 								$title=$tr->translate("MAKING_PURCHASE_REQUEST_PO");

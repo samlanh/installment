@@ -66,6 +66,28 @@ class Invpayment_StatementController extends Zend_Controller_Action {
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm = $frm;
 	}
+
+	function getalldnAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Invpayment_Model_DbTable_DbDnconcrete();
+			$_row =$db->getConcreteDnData($data);
+			print_r(Zend_Json::encode($_row));
+			exit();
+			
+		}
+	}
+	function getReceiveInfoAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Invpayment_Model_DbTable_DbDnconcrete();
+			$_row =$db->getReceiveProductInfo($data);
+			print_r(Zend_Json::encode($_row));
+			exit();
+			
+		}
+	}
+
 // 	function editAction(){
 // 		$tr=Application_Form_FrmLanguages::getCurrentlanguage();
 // 		$db = new Invpayment_Model_DbTable_DbInvoice();
@@ -163,16 +185,7 @@ class Invpayment_StatementController extends Zend_Controller_Action {
 // 		}
 // 	}
 	
-	function getalldnAction(){
-		if($this->getRequest()->isPost()){
-			$data = $this->getRequest()->getPost();
-			$db = new Invpayment_Model_DbTable_DbDnconcrete();
-			$_row =$db->getConcreteDnData($data);
-			print_r(Zend_Json::encode($_row));
-			exit();
-			
-		}
-	}
+
 // 	function dndetailAction(){
 // 		if($this->getRequest()->isPost()){
 // 			$data = $this->getRequest()->getPost();
