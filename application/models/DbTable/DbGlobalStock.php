@@ -107,8 +107,8 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 				,p.isService
 				,p.isCountStock
 				,p.budgetId
-				,(SELECT pl.qty FROM st_product_location AS pl WHERE pl.proId=p.proId AND pl.projectId= $projectId LIMIT 1) AS currentQty
-				,(SELECT pl.costing FROM st_product_location AS pl WHERE pl.proId=p.proId AND pl.projectId= $projectId LIMIT 1) AS currentPrice
+				,COALESCE((SELECT pl.qty FROM st_product_location AS pl WHERE pl.proId=p.proId AND pl.projectId= $projectId LIMIT 1),0) AS currentQty
+				,COALESCE((SELECT pl.costing FROM st_product_location AS pl WHERE pl.proId=p.proId AND pl.projectId= $projectId LIMIT 1),0) AS currentPrice
 				,p.measureLabel AS measureTitle
 				,COALESCE((SELECT pod.unitPrice FROM `st_purchasing_detail` AS pod WHERE pod.proId=p.proId ORDER BY pod.purchaseId DESC LIMIT 1),1) AS latestUnitPrice
 			";
@@ -133,9 +133,10 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 					`st_product` AS p ";
 			
 		if(!empty($projectId)){
-			$sql.=" LEFT JOIN st_product_location AS l ON p.proId=l.proId ";
+			$sql.=" JOIN st_product_location AS l ON p.proId=l.proId AND l.projectId=".$projectId;
+			///$sql.=" AND l.projectId=".$projectId;
 			$sql.=" WHERE p.status=1 ";
-				$sql.=" AND l.projectId=".$projectId;
+				
 		}else{
 			$sql.=" WHERE p.status=1 ";
 		}
