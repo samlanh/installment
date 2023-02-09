@@ -7,7 +7,7 @@ class Invpayment_PaymentController extends Zend_Controller_Action {
 		defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
 	}
 	public function indexAction(){
-		//$db = new ();
+		
 		try{
 			$db = new Invpayment_Model_DbTable_DbPayment();
 			if(!empty($this->getRequest()->isPost())){

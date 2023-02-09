@@ -441,6 +441,20 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		return $row;
 		
 	}
+
+	function getAllCateIncome($_data=null){
+		$db=$this->getAdapter();
+		$sql="
+			SELECT 
+				c.id AS id,
+				c.title AS `name`
+			";
+		$sql.=" FROM `st_cate_income` AS c  ";
+		$sql.=" WHERE c.status=1 ";
+	
+		$row = $db->fetchAll($sql);
+		return $row;
+	}
 	function initilizeProductType(){
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		$optProduct = array(

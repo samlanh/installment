@@ -1,9 +1,9 @@
 <?php 
-Class Invpayment_Form_FrmPayment extends Zend_Dojo_Form {
+Class Po_Form_FrmIncome extends Zend_Dojo_Form {
 // 	public function init()
 // 	{
 // 	}///
-	public function FrmPayment($data=null){
+	public function FrmIncome($data=null){
 		
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		$filter = 'dijit.form.FilteringSelect';
@@ -29,6 +29,7 @@ Class Invpayment_Form_FrmPayment extends Zend_Dojo_Form {
 				'autoComplete'=>'false',
 				'queryExpr'=>'*${0}*',
 				'onchange'=>'onChageFunctionByBranch();'
+			
 		));
 		$rows = $dbGB->getAllBranchName();
 		$options_branch=array('-1'=>$tr->translate("SELECT_BRANCH"));
@@ -55,18 +56,32 @@ Class Invpayment_Form_FrmPayment extends Zend_Dojo_Form {
 				'style'=>'color:red;font-weight: 600;',
     			'missingMessage'=>$tr->translate("Forget Enter Data")
     	));
-		
-		$supplierId = new Zend_Dojo_Form_Element_FilteringSelect('supplierId');
-		$supplierId->setAttribs(array(
+
+		$cateIncome = new Zend_Dojo_Form_Element_FilteringSelect('cateIncome');
+		$cateIncome->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
+				'onchange'=>'addNewCategory();'
 		));
-		$rsSpp = $dbGBStock->getAllSupplier();
-		$optSpp=array(''=>$tr->translate("SELECT_SUPPLIER"));
-		if(!empty($rsSpp))foreach($rsSpp AS $row){
-			$optSpp[$row['id']]=$row['name'];
+		$rsCtIncome = $dbGBStock->getAllCateIncome();
+		$optCtIncome=array(
+			''=>$tr->translate("SELECT_CATE_INCOME"),
+			'-1'=>$tr->translate("ADD_NEW"),
+		);
+		if(!empty($rsCtIncome))foreach($rsCtIncome AS $row){
+			$optCtIncome[$row['id']]=$row['name'];
 		}
-		$supplierId->setMultiOptions($optSpp);
+		$cateIncome->setMultiOptions($optCtIncome);
+
+		$income_title = new Zend_Dojo_Form_Element_TextBox('incomeTitle');
+    	$income_title->setAttribs(array(
+    			'dojoType'=>'dijit.form.TextBox',
+    			'required'=>'false',
+    			'class'=>'fullside ',
+    			'placeholder'=>$tr->translate("INCOME_TITLE"),
+				
+    	));
+
 		
 		$paymentDate = new Zend_Dojo_Form_Element_DateTextBox('paymentDate');
  		$paymentDate->setAttribs(array(
@@ -132,32 +147,6 @@ Class Invpayment_Form_FrmPayment extends Zend_Dojo_Form {
     	));
 		$totalAmount->setValue(0);
 		
-		$totalPaid = new Zend_Dojo_Form_Element_TextBox('totalPaid');
-    	$totalPaid->setAttribs(array(
-    			'dojoType'=>'dijit.form.NumberTextBox',
-    			'required'=>'true',
-    			'class'=>'fullside ',
-    			'readOnly'=>'readOnly ',
-    			'placeholder'=>$tr->translate("TOTAL_PAID"),
-				'style'=>'color:red;font-weight: 600;',
-    			'missingMessage'=>$tr->translate("Forget Enter Data")
-    	));
-		$totalPaid->setValue(0);
-		
-		$totalDue = new Zend_Dojo_Form_Element_TextBox('totalDue');
-    	$totalDue->setAttribs(array(
-    			'dojoType'=>'dijit.form.NumberTextBox',
-    			'required'=>'true',
-    			'class'=>'fullside ',
-    			'readOnly'=>'readOnly ',
-    			'placeholder'=>$tr->translate("TOTAL_DUE"),
-				'style'=>'color:red;font-weight: 600;',
-    			'missingMessage'=>$tr->translate("Forget Enter Data")
-    	));
-		$totalDue->setValue(0);
-		
-		
-		
 		$_arr = array(1=>$tr->translate("ACTIVE"),0=>$tr->translate("VOID"));
     	$_status = new Zend_Dojo_Form_Element_FilteringSelect("status");
     	$_status->setMultiOptions($_arr);
@@ -173,25 +162,6 @@ Class Invpayment_Form_FrmPayment extends Zend_Dojo_Form {
     			'class'=>'fullside ',
     	));
 		
-		$balance = new Zend_Dojo_Form_Element_NumberTextBox('balance');
-		$balance->setAttribs(array(
-				'dojoType'=>'dijit.form.NumberTextBox',
-				'class'=>' fullside height-text',
-				'readonly'=>'readonly',
-				'placeholder'=>$tr->translate("BALANCE"),
-				'missingMessage'=>$tr->translate("Forget Enter Balance")
-		));
-		$balance->setValue(0);
-		
-		$gTotalBalance = new Zend_Dojo_Form_Element_NumberTextBox('gTotalBalance');
-		$gTotalBalance->setAttribs(array(
-				'dojoType'=>'dijit.form.NumberTextBox',
-				'class'=>' fullside height-text',
-				'readonly'=>'readonly',
-				'placeholder'=>$tr->translate("BALANCE"),
-				'missingMessage'=>$tr->translate("Forget Enter Balance")
-		));
-		$gTotalBalance->setValue(0);
 		
 		$advanceFilter = new Zend_Dojo_Form_Element_TextBox('advanceFilter');
 		$advanceFilter->setAttribs(array(
@@ -227,24 +197,23 @@ Class Invpayment_Form_FrmPayment extends Zend_Dojo_Form {
 		$end_date->setValue($_date);
 		
 		if(!empty($data)){
-			$branch_id->setValue($data['projectId']);
-			$paymentNo->setValue($data['paymentNo']);
-			$supplierId->setValue($data['supplierId']);
-			$paymentDate->setValue($data['paymentDate']);
-			$paymentMethod->setValue($data['paymentMethod']);
-			$bankId->setValue($data['bankId']);
-			$accNameAndChequeNo->setValue($data['accNameAndChequeNo']);
-			$note->setValue($data['note']);
-			$totalAmount->setValue($data['totalAmount']);
-			$_status->setValue($data['status']);
-			$id->setValue($data['id']);
-			$start_date->setValue("");
+			// $branch_id->setValue($data['projectId']);
+			// $paymentNo->setValue($data['paymentNo']);
+			// $supplierId->setValue($data['supplierId']);
+			// $paymentDate->setValue($data['paymentDate']);
+			// $paymentMethod->setValue($data['paymentMethod']);
+			// $bankId->setValue($data['bankId']);
+			// $accNameAndChequeNo->setValue($data['accNameAndChequeNo']);
+			// $note->setValue($data['note']);
+			// $totalAmount->setValue($data['totalAmount']);
+			// $_status->setValue($data['status']);
+			// $id->setValue($data['id']);
+			// $start_date->setValue("");
 		}
 		
 		$this->addElements(array(
 				$branch_id,
 				$paymentNo,
-				$supplierId,
 				$paymentDate,
 				$paymentMethod,
 				$bankId,
@@ -253,14 +222,12 @@ Class Invpayment_Form_FrmPayment extends Zend_Dojo_Form {
 				$totalAmount,
 				$_status,
 				$id,
-				
-				$totalPaid,
-				$totalDue,
-				$balance,
-				$gTotalBalance,
+
 				$advanceFilter,
 				$start_date,
-				$end_date
+				$end_date,
+				$cateIncome,
+				$income_title
 		));
 		return $this;
 	}
