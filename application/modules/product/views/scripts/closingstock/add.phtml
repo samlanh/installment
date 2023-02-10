@@ -37,30 +37,37 @@
 	   			}
 			</script>
 			<div class="card-box">
-				<div class="col-md-12 col-sm-12 col-xs-12">
-					<div class="form-group" style="background: #d8e0e2;padding: 5px 15px;margin: 0;border: solid 1px #697996;border-radius: 2px;margin-top: 10px;">
-		                <div class="col-md-3 col-sm-3 col-xs-12">
-			                <label class="control-label bold col-md-3 col-sm-3 col-xs-12"><?php echo $tr->translate("BRANCH_NAME");?> </label>
-			                <div class="col-md-9 col-sm-9 col-xs-12">
-			                	<?php echo $frm->getElement("branch_id");?>
-			                </div>
+				<div class="col-md-3 col-sm-3 col-xs-3">
+					 <div class="form-group">
+		                <label class="control-label bold col-md-3 col-sm-3 col-xs-12"><?php echo $tr->translate("BRANCH_NAME");?></label>
+		                <div class="col-md-9 col-sm-9 col-xs-12">
+		                	<?php echo $frm->getElement("branch_id");?>
+		                	<input type="hidden" name="identity" id="identity" dojoType="dijit.form.TextBox" value="" >
 		                </div>
-		                <div class="col-md-1 col-sm-1 col-xs-12"></div>
-		                <div class="col-md-8 col-sm-8 col-xs-12">
-							<label style=" margin: 0; line-height: 30px; " class="control-label bold col-md-2 col-sm-2 col-xs-12"><?php echo $tr->translate("CATEGORY");?> </label>
-							 <div class="col-md-4 col-sm-4 col-xs-12">
-									<?php echo $frm->getElement("categoryId");?>
-							</div>
-							<label style=" margin: 0; line-height: 30px; text-align: center;" class="control-label bold col-md-1 col-sm-1 col-xs-12"><?php echo $tr->translate("PRODUCT");?> </label>
-							<div class="col-md-5 col-sm-5 col-xs-12">
-								<input id="productId" />
-							</div>
+	                 </div>
+	                 <div class="form-group">
+	                 	<label class="control-label bold col-md-3 col-sm-3 col-xs-12"><?php echo $tr->translate("DATE");?></label>
+	                 	<div class="col-md-9 col-sm-9 col-xs-12"><?php echo $frm->getElement("date");?></div>
+	                 </div>
+	                 <div class="form-group">
+	                 	<label class="control-label bold col-md-3 col-sm-3 col-xs-12"><?php echo $tr->translate("NOTE");?></label>
+	                 	<div class="col-md-9 col-sm-9 col-xs-12"><?php echo $frm->getElement("note");?></div>
+	                 </div>
+				</div>
+				<div class="col-md-9 col-sm-9 col-xs-9">
+					<div class="form-group" style="background: #d8e0e2;padding: 5px 15px;margin: 0;border: solid 1px #697996;border-radius: 2px;margin-top: 10px;">
+						<label style=" margin: 0; line-height: 30px; " class="control-label bold col-md-2 col-sm-2 col-xs-12"><?php echo $tr->translate("CATEGORY");?> </label>
+						 <div class="col-md-4 col-sm-4 col-xs-12">
+							<?php echo $frm->getElement("categoryId");?>
+						</div>
+						<label style=" margin: 0; line-height: 30px; text-align: center;" class="control-label bold col-md-1 col-sm-1 col-xs-12"><?php echo $tr->translate("PRODUCT");?> </label>
+						<div class="col-md-4 col-sm-4 col-xs-12">
+							<input id="productId" />
+						</div>
+						<div class="card-box">
+							<div id="showrecord"></div>
 						</div>
 					</div>
-					<div class="card-box">
-						<div id="showrecord"></div>
-					</div>
-					<input type="hidden" name="identity" id="identity" dojoType="dijit.form.TextBox" value="" >
 				</div>
 				<div class="clearfix"></div>
 			</div>
@@ -102,6 +109,7 @@ tr.rowData {
 	dojo.require("dojo.NodeList-manipulate");
     dojo.require("dijit.form.NumberTextBox");
 	dojo.require("dijit.form.DateTextBox");
+	dojo.require("dijit.form.Textarea");
 	
 	var productStore  = getDataStorefromJSON('id','name', null );
     require(["dojo/ready"], function(ready){
@@ -170,7 +178,8 @@ tr.rowData {
 			temp+='<td width="20%"><?php echo $tr->translate("PRODUCT_NAME");?></td>';
 			temp+='<td ><?php echo $tr->translate("CURRENT_QTY");?></td>';
 			temp+='<td width="10%"><?php echo $tr->translate("COUNT_QTY");?></td>';
-			temp+='<td width="10%"><?php echo $tr->translate("CLOSING_DATE");?></td>';
+			temp+='<td width="10%"><?php echo $tr->translate("DIFFER_QTY");?></td>';
+			temp+='<td width="10%"><?php echo $tr->translate("COUNT_DATE");?></td>';
 			temp+='<td width="10%"><?php echo $tr->translate("NOTE");?></td>';
 			dojo.query("#head-title").append(temp);
 			title=1;
@@ -213,9 +222,9 @@ tr.rowData {
 				template+='<td width="2%" align="center"><img onclick="deleteRecord('+col+');" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
 				template+='<td align="center" width="2%">'+no+'</td>';
 				template+='<td class="productName" >'+data.proCode+'<br />'+data.proName+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId'+col+'" name="proId'+col+'" value="'+data.id+'" type="text"  ></td>';	
-				
-				template+='<td class="currentQty"  width="10%">'+data.currentQty+' ('+data.measureTitle+')</td>';	
-				template+='<td><input dojoType="dijit.form.NumberTextBox" class="fullside" id="count_qty'+col+'" name="count_qty'+col+'" placeholder="'+'<?php echo $tr->translate("COUNT_QTY");?> " value="0" type="text"  ></td>';	
+				template+='<td class="currentQty"  width="10%"><input type="hidden" dojoType="dijit.form.TextBox" id="currentQty'+col+'" name="currentQty'+col+'" value="'+data.currentQty+'" type="text"  >'+data.currentQty+' ('+data.measureTitle+')</td>';	
+				template+='<td><input dojoType="dijit.form.NumberTextBox" required="true" class="fullside" id="count_qty'+col+'" onkeyup="countDifference('+col+');" name="count_qty'+col+'" placeholder="'+'<?php echo $tr->translate("COUNT_QTY");?> " type="text"  ></td>';
+				template+='<td><input dojoType="dijit.form.NumberTextBox" readOnly class="fullside" id="differQty'+col+'" name="differQty'+col+'" type="text"  ></td>';	
 				template+='<td><input required dojoType="dijit.form.DateTextBox" class="fullside" constraints="{datePattern:'+"'dd/MM/yyyy'"+'}" id="closing_date'+col+'" name="closing_date'+col+'"  placeholder="'+'<?php echo $tr->translate("CLOSING_DATE");?> " value="now" type="text"   ></td>';	
 				template+='<td><input dojoType="dijit.form.NumberTextBox" class="fullside" id="note'+col+'" name="note'+col+'" placeholder="'+'<?php echo $tr->translate("NOTE");?> "  type="text"  ></td>';	
 				
@@ -234,7 +243,12 @@ tr.rowData {
 			}
 		});
 	}
-	
+	function countDifference(index){
+		countQty = dijit.byId('count_qty'+index).get('value');
+		currentQty = dijit.byId('currentQty'+index).get('value');
+		differQty = currentQty-countQty;
+		dijit.byId('differQty'+index).attr('value',differQty);
+	}
 	function deleteRecord(index) {
 		var identity = $('#identity').val();
 		var arrays = identity.split(',');

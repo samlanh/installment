@@ -15,25 +15,25 @@ class Product_ClosingstockController  extends Zend_Controller_Action {
 			}
 			else{
 				$search = array(
-					
 					'adv_search'=>'',
 					'branch_id'=>-1,
 					'start_date'=> date('Y-m-d'),
 					'end_date'=>date('Y-m-d'),
-				
 				);
 			}
-			$rs_rows= $db->getAllProductClosing($search);
 			
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}	
+		
+		$rs_rows= $db->getAllProductClosing($search);
+		
 		$list = new Application_Form_Frmtable();
-		$collumns = array("PROJECT_NAME","PRODUCT_NAME","COUNT_QTY","CLOSING_DATE","NOTE");
+		$collumns = array("PROJECT_NAME","DATE","BY_USER","NOTE","STATUS");
 		$link=array('module'=>'product','controller'=>'closingstock','action'=>'edit');
-		$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array('projectName'=>$link,
-				'name'=>$link,'barCode'=>$link,'currentQty'=>$link));
+		$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array(
+				'projectName'=>$link,'inputDate'=>$link,'user_name'=>$link));
 		
 		$frm = new Application_Form_FrmAdvanceSearchStock();
 		$frm = $frm->AdvanceSearch();
