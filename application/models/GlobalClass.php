@@ -249,7 +249,18 @@ public function getOptonsHtmlTranslate($sql, $display, $value){
 				$options .= '<option value="2" >'.htmlspecialchars('អ្នកធានាជំនួស', ENT_QUOTES).'</option>';
 			return $options;
 		}
-		
+		public function getAllExpenseIncomeType($type){
+			$_db = new Po_Model_DbTable_DbCateExpense();
+			$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+			$rows = $_db->getParentCateExpense();
+			$options = '';
+			$options .= '<option Value="0">'.$tr->translate("SELECT_CATEGORY").'</option>';
+			$options .= '<option Value="-1">'.$tr->translate("ADD_NEW").'</option>';
+			if(!empty($rows))foreach($rows as $value){
+				$options .= '<option value="'.$value['id'].'" >'.htmlspecialchars(addslashes($value['name'])).'</option>';
+			}			
+			return $options;
+		}
 		
 		
 		
