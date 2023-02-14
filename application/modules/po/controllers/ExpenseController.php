@@ -33,7 +33,7 @@ class Po_ExpenseController extends Zend_Controller_Action
     		$list = new Application_Form_Frmtable();
     		$collumns = array("BRANCH","RECEIVER","EXPENSE_TITLE","RECEIPT_NO","PAYMENT_METHOD","INVOICE","TOTAL_EXPENSE","NOTE","FOR_DATE","BY_USER","STATUS");
     		$link=array(
-    				'module'=>'registrar','controller'=>'expense','action'=>'edit',
+    				'module'=>'po','controller'=>'expense','action'=>'edit',
     		);
     		$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array('branch_name'=>$link,'title'=>$link,'invoice'=>$link,'receiver'=>$link));
     	}catch (Exception $e){
@@ -53,9 +53,9 @@ class Po_ExpenseController extends Zend_Controller_Action
 			try {
 				$db->addExpense($data);
 				if(!empty($data['savenew'])){
-					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/registrar/expense/add");
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/po/expense/add");
 				}else{
-					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/registrar/expense");
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/po/expense");
 				}				
 			} catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");
@@ -133,7 +133,7 @@ class Po_ExpenseController extends Zend_Controller_Action
     function addCateExpenseAction(){
     	if($this->getRequest()->isPost()){
     		$data = $this->getRequest()->getPost();
-    		$db = new Registrar_Model_DbTable_DbExpense();
+    		$db = new Po_Model_DbTable_DbExpense();
     		$id = $db->addCateExpense($data);
     		print_r(Zend_Json::encode($id));
     		exit();

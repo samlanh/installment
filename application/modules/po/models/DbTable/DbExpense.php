@@ -1,7 +1,7 @@
 <?php
 class Po_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 {
-	protected $_name = 'ln_expense';
+	protected $_name = 'st_expense';
 	public function getUserId(){
 		$session_user=new Zend_Session_Namespace(SYSTEM_SES);
 		return $session_user->user_id;
@@ -9,36 +9,35 @@ class Po_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 	function addExpense($data){
 		$_db= $this->getAdapter();
 		$_db->beginTransaction();
-		
-		$db = new Registrar_Model_DbTable_DbIncome();
-		$invoice = $db->getReceiptNumber($data['branch_id'],2);
-		
 		try{
 			$_arr = array(
-					'branch_id'		=>$data['branch_id'],
-					'title'			=>$data['title'],
-					'total_amount'	=>$data['total_amount'],
-					'invoice'		=>$invoice,
-					'payment_type'	=>$data['payment_method'],
-					'description'	=>$data['Description'],
-					'receiver'		=>$data['receiver'],
-					'cheque_no'		=>$data['cheque_num'],
-					'external_invoice'=>$data['external_invoice'],
-					'date'			=>$data['Date'],
-					'user_id'		=>$this->getUserId(),
-					'create_date'	=>date('Y-m-d H:i:s'),
+					'projectId'				=>$data['branch_id'],
+					'paymentNo'				=>$data['paymentNo'],
+					'externalInvoice'	 	=>$data['externalInvoice'],
+					'expenseTitle'			=>$data['expenseTitle'],
+					'receiver'				=>$data['receiver'],
+					'note'		   			=>$data['note'],
+					'paymentMethod' 		=>$data['paymentMethod'],
+					'bankId'				=>$data['bankId'],
+					'accNameAndChequeNo'	=>$data['accNameAndChequeNo'],
+					'totalAmount'			=>$data['totalAmount'],
+					'paymentDate'			=>$data['paymentDate'],
+					'totalAmount'			=>$data['totalAmount'],
+					'userId'				=>$this->getUserId(),
+					'createDate'			=>date('Y-m-d H:i:s'),
 				);
 			$expend_id = $this->insert($_arr);
 			$ids = explode(',', $data['identity']);
-			$this->_name='ln_expense_detail';
+			$this->_name='st_expense_detail';
 			foreach ($ids as $j){
 				$arr = array(
-						'expense_id'	=>$expend_id,
-						'service_id'	=>$data['expense_id_'.$j],
-						'description'	=>$data['remark_'.$j],
+
+						'expenseId'		=>$expend_id,
+						'cateExpenseId'	=>$data['cate_expense_id_'.$j],
 						'price'			=>$data['price_'.$j],
 						'qty'			=>$data['qty_'.$j],
 						'total'			=>$data['total_'.$j],
+						'note'	        =>$data['remark_'.$j],
 					);
 			   $this->insert($arr);
 			}
@@ -193,14 +192,13 @@ class Po_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 	}
 
 	function addCateExpense($data){
-		$this->_name="rms_account_name";
+		$this->_name="st_cate_expense";
 		$arr = array(
-				'account_name'	=>$data['account_name'],
-				'parent_id'		=>$data['parent'],
-				'account_code'	=>$data['account_code'],
-				'account_type'	=>5, // expense category
-				'user_id'		=>$this->getUserId(),
-				'date'			=>date('Y-m-d'),
+				'title'    		=>$data['account_name'],
+				'parent'		=>$data['parent'],
+				'accountCode'	=>$data['account_code'],
+				'createDate'	=>date('Y-m-d'), 
+				'userId'		=>$this->getUserId(),
 		);
 		$id = $this->insert($arr);
 		$db = new Application_Model_GlobalClass();

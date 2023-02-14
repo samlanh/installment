@@ -11,7 +11,7 @@ $frm = $this->frm_expense;
 	height: 30px;
 }
 #lbl_header {
-    display: initial !important;///
+    display: initial !important;
 }
 table.collape tbody td {
     padding: 2px;
@@ -117,7 +117,6 @@ table.collape tbody td {
 
 	             </div>
 
-
 	             <div class="col-md-4 col-sm-4 col-xs-12">
 					 <div class="card-blogform">
 						<div class="card-body"> 
@@ -193,13 +192,14 @@ table.collape tbody td {
                	<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
 					<input type="submit" label="<?php echo $tr->translate("SAVECLOSE");?>" id='saveclose' name='saveclose' value='saveclose' dojoType="dijit.form.Button"
 						 class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-disk" />
-					<input type="button" onclick='printSave("");' label="<?php echo $tr->translate("SAVE_PRINT")?>" name='savenew' value='savenew' dojoType="dijit.form.Button"
-						class="button-class button-primary" iconClass="glyphicon glyphicon-print" />
+						 <input type="submit" label="<?php echo $tr->translate("SAVENEW");?>" id='savenew' name='savenew' value='savenew' dojoType="dijit.form.Button"
+						 class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-disk-saved" />
                	</div>
              </div>
 		</form>
 	</div>
 </div>
+<!--
 
 <div class="dijitHidden" style="padding: 0px; margin: 0px;">
 	<div data-dojo-type="dijit.Dialog" style="width:21cm;height: 15cm ;" align="center" data-dojo-props="title:'<?php echo $tr->translate("ប័ណ្ណចំណាយ");?>'" id="terms" >
@@ -300,10 +300,10 @@ table.collape tbody td {
 											<td colspan="2" align="center" valign="top">
 												<div style="font-weight:bold;color:#000; font-size: 14px;margin-top:-10px;"> 
 													<?php 
-													   $session_user=new Zend_Session_Namespace(SYSTEM_SES);
-													   $last_name=$session_user->last_name;
-													   $username = $session_user->first_name;
-													   echo"Paid By : ".$last_name." ".$username;
+													//    $session_user=new Zend_Session_Namespace(SYSTEM_SES);
+													//    $last_name=$session_user->last_name;
+													//    $username = $session_user->first_name;
+													//    echo"Paid By : ".$last_name." ".$username;
 													?>
 												</div>
 											</td>
@@ -318,7 +318,7 @@ table.collape tbody td {
 										<tr>
 											<td colspan="2" align="center" >
 												<div style="width:70%;border-bottom:1px solid #000;margin-bottom:10px;margin-top: 40px;"></div>
-												<div style="margin-top:-11px;">Date : <?php echo date('d / m / Y , H:i:s ',strtotime(Zend_Date::now()));?></div>
+												<div style="margin-top:-11px;">Date : <?php// echo date('d / m / Y , H:i:s ',strtotime(Zend_Date::now()));?></div>
 											</td>
 											<td colspan="2" align="center" width="30%">
 												<div style="width:70%;border-bottom:1px solid #000;margin-bottom:10px;margin-top: 40px;"></div>
@@ -340,6 +340,8 @@ table.collape tbody td {
 				 type="button" onclick="doPrintInvoice();"><?php echo $tr->translate("SAVE_PRINT");?></button>
 	</div>
 </div>
+			-->
+
 <iframe name=print_frame width=0 height=0 frameborder=0 src=about:blank></iframe>	
 <script type="text/javascript">
 	dojo.require("dijit.form.Textarea");
@@ -347,15 +349,15 @@ table.collape tbody td {
 	dojo.require("dojo.NodeList-manipulate");
 	dojo.require("dojo.data.ObjectStore");
 	dojo.ready(function(){
-		getReceiptNumber("");
+	//	getReceiptNumber("");
 		addRow();
-		dijit.byId('payment_method').attr('value',1);
+	//	dijit.byId('payment_method').attr('value',1);
 	});
 	function hideDialog(){
 		dijit.byId('terms').hide();
 	}
-
-	var url_get_recceipt_number = "<?php echo $this->url(array('module'=>'registrar','controller'=>'expense','action'=>'get-receipt-number')); ?>";
+/*
+	var url_get_recceipt_number = "<?php echo $this->url(array('module'=>'po','controller'=>'expense','action'=>'get-receipt-number')); ?>";
 	function getReceiptNumber(receipt){
 		branch_id = dijit.byId('branch_id').get('value');
 		if(branch_id>0){
@@ -377,6 +379,7 @@ table.collape tbody td {
 			});
 		}
 	}
+	*/
 	function deleteRecord(index) {
 		var identity = $('#identity').val();
 		var arrays = identity.split(',');
@@ -398,7 +401,7 @@ table.collape tbody td {
 		for(var n = 0; n < rowIDArray.length; n++) {
 			netTotal += dijit.byId('total_'+rowIDArray[n]).get('value');
 		}
-		dijit.byId('total_amount').attr('value',netTotal);
+		dijit.byId('totalAmount').attr('value',netTotal);
 	}
 	 
 	var template = '';
@@ -425,7 +428,7 @@ table.collape tbody td {
 			}
 			template+='<td width="47px" align="center"><img onclick="deleteRecord('+col+');calculateTotal('+col+');calculatePaidAmount('+col+');" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
 			template+='<td width="50px" align="center">'+no+'</td>';
-			template+='<td style="width:300px"><select style="width:100%" onchange="popupCateExpense('+col+');" dojoType="dijit.form.FilteringSelect" id="expense_id_'+col+'" name="expense_id_'+col+'">'+optexpense+'</select></td>';	
+			template+='<td style="width:300px"><select style="width:100%" onchange="popupCateExpense('+col+');" dojoType="dijit.form.FilteringSelect" id="cate_expense_id_'+col+'" name="cate_expense_id_'+col+'">'+optexpense+'</select></td>';	
 			template+='<td><input type="text" required="1" onkeyup="calculateTotal('+col+');" name="price_'+col+'" id="price_'+col+'"  dojoType="dijit.form.NumberTextBox" style="width:120px;" /></td>';	
 			template+='<td><input type="text" required="1" onkeyup="calculateTotal('+col+',1);" name="qty_'+col+'" id="qty_'+col+'" dojoType="dijit.form.NumberTextBox" style="width:120px;" /></td>';
 			template+='<td><input type="text" onkeyup="calculateTotal('+col+');" readonly="readonly" name="total_'+col+'" id="total_'+col+'" dojoType="dijit.form.NumberTextBox" style="width:150px;" /></td>';		
@@ -451,9 +454,10 @@ table.collape tbody td {
 			
 			dijit.byId('total_'+index).attr('value',price * qty);
 			
-			dijit.byId('total_amount').attr('value',netTotal);	
+			dijit.byId('totalAmount').attr('value',netTotal);	
 			netTotal();
 	}
+	/*
 
 	function printSave(new_receipt){	
 		if(dijit.byId('office_receipt').validate()) {
@@ -539,13 +543,14 @@ table.collape tbody td {
 		window.frames["print_frame"].window.print();
 		$('#office_receipt').submit();
 	}
+	*/
 
 	function checkValidateAddRow(){
 		var rowId = $('#identity').val();
 		if(rowId!=''){
 			var rowIDArray = rowId.split(',');
 			for(var n = 0; n < rowIDArray.length; n++) {
-				expense = dijit.byId('expense_id_'+rowIDArray[n]).get('value');
+				expense = dijit.byId('cate_expense_id_'+rowIDArray[n]).get('value');
 				if(expense<=0){
 					return false;
 				}
@@ -554,7 +559,7 @@ table.collape tbody td {
 	}
 	function popupCateExpense(index){
 		dijit.byId("ex_save_new").attr("disabled",false);
-		expense_id = dijit.byId("expense_id_"+index).get('value');
+		expense_id = dijit.byId("cate_expense_id_"+index).get('value');
 		$("#tow_value").val(index);
 		if(expense_id==-1){
 			dijit.byId("popup_cate_expense").show();
@@ -562,7 +567,7 @@ table.collape tbody td {
 	}
 
 	var cate_expense_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode($this->cate_expense));?> );
-	var url_add_cate_expense = '<?php echo $this->url(array("module"=>"registrar","controller"=>"expense","action"=>"add-cate-expense")); ?>';
+	var url_add_cate_expense = '<?php echo $this->url(array("module"=>"po","controller"=>"expense","action"=>"add-cate-expense")); ?>';
 	function addCateExpense(){
 		if(dijit.byId('add_cate_expense').validate()) {
 			dijit.byId("ex_save_new").attr("disabled",true);
@@ -622,8 +627,8 @@ table.collape tbody td {
 								</tr>
 								<tr>
 									<td colspan="2" align="center">
-										<input type="button" onclick="addCateExpense();" value="save_new" name="ex_save_new"  id="ex_save_new" label="<?php echo $tr->translate('SAVE_NEW');?>" dojoType="dijit.form.Button" 
-											iconClass="dijitEditorIcon dijitEditorIconSave" />
+										<input type="button" onclick="addCateExpense();" value="save_new" name="ex_save_new"  id="ex_save_new" label="<?php echo $tr->translate('SAVE');?>" dojoType="dijit.form.Button" 
+										class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-saved" />
 									</td>
 								</tr>
 							</table>	
@@ -638,7 +643,7 @@ table.collape tbody td {
 <script>
 require(["dojo/ready"], function(ready){
 	ready(function(){
-		getbranchinfo();
+	//	getbranchinfo();
 		onChageFunctionByBranch();
 		
 	});
