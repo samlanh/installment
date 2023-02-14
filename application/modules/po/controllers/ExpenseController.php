@@ -18,10 +18,10 @@ class Po_ExpenseController extends Zend_Controller_Action
     		}
     		else{
     			$formdata = array(
-    					"adv_search"=>'',
-    					"payment_type"=>-1,
-    					"status"=>-1,
-    					"branch_id"=>'',
+    					"advanceFilter"=>'',
+    				//	"paymentMethod"=>-1,
+    					// "status"=>-1,
+    					 "branch_id"=>-1,
     					'start_date'=> date('Y-m-d'),
     					'end_date'=>date('Y-m-d'),
     			);
@@ -31,17 +31,17 @@ class Po_ExpenseController extends Zend_Controller_Action
     		
 			$rs_rows= $db->getAllExpense($formdata);//call frome model
     		$list = new Application_Form_Frmtable();
-    		$collumns = array("BRANCH","RECEIVER","EXPENSE_TITLE","RECEIPT_NO","PAYMENT_METHOD","INVOICE","TOTAL_EXPENSE","NOTE","FOR_DATE","BY_USER","STATUS");
+    		$collumns = array("BRANCH_NAME","EXPENSE_TITLE","BUDGET_ITEM","RECEIPT_NO","RECEIVER","PAYMENT_METHOD","BANK_NAME","ACCOUNT_AND_CHEQUE_NO","TOTAL_EXPENSE","DATE","STATUS");
     		$link=array(
     				'module'=>'po','controller'=>'expense','action'=>'edit',
     		);
-    		$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array('branch_name'=>$link,'title'=>$link,'invoice'=>$link,'receiver'=>$link));
+    		$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array('projectName'=>$link,'expenseTitle'=>$link,'budgetItem'=>$link,'paymentNo'=>$link));
     	}catch (Exception $e){
     		Application_Form_FrmMessage::message("Application Error");
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     	}
-		$form = new Po_Form_FrmSearchexpense();
-    	$frm = $form->AdvanceSearch();
+		$form = new Po_Form_FrmExpense();
+    	$frm = $form->FrmExpense();
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm_search = $frm;
     }

@@ -2,6 +2,7 @@
 $frm = $this->frm_search;
 $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 $urlReceipt = $this->baseUrl()."/allreport/accounting/rpt-expensedetail/id/";
+$urlEdit = $this->baseUrl()."/po/expense/edit/id/";
 ?>
 <title><?php echo $tr->translate("OTHER_EXPENSE")?></title>
 <script>
@@ -23,20 +24,12 @@ $urlReceipt = $this->baseUrl()."/allreport/accounting/rpt-expensedetail/id/";
 			<form id="list" name="list" action="<?php echo $this->url(array('module'=>'po','controller'=>'expense','action'=>'index')); ?>" dojoType="dijit.form.Form" method="post">
   				<div class="form-group">
 	            	<div class="col-md-3 col-sm-3 col-xs-12">
-	            		<?php echo $frm->getElement("adv_search");?>
+	            		<?php echo $frm->getElement("advanceFilter");?>
 	            	</div>
 	            	<div class="col-md-3 col-sm-3 col-xs-12">
 	            		<?php echo $frm->getElement('branch_id');?>
 	            	</div>
-	            	<div class="col-md-3 col-sm-3 col-xs-12">
-	            		<?php echo $frm->getElement('status');?>
-	            	</div>
-	            	<div class="col-md-3 col-sm-3 col-xs-12">
-	            		<?php echo $frm->getElement('payment_type');?>
-	            	</div>
-	            </div>
-	            <div class="form-group">
-	            	<div class="col-md-3 col-sm-3 col-xs-12">
+					<div class="col-md-3 col-sm-3 col-xs-12">
 	            		<?php echo $frm->getElement("start_date");?>
 	            	</div>
 	            	<div class="col-md-3 col-sm-3 col-xs-12">
@@ -45,7 +38,9 @@ $urlReceipt = $this->baseUrl()."/allreport/accounting/rpt-expensedetail/id/";
 	            	<div class="col-md-2 col-sm-2 col-xs-12">
 	            		<button class="button-class button-primary" iconClass="glyphicon glyphicon-search" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
 	            	</div>
+	            	
 	            </div>
+	          
 			</form>
 		</div>
 		<div class="card-box">
@@ -61,12 +56,16 @@ $(function(){
 		selector: '.context-menu-one', 
 		callback: function(key, options) {
 			var m = "clicked: " + key;
+			if(key=="edit"){
+				url='<?php echo $urlEdit;?>';
+			} else 
 			if(key=="receipt"){
 				url='<?php echo $urlReceipt;?>';
 			}
 			gotoAction();
 		},
 		items: {
+			"edit": {name: "<?php echo $tr->translate("EDIT");?>", icon: "fa-edit", accesskey: "c"},
 			"receipt": {name: "<?php echo $tr->translate("PAYMENT_VOUCHER");?>", icon: "fa-money", accesskey: "c"},
 		}
 	});

@@ -81,13 +81,13 @@ class Product_ClosingstockController  extends Zend_Controller_Action {
 		$rows = $db->GetRowDetail($id);
 		$this->view->rowDetail = $rows;
 		
-		if(empty($id) OR empty($row)){
-			Application_Form_FrmMessage::Sucessfull("NO_DATA","/product/closingstock/index",2);
-		}
+		// if(empty($id) OR empty($row)){
+		// 	Application_Form_FrmMessage::Sucessfull("NO_DATA","/product/closingstock/index",2);
+		// }
 		
-		if($row['isClosed']=1){
-			Application_Form_FrmMessage::Sucessfull("Can not edit this data","/product/closingstock/",2);
-		}
+		// if($row['isClosed']=1){
+		// 	Application_Form_FrmMessage::Sucessfull("Can not edit this data","/product/closingstock/",2);
+		// }
 	
 		$frm = new Product_Form_FrmPreCount();
     	$frm->FrmPreCountProduct($row);
