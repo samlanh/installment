@@ -57,8 +57,8 @@ class Product_ClosingstockController  extends Zend_Controller_Action {
 	    		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 	    	}
     	}
-    	$frm = new Requesting_Form_FrmRequest();
-    	$frm->FrmRequestPO(null);
+    	$frm = new Product_Form_FrmPreCount();
+    	$frm->FrmPreCountProduct(null);
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm = $frm;
 	}
@@ -77,15 +77,22 @@ class Product_ClosingstockController  extends Zend_Controller_Action {
 		$id = $this->getRequest()->getParam('id');
 		$id = empty($id)?0:$id;
 		$row = $db->getDataRow($id);
-		/*
-		if(empty($id) OR empty($row)){
-			Application_Form_FrmMessage::Sucessfull("NO_DATA","/product/initqty/index",2);
-		}
-		if($row['recordHistory']>1){
-			Application_Form_FrmMessage::Sucessfull("Can not edit this data","/product/initqty/",2);
-		}
-		*/
-		$this->view->rs = $row;
+
+		$rows = $db->GetRowDetail($id);
+		$this->view->rowDetail = $rows;
+		
+		// if(empty($id) OR empty($row)){
+		// 	Application_Form_FrmMessage::Sucessfull("NO_DATA","/product/closingstock/index",2);
+		// }
+		
+		// if($row['isClosed']=1){
+		// 	Application_Form_FrmMessage::Sucessfull("Can not edit this data","/product/closingstock/",2);
+		// }
+	
+		$frm = new Product_Form_FrmPreCount();
+    	$frm->FrmPreCountProduct($row);
+    	Application_Model_Decorator::removeAllDecorator($frm);
+    	$this->view->frm = $frm;
 	}
 	function viewAction(){
 		

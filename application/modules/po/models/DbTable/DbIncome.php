@@ -7,6 +7,51 @@ class Po_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 		$session_user=new Zend_Session_Namespace(SYSTEM_SES);
 		return $session_user->user_id;
 	}
+	function getAllIncome($search=null){
+		$db = $this->getAdapter();
+		
+		$dbp = new Application_Model_DbTable_DbGlobal();
+	
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		
+		$sql="  SELECT id,
+			(SELECT project_name FROM `ln_project` WHERE br_id= projectId LIMIT 1) AS projectName,	   
+			(SELECT title FROM `st_cate_income` AS cate WHERE cate.id = cateIncome) AS cateIncome,
+			incomeTitle,
+			paymentNo,
+		
+			(SELECT vi.name_kh FROM `ln_view` AS vi WHERE vi.type=2 AND vi.key_code=`paymentMethod` LIMIT 1) AS paymentMethod,
+			(SELECT ba.bank_name FROM `st_bank` AS ba WHERE ba.id=`bankId` LIMIT 1) AS bankName,
+			accNameAndChequeNo,
+			totalAmount,
+			paymentDate
+		";
+		
+		$sql.=$dbp->caseStatusShowImage("st_income.status");
+		$sql.=" FROM st_income ";
+		
+		$from_date =(empty($search['start_date']))? '1': " paymentDate >= '".$search['start_date']." 00:00:00'";
+		$to_date = (empty($search['end_date']))? '1': " paymentDate <= '".$search['end_date']." 23:59:59'";
+		$where = " WHERE ".$from_date." AND ".$to_date;
+		
+		if (!empty($search['adv_search'])){
+			$s_where = array();
+			$s_search = trim(addslashes($search['adv_search']));
+			$s_where[] = " title LIKE '%{$s_search}%'";
+			$s_where[] = " totalAmount LIKE '%{$s_search}%'";
+			$where .=' AND ('.implode(' OR ',$s_where).')';
+		}
+		if(!empty($search['cateIncome'])){
+			$where.= " AND cateIncome = ".$search['cateIncome'];
+		}
+		if(!empty($search['branch_id'])){
+			$where.= " AND projectId = ".$search['branch_id'];
+		}
+		
+        $order=" order by id desc ";
+		return $db->fetchAll($sql.$where.$order);
+	}
+
 		
 	function addIncome($data){
 		
@@ -14,7 +59,6 @@ class Po_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
     	$db->beginTransaction();
     	try
     	{
-    		
     		$array = array(
 				'projectId'		=>$data['branch_id'],
 				'cateIncome'	=>$data['cateIncome'],
@@ -35,7 +79,7 @@ class Po_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
     	}catch(Exception $e){
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     		$db->rollBack();
-    		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL","/po/income/add",2);
+    	//	Application_Form_FrmMessage::Sucessfull("INSERT_FAIL","/po/income/add",2);
     	}
  	} 	 
 	function updateIncome($data){
@@ -64,75 +108,7 @@ class Po_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 		$sql=" SELECT * FROM ln_income WHERE id=$id ";
 		return $db->fetchRow($sql);
 	}
-	function getAllIncome($search=null){
-		$db = $this->getAdapter();
-		
-		$dbp = new Application_Model_DbTable_DbGlobal();
-		$lang = $dbp->currentlang();
-		if($lang==1){// khmer
-			$label = "name_kh";
-			$branch = "branch_namekh";
-		}else{ // English
-			$label = "name_en";
-			$branch = "branch_nameen";
-		}
-		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-		$Option1 = $tr->translate('OTHER_INCOME');
-		$Option2 = $tr->translate('CREDIT_MEMO');
-		
-		$sql=" SELECT id,
-				(SELECT $branch FROM `rms_branch` WHERE rms_branch.br_id =branch_id LIMIT 1) AS branch_name,
-				(SELECT CONCAT(COALESCE(s.stu_code,''),'-',COALESCE(s.stu_khname,''),'-',COALESCE(s.last_name,''),' ',COALESCE(s.stu_enname,'')) 
-						FROM rms_student AS s
-					   		WHERE s.stu_id=student_id LIMIT 1) AS studentName,
-					   		
-				(SELECT cate.category_name from rms_cate_income_expense as cate where cate.id = cate_income) AS cate_name,
-				title,
-				invoice,
-				(SELECT $label FROM `rms_view` WHERE rms_view.type=8 and rms_view.key_code = payment_method) AS payment_method,
-				(SELECT bank_name FROM `rms_bank` b WHERE bank_id = b.id=bank_id LIMIT 1) AS bank_name,
-				cheqe_no,
-				CASE
-					WHEN optionType=1 THEN '$Option1'
-					WHEN optionType=2 THEN '$Option2'
-				END
-				AS optionType,
-				total_amount,
-				description,
-				date
-		";
-		
-		$sql.=$dbp->caseStatusShowImage("ln_income.status");
-		$sql.=" FROM ln_income ";
-		
-		$from_date =(empty($search['start_date']))? '1': " date >= '".$search['start_date']." 00:00:00'";
-		$to_date = (empty($search['end_date']))? '1': " date <= '".$search['end_date']." 23:59:59'";
-		$where = " WHERE ".$from_date." AND ".$to_date;
-		
-		if (!empty($search['adv_search'])){
-			$s_where = array();
-			$s_search = trim(addslashes($search['adv_search']));
-			$s_where[] = " title LIKE '%{$s_search}%'";
-			$s_where[] = " total_amount LIKE '%{$s_search}%'";
-			$s_where[] = " invoice LIKE '%{$s_search}%'";
-			$where .=' AND ('.implode(' OR ',$s_where).')';
-		}
-		if(!empty($search['cate_income'])){
-			$where.= " AND cate_income = ".$search['cate_income'];
-		}
-		if(!empty($search['branch_id'])){
-			$where.= " AND branch_id = ".$search['branch_id'];
-		}
-		if($search['option_type']>0){
-			$where.= " AND optionType = ".$search['option_type'];
-		}
-		
-		if($search['status']>-1){
-			$where.= " AND status = ".$search['status'];
-		}
-        $order=" order by id desc ";
-		return $db->fetchAll($sql.$where.$order);
-	}
+	
 	function getAllExpenseReport($search=null){
 		$db = $this->getAdapter();
 		$session_user=new Zend_Session_Namespace(SYSTEM_SES);
