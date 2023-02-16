@@ -93,20 +93,96 @@ class Product_Model_DbTable_DbPreCountProduct extends Zend_Db_Table_Abstract
     		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL", "/product/closingstock/add",2);
     	}
     }
+	
     function updateData($data){
     	 
     	$db = $this->getAdapter();
     	$db->beginTransaction();
     	try
     	{
+			$id = $data['id'];
     		$arr = array(
-				'count_qty'=>$data['count_qty'],
-				'closing_date'=>$data['closing_date'],
-				'note'=>$data['note'],
+					'projectId'=>$data['branch_id'],
+    				'inputDate'=>$data['date'],
+    				'note'=>$data['note'],
+					'status'=>$data['status'],
+    				'userId'=>$this->getUserId()
 			);
 			$this->_name='st_precount_product';
-			$where="id=".$data['id'];
+			$where="id=".$id;
 			$this->update($arr, $where);
+
+			if($data['status']==1){
+
+				$identitys = explode(',',$data['identity']);
+				$detailId="";
+				if (!empty($identitys)){
+					foreach ($identitys as $i){
+						if (empty($detailId)){
+							if (!empty($data['detailId'.$i])){
+								$detailId = $data['detailId'.$i];
+							}
+						}else{
+							if (!empty($data['detailId'.$i])){
+								$detailId= $detailId.",".$data['detailId'.$i];
+							}
+						}
+					}
+				}
+				$this->_name='st_precount_product_detail';
+				$whereDl = 'countId = '.$id;
+				if (!empty($detailId)){
+					$whereDl.=" AND id NOT IN ($detailId)";
+				}
+				$this->delete($whereDl);
+				
+				$dbs = new Application_Model_DbTable_DbGlobalStock();
+
+				if(!empty($data['identity'])){
+					$ids = explode(',', $data['identity']);
+					foreach ($ids as $i){
+
+						$arr = array(
+							'branch_id'=>$data['branch_id'],
+							'productId'=>$data['proId'.$i],
+						);
+						$rsProduct = $dbs->getProductInfoByLocation($arr);
+							
+						if (!empty($data['detailId'.$i])){
+							$arr = array(
+
+								'countId'=>$id,
+								'proId'=>$data['proId'.$i],
+								'currentQty'=>$rsProduct['currentQty'],//$data['currentQty'.$i],
+								'countQty'=>$data['count_qty'.$i],
+								'closingDate'=>$data['closing_date'.$i],
+								'note'=>$data['note'.$i],
+							);
+							$this->_name='st_precount_product_detail';
+							$where =" id =".$data['detailId'.$i];
+							$this->update($arr, $where);
+						}else{
+
+							$arr = array(
+
+								'countId'=>$id,
+								'proId'=>$data['proId'.$i],
+								'currentQty'=>$rsProduct['currentQty'],//$data['currentQty'.$i],
+								'countQty'=>$data['count_qty'.$i],
+								'closingDate'=>$data['closing_date'.$i],
+								'note'=>$data['note'.$i],
+								
+							);
+							$this->_name='st_precount_product_detail';	
+							$this->insert($arr);
+						}
+					}
+				}
+
+				
+			}
+
+
 			
 			/*
 			$arr = array(
@@ -124,13 +200,23 @@ class Product_Model_DbTable_DbPreCountProduct extends Zend_Db_Table_Abstract
     	}
     }
     function getDataRow($recordId){
+
     	$db = $this->getAdapter();
-    	$sql="SELECT l.*,
-		(SELECT project_name FROM `ln_project` WHERE br_id=l.projectId LIMIT 1) AS projectName,
-		(SELECT proName FROM `st_product` p WHERE p.proId=l.proId LIMIT 1) AS proName
-		FROM `st_precount_product` l
-		 WHERE l.id=".$recordId." LIMIT 1";
+    	$sql="SELECT * FROM `st_precount_product` 
+		 WHERE id=".$recordId." LIMIT 1";
     	return $db->fetchRow($sql);
+    }
+
+	function GetRowDetail($countId){
+		
+    	$db = $this->getAdapter();
+    	$sql="SELECT *,
+			(SELECT st_product.proCode FROM st_product WHERE st_product.proId=pd.proId LIMIT 1) AS proCode,
+			(SELECT st_product.proName FROM st_product WHERE st_product.proId=pd.proId LIMIT 1) AS productName,
+			(SELECT st_product.measureLabel FROM st_product WHERE st_product.proId=pd.proId LIMIT 1) AS MeasureLabel
+			 FROM `st_precount_product_detail` AS pd
+			 WHERE pd.countId =".$countId;
+    	return $db->fetchAll($sql);
     }
 
 }

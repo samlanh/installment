@@ -1,9 +1,9 @@
 <?php 
-Class Po_Form_FrmIncome extends Zend_Dojo_Form {
+Class Po_Form_FrmExpense extends Zend_Dojo_Form {
 // 	public function init()
 // 	{
 // 	}///
-	public function FrmIncome($data=null){
+	public function FrmExpense($data=null){
 		
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		$filter = 'dijit.form.FilteringSelect';
@@ -49,13 +49,32 @@ Class Po_Form_FrmIncome extends Zend_Dojo_Form {
 		$paymentNo = new Zend_Dojo_Form_Element_TextBox('paymentNo');
     	$paymentNo->setAttribs(array(
     			'dojoType'=>'dijit.form.ValidationTextBox',
-    			'required'=>'true',
     			'class'=>'fullside ',
     			'readOnly'=>'readOnly ',
     			'placeholder'=>$tr->translate("INVOICE_NO"),
 				'style'=>'color:red;font-weight: 600;',
     			'missingMessage'=>$tr->translate("Forget Enter Data")
     	));
+
+		$external_invoice = new Zend_Dojo_Form_Element_TextBox('externalInvoice');
+    	$external_invoice->setAttribs(array(
+    			'dojoType'=>'dijit.form.ValidationTextBox',
+    			'required'=>'true',
+    			'class'=>'fullside ',
+    			'placeholder'=>$tr->translate("EXTERNAL_INVOICE"),
+				'style'=>'color:red;font-weight: 600;',
+    			'missingMessage'=>$tr->translate("Forget Enter Data")
+    	));
+
+		$budgetItem = new Zend_Dojo_Form_Element_FilteringSelect('budgetItem');
+		$budgetItem->setAttribs(array(
+			'dojoType'=>'dijit.form.FilteringSelect',
+			'class'=>'fullside',
+			'autoComplete'=>'false',
+			'queryExpr'=>'*${0}*',
+ 			'onchange'=>'addNewBudgetItem();'
+		));
+		
 
 		$cateIncome = new Zend_Dojo_Form_Element_FilteringSelect('cateIncome');
 		$cateIncome->setAttribs(array(
@@ -73,12 +92,20 @@ Class Po_Form_FrmIncome extends Zend_Dojo_Form {
 		}
 		$cateIncome->setMultiOptions($optCtIncome);
 
-		$income_title = new Zend_Dojo_Form_Element_TextBox('incomeTitle');
-    	$income_title->setAttribs(array(
+		$expense_title = new Zend_Dojo_Form_Element_TextBox('expenseTitle');
+    	$expense_title->setAttribs(array(
     			'dojoType'=>'dijit.form.TextBox',
     			'required'=>'true',
     			'class'=>'fullside ',
-    			'placeholder'=>$tr->translate("INCOME_TITLE"),
+    			'placeholder'=>$tr->translate("EXPENSE_TITLE"),
+				
+    	));
+		$receiver = new Zend_Dojo_Form_Element_TextBox('receiver');
+    	$receiver->setAttribs(array(
+    			'dojoType'=>'dijit.form.TextBox',
+    			'required'=>'true',
+    			'class'=>'fullside ',
+    			'placeholder'=>$tr->translate("RECEIVER"),
 				
     	));
 
@@ -133,7 +160,7 @@ Class Po_Form_FrmIncome extends Zend_Dojo_Form {
     	$note->setAttribs(array(
     			'dojoType'=>'dijit.form.Textarea',
     			'class'=>'fullside',
-    			'style'=>'font-family: inherit;  min-height:100px !important; max-width:99%;'));
+    			'style'=>'font-family: inherit;  min-height:50px !important; max-width:99%;'));
 		
 		$totalAmount = new Zend_Dojo_Form_Element_TextBox('totalAmount');
     	$totalAmount->setAttribs(array(
@@ -179,8 +206,9 @@ Class Po_Form_FrmIncome extends Zend_Dojo_Form {
 		$_date = $request->getParam("end_date");
 		if(empty($_date)){
 			$_date = date("Y-m-d");
+			$start_date->setValue($_date);
 		}
-		$start_date->setValue($_date);
+		
 		 
 		$end_date= new Zend_Dojo_Form_Element_DateTextBox('end_date');
 		$end_date->setAttribs(array(
@@ -225,7 +253,10 @@ Class Po_Form_FrmIncome extends Zend_Dojo_Form {
 				$start_date,
 				$end_date,
 				$cateIncome,
-				$income_title
+				$expense_title ,
+				$external_invoice ,
+				$receiver,
+				$budgetItem
 		));
 		return $this;
 	}
