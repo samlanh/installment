@@ -210,6 +210,9 @@ Class Po_Form_FrmExpense extends Zend_Dojo_Form {
 		
 		if(!empty($data)){
 			$branch_id->setValue($data['projectId']);
+			$branch_id->setAttribs(array(
+				'readOnly'=>'readOnly',
+			));
 			$paymentNo->setValue($data['paymentNo']);
 			$external_invoice->setValue($data['externalInvoice']);
 			$expense_title->setValue($data['expenseTitle']);

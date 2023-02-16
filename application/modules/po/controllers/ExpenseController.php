@@ -98,7 +98,7 @@ class Po_ExpenseController extends Zend_Controller_Action
 		$db = new Po_Model_DbTable_DbExpense();
 		$row  = $db->getexpensebyid($id);
 		$this->view->row = $row;
-		// $this->view->rows = $db->getexpenseDetailbyid($id);
+		$this->view->rows = $db->getexpenseDetailbyid($id);
 
     	$pructis=new Po_Form_Frmexpense();
     	$frm = $pructis->FrmExpense($row);
