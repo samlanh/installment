@@ -82,10 +82,9 @@ class Po_ExpenseController extends Zend_Controller_Action
     	if($this->getRequest()->isPost()){
 			try{
 				$data = $this->getRequest()->getPost();
-				$data['id'] = $id;
 				$db = new Po_Model_DbTable_DbExpense();	
-				$db->updatExpense($data);
-				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","/registrar/expense");
+				$db->updateData($data);
+				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","/po/expense");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("EDIT_FAIL");
 		
@@ -104,11 +103,11 @@ class Po_ExpenseController extends Zend_Controller_Action
     	$frm = $pructis->FrmExpense($row);
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm_expense=$frm;
-    	$db = new Application_Model_GlobalClass();
-    	$this->view->expenseopt = $db->getAllExpenseIncomeType(5);
+    	$dbg = new Application_Model_GlobalClass();
+    	$this->view->expenseopt = $dbg->getAllExpenseIncomeType(5);
     	
-    	$db = new Po_Model_DbTable_DbCateExpense();
-    	$this->view->parent = $db->getParentCateExpense();
+    	$dbe = new Po_Model_DbTable_DbCateExpense();
+    	$this->view->parent = $dbe->getParentCateExpense();
     }
     function getReceiptNumberAction(){
     	if($this->getRequest()->isPost()){

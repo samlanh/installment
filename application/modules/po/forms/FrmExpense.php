@@ -221,7 +221,7 @@ Class Po_Form_FrmExpense extends Zend_Dojo_Form {
 			$bankId->setValue($data['bankId']);
 			$accNameAndChequeNo->setValue($data['accNameAndChequeNo']);
 			$totalAmount->setValue($data['totalAmount']);
-			$paymentDate->setValue($data['paymentDate']);
+		//	$paymentDate->setValue($data['paymentDate']);
 			$budgetItem->setValue($data['budgetId']);
 			$note->setValue($data['note']);
 			$_status->setValue($data['status']);

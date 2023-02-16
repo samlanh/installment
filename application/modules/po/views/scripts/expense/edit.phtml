@@ -2,11 +2,10 @@
 $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 $baseurl =  Zend_Controller_Front::getInstance()->getBaseUrl();
 $frm = $this->frm_expense;
-$row = $this->row;
-print_r($row);
+$rs= $this->rows;
 ?>
 <script src="<?php echo $baseurl;?>/js/help.js"></script>
-<title><?php echo $tr->translate("Edit_OTHER_EXPENSE")?></title>
+<title><?php echo $tr->translate("EDIT_OTHER_EXPENSE")?></title>
 <style>	
 .fullside {
 	width: 100%;
@@ -28,7 +27,7 @@ table.collape tbody td {
  </script>
 <div class="card">
 	<div class="card-content collapse show">
-		<form id='office_receipt' action="<?php echo $this->url(array('module'=>'po','controller'=>'expense','action'=>'add')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+		<form id='office_receipt' action="<?php echo $this->url(array('module'=>'po','controller'=>'expense','action'=>'edit')); ?>" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
 			<script type="dojo/method" event="onSubmit">	
 				if(this.validate()) {
 					condition = checkValidateAddRow();
@@ -45,7 +44,7 @@ table.collape tbody td {
 			<div class="card-box">
 	             <div class="col-sm-12 border-botom">
 			    	<div class="col-sm-8 pd-0">
-			    		<h4 class="m-b-0"><i class="fa fa-money" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('ADD_OTHER_EXPENSE');?></h4>
+			    		<h4 class="m-b-0"><i class="fa fa-money" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('EDIT_OTHER_EXPENSE');?></h4>
 	    			</div>
 	    			<div class="col-sm-4 text-right">
 	    			</div>
@@ -116,7 +115,6 @@ table.collape tbody td {
 										<label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("STATUS");?> :
 										</label>
 										<div class="col-md-7 col-sm-7 col-xs-12">
-												<input type="hidden" id="identity" name="identity" />
 												<?php echo $frm->getElement('status');?>
 										</div>
 									</div>
@@ -138,7 +136,7 @@ table.collape tbody td {
 													<i class="material-icons-outlined">payments</i>
 												</div> 
 												<div class="col-md-10 col-sm-10 col-xs-12"> 
-													<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("EXPENSE_INFO");?></p>
+													<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("PAYMENT_INFO");?></p>
 												</div> 
 											</div>
 											<div class="form-group">
@@ -236,9 +234,8 @@ table.collape tbody td {
 	dojo.require("dojo.NodeList-manipulate");
 	dojo.require("dojo.data.ObjectStore");
 	dojo.ready(function(){
-	//	getReceiptNumber("");
-		addRow();
-	//	dijit.byId('payment_method').attr('value',1);
+
+		initialize();
 	});
 	function hideDialog(){
 		dijit.byId('terms').hide();
@@ -336,9 +333,6 @@ table.collape tbody td {
 		}
 	}
 
-
-
-
 	function initialize(){ 
 
 		<?php if (!empty($rs)) foreach ($rs as $key=> $row){?>
@@ -357,7 +351,7 @@ table.collape tbody td {
 				title=1;
 			}
 			template+='<td width="47px" align="center"><img onclick="deleteRecord('+col+');calculateTotal('+col+');calculatePaidAmount('+col+');" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
-			template+='<td width="50px" align="center">'+no+'</td>';
+			template+='<td width="50px" align="center">'+no+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="detailId'+col+'" name="detailId'+col+'" value="<?php echo $row['id'];?>" type="text"  > </td>';
 			template+='<td style="width:300px"><select style="width:100%" onchange="popupCateExpense('+col+');" dojoType="dijit.form.FilteringSelect" id="cate_expense_id_'+col+'" name="cate_expense_id_'+col+'">'+optexpense+'</select></td>';	
 			template+='<td><input type="text" required="1" onkeyup="calculateTotal('+col+');" name="price_'+col+'" id="price_'+col+'"  dojoType="dijit.form.NumberTextBox" style="width:120px;" /></td>';	
 			template+='<td><input type="text" required="1" onkeyup="calculateTotal('+col+',1);" name="qty_'+col+'" id="qty_'+col+'" dojoType="dijit.form.NumberTextBox" style="width:120px;" /></td>';
@@ -374,11 +368,14 @@ table.collape tbody td {
 				 parseContent: true,
 			});
 
+			dijit.byId('cate_expense_id_'+col).attr('value',"<?php echo $row['cateExpenseId'];?>");
+			dijit.byId('qty_'+col).attr('value',"<?php echo $row['qty'];?>");
+			dijit.byId('price_'+col).attr('value',"<?php echo $row['price'];?>");
+			dijit.byId('total_'+col).attr('value',"<?php echo $row['total'];?>");
+			dijit.byId('remark_'+col).attr('value','<?php echo $row["note"];?>');
+
 		<?php } ?>
 	 }
-
-
-
 
 	function popupCateExpense(index){
 		dijit.byId("ex_save_new").attr("disabled",false);
