@@ -68,36 +68,76 @@ class Product_Model_DbTable_DbClosingStock extends Zend_Db_Table_Abstract
     				'closingDate'=>$data['date'],
     				'note'=>$data['note'],
     				'userId'=>$this->getUserId(),
-    				'createDate'=>date('Y-m-d'),
+    				'createDate'=>date('Y-m-d h:s'),
     			);
     		$closeId = $this->insert($arr);
     		
-    		
-    		$arr = array(
-    				'isClosed'=>1
-    			);
-    		$this->_name='st_adjust_stock';
-    		$where='id='.$data['adjustDate'];
-    		$this->update($arr, $where);
+//     		$arr = array(
+//     				'isClosed'=>1
+//     			);
+//     		$this->_name='st_adjust_stock';
+//     		$where='id='.$data['adjustDate'];
+//     		$this->update($arr, $where);
     		
     		$param = array(
     			'branch_id'=>$data['branch_id'],
     			'isCountStock'=>1
     		);
     		
+    		$dbcountStock = new Product_Model_DbTable_DbPreCountProduct();
     		$results = $dbs->getProductLocationbyProId($param);
     		
     		if(!empty($results)){
+    			
     			foreach($results as $result){
-    				$arr = array(
-    					'closingId'=>$closeId,
-    					'projectId'=>$data['branch_id'],
-    					'proId'=>$result['id'],
-    					'qtyBegining'=>$result['currentQty'],
-    					'costing'=>$result['costing'],
-    				);
-    				$this->_name='st_closing_detail';
-    				$id = $this->insert($arr);
+    				$param = array(
+    						'projectId'=>$data['branch_id'],
+    						'proId'=>$result['id'],
+    						'isClosed'=>0,
+    						'getSigleRow'=>1,
+    						);
+    				$adjustResult = $dbcountStock->getProductExistingCount($param);
+    				if(!empty($adjustResult)){
+    					$differ = $adjustResult['currentQty']-$adjustResult['countQty'];
+    					
+	    				$arr = array(
+	    					'closingId'=>$closeId,
+	    					'projectId'=>$data['branch_id'],
+	    					'proId'=>$result['id'],
+	    					'qtyBegining'=>$result['currentQty']-$differ,
+	    					'qtyAdjust'=>$differ,
+	    					'costing'=>$result['costing'],
+	    				);
+	    				
+	    				$this->_name='st_closing_detail';
+	    				$id = $this->insert($arr);
+	    				
+// 	    				$results = $this->getDataAllRow($data['id']);
+// 	    				if(!empty($results)){
+// 	    					foreach($results as $result){
+	    						$arr = array(
+	    								'qty'=>$result['currentQty']-$differ,
+	    						);
+	    							
+	    						$this->_name='st_product_location';
+	    						$where = 'projectId='.$data['branch_id']." AND proId=".$result['proId'];
+	    						$this->update($arr, $where);
+	    				
+	    						$param = array(
+    								'branch_id'=>$data['branch_id'],
+    								'productId'=>$result['proId'],
+	    						);
+	    				
+	    						$qtyDifferent = $result['currentQty']- $differ;
+	    						$dbs->addProductHistoryQty($data['branch_id'],$result['proId'],7,$qtyDifferent,$adjustResult['id']);//movement'
+// 	    					}
+// 	    				}
+	    				
+	    				$this->_name='st_precount_product_detail';
+	    				$_arr = array('isClosed'=>1);
+	    				$where ='id='.$adjustResult['id'];
+	    				$this->update($_arr, $where);
+    				}
     			}
     		}
     		$db->commit();

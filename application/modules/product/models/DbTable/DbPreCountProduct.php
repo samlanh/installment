@@ -93,30 +93,94 @@ class Product_Model_DbTable_DbPreCountProduct extends Zend_Db_Table_Abstract
     		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL", "/product/closingstock/add",2);
     	}
     }
+	
     function updateData($data){
     	 
     	$db = $this->getAdapter();
     	$db->beginTransaction();
     	try
     	{
+			$id = $data['id'];
     		$arr = array(
-				'count_qty'=>$data['count_qty'],
-				'closing_date'=>$data['closing_date'],
-				'note'=>$data['note'],
+					'projectId'=>$data['branch_id'],
+    				'inputDate'=>$data['date'],
+    				'note'=>$data['note'],
+					'status'=>$data['status'],
+    				'userId'=>$this->getUserId()
 			);
 			$this->_name='st_precount_product';
-			$where="id=".$data['id'];
+			$where="id=".$id;
 			$this->update($arr, $where);
-			
-			/*
-			$arr = array(
-					'qty'=>$data['beginingQty']
-				);
-			$this->_name='st_product_story';
-			$where="tranType =1 AND transId=".$data['id'];
-			$this->update($arr, $where);
-			*/
 
+			if($data['status']==1){
+
+				$identitys = explode(',',$data['identity']);
+				$detailId="";
+				if (!empty($identitys)){
+					foreach ($identitys as $i){
+						if (empty($detailId)){
+							if (!empty($data['detailId'.$i])){
+								$detailId = $data['detailId'.$i];
+							}
+						}else{
+							if (!empty($data['detailId'.$i])){
+								$detailId= $detailId.",".$data['detailId'.$i];
+							}
+						}
+					}
+				}
+				$this->_name='st_precount_product_detail';
+				$whereDl = 'countId = '.$id;
+				if (!empty($detailId)){
+					$whereDl.=" AND id NOT IN ($detailId)";
+				}
+				$this->delete($whereDl);
+				
+				$dbs = new Application_Model_DbTable_DbGlobalStock();
+
+				if(!empty($data['identity'])){
+					$ids = explode(',', $data['identity']);
+					foreach ($ids as $i){
+
+						$arr = array(
+							'branch_id'=>$data['branch_id'],
+							'productId'=>$data['proId'.$i],
+						);
+						$rsProduct = $dbs->getProductInfoByLocation($arr);
+							
+						if (!empty($data['detailId'.$i])){
+							$arr = array(
+
+								'countId'=>$id,
+								'proId'=>$data['proId'.$i],
+								'currentQty'=>$rsProduct['currentQty'],//$data['currentQty'.$i],
+								'countQty'=>$data['count_qty'.$i],
+								'closingDate'=>$data['closing_date'.$i],
+								'note'=>$data['note'.$i],
+							);
+							$this->_name='st_precount_product_detail';
+							$where =" id =".$data['detailId'.$i];
+							$this->update($arr, $where);
+						}else{
+
+							$arr = array(
+
+								'countId'=>$id,
+								'proId'=>$data['proId'.$i],
+								'currentQty'=>$rsProduct['currentQty'],//$data['currentQty'.$i],
+								'countQty'=>$data['count_qty'.$i],
+								'closingDate'=>$data['closing_date'.$i],
+								'note'=>$data['note'.$i],
+								
+							);
+							$this->_name='st_precount_product_detail';	
+							$this->insert($arr);
+						}
+					}
+				}
+
+				
+			}
     		$db->commit();
     	}catch (Exception $e){
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -124,13 +188,86 @@ class Product_Model_DbTable_DbPreCountProduct extends Zend_Db_Table_Abstract
     	}
     }
     function getDataRow($recordId){
+
     	$db = $this->getAdapter();
-    	$sql="SELECT l.*,
-		(SELECT project_name FROM `ln_project` WHERE br_id=l.projectId LIMIT 1) AS projectName,
-		(SELECT proName FROM `st_product` p WHERE p.proId=l.proId LIMIT 1) AS proName
-		FROM `st_precount_product` l
-		 WHERE l.id=".$recordId." LIMIT 1";
+    	$sql="SELECT * FROM `st_precount_product` 
+		 WHERE id=".$recordId." LIMIT 1";
     	return $db->fetchRow($sql);
+    }
+
+	function GetRowDetail($countId){
+		
+    	$db = $this->getAdapter();
+    	$sql="SELECT *,
+			(SELECT st_product.proCode FROM st_product WHERE st_product.proId=pd.proId LIMIT 1) AS proCode,
+			(SELECT st_product.proName FROM st_product WHERE st_product.proId=pd.proId LIMIT 1) AS productName,
+			(SELECT st_product.measureLabel FROM st_product WHERE st_product.proId=pd.proId LIMIT 1) AS MeasureLabel
+			 FROM `st_precount_product_detail` AS pd
+			 WHERE pd.countId =".$countId;
+    	return $db->fetchAll($sql);
+    }
+    function getProductExistingCount($data){
+    	$sql="
+    		SELECT pp.id,
+		    	pp.proId,
+		    	pp.countQty,
+		    	pp.currentQty,
+		    	pp.note,
+		    	DATE_FORMAT(pp.closingDate,'%d-%m-%Y') AS closingDate,
+		    	(SELECT `proCode` FROM `st_product` WHERE st_product.`proId`=pp.proId LIMIT 1) AS proCode,
+		    	(SELECT `proName` FROM `st_product` WHERE st_product.`proId`=pp.proId LIMIT 1) AS proName,
+		    	(SELECT measureLabel FROM st_product p WHERE p.proId=pp.proId LIMIT 1) measureLabel
+    	FROM 
+    		st_precount_product AS p,
+    		`st_precount_product_detail` AS pp
+    	WHERE p.id=pp.countId ";
+    	if(!empty($data['projectId'])){
+    		$sql.=" AND p.projectId=".$data['projectId'];
+    	}
+    	if(!empty($data['proId'])){
+    		$sql.=" AND pp.proId=".$data['proId'];
+    	}
+    	if(isset($data['isClosed'])){
+    		$sql.=" AND pp.isClosed=".$data['isClosed'];
+    	}
+    	if(!empty($data['getSigleRow'])){
+    		$result = $this->getAdapter()->fetchRow($sql);
+    	}else{
+    		$result = $this->getAdapter()->fetchAll($sql);
+    	}
+    	return $result;
+    	
+    }
+    function getgetProductExistingCountRecords($data){
+    	
+    	$result = $this->getProductExistingCount($data);
+    	$string='';
+    	$array= array();
+    	$records =''; 
+    	if(!empty($result)){
+    		foreach ($result as $key=> $row){
+    			if($key==0){
+    				$records=$key;
+    			}else{
+    				$records = $records.",".$key;
+    			}
+    			$class='';
+    			if($key%2==0)$class="styleClass";
+    			
+    			$differ = $row['countQty']-$row['currentQty'];
+    			$diffclass='';
+    			if($differ<0){$diffclass="red";}
+    			$string.='<div class="col-sm-4 col-md-4 col-xs-12 hover '.$class.'"><input type="hidden" value="'.$row["proId"].'" name="proId_'.$key.'" />'.($key+1).','.$row["proName"].'&nbsp; ('.$row['measureLabel'].')</div>';
+    			$string.='<div class="col-sm-2 col-md-2 col-xs-12 hover '.$class.'">&nbsp;'.$row['currentQty'].'</div>';
+    			$string.='<div class="col-sm-2 col-md-2 col-xs-12 hover '.$class.'">&nbsp;'.$row['countQty'].'</div>';
+    			$string.='<div class="col-sm-2 col-md-2 col-xs-12 hover '.$class.' '.$diffclass.' ">&nbsp;'.$differ.'</div>';
+    			$string.='<div class="col-sm-2 col-md-2 col-xs-12 hover '.$class.'">&nbsp;'.$row['note'].'</div>';
+    		}
+    	}
+    	$array=array(
+    			'listData'=>$string,
+    			'records'=>$records);
+    	return $array;
     }
 
 }

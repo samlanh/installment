@@ -5,6 +5,18 @@
 ?>
 <script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
 <title><?php echo $this->tr->translate("CLOSING_STOCK_ENTRY")?></title>
+<style>
+.styleClass{background: #eee;}
+.hover:hover{background:#eff4fd;}
+.header{
+	background: #062b61;
+    color: #fff;
+    padding: 10px 0px;
+}
+.font-size{font-size: 12px;}
+.font-size div{line-height:25px;}
+.red{color:red;}
+</style>
  <div class="card">
 	<div class="card-content collapse show">
 		<div class="card-box">
@@ -25,12 +37,7 @@
 						dijit.byId('branch_id').focus();
 						return false;
 					}
-					adjustDate = dijit.byId('adjustDate').get('value');
-					if(adjustDate=='' || adjustDate<=0){
-						alert('<?php echo $tr->translate('PLEASE_SELECT');?>');
-						dijit.byId('adjustDate').focus();
-						return false;
-					}
+					
 					
 					
 					loadingBlock();
@@ -40,7 +47,7 @@
 	   			}
 			</script>
 			<div class="card-box">
-				<div class="col-md-5 col-sm-5 col-xs-12">
+				<div class="col-md-3 col-sm-3 col-xs-12">
 					<div class="card-blogform">
 						<div class="card-body"> 
 							<div class="row"> 
@@ -53,7 +60,6 @@
 											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("CLOSING_STOCK_ENTRY");?></p>
 										</div> 
 									</div>
-
 									<div class="form-group">
 										<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("BRANCH_NAME");?> </label>
 										<div class="col-md-7 col-sm-7 col-xs-12">
@@ -76,6 +82,7 @@
 										<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("NOTE");?> </label>
 										<div class="col-md-7 col-sm-7 col-xs-12">
 											<?php echo $frm->getElement("note");?>
+											<input type="text" name="identity" id="identity" dojoType="dijit.form.TextBox" />
 										</div>
 									</div>
 								</div>
@@ -84,7 +91,31 @@
 					</div>
 				</div>
 				<div class="col-md-9 col-sm-9 col-xs-12">
-						
+					<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12">
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="glyphicon glyphicon-object-align-right" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("PRODUCT_LIST");?></p>
+										</div> 
+									</div>
+									<div class="form-group header">
+										<div class="col-sm-4 col-md-4 col-xs-12"><?php echo $tr->translate('PRODUCT_NAME');?></div>
+										<div class="col-sm-2 col-md-2 col-xs-12"><?php echo $tr->translate('CURRENT_STOCK');?></div>
+										<div class="col-sm-2 col-md-2 col-xs-12"><?php echo $tr->translate('ACTUAL_QTY');?></div>
+										<div class="col-sm-2 col-md-2 col-xs-12"><?php echo $tr->translate('DIFFERENCE');?></div>
+										<div class="col-sm-2 col-md-2 col-xs-12"><?php echo $tr->translate('NOTE');?></div>
+									</div>
+									<div class="form-group font-size" id="productList">
+									</div>	
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 				<div class="clearfix"></div>
 			</div>
@@ -111,7 +142,7 @@
 		new dijit.form.FilteringSelect({
 			autoComplete: false,
 			queryExpr: "*${0}*",
-			required: true,		           
+			required: false,		           
 			placeHolder:'<?php echo $tr->translate('SELECT_ADJUST');?>',
 			name: "adjustDate",
 			id: "adjustDate",
@@ -132,6 +163,7 @@
 		if(branch_id==null || branch_id==-1){
 			return false;
 		}
+		getProductCountStock(branch_id);
 		dojo.xhrPost({
 			url:urlGetAdjusted,	
 			content:{ 
@@ -143,6 +175,27 @@
 			load: function(data) {
 				storeAdjust = getDataStorefromJSON('id','name',data);
 				dijit.byId('adjustDate').set('store',storeAdjust);
+			},
+			error: function(err) {
+			}
+		});
+	}
+	var urlGetAdjusted = '<?php echo $this->url(array('module'=>'product','controller'=>'closingstock','action'=>'getcountstock')); ?>';
+	function getProductCountStock(branch_id){
+		dojo.byId("productList").innerHTML = '<center>No Data</center>';	
+		dojo.xhrPost({
+			url:urlGetAdjusted,	
+			content:{ 
+				'projectId':branch_id,
+				'isApproved':1,
+				'isClosed':0,
+			},		    
+			handleAs:"json",
+			load: function(data) {
+				if(data.listData){
+					dojo.byId("productList").innerHTML = data.listData;
+					$('#identity').val(data.records);
+				}			
 			},
 			error: function(err) {
 			}

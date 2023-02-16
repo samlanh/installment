@@ -320,20 +320,21 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
     			
     			$records[$key]['qtyBegining']=$result['qtyBegining'];
     			$records[$key]['costing']=$result['costing'];
+    			$records[$key]['qtyAdjust']=$result['qtyAdjust'];
     			
     			$records[$key]['qtyReceive']=0;
     			$records[$key]['qtyUsage']=0;
     			$records[$key]['qtySale']=0;
-    			$records[$key]['qtyAdjust']=0;
+    			
     			$records[$key]['qtyTransferOut']=0;
     			$records[$key]['qtyReceivedTransfer']=0;
     			
     			$records[$key]['qtyTransferInpending']=0;
     			
-    			$qtyAdjust = $this->getAdjustEntry($result['adjustId'],$result['proId']);
-    			if(!empty($qtyAdjust)){
-    				$records[$key]['qtyAdjust']=$qtyAdjust;
-    			}
+//     			$qtyAdjust = $this->getAdjustEntry($result['adjustId'],$result['proId']);
+//     			if(!empty($qtyAdjust)){
+//     				$records[$key]['qtyAdjust']=$qtyAdjust;
+//     			}
     			
     			$param = array(
     					'projectId'=>$result['projectId'],

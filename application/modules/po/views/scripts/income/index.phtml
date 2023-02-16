@@ -18,37 +18,27 @@
     		</div>
 	    </div>
 		<div class="card-box">
-			<form id="list" name="list" action="<?php echo $this->url(array('module'=>'registrar','controller'=>'income','action'=>'index')); ?>" dojoType="dijit.form.Form" method="post">
+			<form id="list" name="list" action="<?php echo $this->url(array('module'=>'po','controller'=>'income','action'=>'index')); ?>" dojoType="dijit.form.Form" method="post">
 				<div class="form-group">
 	            	<div class="col-md-2 col-sm-2 col-xs-12">
-	            		<?php echo $frm->getElement("adv_search");?>
+	            		<?php echo $frm->getElement("advanceFilter");?>
 	            	</div>
 	            	<div class="col-md-2 col-sm-2 col-xs-12">
 	            		<?php echo $frm->getElement('branch_id');?>
 	            	</div>
 	            	<div class="col-md-2 col-sm-2 col-xs-12">
-	            		<input id="studentId" />
+	            		<?php echo $frm->getElement('cateIncome');?>
 	            	</div>
-	            	<div class="col-md-2 col-sm-2 col-xs-12">
-	            		<?php echo $frm->getElement('option_type');?>
-	            	</div>
-	            	<div class="col-md-2 col-sm-2 col-xs-12">
-	            		<?php echo $frm->getElement('cate_income');?>
-	            	</div>
-	            </div>
-	            <div class="form-group">
-	            	<div class="col-md-2 col-sm-2 col-xs-12">
-	            		<?php echo $frm->getElement('status');?>
-	            	</div>
-	            	<div class="col-md-2 col-sm-2 col-xs-12">
+					<div class="col-md-2 col-sm-2 col-xs-12">
 	            		<?php echo $frm->getElement("start_date");?>
 	            	</div>
 	            	<div class="col-md-2 col-sm-2 col-xs-12">
 	            		<?php echo $frm->getElement("end_date");?>
 	            	</div>
-	            	<div class="col-md-2 col-sm-2 col-xs-12">
+					<div class="col-md-2 col-sm-2 col-xs-12">
 	            		<button class="button-class button-primary" iconClass="glyphicon glyphicon-search" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
 	            	</div>
+	            </div>
 	            </div>
             </form>
 		</div>
@@ -60,50 +50,11 @@
 <script src="<?php echo $this->baseUrl();?>/admin/js/global.js"  type="text/javascript"></script>
 <script src="<?php echo $this->baseUrl();?>/js/help.js"  type="text/javascript"></script>
 <script type="text/javascript">
-dojo.require("dojo.data.ItemFileWriteStore");  
+dojo.require("dojo.data.ItemFileWriteStore"); 
 dojo.ready(function(){
-	new dijit.form.FilteringSelect({
-		required: false,  
-		autoComplete: false,
-		queryExpr: "*${0}*",                      
-	    id: "studentId",
-	    name: "studentId",  
-	    tabindex: "1",         
-	    class: 'fullside',  
-	    placeHolder:"<?php echo $tr->translate("SELECT_STUDENT_NAME")?>", 
-	    
-	}, "studentId");
-
-	branchId = dijit.byId('branch_id');
-	branchId.on('change',function(evt){
-		branchId = dijit.byId('branch_id').get('value');
-		if(branchId==''){
-			dijit.byId("branch_id").focus();
-			return false;
-		}
-		getAllstudentBranch();
-	});
-
-	getAllstudentBranch();
+	
 });
 
-function getAllstudentBranch(){
-	dijit.byId("studentId").reset();
-	branchId = dijit.byId('branch_id').get('value');
-	if(branchId==''){
-		 dijit.byId('branch_id').focus();
-		 return false;
-	}
-	
-	var urlGet = '<?php echo $this->url(array('module'=>'registrar','controller'=>'register','action'=>'getallstudent')); ?>';
-	
-	contentData = {
-			'branch_id':branchId,
-			'customer_type':1
-			}
-	selectedId='<?php echo $this->adv_search['studentId'];?>';
-	getAllStudentByBranch(urlGet,contentData,selectedId);
-}
 
 var row=0;
 var url="";

@@ -196,19 +196,5 @@ class Stockinout_Model_DbTable_DbAdjustStock extends Zend_Db_Table_Abstract
     	
     	return $db->fetchAll($sql);
     }
-    function getProductExistingCount($data){
-    	$sql="
-    		SELECT pp.id, 
-				pp.proId,
- 				pp.countQty, 
- 				DATE_FORMAT(pp.closingDate,'%d-%m-%Y') AS closingDate, 
- 			   (SELECT `proCode` FROM `st_product` WHERE st_product.`proId`=pp.proId LIMIT 1) AS proCode,
-			   (SELECT `proName` FROM `st_product` WHERE st_product.`proId`=pp.proId LIMIT 1) AS proName, 
-			   (SELECT measureLabel FROM st_product p WHERE p.proId=pp.proId LIMIT 1) measureLabel 
-  			FROM `st_precount_product_detail` AS pp WHERE 1 
-    	";
-    	if(!empty($data['projectId'])){
-    		$sql.=" AND (SELECT pp.id FROM `st_precount_product` pp WHERE pp.projectId=".$data['projectId']." LIMIT 1)";
-    	}
-    }
+    
 }
