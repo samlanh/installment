@@ -268,9 +268,11 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
     			(SELECT project_name FROM `ln_project` WHERE br_id=cl.projectId LIMIT 1) AS projectName,
     			cl.projectId,
 		    	cl.closingDate,
+				cl.fromDate,
 		    	cl.toDate,
+				cl.adjustId,
 		    	cd.proId,
-		    	cl.adjustId,
+				cd.qtyAdjust,
 		    	(SELECT adjustDate FROM `st_adjust_stock` WHERE st_adjust_stock.id= cl.adjustId LIMIT 1) AS adjustDate,
 		    	(SELECT st_product.proCode FROM st_product WHERE st_product.proId=cd.proId LIMIT 1) AS proCode,
 		    	(SELECT st_product.proName FROM st_product WHERE st_product.proId=cd.proId LIMIT 1) AS productName,
@@ -339,9 +341,13 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
     			$param = array(
     					'projectId'=>$result['projectId'],
     					'proId'=>$result['proId'],
-    					'start_date'=>$result['closingDate'],
+    					'start_date'=>$result['fromDate'],
     					'end_date'=>$result['toDate'],//less 1 day
     					);
+
+
+						// print_r($param);
+						// exit();
     			
     			
     			$qtyReceive = $this->getPurchasebyClosingEntry($param);

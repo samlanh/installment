@@ -120,16 +120,16 @@ class Product_Model_DbTable_DbClosingStock extends Zend_Db_Table_Abstract
 	    						);
 	    							
 	    						$this->_name='st_product_location';
-	    						$where = 'projectId='.$data['branch_id']." AND proId=".$result['proId'];
+	    						$where = 'projectId='.$data['branch_id']." AND proId=".$result['id'];
 	    						$this->update($arr, $where);
 	    				
 	    						$param = array(
     								'branch_id'=>$data['branch_id'],
-    								'productId'=>$result['proId'],
+    								'productId'=>$result['id'],
 	    						);
 	    				
 	    						$qtyDifferent = $result['currentQty']- $differ;
-	    						$dbs->addProductHistoryQty($data['branch_id'],$result['proId'],7,$qtyDifferent,$adjustResult['id']);//movement'
+	    						$dbs->addProductHistoryQty($data['branch_id'],$result['id'],7,$qtyDifferent,$adjustResult['id']);//movement'
 // 	    					}
 // 	    				}
 	    				
@@ -262,9 +262,9 @@ class Product_Model_DbTable_DbClosingStock extends Zend_Db_Table_Abstract
     	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
     	
     	$sql="SELECT
-		    	cl.id,
-		    	CONCAT(DATE_FORMAT(cl.closingDate,'%d-%m-%Y'),'/',DATE_FORMAT(cl.toDate,'%d-%m-%Y')) AS name
-    		FROM `st_closing` cl WHERE 1 ";
+		cl.id,
+		CONCAT( COALESCE(DATE_FORMAT(cl.closingDate,'%d-%m-%Y'), ''), ' /', COALESCE( DATE_FORMAT(cl.toDate,'%d-%m-%Y'), '')) AS name
+		FROM `st_closing` cl WHERE 1";
     	
     	$where='';
     	if($search['branch_id']>-1){
