@@ -560,12 +560,15 @@ class Report_StockmgController extends Zend_Controller_Action {
     			$search=array(
 					'adv_search'=>"",
 					'branch_id' => -1,
+					'paymentMethod' => '',
+					'bankId' => '',
+					'budgetItem' => '',
 					'start_date'=> date('Y-m-d'),
 					'end_date'=>date('Y-m-d'),
-					'statusAcc'=>-1,
+					
 				);
     		}
-			$search['closingStatus']=-1;
+		//	$search['closingStatus']=-1;
     		$this->view->search = $search;
 			$db = new Po_Model_DbTable_DbExpense();
 			$rs_rows = $db->getAllExpenseReport($search);
@@ -585,6 +588,19 @@ class Report_StockmgController extends Zend_Controller_Action {
 		$frmpopup = new Application_Form_FrmPopupGlobal();
 		$this->view->footerReport = $frmpopup->getFooterReport();
 		$this->view->headerReport = $frmpopup->getLetterHeadReport();
+		$db = new  Application_Model_DbTable_DbGlobalStock();
+			$results =  $db->getAllBudgetItem($parent = 0, $spacing = '', $cate_tree_array = '',null,null);
+				
+			$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+			array_unshift($results, array ('id' => 0,'name' =>$tr->translate("SELECT_BUDGET_ITEM")));
+				
+			$this->view->budgetItem = $results;
+			
+			$rsType =  $db->getAllBudgetType($parent = 0, $spacing = '', $cate_tree_array = '',null,null);
+			
+			array_unshift($rsType, array ('id' => 0,'name' =>$tr->translate("SELECT_BUDGET_TYPE")));
+			$this->view->budgetType = $rsType;
+			
 	}
 	
 }
