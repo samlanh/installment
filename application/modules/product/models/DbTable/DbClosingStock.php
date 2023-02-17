@@ -15,6 +15,7 @@ class Product_Model_DbTable_DbClosingStock extends Zend_Db_Table_Abstract
     			cl.id,
     			(SELECT project_name FROM `ln_project` WHERE br_id=cl.projectId LIMIT 1) AS projectName,
 		    	cl.closingDate,
+		    	cl.toDate,
 		    	cl.note,
 		    	(SELECT adjustDate FROM `st_adjust_stock` WHERE st_adjust_stock.id= cl.adjustId LIMIT 1) AS adjustDate,
 		    	(SELECT first_name FROM rms_users WHERE id=cl.userId LIMIT 1 ) AS user_name
@@ -59,28 +60,40 @@ class Product_Model_DbTable_DbClosingStock extends Zend_Db_Table_Abstract
     	$db->beginTransaction();
     	try
     	{
-    		$this->updatePreviousClosingEntry($data['branch_id'], $data['date']);
+    		$projectId = $data['branch_id'];
+    		$this->updatePreviousClosingEntry($projectId, $data['date']);
     		
     		$dbs = new Application_Model_DbTable_DbGlobalStock();
     		$arr = array(
-    				'projectId'=>$data['branch_id'],
+    				'projectId'=>$projectId,
     				'adjustId'=>$data['adjustDate'],
     				'closingDate'=>$data['date'],
+    				'fromDate'=>$data['date'],
     				'note'=>$data['note'],
     				'userId'=>$this->getUserId(),
     				'createDate'=>date('Y-m-d h:s'),
     			);
     		$closeId = $this->insert($arr);
     		
-//     		$arr = array(
-//     				'isClosed'=>1
-//     			);
-//     		$this->_name='st_adjust_stock';
-//     		$where='id='.$data['adjustDate'];
-//     		$this->update($arr, $where);
+    		$arr = array(
+    				'isLocked'=>1
+    			);
+    		
+    		$this->_name='st_stockout';
+    		$where="projectId=".$projectId;
+    		$this->update($arr, $where);
+    		
+    		$this->_name='st_receive_stock';
+    		$this->update($arr, $where);
+    		
+    		$this->_name='st_transfer_receive';
+    		$this->update($arr, $where);
+    		
+    		$this->_name='st_adjust_stock';
+    		$this->update($arr, $where);
     		
     		$param = array(
-    			'branch_id'=>$data['branch_id'],
+    			'branch_id'=>$projectId,
     			'isCountStock'=>1
     		);
     		

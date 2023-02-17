@@ -341,14 +341,9 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
     			$param = array(
     					'projectId'=>$result['projectId'],
     					'proId'=>$result['proId'],
-    					'start_date'=>$result['fromDate'],
-    					'end_date'=>$result['toDate'],//less 1 day
-    					);
-
-
-						// print_r($param);
-						// exit();
-    			
+    					'start_date'=>$result['closingDate'],
+    					'end_date'=>empty($result['toDate'])?date('Y-m-d'):$result['toDate'],//less 1 day
+    				);
     			
     			$qtyReceive = $this->getPurchasebyClosingEntry($param);
     			
@@ -408,7 +403,7 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
     	
     	if(!empty($data['start_date'])){
     		$from_date =(empty($data['start_date']))? '1': " rs.receiveDate >= '".$data['start_date']." 00:00:00'";
-    		$to_date = (empty($data['end_date']))? '1': " rs.receiveDate < '".$data['end_date']." 00:00:00'";
+    		$to_date = (empty($data['end_date']))? '1': " rs.receiveDate <='".$data['end_date']." 23:59:59'";
     		$sql.= " AND ".$from_date." AND ".$to_date;
     	}
     	if(!empty($data['projectId'])){
