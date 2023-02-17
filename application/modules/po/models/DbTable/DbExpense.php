@@ -20,7 +20,6 @@ class Po_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 					'paymentMethod' 		=>$data['paymentMethod'],
 					'bankId'				=>$data['bankId'],
 					'accNameAndChequeNo'	=>$data['accNameAndChequeNo'],
-					'totalAmount'			=>$data['totalAmount'],
 					'paymentDate'			=>$data['paymentDate'],
 					'totalAmount'			=>$data['totalAmount'],
 					'budgetId'				=>$data['budgetItem'],
@@ -48,57 +47,112 @@ class Po_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 			echo $e->getMessage();
 		}
  	}
-	function updatExpense($data){
-	 	$_db= $this->getAdapter();
-	 	$_db->beginTransaction();
-	 	try{
-			$arr = array(	
-					'branch_id'		=>$data['branch_id'],
-					'title'			=>$data['title'],
-					'total_amount'	=>$data['total_amount'],
-					'invoice'		=>$data['invoice'],
-					'payment_type'	=>$data['payment_method'],
-					'description'	=>$data['Description'],
-					'receiver'		=>$data['receiver'],
-					'cheque_no'		=>$data['cheque_num'],
-					'external_invoice'=>$data['external_invoice'],
-					'date'			=>$data['Date'],
-					'status'		=>$data['Stutas'],
-					'user_id'		=>$this->getUserId(),
-					//'create_date'=>date('Y-m-d H:i:s'),
-				);
-			$where=" id = ".$data['id'];
+
+	function updateData($data){
+    	 
+    	$db = $this->getAdapter();
+    	$db->beginTransaction();
+    	try
+    	{
+			$id = $data['id'];
+    		$arr = array(
+					'projectId'				=>$data['branch_id'],
+					'paymentNo'				=>$data['paymentNo'],
+					'externalInvoice'	 	=>$data['externalInvoice'],
+					'expenseTitle'			=>$data['expenseTitle'],
+					'receiver'				=>$data['receiver'],
+					'note'		   			=>$data['note'],
+					'paymentMethod' 		=>$data['paymentMethod'],
+					'bankId'				=>$data['bankId'],
+					'accNameAndChequeNo'	=>$data['accNameAndChequeNo'],
+					'paymentDate'			=>$data['paymentDate'],
+					'totalAmount'			=>$data['totalAmount'],
+					'budgetId'				=>$data['budgetItem'],
+					'userId'				=>$this->getUserId(),
+					'createDate'			=>date('Y-m-d H:i:s'),
+					'status'				=>$data['status']
+			);
+			$this->_name='st_expense';
+			$where="id=".$id;
 			$this->update($arr, $where);
-			
-			$this->_name='ln_expense_detail';
-			$where = "expense_id = ".$data['id'];
-			$this->delete($where);
-			$ids = explode(',', $data['identity']);
-			foreach ($ids as $j){
-				$arr = array(
-						'expense_id'	=>$data['id'],
-						'service_id'	=>$data['expense_id_'.$j],
-						'description'	=>$data['remark_'.$j],
-						'price'			=>$data['price_'.$j],
-						'qty'			=>$data['qty_'.$j],
-						'total'			=>$data['total_'.$j],);
-				$this->insert($arr);
+
+			if($data['status']==1){
+
+				$identitys = explode(',',$data['identity']);
+
+				$detailId="";
+				if (!empty($identitys)){
+					foreach ($identitys as $i){
+						if (empty($detailId)){
+							if (!empty($data['detailId'.$i])){
+								$detailId = $data['detailId'.$i];
+							}
+						}else{
+							if (!empty($data['detailId'.$i])){
+								$detailId= $detailId.",".$data['detailId'.$i];
+							}
+						}
+					}
+				}
+				$this->_name='st_expense_detail';
+				$whereDl = 'expenseId = '.$id;
+				if (!empty($detailId)){
+					$whereDl.=" AND id NOT IN ($detailId)";
+				}
+				$this->delete($whereDl);
+
+				if(!empty($data['identity'])){
+					$ids = explode(',', $data['identity']);
+					foreach ($ids as $i){
+	
+						if (!empty($data['detailId'.$i])){
+							$arr = array(
+
+								'expenseId'		=>$id,
+								'cateExpenseId'	=>$data['cate_expense_id_'.$i],
+								'price'			=>$data['price_'.$i],
+								'qty'			=>$data['qty_'.$i],
+								'total'			=>$data['total_'.$i],
+								'note'	        =>$data['remark_'.$i],
+							);
+							$this->_name='st_expense_detail';
+							$where =" id =".$data['detailId'.$i];
+							$this->update($arr, $where);
+						}else{
+
+							$arr = array(
+
+								'expenseId'		=>$id,
+								'cateExpenseId'	=>$data['cate_expense_id_'.$i],
+								'price'			=>$data['price_'.$i],
+								'qty'			=>$data['qty_'.$i],
+								'total'			=>$data['total_'.$i],
+								'note'	        =>$data['remark_'.$i],
+								
+							);
+							$this->_name='st_expense_detail';	
+							$this->insert($arr);
+						}
+					}
+				}
+
+				
 			}
-			$_db->commit();
-		}catch(Exception $e){
-			$_db->rollBack();
-			echo $e->getMessage();
-		}
-		//print_r($data); exit();
-	}
+    		$db->commit();
+    	}catch (Exception $e){
+    		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+    		$db->rollBack();
+    	}
+    }
 	function getexpensebyid($id){
 		$db = $this->getAdapter();
-		$sql="SELECT * FROM ln_expense where id=$id ";
+		$sql="SELECT * FROM st_expense where id=$id ";
 		return $db->fetchRow($sql);
 	}
+	
 	function getexpenseDetailbyid($id){
 		$db = $this->getAdapter();
-		$sql="SELECT * FROM ln_expense_detail WHERE expense_id=".$id;
+		$sql="SELECT * FROM st_expense_detail WHERE expenseId=".$id;
 		return $db->fetchAll($sql);
 	}
 
@@ -108,29 +162,29 @@ class Po_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 		
 		$sql=" SELECT p.id, 
 				(SELECT l.project_name FROM `ln_project` AS l WHERE l.br_id = p.projectId LIMIT 1) AS projectName,
-				expenseTitle,
+				p.expenseTitle,
 				(SELECT b.budgetTitle FROM `st_budget_item` AS b WHERE b.id = p.budgetId LIMIT 1) AS budgetItem,
-				paymentNo, receiver,
+				p.paymentNo, p.receiver,
 				(SELECT vi.name_kh FROM `ln_view` AS vi WHERE vi.type=2 AND vi.key_code=p.`paymentMethod` LIMIT 1) AS paymentMethod,
 				(SELECT ba.bank_name FROM `st_bank` AS ba WHERE ba.id=p.`bankId` LIMIT 1) AS bankName,
-				accNameAndChequeNo,totalAmount, paymentdate, status				
+				p.accNameAndChequeNo, p.totalAmount, p.paymentdate, p.status				
 			";
 		$sql.=$dbp->caseStatusShowImage("p.status");
 		$sql.=" FROM `st_expense` AS p ";
 		
-		$from_date =(empty($search['start_date']))? '1': " paymentdate >= '".$search['start_date']." 00:00:00'";
-		$to_date = (empty($search['end_date']))? '1': " paymentdate <= '".$search['end_date']." 23:59:59'";
+		$from_date =(empty($search['start_date']))? '1': " p.paymentdate >= '".$search['start_date']." 00:00:00'";
+		$to_date = (empty($search['end_date']))? '1': " p.paymentdate <= '".$search['end_date']." 23:59:59'";
 		$where = " WHERE ".$from_date." AND ".$to_date;
 		
-		if (!empty($search['adv_search'])){
+		if (!empty($search['advanceFilter'])){
 			$s_where = array();
-			$s_search = trim(addslashes($search['adv_search']));
+			$s_search = trim(addslashes($search['advanceFilter']));
 			$s_where[] = " p.expenseTitle LIKE '%{$s_search}%'";
 			$s_where[] = " p.paymentNo LIKE '%{$s_search}%'";
 			$s_where[] = " p.receiver LIKE '%{$s_search}%'";
 			$where .=' AND ('.implode(' OR ',$s_where).')';
 		}
-		if($search['branch_id'] != -1){
+		if($search['branch_id'] > 0){
 			$where.= " AND p.projectId = ".$search['branch_id'];
 		}
 

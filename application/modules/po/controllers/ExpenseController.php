@@ -82,10 +82,9 @@ class Po_ExpenseController extends Zend_Controller_Action
     	if($this->getRequest()->isPost()){
 			try{
 				$data = $this->getRequest()->getPost();
-				$data['id'] = $id;
-				$db = new Registrar_Model_DbTable_DbExpense();	
-				$db->updatExpense($data);
-				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","/registrar/expense");
+				$db = new Po_Model_DbTable_DbExpense();	
+				$db->updateData($data);
+				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","/po/expense");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("EDIT_FAIL");
 		
@@ -93,33 +92,22 @@ class Po_ExpenseController extends Zend_Controller_Action
 				echo $e->getMessage();
 			}
 		}
-// 		$_db = new Application_Model_DbTable_DbGlobal();
-// 		$user_type=$_db->getUserType();
-// 		if($user_type!=1){
-// 			Application_Form_FrmMessage::Sucessfull(" You are not Admin !!! ", '/registrar/expense');
-// 		}
+
 		$id = $this->getRequest()->getParam('id');
-		$db = new Registrar_Model_DbTable_DbExpense();
+		$db = new Po_Model_DbTable_DbExpense();
 		$row  = $db->getexpensebyid($id);
 		$this->view->row = $row;
 		$this->view->rows = $db->getexpenseDetailbyid($id);
-		//print_r($this->view->rows); exit();
-    	/////////////////////|||||||||\\\\\\\\\\\\\\\\\\\\\\\
-    	$_db = new Application_Form_FrmGlobal();
-    	$this->view->header = $_db->getHeaderReceipt();
-    	
-    	$pructis=new Registrar_Form_Frmexpense();
-    	$frm = $pructis->FrmAddExpense($row);
+
+    	$pructis=new Po_Form_Frmexpense();
+    	$frm = $pructis->FrmExpense($row);
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm_expense=$frm;
-    	$db = new Application_Model_GlobalClass();
-    	$this->view->expenseopt = $db->getAllExpenseIncomeType(5);
-    	 
-    	$db = new Registrar_Model_DbTable_DbCateExpense();
-    	$this->view->parent = $db->getParentCateExpense();
-    	 
-    	$_db = new Application_Form_FrmGlobal();
-    	$this->view->header = $_db->getHeaderReceipt();
+    	$dbg = new Application_Model_GlobalClass();
+    	$this->view->expenseopt = $dbg->getAllExpenseIncomeType(5);
+    	
+    	$dbe = new Po_Model_DbTable_DbCateExpense();
+    	$this->view->parent = $dbe->getParentCateExpense();
     }
     function getReceiptNumberAction(){
     	if($this->getRequest()->isPost()){

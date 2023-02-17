@@ -16,6 +16,7 @@ Class Po_Form_FrmExpense extends Zend_Dojo_Form {
 		
 		$dbGB = new Application_Model_DbTable_DbGlobal(); 
     	$dbGBStock = new Application_Model_DbTable_DbGlobalStock(); 
+	
     	
 		$userInfo = $dbGB->getUserInfo();
 		$userLevel=0;
@@ -75,23 +76,8 @@ Class Po_Form_FrmExpense extends Zend_Dojo_Form {
  			'onchange'=>'addNewBudgetItem();'
 		));
 		
-
-		$cateIncome = new Zend_Dojo_Form_Element_FilteringSelect('cateIncome');
-		$cateIncome->setAttribs(array(
-				'dojoType'=>'dijit.form.FilteringSelect',
-				'class'=>'fullside',
-				'onchange'=>'addNewCategory();'
-		));
-		$rsCtIncome = $dbGBStock->getAllCateIncome();
-		$optCtIncome=array(
-			''=>$tr->translate("SELECT_CATE_INCOME"),
-			'-1'=>$tr->translate("ADD_NEW"),
-		);
-		if(!empty($rsCtIncome))foreach($rsCtIncome AS $row){
-			$optCtIncome[$row['id']]=$row['name'];
-		}
-		$cateIncome->setMultiOptions($optCtIncome);
-
+		$budgetItem->setMultiOptions($dbGBStock->getAllBudgetItem(0,'', '',1,null));
+		
 		$expense_title = new Zend_Dojo_Form_Element_TextBox('expenseTitle');
     	$expense_title->setAttribs(array(
     			'dojoType'=>'dijit.form.TextBox',
@@ -223,18 +209,24 @@ Class Po_Form_FrmExpense extends Zend_Dojo_Form {
 		$end_date->setValue($_date);
 		
 		if(!empty($data)){
-			// $branch_id->setValue($data['projectId']);
-			// $paymentNo->setValue($data['paymentNo']);
-			// $supplierId->setValue($data['supplierId']);
-			// $paymentDate->setValue($data['paymentDate']);
-			// $paymentMethod->setValue($data['paymentMethod']);
-			// $bankId->setValue($data['bankId']);
-			// $accNameAndChequeNo->setValue($data['accNameAndChequeNo']);
-			// $note->setValue($data['note']);
-			// $totalAmount->setValue($data['totalAmount']);
-			// $_status->setValue($data['status']);
-			// $id->setValue($data['id']);
-			// $start_date->setValue("");
+			$branch_id->setValue($data['projectId']);
+			$branch_id->setAttribs(array(
+				'readOnly'=>'readOnly',
+			));
+			$paymentNo->setValue($data['paymentNo']);
+			$external_invoice->setValue($data['externalInvoice']);
+			$expense_title->setValue($data['expenseTitle']);
+			$receiver->setValue($data['receiver']);
+			$paymentMethod->setValue($data['paymentMethod']);
+			$bankId->setValue($data['bankId']);
+			$accNameAndChequeNo->setValue($data['accNameAndChequeNo']);
+			$totalAmount->setValue($data['totalAmount']);
+		//	$paymentDate->setValue($data['paymentDate']);
+			$budgetItem->setValue($data['budgetId']);
+			$note->setValue($data['note']);
+			$_status->setValue($data['status']);
+			$id->setValue($data['id']);
+		///	$start_date->setValue("");
 		}
 		
 		$this->addElements(array(
@@ -252,7 +244,6 @@ Class Po_Form_FrmExpense extends Zend_Dojo_Form {
 				$advanceFilter,
 				$start_date,
 				$end_date,
-				$cateIncome,
 				$expense_title ,
 				$external_invoice ,
 				$receiver,
