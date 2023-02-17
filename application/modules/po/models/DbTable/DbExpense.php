@@ -205,11 +205,17 @@ class Po_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 		$to_date = (empty($search['end_date']))? '1': " date <= '".$search['end_date']." 23:59:59'";
 		$where = " WHERE ".$from_date." AND ".$to_date;
 	
-		$sql=" SELECT id,
-		(SELECT branch_namekh FROM `rms_branch` WHERE rms_branch.br_id =branch_id LIMIT 1) AS branch_name,
-		account_id,invoice,
-		curr_type,
-		total_amount,disc,date,status FROM $this->_name ";
+		$sql=" SELECT p.id, 
+		(SELECT l.project_name FROM `ln_project` AS l WHERE l.br_id = p.projectId LIMIT 1) AS projectName,
+		p.expenseTitle,
+		(SELECT b.budgetTitle FROM `st_budget_item` AS b WHERE b.id = p.budgetId LIMIT 1) AS budgetItem,
+		p.paymentNo, p.receiver,
+		(SELECT vi.name_kh FROM `ln_view` AS vi WHERE vi.type=2 AND vi.key_code=p.`paymentMethod` LIMIT 1) AS paymentMethod,
+		(SELECT ba.bank_name FROM `st_bank` AS ba WHERE ba.id=p.`bankId` LIMIT 1) AS bankName,
+		p.accNameAndChequeNo, p.totalAmount, p.paymentdate, p.status 
+		
+		FROM `st_expense` AS p				
+		";
 	
 		if (!empty($search['adv_search'])){
 			$s_where = array();
