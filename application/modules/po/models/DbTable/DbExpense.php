@@ -146,13 +146,21 @@ class Po_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
     }
 	function getexpensebyid($id){
 		$db = $this->getAdapter();
-		$sql="SELECT * FROM st_expense where id=$id ";
+		$sql="SELECT *,  
+		(SELECT l.project_name FROM `ln_project` AS l WHERE l.br_id = p.projectId LIMIT 1) AS projectName,
+		(SELECT b.budgetTitle FROM `st_budget_item` AS b WHERE b.id = p.budgetId LIMIT 1) AS budgetItem,
+		(SELECT vi.name_kh FROM `ln_view` AS vi WHERE vi.type=2 AND vi.key_code=p.`paymentMethod` LIMIT 1) AS paymentMethodTitle,
+		(SELECT ba.bank_name FROM `st_bank` AS ba WHERE ba.id=p.`bankId` LIMIT 1) AS bankName,
+		(SELECT us.user_name FROM `rms_users` AS us WHERE us.id=p.`userId` LIMIT 1) AS byUser
+		FROM `st_expense` AS p	WHERE id=$id ";
 		return $db->fetchRow($sql);
 	}
 	
 	function getexpenseDetailbyid($id){
 		$db = $this->getAdapter();
-		$sql="SELECT * FROM st_expense_detail WHERE expenseId=".$id;
+		$sql="SELECT *,
+		( SELECT title FROM `st_cate_expense` WHERE st_cate_expense.id = st_expense_detail.cateExpenseId LIMIT 1 ) AS CateExpenseTitle
+		 FROM st_expense_detail WHERE expenseId=".$id;
 		return $db->fetchAll($sql);
 	}
 
