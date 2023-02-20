@@ -170,22 +170,7 @@
 							</div>
 							
 						</div>
-						<!--
-						<div class="form-group" >
-							<div class="custom-control custom-checkbox ">
-								<input type="checkbox" class="checkbox custom-control-input" name="check_all" id="check_all" value="all" OnChange="checkAllDn(0);" >
-								<label class="custom-control-label" for="check_all">
-									<?php echo $tr->translate('ALL');?>
-								</label>
-							</div>
-							<div class="col-md-12 col-sm-12 col-xs-12">
-								<div id="dnRecord">
-								</div>
-							</div>
-						</div>
-						-->
 					</div>
-					
 					<table class="collape tablesorter"  style="width:100%; white-space: nowrap;border:1px solid #ddd;">
 				    	<tr id="head-title" class="head-td" align="center">
 							<td width="2%"><?php echo $tr->translate("DEL");?></td>
@@ -198,12 +183,12 @@
 							<td width="10%"><?php echo $tr->translate("QTY");?></td>
 							<td width="10%"><?php echo $tr->translate("UNIT_PRICE")." ".$tr->translate("CURRENCY_SIGN");?></td>
 							<td width="10%"><?php echo $tr->translate("TOTAL");?></td>
-							
 						</tr>
 						<tbody id="table_row">
 						</tbody>
 					</table>
 					<input type="text" id="identity" name="identity" />
+					<input type="text" id="dnIdentity" name="dnIdentity" />
 					<div class="form-group" style="margin-bottom: 0; ">
 						<label class="control-label bold col-md-3 col-sm-3 col-xs-12" style="text-align:right;"></label>
 		                <div class="col-md-3 col-sm-3 col-xs-12">
@@ -338,7 +323,7 @@ ul.listDn li small {
 	 
 	 });
     function previewStatement(){
-		identity = $('#identity').val();
+		identity = $('#dnIdentity').val();
 		window.open('<?php echo $this->url(array('module'=>'invpayment','controller'=>'statement','action'=>'view'));?>'+'/id/'+identity,'_blank');
     }
 	function onChageFunctionByBranch(){
@@ -458,11 +443,8 @@ ul.listDn li small {
 	var title = 0;
 	var urlGetReceiiveInfo = '<?php echo $this->url(array('module'=>'invpayment','controller'=>'statement','action'=>'get-receive-info')); ?>';
 	function addRowProductReceive(){
-		
 		template='';
 		temp = "";
-
-		
 		branch_id = dijit.byId('branch_id').get('value');
 		if(branch_id=='' || branch_id<=0){
 			infoMessageAlert('<?php echo $tr->translate('PLEASE_SELECT_BRANCH');?>');
@@ -479,6 +461,7 @@ ul.listDn li small {
 	
 		var iden = $("#identity").val();
 		var arrays = iden.split(',');
+
 		 if(arrays!=""){
 			
 			 for(var i=0;i< arrays.length;i++) {
@@ -517,9 +500,16 @@ ul.listDn li small {
 				
 				dojo.query("#table_row").append(tmp);
 				if($("#identity").val()!="") {
-				var identity = $("#identity").val();
-				$("#identity").val(identity+','+col);
-				} else {$("#identity").val(col);}
+					var identity = $("#identity").val();
+					$("#identity").val(identity+','+col);
+
+					var identitydn = $("#dnIdentity").val();
+					$("#dnIdentity").val(identitydn+','+data.id);
+				} else {
+					$("#identity").val(col);
+					
+					$("#dnIdentity").val(data.id);
+				}
 				dojo.html.set(dojo.byId("row"+col),template , {
 					 parseContent: true,
 				});
@@ -534,13 +524,24 @@ ul.listDn li small {
 	
 	}
 	function deleteRecord(index) {
+		var identityDn = $('#dnIdentity').val();
+		var arraysDn = identityDn.split(',');
+		
 		var identity = $('#identity').val();
 		var arrays = identity.split(',');
 		for(var i=0;i<arrays.length;i++) {
-			if(arrays[i] == index) arrays.splice(i,1);
+			if(arrays[i] == index){
+				arrays.splice(i,1);
+				arraysDn.splice(i,1);
+			}
 		}
 		var strings = arrays.join(',');
+		var stringsDn = arraysDn.join(',');
+		
 		$('#identity').val(strings);
+
+		$('#dnIdentity').val(stringsDn);
+		
 		dojo.query("#row"+index).remove();
 		calculateRowAmount();
 	}
@@ -550,7 +551,7 @@ ul.listDn li small {
 		if(rowId==""){
 			return false;
 		}
-		
+		alert(rowId);
 		var payment=0;
 		
 		var rowIDArray = rowId.split(',');

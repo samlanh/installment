@@ -94,5 +94,7 @@ class Po_ConcretController extends Zend_Controller_Action {
 		$work_type = $dbg->getWorkTypeOpt();
 		$this->view->worktype = $work_type;
 	}
+
+	
 }
 

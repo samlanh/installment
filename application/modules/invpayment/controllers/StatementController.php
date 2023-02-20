@@ -37,7 +37,6 @@ class Invpayment_StatementController extends Zend_Controller_Action {
 			}
 			
 			
-		
 			
 		$frm_search = new Application_Form_FrmAdvanceSearchStock();
 		$frm = $frm_search->AdvanceSearch();
@@ -65,6 +64,23 @@ class Invpayment_StatementController extends Zend_Controller_Action {
     	$frm->FrmgetStatement(null);
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm = $frm;
+	}
+	public function viewAction(){
+	
+		$db = new Invpayment_Model_DbTable_DbConcreteStatement();
+		try{
+			$id = $this->getRequest()->getParam('id');
+			$id = empty($id)?0:$id;
+			$this->view->rows = $db->getConcreteStatement($id);
+	
+		}catch (Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+		}
+		 
+		$frmpopup = new Application_Form_FrmPopupGlobal();
+		$this->view->footerReport = $frmpopup->getFooterReport();
+		$this->view->headerReport = $frmpopup->getLetterHeadReport();
 	}
 
 	function getalldnAction(){

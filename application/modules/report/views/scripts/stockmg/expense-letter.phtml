@@ -1,0 +1,370 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$this->headTitle($tr->translate("EXPENSE_LETTER")); 
+	echo $this->headTitle();
+	
+	$month = array("01"=>"មករា","02"=>"កុម្ភៈ","03"=>"មីនា","04"=>"មេសា","05"=>"ឧសភា","06"=>"មិថុនា","07"=>"កក្កដា","08"=>"សីហា","09"=>"កញ្ញា","10"=>"តុលា","11"=>"វិច្ឆិកា","12"=>"ធ្នូ",);
+	$dbparmeter = new Report_Model_DbTable_DbParamater();
+	//$requestInfor = $this->baseUrl()."/report/stockmg/request-info/id/";
+	
+	$row = $this->row;
+?>
+<div class="reportblog">
+	<div class="card-box">
+		<div class="col-sm-12 border-botom">
+			<div class="col-sm-8 pd-0">
+				<h4 class="m-b-0"><i class="fa fa-file-text" aria-hidden="true"></i> <?php echo $tr->translate('EXPENSE_LETTER');?></h4>
+			</div>
+			<div class="col-sm-4 text-right">
+			</div>
+		</div>
+	</div>
+	<div class="card-box">
+		<div id="divPrint">
+			<style>
+				table.tableTop tr td,span {
+					font-size:12px ;
+					font-family: 'Times New Roman','Khmer OS Battambang';
+				}
+				table.tableTop tr td span.project-name{
+					font-size:12px ;
+					font-family:"Times New Roman","Khmer OS Muol Light";
+				}
+				table tr td{
+					padding:0 2px;
+					line-height: 14px;
+				}
+				table.content-data{
+					border-collapse:collapse;
+					border:1px solid #000; 
+					font-size:13px;
+				}
+				table.content-data thead tr.style {
+				   line-height: 25px; font-size:12px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
+					background: #c1d0f3;
+					font-weight:600;
+				}
+				table.content-data  tr.regurlar {
+					background: #eee;
+				}
+				table.content-data tr td{
+					padding:5px 3px; 
+					border:none;
+					vertical-align:middle;
+				}
+				table.content-data tr.headRow td{
+					border:solid 1px #000;
+					padding:10px 2px; 
+					vertical-align:middle;
+				}
+				.content-data tr.headRow td span {
+					display: block;
+					line-height: 14px;
+				}
+				.content-data tr.headRow td small {
+					display: block;
+					line-height: 12px;
+					font-size: 10px;
+				}
+
+				table.requestInfo {
+					width: 100%;
+					margin-top: 10px;
+				}
+				table.requestInfo tr td {
+					vertical-align: top;
+				}
+				table.requestInfo span.lbTitle {
+					line-height: 14px;
+					float: left;
+					vertical-align: top;
+					min-width: 20%;
+				}
+				table.requestInfo span.lbTitle small {
+					display: block;
+					font-style: italic;
+					font-weight: 200;
+					line-height: 10px;
+				}
+				table.requestInfo tr td span {
+					line-height: 14px;
+					vertical-align: top;
+					min-width: 75%;
+				}
+				span.bold {
+					font-weight: 600;
+				}
+				span.redColor {
+					color: #ff0000;
+				}
+				tr.style.rejected {
+					background: #ffcece;
+				}
+				tr.rowFooter td span {
+					font-weight: 600;
+					font-size: 12px;
+				}
+				tr.rowFooter td span.gtotalVal {
+					color: #000000;
+					display: block;
+					width: 100%;
+					border-bottom: dashed 1px #959595;
+					text-align: right;
+				}
+				span.gtotalVal.mainTotal {
+					font-size: 14px;
+				}
+				a.colorInherit {
+					color: inherit;
+					text-decoration:none;
+				}
+				.signatureImg{
+					height:50px;
+					position:relative;
+					margin-bottom: -15px;
+				}
+				
+			</style>
+				
+			<table class="tableTop" width="100%" >
+				<tr>
+					<td width="30%" id="projectlogo">
+						<br />
+						<img style="height:85px; max-width: 100%;" src="">
+					</td>
+					<td width="40%" valign="top" style=" padding-bottom: 40px;">
+					</td>
+					<td width="30%" align="right" style="vertical-align:top; position: relative;">
+						<span class="project-name" id="projectName">(<?php echo $row["projectName"];?>)</span>
+						<?php echo $this->printByFormat;?>
+					</td>
+				</tr> 
+				<tr>
+					<td colspan="3" align="center" style="position: relative;">
+						<span style='font-family: "Times New Roman","Khmer OS Muol Light";' >ប័ណ្ណចំណាយ</span>
+						<span style='font-family: "Times New Roman","Khmer OS Muol Light";display: block;line-height: 16px;text-transform: uppercase;font-weight: 600;' >Expense Letter</span>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3" style="position:relative;" >
+					
+						<table class="requestInfo">
+							<tr>
+								<td width="40%">
+									<span class="lbTitle">
+										ឈ្មោះចំណាយ : 
+										<small>Expense Title : </small>
+									</span>
+									<span><?php echo $row["expenseTitle"];?></span></td>
+								<td width="30%">
+								
+									<span class="lbTitle">
+										លេខវិក្កយបត្រ : 
+										<small>Payment N<sup>o</sup> : </small>
+									</span>
+									<span class="bold redColor" ><?php echo $row["paymentNo"];?></span>
+									
+								</td>
+								<td width="40%">
+									<span class="lbTitle">
+									លេខវិក្កយបត្រ(ក្រៅ) : 
+										<small>External Invoice  : </small>
+									</span>
+									<span class="bold redColor" ><?php echo $row["externalInvoice"];?></span>
+								</td>	
+							</tr>
+							<tr>
+								<td width="40%">
+									<span class="lbTitle">
+										មុខចំណាយ : 
+										<small>Budget Item : </small>
+									</span>
+									<span><?php echo $row["budgetItem"];?></span></td>
+								<td width="30%">
+								
+									<span class="lbTitle">
+										វិធីសាស្ត្រទូទាត់ : 
+										<small>Payment Method : </small>
+									</span>
+									<span class="bold " ><?php echo $row["paymentMethodTitle"];?></span>
+									
+								</td>
+								<td width="40%">
+									<span class="lbTitle">
+									ឈ្មោះធនាគា : 
+										<small> Bank Name  : </small>
+									</span>
+									<span class="bold " ><?php echo $row["bankName"];?></span>
+								</td>	
+							</tr>
+							<tr>
+								<td width="40%">
+									<span class="lbTitle">
+										ថ្ងៃចំណាយ : 
+										<small>Payment Date : </small>
+									</span>
+									<span class="bold redColor"><?php echo $row["paymentDate"];?></span></td>
+								<td width="30%">
+								
+									<span class="lbTitle">
+										លេខ​ និង​ ឈ្មោះគណនេយ្យ : 
+										<small>accNameAndChequeNo : </small>
+									</span>
+									<span class="bold redColor" ><?php echo $row["accNameAndChequeNo"];?></span>
+									
+								</td>
+								<td width="40%">
+									<span class="lbTitle">
+									ចំណាយសរុប : 
+										<small> Total Expense: </small>
+									</span>
+									<span class="bold redColor" ><?php echo $row["totalAmount"];?></span>
+								</td>	
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3" >
+						<table class="content-data" width="100%" border="1"  cellspacing="0" cellpadding="0">
+							<thead>
+								<tr class="style headRow" align="center" >
+									<td scope="col" class="center">
+										<span>ល.រ</span>
+										<small>N<sup>o</sup></small>
+									</td>
+									<td scope="col" class="center" style="width:200px;">
+										<span>ប្រភេទចំណាយ</span>
+										<small>Expense Category</small>
+									</td>
+									<td scope="col" class="center">
+										<span>បរិមាណ</span>
+										<small>Qty</small>
+									</td>
+									<td scope="col" class="center">
+										<span>តម្លៃ/ឯកតា (USD)</span>
+										<small>Unit Price</small>
+									</td>
+
+									<td scope="col" class="center">
+										<span>សរុប (USD)</span>
+										<small>Sub Total</small>
+									</td>
+									<td scope="col" class="center" style="width:200px;">
+										<span>ផ្សេងៗ</span>
+										<small>Other</small>
+									</td>
+								</tr>
+								
+							</thead>
+							 <?php 
+							 $i=0;
+							 $minimumRow=15;
+							 $gTotal=0;
+				                if(!empty($this->rowdetail)) foreach ($this->rowdetail as $index => $rs){ $i++;
+								$classRowBg = "odd";
+								if(($i%2)==0){
+								$classRowBg = "regurlar";
+								}
+								$gTotal=$gTotal+$rs["total"];
+							?>
+							<tr class="style <?php echo $classRowBg; ?>" style=" white-space:nowrap;">
+				               	<td data-label="ល.រ​ /N.o"  style="text-align: center;"><?php echo $i; ?></td>
+								<td data-label="ទំនិញ/Product"><?php echo $rs["CateExpenseTitle"];?></td>
+								<td data-label="បរិមាណ/Qty" align="center"><?php echo $rs["qty"];?></td>
+								<td data-label="តម្លៃ/ឯកតា (USD)/Unit Price" align="center"><?php echo $rs["price"];?></td>
+								<td data-label="សរុប (USD)/Sub Total" align="right"><?php echo number_format($rs["total"],3);?></td>
+								<td data-label="ផ្សេងៗ/Other" style="font-size: 9px;"><?php echo $rs["note"];?></td>
+							</tr>
+							<?php } ?>
+							<?php for ($i = $i; $i <= $minimumRow; $i++) { ?>
+							<tr class="style <?php //echo $classRow; ?>" style=" white-space:nowrap;">
+								<td style="border:none;" colspan="8">&nbsp;</td>
+							</tr>
+							<?php } ?>
+						</table>
+						
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3" >
+					<br />
+						<table style="width:45%; float: left;" border="1"  cellspacing="0" cellpadding="0">
+						
+							<tr>
+								<td style="vertical-align: top;padding: 2px 5px;height: 80px; line-height: 16px;">
+									<span style="font-weight: 600; display: block;text-decoration: underline;">សម្គាល់ / Note ៖</span>
+									<span style="display: block; font-size:11px;"><?php echo $row["note"];?><span>
+								</td>
+							</tr>
+						</table>
+						<table style="width: 55%;">
+							<tr class="rowFooter" style=" white-space:nowrap;">
+								<td style="width:70%; text-align:right;" ><span>សរុបរួម / Grand Total (USD):</span></td>
+								<td style="border:none; " ><span class="gtotalVal mainTotal"><?php echo number_format($gTotal,3);?></span></td>
+							</tr>
+						</table>
+						
+						<div class="clearfix" style="clear: both !important;"></div>
+						<table width="100%" cellspacing="0" cellpadding="0" style="margin-top:10px;" >
+							<tr>
+								<td style="width:40%; vertical-align: top;line-height: 16px; text-align:center;">
+									<span style="font-weight: 600; display: block;">អ្នកទទួល / Receiver</span>
+								</td>
+								<td style="width:20%; vertical-align: top;line-height: 16px; text-align:center;">
+									<span style="font-weight: 600; display: block;"><?php //echo $tr->translate("CHECKING_BY");?> </span>
+								</td>
+								<td style="width:40%; vertical-align: top;line-height: 16px; text-align:center;">
+									<span style="font-weight: 600; display: block;">អ្នកតំណាងក្រុមហ៊ុន / Company Represent</span>
+								</td>
+							</tr>
+						
+							<tr>
+								<td style="text-align:center;">
+									<span style="font-weight: 600; display: block; line-height: 16px;"><?php echo $row["receiver"];?></span>
+								</td>
+								<td style="text-align:center;">
+									
+								</td>
+								
+								<td style="text-align:center;">
+									<span style="font-weight: 600; display: block; line-height: 16px;"><?php echo $row["byUser"];?></span>
+								</td>
+							</tr>
+						</table>
+						<div class="clearfix" style="clear: both !important;"></div>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>
+<script>
+require(["dojo/ready"], function(ready){
+	ready(function(){
+		 getBranchInfo();
+	});
+});
+		
+function getBranchInfo(){
+	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
+	branch_id = '<?php echo empty($row['projectId'])?0:$row['projectId'];?>';
+	if(branch_id=="" || branch_id<=0){
+		return false;
+	}
+	dojo.xhrPost({
+	    url: url_submit,	
+	    content:{ 
+		    'branch_id':branch_id
+		},	
+		load: function(data) {
+			var arr = JSON.parse(data);
+			var imagesUrl = '<img  style="height:85px; max-width: 100%;" src="'+arr.url_logo+'" />';
+			document.getElementById('projectlogo').innerHTML = imagesUrl;	
+			document.getElementById('projectName').innerHTML = 'គម្រោង៖ '+arr.project_name;
+		},
+		error: function(e) {
+		}
+	});
+}
+</script>
