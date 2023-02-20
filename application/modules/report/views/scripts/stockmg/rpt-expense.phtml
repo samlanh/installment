@@ -18,9 +18,9 @@
 			'keyIndex'=>1,//Purchase By Request
 			'typeKeyIndex'=>1,
 		);
-	$purchaseType = $dbGBstock->purchasingTypeKey($arrStep);
+	//$purchaseType = $dbGBstock->purchasingTypeKey($arrStep);
 	
-	$paymentLetter = $this->baseUrl()."/report/stockmg/payment-letter/id/";
+	$expenseLetter = $this->baseUrl()."/report/stockmg/expense-letter/id/";
 
 ?>
 <title><?php echo $tr->translate("RPT_EXPENSE");?></title>
@@ -52,9 +52,7 @@
 					<label  class="col-md-2 col-sm-2 col-xs-12">
 					<?php echo $frm->getElement("bankId");?>
 					</label>
-					<label class="col-md-2 col-sm-2 col-xs-12">
-						<input id="budgetType" />
-					</label>
+					
 					<label class="col-md-2 col-sm-2 col-xs-12">
 						<input id="budgetItem" />
 					</label>
@@ -311,29 +309,6 @@
 	require(["dojo/ready"], function(ready){
 		ready(function(){
 
-				new dijit.form.FilteringSelect({
-					store: budgetTypeStore,
-					autoComplete: false,
-					queryExpr: "*${0}*",                       
-					id: "budgetType",
-					name: "budgetType",  
-					class: 'fullside',  
-		
-					required:false,
-					placeHolder:"<?php echo $tr->translate("SELECT_BUDGET_ITEM");?>", 
-					onChange: function() {        
-						budgetType = dijit.byId('budgetType').get('value');
-						if(budgetType!=0){
-							urlGetBudgetItem = '<?php echo $this->url(array('module'=>'budget','controller'=>'item','action'=>'get-allbudgetitem'));?>';
-							notinBranchId = dijit.byId('branch_id').get('value');
-							contentData = {
-									'budgetType':budgetType,
-									'noBtnNew':1
-								};
-							getAllBudgetItem(urlGetBudgetItem,contentData);
-					}
-					} 
-				}, "budgetType");
 				
 				new dijit.form.FilteringSelect({
 					store: budgetItemStore,
@@ -390,13 +365,13 @@ $(function(){
 		selector: '.context-menu-one', 
 		callback: function(key, options) {
 			var m = "clicked: " + key;
-			if(key=="paymentLetter"){
-				url='<?php echo $paymentLetter;?>';
+			if(key=="expenseLetter"){
+				url='<?php echo $expenseLetter;?>';
 			}
 			gotoAction();
 		},
 		items: {
-			"paymentLetter": {name: "<?php echo $tr->translate("PAYMENT_LETTER");?>", icon: "fa-file-text", accesskey: "c"},
+			"expenseLetter": {name: "<?php echo $tr->translate("EXPENSE_LETTER");?>", icon: "fa-file-text", accesskey: "c"},
 		}
 	});
 });

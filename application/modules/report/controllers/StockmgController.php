@@ -602,5 +602,24 @@ class Report_StockmgController extends Zend_Controller_Action {
 			$this->view->budgetType = $rsType;
 			
 	}
+	public function expenseLetterAction(){
+		try{
+			
+
+			$db = new Po_Model_DbTable_DbExpense();
+			$id = $this->getRequest()->getParam('id');
+			$id = empty($id)?0:$id;
+			$row  = $db->getexpensebyid($id);
+			$this->view->row = $row;
+			$this->view->rowdetail = $db->getexpenseDetailbyid($id);
+		
+		}catch (Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+		}
+		
+		$frmpopup = new Application_Form_FrmPopupGlobal();
+		$this->view->printByFormat = $frmpopup->printByFormat();
+	}
 	
 }

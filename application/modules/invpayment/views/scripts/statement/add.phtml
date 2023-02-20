@@ -105,21 +105,21 @@
 										</div> 
 									</div>
 									 <div class="form-group">
-										<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("SUPPLIER_INVOICE");?> </label>
+										<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("STATEMENT_FROMSUPPLIER");?> </label>
 										<div class="col-md-7 col-sm-7 col-xs-12">
-											<?php echo $frm->getElement("supplierInvoiceNo");?>
+											<?php echo $frm->getElement("supplierstMentNo");?>
 										</div>
 									 </div>
 									 <div class="form-group">
 										<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("START_DATE");?> </label>
 										<div class="col-md-7 col-sm-7 col-xs-12">
-											<?php echo $frm->getElement("invoiceDate");?>
+											<?php echo $frm->getElement("startDate");?>
 										</div>
 									 </div>
 									 <div class="form-group">
 										<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("END_DATE");?> </label>
 										<div class="col-md-7 col-sm-7 col-xs-12">
-											<?php echo $frm->getElement("receiveIvDate");?>
+											<?php echo $frm->getElement("endDate");?>
 										</div>
 									 </div>
 								 </div>
@@ -164,28 +164,13 @@
 							<div class="col-md-2 col-sm-2 col-xs-12">
 								<input dojoType="dijit.form.DateTextBox" onchange="getAllDN();"  class="fullside" constraints="{datePattern:'dd/MM/yyyy'}" placeHolder="<?php echo $tr->translate("END_DATE");?>" id="toDate" name="toDate" type="text">	
 							</div>
-							<label style=" margin: 0; line-height: 30px; text-align: center;" class="control-label bold col-md-1 col-sm-1 col-xs-12"><?php echo $tr->translate("FILLTER_DN");?></label>
+							<label style=" margin: 0; line-height: 30px; text-align: center;" class="control-label bold col-md-1 col-sm-1 col-xs-12"><?php echo $tr->translate("SELECT_DN");?></label>
 							<div class="col-md-5 col-sm-5 col-xs-12">
 								<input id="dnList" />
 							</div>
 							
 						</div>
-						<!--
-						<div class="form-group" >
-							<div class="custom-control custom-checkbox ">
-								<input type="checkbox" class="checkbox custom-control-input" name="check_all" id="check_all" value="all" OnChange="checkAllDn(0);" >
-								<label class="custom-control-label" for="check_all">
-									<?php echo $tr->translate('ALL');?>
-								</label>
-							</div>
-							<div class="col-md-12 col-sm-12 col-xs-12">
-								<div id="dnRecord">
-								</div>
-							</div>
-						</div>
-						-->
 					</div>
-					
 					<table class="collape tablesorter"  style="width:100%; white-space: nowrap;border:1px solid #ddd;">
 				    	<tr id="head-title" class="head-td" align="center">
 							<td width="2%"><?php echo $tr->translate("DEL");?></td>
@@ -198,12 +183,12 @@
 							<td width="10%"><?php echo $tr->translate("QTY");?></td>
 							<td width="10%"><?php echo $tr->translate("UNIT_PRICE")." ".$tr->translate("CURRENCY_SIGN");?></td>
 							<td width="10%"><?php echo $tr->translate("TOTAL");?></td>
-							
 						</tr>
 						<tbody id="table_row">
 						</tbody>
 					</table>
-					<input type="text" id="identity" name="identity" />
+					<input type="hidden" id="identity" name="identity" />
+					<input type="hidden" id="dnIdentity" name="dnIdentity" />
 					<div class="form-group" style="margin-bottom: 0; ">
 						<label class="control-label bold col-md-3 col-sm-3 col-xs-12" style="text-align:right;"></label>
 		                <div class="col-md-3 col-sm-3 col-xs-12">
@@ -338,7 +323,7 @@ ul.listDn li small {
 	 
 	 });
     function previewStatement(){
-		identity = $('#identity').val();
+		identity = $('#dnIdentity').val();
 		window.open('<?php echo $this->url(array('module'=>'invpayment','controller'=>'statement','action'=>'view'));?>'+'/id/'+identity,'_blank');
     }
 	function onChageFunctionByBranch(){
@@ -406,6 +391,7 @@ ul.listDn li small {
 		objectContentFilter = {
 				'branch_id':branch_id,
 				'supplierId':supplierId,
+				'isClosed':0,
 				'fromDate':fromDate,
 				'toDate':toDate,
 				'purchaseType':purchaseType};
@@ -419,7 +405,7 @@ ul.listDn li small {
 		if(branch_id=='' || branch_id<=0){
 			return false;
 		}
-		receiveIvDate = dijit.byId('receiveIvDate').get('value');
+		/*receiveIvDate = dijit.byId('receiveIvDate').get('value');
 		if(receiveIvDate==''){
 			infoMessageAlert('<?php echo $tr->translate('PLEASE_SELECT_RECEIVE_DATE');?>');
 			dijit.byId('date').focus();
@@ -437,13 +423,13 @@ ul.listDn li small {
 			}
 			
 			var y = a.getFullYear();
-			var receiveIvDate = dd +'-'+month+'-'+y ;
+			var receiveIvDate = dd +'-'+month+'-'+y ;*/
 	
 		dojo.xhrPost({
 			url:urlGetRequestNo,	
 			content:{ 
 				'branch_id':branch_id,
-				'receiveIvDate':receiveIvDate
+				'receiveIvDate':'<?php echo date('d-m-Y');?>'//receiveIvDate
 			},		    
 			handleAs:"json",
 			load: function(data) {
@@ -458,11 +444,8 @@ ul.listDn li small {
 	var title = 0;
 	var urlGetReceiiveInfo = '<?php echo $this->url(array('module'=>'invpayment','controller'=>'statement','action'=>'get-receive-info')); ?>';
 	function addRowProductReceive(){
-		
 		template='';
 		temp = "";
-
-		
 		branch_id = dijit.byId('branch_id').get('value');
 		if(branch_id=='' || branch_id<=0){
 			infoMessageAlert('<?php echo $tr->translate('PLEASE_SELECT_BRANCH');?>');
@@ -479,6 +462,7 @@ ul.listDn li small {
 	
 		var iden = $("#identity").val();
 		var arrays = iden.split(',');
+
 		 if(arrays!=""){
 			
 			 for(var i=0;i< arrays.length;i++) {
@@ -507,9 +491,9 @@ ul.listDn li small {
 				template+='<td  data-label="<?php echo $tr->translate("WORK_TYPE");?>" class="infoCol"  >'+data.workType+' </td>';
 				strength = (data.strength!=null)?data.strength:'';	
 				template+='<td  data-label="<?php echo $tr->translate("STRENGTH");?>" class="infoCol"  >'+strength+' </td>';
-				template+='<td  data-label="<?php echo $tr->translate("DN_NO");?>" class="red bold" ><input   readOnly dojoType="dijit.form.ValidationTextBox" class="fullside" id="dnNO'+col+'" name="dnNO'+col+'" value="'+data.dnNumber+'" type="text"  ></td>';
-				template+='<td data-label="<?php echo $tr->translate("QTY");?>" class=" bold" ><input readOnly dojoType="dijit.form.NumberTextBox" required="true" data-dojo-props="constraints:{min:0.0001},rangeMessage:'+"'<?php echo $tr->translate("MINIMUM_VALUE_IS_ONE");?>'"+'" class="fullside" id="qty'+col+'" name="qty'+col+'" placeholder="'+'<?php echo $tr->translate("QTY");?> " value="'+data.qtyReceive+'" type="text"  ></td>';	
-				template+='<td data-label="<?php echo $tr->translate("UNIT_PRICE");?>" class=" bold"><input readOnly  dojoType="dijit.form.NumberTextBox" required="true" data-dojo-props="constraints:{min:0.0001},rangeMessage:'+"'<?php echo $tr->translate("MINIMUM_VALUE_IS_ONE");?>'"+'" class="fullside" id="unitPrice'+col+'" name="unitPrice'+col+'" placeholder="'+'<?php echo $tr->translate("UNIT_PRICE");?>" value="'+data.price+'" type="text"  ></td>';	
+				template+='<td  data-label="<?php echo $tr->translate("DN_NO");?>" class="red bold" ><input   readOnly dojoType="dijit.form.ValidationTextBox" class="fullside" id="dnId'+col+'" name="dnId'+col+'" value="'+data.id+'" type="text"  ></td>';
+				template+='<td data-label="<?php echo $tr->translate("QTY");?>" class=" bold" ><input readOnly dojoType="dijit.form.NumberTextBox" required="true" class="fullside" id="qty'+col+'" name="qty'+col+'" placeholder="'+'<?php echo $tr->translate("QTY");?> " value="'+data.qtyReceive+'" type="text"  ></td>';	
+				template+='<td data-label="<?php echo $tr->translate("UNIT_PRICE");?>" class=" bold"><input readOnly  dojoType="dijit.form.NumberTextBox" required="true"  class="fullside" id="unitPrice'+col+'" name="unitPrice'+col+'" placeholder="'+'<?php echo $tr->translate("UNIT_PRICE");?>" value="'+data.price+'" type="text"  ></td>';	
 				template+='<td data-label="<?php echo $tr->translate("SUBTOTAL");?>" class=" bold"><input dojoType="dijit.form.NumberTextBox" readOnly required="true" class="fullside" id="subTotal'+col+'" name="subTotal'+col+'" placeholder="'+'<?php echo $tr->translate("TOTAL");?> " value="'+data.subTotal+'" type="text"  ></td>';	
 				
 				tmp='<tr class="rowData" id="row'+col+'">';
@@ -517,9 +501,16 @@ ul.listDn li small {
 				
 				dojo.query("#table_row").append(tmp);
 				if($("#identity").val()!="") {
-				var identity = $("#identity").val();
-				$("#identity").val(identity+','+col);
-				} else {$("#identity").val(col);}
+					var identity = $("#identity").val();
+					$("#identity").val(identity+','+col);
+
+					var identitydn = $("#dnIdentity").val();
+					$("#dnIdentity").val(identitydn+','+data.id);
+				} else {
+					$("#identity").val(col);
+					
+					$("#dnIdentity").val(data.id);
+				}
 				dojo.html.set(dojo.byId("row"+col),template , {
 					 parseContent: true,
 				});
@@ -534,13 +525,24 @@ ul.listDn li small {
 	
 	}
 	function deleteRecord(index) {
+		var identityDn = $('#dnIdentity').val();
+		var arraysDn = identityDn.split(',');
+		
 		var identity = $('#identity').val();
 		var arrays = identity.split(',');
 		for(var i=0;i<arrays.length;i++) {
-			if(arrays[i] == index) arrays.splice(i,1);
+			if(arrays[i] == index){
+				arrays.splice(i,1);
+				arraysDn.splice(i,1);
+			}
 		}
 		var strings = arrays.join(',');
+		var stringsDn = arraysDn.join(',');
+		
 		$('#identity').val(strings);
+
+		$('#dnIdentity').val(stringsDn);
+		
 		dojo.query("#row"+index).remove();
 		calculateRowAmount();
 	}
@@ -550,7 +552,6 @@ ul.listDn li small {
 		if(rowId==""){
 			return false;
 		}
-		
 		var payment=0;
 		
 		var rowIDArray = rowId.split(',');

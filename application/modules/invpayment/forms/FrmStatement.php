@@ -56,15 +56,16 @@ Class Invpayment_Form_FrmStatement extends Zend_Dojo_Form {
     			'missingMessage'=>$tr->translate("Forget Enter Data")
     	));
 		
-		$supplierInvoiceNo = new Zend_Dojo_Form_Element_TextBox('supplierInvoiceNo');
+		$supplierInvoiceNo = new Zend_Dojo_Form_Element_ValidationTextBox('supplierstMentNo');
     	$supplierInvoiceNo->setAttribs(array(
     			'dojoType'=>'dijit.form.TextBox',
     			'class'=>'fullside ',
-    			'placeholder'=>$tr->translate("INVOICE_NO"),
+    			'required'=>'true',
+    			'placeholder'=>$tr->translate("STATEMENT_FROMSUPPLIER"),
     			'missingMessage'=>$tr->translate("Forget Enter Data")
     	));
 		
-		$invoiceDate = new Zend_Dojo_Form_Element_DateTextBox('invoiceDate');
+		$invoiceDate = new Zend_Dojo_Form_Element_DateTextBox('startDate');
  		$invoiceDate->setAttribs(array(
  			'dojoType'=>'dijit.form.DateTextBox',
  			'class'=>'fullside',
@@ -72,7 +73,7 @@ Class Invpayment_Form_FrmStatement extends Zend_Dojo_Form {
  		));
 		$invoiceDate->setValue(date("Y-m-d"));
 		
-		$receiveIvDate = new Zend_Dojo_Form_Element_DateTextBox('receiveIvDate');
+		$receiveIvDate = new Zend_Dojo_Form_Element_DateTextBox('endDate');
  		$receiveIvDate->setAttribs(array(
  			'dojoType'=>'dijit.form.DateTextBox',
  			'class'=>'fullside',

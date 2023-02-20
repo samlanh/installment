@@ -161,7 +161,8 @@ class Invpayment_Model_DbTable_DbDnconcrete extends Zend_Db_Table_Abstract
 	    	rst.dnNumber AS name ";
     	$sql.="
 	    	FROM st_receive_stock AS rst
-	    	JOIN `st_purchasing`AS po ON po.id = rst.poId
+	    		JOIN `st_receive_stock_detail`AS rsd 
+	    	ON rst.id = rsd.receiveId
     	";
     	$sql.=" WHERE rst.status=1 ";
     	$sql.=" AND rst.verified =1 ";
@@ -175,6 +176,10 @@ class Invpayment_Model_DbTable_DbDnconcrete extends Zend_Db_Table_Abstract
     	if(!empty($data['supplierId'])){
     		$sql.=" AND rst.supplierId= ".$data['supplierId'];
     	}
+    	if(isset($data['isClosed'])){
+    		$sql.=" AND rsd.isClosed= ".$data['isClosed'];
+    	}
+    	
     	$fromDate =(empty($data['fromDate']))? '1': " rst.receiveDate >= '".$data['fromDate']." 00:00:00'";
     	$toDate = (empty($data['toDate']))? '1': " rst.receiveDate <= '".$data['toDate']." 23:59:59'";
     	

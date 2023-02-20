@@ -1,6 +1,6 @@
 <?php
 class Invpayment_StatementController extends Zend_Controller_Action {
-	const REDIRECT_URL = '/statement/index';
+	const REDIRECT_URL = '/invpayment/statement';
 	const INVOICE_TYPE = 1;//DN Invoice
 	public function indexAction(){
 		//$db = new ();
@@ -37,7 +37,6 @@ class Invpayment_StatementController extends Zend_Controller_Action {
 			}
 			
 			
-		
 			
 		$frm_search = new Application_Form_FrmAdvanceSearchStock();
 		$frm = $frm_search->AdvanceSearch();
@@ -47,13 +46,11 @@ class Invpayment_StatementController extends Zend_Controller_Action {
 	}
 	function addAction(){
 
-		$db = new Invpayment_Model_DbTable_DbInvoice();
+		$db = new Invpayment_Model_DbTable_DbConcreteStatement();
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {		
-				
-				$_data['ivType']=self::INVOICE_TYPE;
-				$db->issueInvoice($_data);
+				$db->addConcreteStatment($_data);
 	    		Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL."/index");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
@@ -65,6 +62,23 @@ class Invpayment_StatementController extends Zend_Controller_Action {
     	$frm->FrmgetStatement(null);
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm = $frm;
+	}
+	public function viewAction(){
+	
+		$db = new Invpayment_Model_DbTable_DbConcreteStatement();
+		try{
+			$id = $this->getRequest()->getParam('id');
+			$id = empty($id)?0:$id;
+			$this->view->rows = $db->getConcreteStatement($id);
+	
+		}catch (Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+		}
+		 
+		$frmpopup = new Application_Form_FrmPopupGlobal();
+		$this->view->footerReport = $frmpopup->getFooterReport();
+		$this->view->headerReport = $frmpopup->getLetterHeadReport();
 	}
 
 	function getalldnAction(){
