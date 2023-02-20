@@ -188,14 +188,9 @@ Class Po_Form_FrmExpense extends Zend_Dojo_Form {
 				'placeholder'=>$tr->translate('START_DATE'),
 				'dojoType'=>"dijit.form.DateTextBox",
 				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
-				'class'=>'fullside',));
-		$_date = $request->getParam("end_date");
-		if(empty($_date)){
-			$_date = date("Y-m-d");
-			$start_date->setValue($_date);
-		}
-		
-		 
+				'class'=>'fullside',)
+			);
+
 		$end_date= new Zend_Dojo_Form_Element_DateTextBox('end_date');
 		$end_date->setAttribs(array(
 				'dojoType'=>"dijit.form.DateTextBox",
