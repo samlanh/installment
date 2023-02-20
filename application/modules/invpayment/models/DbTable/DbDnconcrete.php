@@ -175,12 +175,12 @@ class Invpayment_Model_DbTable_DbDnconcrete extends Zend_Db_Table_Abstract
     	if(!empty($data['supplierId'])){
     		$sql.=" AND rst.supplierId= ".$data['supplierId'];
     	}
-    	if(!empty($data['fromDate'])){
-    		$sql.=" AND rst.receiveDate= ".$data['fromDate'];
-    	}
-    	if(!empty($data['toDate'])){
-    		$sql.=" AND rst.receiveDate= ".$data['fromDate'];
-    	}
+    	$fromDate =(empty($data['fromDate']))? '1': " rst.receiveDate >= '".$data['fromDate']." 00:00:00'";
+    	$toDate = (empty($data['toDate']))? '1': " rst.receiveDate <= '".$data['toDate']." 23:59:59'";
+    	
+    	$sql.= " AND ".$fromDate." AND ".$toDate;
+    	
+    	
     	$dbiv = new Invpayment_Model_DbTable_DbInvoice();
     	$DNListFromInvoice = $dbiv->getDnIDInInvoice($data);
     	if(!empty($DNListFromInvoice)){ 
@@ -193,19 +193,18 @@ class Invpayment_Model_DbTable_DbDnconcrete extends Zend_Db_Table_Abstract
 	function getReceiveProductInfo($_data=null){
 		$db=$this->getAdapter();
 		
-		$sql=" SELECT rs.id,
-		rd.proId,
-		(SELECT proName FROM `st_product` AS p WHERE p.proId=rd.proId) AS proName,
-		(SELECT proCode FROM `st_product` AS p WHERE p.proId=rd.proId) AS proCode,
-		(SELECT NAME FROM `st_measure`AS m WHERE m.id= (SELECT measureId FROM `st_product` WHERE proId = rd.proId)) AS measure,
-		rd.strength, 
-		(SELECT workTitle FROM `st_work_type` AS wt WHERE wt.id= rd.worktype ) AS workType,
-		rs.dnNumber,rd.strength,
-		rd.qtyReceive, rd.price, rd.subTotal
-
-		 FROM `st_receive_stock`  AS rs JOIN `st_receive_stock_detail` AS rd ON rs.id =rd.receiveId WHERE";	
+		$sql="SELECT rs.id,
+					rd.proId,
+					(SELECT proName FROM `st_product` AS p WHERE p.proId=rd.proId) AS proName,
+					(SELECT proCode FROM `st_product` AS p WHERE p.proId=rd.proId) AS proCode,
+					(SELECT NAME FROM `st_measure`AS m WHERE m.id= (SELECT measureId FROM `st_product` WHERE proId = rd.proId)) AS measure,
+					(SELECT workTitle FROM `st_work_type` AS wt WHERE wt.id= rd.worktype ) AS workType,
+					rs.dnNumber,
+					rd.strength,
+					rd.qtyReceive, rd.price, rd.subTotal
+		 	FROM `st_receive_stock`  AS rs JOIN `st_receive_stock_detail` AS rd ON rs.id =rd.receiveId WHERE 1 ";	
 		if(!empty($_data['receiveId'])){
-			$sql.=" rs.id=".$_data['receiveId'];
+			$sql.=" AND rs.id=".$_data['receiveId'];
 		}
 		return $db->fetchRow($sql);
 		

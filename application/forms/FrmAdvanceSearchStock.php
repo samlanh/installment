@@ -28,6 +28,16 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 				'placeholder'=>$this->tr->translate("ADVANCE_SEARCH")
 				));
 		$_title->setValue($request->getParam("adv_search"));
+
+		$budgetItem = new Zend_Dojo_Form_Element_FilteringSelect('budgetItem');
+		$budgetItem->setAttribs(array(
+			'dojoType'=>'dijit.form.FilteringSelect',
+			'class'=>'fullside',
+			'autoComplete'=>'false',
+			'queryExpr'=>'*${0}*',
+		));
+		
+		$budgetItem->setMultiOptions($dbGBStock->getAllBudgetItem(0,'', '',1,null));
 		
 		
 		$_status=  new Zend_Dojo_Form_Element_FilteringSelect('status');
@@ -355,7 +365,7 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 				
 				,$recivedProPO
 				,$dateFilterOpt
-				
+				,$budgetItem	
 			)
 		);
 		return $this;

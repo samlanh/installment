@@ -201,35 +201,44 @@ class Po_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 	function getAllExpenseReport($search=null){
 		$db = $this->getAdapter();
 		$session_user=new Zend_Session_Namespace(SYSTEM_SES);
-		$from_date =(empty($search['start_date']))? '1': " date >= '".$search['start_date']." 00:00:00'";
-		$to_date = (empty($search['end_date']))? '1': " date <= '".$search['end_date']." 23:59:59'";
-		$where = " WHERE ".$from_date." AND ".$to_date;
+		$from_date =(empty($search['start_date']))? '1': " p.paymentDate >= '".$search['start_date']." 00:00:00'";
+		$to_date = (empty($search['end_date']))? '1': "p.paymentDate <= '".$search['end_date']." 23:59:59'";
+		$where = " AND  ".$from_date." AND ".$to_date;
 	
-		$sql=" SELECT p.id, 
+		$sql="SELECT *,  
 		(SELECT l.project_name FROM `ln_project` AS l WHERE l.br_id = p.projectId LIMIT 1) AS projectName,
-		p.expenseTitle,
 		(SELECT b.budgetTitle FROM `st_budget_item` AS b WHERE b.id = p.budgetId LIMIT 1) AS budgetItem,
-		p.paymentNo, p.receiver,
-		(SELECT vi.name_kh FROM `ln_view` AS vi WHERE vi.type=2 AND vi.key_code=p.`paymentMethod` LIMIT 1) AS paymentMethod,
+		(SELECT vi.name_kh FROM `ln_view` AS vi WHERE vi.type=2 AND vi.key_code=p.`paymentMethod` LIMIT 1) AS paymentMethodTitle,
 		(SELECT ba.bank_name FROM `st_bank` AS ba WHERE ba.id=p.`bankId` LIMIT 1) AS bankName,
-		p.accNameAndChequeNo, p.totalAmount, p.paymentdate, p.status 
-		
-		FROM `st_expense` AS p				
+		(SELECT us.user_name FROM `rms_users` AS us WHERE us.id=p.`userId` LIMIT 1) AS byUser
+		FROM `st_expense` AS p	WHERE p.status = 1		
 		";
 	
 		if (!empty($search['adv_search'])){
 			$s_where = array();
 			$s_search = trim(addslashes($search['adv_search']));
-			$s_where[] = " account_id LIKE '%{$s_search}%'";
+			$s_where[] = " p.expenseTitle LIKE '%{$s_search}%'";
 			$s_where[] = " title LIKE '%{$s_search}%'";
-			$s_where[] = " total_amount LIKE '%{$s_search}%'";
-			$s_where[] = " invoice LIKE '%{$s_search}%'";
+			$s_where[] = " P.totalAmount LIKE '%{$s_search}%'";
+			$s_where[] = " p.paymentNo LIKE '%{$s_search}%'";
 			
 			$where .=' AND ('.implode(' OR ',$s_where).')';
 		}
-		if($search['status']>-1){
-			$where.= " AND status = ".$search['status'];
+		if($search['branch_id']>0){
+			$where.= " AND p.projectId = ".$search['status'];
 		}
+
+		if(!empty($search['paymentMethod'])){
+			$where.= " AND p.paymentMethod = ".$search['paymentMethod'];
+		}
+		if(!empty($search['bankId'])){
+			$where.= " AND p.bankId = ".$search['bankId'];
+		}
+		if(!empty($search['budgetItem'])){
+			$where.= " AND p.budgetId = ".$search['budgetItem'];
+		}
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$where.= $dbp->getAccessPermission('p.projectId');
 		
 		$order=" order by id desc ";
 		return $db->fetchAll($sql.$where.$order);
