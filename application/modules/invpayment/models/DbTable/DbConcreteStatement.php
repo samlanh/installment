@@ -7,28 +7,79 @@ class Invpayment_Model_DbTable_DbConcreteStatement extends Zend_Db_Table_Abstrac
     	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
     	return $session_user->user_id;
     }
+
+
+	function getAllStatement($search){
+    	$db = $this->getAdapter();
+		$dbGb = new Application_Model_DbTable_DbGlobal();
+
+		$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
+		$sql="SELECT st.id,
+			(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id=st.projectId LIMIT 1) AS projectName,
+			st.stmentNo, st.stmentDate, st.supplierStmentNo, st.totalExternal,
+
+			(SELECT sp.supplierName FROM `st_supplier` AS sp  WHERE sp.id = st.supplierId LIMIT 1) AS supplierName,
+			st.note, 
+			(SELECT u.first_name FROM `rms_users` AS u WHERE u.id = st.userId LIMIT 1 ) AS byUser, st.status ";
+
+		$sql.=$dbGb->caseStatusShowImage("st.status");
+		$sql.="
+			FROM `st_statement` AS st WHERE 1
+			";
+		
+    	$where = "";
+    	$from_date =(empty($search['start_date']))? '1': " st.stmentDate >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " st.stmentDate <= '".$search['end_date']." 23:59:59'";
+    	
+    	$where.= " AND ".$from_date." AND ".$to_date;
+    	
+    	if(!empty($search['adv_search'])){
+
+    		$s_where = array();
+    		$s_search = (trim($search['adv_search']));
+    		$s_where[] = " st.stmentNo LIKE '%{$s_search}%'";
+    		$s_where[] = " st.supplierStmentNo LIKE '%{$s_search}%'";
+    		$s_where[] = " st.totalExternal LIKE '%{$s_search}%'";
+
+    		$where .=' AND ( '.implode(' OR ',$s_where).')';
+    	}
+    	if($search['status']>-1){
+    		$where.= " AND st.status = ".$search['status'];
+    	}
+    	if(($search['branch_id'])>0){
+    		$where.= " AND st.projectId = ".$search['branch_id'];
+    	}
+		if(!empty($search['supplierId'])){
+    		$where.= " AND st.supplierId = ".$search['supplierId'];
+    	}
+    	$order=' ORDER BY st.id DESC  ';
+    	$where.=$dbGb->getAccessPermission("st.projectId");
+
+    	return   $db->fetchAll($sql.$where.$order);
+		
+    }
   
     function getConcreteStatement($recordId){
     	$db =$this->getAdapter();
-    	$sql="SELECT 
-				st.dnNumber,
-				sd.qtyReceive,
-				sd.price,
-				sd.subTotal,
-				DATE_FORMAT(st.receiveDate,'%d-%m-%Y') AS receiveDate,
-				(SELECT k.workTitle FROM `st_work_type` k WHERE k.id=sd.workType LIMIT 1) WorkType,
-				(SELECT p.proName FROM st_product p WHERE p.proId=sd.proId LIMIT 1) proName,
-				(SELECT p.proCode FROM st_product p WHERE p.proId=sd.proId LIMIT 1) proCode,
-				(SELECT p.measureLabel FROM st_product p WHERE p.proId=sd.proId LIMIT 1) measureLabel,
-				sd.note AS note,
-				sd.strength
-		FROM 
-			`st_receive_stock_detail` AS 
-				sd  JOIN `st_receive_stock` AS st 
-				ON sd.receiveId = st.id WHERE
-				st.transactionType = 2 AND sd.receiveId IN(".$recordId.")";
-    	echo $sql;
+    	$sql="SELECT *,
+			( SELECT p.proName FROM `st_product` AS p WHERE p.proId=sd.proId LIMIT 1) AS proName,
+			( SELECT p.proCode FROM `st_product` AS p WHERE p.proId=sd.proId LIMIT 1) AS proCode,
+			( SELECT p.measureLabel FROM `st_product` AS p WHERE p.proId=sd.proId LIMIT 1) AS measureLabel,
+			( SELECT r.dnNumber FROM `st_receive_stock` AS r WHERE r.id=sd.dnId LIMIT 1) AS dnNumber,
+			( SELECT rd.strength FROM `st_receive_stock_detail` AS rd WHERE rd.receiveId=sd.dnId LIMIT 1) AS strength,
+			( SELECT w.workTitle FROM  `st_work_type` AS w WHERE w.id IN (SELECT workType FROM  st_receive_stock_detail WHERE id = sd.dnId) ) AS workType
+			 FROM `st_statement_detail` sd  JOIN `st_statement` AS st ON sd.stamentId= st.id
+			 WHERE sd.stamentId = ".$recordId;
+    
     	return $db->fetchAll($sql);
+    }
+
+	function getStatementRow($recordId){
+    	$db =$this->getAdapter();
+    	$sql="SELECT *,
+			(SELECT sp.supplierName FROM `st_supplier` AS sp  WHERE sp.id = st.supplierId LIMIT 1) AS supplierName
+			 FROM `st_statement` AS st  WHERE st.id = ".$recordId;
+    	return $db->fetchRow($sql);
     }
     function addConcreteStatment($data){
     	$db = $this->getAdapter();
@@ -63,11 +114,11 @@ class Invpayment_Model_DbTable_DbConcreteStatement extends Zend_Db_Table_Abstrac
 	    		$this->_name='st_statement_detail';
 	    		$this->insert($arr);
 	    		
-	    		$this->_name='st_receive_stock_detail';
+	    		$this->_name='st_receive_stock';
 	    		$arr = array(
-	    				'isClosed'=>1
+	    				'isissueStatement'=>1
 	    				);
-	    		$where = 'receiveId='.$data['dnId'.$i];
+	    		$where = 'id='.$data['dnId'.$i];
 	    		$this->update($arr, $where);
 	    	}
     		$db->commit();

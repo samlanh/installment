@@ -10,12 +10,6 @@ class Product_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     
     }
     
-    // function checkItemsTypeId($category){
-    // 	$db = $this->getAdapter();
-    // 	$sql="SELECT d.* FROM ln_properties_type AS d WHERE d.type_nameen = '$category' LIMIT 1";
-    // 	return $db->fetchRow($sql);
-    // }
-    
     public function ProductByImport($data){
     	$db = $this->getAdapter();
     	$count = count($data);
@@ -35,6 +29,7 @@ class Product_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 					$_arr=array(
 						
 						'categoryName'   => $data[$i]['B'],
+						'parentId'     	 => 0,
 						'status'     	 => 1,
 						'isMaterial'     => $isMaterial,
 						'createDate' 	=> date("Y-m-d H:i:s"),
@@ -61,52 +56,39 @@ class Product_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 			}
 
 			$isCountStock = ($data[$i]['H']=="មិនរាប់")?0:1;
-
+			$dbp = new Product_Model_DbTable_DbProduct();
+			$proCode = $dbp->generateProductCode();
+			$this->_name = "st_product";
+			$_arr=array(
+				'proName'  	  => $data[$i]['C'],
+				'proCode'  	  => $proCode ,
+				'categoryId'  	  => $cateId,
+				'measureId'   	 => $measureId,
+				'isConvertMeasure' => 0,
+				'measureLabel' => $data[$i]['D'],
+				'measureValue' => 1,
+				'isCountStock'   => $isCountStock,
+				'createDate' 	=> date("Y-m-d H:i:s"),
+				'userId'	 	=> $this->getUserId()
+			);
+			
 			if (!empty($data[$i]['E'])){
 
-				$_arr=array(
+				$_arr['proName']=$_arr['proName']." សំណង់";
+				$_arr['budgetId']=1;
+				$this->insert($_arr);
 
-					'proName'     	  => $data[$i]['C'],
-					'categoryId'  	  => $cateId,
-					'measureId'   	 => $measureId,
-					'isCountStock'   => $isCountStock,
-					'budgetId'   	 => 1,
-					'createDate' 	=> date("Y-m-d H:i:s"),
-					'userId'	 	=> $this->getUserId()
-				);
-				$this->_name = "st_product";
-				$proId =  $this->insert($_arr);
 			}
-			if (!empty($data[$i]['F'])){
 			
-				$_arr=array(
-
-					'proName'     	  => $data[$i]['C'],
-					'categoryId'  	  => $cateId,
-					'measureId'   	 => $measureId,
-					'isCountStock'   => $isCountStock,
-					'budgetId'   	 => 2,
-					'createDate' 	=> date("Y-m-d H:i:s"),
-					'userId'	 	=> $this->getUserId()
-				);
-				$this->_name = "st_product";
-				$proId =  $this->insert($_arr);
-
+			if (!empty($data[$i]['F'])){
+				$_arr['proName']=$data[$i]['C']." ហេដ្ឋារចនាសម្ព័ន្ធខាងក្រៅ";
+				$_arr['budgetId']=2;
+				$this->insert($_arr);
 			}
-
+		
 			if (!empty($data[$i]['G'])){
-
-				$_arr=array(
-
-					'proName'     	  => $data[$i]['C'],
-					'categoryId'  	  => $cateId,
-					'measureId'   	 => $measureId,
-					'isCountStock'   => $isCountStock,
-					'budgetId'   	 => 3,
-					'createDate' 	=> date("Y-m-d H:i:s"),
-					'userId'	 	=> $this->getUserId()
-				);
-				$this->_name = "st_product";
+				$_arr['proName']=$data[$i]['C']." ហេដ្ឋារចនាសម្ព័ន្ធខាងក្នុង";
+				$_arr['budgetId']=3;
 				$proId =  $this->insert($_arr);
 
 			}

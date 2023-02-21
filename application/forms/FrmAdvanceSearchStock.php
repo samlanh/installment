@@ -23,7 +23,6 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 		
 		$_title = new Zend_Dojo_Form_Element_TextBox('adv_search');
 		$_title->setAttribs(array('dojoType'=>$this->text,
-				'onkeyup'=>'this.submit()',
 				'class'=>'fullside',
 				'placeholder'=>$this->tr->translate("ADVANCE_SEARCH")
 				));

@@ -5,7 +5,7 @@ class Invpayment_StatementController extends Zend_Controller_Action {
 	public function indexAction(){
 		//$db = new ();
 		try{
-			$db = new Invpayment_Model_DbTable_DbInvoice();
+			$db = new Invpayment_Model_DbTable_DbConcreteStatement();
 			
 			if(!empty($this->getRequest()->isPost())){
 				$search=$this->getRequest()->getPost();
@@ -19,17 +19,17 @@ class Invpayment_StatementController extends Zend_Controller_Action {
 					'end_date'=>date('Y-m-d'),
 				);
 			}
-			$search['ivType']=self::INVOICE_TYPE;
+		
 			$rs_rows=array();
-			$rs_rows= $db->getAllInvoice($search);//
+			$rs_rows= $db->getAllStatement($search);
 			
 			
 			$list = new Application_Form_Frmtable();
-    		$collumns = array("PROJECT_NAME","INVOICE_NO","RECEIVE_DATE","SUPPLIER_INVOICE","INVOICE_DATE","TOTAL","DNORIV_NO","PO_NO","SUPPLIER","STATUS","BY");
+    		$collumns = array("PROJECT_NAME","STATEMENT_NO","STATEMENT_DATE","SUPPLIER_STATE_NO","TOTAL","SUPPLIER","NOTE","BY","STATUS");
     		$link=array(
-    				'module'=>'invpayment','controller'=>'index','action'=>'edit',
+    				'module'=>'invpayment','controller'=>'statement','action'=>'edit',
     		);
-    		$this->view->list=$list->getCheckList(10, $collumns, $rs_rows , array('branch_name'=>$link,'invoiceNo'=>$link,'purchaseNo'=>$link,));
+    		$this->view->list=$list->getCheckList(10, $collumns, $rs_rows , array('projectName'=>$link,'stmentNo'=>$link,));
 			
 			}catch (Exception $e){
 				Application_Form_FrmMessage::message("Application Error");
@@ -70,6 +70,8 @@ class Invpayment_StatementController extends Zend_Controller_Action {
 			$id = $this->getRequest()->getParam('id');
 			$id = empty($id)?0:$id;
 			$this->view->rows = $db->getConcreteStatement($id);
+
+			$this->view->rs = $db->getStatementRow($id);
 	
 		}catch (Exception $e){
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
