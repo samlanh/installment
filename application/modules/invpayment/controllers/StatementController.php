@@ -5,7 +5,7 @@ class Invpayment_StatementController extends Zend_Controller_Action {
 	public function indexAction(){
 		//$db = new ();
 		try{
-			$db = new Invpayment_Model_DbTable_DbInvoice();
+			$db = new Invpayment_Model_DbTable_DbConcreteStatement();
 			
 			if(!empty($this->getRequest()->isPost())){
 				$search=$this->getRequest()->getPost();
@@ -21,13 +21,13 @@ class Invpayment_StatementController extends Zend_Controller_Action {
 			}
 			$search['ivType']=self::INVOICE_TYPE;
 			$rs_rows=array();
-			$rs_rows= $db->getAllInvoice($search);//
+			$rs_rows= $db->getAllStatement($search);//
 			
 			
 			$list = new Application_Form_Frmtable();
     		$collumns = array("PROJECT_NAME","INVOICE_NO","RECEIVE_DATE","SUPPLIER_INVOICE","INVOICE_DATE","TOTAL","DNORIV_NO","PO_NO","SUPPLIER","STATUS","BY");
     		$link=array(
-    				'module'=>'invpayment','controller'=>'index','action'=>'edit',
+    				'module'=>'invpayment','controller'=>'statement','action'=>'edit',
     		);
     		$this->view->list=$list->getCheckList(10, $collumns, $rs_rows , array('branch_name'=>$link,'invoiceNo'=>$link,'purchaseNo'=>$link,));
 			
