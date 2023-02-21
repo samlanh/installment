@@ -192,12 +192,17 @@
 									<td scope="col" style="padding:1px;">ប្រភេទទិញ <br> Product Category</td>
 									<td scope="col" style="padding:1px;">បរិមាណនៅសល់ <br> Current QTY</td>	                    
 									<td scope="col" style="padding:1px;">តម្លៃ <br> Cost</td>
+									<td scope="col" style="padding:1px;">សរុប <br> Total</td>
 									<td scope="col" style="padding:1px;">គម្រោងចំណាយ <br>Budget Plan</td>
 									<td scope="col" style="padding:1px;">ផ្សេងៗ <br> Other</td>
 									</tr>
 					            </thead>
 				                <?php 
+				                	$total=0;
+				                	$grandTotal = 0;
 				                if(!empty($this->rows)) foreach ($this->rows as $index => $rs){
+				                	$total = $rs['currentQty']*$rs['cost'];
+				                	$grandTotal = $grandTotal+$total;
 								?>
 								<tr class="style" align="left">
 									<td data-label="ល.រ​ /N.o" class="padding" style="text-align: center;"><?php echo $index+1;?></td>
@@ -206,12 +211,18 @@
 									<td data-label="បារកូដ/Barcode">&nbsp;<?php echo $rs['barCode']?></td>
 									<td data-label="ប្រភេទទិញ/Product Category"><?php echo $rs['categoryName']?></td>
 									<td data-label="បរិមាណនៅសល់/Current QTY"><strong><?php echo number_format($rs['currentQty'],2)?></strong><span style="float: right;"><?php echo $rs['measureTitle'];?></span></td>
-									<td data-label="តម្លៃ/Cost">&nbsp;</td>	                    
+									<td data-label="តម្លៃ/Cost">&nbsp;<?php echo number_format($rs['cost'],2)?></td>
+									<td data-label="តម្លៃ/Cost">&nbsp;<?php echo number_format($total,2)?></td>	                    
 									<td data-label="គម្រោងចំណាយ/Budget Plan"><?php echo $rs['budgetTitle']?></td>
 									<td data-label="ផ្សេងៗ/Other">&nbsp;</td>
 								</tr>
 				                <?php }?>
-				            </table>
+				                <tr>
+				                	<td colspan="6" style=""></td>
+				                	<td colspan="2" align="right"><strong><?php echo number_format($grandTotal,2)?></strong></td>
+				                	<td colspan="2"></td>
+				                </tr>
+				            </table><br />
 				            <?php echo $this->footerReport;?>
 				    	</td>
 				    </tr>

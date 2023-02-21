@@ -15,6 +15,7 @@ Class Product_Form_FrmCategory extends Zend_Dojo_Form {
 			'dojoType'=>'dijit.form.FilteringSelect',
 			'class'=>'fullside',
 			'autoComplete'=>'false',
+			'required'=>'false',
 			'queryExpr'=>'*${0}*',
 		));
 		$options = $db->getAllCategoryProduct(0,'','',1);

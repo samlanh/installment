@@ -80,7 +80,16 @@ class Product_Model_DbTable_DbinitilizeQtybyProject extends Zend_Db_Table_Abstra
 					$result = $dbs->getProductInfoByLocation($param);
 					
 					if(empty($result)){
-					
+						$arr = array(
+								'projectId'=>$data['branch_id'],
+								'productId'=>$data['proId'.$i],
+								'costing'=>$data['costing'.$i],
+								'date'=>date('Y-m-d')
+						);
+						
+						$this->_name='st_product_costing';
+						$this->insert($arr);
+						
 						$arr = array(
 								'projectId'=>$data['branch_id'],
 								'proId'=>$data['proId'.$i],

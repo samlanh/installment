@@ -118,6 +118,7 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
 			    		CONCAT(COALESCE(p.proCode,''),' ',COALESCE(p.proName,'')) AS `name`,
 			    		p.barCode,
 			    		l.qty AS currentQty,
+			    		l.costing as cost,
 			    		p.measureLabel AS measureTitle,
 			    		(SELECT i.budgetTitle FROM `st_budget_item` AS i WHERE i.id=p.budgetId LIMIT 1) budgetTitle,
 			    		l.costing,
