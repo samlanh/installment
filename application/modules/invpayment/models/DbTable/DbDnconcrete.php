@@ -176,8 +176,8 @@ class Invpayment_Model_DbTable_DbDnconcrete extends Zend_Db_Table_Abstract
     	if(!empty($data['supplierId'])){
     		$sql.=" AND rst.supplierId= ".$data['supplierId'];
     	}
-    	if(isset($data['isClosed'])){
-    		$sql.=" AND rsd.isClosed= ".$data['isClosed'];
+    	if(isset($data['isissueStatement'])){
+    		$sql.=" AND rst.isissueStatement= ".$data['isissueStatement'];
     	}
     	
     	$fromDate =(empty($data['fromDate']))? '1': " rst.receiveDate >= '".$data['fromDate']." 00:00:00'";
