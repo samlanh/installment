@@ -42,10 +42,10 @@ class Product_IndexController extends Zend_Controller_Action {
 			$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array('proName'=>$link,'proCode'=>$link,
 					'barCode'=>$link,'categoryName'=>$link,'MeasureName'=>$link));
 			
-			$frm = new Application_Form_FrmAdvanceSearchStock();
-			$frm = $frm->AdvanceSearch();
-			Application_Model_Decorator::removeAllDecorator($frm);
-			$this->view->frm_search = $frm;
+			$frm_search = new Application_Form_FrmAdvanceSearchStock();
+			$frm_search = $frm_search->AdvanceSearch();
+			Application_Model_Decorator::removeAllDecorator($frm_search);
+			$this->view->frm_search = $frm_search;
 			
 			$frm = new Product_Form_Frmproduct();
 			$frm = $frm->FrmSearchProduct();
