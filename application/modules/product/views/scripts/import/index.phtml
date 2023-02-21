@@ -1,8 +1,8 @@
 <?php
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-	echo $this->headTitle($tr->translate('IMPORT_FILE_ITEMS_PRICE')); 
-	$url_save = $this->url(array('module'=>'project','controller'=>'import','action'=>'index'));
-	$frm = $this->frm;
+	echo $this->headTitle($tr->translate('IMPORT_PRODUCT')); 
+	$url_save = $this->url(array('module'=>'product','controller'=>'import','action'=>'index'));
+	//$frm = $this->frm;
 ?>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -44,7 +44,7 @@
 <div class="card-box">
                	<div class="col-sm-12 border-botom">
 		    		<div class="col-sm-8 pd-0">
-		    			<h4 class="m-b-0"><i class="fa fa-database" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('IMPORT_FILE_ITEMS_PRICE')?></h4>
+		    			<h4 class="m-b-0"><i class="fa fa-database" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('IMPORT_PRODUCT')?></h4>
 	    			</div>
 	    			<div class="col-sm-4 text-right">
 	    			</div>
@@ -54,68 +54,15 @@
 	<div class="col-sm-12 border-botom">
 	<form id='add_client' enctype="multipart/form-data" dojoType="dijit.form.Form" method="post">
 		<script type="dojo/method" event="onSubmit">			
-		if(this.validate()) {
-			branch_id = dijit.byId('branch_id').get('value');
-				if(branch_id==""){
-					alert("<?php echo $tr->translate('PLEASE_SELECT_BRANCH');?>");
-					dijit.byId("branch_id").focus();
-					return false;
-				}
-			return true;
-		}else{
-			return false;
-		}
+	
 		</script>
 			<table width="100%" style=" margin-top:10px;">
-				<tr>
-					<td colspan="2">
-						<h3>Sample Format Excel</h3>
-						<table class="content-data" cellpadding="4"​   border="1" >
-							<thead>
-								<tr  class="style-head">
-									<td><?php echo $tr->translate("No");?></td>
-									<td><?php echo $tr->translate("PROPERTY_CODE");?></td>
-									<td><?php echo $tr->translate("STREET");?></td>
-									<td><?php echo $tr->translate("PROPERTY_TYPE");?></td>
-									<td><?php echo $tr->translate("PRICE");?></td>
-									<td><?php echo $tr->translate("HEIGHT");?></td>
-									<td><?php echo $tr->translate("WIDTH");?></td>
-									<td><?php echo $tr->translate("SIZE");?></td>
-									<td><?php echo $tr->translate("NORTH");?></td>
-									<td><?php echo $tr->translate("SOUTH");?></td>
-									<td><?php echo $tr->translate("WEST");?></td>
-									<td><?php echo $tr->translate("EAST");?></td>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td align="center">1</td>
-									<td>A1</td>
-									<td>បេតុង</td>
-									<td>ដីឡូតិ៏</td>
-									<td align="center">6000</td>
-									<td align="center">10</td>
-									<td align="center">20</td>
-									<td align="center">200</td>
-									<td align="center">B10</td>
-									<td align="center">B10</td>
-									<td align="center">B10</td>
-									<td align="center">B10</td>
-								</tr>
-							</tbody>
-						</table>
-					</td>
-				</tr>
+				
 				<tr>
 					<td><br /><br /><br />
 						<div class="col-sm-4 text-right"></div>	
 						<div class="col-sm-4 text-right">
-							<div class="form-group">
-								<div class="col-md-6"><?php echo $tr->translate('FOR_BRANCH')?></div>
-								<div class="col-md-6">
-								<?php echo $frm->getElement("branch_id");?>
-								</div>
-							</div>
+							
 							<div class="form-group">
 								<div class="col-md-6"><?php echo $tr->translate('CHOOSE_FILE')?>(Exel)</div>
 								<div class="col-md-6"><input type="file" name="file_excel" id="file_excel" required="required" class="fullside"/></div>

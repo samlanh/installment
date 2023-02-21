@@ -3,7 +3,7 @@
 class Product_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 {
 
-    protected $_name = 'ldc_product';
+    protected $_name = 'st_product';
     public function getUserId(){
     	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
     	return $session_user->user_id;
@@ -23,34 +23,31 @@ class Product_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 
     	for($i=1; $i<=$count; $i++){
 
-			$sql=" SELECT * FROM `st_category` WHERE categoryName = '".$data[$i]['B']." ' ";
-			$category =  $db->fetchRow($sql);
-			
-			if(!empty($category)){
+			if(empty($data[$i]['B']) OR empty($data[$i]['C'])){
+				continue;
+			}
 
-				$cateId= $category['id'];   
-			}else{
-				
-				$_arr=array(
-						//'id'       => $data[$i]['A'],
-						'categoryName'       => $data[$i]['B'],
-						'status'      => 1,
+			$sql=" SELECT id FROM `st_category` WHERE categoryName = '".$data[$i]['B']." ' ";
+			$cateId =  $db->fetchOne($sql);
+			
+			if(empty($cateId)){
+					$isMaterial = ($data[$i]['B']=="បេតុង")?1:0;
+					$_arr=array(
+						
+						'categoryName'   => $data[$i]['B'],
+						'status'     	 => 1,
+						'isMaterial'     => $isMaterial,
 						'createDate' 	=> date("Y-m-d H:i:s"),
 						'userId'	 	=> $this->getUserId()
 				);
 				$this->_name = "st_category";
 				$cateId =  $this->insert($_arr);
-
 			}
 
-			$sql=" SELECT * FROM `st_measure` WHERE name = '".$data[$i]['D']." ' ";
-			$measure =  $db->fetchRow($sql);
+			$sql=" SELECT id FROM `st_measure` WHERE name = '".$data[$i]['D']." ' ";
+			$measureId =  $db->fetchOne($sql);
 			
-			if(!empty($measure)){
-
-				$measureId= $measure['id'];   
-			}else{
-				
+			if(empty($measureId)){
 				$_arr=array(
 						
 						'name'       => $data[$i]['D'],
@@ -63,16 +60,58 @@ class Product_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 
 			}
 
-			// $_arr=array(
-				
-			// 	'proName'       => $data[$i]['C'],
-			// 	'categoryId'    => $cateId,
-			// 	'status'     	=> 1,
-			// 	'createDate' 	=> date("Y-m-d H:i:s"),
-			// 	'userId'	 	=> $this->getUserId()
-			// );
-			// $this->_name = "st_product";
-			// $proId =  $this->insert($_arr);
+			$isCountStock = ($data[$i]['H']=="មិនរាប់")?0:1;
+
+			if (!empty($data[$i]['E'])){
+
+				$_arr=array(
+
+					'proName'     	  => $data[$i]['C'],
+					'categoryId'  	  => $cateId,
+					'measureId'   	 => $measureId,
+					'isCountStock'   => $isCountStock,
+					'budgetId'   	 => 1,
+					'createDate' 	=> date("Y-m-d H:i:s"),
+					'userId'	 	=> $this->getUserId()
+				);
+				$this->_name = "st_product";
+				$proId =  $this->insert($_arr);
+			}
+			if (!empty($data[$i]['F'])){
+			
+				$_arr=array(
+
+					'proName'     	  => $data[$i]['C'],
+					'categoryId'  	  => $cateId,
+					'measureId'   	 => $measureId,
+					'isCountStock'   => $isCountStock,
+					'budgetId'   	 => 2,
+					'createDate' 	=> date("Y-m-d H:i:s"),
+					'userId'	 	=> $this->getUserId()
+				);
+				$this->_name = "st_product";
+				$proId =  $this->insert($_arr);
+
+			}
+
+			if (!empty($data[$i]['G'])){
+
+				$_arr=array(
+
+					'proName'     	  => $data[$i]['C'],
+					'categoryId'  	  => $cateId,
+					'measureId'   	 => $measureId,
+					'isCountStock'   => $isCountStock,
+					'budgetId'   	 => 3,
+					'createDate' 	=> date("Y-m-d H:i:s"),
+					'userId'	 	=> $this->getUserId()
+				);
+				$this->_name = "st_product";
+				$proId =  $this->insert($_arr);
+
+			}
+
+			
 
     	}
     }
