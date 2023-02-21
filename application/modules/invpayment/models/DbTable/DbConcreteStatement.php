@@ -102,16 +102,66 @@ class Invpayment_Model_DbTable_DbConcreteStatement extends Zend_Db_Table_Abstrac
 	    			'totalExternal'=>$data['totalAmountExternal'],
 	    		);
 	    	$stmentId  = $this->insert($arr);
+	    	
+	    	
+		    	$arr = array(
+		    			'projectId'			=>$data['branch_id'],
+		    			'ivType'			=>3,
+		    			'invoiceNo'			=>$data['invoiceNo'],
+		    			'dnId'				=>$data['dnIdentity'],
+		    			'supplierId'		=>$data['supplierId'],
+		    				
+		    			'invoiceDate'				=>date('Y-m-d'),
+		    			'supplierInvoiceNo'			=>$data['supplierstMentNo'],
+		    			'receiveIvDate'				=>date('Y-m-d'),
+		    			//'purId'						=>'',
+		    			'note'						=>$data['note'],
+		    			'totalInternal'				=>$data['totalAmountExternal'],
+		    			'totalAmount'				=>$data['totalAmountExternal'],
+		    			'totalExternal'				=>$data['totalAmountExternal'],
+		    			'totalAmountExternal'		=>$data['totalAmountExternal'],
+		    			'totalAmountExternalAfter'	=>$data['totalAmountExternal'],
+		    			'status'			=>1,
+		    			'createDate'		=>date("Y-m-d H:i:s"),
+		    			'modifyDate'		=>date("Y-m-d H:i:s"),
+		    			'userId'			=>$this->getUserId(),
+		    	);
+		    	$this->_name='st_invoice';
+	    	$invoiceId = $this->insert($arr);
+	    	
 	    	$ids = explode(',', $data['identity']);
 	    	foreach ($ids as $i){
 	    		$arr = array(
 	    				'stamentId'=>$stmentId,
 	    				'dnId'=>$data['dnId'.$i],
-	    				'proId'=>$data['branch_id'],
+	    				'proId'=>$data['proId'.$i],
 	    				'qtyPo'=>$data['qty'.$i],
 	    				'subTotal'=>$data['subTotal'.$i],
 	    			);
 	    		$this->_name='st_statement_detail';
+	    		$this->insert($arr);
+	    		
+	    		
+	    		$arr = array(
+	    				'invId'				=>$invoiceId,
+	    				'type'				=>1,
+	    				'proId'				=>$data['proId'.$i],
+	    				'qtyPo'				=>$data['qty'.$i],
+	    				'unitPrice'			=>$data['unitPrice'.$i],
+	    				'discountPercent'	=>0,
+	    				'discountAmount'	=>0,
+	    				'totalDiscount'		=>0,
+	    				'total'				=>$data['subTotal'.$i],
+	    					
+	    				'totalQtyReceive'			=>$data['qty'.$i],
+	    				'unitPriceReceive'			=>$data['unitPrice'.$i],
+	    				'receiveDiscountPercent'	=>0,
+	    				'receiveDiscountAmount'		=>0,
+	    				'totalReceiveDiscount'		=>0,
+	    				'totalReceive'				=>$data['subTotal'.$i],
+	    					
+	    		);
+	    		$this->_name='st_invoice_detail';
 	    		$this->insert($arr);
 	    		
 	    		$this->_name='st_receive_stock';

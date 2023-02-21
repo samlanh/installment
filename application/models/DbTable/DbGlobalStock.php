@@ -765,8 +765,8 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 				$arrKey = array(
 					1=>$tr->translate("INVOICE_BY_REQUEST"),
 					2=>$tr->translate("INVOICE_DEPOSIT"),
-					3=>$tr->translate("INVOICE_PETTY_CASH"),
-					4=>$tr->translate("INVOICE_OVERSEAS_PO"),
+					3=>$tr->translate("INVOICE_CONCATE"),
+					4=>$tr->translate("INVOICE_PETTY_CASH"),
 					
 				);
 			}else if($typeKeyIndex==3){//for Sql Query
@@ -774,8 +774,8 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 				$string=", CASE
 					WHEN  $keyIndex = 1 THEN '".$tr->translate("INVOICE_BY_REQUEST")."'
 					WHEN  $keyIndex = 2 THEN '".$tr->translate("INVOICE_DEPOSIT")."'
-					WHEN  $keyIndex = 3 THEN '".$tr->translate("INVOICE_PETTY_CASH")."'
-					WHEN  $keyIndex = 4 THEN '".$tr->translate("INVOICE_OVERSEAS_PO")."'
+					WHEN  $keyIndex = 3 THEN '".$tr->translate("INVOICE_CONCATE")."'
+					WHEN  $keyIndex = 4 THEN '".$tr->translate("INVOICE_PETTY_CASH")."'
 				
 					END AS ivTypeTitle ";
 				return $string;
@@ -783,8 +783,8 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 				$arrKey = array(
 					array('id'=>1,'name'=>$tr->translate("INVOICE_BY_REQUEST")),
 					array('id'=>2,'name'=>$tr->translate("INVOICE_DEPOSIT")),
-					array('id'=>3,'name'=>$tr->translate("INVOICE_PETTY_CASH")),
-					array('id'=>4,'name'=>$tr->translate("INVOICE_OVERSEAS_PO")),
+					array('id'=>3,'name'=>$tr->translate("INVOICE_CONCATE")),
+					array('id'=>4,'name'=>$tr->translate("INVOICE_PETTY_CASH")),
 					
 					
 				);
