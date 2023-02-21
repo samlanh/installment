@@ -3,7 +3,7 @@
 class Product_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 {
 
-    protected $_name = 'ldc_product';
+    protected $_name = 'st_product';
     public function getUserId(){
     	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
     	return $session_user->user_id;
@@ -23,14 +23,20 @@ class Product_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 
     	for($i=1; $i<=$count; $i++){
 
+			if(empty($data[$i]['B']) OR empty($data[$i]['C'])){
+				continue;
+			}
+
 			$sql=" SELECT id FROM `st_category` WHERE categoryName = '".$data[$i]['B']." ' ";
 			$cateId =  $db->fetchOne($sql);
 			
 			if(empty($cateId)){
+					$isMaterial = ($data[$i]['B']=="បេតុង")?1:0;
 					$_arr=array(
 						
-						'categoryName'       => $data[$i]['B'],
-						'status'      => 1,
+						'categoryName'   => $data[$i]['B'],
+						'status'     	 => 1,
+						'isMaterial'     => $isMaterial,
 						'createDate' 	=> date("Y-m-d H:i:s"),
 						'userId'	 	=> $this->getUserId()
 				);
@@ -53,10 +59,10 @@ class Product_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 				$measureId =  $this->insert($_arr);
 
 			}
-			if (!empty($data[$i]['E'])){
-			
 
-				$isCountStock = ($data[$i]['H']=="មិនរាប់")?0:1;
+			$isCountStock = ($data[$i]['H']=="មិនរាប់")?0:1;
+
+			if (!empty($data[$i]['E'])){
 
 				$_arr=array(
 
@@ -70,13 +76,9 @@ class Product_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 				);
 				$this->_name = "st_product";
 				$proId =  $this->insert($_arr);
-
 			}
 			if (!empty($data[$i]['F'])){
 			
-
-				$isCountStock = ($data[$i]['H']=="មិនរាប់")?0:1;
-
 				$_arr=array(
 
 					'proName'     	  => $data[$i]['C'],
@@ -93,9 +95,6 @@ class Product_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 			}
 
 			if (!empty($data[$i]['G'])){
-			
-
-				$isCountStock = ($data[$i]['H']=="មិនរាប់")?0:1;
 
 				$_arr=array(
 
@@ -111,6 +110,8 @@ class Product_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 				$proId =  $this->insert($_arr);
 
 			}
+
+			
 
     	}
     }
