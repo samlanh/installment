@@ -30,23 +30,23 @@ class Product_importController extends Zend_Controller_Action {
 				} catch(Exception $e) {
 					die('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());
 				}
-				
 				$sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
 				$db->ProductByImport($sheetData);
-				//Application_Form_FrmMessage::message("Import Successfully");
+				Application_Form_FrmMessage::Sucessfull("Import Successfully", "/product/import");
 			}
 			else{
+			
 			}
 			
-			$frm = new Project_Form_FrmImport();
-			$frm->FrmImport(null);
-			Application_Model_Decorator::removeAllDecorator($frm);
-			$this->view->frm = $frm;
+			// $frm = new Project_Form_FrmImport();
+			// $frm->FrmImport(null);
+			// Application_Model_Decorator::removeAllDecorator($frm);
+			// $this->view->frm = $frm;
 			
 		}catch (Exception $e){
 			echo $e->getMessage();exit();
-		//	Application_Form_FrmMessage::message("Application Error");
-		//	Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			Application_Form_FrmMessage::message("Application Error");
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}
 	}
 	
