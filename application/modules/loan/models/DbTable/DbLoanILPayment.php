@@ -522,9 +522,14 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 								$after_service = abs($remain_money);
 							}		    						
 							
-							if($after_principal<=0){
+							//if($after_principal<=0){
+								//$is_compleated_d=1;
+							//}
+							$total_payment_after = $after_principal+$after_interest;
+							if($total_payment_after<=0){
 								$is_compleated_d=1;
 							}
+							
 							if($data['option_pay']!=3){//ព្រោះបញ្ចូលជា Extra payment hz
 								 $arra = array(
 										'begining_balance_after'=>$after_outstanding-$paid_principal,
