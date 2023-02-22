@@ -14,39 +14,53 @@ class  Budget_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	$count = count($data);
     	$dbg = new Application_Model_DbTable_DbGlobal();
-
+		$btpype='';
     	for($i=1; $i<=$count; $i++){
 
-			if(empty($data[$i]['B']) OR empty($data[$i]['C'])){
+			if(empty($data[$i]['B'])){
 				continue;
 			}
 			$sql=" SELECT id FROM `st_budget_item` WHERE budgetTitle = '".$data[$i]['B']." ' ";
 			$parentId =  $db->fetchOne($sql);
-
 			$this->_name = "st_budget_item";
-			$_arr=array(
-
-				//	'budgetTypeId'=>$data['budgetType'],
-					'createDate'=>date("Y-m-d"),
-					'status'=>1,
-					'userId'=>$this->getUserId(),
-			);
-
-			if(empty($parentId)){
 			
-				$_arr['budgetTitle']=$data[$i]['B'];
-				$_arr['parentId']=0;
-				$parentId= $this->insert($_arr);
-
+			if(empty($parentId)){
+				$btpype++;
+				
+				$_arr=array(
+					'budgetTypeId'=>$btpype,
+					'budgetTitle' =>$data[$i]['B'],
+					'parentId'    =>0,
+					'createDate'  =>date("Y-m-d"),
+					'status'      =>1,
+					'userId'      =>$this->getUserId(),
+				);
+				$this->insert($_arr);	
 			}
-			$sql=" SELECT id FROM `st_budget_item` WHERE budgetTitle = '".$data[$i]['C']." ' ";
-			$budgetId =  $db->fetchOne($sql);
+    	}
+		for($j=1; $j<=$count; $j++){
+
+			if(empty($data[$j]['B']) OR empty($data[$j]['C'])){
+				continue;
+			}
+			$sql=" SELECT id FROM `st_budget_item` WHERE budgetTitle = '".$data[$j]['B']." ' ";
+			$parentId =  $db->fetchOne($sql);
+
+			
+			$sql1=" SELECT id FROM `st_budget_item` WHERE budgetTitle = '".$data[$j]['C']." ' ";
+			$budgetId =  $db->fetchOne($sql1);
 
 			if(empty($budgetId)){
-			
-				$_arr['budgetTitle']=$data[$i]['C'];
-				$_arr['parentId']= $parentId;
+				$_arr=array(
+					'budgetTypeId'=>$parentId,
+					'budgetTitle' =>$data[$j]['C'],
+					'parentId'    =>$parentId,
+					'createDate'  =>date("Y-m-d"),
+					'status'      =>1,
+					'userId'      =>$this->getUserId(),
+				);
 				$this->insert($_arr);
+			
 			}
 
     	}
