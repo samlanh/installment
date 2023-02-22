@@ -508,6 +508,32 @@ class Report_LoanController extends Zend_Controller_Action {
  	$key = new Application_Model_DbTable_DbKeycode();
  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
  }
+
+ function rptPaymentschedulesttAction(){
+	$db = new Report_Model_DbTable_DbRptPaymentSchedule();
+	$id =$this->getRequest()->getParam('id');
+	$id = empty($id)?0:$id;
+	$row = $db->getPaymentSchedule($id);
+	$this->view->tran_schedule=$row;
+	if(empty($row) or $row==''){
+		Application_Form_FrmMessage::Sucessfull("RECORD_NOT_EXIST",'/report/loan/rpt-sold',2);
+	}
+	$db = new Application_Model_DbTable_DbGlobal();
+	$rs = $db->getClientByMemberId($id);
+	if(empty($rs)){
+		Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND",'/report/loan/rpt-sold',2);
+		exit();
+	}
+	$this->view->client =$rs;
+	$frm = new Application_Form_FrmSearchGlobal();
+	$form = $frm->FrmSearchLoadSchedule();
+	Application_Model_Decorator::removeAllDecorator($form);
+	$this->view->form_filter = $form;
+	$day_inkhmer = $db->getDayInkhmerBystr(null);
+	$this->view->day_inkhmer = $day_inkhmer;
+	$key = new Application_Model_DbTable_DbKeycode();
+	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+}
  function rptPaymentreminderAction(){
  	$db = new Report_Model_DbTable_DbRptPaymentSchedule();
  	$id =$this->getRequest()->getParam('id');
