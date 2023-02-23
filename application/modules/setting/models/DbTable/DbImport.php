@@ -1109,5 +1109,478 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     		exit();
     	}
     }
+    function importHanuman($data){
+    	$db = $this->getAdapter();
+    	$db->beginTransaction();
+    	$dbg = new Application_Model_DbTable_DbGlobal();
+    	try{
+    		$count = count($data);
+    		$a_time= 0;
+    		$install = 1;
+    		$first_pay = 0;
+    		$cum_interest=0;
+    		$first_payment=0;
+    		$branch_id=1;
+    		$n=0;
+    		$oldland_str='';
+    		$payment_id = array('រំលស់'=>4,'ផ្តាច់'=>6,'ដំណាក់កាល'=>3);
+    			
+    		$SaleIdGenerate =1;
+    		for($i=2; $i<=$count; $i++){
+    			if(empty($data[$i]['A'])){
+    				continue;
+    			}
+    			if($oldland_str!=$data[$i]['I']){
+    				$sql="SELECT `client_id` FROM `ln_client` WHERE name_kh='".$data[$i]['U']."'";
+    				$client_id = $db->fetchOne($sql);
+    				if(empty($client_id)){
+    					
+    					$client_code = $dbg->getNewClientIdByBranch();
+    			   
+    					$_arr=array(
+    							'client_number'=> $client_code,
+    							'name_kh'	  => $data[$i]['U'],
+    							'sex'	      => 1,
+    							'pro_id'      => 12,
+    							'dis_id'      => 0,
+    							'com_id'      => 0,
+    							'village_id'  => 0,
+    							'street'	  => 0,
+    							'house'	      => 0,
+    							'nationality' => 'ខ្មែរ',
+    							'phone'	      => $data[$i]['V'],
+    							'remark'	      => $data[$i]['W'],
+    							'create_date' => date("Y-m-d"),
+    							'status'      => 1,
+    							'client_d_type'=> 4,
+    							'user_id'	  => $this->getUserId(),
+    							'p_nationality'=> 'ខ្មែរ',
+    							'ksex'        => 1,
+    							'adistrict'   => 0,
+    							'cprovince'   => 12,
+    							'dcommune'    => 0,
+    							'qvillage'    => 0,
+    							'dstreet'     => 0,
+    							'branch_id'   => 1,
+    							'joint_doc_type' => 4,
+    					);
+    					$this->_name='ln_client';
+    					$client_id = $this->insert($_arr);
+    				}
+    	
+    				$sql="SELECT id FROM `ln_properties` WHERE branch_id = $branch_id AND land_address = '".$data[$i]['I']."'";
+    				$land_id = $db->fetchOne($sql);
+    				if(empty($land_id)){
+    					$land_string = $data[$i]['I'];
+    					$str_arr = explode ("+", $land_string);
+    					$oldlandid = '';
+    					if(count($str_arr)>1){
+    						foreach($str_arr as $land_address){
+    	
+    							$_arr=array(
+    									'branch_id'	  => $branch_id,
+    									'land_code'	  => '',
+    									'land_address'=> $land_address,
+    									'street'	  => $data[$i]['J'],
+    									'price'	      => $data[$i]['M']/count($str_arr),
+    									'land_price'  => $data[$i]['M']/count($str_arr),
+    									'house_price' => 0,
+    									'land_size'	  => '',
+    									'width'       => '',
+    									'height'      => '',
+    									'is_lock'     => 1,
+    									'status'	  => 1,
+    									'user_id'	  => $this->getUserId(),
+    									'property_type'=> '',
+    									'south'	      => '',
+    									'north'	      => '',
+    									'west'	      => '',
+    									'east'	      => '',
+    									'create_date'	  =>	date("Y-m-d"),
+    							);
+    							$this->_name='ln_properties';
+    							$land_id = $this->insert($_arr);
+    							$oldlandid = $oldlandid.','.$land_id;
+    						}
+    					}
+    			   
+    					$_arr=array(
+    							'branch_id'	  => $branch_id,
+    							'land_code'	  => '',
+    							'land_address'=> $data[$i]['I'],
+    							'street'	  => $data[$i]['J'],
+    							'price'	      => $data[$i]['M'],
+    							'land_price'  => $data[$i]['M'],
+    							'old_land_id' => $oldlandid,
+    							'house_price' => 0,
+//     							'land_size'	  => $data[$i]['W'],
+    							'width'       => '',
+    							'height'      => '',
+    							'is_lock'     => 1,
+    							'status'	  => 1,
+    							'user_id'	  => $this->getUserId(),
+    							'property_type'=> '1',
+    							'south'	      => '',
+    							'north'	      => '',
+    							'west'	      => '',
+    							'east'	      => '',
+    							'create_date'	  =>	date("Y-m-d"),
+    					);
+    					$this->_name='ln_properties';
+    					$land_id = $this->insert($_arr);
+    				}else{
+    					$arr = array('is_lock'=>1);
+    					$this->_name='ln_properties';
+    					$where="id = ".$land_id;
+    					$this->update($arr, $where);
+    				}
+    	
+    				$dbtable = new Application_Model_DbTable_DbGlobal();
+    				$loan_number = $dbtable->getLoanNumber();
+    				$arr = array(
+    						'branch_id'=>$branch_id,
+    						'house_id'=>$land_id,
+    						'receipt_no'=>'',
+    						'sale_number'=>$data[$i]['H'],//$loan_number,
+    						'payment_id'=>4,//$payment_id[$data[$i]['L']],
+//     						'note'=>$data[$i]['G'],
+    						'client_id'=>$client_id,
+    						'price_before'=>$data[$i]['K'],
+    						'discount_amount'=>$data[$i]['M']-$data[$i]['K'],
+//     						'discount_percent'=>$data[$i]['Q'],
+    						'price_sold'=>($data[$i]['M']),
+    						'other_fee'=>0,
+    						// 	    				'paid_amount'=>$data[$i]['E'],
+    						'balance'=>0,//($data[$i]['0'])-$data[$i]['D'],
+    						// 	    				'interest_rate'=>$data[$i]['P'],
+    						'total_duration'=>$data[$i]['R'],
+    						'validate_date'=>$data[$i]['P'],
+    						'payment_method'=>1,
+    						'land_price'=>0,//$data['house_price'],
+    						'total_installamount'=>$data[$i]['R'],
+    						'typesale'=>1,
+    						'build_start'=>'',
+    						'amount_build'=>0,
+    						'is_reschedule'=>1,
+    						'staff_id'=>0,
+    						'comission'=>0,
+    						'full_commission'=>0,
+    						'create_date'=>date("Y-m-d"),
+    						'startcal_date'=>date("Y-m-d",strtotime($data[$i]['O'])),
+    						'first_payment'=>date("Y-m-d",strtotime($data[$i]['O'])),
+    						'agreement_date'=>date("Y-m-d",strtotime($data[$i]['Q'])),
+    						'buy_date'=>date("Y-m-d",strtotime($data[$i]['O'])),
+    						'end_line'=>date("Y-m-d",strtotime($data[$i]['P'])),
+    						'validate_date'=>date("Y-m-d",strtotime($data[$i]['P'])),
+    						'user_id'=>$this->getUserId(),
+    						'amount_daydelay'=>0
+    				);
+    	
+    				$this->_name='ln_sale';
+    				$sale_id = $this->insert($arr);//add group loan
+    				$a_time=1;
+    					
+    				// 					$SaleIdGenerate = $SaleIdGenerate +1;
+    				// 					$sale_id = $SaleIdGenerate;
+    			}
+    			 
+    			// 	    		if($first_pay==1 AND $first_payment==0){
+    			// 		    		$this->_name='ln_sale';
+    			// 		    		$where=" id =".$sale_id;
+    			// 		    		$arr = array(
+    			// 		    			'first_payment'=>date("Y-m-d",strtotime($data[$i]['B']))
+    			// 		    		);
+    			// 		    	   $this->update($arr, $where);
+    			// 		    	   $first_payment=1;
+    			// 	    		}
+    			 
+    			$is_completed =($data[$i]['I']==0)?1:0;
+    			$cum_interest = 0;//$cum_interest+$data[$i]['E'];
+    			$this->_name="ln_saleschedule";
+    			// 	    		if($n==0){
+    			$begining = $data[$i]['C'];
+    			$ending=$data[$i]['E'];
+    			$is_completed=0;
+    			// 	    		}else{
+    			// 	    			$begining = $ending;
+    			// 	    			$ending = $data[$i]['F'];
+    			// 	    		}
+    			//if($oldland_str!=$data[$i]['L']){
+    			if(!empty($data[$i]['G']) OR !empty($data[$i]['H']) OR !empty($data[$i]['I'])){
+    				$is_completed=1;
+    			}
+    			$n++;
+    			if($oldland_str!=$data[$i]['I']){
+    				$install=1;
+    			}
+    			
+    			$datapayment = array(
+    					'branch_id'=>1,
+    					'sale_id'=>$sale_id,//good
+    					'begining_balance'=>$begining,//$data[$i]['F']+$data[$i]['C'],//good
+    					'begining_balance_after'=>$begining,//$data[$i]['F']+$data[$i]['C'],//good
+    					'principal_permonth'=> $data[$i]['D'],//good
+    					'principal_permonthafter'=>$data[$i]['D'],//good
+    					'total_interest'=>0,//$data[$i]['D'],//good
+    					'total_interest_after'=>$data[$i]['E'],//good
+    					'total_payment'=>$data[$i]['F'],//good
+    					'total_payment_after'=>$data[$i]['F'],//good
+    					'ending_balance'=>$data[$i]['G'],
+    					'cum_interest'=>$cum_interest,
+    					'amount_day'=>30,
+    					'is_completed'=>0,
+    					'date_payment'=>date("Y-m-d",strtotime($data[$i]['B'])),
+    					//'ispay_bank'=>($data[$i]['B']=='បានប្លង់រឹង'?2:0),
+//     					'paid_date'=>date("Y-m-d",strtotime($data[$i]['H'])),
+    					'note'=>'',
+    					//     				'percent'=>($first_pay==0)?$data[$i]['N']:0,
+    			//     				'percent_agree'=>($first_pay==0)?$data[$i]['N']:0,
+    					'is_installment'=>1,//($first_pay==0)?1:0,
+    					'no_installment'=>$install,
+    					'last_optiontype'=>1,
+//     					'note'=>$data[$i]['I'],
+    			);
+    			$saledetailid = $this->insert($datapayment);
+    			 
+    			$dbg->updateLateRecordSaleschedule($sale_id);
+    			 
+//     			if(!empty($data[$i]['G']) OR !empty($data[$i]['H']) OR !empty($data[$i]['I'])){
+    	
+//     				$arr_client_pay = array(
+//     						'branch_id'						=>	$branch_id,
+//     						'receipt_no'					=>	$data[$i]['G'],
+//     						'date_pay'					    =>	date("Y-m-d",strtotime($data[$i]['H'])),
+//     						'date_input'					=>	date("Y-m-d",strtotime($data[$i]['H'])),
+//     						'from_date'						=>	date("Y-m-d",strtotime($data[$i]['B'])),//check more
+//     						'client_id'                     =>	$client_id,
+//     						'sale_id'						=>	$sale_id,
+//     						'land_id'						=>	$land_id,
+//     						'outstanding'                   =>	$data[$i]['C'],//ប្រាក់ដើមមុនបង់
+//     						'total_principal_permonth'		=>	$data[$i]['D'],//ប្រាក់ដើមត្រូវបង់
+//     						'total_interest_permonth'		=>	0,//$data[$i]['D'],
+//     						'penalize_amount'				=>	0,
+//     						'total_payment'					=>	$data[$i]['D'],//ប្រាក់ត្រូវបង់ok
+//     						'service_charge'				=>	0,
+//     						'principal_amount'				=>	$data[$i]['E'],//ប្រាក់ដើមនៅសល់បន្ទប់ពីបង់
+//     						'balance'						=>	0,
+//     						'recieve_amount'				=>	$data[$i]['D'],//ok
+//     						'amount_payment'				=>	$data[$i]['D'],//brak ban borng
+//     						'return_amount'					=>	0,//ok
+//     						'note'							=>	'',
+//     						'cheque'						=>	'',
+//     						'user_id'						=>	$this->getUserId(),
+//     						'payment_option'				=>	1,
+//     						'status'						=>	1,
+//     						'is_completed'					=>	1,
+//     						'field3'						=>  ($first_pay==0)?1:3,
+//     						'is_payoff'						=>  0,
+//     						'extra_payment' 				=>  0,
+//     						'payment_times'					=>  $install,
+//     						'payment_method'				=>  1,
+    	
+//     						'total_principal_permonthpaid'	=>	$data[$i]['D'],//ok ប្រាក់ដើមបានបង
+//     						'total_interest_permonthpaid'	=>	0,//$data[$i]['D'],//ok ការប្រាក់បានបង
+//     						'penalize_amountpaid'			=>	0,// ok បានបង
+//     						'service_chargepaid'			=>	0,// okបានបង
+//     				);
+    	
+//     				$this->_name = "ln_client_receipt_money";
+//     				$client_pay = $this->insert($arr_client_pay);
+    	
+//     				$arr = array(
+//     						'crm_id'				=>	$client_pay,
+//     						'land_id'			    =>	$land_id,//ok
+//     						'lfd_id'				=>	$saledetailid,//ok
+//     						'date_payment'			=>	date("Y-m-d",strtotime($data[$i]['B'])), // ថ្ងៃដែលត្រូវបង់
+//     						'principal_permonth'	=>	0,
+//     						'total_interest'		=>	0,
+//     						'total_payment'			=>	0,
+//     						'total_recieve'			=>	0,
+//     						'pay_after'				=>	0,
+//     						'penelize_amount'		=>	0,
+//     						'service_charge'		=>	0,
+//     						'penelize_new'			=>	0,
+//     						'service_charge_new'	=>	0,
+//     						'capital'				=>  $data[$i]['C'],
+//     						'remain_capital'		=>	$data[$i]['E'], // remain balance after paid
+//     						'old_principal_permonth'=>	$data[$i]['D'],
+//     						'old_total_priciple'	=>	$data[$i]['D'],
+//     						'old_interest'			=>	0,//$data[$i]['D'],
+//     						'old_total_payment'		=>	0,//$data[$i]['E'],
+//     						'old_penelize'			=>	0,
+//     						'old_service_charge'	=>	0,
+//     						'last_pay_date'			=>	date("Y-m-d",strtotime($data[$i]['B'])),
+//     						'paid_date'				=>	date("Y-m-d",strtotime($data[$i]['B'])),
+//     						'is_completed'			=>	1,
+//     						'status'				=>	1);
+//     				$this->_name='ln_client_receipt_money_detail';
+//     				$this->insert($arr);
+    	
+//     			}
+				
+    			$oldland_str=$data[$i]['I'];
+    			$install = $install+1;
+    		}
+    		// 	    	exit();
+    		$db->commit();
+    	}catch(Exception $e){
+    		// 	   		$db->rollBack();
+    		echo $e->getMessage();
+    		exit();
+    	}
+    }
+    function insertPayment($data){
+	    	$db = $this->getAdapter();
+// 	    	$db->beginTransaction();
+	    	$dbg = new Application_Model_DbTable_DbGlobal();
+	    	
+	    	$oldLot='';
+	        $count = count($data);
+    		for($i=1; $i<=$count; $i++){
+    	    	if(!empty($data[$i]['B'])){
+    	    		
+    	    		$land_address = $data[$i]['B'];
+    	    		$sql="SELECT *,
+    	    			(SELECT COUNT(id) FROM `ln_saleschedule` WHERE sale_id=s.id AND status=1 AND is_completed=0 LIMIT 1) as intallment
+    	    		FROM `ln_sale` s
+    	    			WHERE house_id IN(SELECT id FROM `ln_properties` WHERE land_address='".$land_address."')";
+    	    		$rs = $db->fetchRow($sql);
+    	    		if(empty($rs)){continue;}
+    	    		if($oldLot !=$land_address){
+    	    			$allPaid=0;
+    	    		}
+    	    		
+    	    		$allPaid = $allPaid+$data[$i]['E'];
+    	 
+    	    				$arr_client_pay = array(
+    	    						'branch_id'						=>	1,
+    	    						'receipt_no'					=>	$data[$i]['C'],
+    	    						'date_pay'					    =>	date("Y-m-d",strtotime($data[$i]['F'])),
+    	    						'date_input'					=>	date("Y-m-d",strtotime($data[$i]['F'])),
+    	    						'from_date'						=>	date("Y-m-d",strtotime($data[$i]['F'])),//check more
+    	    						'client_id'                     =>	$rs['client_id'],
+    	    						'sale_id'						=>	$rs['id'],
+    	    						'land_id'						=>	$rs['house_id'],
+//     	    						'payment_times'					=>  $rsSchedule['no_installment'],
+//     	    						'outstanding'                   =>	$rsSchedule['begining_balance'],//ប្រាក់ដើមមុនបង់
+//     	    						'principal_amount'				=>	$rsSchedule['begining_balance']-$data[$i]['E'],//ប្រាក់ដើមនៅសល់បន្ទប់ពីបង់
+    	    						'total_principal_permonth'		=>	$data[$i]['E'],//ប្រាក់ដើមត្រូវបង់
+    	    						'total_interest_permonth'		=>	0,//$data[$i]['D'],
+    	    						'penalize_amount'				=>	0,
+    	    						'total_payment'					=>	$data[$i]['E'],//ប្រាក់ត្រូវបង់ok
+    	    						'service_charge'				=>	0,
+    			    				'balance'						=>	0,
+    			    				'recieve_amount'				=>	$data[$i]['E'],//ok
+    			    				'amount_payment'				=>	$data[$i]['E'],//brak ban borng
+    			    				'return_amount'					=>	0,//ok
+    			    				'note'							=>	$data[$i]['A'],//$data[$i]['D'],
+    			    				'cheque'						=>	'',
+    			    				'user_id'						=>	$this->getUserId(),
+    			    				'payment_option'				=>	1,
+    			    				'status'						=>	1,
+    			    				'is_completed'					=>	1,
+    			    				'field3'						=>  1,//($first_pay==0)?1:3,
+    			    				'is_payoff'						=>  0,
+    			    				'extra_payment' 				=>  0,
+    			    				'payment_method'				=>  1,
+    	    						'selling_price'					=>	$rs['price_sold'],
+    	    						'allpaid_before'				=>	$allPaid,
+    			    				'total_principal_permonthpaid'	=>	$data[$i]['E'],//ok ប្រាក់ដើមបានបង
+    			    				'total_interest_permonthpaid'	=>	0,//$data[$i]['D'],//ok ការប្រាក់បានបង
+    			    				'penalize_amountpaid'			=>	0,// ok បានបង
+    			    				'service_chargepaid'			=>	0,// okបានបង
+    			    				);
+    	 
+    	    				$this->_name = "ln_client_receipt_money";
+    	    				$client_pay = $this->insert($arr_client_pay);
+    	    				$oldLot = $data[$i]['B'];
+    	    				 
+    	    				
+    	    				$sql="SELECT *
+    	    					FROM `ln_saleschedule` s
+    	    							WHERE is_completed=0 AND sale_id=".$rs['id'];
+    	    						$sql.=" ORDER BY id ";
+    	    				$rsSchedule = $db->fetchAll($sql);
+    	    				
+    	    				
+    	    				$remain_money = $data[$i]['E'];
+    	    				foreach($rsSchedule as $key=> $r){
+    	    					
+    	    					
+    	    					if($remain_money<=0){
+    	    						break;
+    	    					}
+    	    					$total_principal = $r['principal_permonthafter'];
+    	    					$remain_money = round($remain_money-$r['principal_permonthafter'],2);
+    	    					//echo $rs['principal_permonthafter'];exit();
+    	    					$after_outstanding = $r['begining_balance_after'];
+    	    					if($land_address=='A2' AND $data[$i]['E']==300){
+    	    						
+    	    					}
+    	    					if($i==45){
+//     	    						echo $sql;exit();
+//     	    						echo $r['principal_permonthafter'];
+//     	    						echo $remain_money;exit();
+    	    					}
+    	    					if($remain_money>=0){//check here of គេបង់លើសខ្លះ
+    	    						$paid_principal = $total_principal;
+    	    						$after_principal = 0;
+    	    						$is_compleated_d=1;
+    	    						//echo 1;
+    	    					}else{
+    	    						$paid_principal = $total_principal-abs($remain_money);
+    	    						$is_compleated_d=0;
+    	    						$after_principal = abs($remain_money);
+    	    						//echo 0;
+    	    					}
+    	    					//exit();
+    	    					
+	    	    				$arr =array(
+	    	    					'begining_balance_after'=>$after_outstanding-$paid_principal,
+	    	    					'is_completed'=>$is_compleated_d,
+	    	    					'total_payment_after'=>$after_principal,
+	    	    					'principal_permonthafter'=>$after_principal,
+	    	    					'paid_date'	=>	date("Y-m-d",strtotime($data[$i]['F'])),
+	    	    					'received_date'=>date("Y-m-d",strtotime($data[$i]['F']))
+	    	    				);
+	    	    				$this->_name='ln_saleschedule';
+	    	    				$where="id=".$r['id'];
+	    	    				$this->update($arr, $where);  
+    	    				}  	    				
+    	 
+    	    				$arr = array(
+    			    						'crm_id'				=>	$client_pay,
+    			    						'land_id'			    =>	$r['id'],//ok
+    			    						'lfd_id'				=>	$r['id'],//ok
+    			    						'date_payment'			=>	date("Y-m-d",strtotime($data[$i]['F'])), // ថ្ងៃដែលត្រូវបង់
+    			    						'principal_permonth'	=>	0,
+    			    						'total_interest'		=>	0,
+    			    						'total_payment'			=>	0,
+    			    						'total_recieve'			=>	0,
+    			    						'pay_after'				=>	0,
+    			    						'penelize_amount'		=>	0,
+    			    						'service_charge'		=>	0,
+    			    						'penelize_new'			=>	0,
+    			    						'service_charge_new'	=>	0,
+    			    						'capital'				=>  $r['begining_balance'],
+    			    						'remain_capital'		=>	$r['begining_balance']-$data[$i]['E'], // remain balance after paid
+    			    						'old_principal_permonth'=>	$data[$i]['E'],
+    			    						'old_total_priciple'	=>	$data[$i]['E'],
+    			    						'old_interest'			=>	0,//$data[$i]['D'],
+    			    						'old_total_payment'		=>	0,//$data[$i]['E'],
+    			    						'old_penelize'			=>	0,
+    			    						'old_service_charge'	=>	0,
+    			    						'last_pay_date'			=>	date("Y-m-d",strtotime($data[$i]['F'])),
+    			    						'paid_date'				=>	date("Y-m-d",strtotime($data[$i]['F'])),
+    			    						'is_completed'			=>	1,
+    			    						'status'				=>	1);
+    	    				$this->_name='ln_client_receipt_money_detail';
+    	    				$this->insert($arr);
+    	    			}else{
+//     	    				echo $data[$i]['B'];exit();
+    	    			}
+    		}
+//     		$db->commit();
+    }
 }   
 
