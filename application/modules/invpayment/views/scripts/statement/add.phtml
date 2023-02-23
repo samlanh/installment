@@ -72,6 +72,10 @@
 										<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("BRANCH_NAME");?> </label>
 										<div class="col-md-7 col-sm-7 col-xs-12">
 											<?php echo $frm->getElement("branch_id");?>
+											<select id="newList">
+												<option value="1">1</option>
+												<option value="2">2</option>
+											</select>
 										</div>
 									 </div>
 									 <div class="form-group">
@@ -164,8 +168,11 @@
 							<div class="col-md-2 col-sm-2 col-xs-12">
 								<input dojoType="dijit.form.DateTextBox" onchange="getAllDN();"  class="fullside" constraints="{datePattern:'dd/MM/yyyy'}" placeHolder="<?php echo $tr->translate("END_DATE");?>" id="toDate" name="toDate" type="text">	
 							</div>
-							<label style=" margin: 0; line-height: 30px; text-align: center;" class="control-label bold col-md-1 col-sm-1 col-xs-12"><?php echo $tr->translate("SELECT_DN");?></label>
-							<div class="col-md-5 col-sm-5 col-xs-12">
+							<div class="col-md-1 col-sm-1 col-xs-12">
+								<input type="button" onClick="getAllDN(1);" class="button-class button-primary" iconClass="glyphicon 	glyphicon glyphicon-list" value="generate" id="generate" name="generate" label="<?php echo $tr->translate("GENERATE");?>" dojoType="dijit.form.Button"  />
+							</div>
+							<label style=" margin: 0; line-height: 30px; text-align: center;" class="control-label bold col-md-2 col-sm-2 col-xs-12"><?php echo $tr->translate("SELECT_DN");?></label>
+							<div class="col-md-3 col-sm-3 col-xs-12">
 								<input id="dnList" />
 							</div>
 							
@@ -187,8 +194,8 @@
 						<tbody id="table_row">
 						</tbody>
 					</table>
-					<input type="hidden" id="identity" name="identity" />
-					<input type="hidden" id="dnIdentity" name="dnIdentity" />
+					<input type="text" id="identity" name="identity" />
+					<input type="text" id="dnIdentity" name="dnIdentity" />
 					<div class="form-group" style="margin-bottom: 0; ">
 						<label class="control-label bold col-md-3 col-sm-3 col-xs-12" style="text-align:right;"></label>
 		                <div class="col-md-3 col-sm-3 col-xs-12">
@@ -330,14 +337,14 @@ ul.listDn li small {
 		getAllDN();
 		getInvoiceNoByBranch();
 	}
-	
-	function getAllDN(){
+	var keyindex=1;
+	function getAllDN(generate=null){
 		dijit.byId('dnList').reset();
 		no = 0;
 		$("#identity").val("");
-		dojo.html.set(dojo.byId("table_row"),"" , {
+		/*dojo.html.set(dojo.byId("table_row"),"" , {
 			parseContent: true,
-		});
+		});*/
 		
 		var urlGetAlldn = '<?php echo $this->url(array('module'=>'invpayment','controller'=>'statement','action'=>'getalldn')); ?>';
 		
@@ -394,10 +401,36 @@ ul.listDn li small {
 				'isissueStatement':0,
 				'fromDate':fromDate,
 				'toDate':toDate,
-				'purchaseType':purchaseType};
-		getAllDNList(urlGetAlldn,objectContentFilter);
+				'purchaseType':purchaseType,
+				'keyindex':keyindex};
+		if(generate!=null){
+			objectContentFilter['labelList']=1;
+			generateAllDn(urlGetAlldn,objectContentFilter);//internal page
+		}
+		else{
+			getAllDNList(urlGetAlldn,objectContentFilter);//external page
+		}
 	}
-	
+	function generateAllDn(urlGetAlldn,objectContentFilter){
+		dojo.byId("table_row").innerHTML="";
+		dojo.xhrPost({
+			url:urlGetAlldn,	
+			content:objectContentFilter,		    
+			handleAs:"json",
+			load: function(data){
+				keyindex=data.keyindex;
+				$("#identity").val(data.identity);
+				$("#dnIdentity").val(data.dnIdentity);
+				
+				stringrow = data.stringrow;
+				dojo.html.set(dojo.byId("table_row"),stringrow , {
+					parseContent: true,
+				});
+			},
+			error: function(err) {
+			}
+		});
+	}
 	var urlGetRequestNo = '<?php echo $this->url(array('module'=>'invpayment','controller'=>'index','action'=>'getinvoiceno')); ?>';
 	function getInvoiceNoByBranch(){
 		
@@ -405,26 +438,6 @@ ul.listDn li small {
 		if(branch_id=='' || branch_id<=0){
 			return false;
 		}
-		/*receiveIvDate = dijit.byId('receiveIvDate').get('value');
-		if(receiveIvDate==''){
-			infoMessageAlert('<?php echo $tr->translate('PLEASE_SELECT_RECEIVE_DATE');?>');
-			dijit.byId('date').focus();
-			return false;
-		}
-			var a = new Date(receiveIvDate);
-			mm = a.getMonth()+1;
-			var dd = a.getDate();
-			 if(dd<10){
-				 dd = "0"+dd;
-			}
-			month=mm;
-			if(mm<10){
-				 month = "0"+mm;
-			}
-			
-			var y = a.getFullYear();
-			var receiveIvDate = dd +'-'+month+'-'+y ;*/
-	
 		dojo.xhrPost({
 			url:urlGetRequestNo,	
 			content:{ 
@@ -443,7 +456,7 @@ ul.listDn li small {
 	var col= 0; var no=0;
 	var title = 0;
 	var urlGetReceiiveInfo = '<?php echo $this->url(array('module'=>'invpayment','controller'=>'statement','action'=>'get-receive-info')); ?>';
-	function addRowProductReceive(){
+	function addRowProductReceive(dnId=null){
 		template='';
 		temp = "";
 		branch_id = dijit.byId('branch_id').get('value');
@@ -452,24 +465,26 @@ ul.listDn li small {
 			dijit.byId('branch_id').focus();
 			return false;
 		}
-
-		receiveId = dijit.byId('dnList').get('value');
-		if(receiveId=='' || receiveId<=0){
-			dijit.byId('dnList').reset();
-			dijit.byId('dnList').focus();
-			return false;
+		if(dnId!=null){
+			receiveId = dnId;
 		}
-	
+		else{
+			receiveId = dijit.byId('dnList').get('value');
+			if(receiveId=='' || receiveId<=0){
+				dijit.byId('dnList').reset();
+				dijit.byId('dnList').focus();
+				return false;
+			}
+		}
+		
 		var iden = $("#identity").val();
 		var arrays = iden.split(',');
-
 		 if(arrays!=""){
-			
 			 for(var i=0;i< arrays.length;i++) {
-				 readychoose = dijit.byId('rsId'+arrays[i]).get('value');
+				readychoose = dijit.byId('rsId'+arrays[i]).get('value');
 				 if(readychoose==receiveId){
 					 infoMessageAlert("<?php echo $tr->translate("Choosen ready")?> ");
-					 dijit.byId('productId').reset();
+					 dijit.byId('dnList').reset();
 					 return false;
 				 }
 			}
@@ -560,6 +575,5 @@ ul.listDn li small {
 			}
 		amount = parseFloat(payment).toFixed(2);
 		dijit.byId('totalAmountExternal').attr('value',payment.toFixed(2));
-		
 	}
 </script>

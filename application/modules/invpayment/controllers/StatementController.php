@@ -25,7 +25,7 @@ class Invpayment_StatementController extends Zend_Controller_Action {
 			
 			
 			$list = new Application_Form_Frmtable();
-    		$collumns = array("PROJECT_NAME","STATEMENT_NO","STATEMENT_DATE","SUPPLIER_STATE_NO","TOTAL","SUPPLIER","NOTE","BY","STATUS");
+    		$collumns = array("PROJECT_NAME","INVOICE_NO","CREATE_DATE","STATEMENT_FROMSUPPLIER","TOTAL","SUPPLIER","NOTE","BY","STATUS");
     		$link=array(
     				'module'=>'invpayment','controller'=>'statement','action'=>'edit',
     		);
