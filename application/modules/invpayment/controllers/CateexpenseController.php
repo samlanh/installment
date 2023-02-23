@@ -1,6 +1,6 @@
 <?php
 
-class Po_CateexpenseController extends Zend_Controller_Action
+class Invpayment_CateexpenseController extends Zend_Controller_Action
 {
 	const REDIRECT_URL = '/po/cateexpense';
 	
@@ -14,7 +14,7 @@ class Po_CateexpenseController extends Zend_Controller_Action
     public function indexAction()
     {
     	try{ 
-    		$db = new Po_Model_DbTable_DbCateExpense();
+    		$db = new Invpayment_Model_DbTable_DbCateExpense();
     		if($this->getRequest()->isPost()){
     			$search=$this->getRequest()->getPost();
     		}
@@ -35,7 +35,7 @@ class Po_CateexpenseController extends Zend_Controller_Action
 			$list = new Application_Form_Frmtable();
 			$collumns = array("TITLE","PARENT","ACCOUNT_CODE","CREATE_DATE","USER","STATUS");
 			$link=array(
-				'module'=>'po','controller'=>'cateexpense','action'=>'edit',
+				'module'=>'invpayment','controller'=>'cateexpense','action'=>'edit',
 			);
 			$this->view->list=$list->getCheckList(10, $collumns, $rs_rows, array('title'=>$link,'parentName'=>$link,'accountCode'=>$link,));
 
@@ -44,14 +44,14 @@ class Po_CateexpenseController extends Zend_Controller_Action
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     	}
 
-    	$frm = new Po_Form_FrmSearchexpense();
+    	$frm = new Invpayment_Form_FrmSearchexpense();
     	$frm = $frm->AdvanceSearch();
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm_search = $frm;
     }
     public function addAction()
     {
-		$db = new Po_Model_DbTable_DbCateExpense();
+		$db = new Invpayment_Model_DbTable_DbCateExpense();
     	if($this->getRequest()->isPost()){
 			$data=$this->getRequest()->getPost();	
 			try {
@@ -61,9 +61,9 @@ class Po_CateexpenseController extends Zend_Controller_Action
 					$sms = "RECORD_EXIST";
 				}
 				if(!empty($data['save_close'])){
-					Application_Form_FrmMessage::Sucessfull($sms,"/po/cateexpense");
+					Application_Form_FrmMessage::Sucessfull($sms,"/invpayment/cateexpense");
 				}else{
-					Application_Form_FrmMessage::message($sms,"/po/cateexpense/add");
+					Application_Form_FrmMessage::message($sms,"/invpayment/cateexpense/add");
 				}				
 			} catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");
@@ -80,17 +80,17 @@ class Po_CateexpenseController extends Zend_Controller_Action
     		$id = $this->getRequest()->getParam('id');
 			$data=$this->getRequest()->getPost();	
 			$data['id']=$id;
-			$db = new Po_Model_DbTable_DbCateExpense();				
+			$db = new Invpayment_Model_DbTable_DbCateExpense();				
 			try {
 				$db->updateCateExpense($data);				
-				Application_Form_FrmMessage::Sucessfull('EDIT_SUCCESS', "/po/cateexpense");		
+				Application_Form_FrmMessage::Sucessfull('EDIT_SUCCESS', "/invpayment/cateexpense");		
 			} catch (Exception $e) {
 				$this->view->msg = 'EDIT_FAIL';
 			}
 		}
 		
 		$id = $this->getRequest()->getParam('id');
-		$db = new Po_Model_DbTable_DbCateExpense();
+		$db = new Invpayment_Model_DbTable_DbCateExpense();
 		$row  = $db->getCateExpenseById($id);
 		$this->view->rs = $row;
 		

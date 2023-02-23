@@ -1,5 +1,5 @@
 <?php
-class Po_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
+class Invpayment_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 {
 	protected $_name = 'st_expense';
 	public function getUserId(){

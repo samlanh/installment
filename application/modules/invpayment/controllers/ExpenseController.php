@@ -1,5 +1,5 @@
 <?php
-class Po_ExpenseController extends Zend_Controller_Action
+class Invpayment_ExpenseController extends Zend_Controller_Action
 {
 	const REDIRECT_URL = '/po/expense';
 	
@@ -12,7 +12,7 @@ class Po_ExpenseController extends Zend_Controller_Action
     public function indexAction()
     {
     	try{
-    		$db = new Po_Model_DbTable_DbExpense();
+    		$db = new Invpayment_Model_DbTable_DbExpense();
     		if($this->getRequest()->isPost()){
     			$formdata=$this->getRequest()->getPost();
     		}
@@ -33,14 +33,14 @@ class Po_ExpenseController extends Zend_Controller_Action
     		$list = new Application_Form_Frmtable();
     		$collumns = array("BRANCH_NAME","EXPENSE_TITLE","BUDGET_ITEM","RECEIPT_NO","RECEIVER","PAYMENT_METHOD","BANK_NAME","ACCOUNT_AND_CHEQUE_NO","TOTAL_EXPENSE","DATE","STATUS");
     		$link=array(
-    				'module'=>'po','controller'=>'expense','action'=>'edit',
+    				'module'=>'invpayment','controller'=>'expense','action'=>'edit',
     		);
     		$this->view->list=$list->getCheckList(10, $collumns,$rs_rows,array('projectName'=>$link,'expenseTitle'=>$link,'budgetItem'=>$link,'paymentNo'=>$link));
     	}catch (Exception $e){
     		Application_Form_FrmMessage::message("Application Error");
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     	}
-		$form = new Po_Form_FrmExpense();
+		$form = new Invpayment_Form_FrmExpense();
     	$frm = $form->FrmExpense();
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm_search = $frm;
@@ -49,13 +49,13 @@ class Po_ExpenseController extends Zend_Controller_Action
     {
     	if($this->getRequest()->isPost()){
 			$data=$this->getRequest()->getPost();	
-			$db = new Po_Model_DbTable_DbExpense();				
+			$db = new Invpayment_Model_DbTable_DbExpense();				
 			try {
 				$db->addExpense($data);
 				if(!empty($data['savenew'])){
-					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/po/expense/add");
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/invpayment/expense/add");
 				}else{
-					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/po/expense");
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/invpayment/expense");
 				}				
 			} catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");
@@ -63,14 +63,14 @@ class Po_ExpenseController extends Zend_Controller_Action
 			}
 		}
 
-    	$pructis=new Po_Form_Frmexpense();
+    	$pructis=new Invpayment_Form_Frmexpense();
     	$frm = $pructis->FrmExpense();
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm_expense=$frm;
     	$db = new Application_Model_GlobalClass();
     	$this->view->expenseopt = $db->getAllExpenseIncomeType(5);
     	
-    	$db = new Po_Model_DbTable_DbCateExpense();
+    	$db = new Invpayment_Model_DbTable_DbCateExpense();
     	$this->view->parent = $db->getParentCateExpense();
     	
     //	$_db = new Application_Form_FrmGlobal();
@@ -82,9 +82,9 @@ class Po_ExpenseController extends Zend_Controller_Action
     	if($this->getRequest()->isPost()){
 			try{
 				$data = $this->getRequest()->getPost();
-				$db = new Po_Model_DbTable_DbExpense();	
+				$db = new Invpayment_Model_DbTable_DbExpense();	
 				$db->updateData($data);
-				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","/po/expense");
+				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","/invpayment/expense");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("EDIT_FAIL");
 		
@@ -94,19 +94,19 @@ class Po_ExpenseController extends Zend_Controller_Action
 		}
 
 		$id = $this->getRequest()->getParam('id');
-		$db = new Po_Model_DbTable_DbExpense();
+		$db = new Invpayment_Model_DbTable_DbExpense();
 		$row  = $db->getexpensebyid($id);
 		$this->view->row = $row;
 		$this->view->rows = $db->getexpenseDetailbyid($id);
 
-    	$pructis=new Po_Form_Frmexpense();
+    	$pructis=new Invpayment_Form_Frmexpense();
     	$frm = $pructis->FrmExpense($row);
     	Application_Model_Decorator::removeAllDecorator($frm);
     	$this->view->frm_expense=$frm;
     	$dbg = new Application_Model_GlobalClass();
     	$this->view->expenseopt = $dbg->getAllExpenseIncomeType(5);
     	
-    	$dbe = new Po_Model_DbTable_DbCateExpense();
+    	$dbe = new Invpayment_Model_DbTable_DbCateExpense();
     	$this->view->parent = $dbe->getParentCateExpense();
     }
     function getReceiptNumberAction(){
@@ -121,7 +121,7 @@ class Po_ExpenseController extends Zend_Controller_Action
     function addCateExpenseAction(){
     	if($this->getRequest()->isPost()){
     		$data = $this->getRequest()->getPost();
-    		$db = new Po_Model_DbTable_DbExpense();
+    		$db = new Invpayment_Model_DbTable_DbExpense();
     		$id = $db->addCateExpense($data);
     		print_r(Zend_Json::encode($id));
     		exit();

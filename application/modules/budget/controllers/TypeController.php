@@ -37,12 +37,27 @@ class Budget_TypeController extends Zend_Controller_Action {
 			$this->view->frm_search = $frm;
 	}
 	function addAction(){
+
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$isAddBugetType = $this->getRequest()->getParam('isAddBudgetType');
+
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
-			try {		
+			try {
+
 				$db = new Budget_Model_DbTable_DbBudgetType();
 				$db->addBudgetType($_data);
-				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/budget/type/add");
+
+				if(!empty($isAddBugetType)){
+					$alert = $tr->translate("INSERT_SUCCESS");
+					echo "<script> alert('".$alert."');</script>";
+		    		echo "<script>window.close();</script>";
+
+				}else{
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/budget/type/add");
+
+				}
+
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
