@@ -1,7 +1,7 @@
 <?php
 class Invpayment_ExpenseController extends Zend_Controller_Action
 {
-	const REDIRECT_URL = '/po/expense';
+	const REDIRECT_URL = '/invpayment/expense';
 	
     public function init()
     {

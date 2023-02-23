@@ -2,7 +2,7 @@
 
 class Invpayment_CateexpenseController extends Zend_Controller_Action
 {
-	const REDIRECT_URL = '/po/cateexpense';
+	const REDIRECT_URL = '/invpayment/cateexpense';
 	
     public function init()
     {
