@@ -6,7 +6,6 @@
 	
 	$dbGB = new Application_Model_DbTable_DbGlobal();
 
-	
 	$headerReportType = REPORT_LETER_HEAD;
 	$classHideHeight="110px";
 	if($headerReportType==2){
@@ -16,7 +15,7 @@
 	$branch_title = $tr->translate("BRAND_TITLE");
 	$row = $this->rs;
 ?>
-<title><?php echo $tr->translate("CONCRETED_STATEMENT");?></title>
+<title><?php echo $tr->translate("PRODUCT_STATEMENT");?></title>
 <script>
      dojo.require("dijit.form.DateTextBox");
 </script>
@@ -24,7 +23,7 @@
 		<div class="card-box">
 	       	<div class="col-sm-12 border-botom">
 		   		<div class="col-sm-8 pd-0">
-		    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i> <?php echo $tr->translate('CONCRETED_STATEMENT');?></h4>
+		    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i> <?php echo $tr->translate('PRODUCT_STATEMENT');?></h4>
 	    		</div>
 	    		<div class="col-sm-4 text-right">
 	    		</div>
@@ -184,16 +183,15 @@
 									</td>
 								</tr>
 				                <tr class="style" align="center">
-									<td scope="col"  style="padding:1px;">ល.រ​ <br> No.</td>                   
+									<td scope="col"  style="padding:1px;">ល.រ​ <br> No.</td> 
+									<td scope="col" style="padding:1px;">ថ្ងៃចេញវិក្កយបត្រ <br>Invoice Date</td>  
+									<td scope="col" style="padding:1px;">លេខវិក្កយបត្រ <br>invoice No</td>
+									<td scope="col" style="padding:1px;">អ្នកផ្គត់ផ្គង់ <br>Supplier Name</td>                   
 									<td scope="col" style="padding:1px;">ឈ្មោះទំនិញ <br> Product Name</td>
-									<td scope="col" style="padding:1px;">កាលបរិច្ឆេទ <br> Date</td>
-									<td scope="col" style="padding:1px;">ប្រភេទការងារ <br> Work Type</td>
-									<td scope="col" style="padding:1px;">លេខបេតុង <br> Strength</td>
-									<td scope="col" style="padding:1px;">លេខ DN <br> DN Number</td>
 									<td scope="col" style="padding:1px;">បរិមាណ <br>  QTY</td>	                    
 									<td scope="col" style="padding:1px;">តម្លៃក្នុង​ ១ ឯកតា <br> Unit Price</td>
 									<td scope="col" style="padding:1px;">សរុប <br> SubTotal</td>
-									<td scope="col" style="padding:1px;">សម្គាល់ <br> Note</td>
+									<td scope="col" style="padding:1px;">កាលបរិច្ឆេទ <br> Statement Date</td>
 									</tr>
 					            </thead>
 				                <?php 
@@ -203,20 +201,19 @@
 								?>
 									<tr class="style <?php if($index%2!=0)echo "eventStyle";?>" align="left">
 										<td data-label="ល.រ​ /N.o" class="padding" style="text-align: center;"><?php echo $index+1;?></td>
+										<td data-label="ថ្ងៃចេញវិក្កយបត្រ/ Invoice Date"><?php echo $rs['invoiceDate']?></td>
+										<td data-label="លេខវិក្កយបត្រ/invoice No"><strong><span style="float: left; color:red;" ><?php echo $rs['invoiceNo']?></span></strong></td>
+										<td data-label="អ្នកផ្គត់ផ្គង់/ Supplier Name"><?php echo $rs['supplierName']?></td>
 										<td data-label="ឈ្មោះទំនិញ/Product Name"><strong><?php echo $rs['proName']?> - <?php echo $rs['proCode']?></strong></td>
-										<td data-label="កាលបរិច្ឆេទ/ Date"><?php echo $rs['stmentDate']?></td>
-										<td data-label="ប្រភេទការងារ/Work Type"><?php echo $rs['workType']?></td>
-										<td data-label="លេខបេតុង/Strength"><?php echo $rs['strength']?></td>
-										<td data-label="លេខ DN/DN Number"><?php echo $rs['dnNumber']?></td>
-										<td data-label="បរិមាណ/ QTY"><strong><?php echo number_format($rs['qtyPo'],2)?></strong><span style="float: right;">(<?php echo $rs['measureLabel'];?>)</span></td>
+										<td data-label="បរិមាណ/ QTY"><strong><?php echo number_format($rs['qty'],2)?></strong><span style="float: right;">(<?php echo $rs['measureLabel'];?>)</span></td>
 										<td data-label="តម្លៃ/Cost"><strong><?php echo number_format($rs['unitPrice'],2)?></strong></td>	  
 										<td data-label="សរុប/SubTotal"><strong><span style="float: left; color:red;"><?php echo number_format($rs['subTotal'],2)?></span></strong></td>	                                      
-										<td data-label="ផ្សេងៗ/Other" style="min-width: 200px;"><?php echo $rs['note']?></td>
+										<td data-label="កាលបរិច្ឆេទ/ Date"><?php echo $rs['stmentDate']?></td>
 									</tr>
 				                <?php }?>
 				                <tr>
 				                	<td colspan="8" align="right" style="border-left:1px solid #fff;border-bottom:1px solid #fff;">សរុបរួម / Grand Total</td>
-				                	<td colspan="2"  style="border:1px solid #fff;border-top:1px solid #000;">$ <strong><?php echo number_format($grandTotal,2);?></strong></td>
+				                	<td colspan="2"  style="border:1px solid #fff;border-top:1px solid #000;"> <strong><span style=" color:red;">$<?php echo number_format($grandTotal,2);?></span></strong></td>
 				                </tr>
 
 				            </table>

@@ -1,11 +1,11 @@
 <?php
 class Invpayment_StatementproductController extends Zend_Controller_Action {
-	const REDIRECT_URL = '/invpayment/statement';
+	const REDIRECT_URL = '/invpayment/statementproduct';
 	const INVOICE_TYPE = 1;//DN Invoice
 	public function indexAction(){
 		//$db = new ();
 		try{
-			$db = new Invpayment_Model_DbTable_DbConcreteStatement();
+			$db = new Invpayment_Model_DbTable_DbInvoiceStatement();
 			
 			if(!empty($this->getRequest()->isPost())){
 				$search=$this->getRequest()->getPost();
@@ -21,13 +21,12 @@ class Invpayment_StatementproductController extends Zend_Controller_Action {
 			}
 		
 			$rs_rows=array();
-			$rs_rows= $db->getAllStatement($search);
-			
-			
+			$rs_rows= $db->getAllStmProduct($search);
+				
 			$list = new Application_Form_Frmtable();
     		$collumns = array("PROJECT_NAME","INVOICE_NO","CREATE_DATE","STATEMENT_FROMSUPPLIER","TOTAL","SUPPLIER","NOTE","BY","STATUS");
     		$link=array(
-    				'module'=>'invpayment','controller'=>'statement','action'=>'edit',
+    				'module'=>'invpayment','controller'=>'statementproduct','action'=>'edit',
     		);
     		$this->view->list=$list->getCheckList(10, $collumns, $rs_rows , array('projectName'=>$link,'stmentNo'=>$link,));
 			
@@ -46,12 +45,12 @@ class Invpayment_StatementproductController extends Zend_Controller_Action {
 	}
 	function addAction(){
 
-		$db = new Invpayment_Model_DbTable_DbConcreteStatement();
+		$db = new Invpayment_Model_DbTable_DbInvoiceStatement();
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try {		
-				$db->addConcreteStatment($_data);
-	    		Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL."/index");
+				$db->addInvoiceStatment($_data);
+	    		Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL."/add");
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -65,11 +64,11 @@ class Invpayment_StatementproductController extends Zend_Controller_Action {
 	}
 	public function viewAction(){
 	
-		$db = new Invpayment_Model_DbTable_DbConcreteStatement();
+		$db = new Invpayment_Model_DbTable_DbInvoiceStatement();
 		try{
 			$id = $this->getRequest()->getParam('id');
 			$id = empty($id)?0:$id;
-			$this->view->rows = $db->getConcreteStatement($id);
+			$this->view->rows = $db->getProductStatement($id);
 
 			$this->view->rs = $db->getStatementRow($id);
 	
