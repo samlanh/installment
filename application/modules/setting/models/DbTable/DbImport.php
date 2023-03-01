@@ -1473,7 +1473,9 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     			    				'recieve_amount'				=>	$data[$i]['E'],//ok
     			    				'amount_payment'				=>	$data[$i]['E'],//brak ban borng
     			    				'return_amount'					=>	0,//ok
-    			    				'note'							=>	$data[$i]['A'],//$data[$i]['D'],
+    			    				'note'							=>	$data[$i]['G'],//$data[$i]['D'],
+    	    						'closing_note'					=>	$data[$i]['D'],//$data[$i]['D'],
+    	    						
     			    				'cheque'						=>	'',
     			    				'user_id'						=>	$this->getUserId(),
     			    				'payment_option'				=>	1,
@@ -1576,6 +1578,13 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     			    						'status'				=>	1);
     	    				$this->_name='ln_client_receipt_money_detail';
     	    				$this->insert($arr);
+    	    				
+    	    				$this->_name='ln_client_receipt_money';
+    	    				$arr = array(
+    	    						'date_payment'=>$r['date_payment']
+    	    					);
+    	    				$where = 'id='.$client_pay;
+    	    				$this->update($arr, $where);
     	    			}else{
 //     	    				echo $data[$i]['B'];exit();
     	    			}

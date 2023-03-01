@@ -28,8 +28,8 @@ class Setting_importController extends Zend_Controller_Action {
 // 				$db->ImportPPLand($sheetData);
 				//$db->ImportADLand($sheetData);
 				//$db->updateItemsByImport($sheetData);
-				$db->importHanuman($sheetData);
-				//$db->insertPayment($sheetData);
+				//$db->importHanuman($sheetData);
+				$db->insertPayment($sheetData);
 				
 				
 				Application_Form_FrmMessage::message("Import Successfully");

@@ -171,3 +171,21 @@ function getAllCategory(urlGetCategory){
 			}
 		});
 	}
+
+	function getAllInvoiceList(urlGet,objectContentFilter,selected=null){
+		dojo.xhrPost({
+			url:urlGet,	
+			content:objectContentFilter,		    
+			handleAs:"json",
+			load: function(data) {
+				alert(data);
+				invoiceStore  = getDataStorefromJSON('id','name', data);		
+				dijit.byId('invoiceList').set('store', invoiceStore);
+				if(selected!=null){
+					dijit.byId('invoiceList').attr('value',selected)
+				}
+			},
+			error: function(err) {
+			}
+		});
+	}
