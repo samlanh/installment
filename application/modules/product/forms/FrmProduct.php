@@ -12,6 +12,7 @@ Class Product_Form_Frmproduct extends Zend_Dojo_Form {
 		$chbox = 'dijit.form.CheckBox';
 		
 		$db = new Application_Model_DbTable_DbGlobalStock();
+		$request=Zend_Controller_Front::getInstance()->getRequest();
 		
 		$categoryId = new Zend_Dojo_Form_Element_FilteringSelect('categoryId');
 		$categoryId->setAttribs(array(
@@ -73,6 +74,20 @@ Class Product_Form_Frmproduct extends Zend_Dojo_Form {
 		
 		$dbp = new Product_Model_DbTable_DbMeasure();
 		$measureId->setMultiOptions($dbp->getAllMeasureList(1));
+
+	
+		$budgetType = new Zend_Dojo_Form_Element_FilteringSelect('budgetType');
+		$budgetType->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'autoComplete'=>'false',
+				'queryExpr'=>'*${0}*',
+				'onchange'=>'getBudgetItem();'
+		));
+		$options = $db->getAllBudgetType(0,'','',1);
+		$budgetType->setMultiOptions($options);
+		
+		$budgetType->setValue($request->getParam('budgetType'));
 		
 		$budgetItem = new Zend_Dojo_Form_Element_FilteringSelect('budgetItem');
 		$budgetItem->setAttribs(array(
@@ -164,6 +179,8 @@ Class Product_Form_Frmproduct extends Zend_Dojo_Form {
 			$convert->setValue($data['isConvertMeasure']);
 			$cutStock->setValue($data['isCountStock']);
 			$budgetItem->setValue($data['budgetId']);
+			$budgetType->setValue($data['budgetTypeId']);
+			
 		}
 		
 		$this->addElements(array(
@@ -182,7 +199,8 @@ Class Product_Form_Frmproduct extends Zend_Dojo_Form {
 				$productName,
 				$note,
 				$categoryId,
-				$status
+				$status,
+				$budgetType
 		));
 		return $this;
 	}

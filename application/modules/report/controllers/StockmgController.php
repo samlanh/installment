@@ -570,7 +570,7 @@ class Report_StockmgController extends Zend_Controller_Action {
     		}
 		//	$search['closingStatus']=-1;
     		$this->view->search = $search;
-			$db = new Po_Model_DbTable_DbExpense();
+			$db = new Invpayment_Model_DbTable_DbExpense();
 			$rs_rows = $db->getAllExpenseReport($search);
     		$this->view->row=$rs_rows;
     		$this->view->search=$search;
@@ -606,7 +606,7 @@ class Report_StockmgController extends Zend_Controller_Action {
 		try{
 			
 
-			$db = new Po_Model_DbTable_DbExpense();
+			$db = new Invpayment_Model_DbTable_DbExpense();
 			$id = $this->getRequest()->getParam('id');
 			$id = empty($id)?0:$id;
 			$row  = $db->getexpensebyid($id);

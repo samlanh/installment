@@ -1,5 +1,5 @@
 <?php 
-Class Po_Form_FrmExpense extends Zend_Dojo_Form {
+Class Invpayment_Form_FrmExpense extends Zend_Dojo_Form {
 // 	public function init()
 // 	{
 // 	}///

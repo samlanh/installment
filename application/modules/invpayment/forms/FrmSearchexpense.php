@@ -1,5 +1,5 @@
 <?php 
-Class Po_Form_FrmSearchexpense extends Zend_Dojo_Form {
+Class Invpayment_Form_FrmSearchexpense extends Zend_Dojo_Form {
 	
 	public function AdvanceSearch($data=null){
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
@@ -41,10 +41,7 @@ Class Po_Form_FrmSearchexpense extends Zend_Dojo_Form {
 				
 		$_bydate->setMultiOptions($_date_opt);
 		$_bydate->setValue($request->getParam("by_date"));
-		
-;
-		
-	
+
 		
 		$_releasedate = new Zend_Dojo_Form_Element_DateTextBox('start_date');
 		$_releasedate->setAttribs(array('dojoType'=>'dijit.form.DateTextBox',
