@@ -191,7 +191,63 @@ class Invpayment_Model_DbTable_DbDnconcrete extends Zend_Db_Table_Abstract
     	if(!empty($DNListFromInvoice)){ 
     		$sql.=" AND rst.id NOT IN ($DNListFromInvoice) ";
     	}
-    	return $db->fetchAll($sql);
+    	$results =  $db->fetchAll($sql);
+    	if(!empty($data['labelList'])){
+    		return $this->getAllDnbyData($results,$data);
+    	}else{
+    		return $results;
+    	}
+    }
+    function getAllDnbyData($dnData,$data){
+    	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+    	
+    	$string='';
+    	$no = $data['keyindex'];
+    	$identity='';
+    	if(!empty($dnData)){
+    		foreach ($dnData as $key => $row){
+    			if (empty($identity)){
+    				$identity=$no;
+    				$dnIdentity=$row['id'];
+    			}else{
+    				$identity=$identity.",".$no;
+    				$dnIdentity=$dnIdentity.",".$row['id'];
+    			}
+    			
+    			$row = $this->getReceiveProductInfo($row['id']);
+    			
+    		  
+    			$classRowBg = "odd";
+    			if(($key%2)==0){
+    				$classRowBg = "regurlar";
+    			}
+    	
+    			$qtyReceived=0;
+    			$note='';
+    	
+    			$string.='<tr id="row'.$no.'" class="rowData '.$classRowBg.'" >';
+	    			$string.='<td  class="numberRecord infoCol" align="center"><span title="'.$tr->translate("REMOVE_RECORD").'" class="removeRow" onclick="deleteRecord('.$no.');"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></span></td>';
+	    			$string.='<td  class="numberRecord infoCol" data-label="'.$tr->translate("N_O").'" align="center" >'.($key+1).'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="rsId'.$no.'" name="rsId'.$no.'" value="'.$row['id'].'"></td>';
+	    			$string.='<td  data-label="'.$tr->translate("PRODUCT_NAME").'" class="productName infoCol" >'.$row['proCode'].'<br />'.$row['proName'].'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId'.$no.'" name="proId'.$no.'" value="'.$row['proId'].'" type="text" ></td>';
+	    			$string.='<td  data-label="'.$tr->translate("MEASURE").'" class="red infoCol"  >'.$row['measure'].'</td>';
+	    			$string.='<td  data-label="'.$tr->translate("WORK_TYPE").'" class="infoCol"  >'.$row['workType'].' </td>';
+	    			
+	    			$strength = ($row['workType']!=null) ? $row['workType']:'';
+	    			
+	    			$string.='<td  data-label="'.$tr->translate("STRENGTH").'" class="infoCol"  >'.$strength.'</td>';
+	    			$string.='<td  data-label="'.$tr->translate("DN_NO").'" class="red bold" ><input readOnly dojoType="dijit.form.ValidationTextBox" class="fullside" id="dnId'.$no.'" name="dnId'.$no.'" value="'.$row['id'].'" type="text" ></td>';
+	    			$string.='<td data-label="'.$tr->translate("QTY").'" class=" bold" ><input readOnly dojoType="dijit.form.NumberTextBox" required="true" class="fullside" id="qty'.$no.'" name="qty'.$no.'" placeholder="'.$tr->translate("QTY").'" value="'.$row['qtyReceive'].'" type="text" ></td>';
+	    			$string.='<td data-label="'.$tr->translate("UNIT_PRICE").'" class=" bold"><input readOnly  dojoType="dijit.form.NumberTextBox" required="true"  class="fullside" id="unitPrice'.$no.'" name="unitPrice'.$no.'" placeholder="'.$tr->translate("UNIT_PRICE").'" value="'.$row['price'].'" type="text" ></td>';
+	    			$string.='<td data-label="'.$tr->translate("SUBTOTAL").'" class=" bold"><input dojoType="dijit.form.NumberTextBox" readOnly required="true" class="fullside" id="subTotal'.$no.'" name="subTotal'.$no.'" placeholder="'.$tr->translate("TOTAL").'" value="'.$row['subTotal'].'" type="text"  ></td>';
+    			$string.='</tr>';
+    			$no++;
+    		}
+    	}
+    	$array = array('stringrow'=>$string,
+    					'keyindex'=>$no,
+    					'identity'=>$identity,
+    					'dnIdentity'=>$dnIdentity);
+    	return $array;
     }
 
 
@@ -207,7 +263,9 @@ class Invpayment_Model_DbTable_DbDnconcrete extends Zend_Db_Table_Abstract
 					rs.dnNumber,
 					rd.strength,
 					rd.qtyReceive, rd.price, rd.subTotal
-		 	FROM `st_receive_stock`  AS rs JOIN `st_receive_stock_detail` AS rd ON rs.id =rd.receiveId WHERE 1 ";	
+		 	FROM `st_receive_stock`  AS rs 
+				JOIN `st_receive_stock_detail` AS rd 
+			ON rs.id =rd.receiveId WHERE 1 ";	
 		if(!empty($_data['receiveId'])){
 			$sql.=" AND rs.id=".$_data['receiveId'];
 		}

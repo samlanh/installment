@@ -184,7 +184,9 @@ class Product_Model_DbTable_DbProduct extends Zend_Db_Table_Abstract
     }
     function getProductbyId($recordId){
     	$db = $this->getAdapter();
-    	$sql=" SELECT * FROM $this->_name WHERE proId=".$recordId." LIMIT 1";
+    	$sql=" SELECT *,
+		(select budgetTypeId from `st_budget_item` where id = budgetId limit 1) as budgetTypeId
+		 FROM $this->_name WHERE proId=".$recordId." LIMIT 1";
     	return $db->fetchRow($sql);
     }
     function getProductDetailbyId($proId){

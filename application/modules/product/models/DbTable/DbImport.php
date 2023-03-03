@@ -75,20 +75,20 @@ class Product_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 			if (!empty($data[$i]['E'])){
 
 				$_arr['proName']=$_arr['proName']." សំណង់";
-				$_arr['budgetId']=1;
+				$_arr['budgetId']=3;
 				$this->insert($_arr);
 
 			}
 			
 			if (!empty($data[$i]['F'])){
 				$_arr['proName']=$data[$i]['C']." ហេដ្ឋារចនាសម្ព័ន្ធខាងក្រៅ";
-				$_arr['budgetId']=2;
+				$_arr['budgetId']=1;
 				$this->insert($_arr);
 			}
 		
 			if (!empty($data[$i]['G'])){
 				$_arr['proName']=$data[$i]['C']." ហេដ្ឋារចនាសម្ព័ន្ធខាងក្នុង";
-				$_arr['budgetId']=3;
+				$_arr['budgetId']=2;
 				$proId =  $this->insert($_arr);
 
 			}

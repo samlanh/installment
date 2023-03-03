@@ -90,19 +90,33 @@ class Po_Model_DbTable_DbSupplier extends Zend_Db_Table_Abstract
     				
     				);
 			$this->_name='st_supplier';
+
+			$existing = $this->ifSupplierExisting($data);
+
 			if(!empty($data['id'])){
-				
-				$id = $data['id'];
-				$arr['status']=$data['status'];
-				$where = 'id = '.$id;
-				$this->update($arr, $where);
+
+				if(empty($existing)){
+					$id = $data['id'];
+					$arr['status']=$data['status'];
+					$where = 'id = '.$id;
+					$this->update($arr, $where);
+
+				}else{
+					Application_Form_FrmMessage::Sucessfull("DATA_EXISTING", "/po/supplier/edit",2);
+				}
+
 			}else{
-				$arr['status']=1;
-				$arr['createDate']=date("Y-m-d H:i:s");
-				$id = $this->insert($arr);
+				if(empty($existing)){
+					$arr['status']=1;
+					$arr['createDate']=date("Y-m-d H:i:s");
+					$id = $this->insert($arr);
+				}else{
+					Application_Form_FrmMessage::Sucessfull("DATA_EXISTING", "/po/supplier/add",2);
+				}
+
+				
 			}
-			
-			
+
     		$db->commit();
     	}catch (Exception $e){
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -121,5 +135,14 @@ class Po_Model_DbTable_DbSupplier extends Zend_Db_Table_Abstract
     	return $db->fetchRow($sql);
     }
 
+	function ifSupplierExisting($data){
+		
+    	$db = $this->getAdapter();
+    	$sql=" SELECT * FROM $this->_name WHERE supplierName='".$data['supplierName']."'";
+		if(!empty($data['id'])){
+			$sql.=" AND id !=".$data['id'];
+		}	
+    	return $db->fetchRow($sql);
+    }
    
 }

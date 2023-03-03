@@ -88,8 +88,7 @@ class Stockinout_IndexController extends Zend_Controller_Action {
 		if(empty($id) OR empty($result) OR ($result['isIssueInvoice']==1)){
 			Application_Form_FrmMessage::Sucessfull("NO_DATA","/stockinout/index/index",2);
 		}
-		
-		
+		$this->view->photo = $result['photoDn'];
 		$fm = new Stockinout_Form_FrmReceiveStock();
 		$frm = $fm->FrmReceivStock($result);
 		Application_Model_Decorator::removeAllDecorator($frm);
