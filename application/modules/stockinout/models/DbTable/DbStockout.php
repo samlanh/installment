@@ -228,7 +228,9 @@ class Stockinout_Model_DbTable_DbStockout extends Zend_Db_Table_Abstract
     	$sql=" SELECT 
     				 sd.*,
     				 (SELECT `proCode` FROM `st_product` where st_product.`proId`=sd.proId LIMIT 1) AS proCode,
-					 (SELECT `proName` FROM `st_product` where st_product.`proId`=sd.proId LIMIT 1) AS proName
+					 (SELECT `proName` FROM `st_product` where st_product.`proId`=sd.proId LIMIT 1) AS proName,
+					 (SELECT measureLabel FROM `st_product` WHERE st_product.`proId`=sd.proId LIMIT 1) AS measureLabel,
+					 (SELECT qty FROM `st_product_location` WHERE st_product_location.`proId`=sd.proId LIMIT 1) AS curentQty
     		FROM $this->_name as sd WHERE sd.stockoutId=".$recordId." ";
     	return $db->fetchAll($sql);
     }
