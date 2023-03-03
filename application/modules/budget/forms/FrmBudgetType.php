@@ -105,6 +105,7 @@ Class Budget_Form_FrmBudgetType extends Zend_Dojo_Form {
 				$branch_id->setValue($row['br_id']);
 			}
 		}
+		//
 		
 		$db = new Application_Model_DbTable_DbGlobalStock();
 		$budgetType = new Zend_Dojo_Form_Element_FilteringSelect('budgetType');
@@ -182,7 +183,6 @@ Class Budget_Form_FrmBudgetType extends Zend_Dojo_Form {
 			$budgetTitle->setValue($data['budgetTitle']);
 			$id->setValue($data['id']);
 		}
-	
 		$this->addElements(array(
 				$settingType,
 				$branch_id,

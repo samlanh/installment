@@ -250,7 +250,7 @@ public function getOptonsHtmlTranslate($sql, $display, $value){
 			return $options;
 		}
 		public function getAllExpenseIncomeType($type){
-			$_db = new Po_Model_DbTable_DbCateExpense();
+			$_db = new Invpayment_Model_DbTable_DbCateExpense();
 			$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 			$rows = $_db->getParentCateExpense();
 			$options = '';
