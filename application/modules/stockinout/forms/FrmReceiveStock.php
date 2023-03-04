@@ -121,6 +121,7 @@ Class Stockinout_Form_FrmReceiveStock extends Zend_Dojo_Form {
 			$id->setValue($_data['id']);
 			$_note->setValue($_data['note']);
 			$dnDate->setValue($_data['receiveDate']);
+			$oldPhoto->setValue($_data['photoDn']);
 		}
 		$this->addElements(array($oldPhoto,$oldfileDn,$supplierId,$fileDn,$photogoods,$truckNumber,$driver,$counter,$dnDate,$_branch_id,
 				$documentType,$dnTitle,$_status,$id,$_note,
