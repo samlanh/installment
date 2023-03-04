@@ -273,6 +273,9 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
     				$arr['photoDn']=$photo;
     			}
     		}
+			if(!empty($photo_name) AND file_exists($part.$data['oldPhoto'])){//delelete old file
+    			unlink($part.$data['oldPhoto']);
+    		}
     		
     		$photo_name = $_FILES['fileDn']['name'];
     		if (!empty($photo_name)){
