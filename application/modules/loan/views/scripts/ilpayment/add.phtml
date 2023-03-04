@@ -27,7 +27,16 @@
 							dijit.byId('amount_receive').focus();
 							return false;
 						}
+					}else if(option_pay=3){
+						os_amount = dijit.byId('os_amount').get('value');
+						os_amount=isNaN(os_amount)?0:os_amount;
+						if(os_amount<=0){
+							infoMessageAlert('ប្រាក់ដើម ត្រូវតែមានក្នុងការ រំលស់ដើម!');
+							dijit.byId('os_amount').focus();
+							return false;
+						}
 					}
+					
 					if(receive_amount<0){
 						infoMessageAlert('Please fill Recieve Amount');
 						dijit.byId('amount_receive').focus();
@@ -45,6 +54,8 @@
 						dijit.byId('to_branch_id').focus();
 						return false;
 					}
+					
+					
 					loadingBlock();
 					dijit.byId('submit_close').set('disabled',true);
 					dijit.byId('submitButton').set('disabled',true);
@@ -778,6 +789,17 @@ function showReciept(receipt_number){
 			if(receive_amount<total_payments){
 				infoMessageAlert('ប្រាក់បានទទួលត្រូវ ស្មើរនឹង  ត្រូវបង់ប្រាក់');
 				dijit.byId('amount_receive').focus();
+				return false;
+			}
+		}
+		
+		
+		if(option_pay=3){
+			os_amount = dijit.byId('os_amount').get('value');
+			os_amount=isNaN(os_amount)?0:os_amount;
+			if(os_amount<=0){
+				infoMessageAlert('ប្រាក់ដើម ត្រូវតែមានក្នុងការ រំលស់ដើម!');
+				dijit.byId('os_amount').focus();
 				return false;
 			}
 		}
@@ -1798,6 +1820,7 @@ function getSavePrint(){
 	var urlSavePrint = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'saveprint')); ?>';
 	branch_id = dijit.byId('branch_id').get('value');
 	amount_receive = dijit.byId('amount_receive').get('value');
+	
 	if(amount_receive<=0){
 		infoMessageAlert("<?php echo $tr->translate("CANNOT_PRINTPAYMENT_ALERT");?>");
 		dijit.byId('amount_receive').focus();

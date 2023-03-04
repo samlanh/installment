@@ -86,10 +86,9 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 				  rm.penalize_amount as penalize_amount_parent,
 				  rm.total_interest_permonth as total_interest_permonth_parent
 				FROM
-				  `ln_client_receipt_money` AS rm ,
-				  `ln_client_receipt_money_detail` AS rmd
+				  `ln_client_receipt_money` AS rm LEFT JOIN `ln_client_receipt_money_detail` AS rmd ON rm.id=rmd.`crm_id`
 				WHERE rm.id = $id
-				AND rm.id=rmd.`crm_id` ";
+				 ";
 		
 		$dbp = new Application_Model_DbTable_DbGlobal();
 		$sql.=$dbp->getAccessPermission("rm.branch_id");
