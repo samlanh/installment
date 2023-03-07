@@ -39,10 +39,16 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 					$optionList[$rs['id']]=$rs['name'];
 				}
 				return $optionList;
+			}else{
+				$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+				$optionList= array(
+						0=>$tr->translate("SELECT_CATEGORY"),
+						-1=>$tr->translate("ADD_NEW")
+						);
+				return $optionList;
 			}
 		}
 		return $cate_tree_array;
-		
 	}
 	function getAllProduct($_data=null){
 		//$dbgb = new Application_Model_DbTable_DbGlobal();

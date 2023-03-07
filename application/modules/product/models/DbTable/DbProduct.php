@@ -81,40 +81,44 @@ class Product_Model_DbTable_DbProduct extends Zend_Db_Table_Abstract
     	$db->beginTransaction();
     	try
     	{
-    		$productCode = $this->generateProductCode();
-    		
-    		$arr = array(
-    				'proName'=>$data['productName'],
-    				'proCode'=>$productCode,
-    				'barCode'=>$data['barCode'],
-    				'isService'=>$data['isService'],
-    				'categoryId'=>$data['categoryId'],
-    				'isConvertMeasure'=>$data['isConvert'],
-    				'measureId'=>$data['measureId'],
-    				'measureLabel'=>$data['labelMeasure'],
-    				'measureValue'=>$data['qtyMeasure'],
-    				'userId'=>$this->getUserId(),
-    				'createDate'=>date("Y-m-d"),
-    				'isCountStock'=>$data['isCountStock'],
-    				'note'=>$data['note'],
-    				'status'=>1,
-    				'budgetId'=>$data['budgetItem'],    				
-    		);
-    		
-    		$part= PUBLIC_PATH.'/images/';
-    		$photo_name = $_FILES['photo']['name'];
-    		if (!empty($photo_name)){
-    			$tem =explode(".", $photo_name);
-    			$image_name = "product_".date("Y").date("m").date("d").time().".".end($tem);
-    			$tmp = $_FILES['photo']['tmp_name'];
-    			if(move_uploaded_file($tmp, $part.$image_name)){
-    				move_uploaded_file($tmp, $part.$image_name);
-    				$photo = $image_name;
-    				$arr['image']=$photo;
-    			}
+			$existing = $this->ifProductExisting($data);
+			if(empty($existing)){
+				$productCode = $this->generateProductCode();
+				$arr = array(
+						'proName'=>$data['productName'],
+						'proCode'=>$productCode,
+						'barCode'=>$data['barCode'],
+						'isService'=>$data['isService'],
+						'categoryId'=>$data['categoryId'],
+						'isConvertMeasure'=>$data['isConvert'],
+						'measureId'=>$data['measureId'],
+						'measureLabel'=>$data['labelMeasure'],
+						'measureValue'=>$data['qtyMeasure'],
+						'userId'=>$this->getUserId(),
+						'createDate'=>date("Y-m-d"),
+						'isCountStock'=>$data['isCountStock'],
+						'note'=>$data['note'],
+						'status'=>1,
+						'budgetId'=>$data['budgetItem'],    				
+				);
+				
+				$part= PUBLIC_PATH.'/images/';
+				$photo_name = $_FILES['photo']['name'];
+				if (!empty($photo_name)){
+					$tem =explode(".", $photo_name);
+					$image_name = "product_".date("Y").date("m").date("d").time().".".end($tem);
+					$tmp = $_FILES['photo']['tmp_name'];
+					if(move_uploaded_file($tmp, $part.$image_name)){
+						move_uploaded_file($tmp, $part.$image_name);
+						$photo = $image_name;
+						$arr['image']=$photo;
+					}
+				}
+				$id = $this->insert($arr);
+				$db->commit();
+			}else{
+    			Application_Form_FrmMessage::Sucessfull("DATA_EXISTING", "/product/index/add",2);
     		}
-    		$id = $this->insert($arr);
-    		$db->commit();
     	}catch (Exception $e){
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     		$db->rollBack();
@@ -127,49 +131,68 @@ class Product_Model_DbTable_DbProduct extends Zend_Db_Table_Abstract
     	$db->beginTransaction();
     	try
     	{
-    		$arr = array(
-    			'proName'=>$data['productName'],
-    			'proCode'=>$data['productCode'],
-    			'barCode'=>$data['barCode'],
-    			'isService'=>$data['isService'],
-    			'categoryId'=>$data['categoryId'],
-    			'isConvertMeasure'=>$data['isConvert'],
-    			'measureId'=>$data['measureId'],
-    			'measureLabel'=>$data['labelMeasure'],
-    			'measureValue'=>$data['qtyMeasure'],
-    			'userId'=>$this->getUserId(),
-    			'createDate'=>date("Y-m-d"),
-    			'isCountStock'=>$data['isCountStock'],
-    			'note'=>$data['note'],
-    			'status'=>1,
-    			'budgetId'=>$data['budgetItem'],    				
-    		);
-    		
-    		$part= PUBLIC_PATH.'/images/';
-    		$photo_name = $_FILES['photo']['name'];
-    		if (!empty($photo_name)){
-    			$tem =explode(".", $photo_name);
-    			$image_name = "product_".date("Y").date("m").date("d").time().".".end($tem);
-    			$tmp = $_FILES['photo']['tmp_name'];
-    			if(move_uploaded_file($tmp, $part.$image_name)){
-    				move_uploaded_file($tmp, $part.$image_name);
-    				$photo = $image_name;
-    				$arr['image']=$photo;
-    			}
+			$existing = $this->ifProductExisting($data);
+			if(empty($existing)){
+				
+				$arr = array(
+					'proName'=>$data['productName'],
+					'proCode'=>$data['productCode'],
+					'barCode'=>$data['barCode'],
+					'isService'=>$data['isService'],
+					'categoryId'=>$data['categoryId'],
+					'isConvertMeasure'=>$data['isConvert'],
+					'measureId'=>$data['measureId'],
+					'measureLabel'=>$data['labelMeasure'],
+					'measureValue'=>$data['qtyMeasure'],
+					'userId'=>$this->getUserId(),
+					'createDate'=>date("Y-m-d"),
+					'isCountStock'=>$data['isCountStock'],
+					'note'=>$data['note'],
+					'status'=>1,
+					'budgetId'=>$data['budgetItem'],    				
+				);
+				
+				$part= PUBLIC_PATH.'/images/';
+				$photo_name = $_FILES['photo']['name'];
+				if (!empty($photo_name)){
+					$tem =explode(".", $photo_name);
+					$image_name = "product_".date("Y").date("m").date("d").time().".".end($tem);
+					$tmp = $_FILES['photo']['tmp_name'];
+					if(move_uploaded_file($tmp, $part.$image_name)){
+						move_uploaded_file($tmp, $part.$image_name);
+						$photo = $image_name;
+						$arr['image']=$photo;
+					}
+				}
+				if(!empty($photo_name) AND file_exists($part.$data['oldPhoto'])){//delelete old file
+					unlink($part.$data['oldPhoto']);
+				}
+				
+				$where = 'proId = '.$data['id'];
+				$this->update($arr, $where);
+				$db->commit();
+
+			}else{
+    			Application_Form_FrmMessage::Sucessfull("DATA_EXISTING", "/product/index",2);
     		}
-    		if(!empty($photo_name) AND file_exists($part.$data['oldPhoto'])){//delelete old file
-    			unlink($part.$data['oldPhoto']);
-    		}
     		
-    		$where = 'proId = '.$data['id'];
-			$this->update($arr, $where);
-    		$db->commit();
     	}catch (Exception $e){
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     		$db->rollBack();
     		Application_Form_FrmMessage::Sucessfull("UPDATE_FAIL", "/product/index",2);
     	}
     }
+
+	function ifProductExisting($data){
+		
+    	$db = $this->getAdapter();
+    	$sql=" SELECT * FROM $this->_name WHERE proName='".$data['productName']."'";
+		if(!empty($data['id'])){
+			$sql.=" AND proId !=".$data['id'];
+		}	
+    	return $db->fetchRow($sql);
+    }
+
     function generateProductCode(){
     	$db = $this->getAdapter();
     	$sql=" SELECT count(proId) FROM $this->_name";
@@ -197,7 +220,6 @@ class Product_Model_DbTable_DbProduct extends Zend_Db_Table_Abstract
     	if($lang_id==2){
     		$strLable ='name_en' ;
     	}
-    	
     	$sql=" SELECT
 		    	p.proId,
 		    	p.proName,
@@ -223,3 +245,4 @@ class Product_Model_DbTable_DbProduct extends Zend_Db_Table_Abstract
     }
    
 }
+?>
