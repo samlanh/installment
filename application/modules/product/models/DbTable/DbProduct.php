@@ -167,7 +167,7 @@ class Product_Model_DbTable_DbProduct extends Zend_Db_Table_Abstract
 				if(!empty($photo_name) AND file_exists($part.$data['oldPhoto'])){//delelete old file
 					unlink($part.$data['oldPhoto']);
 				}
-				
+			
 				$where = 'proId = '.$data['id'];
 				$this->update($arr, $where);
 				$db->commit();
