@@ -253,13 +253,13 @@ function addRecords(data){
 				temp+='<td><?php echo $tr->translate("N_O");?></td>';
 				temp+='<td width="20%"><?php echo $tr->translate("PRODUCT_NAME");?></td>';
 				temp+='<td class="currentQty"><?php echo $tr->translate("MEASURE");?></td>';
-				temp+='<td width="20%"><?php echo $tr->translate("WORK_TYPE");?></td>';
-				temp+='<td width="15%"><?php echo $tr->translate("STRENGTH");?></td>';
-				temp+='<td width="15%"><?php echo $tr->translate("DN_NO");?></td>';
+				temp+='<td width="15%"><?php echo $tr->translate("WORK_TYPE");?></td>';
+				temp+='<td width="10%"><?php echo $tr->translate("STRENGTH");?></td>';
+				temp+='<td width="10%"><?php echo $tr->translate("DN_NO");?></td>';
 				temp+='<td width="5%"><?php echo $tr->translate("QTY");?></td>';
 				temp+='<td width="10%"><?php echo $tr->translate("UNIT_PRICE");?></td>';
-				temp+='<td width="10%"><?php echo $tr->translate("TOTAL");?></td>';
-				temp+='<td width="25%"><?php echo $tr->translate("NOTE");?></td>';
+				temp+='<td width="15%"><?php echo $tr->translate("TOTAL");?></td>';
+			
 				dojo.query("#head-title").append(temp);
 				title=1;
 			}
@@ -271,9 +271,9 @@ function addRecords(data){
 				proName = '<?php echo $row['proName']?>';
 				measureTitle = '<?php echo $row['measureLabel']?>';
 				
-				template+='<td align="center" width="2%">'+no+'</td>';
-				template+='<td class="productName" >'+proCode+'<br />'+proName+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId'+col+'" name="proId'+col+'" value="<?php echo $row['proId'];?>" type="text"  ></td>';	
-				template+='<td class="currentQty"  width="10%">('+measureTitle+')</td>';
+				template+='<td rowspan = "2" class="numberRecord infoCol" align="center" width="2%">'+no+'</td>';
+				template+='<td class="productName infoCol" >'+proCode+'<br />'+proName+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId'+col+'" name="proId'+col+'" value="<?php echo $row['proId'];?>" type="text"  ></td>';	
+				template+='<td class="currentQty infoCol"  width="10%">('+measureTitle+')</td>';
 				template+='<td><select required placeHolder="<?php echo $tr->translate('WORK_TYPE');?>" class="fullside" onchange="addNewWorkType('+col+');"  dojoType="dijit.form.FilteringSelect" name="workType'+col+'" id="workType'+col+'" >';
 					<?php if(!empty($this->worktype))foreach($this->worktype as $rswt){
 						if($row['workType']==$rswt['id'] ){ ?>
@@ -287,9 +287,13 @@ function addRecords(data){
 				template+='<td><input onkeyup="calculateTotal('+col+');" dojoType="dijit.form.NumberTextBox" required="true" data-dojo-props="constraints:{min:0.0001},rangeMessage:'+"'<?php echo $tr->translate("MINIMUM_VALUE_IS_ONE");?>'"+'" class="fullside" id="qty'+col+'" name="qty'+col+'" placeholder="'+'<?php echo $tr->translate("QTY");?> " value="1" type="text"  ></td>';	
 				template+='<td><input onkeyup="calculateTotal('+col+');" dojoType="dijit.form.NumberTextBox" required="true" data-dojo-props="constraints:{min:0.0001},rangeMessage:'+"'<?php echo $tr->translate("MINIMUM_VALUE_IS_ONE");?>'"+'" class="fullside" id="unitPrice'+col+'" name="unitPrice'+col+'" placeholder="'+'<?php echo $tr->translate("UNIT_PRICE");?>" type="text"  ></td>';	
 				template+='<td><input dojoType="dijit.form.NumberTextBox" readOnly required="true" class="fullside" id="total'+col+'" name="total'+col+'" placeholder="'+'<?php echo $tr->translate("TOTAL");?> " value="1" type="text"  ></td>';	
-				template+='<td><input dojoType="dijit.form.Textarea" class="fullside" id="note'+col+'" name="note'+col+'" placeholder="'+'<?php echo $tr->translate("NOTE");?> " value="" type="text"  ></td>';	
+			
+				templateii='';
+				templateii+='<td colspan="8" class="infoCol" data-label="<?php echo $tr->translate("NOTE");?>"><input dojoType="dijit.form.TextBox" class="fullside" id="note'+col+'" name="note'+col+'" placeholder="'+'<?php echo $tr->translate("NOTE");?> " value="" type="text"  ></td>';	
 				
 				tmp='<tr class="rowData" id="row'+col+'">';
+				tmp+="</tr>";
+				tmp+='<tr class="rowData" id="rowii'+col+'">';
 				tmp+="</tr>";
 				dojo.query("#table_row").append(tmp);
 				if($("#identity").val()!="") {
@@ -297,6 +301,9 @@ function addRecords(data){
 					$("#identity").val(identity+','+col);
 				} else {$("#identity").val(col);}
 				dojo.html.set(dojo.byId("row"+col),template , {
+					 parseContent: true,
+				});
+				dojo.html.set(dojo.byId("rowii"+col),templateii , {
 					 parseContent: true,
 				});
 				dijit.byId('strength'+col).attr('value','<?php echo $row['strength']?>');
