@@ -119,7 +119,7 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 		$to_date = new Zend_Dojo_Form_Element_DateTextBox('end_date');
 		$to_date->setAttribs(array(
 				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
-				'dojoType'=>'dijit.form.DateTextBox','required'=>'true','class'=>'fullside',
+				'dojoType'=>'dijit.form.DateTextBox','required'=>'false','class'=>'fullside',
 		));
 		$_date = $request->getParam("end_date");
 		

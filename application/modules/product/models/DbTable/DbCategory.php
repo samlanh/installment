@@ -34,9 +34,9 @@ class Product_Model_DbTable_DbCategory extends Zend_Db_Table_Abstract
     	
     	if(!empty($search['adv_search'])){
     		$s_where = array();
-    		$s_search = (trim($search['adv_search']));
+    		$s_search = addslashes((trim($search['adv_search'])));
     		$s_where[] = " c.categoryName LIKE '%{$s_search}%'";
-    		$where .=' AND ( '.implode(' OR ',$s_where).')';
+			$where .=' AND ( '.implode(' OR ',$s_where).')';
     	}
     	if($search['status']>-1){
     		$where.= " AND c.status = ".$search['status'];
@@ -49,50 +49,75 @@ class Product_Model_DbTable_DbCategory extends Zend_Db_Table_Abstract
     }
    
     function addCategory($data){
+		$db = $this->getAdapter();
+    	$db->beginTransaction();
     	try
     	{
-    		$db = new Application_Model_DbTable_DbGlobalStock();
-    		$result = $db->dataExisting($this->_name,"categoryName='".$data['categoryTitle']."'");
-    		
-    		if(empty($result)){
-	    		$arr = array(
-	    				'parentId'=>$data['parent_id'],
-	    				'categoryName'=>$data['categoryTitle'],
-						'isMaterial'=>$data['isMaterial'],
-	    				'note'=>$data['note'],
-	    				'createDate'=>date("Y-m-d"),
-	    				'status'=>1,
-	    				'userId'=>$this->getUserId(),
-	    			);
-	    		$this->insert($arr);
-    		}else{
-    			Application_Form_FrmMessage::Sucessfull("DATA_EXISTING", "/product/category/add",2);
-    		}
+			$data['categoryTitle'] = addslashes($data['categoryTitle']);
+			$existing = $this->ifCategoryExisting($data);
+			if(empty($existing)){
+				$arr = array(
+					'parentId'=>$data['parent_id'],
+					'categoryName'=>$data['categoryTitle'],
+					'isMaterial'=>$data['isMaterial'],
+					'note'=>$data['note'],
+					'createDate'=>date("Y-m-d"),
+					'status'=>1,
+					'userId'=>$this->getUserId(),
+				);
+				$this->insert($arr);
+				$db->commit();
+
+			}else{
+				Application_Form_FrmMessage::Sucessfull("DATA_EXISTING", "/product/category/add",2);
+
+			}
+		
     	}catch (Exception $e){
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$db->rollBack();
     		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL", "/product/category/add",2);
     	}
     }
     function updateCategory($data){
     	try
     	{
-    		$arr = array(
-    			'parentId'=>$data['parent_id'],
-				'isMaterial'=>$data['isMaterial'],
-    			'categoryName'=>$data['categoryTitle'],
-    			'note'=>$data['note'],
-    			'status'=>$data['status'],
-    			'userId'=>$this->getUserId(),
-    		);
-    		
-    		$where = 'id = '.$data['id'];
-			$this->update($arr, $where);
-			
+			$data['categoryTitle'] = addslashes($data['categoryTitle']);
+			$existing = $this->ifCategoryExisting($data);
+			if(empty($existing)){
+				$arr = array(
+					'parentId'=>$data['parent_id'],
+					'isMaterial'=>$data['isMaterial'],
+					'categoryName'=>$data['categoryTitle'],
+					'note'=>$data['note'],
+					'status'=>$data['status'],
+					'userId'=>$this->getUserId(),
+				);
+				
+				$where = 'id = '.$data['id'];
+				$this->update($arr, $where);
+
+			}else{
+				Application_Form_FrmMessage::Sucessfull("DATA_EXISTING", "/product/category/index",2);
+			}
+	
     	}catch (Exception $e){
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     		Application_Form_FrmMessage::Sucessfull("UPDATE_FAIL", "/product/category/index",2);
     	}
     }
+
+	function ifCategoryExisting($data){
+		
+    	$db = $this->getAdapter();
+    	$sql=" SELECT * FROM $this->_name WHERE categoryName='".$data['categoryTitle']."'";
+		if(!empty($data['id'])){
+			$sql.=" AND id !=".$data['id'];
+		}	
+    	return $db->fetchRow($sql);
+    }
+
+
     function getDataRow($recordId){
     	$db = $this->getAdapter();
     	$sql=" SELECT * FROM $this->_name WHERE id=".$recordId." LIMIT 1";
