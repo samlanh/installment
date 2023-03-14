@@ -42,7 +42,7 @@ class Product_Model_DbTable_DbProduct extends Zend_Db_Table_Abstract
     	
     	if(!empty($search['adv_search'])){
     		$s_where = array();
-    		$s_search = (trim($search['adv_search']));
+    		$s_search = addslashes((trim($search['adv_search'])));
     		$s_where[] = " P.proName LIKE '%{$s_search}%'";
     		$s_where[] = " P.proCode LIKE '%{$s_search}%'";
     		$s_where[] = " P.barCode LIKE '%{$s_search}%'";
@@ -186,7 +186,8 @@ class Product_Model_DbTable_DbProduct extends Zend_Db_Table_Abstract
 	function ifProductExisting($data){
 		
     	$db = $this->getAdapter();
-    	$sql=" SELECT * FROM $this->_name WHERE proName='".$data['productName']."'";
+		$proName = addslashes(trim($data['productName']));
+    	$sql=" SELECT * FROM $this->_name WHERE proName='".$proName."'";
 		if(!empty($data['id'])){
 			$sql.=" AND proId !=".$data['id'];
 		}	

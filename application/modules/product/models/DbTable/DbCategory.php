@@ -53,7 +53,6 @@ class Product_Model_DbTable_DbCategory extends Zend_Db_Table_Abstract
     	$db->beginTransaction();
     	try
     	{
-			$data['categoryTitle'] = addslashes($data['categoryTitle']);
 			$existing = $this->ifCategoryExisting($data);
 			if(empty($existing)){
 				$arr = array(
@@ -82,7 +81,6 @@ class Product_Model_DbTable_DbCategory extends Zend_Db_Table_Abstract
     function updateCategory($data){
     	try
     	{
-			$data['categoryTitle'] = addslashes($data['categoryTitle']);
 			$existing = $this->ifCategoryExisting($data);
 			if(empty($existing)){
 				$arr = array(
@@ -110,7 +108,8 @@ class Product_Model_DbTable_DbCategory extends Zend_Db_Table_Abstract
 	function ifCategoryExisting($data){
 		
     	$db = $this->getAdapter();
-    	$sql=" SELECT * FROM $this->_name WHERE categoryName='".$data['categoryTitle']."'";
+		$title = addslashes(trim($data['categoryTitle']));
+    	$sql=" SELECT * FROM $this->_name WHERE categoryName='".$title."'";
 		if(!empty($data['id'])){
 			$sql.=" AND id !=".$data['id'];
 		}	
