@@ -30,7 +30,7 @@ class Product_Model_DbTable_DbinitilizeQtybyProject extends Zend_Db_Table_Abstra
     	
     	if(!empty($search['adv_search'])){
     		$s_where = array();
-    		$s_search = (trim($search['adv_search']));
+    		$s_search = addslashes((trim($search['adv_search'])));
     		$s_where[] = " p.proName LIKE '%{$s_search}%'";
     		$s_where[] = " p.proCode LIKE '%{$s_search}%'";
     		$s_where[] = " p.barCode LIKE '%{$s_search}%'";
