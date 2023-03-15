@@ -29,7 +29,7 @@ class Application_Form_FrmAdvanceSearch extends Zend_Dojo_Form
 		
 		
 		$_status=  new Zend_Dojo_Form_Element_FilteringSelect('status');
-		$_status->setAttribs(array('dojoType'=>$this->filter,'class'=>'fullside'));
+		$_status->setAttribs(array('dojoType'=>$this->filter,'class'=>'fullside','required'=>false,));
 		$_status_opt = array(
 				-1=>$this->tr->translate("ALL"),
 				1=>$this->tr->translate("ACTIVE"),

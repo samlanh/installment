@@ -36,7 +36,6 @@ class Budget_Model_DbTable_DbbudgetItem extends Zend_Db_Table_Abstract
     	}
     	
     	$order=' ORDER BY bi.id DESC  ';
-    	echo $sql.$where_date.$order;
     	$db = $this->getAdapter();
     	return $db->fetchAll($sql.$where_date.$order);
     }

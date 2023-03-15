@@ -85,6 +85,7 @@ Class Product_Form_Frmproduct extends Zend_Dojo_Form {
 				'onchange'=>'getBudgetItem();'
 		));
 		$options = $db->getAllBudgetType(0,'','',1);
+		unset($options[-1]);
 		$budgetType->setMultiOptions($options);
 		
 		$budgetType->setValue($request->getParam('budgetType'));
@@ -215,10 +216,12 @@ Class Product_Form_Frmproduct extends Zend_Dojo_Form {
 	
 		$categoryId = new Zend_Dojo_Form_Element_FilteringSelect('categoryId');
 		$categoryId->setAttribs(array(
+			'placeholder'=>$tr->translate('SELECT_CATEGORY'),
 			'dojoType'=>$filter,
 			'class'=>'fullside',
 			'autoComplete'=>'false',
 			'queryExpr'=>'*${0}*',
+			'required'=>'false',
 		));
 		$options = $db->getAllCategoryProduct(0,'','',1);
 		unset($options[-1]);
@@ -227,10 +230,12 @@ Class Product_Form_Frmproduct extends Zend_Dojo_Form {
 		
 		$isService = new Zend_Dojo_Form_Element_FilteringSelect('isService');
 		$isService->setAttribs(array(
+			'placeholder'=>$tr->translate('SELECT_PRODUCT_TYPE'),
 			'dojoType'=>$filter,
 			'class'=>'fullside',
 			'autoComplete'=>'false',
 			'queryExpr'=>'*${0}*',
+			'required'=>'false',
 		));
 	
 		$optProduct = $db->initilizeProductType();
@@ -240,10 +245,12 @@ Class Product_Form_Frmproduct extends Zend_Dojo_Form {
 	
 		$cutStock = new Zend_Dojo_Form_Element_FilteringSelect('isCountStock');
 		$cutStock->setAttribs(array(
+			'placeholder'=>$tr->translate('SELECT_STOCK_TYPE'),
 			'dojoType'=>$filter,
 			'class'=>'fullside',
 			'autoComplete'=>'false',
 			'queryExpr'=>'*${0}*',
+			'required'=>'false',
 		));
 	
 		$optProduct = $db->initilizeStockType();
@@ -253,10 +260,12 @@ Class Product_Form_Frmproduct extends Zend_Dojo_Form {
 	
 		$measureId = new Zend_Dojo_Form_Element_FilteringSelect('measureId');
 		$measureId->setAttribs(array(
+			'placeholder'=>$tr->translate('MEASURE'),
 			'dojoType'=>'dijit.form.FilteringSelect',
 			'class'=>'fullside',
 			'autoComplete'=>'false',
 			'queryExpr'=>'*${0}*',
+			'required'=>'false',
 		));
 	
 		$dbp = new Product_Model_DbTable_DbMeasure();
@@ -267,10 +276,12 @@ Class Product_Form_Frmproduct extends Zend_Dojo_Form {
 	
 		$budgetItem = new Zend_Dojo_Form_Element_FilteringSelect('budgetItem');
 		$budgetItem->setAttribs(array(
+			'placeholder'=>$tr->translate('BUDGET_ITEM'),
 			'dojoType'=>'dijit.form.FilteringSelect',
 			'class'=>'fullside',
 			'autoComplete'=>'false',
 			'queryExpr'=>'*${0}*',
+			'required'=>'false',
 		));
 	
 		$options = $db->getAllBudgetItem(0,'', '',1);

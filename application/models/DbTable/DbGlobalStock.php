@@ -19,6 +19,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 			";
 		$sql.=" FROM `st_category` AS c  ";
 		$sql.=" WHERE c.status=1 AND c.parentId = $parent ";
+		$sql.=" ORDER BY c.id DESC ";
 		$query = $db->fetchAll($sql);
 		$rowCount = count($query);
 		$id='';

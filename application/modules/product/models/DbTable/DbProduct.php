@@ -50,14 +50,14 @@ class Product_Model_DbTable_DbProduct extends Zend_Db_Table_Abstract
     		$where .=' AND ( '.implode(' OR ',$s_where).')';
     	}
     	
-    	if($search['status']>-1){
+    	if($search['status']>-1 AND $search['status']!= ''){
     		$where.= " AND p.status = ".$search['status'];
     	}
     	
-    	if($search['isService']>-1){
+    	if($search['isService']>-1 AND $search['isService']!= ''){
     		$where.= " AND p.isService = ".$search['isService'];
     	}
-    	if($search['isCountStock']>-1){
+    	if($search['isCountStock']>-1 AND  $search['isCountStock']!= ''){
     		$where.= " AND p.isCountStock = ".$search['isCountStock'];
     	}
     	if($search['categoryId']>0){

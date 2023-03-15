@@ -40,7 +40,8 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 		
 		
 		$_status=  new Zend_Dojo_Form_Element_FilteringSelect('status');
-		$_status->setAttribs(array('dojoType'=>$this->filter,'class'=>'fullside'));
+		$_status->setAttribs(array('dojoType'=>$this->filter,'class'=>'fullside','required'=>'false',
+		'placeholder'=>$this->tr->translate('STATUS'),));
 		$_status_opt = array(
 				-1=>$this->tr->translate("ALL"),
 				1=>$this->tr->translate("ACTIVE"),
@@ -119,6 +120,7 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 		$to_date = new Zend_Dojo_Form_Element_DateTextBox('end_date');
 		$to_date->setAttribs(array(
 				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
+				'placeholder'=>$this->tr->translate('END_DATE'),
 				'dojoType'=>'dijit.form.DateTextBox','required'=>'false','class'=>'fullside',
 		));
 		$_date = $request->getParam("end_date");
