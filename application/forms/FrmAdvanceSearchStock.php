@@ -82,6 +82,7 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 		$branch_id = new Zend_Dojo_Form_Element_FilteringSelect('branch_id');
 		$branch_id->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
+				'placeholder'=>$this->tr->translate("SELECT_BRANCH"),
 				'class'=>'fullside',
 				'required' =>'false',
 				'autoComplete'=>'false',
@@ -131,7 +132,12 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 		$to_date->setValue($_date);
 		
 		$checkingStatus=  new Zend_Dojo_Form_Element_FilteringSelect('checkingStatus');
-		$checkingStatus->setAttribs(array('dojoType'=>$this->filter,'class'=>'fullside'));
+		$checkingStatus->setAttribs(array(
+			'placeholder'=>$this->tr->translate("CHECKING_STATUS"),
+			'required' =>'false',
+			'dojoType'=>$this->filter,
+			'class'=>'fullside'
+		));
 		$_opts = array(
 				0=>$this->tr->translate("CHECKING_STATUS"),
 				1=>$this->tr->translate("APPROVED"),
@@ -141,7 +147,12 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 		$checkingStatus->setValue($request->getParam("checkingStatus"));
 		
 		$pCheckingStatus=  new Zend_Dojo_Form_Element_FilteringSelect('pCheckingStatus');
-		$pCheckingStatus->setAttribs(array('dojoType'=>$this->filter,'class'=>'fullside'));
+		$pCheckingStatus->setAttribs(array(
+			'dojoType'=>$this->filter,
+			'placeholder'=>$this->tr->translate("PCHECKING_STATUS"),
+			'required' =>'false',
+			'class'=>'fullside'
+		));
 		$_opts = array(
 				0=>$this->tr->translate("PCHECKING_STATUS"),
 				1=>$this->tr->translate("APPROVED"),
@@ -151,7 +162,12 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 		$pCheckingStatus->setValue($request->getParam("pCheckingStatus"));
 		
 		$approveStatus=  new Zend_Dojo_Form_Element_FilteringSelect('approveStatus');
-		$approveStatus->setAttribs(array('dojoType'=>$this->filter,'class'=>'fullside'));
+		$approveStatus->setAttribs(array(
+			'dojoType'=>$this->filter,
+			'placeholder'=>$this->tr->translate("APPROVED_STATUS"),
+			'required' =>'false',
+			'class'=>'fullside'
+		));
 		$_opts = array(
 				0=>$this->tr->translate("APPROVED_STATUS"),
 				1=>$this->tr->translate("APPROVED"),
@@ -163,6 +179,7 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 		$processingStatus = new Zend_Dojo_Form_Element_FilteringSelect('processingStatus');
 		$processingStatus->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
+				'placeholder'=>$this->tr->translate("SELECT_PROCESSING"),
 				'class'=>'fullside',
 				'required' =>'false',
 				'autoComplete'=>'false',
@@ -295,7 +312,12 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 		$isPaidStatus->setValue($request->getParam("isPaidStatus"));
 		
 		$reqPOStatus=  new Zend_Dojo_Form_Element_FilteringSelect('reqPOStatus');
-		$reqPOStatus->setAttribs(array('dojoType'=>$this->filter,'class'=>'fullside'));
+		$reqPOStatus->setAttribs(array(
+			'dojoType'=>$this->filter,
+			'placeholder'=>$this->tr->translate("PO_STATUS"),
+			'required' =>'false',
+			'class'=>'fullside'
+		));
 		$reqPOStatusOpt = array(
 				-1=>$this->tr->translate("ALL"),
 				1=>$this->tr->translate("COMPLETED_PO"),

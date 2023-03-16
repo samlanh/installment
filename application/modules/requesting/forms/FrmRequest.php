@@ -183,7 +183,9 @@ class Requesting_Form_FrmRequest extends Zend_Dojo_Form
 		$categoryId = new Zend_Dojo_Form_Element_FilteringSelect('categoryId');
 		$categoryId->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
+				'placeholder'=>$this->tr->translate("SELECT_CATEGORY"),
 				'class'=>'fullside',
+				'required'=>'false',
 				'onchange'=>'getAllProduct();'
 		));
 		$rsCate = $dbGBStock->getAllCategoryProduct();

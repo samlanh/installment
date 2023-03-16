@@ -211,7 +211,9 @@
 		if(categoryId=='' || categoryId==0){
 			categoryId=0;
 		}
-		objectContentFilter = {'branch_id':branch_id,'categoryId':categoryId};
+		objectContentFilter = {
+		//	'branch_id':branch_id,
+			'categoryId':categoryId};
 		getAllProductStoreFunction(urlGetAllProduct,objectContentFilter);
 		
 	}
@@ -302,10 +304,13 @@
 			},		    
 			handleAs:"json",
 			load: function(data) {
+				var currentQty ='';
+				var measureTitle='N/A';
+				if(data.currentQty != undefined){currentQty=  data.currentQty; measureTitle= '('+data.measureTitle+')' ;}
 				template+='<td class="numberRecord"  align="center"><span title="<?php echo $tr->translate("REMOVE_RECORD");?>" class="removeRow" onclick="deleteRecord('+col+');"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></span></td>';
 				template+='<td class="numberRecord"  align="center" data-label="<?php echo $tr->translate("N_O");?>">'+no+'</td>';
-				template+='<td data-label="<?php echo $tr->translate("PRODUCT_NAME");?>"  class="productName" >'+data.proCode+'<br />'+data.proName+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId'+col+'" name="proId'+col+'" value="'+data.id+'" type="text"  ></td>';	
-				template+='<td data-label="<?php echo $tr->translate("STOCK_REMAIN");?>"  class="currentQty">'+data.currentQty+' ('+data.measureTitle+')</td>';	
+				template+='<td data-label="<?php echo $tr->translate("PRODUCT_NAME");?>"  class="productName" >'+productLabel+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId'+col+'" name="proId'+col+'" value="'+productId+'" type="text"  ></td>';	
+				template+='<td data-label="<?php echo $tr->translate("STOCK_REMAIN");?>"  class="currentQty">'+currentQty+' '+measureTitle+'</td>';	
 				template+='<td data-label="<?php echo $tr->translate("QTY_REQUEST");?>" ><input required dojoType="dijit.form.NumberTextBox" data-dojo-props="constraints:{min:0.01},rangeMessage:'+"'<?php echo $tr->translate("MINIMUM_VALUE_IS_ZEROONE");?>'"+'" class="fullside" id="qtyRequest'+col+'" name="qtyRequest'+col+'" placeholder="'+'<?php echo $tr->translate("QTY_REQUEST");?> " value="1" type="text"  ></td>';	
 				template+='<td data-label="<?php echo $tr->translate("DATE_ENTRY");?>" ><input required dojoType="dijit.form.DateTextBox" class="fullside" constraints="{datePattern:'+"'dd/MM/yyyy'"+'}" id="dateReqStockIn'+col+'" name="dateReqStockIn'+col+'" placeholder="'+'<?php echo $tr->translate("DATE_ENTRY");?> " value="now" type="text"  ></td>';	
 				template+='<td data-label="<?php echo $tr->translate("NOTE");?>" ><input dojoType="dijit.form.TextBox" class="fullside" id="note'+col+'" name="note'+col+'" placeholder="'+'<?php echo $tr->translate("NOTE");?> " value="" type="text"  ></td>';	
@@ -352,7 +357,7 @@
 		
 		template+='<td class="numberRecord"  align="center"><span title="<?php echo $tr->translate("REMOVE_RECORD");?>" class="removeRow" onclick="deleteRecord('+col+');"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></span></td>';
 		template+='<td class="numberRecord"  align="center" data-label="<?php echo $tr->translate("N_O");?>">'+no+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="detailId'+col+'" name="detailId'+col+'" value="<?php echo $rs['id'];?>" type="text"  ></td>';
-		template+='<td data-label="<?php echo $tr->translate("PRODUCT_NAME");?>"  class="productName" >'+proCodeString+'<br />'+productNameString+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId'+col+'" name="proId'+col+'" value="<?php echo $rs['proId'];?>" type="text"  ></td>';	
+		template+='<td data-label="<?php echo $tr->translate("PRODUCT_NAME");?>"  class="productName" >'+proCodeString+' '+productNameString+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId'+col+'" name="proId'+col+'" value="<?php echo $rs['proId'];?>" type="text"  ></td>';	
 		template+='<td data-label="<?php echo $tr->translate("STOCK_REMAIN");?>"  class="currentQty" ><?php echo $rs['currentQty'];?> ('+measureTitleString+')</td>';	
 		template+='<td data-label="<?php echo $tr->translate("QTY_REQUEST");?>" ><input required dojoType="dijit.form.NumberTextBox" data-dojo-props="constraints:{min:0.01},rangeMessage:'+"'<?php echo $tr->translate("MINIMUM_VALUE_IS_ZEROONE");?>'"+'" class="fullside" id="qtyRequest'+col+'" name="qtyRequest'+col+'" placeholder="'+'<?php echo $tr->translate("QTY_REQUEST");?> " value="<?php echo $rs['qtyRequest'];?>" type="text"  ></td>';	
 		template+='<td data-label="<?php echo $tr->translate("DATE_ENTRY");?>" ><input required dojoType="dijit.form.DateTextBox" class="fullside" constraints="{datePattern:'+"'dd/MM/yyyy'"+'}" id="dateReqStockIn'+col+'" name="dateReqStockIn'+col+'" placeholder="'+'<?php echo $tr->translate("DATE_ENTRY");?> " value="<?php echo date("Y-m-d",strtotime($rs['dateReqStockIn']));?>" type="text"  ></td>';	

@@ -85,7 +85,7 @@ class Requesting_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 		if(!empty($search['approveStatus'])){
     		$where.= " AND rq.approveStatus = ".$search['approveStatus'];
     	}
-		if($search['status']>-1){
+		if($search['status']>-1 AND $search['status']!=''){
     		$where.= " AND rq.status = ".$search['status'];
     	}
     	if(($search['branch_id'])>0){
@@ -94,7 +94,7 @@ class Requesting_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 		if(!empty($search['processingStatus'])){
     		$where.= " AND rq.processingStatus = ".$search['processingStatus'];
     	}
-		if(($search['reqPOStatus'])>-1){
+		if(($search['reqPOStatus'])>-1 AND $search['reqPOStatus']!=''){
     		$where.= " AND (SELECT rqd.isCompletedPO FROM `st_request_po_detail` AS rqd WHERE rqd.requestId =rq.id AND rqd.approvedStatus=1 ORDER BY rqd.isCompletedPO ASC LIMIT 1 )= ".$search['reqPOStatus'];
     	}
 		$where.=$dbGb->getAccessPermission("rq.projectId");
@@ -330,30 +330,60 @@ class Requesting_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 		$_row =$this->getRequestPOInfoById($data);
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		$baseUrl = Zend_Controller_Front::getInstance()->getBaseUrl();
-		
-		
+	
 		$string="";
+		$checkingstring="";
+		$verifystring="";
+		$popose="";
 		if(!empty($_row)){
 			$urlInfo = $baseUrl."/report/stockmg/request-info/id/".$_row['id'];
+			if($_row['checkingStatus']>0){
+				$checkingstring.='
+					<div class="col-md-12 col-sm-12 col-xs-12">
+								<span class="noteInfo"><i class="fa fa-file-text-o" aria-hidden="true"></i> '.$tr->translate("CHECKING_INFO").'</span>
+					</div>
+					<ul>
+						<li title="'.$tr->translate("CHECKING_STATUS").'"><span class="lbl-tt">'.$tr->translate("CHECKING_STATUS").'</span>: <span class="colorValue">'.$_row['checkingStatusTitle'].'</span></li>
+						<li title="'.$tr->translate("CHECKING_DATE").'"><span class="lbl-tt">'.$tr->translate("CHECKING_DATE").'</span>: <span class="colorValue">'.$_row['checkingDate'].'</span></li>
+						<li title="'.$tr->translate("CHECKING_BY").'"><span class="lbl-tt">'.$tr->translate("CHECKING_BY").'</span>: <span class="colorValue">'.$_row['checkingByName'].'</span></li>
+					</ul>
+				';
+			}
+			if($_row['pCheckingStatus']>0){
+				$verifystring.='
+					<div class="col-md-12 col-sm-12 col-xs-12">
+						<span class="noteInfo"><i class="fa fa-file-text-o" aria-hidden="true"></i> '.$tr->translate("VIEW_INFO").'</span>
+					</div>
+					<ul>
+						<li title="'.$tr->translate("PCHECKING_STATUS").'"><span class="lbl-tt">'.$tr->translate("PCHECKING_STATUS").'</span>: <span class="colorValue">'.$_row['pCheckingStatusTitle'].'</span></li>
+						<li title="'.$tr->translate("PCHECKING_DATE").'"><span class="lbl-tt">'.$tr->translate("PCHECKING_DATE").'</span>: <span class="colorValue">'.$_row['pCheckingDate'].'</span></li>
+						<li title="'.$tr->translate("PCHECKING_BY").'"><span class="lbl-tt">'.$tr->translate("PCHECKING_BY").'</span>: <span class="colorValue">'.$_row['pCheckingByName'].'</span></li>
+					</ul>
+				';
+				$popose.='
+						<li title="'.$tr->translate("PURPOSE").'"><span class="lbl-tt"><i class="fa fa-hand-o-right" aria-hidden="true"></i>  '.$tr->translate("PURPOSE").'</span>: <span class="colorValue">'.$_row['purpose'].'</span></li>
+						<li title="'.$tr->translate("NOTE").'"><span class="lbl-tt"><i class="fa fa-sticky-note" aria-hidden="true"></i>   '.$tr->translate("NOTE").'</span>: <span class="colorValue">'.$_row['note'].'</span></li>
+				';
+			}
 			$string.='
 				<div class="form-group" style=" padding: 10px; ">
-					<div class="col-md-12 col-sm-12 col-xs-12">
-						<span class="noteInfo"><i class="fa fa-file-text-o" aria-hidden="true"></i> '.$tr->translate("REQUEST_INFO").'</span>
-					</div>
+					
 					<div class="col-md-6 col-sm-6 col-xs-12">
+						<div class="col-md-12 col-sm-12 col-xs-12">
+							<span class="noteInfo"><i class="fa fa-file-text-o" aria-hidden="true"></i> '.$tr->translate("REQUEST_INFO").'</span>
+						</div>
 						<ul>
 							<li title="'.$tr->translate("BRANCH_NAME").'"><span class="lbl-tt"><i class="fa fa-map-marker" aria-hidden="true"></i> '.$tr->translate("BRANCH_NAME").'</span>: <span class="colorValue">'.$_row['branch_name'].'</span></li>
 							<li title="'.$tr->translate("REQUEST_NO").'"><span class="lbl-tt"><i class="fa fa-list-alt" aria-hidden="true"></i> '.$tr->translate("REQUEST_NO").'</span>: <span class="colorValue"><a title="'.$tr->translate("REQUEST_INFO_DETAIL").' - '.$_row['requestNo'].'" target="_blank" href="'.$urlInfo.'">'.$_row['requestNo'].'<a></span></li>
 							<li title="'.$tr->translate("REQUEST_NO_FROM").'"><span class="lbl-tt"><i class="fa fa-file-text-o" aria-hidden="true"></i> '.$tr->translate("REQUEST_NO_FROM").'</span>: <span class="colorValue">'.$_row['requestNoLetter'].'</span></li>
 							<li title="'.$tr->translate("REQUEST_DATE").'"><span class="lbl-tt"><i class="fa fa-calendar" aria-hidden="true"></i></span>: <span class="colorValue">'.date(DATE_FORMAT_FOR_PHP,strtotime($_row['date'])).'</span></li>
 							<li title="'.$tr->translate("REQUEST_BY").'"><span class="lbl-tt"><i class="fa fa-user" aria-hidden="true"></i></span>: <span class="colorValue">'.$_row['requestByname'].'</span></li>
+							'.$popose.'
 						</ul>
 					</div>
 					<div class="col-md-6 col-sm-6 col-xs-12">
-						<ul>
-							<li title="'.$tr->translate("PURPOSE").'"><span class="lbl-tt">'.$tr->translate("PURPOSE").'</span>: <span class="colorValue">'.$_row['purpose'].'</span></li>
-							<li title="'.$tr->translate("NOTE").'"><span class="lbl-tt">'.$tr->translate("NOTE").'</span>: <span class="colorValue">'.$_row['note'].'</span></li>
-						</ul>
+						'.$checkingstring.'
+						'.$verifystring.'
 					</div>
 					<div class="clearfix"></div>
 				</div>

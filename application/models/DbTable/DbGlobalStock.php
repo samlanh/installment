@@ -137,10 +137,10 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		}
 		
 		$sql.=" FROM 
-					`st_product` AS p ";
+					`st_product` AS p JOIN st_product_location AS l ON p.proId=l.proId ";
 			
 		if(!empty($projectId)){
-			$sql.=" JOIN st_product_location AS l ON p.proId=l.proId AND l.projectId=".$projectId;
+			$sql.="  AND l.projectId=".$projectId;
 			///$sql.=" AND l.projectId=".$projectId;
 			$sql.=" WHERE p.status=1 ";
 				
