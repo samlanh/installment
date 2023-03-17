@@ -43,14 +43,14 @@ class Po_Model_DbTable_DbDirectPO extends Zend_Db_Table_Abstract
     	
     	if(!empty($search['adv_search'])){
     		$s_where = array();
-    		$s_search = (trim($search['adv_search']));
+    		$s_search = addslashes((trim($search['adv_search'])));
     		$s_where[] = " po.purchaseNo LIKE '%{$s_search}%'";
     		$s_where[] = " spp.supplierName LIKE '%{$s_search}%'";
     		$s_where[] = " po.purpose LIKE '%{$s_search}%'";
     		$s_where[] = " po.total LIKE '%{$s_search}%'";
     		$where .=' AND ( '.implode(' OR ',$s_where).')';
     	}
-    	if($search['status']>-1){
+    	if($search['status']>-1 AND $search['status']!= ''){
     		$where.= " AND po.status = ".$search['status'];
     	}
     	if(($search['branch_id'])>0){

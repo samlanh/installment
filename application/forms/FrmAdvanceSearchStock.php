@@ -197,6 +197,7 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 		$supplierId = new Zend_Dojo_Form_Element_FilteringSelect('supplierId');
 		$supplierId->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
+				'placeholder'=>$this->tr->translate("SELECT_SUPPLIER"),
 				'class'=>'fullside',
 				'required' =>'false',
 				'autoComplete'=>'false',

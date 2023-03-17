@@ -22,6 +22,7 @@ Class Po_Form_FrmPurchase extends Zend_Dojo_Form {
 		$branch_id = new Zend_Dojo_Form_Element_FilteringSelect('branch_id');
 		$branch_id->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
+				'placeholder'=>$tr->translate("SELECT_BRANCH"),
 				'class'=>'fullside',
 				'required' =>'false',
 				'autoComplete'=>'false',
@@ -57,6 +58,8 @@ Class Po_Form_FrmPurchase extends Zend_Dojo_Form {
 		$date = new Zend_Dojo_Form_Element_DateTextBox('date');
  		$date->setAttribs(array(
  			'dojoType'=>'dijit.form.DateTextBox',
+			'placeholder'=>$tr->translate("DATE"),
+			'required'=>'true',
  			'class'=>'fullside',
  			'constraints'=>"{datePattern:'dd/MM/yyyy'}"
  		));
@@ -70,6 +73,7 @@ Class Po_Form_FrmPurchase extends Zend_Dojo_Form {
 		$supplierId = new Zend_Dojo_Form_Element_FilteringSelect('supplierId');
 		$supplierId->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
+				'placeholder'=>$tr->translate("SELECT_SUPPLIER"),
 				'class'=>'fullside',
 				'onchange'=>'addNewSupplier();'
 		));
@@ -117,6 +121,7 @@ Class Po_Form_FrmPurchase extends Zend_Dojo_Form {
     	$_status->setMultiOptions($_arr);
     	$_status->setAttribs(array(
     			'dojoType'=>'dijit.form.FilteringSelect',
+				'placeholder'=>$tr->translate("STATUS"),
     			'required'=>'true',
     			'missingMessage'=>'Invalid Module!',
     			'class'=>'fullside height-text',));

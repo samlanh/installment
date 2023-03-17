@@ -52,6 +52,8 @@ class Requesting_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 		);
 		$sql.= $dbGbSt->requestingProccess($arrStep);
 		$sql.=" ,(SELECT CASE
+					WHEN COALESCE((SELECT sp.id FROM `st_purchasing` AS sp WHERE  sp.status = 1 AND sp.requestId =rqd.requestId LIMIT 1),0) = 0 
+					THEN '".$tr->translate("NOT_YET_PO")."'
 					WHEN  rqd.isCompletedPO = 1 THEN '".$tr->translate("COMPLETED_PO")."'
 					ELSE   '".$tr->translate("UPCOMPLETED_PO")."'
 					END 
