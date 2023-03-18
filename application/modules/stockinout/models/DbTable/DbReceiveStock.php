@@ -44,10 +44,10 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
     		
     		$where .=' AND ( '.implode(' OR ',$s_where).')';
     	}
-    	if($search['status']>-1){
+    	if($search['status']>-1 AND $search['status']!=''){
     		$where.= " AND r.status = ".$search['status'];
     	}
-    	if($search['verifyStatus']>-1){
+    	if($search['verifyStatus']>-1 AND $search['verifyStatus']!=''){
     		$where.= " AND r.isIssueInvoice = ".$search['verifyStatus'];
     	}
     	if($search['branch_id']>0){

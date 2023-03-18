@@ -56,6 +56,7 @@ Class Stockinout_Form_FrmReceiveStock extends Zend_Dojo_Form {
 		$dnTitle = new Zend_Dojo_Form_Element_TextBox('dnTitle');
 		$dnTitle->setAttribs(array(
 			'dojoType'=>$this->tvalidate,
+			'placeholder'=>$this->tr->translate("DNORIV_NO"),
 			'required'=>'true',
 			'class'=>'fullside',
 			));
@@ -79,17 +80,33 @@ Class Stockinout_Form_FrmReceiveStock extends Zend_Dojo_Form {
 		
 		
 		$counter = new Zend_Dojo_Form_Element_TextBox('counter');
-		$counter->setAttribs(array('dojoType'=>$this->tvalidate,'class'=>'fullside',));
+		$counter->setAttribs(array(
+			'dojoType'=>$this->tvalidate,
+			'placeholder'=>$this->tr->translate("COUNTER"),
+			'class'=>'fullside',
+		));
 
 		
 		$driver = new Zend_Dojo_Form_Element_TextBox('driver');
-		$driver->setAttribs(array('dojoType'=>$this->text,'class'=>'fullside',));
+		$driver->setAttribs(array(
+			'dojoType'=>$this->text,
+			'placeholder'=>$this->tr->translate("DELIVER"),
+			'class'=>'fullside',
+		));
 		
 		$truckNumber = new Zend_Dojo_Form_Element_TextBox('truckNumber');
-		$truckNumber->setAttribs(array('dojoType'=>$this->text,'class'=>'fullside',));
+		$truckNumber->setAttribs(array(
+			'dojoType'=>$this->text,
+			'placeholder'=>$this->tr->translate("TRUCK_NUMBER"),
+			'class'=>'fullside',
+		));
 		
 		$_status=  new Zend_Dojo_Form_Element_FilteringSelect('status');
-		$_status->setAttribs(array('dojoType'=>$this->filter,'class'=>'fullside',));
+		$_status->setAttribs(array(
+			'dojoType'=>$this->filter,
+			'placeholder'=>$this->tr->translate("STATUS"),
+			'class'=>'fullside',
+		));
 		$_status_opt = array(
 				1=>$this->tr->translate("ACTIVE"),
 				0=>$this->tr->translate("DEACTIVE"));
