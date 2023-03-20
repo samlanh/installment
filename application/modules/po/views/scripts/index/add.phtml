@@ -83,7 +83,7 @@
 									 </div>  
 									 
 									 <div class="form-group">
-										<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("DATE");?> </label>
+										<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("PO_DATE");?> </label>
 										<div class="col-md-7 col-sm-7 col-xs-12">
 											<?php echo $frm->getElement("date");?>
 										</div>
@@ -371,6 +371,7 @@
 			infoMessageAlert('<?php echo $tr->translate('PLEASE_SELECT_REQUEST_NO');?>');
 			dijit.byId('requestId').focus();
 			return false;
+			no=0;
 		}
 		productId = dijit.byId('productId').get('value');
 		productLabel = dijit.byId('productId').attr('displayedValue');
@@ -411,7 +412,7 @@
 				template+='<td  data-label="<?php echo $tr->translate("STOCK_REMAIN");?>" class="currentQty infoCol"  >'+data.currentQty+' ('+data.measureTitle+')</td>';	
 				template+='<td  data-label="<?php echo $tr->translate("QTY_APPROVED");?>" class="currentQty infoCol"  >'+data.qtyApproved+'<small><?php echo $tr->translate("QTY_REMAIN");?> : '+data.qtyApprovedAfter+'</small><input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="qtyApprovedAfter'+col+'" name="qtyApprovedAfter'+col+'" value="'+data.qtyApprovedAfter+'" type="text"  ></td>';	
 				template+='<td  data-label="<?php echo $tr->translate("QTY");?>" ><input required dojoType="dijit.form.NumberTextBox" class="fullside" data-dojo-props="constraints:{min:0.01,max:'+data.qtyApprovedAfter+'},rangeMessage:'+"'<?php echo $tr->translate("MINIMUM_VALUE_IS_ZEROONE_AND_MAX_VALUE_IS");?> "+data.qtyApprovedAfter+"'"+'"  onKeyup="checkingQtyPO('+col+'); calculateTotal('+col+');" id="qty'+col+'" name="qty'+col+'" placeholder="'+'<?php echo $tr->translate("QTY");?>" value="'+data.qtyApprovedAfter+'" type="text"  ></td>';	
-				template+='<td data-label="<?php echo $tr->translate("UNIT_PRICE");?>"><input required dojoType="dijit.form.NumberTextBox" class="fullside" data-dojo-props="constraints:{min:0.01},rangeMessage:'+"'<?php echo $tr->translate("MINIMUM_VALUE_IS_ZEROONE");?>'"+'"  onKeyup="calculateTotal('+col+');" id="unitPrice'+col+'" name="unitPrice'+col+'" placeholder="'+'<?php echo $tr->translate("UNIT_PRICE");?> " value="'+lastUnitPrice+'" type="text"  ></td>';	
+				template+='<td data-label="<?php echo $tr->translate("UNIT_PRICE");?>"><input required dojoType="dijit.form.NumberTextBox" class="fullside" data-dojo-props="constraints:{min:0.01},rangeMessage:'+"'<?php echo $tr->translate("MINIMUM_VALUE_IS_ZEROONE");?>'"+'"  onKeyup="calculateTotal('+col+');" id="unitPrice'+col+'" name="unitPrice'+col+'" placeholder="'+'<?php echo $tr->translate("UNIT_PRICE");?> "  type="text"  ></td>';	
 				
 				
 				template+='<td data-label="<?php echo $tr->translate("DISCOUNT_PERCENT");?>">';	

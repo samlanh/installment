@@ -61,6 +61,7 @@ Class Po_Form_FrmPurchase extends Zend_Dojo_Form {
 			'placeholder'=>$tr->translate("DATE"),
 			'required'=>'true',
  			'class'=>'fullside',
+			'readOnly'=>'readOnly ',
  			'constraints'=>"{datePattern:'dd/MM/yyyy'}"
  		));
 		if($userLevel!=1){ // NOt Admin
@@ -141,6 +142,7 @@ Class Po_Form_FrmPurchase extends Zend_Dojo_Form {
 		$categoryId = new Zend_Dojo_Form_Element_FilteringSelect('categoryId');
 		$categoryId->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
+				'placeholder'=>$tr->translate("SELECT_CATEGORY"),
 				'class'=>'fullside',
 				'onchange'=>'getAllProduct();'
 		));

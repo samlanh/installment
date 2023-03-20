@@ -29,7 +29,12 @@ class Application_Form_FrmAdvanceSearch extends Zend_Dojo_Form
 		
 		
 		$_status=  new Zend_Dojo_Form_Element_FilteringSelect('status');
-		$_status->setAttribs(array('dojoType'=>$this->filter,'class'=>'fullside','required'=>false,));
+		$_status->setAttribs(array(
+			'dojoType'=>$this->filter,
+			'placeholder'=>$this->tr->translate('STATUS'),
+			'class'=>'fullside',
+			'required'=>'false',
+		));
 		$_status_opt = array(
 				-1=>$this->tr->translate("ALL"),
 				1=>$this->tr->translate("ACTIVE"),
@@ -66,6 +71,7 @@ class Application_Form_FrmAdvanceSearch extends Zend_Dojo_Form
 		$branch_id = new Zend_Dojo_Form_Element_FilteringSelect('branch_id');
 		$branch_id->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
+				'placeholder'=>$this->tr->translate('SELECT_BRANCH'),
 				'class'=>'fullside',
 				'required' =>'false',
 				'autoComplete'=>'false',
@@ -129,7 +135,10 @@ class Application_Form_FrmAdvanceSearch extends Zend_Dojo_Form
 		$to_date = new Zend_Dojo_Form_Element_DateTextBox('end_date');
 		$to_date->setAttribs(array(
 				'constraints'=>"{datePattern:'dd/MM/yyyy'}",
-				'dojoType'=>'dijit.form.DateTextBox','required'=>'true','class'=>'fullside',
+				'placeholder'=>$this->tr->translate('END_DATE'),
+				'dojoType'=>'dijit.form.DateTextBox',
+				'required'=>'false',
+				'class'=>'fullside',
 		));
 		$_date = $request->getParam("end_date");
 		

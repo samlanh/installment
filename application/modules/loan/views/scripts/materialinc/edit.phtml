@@ -1,6 +1,12 @@
 <?php
 $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 $frm = $this->frm_income;
+
+$db_user=new Application_Model_DbTable_DbUsers();
+$session_user=new Zend_Session_Namespace(SYSTEM_SES);
+$user_id = $session_user->user_id;		
+$user_info = $db_user->getUserInfo($user_id);
+$userType = $user_info['user_type'];
 ?>
 <title><?php echo $tr->translate("EDIT_MATERIAL_INCLUDEE");?></title>
 <style>	
@@ -361,12 +367,12 @@ function initialize(){
 	template+='<td data-label="<?php echo $tr->translate("DEL");?>" align="center"><?php if($row['is_gived']!=1){?><span title="<?php echo $tr->translate("REMOVE_RECORD");?>" class="removeRow" onclick="deleteRecords('+col+');calculateTotal('+col+');"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></span><?php }?></td>';
 	template+='<td data-label="<?php echo $tr->translate("NUM");?>" align="center">'+noo+'<input dojoType="dijit.form.TextBox" class="fullside" required="required" id="detailid'+col+'" name="detailid'+col+'" value="" type="hidden" ></td>';
 	template+='<td data-label="<?php echo $tr->translate("ITEMS");?>" ><?php echo $row['itmesTitle'];?><input dojoType="dijit.form.TextBox" class="fullside" required="required" id="items_id'+col+'" name="items_id'+col+'" value="" type="hidden" ></td>';	
-	template+='<td data-label="<?php echo $tr->translate("DESCRIPTION");?>"><input type="text" name="description_'+col+'" id="description_'+col+'" dojoType="dijit.form.Textarea" placeholder="<?php echo $tr->translate("NOTE");?>" class="fullside" /></td>';
+	template+='<td data-label="<?php echo $tr->translate("DESCRIPTION");?>"><input type="text" name="description_'+col+'" id="description_'+col+'" dojoType="dijit.form.Textarea" placeholder="<?php echo $tr->translate("NOTE");?>" class="fullside" /> </td>';
 	
 	template+='<td data-label="<?php echo $tr->translate("STATUS");?>">';
 	template+='<label class="control-label custom-switch ">';
 		template+='<a href="javascript:void(0);" class="switchButton "><?php echo $tr->translate("GIVED_TO_CUSTOMER");?></a>'; 
-		template+='<input <?php if($row['is_gived']==1){ echo "checked";}?> type="checkbox" id="is_gived_'+col+'" name="is_gived_'+col+'" class="custom-switch-input" > ';
+		template+='<input <?php if($row['is_gived']==1 ){ ?> checked="checked" <?php } if($userType!=1 AND $row['is_gived']==1 ){ ?>  onclick="return false" <?php }?> type="checkbox" id="is_gived_'+col+'" name="is_gived_'+col+'" class="custom-switch-input"  > ';
 		template+='<span class="custom-switch-indicator custom-radius "></span>'; 
 	template+='</label>';
 	template+='</td>';

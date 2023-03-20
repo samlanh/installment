@@ -33,7 +33,7 @@ class Stockinout_Model_DbTable_DbStockout extends Zend_Db_Table_Abstract
     	
     	if(!empty($search['adv_search'])){
     		$s_where = array();
-    		$s_search = (trim($search['adv_search']));
+    		$s_search = addslashes((trim($search['adv_search'])));
     		$s_where[] = " so.requestNo LIKE '%{$s_search}%'";
     		$s_where[] = " so.reqOutNo LIKE '%{$s_search}%'";
     		$s_where[] = " so.workerName LIKE '%{$s_search}%'";
@@ -42,7 +42,7 @@ class Stockinout_Model_DbTable_DbStockout extends Zend_Db_Table_Abstract
     		
     		$where .=' AND ( '.implode(' OR ',$s_where).')';
     	}
-    	if($search['branch_id']>-1){
+    	if($search['branch_id']>-1 AND $search['branch_id'] != ''){
     		$where.= " AND so.projectId = ".$search['branch_id'];
     	}
     	if($search['workType']>0){
@@ -57,7 +57,7 @@ class Stockinout_Model_DbTable_DbStockout extends Zend_Db_Table_Abstract
     	if($search['staffWithdraw']>0){
     		$where.= " AND so.staffId = ".$search['staffWithdraw'];
     	}
-    	if($search['status']>-1){
+    	if($search['status']>-1 AND $search['status'] != ''){
     		$where.= " AND so.status = ".$search['status'];
     	}
     	$dbg = new Application_Model_DbTable_DbGlobal();

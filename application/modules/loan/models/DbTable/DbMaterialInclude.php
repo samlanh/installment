@@ -147,7 +147,8 @@ class Loan_Model_DbTable_DbMaterialInclude extends Zend_Db_Table_Abstract
 					WHEN  is_gived = 0 THEN '".$notYerGiveLabel."'
 					WHEN  is_gived = 1 THEN '".$givedLabel."'
 				END AS isGiveLabel,
-			(SELECT title FROM `ln_items_material` WHERE ln_items_material.id =items_id LIMIT 1) AS itmesTitle
+			(SELECT title FROM `ln_items_material` WHERE ln_items_material.id =items_id LIMIT 1) AS itmesTitle,
+			(SELECT user_type FROM `rms_users` WHERE id = (SELECT user_id FROM `ln_material_include` WHERE id = materailinc_id LIMIT 1)) AS UserType
 		FROM ln_material_include_detail WHERE materailinc_id=".$id;
 		return $db->fetchAll($sql);
 	}
