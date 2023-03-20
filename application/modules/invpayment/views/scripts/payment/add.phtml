@@ -1,148 +1,175 @@
-<?php 
-     $this->tr=Application_Form_FrmLanguages::getCurrentlanguage();
-     $tr = Application_Form_FrmLanguages::getCurrentlanguage();
-     $frm = $this->frm;
+<?php
+$this->tr = Application_Form_FrmLanguages::getCurrentlanguage();
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+$frm = $this->frm;
 ?>
-<script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
-<title><?php echo $this->tr->translate("ISSUE_PAYMENT")?></title>
- <div class="card">
+<script src="<?php echo $this->baseUrl(); ?>/js/help.js"></script>
+<title>
+	<?php echo $this->tr->translate("ISSUE_PAYMENT") ?>
+</title>
+<div class="card">
 	<div class="card-content collapse show">
 		<div class="card-box">
-               	<div class="col-sm-12 border-botom">
-		    		<div class="col-sm-8 pd-0">
-		    			<h4 class="m-b-0"><i class="fa fa-money" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('ISSUE_PAYMENT');?></h4>
-    			</div>
-    			<div class="col-sm-4 text-right">
-    			</div>
-    		</div>
-    	</div>
-    	<form action="" dojoType="dijit.form.Form" method="post" enctype="multipart/form-data">
-			<script type="dojo/method" event="onSubmit">   
-	  			 if(this.validate()) {
+			<div class="col-sm-12 border-botom">
+				<div class="col-sm-8 pd-0">
+					<h4 class="m-b-0"><i class="fa fa-money" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;
+						<?php echo $tr->translate('ISSUE_PAYMENT'); ?>
+					</h4>
+				</div>
+				<div class="col-sm-4 text-right">
+				</div>
+			</div>
+		</div>
+		<form action="" dojoType="dijit.form.Form" method="post" enctype="multipart/form-data">
+			<script type="dojo/method" event="onSubmit">
+				   if(this.validate()) {
 					branch_id = dijit.byId('branch_id').get('value');
 					if(branch_id=='' || branch_id<=0){
-						infoMessageAlert('<?php echo $tr->translate('PLEASE_SELECT_BRANCH');?>');
+						infoMessageAlert('<?php echo $tr->translate('PLEASE_SELECT_BRANCH'); ?>');
 						dijit.byId('branch_id').focus();
 						return false;
 					}
 					
 					supplierId = dijit.byId('supplierId').get('value');
 					if(supplierId=='' || supplierId<=0){
-						infoMessageAlert('<?php echo $tr->translate('PLEASE_SELECT_SUPPLIER');?>');
+						infoMessageAlert('<?php echo $tr->translate('PLEASE_SELECT_SUPPLIER'); ?>');
 						dijit.byId('supplierId').focus();
 						return false;
 					}
 					var rowId = $('#identity').val();
 					if(rowId==''){ 
-						infoMessageAlert("<?php echo $tr->translate("PLEASE_ADD_RECORD");?>");
+						infoMessageAlert("<?php echo $tr->translate("PLEASE_ADD_RECORD"); ?>");
 						return false;
 					}
 					totalAmountCh = dijit.byId('totalAmount').get('value');
 					if(totalAmountCh<=0){
-						infoMessageAlert('<?php echo $tr->translate('PLEASE_ENTER_AMOUNT');?>');
+						infoMessageAlert('<?php echo $tr->translate('PLEASE_ENTER_AMOUNT'); ?>');
 						dijit.byId('totalAmount').focus();
 						return false;
 					}
 					loadingBlock();
 					return true;
-	  			 }else {
+				   }else {
 					return false;
-	   			}
+				   }
 			</script>
 			<div class="card-box">
 				<div class="col-md-6 col-sm-6 col-xs-12">
 					<div class="card-blogform">
-						<div class="card-body"> 
-							<div class="row"> 
-								<div class="col-md-12 col-sm-12 col-xs-12"> 
-									<div class="d-flex"> 
+						<div class="card-body">
+							<div class="row">
+								<div class="col-md-12 col-sm-12 col-xs-12">
+									<div class="d-flex">
 										<div class="settings-main-icon ">
 											<i class="glyphicon glyphicon-user" aria-hidden="true"></i>
-										</div> 
-										<div class="col-md-10 col-sm-10 col-xs-12"> 
-											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("SUPPLIER_INFO");?></p>
-										</div> 
+										</div>
+										<div class="col-md-10 col-sm-10 col-xs-12">
+											<p class="tx-20 font-weight-semibold d-flex ">
+												<?php echo $tr->translate("SUPPLIER_INFO"); ?>
+											</p>
+										</div>
 									</div>
-									 <div class="form-group">
-										<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("BRANCH_NAME");?> </label>
+									<div class="form-group">
+										<label class="control-label bold col-md-5 col-sm-5 col-xs-12">
+											<?php echo $tr->translate("BRANCH_NAME"); ?>
+										</label>
 										<div class="col-md-7 col-sm-7 col-xs-12">
-											<?php echo $frm->getElement("branch_id");?>
+											<?php echo $frm->getElement("branch_id"); ?>
 										</div>
-									 </div>
-									 <div class="form-group">
-										<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("PAYMENT_NO");?> </label>
-										<div class="col-md-7 col-sm-7 col-xs-12">
-											<?php echo $frm->getElement("paymentNo");?>
-										</div>
-									 </div>
-									 <div class="form-group">
-										<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("DATE");?> </label>
-										<div class="col-md-7 col-sm-7 col-xs-12">
-											<?php echo $frm->getElement("paymentDate");?>
-										</div>
-									 </div>
-									 <div class="form-group">
-										<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("SUPPLIER");?> </label>
-										<div class="col-md-7 col-sm-7 col-xs-12">
-											<?php echo $frm->getElement("supplierId");?>
-										</div>
-									 </div>
-									 <div class="form-group">
-									   <label class="control-label  col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("BALANCE");?> 
-									   </label>
-									   <div class="col-md-7 col-sm-7 col-xs-12">
-											<?php echo $frm->getElement("balance");?>
-									   </div>
 									</div>
-									 <div class="form-group">
-										<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("TOTAL_BALANCE");?> </label>
+									<div class="form-group">
+										<label class="control-label bold col-md-5 col-sm-5 col-xs-12">
+											<?php echo $tr->translate("PAYMENT_NO"); ?>
+										</label>
 										<div class="col-md-7 col-sm-7 col-xs-12">
-											<?php echo $frm->getElement("gTotalBalance");?>
+											<?php echo $frm->getElement("paymentNo"); ?>
 										</div>
-									 </div>
-								 </div>
-							 </div>
-						 </div>
+									</div>
+									<div class="form-group">
+										<label class="control-label bold col-md-5 col-sm-5 col-xs-12">
+											<?php echo $tr->translate("DATE"); ?>
+										</label>
+										<div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement("paymentDate"); ?>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="control-label bold col-md-5 col-sm-5 col-xs-12">
+											<?php echo $tr->translate("SUPPLIER"); ?>
+										</label>
+										<div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement("supplierId"); ?>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="control-label bold  col-md-5 col-sm-5 col-xs-12" for="first-name">
+											<?php echo $tr->translate("BALANCE"); ?>
+										</label>
+										<div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement("balance"); ?>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="control-label bold col-md-5 col-sm-5 col-xs-12">
+											<?php echo $tr->translate("TOTAL_BALANCE"); ?>
+										</label>
+										<div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement("gTotalBalance"); ?>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
-		             
+
 				</div>
 				<div class="col-md-6 col-sm-6 col-xs-12">
 					<div class="card-blogform">
-						<div class="card-body"> 
-							<div class="row"> 
-								<div class="col-md-12 col-sm-12 col-xs-12"> 
-									<div class="d-flex"> 
+						<div class="card-body">
+							<div class="row">
+								<div class="col-md-12 col-sm-12 col-xs-12">
+									<div class="d-flex">
 										<div class="settings-main-icon ">
 											<i class="glyphicon glyphicon-credit-card" aria-hidden="true"></i>
-										</div> 
-										<div class="col-md-10 col-sm-10 col-xs-12"> 
-											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("PAYMENT_INFO");?></p>
-										</div> 
+										</div>
+										<div class="col-md-10 col-sm-10 col-xs-12">
+											<p class="tx-20 font-weight-semibold d-flex ">
+												<?php echo $tr->translate("PAYMENT_INFO"); ?>
+											</p>
+										</div>
 									</div>
 									<div class="form-group">
-										<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("PAYMENT_METHOD");?> </label>
+										<label class="control-label bold col-md-5 col-sm-5 col-xs-12">
+											<?php echo $tr->translate("PAYMENT_METHOD"); ?>
+										</label>
 										<div class="col-md-7 col-sm-7 col-xs-12">
-											<?php echo $frm->getElement("paymentMethod");?>
+											<?php echo $frm->getElement("paymentMethod"); ?>
 										</div>
-									 </div>
-									 <div class="form-group">
-										<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("BANK");?> </label>
+									</div>
+									<div class="form-group">
+										<label class="control-label bold col-md-5 col-sm-5 col-xs-12">
+											<?php echo $tr->translate("BANK"); ?>
+										</label>
 										<div class="col-md-7 col-sm-7 col-xs-12">
-											<?php echo $frm->getElement("bankId");?>
+											<?php echo $frm->getElement("bankId"); ?>
 										</div>
-									 </div>
-									 <div class="form-group">
-										<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("ACCOUNT_AND_CHEQUE_NO");?> </label>
+									</div>
+									<div class="form-group">
+										<label class="control-label bold col-md-5 col-sm-5 col-xs-12">
+											<?php echo $tr->translate("ACCOUNT_AND_CHEQUE_NO"); ?>
+										</label>
 										<div class="col-md-7 col-sm-7 col-xs-12">
-											<?php echo $frm->getElement("accNameAndChequeNo");?>
+											<?php echo $frm->getElement("accNameAndChequeNo"); ?>
 										</div>
-									 </div>
-									 <div class="form-group">
-										<label class="control-label bold col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("PAID_AMOUNT");?> </label>
+									</div>
+									<div class="form-group">
+										<label class="control-label bold col-md-5 col-sm-5 col-xs-12">
+											<?php echo $tr->translate("PAID_AMOUNT"); ?>
+										</label>
 										<div class="col-md-7 col-sm-7 col-xs-12">
-											<?php echo $frm->getElement("totalAmount");?>
+											<?php echo $frm->getElement("totalAmount"); ?>
 										</div>
-									 </div>
+									</div>
 									<div style="display: none;">
 										<span id="sppReceiverName"></span>
 										<span id="sppBankNumber"></span>
@@ -158,322 +185,365 @@
 				</div>
 			</div>
 			<div class="card-box">
-				 <div class="col-md-12 col-sm-12 col-xs-12">
-					<div class="form-group" style="background: #d8e0e2;padding: 5px 15px;margin: 0;border: solid 1px #697996;border-radius: 2px;margin-top: 10px;">
-						<label style=" margin: 0; line-height: 30px; " class="control-label bold col-md-2 col-sm-2 col-xs-12"><?php echo $tr->translate("FILTER_BY_DATE");?> </label>
-						 <div class="col-md-3 col-sm-3 col-xs-12">
-								<?php echo $frm->getElement("start_date");?>
-						</div>
-						<label style=" margin: 0; line-height: 30px; text-align: center;" class="control-label bold col-md-1 col-sm-1 col-xs-12"><?php echo $tr->translate("TO");?> </label>
+				<div class="col-md-12 col-sm-12 col-xs-12">
+					<div class="form-group"
+						style="background: #d8e0e2;padding: 5px 15px;margin: 0;border: solid 1px #697996;border-radius: 2px;margin-top: 10px;">
+						<label style=" margin: 0; line-height: 30px; "
+							class="control-label bold col-md-2 col-sm-2 col-xs-12">
+							<?php echo $tr->translate("FILTER_BY_DATE"); ?>
+						</label>
 						<div class="col-md-3 col-sm-3 col-xs-12">
-							<?php echo $frm->getElement("end_date");?>
+							<?php echo $frm->getElement("start_date"); ?>
+						</div>
+						<label style=" margin: 0; line-height: 30px; text-align: center;"
+							class="control-label bold col-md-1 col-sm-1 col-xs-12">
+							<?php echo $tr->translate("TO"); ?>
+						</label>
+						<div class="col-md-3 col-sm-3 col-xs-12">
+							<?php echo $frm->getElement("end_date"); ?>
 						</div>
 						<div class="col-md-3 col-sm-3 col-xs-12">
-							<input class="button-class button-primary " iconclass="glyphicon glyphicon-search" type="button" label="<?php echo $tr->translate('SEARCH');?>" dojoType="dijit.form.Button" onclick="getSupplierInvoice();"/>
+							<input class="button-class button-primary " iconclass="glyphicon glyphicon-search"
+								type="button" label="<?php echo $tr->translate('SEARCH'); ?>"
+								dojoType="dijit.form.Button" onclick="getSupplierInvoice();" />
 						</div>
-						 <div class="clearfix"></div>
-						 <label style=" margin: 0; line-height: 30px; " class="control-label bold col-md-2 col-sm-2 col-xs-12"><?php echo $tr->translate("SEARCH");?> </label>
-						 <div class="col-md-7 col-sm-7 col-xs-12">
-								<?php echo $frm->getElement("advanceFilter");?>
+						<div class="clearfix"></div>
+						<label style=" margin: 0; line-height: 30px; "
+							class="control-label bold col-md-2 col-sm-2 col-xs-12">
+							<?php echo $tr->translate("SEARCH"); ?>
+						</label>
+						<div class="col-md-7 col-sm-7 col-xs-12">
+							<?php echo $frm->getElement("advanceFilter"); ?>
 						</div>
 						<div class="clearfix"></div>
 						<div class="clearfix">
 							<div class="custom-control custom-checkbox">
-								<input type="checkbox" class="checkbox custom-control-input" name="check_all" id="check_all" value="all" OnChange="CheckAllTotal(0);"  >
+								<input type="checkbox" class="checkbox custom-control-input" name="check_all"
+									id="check_all" value="all" OnChange="CheckAllTotal(0);">
 								<label class="custom-control-label" for="check_all">
-									<?php echo $tr->translate('ALL');?>
+									<?php echo $tr->translate('ALL'); ?>
 								</label>
 							</div>
-							 
+
 						</div>
 					</div>
 					<div class="form-group">
-						<table  style="margin: 0 auto; width: 100%; border-collapse: collapse; border: 1px #ccc solid;">
+						<table style="margin: 0 auto; width: 100%; border-collapse: collapse; border: 1px #ccc solid;">
 							<thead>
 								<tr id="head-title" class="head-td" align="right">
 									<th class="paddingCheckbox">&nbsp;</th>
-									<th><?php echo $tr->translate("NUM");?></th>
-									<th style=" min-width: 105px;"><?php echo $tr->translate("RECEIVE_DATE");?></th>
-									<th ><?php echo $tr->translate("INVOICE_NO");?></th>
-									<th ><?php echo $tr->translate("ORIG")." ".$tr->translate("CURRENCY_SIGN");?></th>
-									<th ><?php echo $tr->translate("DUE")." ".$tr->translate("CURRENCY_SIGN");?></th>
-									<th ><?php echo $tr->translate("PAYMENT_AMOUNT")." ".$tr->translate("CURRENCY_SIGN");?></th>
-									<th ><?php echo $tr->translate("REMAIN")." ".$tr->translate("CURRENCY_SIGN");?></th>
+									<th>
+										<?php echo $tr->translate("NUM"); ?>
+									</th>
+									<th style=" min-width: 105px;">
+										<?php echo $tr->translate("RECEIVE_DATE"); ?>
+									</th>
+									<th>
+										<?php echo $tr->translate("INVOICE_NO"); ?>
+									</th>
+									<th>
+										<?php echo $tr->translate("ORIG") . " " . $tr->translate("CURRENCY_SIGN"); ?>
+									</th>
+									<th>
+										<?php echo $tr->translate("DUE") . " " . $tr->translate("CURRENCY_SIGN"); ?>
+									</th>
+									<th>
+										<?php echo $tr->translate("PAYMENT_AMOUNT") . " " . $tr->translate("CURRENCY_SIGN"); ?>
+									</th>
+									<th>
+										<?php echo $tr->translate("REMAIN") . " " . $tr->translate("CURRENCY_SIGN"); ?>
+									</th>
 								</tr>
 							</thead>
 							<tbody id="table_row">
 							<tbody>
 						</table>
 						<input type="hidden" id="identity" name="identity" />
-						<input type="hidden" name="old_identity" id="old_identity"  value="" >
-					 </div>
+						<input type="hidden" name="old_identity" id="old_identity" value="">
+					</div>
 				</div>
-		    </div>
+			</div>
 			<div class="clearfix"></div>
-	          <div class="card-box">
-          		 <div class="col-md-8 col-sm-8 col-xs-12">
-          		 	<div class="form-group">
-	                   <label class="control-label bold col-md-12 col-sm-12 col-xs-12" for="first-name"><?php echo $tr->translate("NOTE");?> 
-	                   </label>
-	                </div>
-          		 	<div class="form-group">
-	                   <div class="col-md-12 col-sm-12 col-xs-12">
-	                   		<?php echo $frm->getElement("note");?>
-	                   </div>
-	                </div>
-          		 </div>
-          		 <div class="col-md-4 col-sm-4 col-xs-12">
-          		 	<div class="form-group">
-	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("TOTAL_PAID");?> 
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                   		<?php echo $frm->getElement("totalPaid");?>
-	                   </div>
-	                </div>
-	                
-	                <div class="form-group">
-	                   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("TOTAL_DUE");?> 
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                   		<?php echo $frm->getElement("totalDue");?>
-	                   </div>
-	                </div>
-          		 </div>
-         	 </div>  
+			<div class="card-box">
+				<div class="col-md-8 col-sm-8 col-xs-12">
+					<div class="form-group">
+						<label class="control-label bold col-md-12 col-sm-12 col-xs-12" for="first-name">
+							<?php echo $tr->translate("NOTE"); ?>
+						</label>
+					</div>
+					<div class="form-group">
+						<div class="col-md-12 col-sm-12 col-xs-12">
+							<?php echo $frm->getElement("note"); ?>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4 col-sm-4 col-xs-12">
+					<div class="form-group">
+						<label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name">
+							<?php echo $tr->translate("TOTAL_PAID"); ?>
+						</label>
+						<div class="col-md-7 col-sm-7 col-xs-12">
+							<?php echo $frm->getElement("totalPaid"); ?>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name">
+							<?php echo $tr->translate("TOTAL_DUE"); ?>
+						</label>
+						<div class="col-md-7 col-sm-7 col-xs-12">
+							<?php echo $frm->getElement("totalDue"); ?>
+						</div>
+					</div>
+				</div>
+			</div>
 			<div class="clearfix"></div>
-	       	<div class="card-box mt-20">
-               	<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
-               		<input type="submit" class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-remove" value="save_close" id="save_close" name="save_close" label="<?php echo $tr->translate("SAVE_CLOSE");?>" dojoType="dijit.form.Button"  />
-					<input type="submit" class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-disk" value="save_new" id="save_new" name="save_new" label="<?php echo $tr->translate("SAVENEW");?>" dojoType="dijit.form.Button" />
-               	</div>
-             </div>
+			<div class="card-box mt-20">
+				<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
+					<input type="submit" class="button-class button-primary"
+						iconClass="glyphicon glyphicon-floppy-remove" value="save_close" id="save_close"
+						name="save_close" label="<?php echo $tr->translate("SAVE_CLOSE"); ?>"
+						dojoType="dijit.form.Button" />
+					<input type="submit" class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-disk"
+						value="save_new" id="save_new" name="save_new" label="<?php echo $tr->translate("SAVENEW"); ?>"
+						dojoType="dijit.form.Button" />
+				</div>
+			</div>
 		</form>
-    </div>
+	</div>
 </div>
 <style>
-.paddingCheckbox{
-	    padding: 0 5px;
-}
-tr.head-td th {
-    padding: 5px 0;
-    text-align: center;
-}
-tr.rowData {
-    border-bottom: solid 2px #02014a;
-}
-tr.rowData td {
-    padding: 2px 0;
-	font-size: 13px;
-}
-tr.rowData td.textCenter {
-    text-align: center;
-}
-tr.rowData.odd {
-    background: #d8e0e242;
-}
-tr.rowData td.invNoCol {
-    font-size: 11px;
-    color: #c50000;
-}
-tr.rowData td.invNoCol span {
-    color: #02014a;
-    font-size: 10px;
-    font-weight: 600;
-    line-height: 12px;
-}
-tr.rowData td small {
-    color: #02014a;
-    font-size: 70%;
-}
-</style>
-<script src="<?php echo $this->baseUrl();?>/admin/js/global.js"  type="text/javascript"></script>
-<script type="text/javascript">
-	dojo.require("dojo.data.ItemFileWriteStore");  
-	dojo.require("dojo.NodeList-manipulate");
-    dojo.require("dijit.form.Textarea");
-    dojo.require("dijit.form.NumberTextBox");
-    dojo.require("dijit.form.DateTextBox");
+	.paddingCheckbox {
+		padding: 0 5px;
+	}
 
-	
-	var productStore  = getDataStorefromJSON('id','name', null );
-    require(["dojo/ready"], function(ready){
-		ready(function(){
+	tr.head-td th {
+		padding: 5px 0;
+		text-align: center;
+	}
+
+	tr.rowData {
+		border-bottom: solid 2px #02014a;
+	}
+
+	tr.rowData td {
+		padding: 2px 0;
+		font-size: 13px;
+	}
+
+	tr.rowData td.textCenter {
+		text-align: center;
+	}
+
+	tr.rowData.odd {
+		background: #d8e0e242;
+	}
+
+	tr.rowData td.invNoCol {
+		font-size: 11px;
+		color: #c50000;
+	}
+
+	tr.rowData td.invNoCol span {
+		color: #02014a;
+		font-size: 10px;
+		font-weight: 600;
+		line-height: 12px;
+	}
+
+	tr.rowData td small {
+		color: #02014a;
+		font-size: 70%;
+	}
+</style>
+<script src="<?php echo $this->baseUrl(); ?>/admin/js/global.js" type="text/javascript"></script>
+<script type="text/javascript">
+	dojo.require("dojo.data.ItemFileWriteStore");
+	dojo.require("dojo.NodeList-manipulate");
+	dojo.require("dijit.form.Textarea");
+	dojo.require("dijit.form.NumberTextBox");
+	dojo.require("dijit.form.DateTextBox");
+
+
+	var productStore = getDataStorefromJSON('id', 'name', null);
+	require(["dojo/ready"], function (ready) {
+		ready(function () {
 
 			onChageFunctionByBranch();
 			var supplierIdControl = dijit.byId('supplierId');
-			 supplierIdControl.on('change', function(evt) {
-				 getSupplierInvoice();
-				 getSupplierInfo();
+			supplierIdControl.on('change', function (evt) {
+				getSupplierInvoice();
+				getSupplierInfo();
 			});
 		});
 
-	 });
-    
-	function onChageFunctionByBranch(){
+	});
+
+	function onChageFunctionByBranch() {
 		enablePayment();
 		getPaymentNoByBranch();
 		getSupplierInvoice();
-		
+
 	}
-	function enablePayment(){
+	function enablePayment() {
 		paymentMethod = dijit.byId('paymentMethod').get('value');
-		dijit.byId("bankId").set("readOnly",false);
+		dijit.byId("bankId").set("readOnly", false);
 		dijit.byId("bankId").reset();
-		dijit.byId("accNameAndChequeNo").set("readOnly",false);
-		dijit.byId("accNameAndChequeNo").attr("value",'');
-		if(paymentMethod==1){
-			dijit.byId("bankId").set("readOnly",true);
-			dijit.byId("accNameAndChequeNo").attr("value",'N/A');
-			dijit.byId("accNameAndChequeNo").set("readOnly",true);
-		}else{
+		dijit.byId("accNameAndChequeNo").set("readOnly", false);
+		dijit.byId("accNameAndChequeNo").attr("value", '');
+		if (paymentMethod == 1) {
+			dijit.byId("bankId").set("readOnly", true);
+			dijit.byId("accNameAndChequeNo").attr("value", 'N/A');
+			dijit.byId("accNameAndChequeNo").set("readOnly", true);
+		} else {
 			supplierId = dijit.byId('supplierId').get('value');
-			if(supplierId !="" || supplierId!=0){
-				var sppBankNumber = $( '#sppBankNumber').html();
-				var sppReceiverName = $( '#sppReceiverName').html();
-				dijit.byId("accNameAndChequeNo").attr("value",sppReceiverName+' '+sppBankNumber);
+			if (supplierId != "" || supplierId != 0) {
+				var sppBankNumber = $('#sppBankNumber').html();
+				var sppReceiverName = $('#sppReceiverName').html();
+				dijit.byId("accNameAndChequeNo").attr("value", sppReceiverName + ' ' + sppBankNumber);
 			}
-			
+
 		}
 	}
-	
-	var urlGetPaymentNo = '<?php echo $this->url(array('module'=>'invpayment','controller'=>'payment','action'=>'getpaymentno')); ?>';
-	function getPaymentNoByBranch(){
-		
+
+	var urlGetPaymentNo = '<?php echo $this->url(array('module' => 'invpayment', 'controller' => 'payment', 'action' => 'getpaymentno')); ?>';
+	function getPaymentNoByBranch() {
+
 		branch_id = dijit.byId('branch_id').get('value');
-		if(branch_id=='' || branch_id<=0){
+		if (branch_id == '' || branch_id <= 0) {
 			return false;
 		}
 		paymentDate = dijit.byId('paymentDate').get('value');
-		if(paymentDate==''){
-			infoMessageAlert('<?php echo $tr->translate('PLEASE_SELECT_DATE');?>');
+		if (paymentDate == '') {
+			infoMessageAlert('<?php echo $tr->translate('PLEASE_SELECT_DATE'); ?>');
 			dijit.byId('paymentDate').focus();
 			return false;
 		}
-			var a = new Date(paymentDate);
-			mm = a.getMonth()+1;
-			var dd = a.getDate();
-			 if(dd<10){
-				 dd = "0"+dd;
-			}
-			//month = returnMOnth(mm);
-			month=mm;
-			if(mm<10){
-				 month = "0"+mm;
-			}
-			
-			var y = a.getFullYear();
-			var paymentDate = dd +'-'+month+'-'+y ;
-	
+		var a = new Date(paymentDate);
+		mm = a.getMonth() + 1;
+		var dd = a.getDate();
+		if (dd < 10) {
+			dd = "0" + dd;
+		}
+		//month = returnMOnth(mm);
+		month = mm;
+		if (mm < 10) {
+			month = "0" + mm;
+		}
+
+		var y = a.getFullYear();
+		var paymentDate = dd + '-' + month + '-' + y;
+
 		dojo.xhrPost({
-			url:urlGetPaymentNo,	
-			content:{ 
-				'branch_id':branch_id,'paymentDate':paymentDate
-			},		    
-			handleAs:"json",
-			load: function(data) {
+			url: urlGetPaymentNo,
+			content: {
+				'branch_id': branch_id, 'paymentDate': paymentDate
+			},
+			handleAs: "json",
+			load: function (data) {
 				dijit.byId('paymentNo').set('value', data);
 			},
-			error: function(err) {
+			error: function (err) {
 			}
 		});
-	} 	
-	
-	var keyindex=1;
-	var urlGetSupplierInvoice = '<?php echo $this->url(array('module'=>'invpayment','controller'=>'index','action'=>'getallsupplierinv')); ?>';
-	function getSupplierInvoice(){
+	}
+
+	var keyindex = 1;
+	var urlGetSupplierInvoice = '<?php echo $this->url(array('module' => 'invpayment', 'controller' => 'index', 'action' => 'getallsupplierinv')); ?>';
+	function getSupplierInvoice() {
 		branch_id = dijit.byId('branch_id').get('value');
-		if(branch_id==""){
-			//infoMessageAlert("<?php echo $tr->translate('PLEASE_SELECT_BRANCH');?>");
+		if (branch_id == "") {
+			//infoMessageAlert("<?php echo $tr->translate('PLEASE_SELECT_BRANCH'); ?>");
 			//dijit.byId("branch_id").focus();
 			return false;
 		}
 		supplierId = dijit.byId('supplierId').get('value');
-		if(supplierId=="" || supplierId==0){
+		if (supplierId == "" || supplierId == 0) {
 			supplierId = 0;
-			//infoMessageAlert("<?php echo $tr->translate('PLEASE_SELECT_SUPPLIER');?>");
+			//infoMessageAlert("<?php echo $tr->translate('PLEASE_SELECT_SUPPLIER'); ?>");
 			dijit.byId("supplierId").focus();
 			return false;
 		}
-		
+
 		var start_date = dijit.byId('start_date').get('value');
 		var end_date = dijit.byId('end_date').get('value');
 		var advanceFilter = dijit.byId('advanceFilter').get('value');
-		
-		if(start_date== '' || start_date== null ){
-			
-		}else{
+
+		if (start_date == '' || start_date == null) {
+
+		} else {
 			var day = start_date.getDate();
-			if(day <= 9) {day = "0" +day;}
-			var m = start_date.getMonth()+1;
-			if(m <= 9) {m = "0" +m;}
+			if (day <= 9) { day = "0" + day; }
+			var m = start_date.getMonth() + 1;
+			if (m <= 9) { m = "0" + m; }
 			var year = start_date.getFullYear();
-			start_date = year+"-"+m+"-"+day;
+			start_date = year + "-" + m + "-" + day;
 		}
 
 		var day = end_date.getDate();
-		if(day <= 9) {day = "0" +day;}
-		var m = end_date.getMonth()+1;
-		if(m <= 9) {m = "0" +m;}
+		if (day <= 9) { day = "0" + day; }
+		var m = end_date.getMonth() + 1;
+		if (m <= 9) { m = "0" + m; }
 		var year = end_date.getFullYear();
-		end_date = year+"-"+m+"-"+day;
+		end_date = year + "-" + m + "-" + day;
 		loadingBlock();
 		dojo.xhrPost({
 			url: urlGetSupplierInvoice,
-			content:{
-				'branch_id':branch_id,'supplierId':supplierId,'keyindex':keyindex,'start_date':start_date,'end_date':end_date,'advanceFilter':advanceFilter,
-	 			},
-			handleAs:"json",
-			load: function(data) {
-				keyindex=data.keyindex;
+			content: {
+				'branch_id': branch_id, 'supplierId': supplierId, 'keyindex': keyindex, 'start_date': start_date, 'end_date': end_date, 'advanceFilter': advanceFilter,
+			},
+			handleAs: "json",
+			load: function (data) {
+				keyindex = data.keyindex;
 				$("#old_identity").val(data.identity);
-				dojo.html.set(dojo.byId("table_row"),data.stringrow , {
-				     parseContent: true,
-					});
-				dijit.byId('gTotalBalance').set('value',data.gTotalBalance);
+				dojo.html.set(dojo.byId("table_row"), data.stringrow, {
+					parseContent: true,
+				});
+				dijit.byId('gTotalBalance').set('value', data.gTotalBalance);
 				calBalance();
 				HideloadingBlock();
 			},
-			error: function(err) {
+			error: function (err) {
 				infoMessageAlert(err);
 				HideloadingBlock();
 			}
 		});
 	}
-	function CheckAllTotal(index){
+	function CheckAllTotal(index) {
 		var total = 0;
-		var descriptionr="";
+		var descriptionr = "";
 		var old_identity = $("#old_identity").val();
-		if(index==0){
-				if($('#check_all').is(":checked")){
-					$('.checkbox').each(function() { //loop through each checkbox
-			            this.checked = true;  
-					});
-					$("#identity").val(old_identity);
-				}else{
-					$('.checkbox').each(function() { //loop through each checkbox
-			            this.checked = false;  
-					});
-					ResetPayment();
-					$("#identity").val('');
-				}
-		}else{
-			 $('#check_all').attr('checked', false); // Unchecks it
+		if (index == 0) {
+			if ($('#check_all').is(":checked")) {
+				$('.checkbox').each(function () { //loop through each checkbox
+					this.checked = true;
+				});
+				$("#identity").val(old_identity);
+			} else {
+				$('.checkbox').each(function () { //loop through each checkbox
+					this.checked = false;
+				});
+				ResetPayment();
+				$("#identity").val('');
+			}
+		} else {
+			$('#check_all').attr('checked', false); // Unchecks it
 			var a = $("input:checked").val();
-			 var identity = [];
-		     $(':checkbox:checked').each(function(i){
-		    	 identity[i] = $(this).val();
-		     });
-		    
-		     $("#identity").val(identity);
-		     var newIdentity = $("#identity").val();
+			var identity = [];
+			$(':checkbox:checked').each(function (i) {
+				identity[i] = $(this).val();
+			});
 
-				if(old_identity == newIdentity ){
-					$('#check_all').attr('checked', true); // checks it
-				}
-			if($('#mfdid_'+index).is(":checked")){
-				
-			}else{
-				dijit.byId('paymentAmount'+index).set('value',0);
+			$("#identity").val(identity);
+			var newIdentity = $("#identity").val();
+
+			if (old_identity == newIdentity) {
+				$('#check_all').attr('checked', true); // checks it
+			}
+			if ($('#mfdid_' + index).is(":checked")) {
+
+			} else {
+				dijit.byId('paymentAmount' + index).set('value', 0);
 				calculateAmountCheckByKeyup();
 				ResetPayment();
 			}
@@ -482,182 +552,182 @@ tr.rowData td small {
 		calBalance();
 	}
 
-	function ResetPayment(){
+	function ResetPayment() {
 		var old_identity = $("#old_identity").val();
 		var rowIDArray = old_identity.split(',');
-		for(var n = 0; n < rowIDArray.length; n++) {
-			dijit.byId('paymentAmount'+rowIDArray[n]).set('value',0);
-			amountrow = parseFloat(dijit.byId('dueAmount'+rowIDArray[n]).get('value'));
-			
-			amountrowafterdis = amountrow ; //amount after discount
-			amountrow = parseFloat(dijit.byId('remain'+rowIDArray[n]).set('value',amountrowafterdis.toFixed(3)));
+		for (var n = 0; n < rowIDArray.length; n++) {
+			dijit.byId('paymentAmount' + rowIDArray[n]).set('value', 0);
+			amountrow = parseFloat(dijit.byId('dueAmount' + rowIDArray[n]).get('value'));
+
+			amountrowafterdis = amountrow; //amount after discount
+			amountrow = parseFloat(dijit.byId('remain' + rowIDArray[n]).set('value', amountrowafterdis.toFixed(3)));
 		}
 	}
 	function calBalance() {
-		var balance=0;
+		var balance = 0;
 		var rowId = $('#old_identity').val();
-		if(rowId==""){
+		if (rowId == "") {
 			return false;
 		}
 		var rowIDArray = rowId.split(',');
-		for(var n = 0; n < rowIDArray.length; n++) {
-			if($('#mfdid_'+rowIDArray[n]).is(":checked")){
-				amountrow = parseFloat(dijit.byId('dueAmount'+rowIDArray[n]).get('value'));
-				amountrowafterdis = amountrow; 
-		
+		for (var n = 0; n < rowIDArray.length; n++) {
+			if ($('#mfdid_' + rowIDArray[n]).is(":checked")) {
+				amountrow = parseFloat(dijit.byId('dueAmount' + rowIDArray[n]).get('value'));
+				amountrowafterdis = amountrow;
+
 				balance = balance + parseFloat(amountrowafterdis);
 			}
 		}
-		dijit.byId('balance').attr('value',balance.toFixed(3));
+		dijit.byId('balance').attr('value', balance.toFixed(3));
 
 	}
-	function checkAmout(){
+	function checkAmout() {
 		amount_paid = parseFloat(dijit.byId('totalAmount').get('value'));
 		balance = parseFloat(dijit.byId('balance').get('value'));
-		if(amount_paid>=balance){
-			dijit.byId('totalAmount').set('value',balance.toFixed(3))
+		if (amount_paid >= balance) {
+			dijit.byId('totalAmount').set('value', balance.toFixed(3))
 		}
 		calculateAmountCheck();
 	}
-	function calculateAmountCheck(){
+	function calculateAmountCheck() {
 		ResetPayment();
 		amount_paid = parseFloat(dijit.byId('totalAmount').get('value'));
 		var rowId = $('#identity').val();
-		if(rowId==""){
+		if (rowId == "") {
 			return false;
 		}
-		var credit=0;
-		var payment=0;
+		var credit = 0;
+		var payment = 0;
 		var amount = 0;
 		var due = 0;
 		var discount = 0;
-		var totaldis=0;
+		var totaldis = 0;
 		var amountrow = 0;
 		var rowIDArray = rowId.split(',');
 		var amountrowdis = 0;
-		if(amount_paid>0){
-			var paid=0;
-			for(var n = 0; n < rowIDArray.length; n++) {
-				
-				amountrow = parseFloat(dijit.byId('dueAmount'+rowIDArray[n]).get('value'));
-				amountrowafterdis = amountrow; 
+		if (amount_paid > 0) {
+			var paid = 0;
+			for (var n = 0; n < rowIDArray.length; n++) {
+
+				amountrow = parseFloat(dijit.byId('dueAmount' + rowIDArray[n]).get('value'));
+				amountrowafterdis = amountrow;
 				amount_paid = amount_paid - parseFloat(amountrowafterdis);
-				
-				if(amount_paid>=0){
-					payment+= amountrowafterdis;
-					dijit.byId('paymentAmount'+rowIDArray[n]).set('value',amountrowafterdis.toFixed(3));
-					dijit.byId('remain'+rowIDArray[n]).set('value',0);
-					
-					due+= 0;
-				}else{
+
+				if (amount_paid >= 0) {
+					payment += amountrowafterdis;
+					dijit.byId('paymentAmount' + rowIDArray[n]).set('value', amountrowafterdis.toFixed(3));
+					dijit.byId('remain' + rowIDArray[n]).set('value', 0);
+
+					due += 0;
+				} else {
 					remain = Math.abs(amount_paid);
-					paid = parseFloat(dijit.byId('dueAmount'+rowIDArray[n]).get('value')) - parseFloat(remain);
-					dijit.byId('paymentAmount'+rowIDArray[n]).set('value',paid.toFixed(3));
-					dijit.byId('remain'+rowIDArray[n]).set('value',remain.toFixed(3));
-					payment+= paid;
-					due+= remain;
+					paid = parseFloat(dijit.byId('dueAmount' + rowIDArray[n]).get('value')) - parseFloat(remain);
+					dijit.byId('paymentAmount' + rowIDArray[n]).set('value', paid.toFixed(3));
+					dijit.byId('remain' + rowIDArray[n]).set('value', remain.toFixed(3));
+					payment += paid;
+					due += remain;
 					break;
 				}
-				
+
 			}
 		}
 		calculateLastTotal();
 	}
-	function calculateLastTotal(){
+	function calculateLastTotal() {
 		var rowId = $('#identity').val();
-		if(rowId==""){
+		if (rowId == "") {
 			return false;
 		}
-		var credit=0;
-		var payment=0;
+		var credit = 0;
+		var payment = 0;
 		var amount = 0;
 		var due = 0;
 		var discount = 0;
-		var totaldis=0;
+		var totaldis = 0;
 		var amountrow = 0;
 		var rowIDArray = rowId.split(',');
 		var amountrowdis = 0;
-		for(var n = 0; n < rowIDArray.length; n++) {
-			payment+= parseFloat(dijit.byId('paymentAmount'+rowIDArray[n]).get('value'));
-			due+= parseFloat(dijit.byId('remain'+rowIDArray[n]).get('value'));
+		for (var n = 0; n < rowIDArray.length; n++) {
+			payment += parseFloat(dijit.byId('paymentAmount' + rowIDArray[n]).get('value'));
+			due += parseFloat(dijit.byId('remain' + rowIDArray[n]).get('value'));
 		}
-		dijit.byId('totalPaid').attr('value',payment.toFixed(3));
-		dijit.byId('totalDue').attr('value',due.toFixed(3));
+		dijit.byId('totalPaid').attr('value', payment.toFixed(3));
+		dijit.byId('totalDue').attr('value', due.toFixed(3));
 	}
-	function calculateamount(index){
-		var due = dijit.byId('dueAmount'+index).get('value');
-		
-		var payment = dijit.byId('paymentAmount'+index).get('value');
-		var paid =0;
-		var subtotal=0;
-		
+	function calculateamount(index) {
+		var due = dijit.byId('dueAmount' + index).get('value');
+
+		var payment = dijit.byId('paymentAmount' + index).get('value');
+		var paid = 0;
+		var subtotal = 0;
+
 		paid = parseFloat(payment);
-		subtotal= parseFloat(due);
-		
-		if(paid > subtotal){
-			dijit.byId('paymentAmount'+index).set('value',subtotal.toFixed(3));
-			dijit.byId('remain'+index).set('value',0);
-		}else{
-			dijit.byId('remain'+index).set('value',(subtotal-paid).toFixed(3));
+		subtotal = parseFloat(due);
+
+		if (paid > subtotal) {
+			dijit.byId('paymentAmount' + index).set('value', subtotal.toFixed(3));
+			dijit.byId('remain' + index).set('value', 0);
+		} else {
+			dijit.byId('remain' + index).set('value', (subtotal - paid).toFixed(3));
 		}
 		calBalance();
 		calculateAmountCheckByKeyup();
 	}
-	function calculateAmountCheckByKeyup(){
+	function calculateAmountCheckByKeyup() {
 		var rowId = $('#identity').val();
-		if(rowId==""){
+		if (rowId == "") {
 			return false;
 		}
 		//var credit=0;
-		var payment=0;
+		var payment = 0;
 		var amount = 0;
 		var due = 0;
 		var discount = 0;
-		var totaldis=0;
+		var totaldis = 0;
 		var amountrow = 0;
 		var rowIDArray = rowId.split(',');
-			for(var n = 0; n < rowIDArray.length; n++) {
-				payment+= parseFloat(dijit.byId('paymentAmount'+rowIDArray[n]).get('value'));
-				due+= parseFloat(dijit.byId('remain'+rowIDArray[n]).get('value'));				
-			}
+		for (var n = 0; n < rowIDArray.length; n++) {
+			payment += parseFloat(dijit.byId('paymentAmount' + rowIDArray[n]).get('value'));
+			due += parseFloat(dijit.byId('remain' + rowIDArray[n]).get('value'));
+		}
 		amount = parseFloat(payment).toFixed(3);
-		
-		dijit.byId('totalPaid').attr('value',payment.toFixed(3));
-		dijit.byId('totalDue').attr('value',due.toFixed(3));
-		dijit.byId('totalAmount').attr('value',parseFloat(amount).toFixed(3));
+
+		dijit.byId('totalPaid').attr('value', payment.toFixed(3));
+		dijit.byId('totalDue').attr('value', due.toFixed(3));
+		dijit.byId('totalAmount').attr('value', parseFloat(amount).toFixed(3));
 	}
-	
-	var urlGetSupplierInfo = '<?php echo $this->url(array('module'=>'po','controller'=>'supplier','action'=>'get-supplierinfo')); ?>';
-	function getSupplierInfo(){
-		$("#sppReceiverName").text( "" );
-		$("#sppBankNumber").text( "" );
-		$("#sppAddress").text( "" );
-		$("#sppSupplierTel").text( "" );
-		$("#sppContactNumber").text( "" );
-					
+
+	var urlGetSupplierInfo = '<?php echo $this->url(array('module' => 'po', 'controller' => 'supplier', 'action' => 'get-supplierinfo')); ?>';
+	function getSupplierInfo() {
+		$("#sppReceiverName").text("");
+		$("#sppBankNumber").text("");
+		$("#sppAddress").text("");
+		$("#sppSupplierTel").text("");
+		$("#sppContactNumber").text("");
+
 		supplierId = dijit.byId('supplierId').get('value');
-		if(supplierId=='' || supplierId==0){
-			
+		if (supplierId == '' || supplierId == 0) {
+
 			return false;
 		}
 		dojo.xhrPost({
 			url: urlGetSupplierInfo,
-			content:{
-				'supplierId':supplierId
-				},
-			handleAs:"json",
-			load: function(data) {
-				var string='';
-				if(data!=''){
-					$("#sppReceiverName").text( data.receiverName );
-					$("#sppBankNumber").text( data.bankNumber );
-					$("#sppAddress").text( data.address );
-					$("#sppSupplierTel").text( data.supplierTel );
-					$("#sppContactNumber").text( data.contactNumber );
+			content: {
+				'supplierId': supplierId
+			},
+			handleAs: "json",
+			load: function (data) {
+				var string = '';
+				if (data != '') {
+					$("#sppReceiverName").text(data.receiverName);
+					$("#sppBankNumber").text(data.bankNumber);
+					$("#sppAddress").text(data.address);
+					$("#sppSupplierTel").text(data.supplierTel);
+					$("#sppContactNumber").text(data.contactNumber);
 				}
 				enablePayment();
 			},
-			error: function(err) {
+			error: function (err) {
 			}
 		});
 	}
