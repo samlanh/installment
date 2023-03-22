@@ -262,6 +262,7 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 		$purchaseType->setAttribs(
 			array(
 				'dojoType' => 'dijit.form.FilteringSelect',
+				'placeholder' => $this->tr->translate("SELECT_PURCHASE_TYPE"),
 				'class' => 'fullside',
 				'required' => 'false',
 				'autoComplete' => 'false',
@@ -282,6 +283,7 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 		$invoiceType->setAttribs(
 			array(
 				'dojoType' => 'dijit.form.FilteringSelect',
+				'placeholder' => $this->tr->translate("SELECT_INVOICE_TYPE"),
 				'class' => 'fullside',
 				'required' => 'false',
 				'autoComplete' => 'false',
@@ -321,6 +323,7 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 		$bankId->setAttribs(
 			array(
 				'dojoType' => 'dijit.form.FilteringSelect',
+				'placeholder' => $this->tr->translate("SELECT_BANK"),
 				'class' => 'fullside',
 				'required' => 'false',
 			)
@@ -335,7 +338,14 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 		$bankId->setValue($request->getParam("bankId"));
 
 		$statusWithdraw = new Zend_Dojo_Form_Element_FilteringSelect('statusWithdraw');
-		$statusWithdraw->setAttribs(array('dojoType' => $this->filter, 'class' => 'fullside'));
+		$statusWithdraw->setAttribs(
+			array(
+				'dojoType' => $this->filter,
+				'placeholder' => $this->tr->translate("STATUS"),
+				'class' => 'fullside',
+				'required' => 'false',
+			)
+		);
 		$_opts = array(
 			0 => $this->tr->translate("STATUS"),
 			1 => $this->tr->translate("WITHDRAWN"),
@@ -351,6 +361,7 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 		$supplierType->setAttribs(
 			array(
 				'dojoType' => 'dijit.form.FilteringSelect',
+				'placeholder' => $this->tr->translate("SUPPLIER_TYPE"),
 				'required' => 'true',
 				'missingMessage' => 'Invalid Module!',
 				'class' => 'fullside height-text',
@@ -401,7 +412,13 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 
 
 		$requestStatusCheck = new Zend_Dojo_Form_Element_FilteringSelect('requestStatusCheck');
-		$requestStatusCheck->setAttribs(array('dojoType' => $this->filter, 'class' => 'fullside'));
+		$requestStatusCheck->setAttribs(
+			array(
+				'dojoType' => $this->filter,
+				'placeholder' => $this->tr->translate("REQUEST_STATUS"),
+				'class' => 'fullside'
+			)
+		);
 		$_optsRequestStatusCheck = array(
 			0 => $this->tr->translate("ALL"),
 			1 => $this->tr->translate("APPROVED"),
