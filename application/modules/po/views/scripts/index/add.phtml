@@ -3,6 +3,11 @@ $this->tr = Application_Form_FrmLanguages::getCurrentlanguage();
 $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 $frm = $this->frm;
 ?>
+<style>
+	.filterBoxItems.dark {
+		color: black;
+	}
+</style>
 <script src="<?php echo $this->baseUrl(); ?>/js/help.js"></script>
 <title>
 	<?php echo $this->tr->translate("CREATE_PO") ?>
@@ -159,7 +164,7 @@ $frm = $this->frm;
 							class="control-label bold col-md-2 col-sm-2 col-xs-12">
 							<?php echo $tr->translate("CATEGORY"); ?>
 						</label>
-						<div class="col-md-3 col-sm-3 col-xs-12">
+						<div class="col-md-3 dark col-sm-3 col-xs-12">
 							<?php echo $frm->getElement("categoryId"); ?>
 						</div>
 						<label style=" margin: 0; line-height: 30px; text-align: center;"
@@ -297,6 +302,7 @@ $frm = $this->frm;
 			searchAttr: "name",
 			class: 'fullside',
 			onChange: function () {
+
 				addRowProductPO();
 			}
 		}, "productId");
@@ -350,6 +356,7 @@ $frm = $this->frm;
 	}
 	var urlGetAllProduct = '<?php echo $this->url(array('module' => 'requesting', 'controller' => 'request', 'action' => 'getallproduct')); ?>';
 	function getAllProduct() {
+		var no = 0;
 		branch_id = dijit.byId('branch_id').get('value');
 		if (branch_id == '' || branch_id <= 0) {
 			branch_id = 0;
@@ -431,7 +438,6 @@ $frm = $this->frm;
 			infoMessageAlert('<?php echo $tr->translate('PLEASE_SELECT_REQUEST_NO'); ?>');
 			dijit.byId('requestId').focus();
 			return false;
-			no = 0;
 		}
 		productId = dijit.byId('productId').get('value');
 		productLabel = dijit.byId('productId').attr('displayedValue');

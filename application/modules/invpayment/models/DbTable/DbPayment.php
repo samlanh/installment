@@ -45,8 +45,7 @@ class Invpayment_Model_DbTable_DbPayment extends Zend_Db_Table_Abstract
 			$s_search = addslashes((trim($search['adv_search'])));
 			$s_where[] = " pt.paymentNo LIKE '%{$s_search}%'";
 			$s_where[] = " pt.accNameAndChequeNo LIKE '%{$s_search}%'";
-			$s_where[] = " pt.purchaseNo LIKE '%{$s_search}%'";
-			$s_where[] = " spp.totalAmount LIKE '%{$s_search}%'";
+			$s_where[] = " pt.totalAmount LIKE '%{$s_search}%'";
 
 			$s_where[] = " (SELECT ba.bank_name FROM `st_bank` AS ba WHERE ba.id=pt.`bankId` LIMIT 1) LIKE '%{$s_search}%'";
 			$s_where[] = " (SELECT vi.name_kh FROM `ln_view` AS vi WHERE vi.type=2 AND vi.key_code=pt.`paymentMethod` LIMIT 1) LIKE '%{$s_search}%'";
@@ -70,6 +69,7 @@ class Invpayment_Model_DbTable_DbPayment extends Zend_Db_Table_Abstract
 		}
 		$order = ' ORDER BY pt.id DESC  ';
 		$where .= $dbGb->getAccessPermission("pt.projectId");
+
 		return $db->fetchAll($sql . $where . $order);
 	}
 

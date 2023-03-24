@@ -142,10 +142,12 @@ class Invpayment_PaymentController extends Zend_Controller_Action
 			$_row = $db->getAllPaymentRecord($data);
 
 			$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-			array_unshift($_row, array(
-				'id' => 0,
-				'name' => $tr->translate("SELECT_PAYMENT_NO"),
-			)
+			array_unshift(
+				$_row,
+				array(
+					'id' => 0,
+					'name' => $tr->translate("SELECT_PAYMENT_NO"),
+				)
 			);
 			print_r(Zend_Json::encode($_row));
 			exit();

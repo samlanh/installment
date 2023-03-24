@@ -187,7 +187,7 @@ class Invpayment_Model_DbTable_DbIssueCheque extends Zend_Db_Table_Abstract
 
 		if (!empty($search['adv_search'])) {
 			$s_where = array();
-			$s_search = (trim($search['adv_search']));
+			$s_search = addslashes(trim($search['adv_search']));
 			$s_where[] = " reCh.receiverName LIKE '%{$s_search}%'";
 			$s_where[] = " pt.paymentNo LIKE '%{$s_search}%'";
 			$s_where[] = " spp.supplierName LIKE '%{$s_search}%'";

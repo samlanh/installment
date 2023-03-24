@@ -180,7 +180,9 @@ class Po_Form_FrmPurchase extends Zend_Dojo_Form
 			)
 		);
 		$rsCate = $dbGBStock->getAllCategoryProduct();
-		$optCatePro = array('' => $tr->translate("SELECT_CATEGORY"));
+		$optCatePro = array(
+			'' => $tr->translate("SELECT_CATEGORY")
+		);
 		if (!empty($rsCate))
 			foreach ($rsCate as $row) {
 				$optCatePro[$row['id']] = $row['name'];
