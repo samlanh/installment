@@ -116,6 +116,22 @@ class Stockinout_Model_DbTable_DbTransfer extends Zend_Db_Table_Abstract
 				'isApproved' => $data['isApproved'],
 				'userId' => $this->getUserId(),
 			);
+			$part = PUBLIC_PATH . '/images/transferpic/';
+			if (!file_exists($part)) {
+				mkdir($part, 0777, true);
+			}
+			$photo_name = $_FILES['photo']['name'];
+			if (!empty($photo_name)) {
+				$tem = explode(".", $photo_name);
+				$image_name = "photoTransferOut_" . date("Y") . date("m") . date("d") . time() . "." . end($tem);
+				$tmp = $_FILES['photo']['tmp_name'];
+				if (move_uploaded_file($tmp, $part . $image_name)) {
+					move_uploaded_file($tmp, $part . $image_name);
+					$photo = $image_name;
+					$arr['photoTransfer'] = $photo;
+				}
+			}
+
 			$transferId = $this->insert($arr);
 
 			$dbb = new Budget_Model_DbTable_DbInitilizeBudget();
@@ -304,6 +320,26 @@ class Stockinout_Model_DbTable_DbTransfer extends Zend_Db_Table_Abstract
 				'userId' => $this->getUserId(),
 				'status' => $data['status'],
 			);
+			$part = PUBLIC_PATH . '/images/transferpic/';
+			if (!file_exists($part)) {
+				mkdir($part, 0777, true);
+			}
+			$photo_name = $_FILES['photo']['name'];
+			if (!empty($photo_name)) {
+				//unset old file here
+				$tem = explode(".", $photo_name);
+				$image_name = "photoTransferOut_" . date("Y") . date("m") . date("d") . time() . "." . end($tem);
+				$tmp = $_FILES['photo']['tmp_name'];
+				if (move_uploaded_file($tmp, $part . $image_name)) {
+					move_uploaded_file($tmp, $part . $image_name);
+					$photo = $image_name;
+					$arr['photoTransfer'] = $photo;
+				}
+			}
+			if (!empty($photo_name) and file_exists($part . $data['oldPhoto'])) { //delelete old file
+				unlink($part . $data['oldPhoto']);
+			}
+
 			$transferId = $data['id'];
 			$where = "id=" . $transferId;
 			$this->update($arr, $where);

@@ -173,9 +173,9 @@ class Stockinout_Form_FrmTransfer extends Zend_Dojo_Form
 		);
 
 		$id = new Zend_Form_Element_Hidden('id');
+		$oldphoto = new Zend_Form_Element_Hidden('oldPhoto');
 
 		if (!empty($_data)) {
-
 
 			$useFor->setValue($_data['userFor']);
 			$receiver->setValue($_data['receiverId']);
@@ -188,6 +188,7 @@ class Stockinout_Form_FrmTransfer extends Zend_Dojo_Form
 			$_status->setValue($_data['status']);
 			$id->setValue($_data['id']);
 			$_note->setValue($_data['note']);
+			$oldphoto->setValue($_data['photoTransfer']);
 		}
 		$this->addElements(
 			array(
@@ -214,6 +215,8 @@ class Stockinout_Form_FrmTransfer extends Zend_Dojo_Form
 				$id
 				,
 				$_note
+				,
+				$oldphoto
 			)
 		);
 

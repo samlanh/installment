@@ -95,15 +95,17 @@ class Stockinout_TransferoutController extends Zend_Controller_Action
 		$row = $db->getDataRow($id);
 		$rowDetail = $db->getDataRowDetail($id);
 		$this->view->row = $row;
+		$this->view->transferphoto = $row['photoTransfer'];
 		$this->view->rowDetail = $rowDetail;
 
-		if (empty($row)) {
-			Application_Form_FrmMessage::Sucessfull("NO_DATA", self::REDIRECT_URL, 2);
-			exit();
-		} else if ($row['status'] == 0) {
-			Application_Form_FrmMessage::Sucessfull("ALREADY_DEACTIVE", self::REDIRECT_URL, 2);
-			exit();
-		} else if ($row['isCompletedReceive'] == 1) {
+		// if (empty($row)) {
+		// 	Application_Form_FrmMessage::Sucessfull("NO_DATA", self::REDIRECT_URL, 2);
+		// 	exit();
+		// 	} else if ($row['status'] == 0) {
+		// 		Application_Form_FrmMessage::Sucessfull("ALREADY_DEACTIVE", self::REDIRECT_URL, 2);
+		// 		exit();
+		// } else
+		if ($row['isCompletedReceive'] == 1) {
 			Application_Form_FrmMessage::Sucessfull("COMPLETED_RECEIVED_TRANSFERING", self::REDIRECT_URL, 2);
 			exit();
 		}

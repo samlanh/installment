@@ -2,8 +2,47 @@
 $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 echo $this->headTitle($tr->translate('EDIT_TRANSFER_STOCK'));
 $frm = $this->frm;
-
+print_r($this->row);
 ?>
+<style>
+	.image-box {
+		text-align: center;
+	}
+
+	.image-box img {
+		width: 150px;
+		height: 100px;
+		border: solid 1px #eee;
+	}
+
+	.button_browse {
+		position: relative;
+		overflow: hidden;
+		text-align: center;
+		width: 100%;
+		height: 30px;
+		cursor: pointer;
+		background: #fbf9f9;
+		border: 1px solid #e8e8e8;
+	}
+
+	.button_browse span {
+		line-height: 33px;
+		font-weight: 600;
+		cursor: pointer;
+	}
+
+	input.btn_borwse_image {
+		position: absolute;
+		width: 100%;
+		height: 30px;
+		top: 0;
+		left: 0;
+		z-index: 2;
+		opacity: 0;
+		cursor: pointer;
+	}
+</style>
 <script src="<?php echo $this->baseUrl(); ?>/js/help.js" type="text/javascript"></script>
 <div class="card">
 	<div class="card-content collapse show">
@@ -53,7 +92,7 @@ $frm = $this->frm;
 				</div>
 			</div>
 			<div class="col-md-12">
-				<div class="col-md-6 col-sm-6 col-xs-12">
+				<div class="col-md-4 col-sm-4 col-xs-12">
 					<div class="card-blogform">
 						<div class="card-body">
 							<div class="row">
@@ -75,6 +114,7 @@ $frm = $this->frm;
 										<div class="col-md-7 col-sm-7 col-xs-12">
 											<?php echo $frm->getElement('branch_id'); ?>
 											<?php echo $frm->getElement('id'); ?>
+											<?php echo $frm->getElement('oldPhoto'); ?>
 										</div>
 									</div>
 									<div class="form-group">
@@ -122,7 +162,7 @@ $frm = $this->frm;
 						</div>
 					</div>
 				</div>
-				<div class="col-md-6 col-sm-6 col-xs-12">
+				<div class="col-md-4 col-sm-4 col-xs-12">
 					<div class="card-blogform">
 						<div class="card-body">
 							<div class="row">
@@ -167,6 +207,48 @@ $frm = $this->frm;
 										</label>
 										<div class="col-md-7 col-sm-7 col-xs-12">
 											<?php echo $frm->getElement('note'); ?>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4 col-sm-4 col-xs-12">
+					<div class="card-blogform">
+						<div class="card-body">
+							<div class="row">
+								<div class="col-md-12 col-sm-12 col-xs-12">
+									<div class="d-flex">
+										<div class="settings-main-icon ">
+											<i class="fa fa-file-image-o" aria-hidden="true"></i>
+										</div>
+										<div class="col-md-10 col-sm-10 col-xs-12">
+											<p class="tx-20 font-weight-semibold d-flex ">
+												<?php echo $tr->translate("PRODUCT_TRANSFER__PIC"); ?>
+											</p>
+										</div>
+									</div>
+									<div class="form-group">
+										<div class="col-md-12 col-sm-12 col-xs-12">
+											<?php
+											$images = $this->baseUrl() . '/images/no-photo.png';
+											if (!empty($this->transferphoto)) {
+												$images = $this->baseUrl() . '/images/transferpic/' . $this->transferphoto;
+											}
+											?>
+											<div class="account-image">
+												<div class="image-box">
+													<img id="profile_wiew" src="<?php echo $images; ?>" alt="" />
+												</div>
+												<div class="button_browse">
+													<div id='preview'></div>
+													<span>Upload <span><i class="fa fa-camera"
+																aria-hidden="true"></i></span></span>
+													<input class="btn_borwse_image" type="file" id="photo"
+														name="photo" />
+												</div>
+											</div>
 										</div>
 									</div>
 								</div>
@@ -439,5 +521,45 @@ $frm = $this->frm;
 
 
 			<?php } ?>
+	}
+
+	$("#photo").change(function () {
+		readURL(this);
+	});
+	$(function () {
+		bs_input_file();
+	});
+
+	function readURL(input) {
+		if (input.files && input.files[0]) {
+			var reader = new FileReader();
+			reader.onload = function (e) {
+				$('#profile_wiew').attr('src', e.target.result);
+			}
+			reader.readAsDataURL(input.files[0]);
+		}
+	}
+
+	function bs_input_file() {
+		$(".input-file").before(
+			function () {
+				if (!$(this).prev().hasClass('input-ghost')) {
+					var element = $("<input  type='file' accept='image/*' class='input-ghost' style='visibility:hidden; height:0'>");
+					element.attr("name", $(this).attr("name"));
+					element.change(function () {
+						element.next(element).find('input').val((element.val()).split('\\').pop());
+					});
+					$(this).find("button.btn-choose").click(function () {
+						element.click();
+					});
+					$(this).find('input').css("cursor", "pointer");
+					$(this).find('input').mousedown(function () {
+						$(this).parents('.input-file').prev().click();
+						return false;
+					});
+					return element;
+				}
+			}
+		);
 	}
 </script>
