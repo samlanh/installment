@@ -76,6 +76,11 @@ class Stockinout_TransferinController extends Zend_Controller_Action
 	function editAction()
 	{
 		$db = new Stockinout_Model_DbTable_DbReceiveTransfer();
+
+		$id = $this->getRequest()->getParam('id');
+		$id = empty($id) ? 0 : $id;
+		$row = $db->getDataRow($id);
+
 		if ($this->getRequest()->isPost()) {
 			$_data = $this->getRequest()->getPost();
 			try {
@@ -87,11 +92,6 @@ class Stockinout_TransferinController extends Zend_Controller_Action
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		} else {
-			$id = $this->getRequest()->getParam('id');
-			$id = empty($id) ? 0 : $id;
-			$row = $db->getDataRow($id);
-			$this->view->row = $row;
-			$this->view->transferphoto = $row['photoTransferIn'];
 
 			if (empty($row)) {
 				Application_Form_FrmMessage::Sucessfull("NO_DATA", self::REDIRECT_URL, 2);
@@ -104,11 +104,13 @@ class Stockinout_TransferinController extends Zend_Controller_Action
 				exit();
 			}
 
-			$fm = new Stockinout_Form_FrmTransfer();
-			$frm = $fm->FrmTransferReceive($row);
-			Application_Model_Decorator::removeAllDecorator($frm);
-			$this->view->frm = $frm;
 		}
+		$this->view->row = $row;
+		$this->view->transferphoto = $row['photoTransferIn'];
+		$fm = new Stockinout_Form_FrmTransfer();
+		$frm = $fm->FrmTransferReceive($row);
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frm = $frm;
 
 	}
 
