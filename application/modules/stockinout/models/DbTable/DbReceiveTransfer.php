@@ -113,6 +113,22 @@ class Stockinout_Model_DbTable_DbReceiveTransfer extends Zend_Db_Table_Abstract
 				'createDate' => date('Y-m-d H:i:s'),
 				'modifyDate' => date('Y-m-d H:i:s'),
 			);
+			$part = PUBLIC_PATH . '/images/transferpic/';
+			if (!file_exists($part)) {
+				mkdir($part, 0777, true);
+			}
+			$photo_name = $_FILES['photo']['name'];
+			if (!empty($photo_name)) {
+				$tem = explode(".", $photo_name);
+				$image_name = "photoTransferIn_" . date("Y") . date("m") . date("d") . time() . "." . end($tem);
+				$tmp = $_FILES['photo']['tmp_name'];
+				if (move_uploaded_file($tmp, $part . $image_name)) {
+					move_uploaded_file($tmp, $part . $image_name);
+					$photo = $image_name;
+					$arr['photoTransferIn'] = $photo;
+				}
+			}
+
 			$this->_name = 'st_transfer_receive';
 			$receivedId = $this->insert($arr);
 
@@ -197,6 +213,25 @@ class Stockinout_Model_DbTable_DbReceiveTransfer extends Zend_Db_Table_Abstract
 
 				'modifyDate' => date('Y-m-d H:i:s'),
 			);
+			$part = PUBLIC_PATH . '/images/transferpic/';
+			if (!file_exists($part)) {
+				mkdir($part, 0777, true);
+			}
+			$photo_name = $_FILES['photo']['name'];
+			if (!empty($photo_name)) {
+				//unset old file here
+				$tem = explode(".", $photo_name);
+				$image_name = "photoTransferIn_" . date("Y") . date("m") . date("d") . time() . "." . end($tem);
+				$tmp = $_FILES['photo']['tmp_name'];
+				if (move_uploaded_file($tmp, $part . $image_name)) {
+					move_uploaded_file($tmp, $part . $image_name);
+					$photo = $image_name;
+					$arr['photoTransferIn'] = $photo;
+				}
+			}
+			if (!empty($photo_name) and file_exists($part . $data['oldPhoto'])) { //delelete old file
+				unlink($part . $data['oldPhoto']);
+			}
 			$this->_name = 'st_transfer_receive';
 			$receivedId = $data['id'];
 			$where = "id=" . $receivedId;

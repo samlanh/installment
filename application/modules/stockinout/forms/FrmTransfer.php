@@ -320,6 +320,7 @@ class Stockinout_Form_FrmTransfer extends Zend_Dojo_Form
 		);
 
 		$id = new Zend_Form_Element_Hidden('id');
+		$oldphoto = new Zend_Form_Element_Hidden('oldPhoto');
 
 		if (!empty($_data)) {
 			$_branch_id->setValue($_data['projectId']);
@@ -330,6 +331,7 @@ class Stockinout_Form_FrmTransfer extends Zend_Dojo_Form
 			$id->setValue($_data['id']);
 			$_status->setValue($_data['status']);
 			$_note->setValue($_data['note']);
+			$oldphoto->setValue($_data['photoTransferIn']);
 		}
 		$this->addElements(
 			array(
@@ -346,6 +348,8 @@ class Stockinout_Form_FrmTransfer extends Zend_Dojo_Form
 				$_status
 				,
 				$_note
+				,
+				$oldphoto
 
 			)
 		);
