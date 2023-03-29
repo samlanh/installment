@@ -195,6 +195,38 @@ class Report_StockreportController extends Zend_Controller_Action
 		$this->view->footerReport = $frmpopup->getFooterReport();
 		$this->view->headerReport = $frmpopup->getLetterHeadReport();
 	}
+	public function rptReceivestockInfoAction()
+	{
+		$db = new Stockinout_Model_DbTable_DbReceiveStock();
+		try {
+			$id = $this->getRequest()->getParam('id');
+			$id = empty($id) ? 0 : $id;
+			$param = array(
+				'dnId' => $id,
+				'transactionType' => 1, //dn request
+			);
+
+		} catch (Exception $e) {
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+		}
+
+		$rs = $db->getDNById($param);
+		if (empty($id) or empty($rs)) {
+			Application_Form_FrmMessage::Sucessfull("NO_DATA", "/report/stockreport/rpt-receivestock", 2);
+		}
+
+
+		$this->view->rsRow = $rs;
+		$this->view->dnDetail = $db->getDNDetailById($id);
+
+		$frmpopup = new Application_Form_FrmPopupGlobal();
+		$this->view->printByFormat = $frmpopup->printByFormat();
+
+		$frmpopup = new Application_Form_FrmPopupGlobal();
+		$this->view->footerReport = $frmpopup->getFooterReport();
+		$this->view->headerReport = $frmpopup->getLetterHeadReport();
+	}
 	public function rptConcretednAction()
 	{
 		$db = new Stockinout_Model_DbTable_DbReceiveStock();

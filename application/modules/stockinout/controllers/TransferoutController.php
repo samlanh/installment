@@ -91,7 +91,6 @@ class Stockinout_TransferoutController extends Zend_Controller_Action
 		$id = $this->getRequest()->getParam('id');
 		$id = empty($id) ? 0 : $id;
 
-
 		$row = $db->getDataRow($id);
 		$rowDetail = $db->getDataRowDetail($id);
 		$this->view->row = $row;
@@ -101,10 +100,11 @@ class Stockinout_TransferoutController extends Zend_Controller_Action
 		// if (empty($row)) {
 		// 	Application_Form_FrmMessage::Sucessfull("NO_DATA", self::REDIRECT_URL, 2);
 		// 	exit();
-		// 	} else if ($row['status'] == 0) {
-		// 		Application_Form_FrmMessage::Sucessfull("ALREADY_DEACTIVE", self::REDIRECT_URL, 2);
-		// 		exit();
-		// } else
+		// }
+		// if ($row['status'] == 0) {
+		// 	Application_Form_FrmMessage::Sucessfull("ALREADY_DEACTIVE", self::REDIRECT_URL, 2);
+		// 	exit();
+		// }
 		if ($row['isCompletedReceive'] == 1) {
 			Application_Form_FrmMessage::Sucessfull("COMPLETED_RECEIVED_TRANSFERING", self::REDIRECT_URL, 2);
 			exit();
