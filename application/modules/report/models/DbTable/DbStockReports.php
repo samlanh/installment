@@ -175,7 +175,7 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
 	    	(SELECT project_name FROM `ln_project` WHERE br_id=r.projectId LIMIT 1) AS projectName,
 	    	(SELECT name_kh FROM `st_view` WHERE type=4 AND key_code=r.dnType LIMIT 1) dnType,
 	    	r.dnNumber,
-	    	(SELECT name_kh FROM `st_view` WHERE type=5 AND key_code=r.isIssueInvoice LIMIT 1) isIssueInvoice,
+	    	(SELECT name_kh FROM `st_view` WHERE type=5 AND key_code=r.verified LIMIT 1) isVerified,
 	    	r.plateNo,
 	    	r.driverName,
 	    	r.staffCounter,
