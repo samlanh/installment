@@ -1,6 +1,6 @@
 <?php
 $tr = Application_Form_FrmLanguages::getCurrentlanguage();
-$this->headTitle($tr->translate("DELIVERY_NOTE_DETAIL"));
+$this->headTitle($tr->translate("DELIVERY_NOTE"));
 echo $this->headTitle();
 $requestUrl = $this->baseUrl() . "/report/stockmg/request-letter/id/";
 ?>
@@ -9,7 +9,7 @@ $requestUrl = $this->baseUrl() . "/report/stockmg/request-letter/id/";
 		<div class="col-sm-12 border-botom">
 			<div class="col-sm-8 pd-0">
 				<h4 class="m-b-0"><i class="fa fa-file-text" aria-hidden="true"></i>
-					<?php echo $tr->translate('DELIVERY_NOTE_DETAIL'); ?>
+					<?php echo $tr->translate('DELIVERY_NOTE'); ?>
 				</h4>
 			</div>
 			<div class="col-sm-4 text-right">
@@ -172,12 +172,12 @@ $requestUrl = $this->baseUrl() . "/report/stockmg/request-letter/id/";
 				<tr>
 					<td colspan="3" align="center">
 						<span
-							style='font-family: "Times New Roman","Khmer OS Muol Light"; display: block;line-height: 14px;'>ប័ណ្ណទទួលទំនិញលម្អិត</span>
+							style='font-family: "Times New Roman","Khmer OS Muol Light"; display: block;line-height: 14px;'>ប័ណ្ណទទួលទំនិញ</span>
 						<span
 							style='font-family: "Times New Roman","Khmer OS Muol Light";display: block;line-height: 14px;text-transform: uppercase;font-weight: 600;'>Delivery
-							Note Detail
-						</span>
-
+							Note</span>
+						<span
+							style='font-family: "Times New Roman","Khmer OS Muol Light";display: block;line-height: 12px;text-transform: uppercase;'>(ស្នើ/Request)</span>
 					</td>
 				</tr>
 				<tr>
@@ -198,12 +198,11 @@ $requestUrl = $this->baseUrl() . "/report/stockmg/request-letter/id/";
 								</td>
 								<td width="30%">
 									<span class="lbTitle">
-										លេខសំណើ :
-										<small>Request N<sup>o</sup> : </small>
+										លេខបញ្ជាទិញ :
+										<small>Purchase N<sup>o</sup> : </small>
 									</span>
 									<span class="bold redColor"><a class="colorInherit" target="_blank"
-											href="<?php echo $requestUrl . $rs["requestId"]; ?>"><?php echo $rs["requestNo"]; ?></a>
-									</span>
+											href="<?php echo $this->baseUrl() . "/report/stockmg/purchase-letter/id/" . $rs["poId"]; ?>"><?php echo $rs["purchaseNo"]; ?></a></span>
 								</td>
 								<td width="30%">
 									<span class="lbTitle">
@@ -228,11 +227,17 @@ $requestUrl = $this->baseUrl() . "/report/stockmg/request-letter/id/";
 								</td>
 								<td>
 									<span class="lbTitle">
-										អ្នករាប់ទំនិញ :
-										<small>Counter : </small>
+										កាលបរិច្ឆេទបញ្ជាទិញ :
+										<small>Purchase Date : </small>
 									</span>
 									<span class="bold">
-										<?php echo $rs['staffCounter'] ?>
+										<?php
+										$format = 'd-M-Y';
+										$dateString = $rs["purchaseDate"];
+										$date = new DateTime($dateString);
+										$purchaseDate = $date->format($format);
+										echo $purchaseDate;
+										?>
 									</span>
 								</td>
 								<td>
@@ -257,6 +262,32 @@ $requestUrl = $this->baseUrl() . "/report/stockmg/request-letter/id/";
 								</td>
 								<td>
 									<span class="lbTitle">
+										ឯកសារភ្ជាប់:
+										<small>Document Attached : </small>
+									</span>
+								</td>
+								<td>
+									<span class="lbTitle">
+										លេខប័ណ្ណទទួល/វិក្កយបត្រ :
+										<small>DN/Invoice N <sup>o</sup> : </small>
+									</span>
+									<span class="bold">
+										<?php echo $rs['dnNumber'] ?>
+									</span>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<span class="lbTitle">
+										អ្នករាប់ទំនិញ :
+										<small>Counter : </small>
+									</span>
+									<span class="bold">
+										<?php echo $rs['staffCounter'] ?>
+									</span>
+								</td>
+								<td>
+									<span class="lbTitle">
 										<?php echo $tr->translate("PICTURE_GOODS"); ?> :
 										<small>Goods Picture : <span>
 												<?php if (!empty($rs['photoDn'])) { ?><a target="_blank"
@@ -267,6 +298,32 @@ $requestUrl = $this->baseUrl() . "/report/stockmg/request-letter/id/";
 												; ?>
 											</span></small>
 									</span>
+								</td>
+								<td>
+									<span class="lbTitle">
+										កាលបរិច្ឆេទ ទទួល :
+										<small>Receive Date : </small>
+									</span>
+									<span class="bold">
+										<?php
+										$format = 'd-M-Y';
+										$dateString = $rs["receiveDate"];
+										$date = new DateTime($dateString);
+										$receiveDate = $date->format($format);
+										echo $receiveDate;
+										?>
+									</span>
+								</td>
+							</tr>
+							<tr>
+
+								<td>
+									<span class="lbTitle">
+										លេខសំណើ :
+										<small>Request N<sup>o</sup> : </small>
+									</span>
+									<span class="bold redColor"><a class="colorInherit" target="_blank"
+											href="<?php echo $requestUrl . $rs["requestId"]; ?>"><?php echo $rs["requestNo"]; ?></a></span>
 								</td>
 								<td>
 									<span class="lbTitle">
@@ -281,8 +338,10 @@ $requestUrl = $this->baseUrl() . "/report/stockmg/request-letter/id/";
 											</span></small>
 									</span>
 								</td>
-							</tr>
+								<td>
+								</td>
 
+							</tr>
 						</table>
 					</td>
 				</tr>
@@ -291,61 +350,30 @@ $requestUrl = $this->baseUrl() . "/report/stockmg/request-letter/id/";
 						<table class="content-data" width="100%" border="1" cellspacing="0" cellpadding="0">
 							<thead>
 								<tr class="style headRow" align="center">
-									<td scope="col" class="center" rowspan="2">
+									<td scope="col" class="center">
 										<span>ល.រ</span>
 										<small>N<sup>o</sup></small>
 									</td>
-									<td scope="col" class="center" colspan="2">
-										<span>ព័ត៌មានទំនិញ</span>
-										<small>Request Information</small>
-									</td>
-									<td scope="col" class="center" colspan="3">
-										<span>ព័ត៌មានការបញ្ជាទិញ</span>
-										<small>Purchase Information</small>
-									</td>
-									<td scope="col" class="center" colspan="4">
-										<span>ព័ត៌មានការទទួលទំនិញ</span>
-										<small>Receive Information</small>
-									</td>
-								</tr>
-								<tr class="style headRow" align="center">
 									<td scope="col" class="center" style="width:200px;">
-										<span>ទំនិញ</span>
-										<small>Product</small>
-									</td>
-									<td scope="col" class="center">
-										<span>ឯកតា</span>
-										<small>Unit</small>
+										<span>ឈ្មោះទំនិញ</span>
+										<small>Product Name</small>
 									</td>
 
 									<td scope="col" class="center">
-										<span>បរិមាណបញ្ជាទិញ</span>
+										<span>បរិមាណទិញ</span>
 										<small>Purchase Qty</small>
 									</td>
 									<td scope="col" class="center">
-										<span>លេខបញ្ជាទិញ</span>
-										<small>Purchase N<sup>o</sup></small>
-									</td>
-									<td scope="col" class="center">
-										<span>ថ្ងៃបញ្ជាទិញ</span>
-										<small>Purchase Date</small>
-									</td>
-
-									<td scope="col" class="center">
 										<span>បរិមាណទទួល</span>
-										<small>Received Qty</small>
+										<small>Receive Qty</small>
 									</td>
 									<td scope="col" class="center">
 										<span>បរិមាណនៅសល់</span>
 										<small>Remaining Qty</small>
 									</td>
-									<td scope="col" class="center">
-										<span>លេខ ប័ណ្ណទទួល/វិក្កយបត្រ</span>
-										<small>DN N<sup>o</sup> / Invoice N<sup>o</sup></small>
-									</td>
-									<td scope="col" class="center">
-										<span>ថ្ងៃទទួលទំនិញ(ទិញ)</span>
-										<small>Received Date</small>
+									<td scope="col" class="center" style="width:200px;">
+										<span>សម្គាល់</span>
+										<small>Note</small>
 									</td>
 								</tr>
 
@@ -363,49 +391,17 @@ $requestUrl = $this->baseUrl() . "/report/stockmg/request-letter/id/";
 										<td data-label="ឈ្មោះទំនិញ/Product Name">
 											<?php echo $result['proName'] . " " . $result['proCode']; ?>
 										</td>
-										<td data-label="ឯកតា/ Unit" class="centerText">
-											<?php echo $result['measureLabel'] ?>
-										</td>
 										<td data-label="បរិមាណទិញ/Purchase Qty" class="centerText">
-											<?php echo number_format($result['qtyReceive'] + $result['qtyAfterReceive'], 2); ?>
-										</td>
-										<td data-label="លេខបញ្ជាទិញ/Purchase No" class="centerText">
-											<span class="bold redColor"><a class="colorInherit" target="_blank"
-													href="<?php echo $this->baseUrl() . "/report/stockmg/purchase-letter/id/" . $rs["poId"]; ?>"><?php echo $rs["purchaseNo"]; ?></a>
-											</span>
-										</td>
-										<td data-label="ថ្ងៃបញ្ជារទិញ/Purchase Date" class="centerText">
-											<span class="bold">
-												<?php
-												$format = 'd-M-Y';
-												$dateString = $rs["purchaseDate"];
-												$date = new DateTime($dateString);
-												$purchaseDate = $date->format($format);
-												echo $purchaseDate;
-												?>
-											</span>
+											<?php echo number_format($result['qtyReceive'] + $result['qtyAfterReceive'], 2) . ' ' . $result['measureLabel']; ?>
 										</td>
 										<td data-label="បរិមាណទទួល/Receive Qty" class="centerText">
-											<?php echo number_format($result['qtyReceive'], 2); ?>
+											<?php echo number_format($result['qtyReceive'], 2) . ' ' . $result['measureLabel']; ?>
 										</td>
-										<td data-label="បរិមាណនៅសល់/Remaining Qty" style="font-size: 10px;" class="centerText">
-											<?php echo number_format($result['qtyAfterReceive'], 2); ?>
+										<td data-label="បរិមាណនៅសល់/Remaining Qty" style="font-size: 10px;">
+											<?php echo number_format($result['qtyAfterReceive'], 2) . ' ' . $result['measureLabel']; ?>
 										</td>
-										<td data-label="សម្គាល់/Note" style="font-size: 10px;" class="centerText">
-											<span class="bold redColor">
-												<?php echo $rs['dnNumber'] ?>
-											</span>
-										</td>
-										<td data-label="ថ្ងៃទទួទំនិញ/Receive Date" class="centerText">
-											<span class="bold">
-												<?php
-												$format = 'd-M-Y';
-												$dateString = $rs["receiveDate"];
-												$date = new DateTime($dateString);
-												$receiveDate = $date->format($format);
-												echo $receiveDate;
-												?>
-											</span>
+										<td data-label="សម្គាល់/Note" style="font-size: 10px;">
+											<?php echo $result['note']; ?>
 										</td>
 									</tr>
 									<?php
@@ -416,10 +412,6 @@ $requestUrl = $this->baseUrl() . "/report/stockmg/request-letter/id/";
 									<td class="centerText">
 										<?php echo $num + 1; ?>
 									</td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
 									<td></td>
 									<td></td>
 									<td></td>

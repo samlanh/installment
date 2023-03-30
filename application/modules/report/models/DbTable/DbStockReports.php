@@ -228,6 +228,63 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
 		$db = $this->getAdapter();
 		return $db->fetchAll($sql . $where . $where_date . $order);
 	}
+	function getAllReceiveStockDetail($search)
+	{
+		$DATE_FORMAT = DATE_FORMAT_FOR_SQL;
+		$sql = "SELECT  rd.id, 
+		(SELECT pj.project_name FROM `ln_project` AS pj WHERE rs.projectId=pj.br_id ) AS projectName,
+		(SELECT sp.supplierName FROM `st_supplier` AS sp WHERE rs.supplierId=sp.id ) AS supplierName,
+		(SELECT pd.proName FROM `st_product` AS pd WHERE rd.proId=pd.proId ) AS proName,
+		(SELECT pd.proCode FROM `st_product` AS pd WHERE rd.proId=pd.proId ) AS proCode,
+		(SELECT pd.measureLabel FROM `st_product` AS pd WHERE rd.proId=pd.proId ) AS measureLabel,
+		(SELECT p.purchaseNo  FROM  `st_purchasing` AS p WHERE rs.poId=p.id )AS purchaseNo,
+		(SELECT p.date  FROM  `st_purchasing` AS p WHERE rs.poId=p.id )AS purchaseDate,
+		(SELECT name_kh FROM `st_view` WHERE type=5 AND key_code=rs.verified LIMIT 1) isVerified,
+		rd.qtyReceive, rd.qtyAfterReceive, rs.receiveDate, rs.dnNumber
+		
+		 FROM `st_receive_stock_detail` AS rd
+		
+		 JOIN `st_receive_stock` AS rs ON rd.receiveId = rs.id ";
+
+
+		// $from_date = (empty($search['start_date'])) ? '1' : " r.receiveDate >= '" . $search['start_date'] . " 00:00:00'";
+		// $to_date = (empty($search['end_date'])) ? '1' : " r.receiveDate <= '" . $search['end_date'] . " 23:59:59'";
+		// $where = '';
+		// $where_date = " AND " . $from_date . " AND " . $to_date;
+
+		// 		if (!empty($search['adv_search'])) {
+// 			$s_where = array();
+// 			$s_search = addslashes((trim($search['adv_search'])));
+// 			$s_where[] = " r.dnNumber LIKE '%{$s_search}%'";
+// 			$s_where[] = " r.driverName LIKE '%{$s_search}%'";
+// 			$s_where[] = " r.plateNo LIKE '%{$s_search}%'";
+// 			$s_where[] = " r.staffCounter LIKE '%{$s_search}%'";
+
+		// 			$s_where[] = " (SELECT p.id FROM `st_purchasing` AS p WHERE p.id=r.poId AND purchaseNo LIKE '%{$s_search}%')";
+// 			$s_where[] = " (SELECT s.id FROM `st_request_po` AS s WHERE s.id=r.requestId AND requestNo LIKE '%{$s_search}%')";
+
+		// 			$where .= ' AND ( ' . implode(' OR ', $s_where) . ')';
+// 		}
+// 		//     	if($search['status']>-1){
+// //     		$where.= " AND r.status = ".$search['status'];
+// //     	}
+// 		if ($search['verifyStatus'] > -1) {
+// 			$where .= " AND r.isIssueInvoice = " . $search['verifyStatus'];
+// 		}
+// 		if ($search['branch_id'] > 0) {
+// 			$where .= " AND r.projectId = " . $search['branch_id'];
+// 		}
+// 		if ($search['supplierId'] > 0) {
+// 			$where .= " AND r.supplierId = " . $search['supplierId'];
+// 		}
+// 		$dbg = new Application_Model_DbTable_DbGlobal();
+// 		$where .= $dbg->getAccessPermission('r.projectId');
+
+		$order = ' ORDER BY rd.id DESC  ';
+
+		$db = $this->getAdapter();
+		return $db->fetchAll($sql . $order);
+	}
 	function getAllAdjustStock($search)
 	{
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();

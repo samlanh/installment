@@ -1,272 +1,368 @@
-<?php 
-	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-	
-	$frm = $this->frm_search;
-	$frmProduct = $this->frmSearchProduct;
-	
-	$dbGB = new Application_Model_DbTable_DbGlobal();
+<?php
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 
-	
-	$headerReportType = REPORT_LETER_HEAD;
-	$classHideHeight="110px";
-	if($headerReportType==2){
-		$classHideHeight="125px";
-	}
-	
-	$branch_title = $tr->translate("BRAND_TITLE");
+$frm = $this->frm_search;
+$frmProduct = $this->frmSearchProduct;
+
+$dbGB = new Application_Model_DbTable_DbGlobal();
+
+
+$headerReportType = REPORT_LETER_HEAD;
+$classHideHeight = "110px";
+if ($headerReportType == 2) {
+	$classHideHeight = "125px";
+}
+
+$branch_title = $tr->translate("BRAND_TITLE");
+
 ?>
-<title><?php echo $tr->translate("RPT_CURRENTSTOCK");?></title>
+<title>
+	<?php echo $tr->translate("RPT_CURRENTSTOCK"); ?>
+</title>
 <script>
-     dojo.require("dijit.form.DateTextBox");
+	dojo.require("dijit.form.DateTextBox");
 </script>
-	<div class="reportblog">
-		<div class="card-box">
-	       	<div class="col-sm-12 border-botom">
-		   		<div class="col-sm-8 pd-0">
-		    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i> <?php echo $tr->translate('RPT_CURRENTSTOCK');?></h4>
-	    		</div>
-	    		<div class="col-sm-4 text-right">
-	    		</div>
-	    	</div>
-	    </div>
-		<form method="post">
-			<div class="card-box">
-		    	<div class="form-group">
-					<label class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frm->getElement('adv_search');?>
-					</label>
-					<label class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frm->getElement('branch_id');?>
-					</label>
-					<label class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frmProduct->getElement('isCountStock');?>
-					</label>
-					<label class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frmProduct->getElement('categoryId');?>
-					</label>
-					<label class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frmProduct->getElement('measureId');?>
-					</label>
-					<label class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frm->getElement('btn_search');?>
-					</label>
-				</div>
+<div class="reportblog">
+	<div class="card-box">
+		<div class="col-sm-12 border-botom">
+			<div class="col-sm-8 pd-0">
+				<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i>
+					<?php echo $tr->translate('RPT_CURRENTSTOCK'); ?>
+				</h4>
 			</div>
-		</form>
-		<div style="width:100%; margin:0 auto;">
+			<div class="col-sm-4 text-right">
+			</div>
+		</div>
+	</div>
+	<form method="post">
+		<div class="card-box">
+			<div class="form-group">
+				<label class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frm->getElement('adv_search'); ?>
+				</label>
+				<label class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frm->getElement('branch_id'); ?>
+				</label>
+				<label class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frmProduct->getElement('isCountStock'); ?>
+				</label>
+				<label class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frmProduct->getElement('categoryId'); ?>
+				</label>
+				<label class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frmProduct->getElement('measureId'); ?>
+				</label>
+				<label class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frm->getElement('btn_search'); ?>
+				</label>
+			</div>
+		</div>
+	</form>
+	<div style="width:100%; margin:0 auto;">
 		<div style="min-height:22cm; margin:0 auto;">
 			<style>
-				.hideblog{display: block !important;;border: 1px solid #fff; border-bottom: 1px solid #000;}
-				.hiddenblog{display: block !important;}
+				.hideblog {
+					display: block !important;
+					;
+					border: 1px solid #fff;
+					border-bottom: 1px solid #000;
+				}
+
+				.hiddenblog {
+					display: block !important;
+				}
 			</style>
 			<div id="divPrint">
 				<style type="text/css">
-					
-					.style{
-						line-height: 20px;font-size: 11px !important;
-						font-family: 'Times New Roman','Khmer OS Battambang';
+					.style {
+						line-height: 20px;
+						font-size: 11px !important;
+						font-family: 'Times New Roman', 'Khmer OS Battambang';
 					}
-					.hideblog{display: none;}
-					.hiddenblog{display: block !important;}
-					table tr td ul li{text-align: center;list-style: none;line-height: 25px; }
-					table.content-data { page-break-inside:auto }
-					tr.content-data{ page-break-inside:avoid; page-break-after:auto; }
+
+					.hideblog {
+						display: none;
+					}
+
+					.hiddenblog {
+						display: block !important;
+					}
+
+					table tr td ul li {
+						text-align: center;
+						list-style: none;
+						line-height: 25px;
+					}
+
+					table.content-data {
+						page-break-inside: auto
+					}
+
+					tr.content-data {
+						page-break-inside: avoid;
+						page-break-after: auto;
+					}
+
 					#header {
-					  display: table-header-group;
-					  page-break-inside:avoid; page-break-after:auto;
-					  margin-top: 100px;
+						display: table-header-group;
+						page-break-inside: avoid;
+						page-break-after: auto;
+						margin-top: 100px;
 					}
-					.hide{visibility: hidden;}
+
+					.hide {
+						visibility: hidden;
+					}
+
 					@media print {
-					 div.divFooter {
-					    position: fixed;
-					    top: 0;
-					  	width: 100%;
-					  	height: 100px;
-					  	bottom:0px;
-						margin:0;
-					  }
-						.hide{visibility: visible; height: <?php echo $classHideHeight;?>;}
-						@page {size: portrait; margin-left: 0.3cm;margin-right:0.3cm;}
+						div.divFooter {
+							position: fixed;
+							top: 0;
+							width: 100%;
+							height: 100px;
+							bottom: 0px;
+							margin: 0;
+						}
+
+						.hide {
+							visibility: visible;
+							height:
+								<?php echo $classHideHeight; ?>
+							;
+						}
+
+						@page {
+							size: portrait;
+							margin-left: 0.3cm;
+							margin-right: 0.3cm;
+						}
 					}
-					.center{text-align: center !important;}
-					table.content-data{
-						border-collapse:collapse;
-						border:1px solid #000; 
-						font-size:13px;
+
+					.center {
+						text-align: center !important;
 					}
+
+					table.content-data {
+						border-collapse: collapse;
+						border: 1px solid #000;
+						font-size: 13px;
+					}
+
 					table.content-data thead tr.style {
-					   line-height: 25px; font-size:12px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
+						line-height: 25px;
+						font-size: 12px !important;
+						padding: 1px 0px;
+						white-space: nowrap;
+						height: 22px;
 						background: #c1d0f3;
-						font-weight:600;
+						font-weight: 600;
 					}
-					.style td{
+
+					.style td {
 						padding: 0px 2px;
 					}
-					table.tb-footer{
-						border-collapse:collapse;
-						border:1px solid #000; 
-						font-size:13px;
-						font-family: 'Times New Roman','Khmer OS Battambang';
+
+					table.tb-footer {
+						border-collapse: collapse;
+						border: 1px solid #000;
+						font-size: 13px;
+						font-family: 'Times New Roman', 'Khmer OS Battambang';
 					}
-					
-					table.tb-footer tr{
-					 line-height: 14px; font-size:11px; padding:2px 0px; height: 25px;
+
+					table.tb-footer tr {
+						line-height: 14px;
+						font-size: 11px;
+						padding: 2px 0px;
+						height: 25px;
 					}
-					table tr td{
-						padding:0 2px;
+
+					table tr td {
+						padding: 0 2px;
 					}
-					.style:hover{background:#eee;}
-					  
-					  @media screen and (max-width: 600px) {
-							  table {
-							    border: 0;
-							  }
-								table.content-data {
-								    border-collapse: collapse;
-								    border: 1px solid #fff;
-								    font-size: 13px;
-								}
-													
-							  table thead {
-							    border: none;
-							    clip: rect(0 0 0 0);
-							    height: 1px;
-							    margin: -1px;
-							    overflow: hidden;
-							    padding: 0;
-							    position: absolute;
-							    width: 1px;
-							  }
-							  
-							  table .content-data tr {
-							    border-bottom: 3px solid #ddd;
-							    border-right: 3px solid #ddd;
-							    display: block;
-							    margin-bottom: .625em;
-							  }
-							  
-								table .content-data td {
-							    /*border-bottom: 1px solid #ddd;*/
-							    display: block;
-							    font-size: .8em;
-							    text-align: right;
-							  }
-							table .content-data td{
-										border-bottom: 1px solid #ddd;	}
-							  
-							  table td::before {
-							  
-							    content: attr(data-label);
-							    float: left;
-							    font-weight: bold;
-							    text-transform: uppercase;
-							  }
-							  
-							  table td:last-child {
-							    border-bottom: 0;
-							  }
-							}
-				
-					 		</style>
+
+					.style:hover {
+						background: #eee;
+					}
+
+					@media screen and (max-width: 600px) {
+						table {
+							border: 0;
+						}
+
+						table.content-data {
+							border-collapse: collapse;
+							border: 1px solid #fff;
+							font-size: 13px;
+						}
+
+						table thead {
+							border: none;
+							clip: rect(0 0 0 0);
+							height: 1px;
+							margin: -1px;
+							overflow: hidden;
+							padding: 0;
+							position: absolute;
+							width: 1px;
+						}
+
+						table .content-data tr {
+							border-bottom: 3px solid #ddd;
+							border-right: 3px solid #ddd;
+							display: block;
+							margin-bottom: .625em;
+						}
+
+						table .content-data td {
+							/*border-bottom: 1px solid #ddd;*/
+							display: block;
+							font-size: .8em;
+							text-align: right;
+						}
+
+						table .content-data td {
+							border-bottom: 1px solid #ddd;
+						}
+
+						table td::before {
+
+							content: attr(data-label);
+							float: left;
+							font-weight: bold;
+							text-transform: uppercase;
+						}
+
+						table td:last-child {
+							border-bottom: 0;
+						}
+					}
+				</style>
 				<table width="100%">
 					<tr>
-				    	<td align="center" valign="top">
-				        	<div class="divFooter">
-					        	<?php echo $this->headerReport;?>
-				            </div>
-				        </td>
-				    </tr>
-				    <tr>
-				    	<td id="exportExcel">
-				            <table class="content-data" width="100%" border="1"  cellspacing="0" cellpadding="0">
-				                <thead>
-				                <tr class="hide" style="border:1px solid #000;">
-				                	<td colspan="17" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
-				                </tr>
-				                <tr class="style" align="center">
-									<td scope="col"  style="padding:1px;">ល.រ​ <br> No.</td>                   
-									<td scope="col" style="padding:1px;">សាខា <br>Projec Name</td>
-									<td scope="col" style="padding:1px;">ឈ្មោះទំនិញ <br>Product Name</td>
-									<td scope="col" style="padding:1px;">បារកូដ <br> Barcode</td>
-									<td scope="col" style="padding:1px;">ប្រភេទទិញ <br> Product Category</td>
-									<td scope="col" style="padding:1px;">បរិមាណនៅសល់ <br> Current QTY</td>	                    
-									<td scope="col" style="padding:1px;">តម្លៃ <br> Cost</td>
-									<td scope="col" style="padding:1px;">សរុប <br> Total</td>
-									<td scope="col" style="padding:1px;">គម្រោងចំណាយ <br>Budget Plan</td>
-									<td scope="col" style="padding:1px;">ផ្សេងៗ <br> Other</td>
+						<td align="center" valign="top">
+							<div class="divFooter">
+								<?php echo $this->headerReport; ?>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td id="exportExcel">
+							<table class="content-data" width="100%" border="1" cellspacing="0" cellpadding="0">
+								<thead>
+									<tr class="hide" style="border:1px solid #000;">
+										<td colspan="17" style="border:1px solid #fff;border-bottom:1px solid #000;">
+										</td>
 									</tr>
-					            </thead>
-				                <?php 
-				                	$total=0;
-				                	$grandTotal = 0;
-				                if(!empty($this->rows)) foreach ($this->rows as $index => $rs){
-				                	$total = $rs['currentQty']*$rs['cost'];
-				                	$grandTotal = $grandTotal+$total;
-								?>
-								<tr class="style" align="left">
-									<td data-label="ល.រ​ /N.o" class="padding" style="text-align: center;"><?php echo $index+1;?></td>
-									<td data-label="សាខា/Projec Name"><?php echo $rs['projectName']?></td>                   
-									<td data-label="ឈ្មោះទំនិញ/Product Name"><?php echo $rs['name']?></td>
-									<td data-label="បារកូដ/Barcode">&nbsp;<?php echo $rs['barCode']?></td>
-									<td data-label="ប្រភេទទិញ/Product Category"><?php echo $rs['categoryName']?></td>
-									<td data-label="បរិមាណនៅសល់/Current QTY"><strong><?php echo number_format($rs['currentQty'],2)?></strong><span style="float: right;"><?php echo $rs['measureTitle'];?></span></td>
-									<td data-label="តម្លៃ/Cost">&nbsp;<?php echo number_format($rs['cost'],2)?></td>
-									<td data-label="តម្លៃ/Cost">&nbsp;<?php echo number_format($total,2)?></td>	                    
-									<td data-label="គម្រោងចំណាយ/Budget Plan"><?php echo $rs['budgetTitle']?></td>
-									<td data-label="ផ្សេងៗ/Other">&nbsp;</td>
+									<tr class="style" align="center">
+										<td scope="col" style="padding:1px;">ល.រ​ <br> No.</td>
+										<td scope="col" style="padding:1px;">សាខា <br>Projec Name</td>
+										<td scope="col" style="padding:1px;">ឈ្មោះទំនិញ <br>Product Name</td>
+										<td scope="col" style="padding:1px;">បារកូដ <br> Barcode</td>
+										<td scope="col" style="padding:1px;">ប្រភេទទិញ <br> Product Category</td>
+										<td scope="col" style="padding:1px;">បរិមាណនៅសល់ <br> Current QTY</td>
+										<td scope="col" style="padding:1px;">តម្លៃ <br> Cost</td>
+										<td scope="col" style="padding:1px;">សរុប <br> Total</td>
+										<td scope="col" style="padding:1px;">គម្រោងចំណាយ <br>Budget Plan</td>
+										<td scope="col" style="padding:1px;">ផ្សេងៗ <br> Other</td>
+									</tr>
+								</thead>
+								<?php
+								$total = 0;
+								$grandTotal = 0;
+								if (!empty($this->rows))
+									foreach ($this->rows as $index => $rs) {
+										$total = $rs['currentQty'] * $rs['cost'];
+										$grandTotal = $grandTotal + $total;
+										?>
+										<tr class="style" align="left">
+											<td data-label="ល.រ​ /N.o" class="padding" style="text-align: center;">
+												<?php echo $index + 1; ?>
+											</td>
+											<td data-label="សាខា/Projec Name">
+												<?php echo $rs['projectName'] ?>
+											</td>
+											<td data-label="ឈ្មោះទំនិញ/Product Name">
+												<?php echo $rs['name'] ?>
+											</td>
+											<td data-label="បារកូដ/Barcode">&nbsp;
+												<?php echo $rs['barCode'] ?>
+											</td>
+											<td data-label="ប្រភេទទិញ/Product Category">
+												<?php echo $rs['categoryName'] ?>
+											</td>
+											<td data-label="បរិមាណនៅសល់/Current QTY"><strong>
+													<?php echo number_format($rs['currentQty'], 2) ?>
+												</strong><span style="float: right;">
+													<?php echo $rs['measureTitle']; ?>
+												</span></td>
+											<td data-label="តម្លៃ/Cost">&nbsp;
+												<?php echo number_format($rs['cost'], 2) ?>
+											</td>
+											<td data-label="តម្លៃ/Cost">&nbsp;
+												<?php echo number_format($total, 2) ?>
+											</td>
+											<td data-label="គម្រោងចំណាយ/Budget Plan">
+												<?php echo $rs['budgetTitle'] ?>
+											</td>
+											<td data-label="ផ្សេងៗ/Other">&nbsp;</td>
+										</tr>
+									<?php } ?>
+								<tr>
+									<td colspan="6" style=""></td>
+									<td colspan="2" align="right"><strong>
+											<?php echo number_format($grandTotal, 2) ?>
+										</strong></td>
+									<td colspan="2"></td>
 								</tr>
-				                <?php }?>
-				                <tr>
-				                	<td colspan="6" style=""></td>
-				                	<td colspan="2" align="right"><strong><?php echo number_format($grandTotal,2)?></strong></td>
-				                	<td colspan="2"></td>
-				                </tr>
-				            </table><br />
-				            <?php echo $this->footerReport;?>
-				    	</td>
-				    </tr>
+							</table><br />
+							<?php echo $this->footerReport; ?>
+						</td>
+					</tr>
 				</table>
 			</div>
 		</div>
 	</div>
 </div>
-<script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
+<script src="<?php echo $this->baseUrl(); ?>/js/help.js"></script>
 <script>
-	dojo.require("dojo.data.ItemFileWriteStore"); 
-	require(["dojo/ready"], function(ready){
-		ready(function(){
-			 getBranchInfo();
-			 document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
-			 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("RPT_CURRENTSTOCK");?>';
-			 document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date(DATE_FORMAT_FOR_PHP); }}?>';
+	dojo.require("dojo.data.ItemFileWriteStore");
+	require(["dojo/ready"], function (ready) {
+		ready(function () {
+			getBranchInfo();
+			document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
+			document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("RPT_CURRENTSTOCK"); ?>';
+			document.getElementById('dateReport').innerHTML = '<?php if (!empty($this->search['start_date'])) {
+				if (date("Y-m-d", strtotime($this->search['start_date'])) == date("Y-m-d")) {
+					echo date(DATE_FORMAT_FOR_PHP);
+				}
+			} ?>';
 		});
 	});
 
-function getBranchInfo(){
-	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
-	branch_id = '<?php echo empty($this->search['branch_id'])?0:$this->search['branch_id'];?>';
-	if(branch_id=="" || branch_id<=0){
-		return false;
-	}
-	dojo.xhrPost({
-	    url: url_submit,	
-	    content:{ 
-		    'branch_id':branch_id
-		},	
-		load: function(data) {
-			var arr = JSON.parse(data);
-			var imagesUrl = '<img  style="height:85px; max-width: 100%;" src="'+arr.url_logo+'" />';
-			document.getElementById('projectlogo').innerHTML = imagesUrl;	
-			
-			<?php if($headerReportType==2){?>
-			document.getElementById('projectName').innerHTML = '('+arr.project_name+')';
-			<?php }else{?>
-			document.getElementById('projectName').innerHTML = arr.project_name;
-			<?php }?>
-		},
-		error: function(e) {
+	function getBranchInfo() {
+		var url_submit = '<?php echo $this->url(array('module' => 'loan', 'controller' => 'ilpayment', 'action' => 'getbranch')); ?>';
+		branch_id = '<?php echo empty($this->search['branch_id']) ? 0 : $this->search['branch_id']; ?>';
+		if (branch_id == "" || branch_id <= 0) {
+			return false;
 		}
-	});
-}
+		dojo.xhrPost({
+			url: url_submit,
+			content: {
+				'branch_id': branch_id
+			},
+			load: function (data) {
+				var arr = JSON.parse(data);
+				var imagesUrl = '<img  style="height:85px; max-width: 100%;" src="' + arr.url_logo + '" />';
+				document.getElementById('projectlogo').innerHTML = imagesUrl;
+
+				<?php if ($headerReportType == 2) { ?>
+					document.getElementById('projectName').innerHTML = '(' + arr.project_name + ')';
+				<?php } else { ?>
+					document.getElementById('projectName').innerHTML = arr.project_name;
+				<?php } ?>
+			},
+			error: function (e) {
+			}
+		});
+	}
 </script>

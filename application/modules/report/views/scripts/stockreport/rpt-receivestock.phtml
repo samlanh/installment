@@ -290,7 +290,13 @@ $search = $this->search;
 												<?php echo $rs['projectName']; ?>
 											</td>
 											<td data-label="កាលបរិច្ឆេទទទួល/Receive Date">
-												<?php echo $rs['receiveDate']; ?>
+												<?php
+													$format = 'd-M-Y';
+													$dateString = $rs["receiveDate"];
+													$date = new DateTime($dateString);
+													$receiveDate = $date->format($format);
+													echo $receiveDate;
+												?>
 											</td>
 											<td data-label="ប្រភេទឯកសាទទួល/Document Type" align="left">
 												<?php echo $rs['dnType']; ?>
@@ -314,7 +320,13 @@ $search = $this->search;
 												<?php echo $rs['purchaseNo']; ?>
 											</td>
 											<td data-label="ថ្ងៃបញ្ជាទិញ/Purchase Date">
-												<?php echo $rs['purchaseDate']; ?>
+												<?php
+													$format = 'd-M-Y';
+													$dateString = $rs["purchaseDate"];
+													$date = new DateTime($dateString);
+													$purchaseDate = $date->format($format);
+													echo $purchaseDate;
+												?>
 											</td>
 											<td data-label="អ្នកផ្គត់ផ្គង់/Supplier Name" align="left">
 												<?php echo $rs['supplierName']; ?>
@@ -391,7 +403,7 @@ $search = $this->search;
 			callback: function (key, options) {
 				var m = "clicked: " + key;
 				if (key == "r") {
-					url = '<?php echo $this->baseUrl() . "/report/stockreport/rpt-receivestockdetail/id/"; ?>';
+					url = '<?php echo $this->baseUrl() . "/report/stockreport/rpt-receivestock-letter/id/"; ?>';
 				}else 
 				if(key == "rd") {
 					url = '<?php echo $this->baseUrl() . "/report/stockreport/rpt-receivestock-info/id/"; ?>';
