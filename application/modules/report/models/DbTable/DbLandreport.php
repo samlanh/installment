@@ -1350,23 +1350,25 @@ public function getAllOutstadingLoan($search=null){
 	  function getReceiptByID($id){//total_principal_permonth
 		  $db = $this->getAdapter();
 		  //(SELECT `d`.`date_payment` FROM `ln_client_receipt_money_detail` `d` WHERE (`crm`.`id` = `d`.`crm_id`) ORDER BY `d`.`date_payment` ASC LIMIT 1) AS `date_payment`,
-		  $sql="SELECT *,
-		  		(SELECT s.payment_id FROM `ln_sale` AS s WHERE s.id=crm.sale_id LIMIT 1 ) AS payment_option,
+		  $sql="SELECT crm.*,
+		  		s.payment_id AS payment_option,
 		  		(SELECT project_name FROM `ln_project` WHERE br_id=crm.branch_id LIMIT 1) AS project_name,
-				(SELECT p.land_address  FROM `ln_properties` AS p WHERE p.id  = crm.`land_id` LIMIT 1) AS land_address,
-				(SELECT p.old_land_id  FROM `ln_properties` AS p WHERE p.id  = crm.`land_id` LIMIT 1) AS landlot_amount,
-				(SELECT pt.type_nameen FROM `ln_properties_type` AS pt WHERE pt.id = (SELECT p.property_type  FROM `ln_properties` AS p WHERE p.id  = crm.`land_id` LIMIT 1) LIMIT 1)AS property_type,
-				(SELECT p.street  FROM `ln_properties` AS p WHERE p.id  = crm.`land_id` LIMIT 1) AS street,
-				(SELECT s.sale_number FROM `ln_sale` AS s WHERE s.id = crm.sale_id LIMIT 1) AS sale_number,
-				(SELECT s.land_price FROM `ln_sale` AS s WHERE s.id = crm.sale_id LIMIT 1) AS land_price,
+				(SELECT p.land_address  FROM `ln_properties` AS p WHERE p.id  = s.`house_id` LIMIT 1) AS land_address,
+				(SELECT p.street  FROM `ln_properties` AS p WHERE p.id  = s.`house_id` LIMIT 1) AS street,
+				(SELECT p.old_land_id  FROM `ln_properties` AS p WHERE p.id  = s.`house_id` LIMIT 1) AS landlot_amount,
+				(SELECT pt.type_nameen FROM `ln_properties_type` AS pt WHERE pt.id = (SELECT p.property_type  FROM `ln_properties` AS p WHERE p.id  = s.`house_id` LIMIT 1) LIMIT 1)AS property_type,
 				
-				(SELECT s.price_before FROM `ln_sale` AS s WHERE s.id = crm.sale_id LIMIT 1) AS price_before,
-				(SELECT s.discount_amount FROM `ln_sale` AS s WHERE s.id = crm.sale_id LIMIT 1) AS discount_amount,
-				(SELECT s.discount_percent FROM `ln_sale` AS s WHERE s.id = crm.sale_id LIMIT 1) AS discount_percent,
-				(SELECT s.other_discount FROM `ln_sale` AS s WHERE s.id = crm.sale_id LIMIT 1) AS other_discount,
+				s.sale_number AS sale_number,
+				s.land_price AS land_price,
 				
-				(SELECT s.price_sold FROM `ln_sale` AS s WHERE s.id = crm.sale_id LIMIT 1) AS price_sold,
-				(SELECT s.total_duration FROM `ln_sale` AS s WHERE s.id = crm.sale_id LIMIT 1) AS total_duration,
+				s.price_before AS price_before,
+				s.discount_amount AS discount_amount,
+				s.discount_percent AS discount_percent,
+				s.other_discount AS other_discount,
+				
+				s.price_sold AS price_sold,
+				s.total_duration AS total_duration,
+				
 				(SELECT date_payment FROM `ln_saleschedule` WHERE sale_id= crm.sale_id AND status=1 AND no_installment>payment_times ORDER BY date_payment ASC LIMIT 1) as nextdate_payment,
 				(SELECT c.name_kh FROM `ln_client` AS c WHERE c.client_id = crm.client_id LIMIT 1) AS name_kh,
 				(SELECT c.client_number FROM `ln_client` AS c WHERE c.client_id = crm.client_id LIMIT 1) AS client_number,
@@ -1383,16 +1385,19 @@ public function getAllOutstadingLoan($search=null){
 				(SELECT c.hname_kh FROM `ln_client` AS c WHERE c.client_id = crm.client_id LIMIT 1) AS hname_kh,
 				(SELECT CONCAT(last_name,' ',first_name) FROM `rms_users` WHERE rms_users.id=crm.`user_id` LIMIT 1) As by_user,
 				
-				(SELECT s.agreement_date FROM `ln_sale` AS s WHERE s.id = crm.sale_id LIMIT 1) AS agreement_date,
-				(SELECT name_kh FROM `ln_view` WHERE key_code =(SELECT s.pre_schedule_opt FROM `ln_sale` AS s WHERE s.id = crm.sale_id LIMIT 1) AND type = 25 limit 1) AS pre_paymenttype,
-				(SELECT s.pre_schedule_opt FROM `ln_sale` AS s WHERE s.id = crm.sale_id LIMIT 1) AS pre_schedule_opt,
-				(SELECT s.pre_percent_payment FROM `ln_sale` AS s WHERE s.id = crm.sale_id LIMIT 1) AS pre_percent_payment,
-				(SELECT s.pre_amount_month FROM `ln_sale` AS s WHERE s.id = crm.sale_id LIMIT 1) AS pre_amount_month,
-				(SELECT s.pre_percent_installment FROM `ln_sale` AS s WHERE s.id = crm.sale_id LIMIT 1) AS pre_percent_installment,
-				(SELECT s.pre_amount_year FROM `ln_sale` AS s WHERE s.id = crm.sale_id LIMIT 1) AS pre_amount_year,
-				(SELECT s.pre_fix_payment FROM `ln_sale` AS s WHERE s.id = crm.sale_id LIMIT 1) AS pre_fix_payment
+				s.agreement_date AS agreement_date,
+				(SELECT name_kh FROM `ln_view` WHERE key_code = s.pre_schedule_opt AND type = 25 limit 1) AS pre_paymenttype,
+				s.pre_schedule_opt AS pre_schedule_opt,
+				s.pre_percent_payment  AS pre_percent_payment,
 				
-		FROM `ln_client_receipt_money` AS crm WHERE crm.`id`=".$id;
+				s.pre_amount_month AS pre_amount_month,
+				s.pre_percent_installment AS pre_percent_installment,
+				s.pre_amount_year AS pre_amount_year,
+				s.pre_fix_payment AS pre_fix_payment
+				
+		FROM `ln_client_receipt_money` AS crm 
+			LEFT JOIN `ln_sale` AS s ON s.id = crm.sale_id
+		WHERE crm.`id`=".$id;
 		  $dbp = new Application_Model_DbTable_DbGlobal();
 		  $sql.=$dbp->getAccessPermission("crm.branch_id");
 		  

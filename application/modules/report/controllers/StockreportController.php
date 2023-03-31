@@ -4,7 +4,7 @@ class Report_StockreportController extends Zend_Controller_Action
 	public function init()
 	{
 		header('content-type: text/html; charset=utf8');
-		$this->tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		// $this->tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	}
 	public function indexAction()
 	{
