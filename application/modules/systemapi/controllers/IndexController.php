@@ -26,6 +26,9 @@ class Systemapi_IndexController extends Zend_Controller_Action
     		
 			}else if ($GetData['url']=="allActionNotification"){
     			$_dbAction->allActionNotifyAction($GetData);
+			}else if ($GetData['url']=="requestDetail"){
+    			$_dbAction->requestDetailAction($GetData);
+				
 			}else if ($GetData['url']=="systemLanguage"){
     			$_dbAction->systemLanguageAction($GetData);
 			}else if ($GetData['url']=="systemViewType"){

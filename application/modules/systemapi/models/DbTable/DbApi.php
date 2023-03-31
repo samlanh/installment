@@ -523,5 +523,54 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 		}
     }
 	
+	function getRequestDetail($_data){
+		$db = $this->getAdapter();
+		try{
+			
+			$_data['branchList'] = empty($_data['branchList'])?"0":$_data['branchList'];
+			$_data['userType']	 = empty($_data['userType'])?0:$_data['userType'];
+			$_data['userId'] 	 = empty($_data['userId'])?0:$_data['userId'];
+			$_data['pCheckingRequest'] 	 = empty($_data['pCheckingRequest'])?0:$_data['pCheckingRequest'];
+			$_data['approvedrequest'] 	 = empty($_data['approvedrequest'])?0:$_data['approvedrequest'];
+			$recordId 	 = empty($_data['recordId'])?0:$_data['recordId'];
+			
+			$sql=" 	SELECT 
+					rqd.*,p.proCode,
+					p.proName,
+					p.image AS productImage,
+					
+					(SELECT COALESCE(SUM(pl.qty),0) FROM st_product_location AS pl WHERE pl.proId=p.proId LIMIT 1) AS currentQtyAllBranch,
+					(SELECT COALESCE(pl.qty,0) FROM st_product_location AS pl WHERE pl.proId=p.proId AND pl.projectId= rq.projectId LIMIT 1) AS currentQty,
+					(SELECT COALESCE(pod.unitPrice,0) FROM `st_purchasing_detail` AS pod WHERE pod.proId=p.proId ORDER BY pod.purchaseId DESC LIMIT 1) AS latestUnitPrice,
+					p.measureLabel AS measureTitle
+				";
+			$sql.="	FROM 
+						`st_request_po_detail` as rqd
+						JOIN `st_request_po` AS rq ON rq.id = rqd.requestId
+						LEFT JOIN `st_product` AS p  ON p.proId = rqd.proId 
+			";
+			$sql.=" WHERE 1 AND rqd.requestId IN ($recordId) ";	
+			if (!empty($_data['pCheckingRequest']) OR !empty($_data['approvedrequest'])){
+				$sql.=" AND rqd.adjustStatus = 1 ";
+			}
+			$sql.=$this->getAccessPermission("rq.projectId",$_data);
+			$rs = $db->fetchAll($sql);
+			
+			$result = array(
+						'status' =>true,
+						'value' =>$rs,
+					);
+			return $result;
+			
+		}catch(Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$result = array(
+				'status' =>false,
+				'value' =>$e->getMessage(),
+			);
+			return $result;
+		}
+	}
+	
 	
 }
