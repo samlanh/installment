@@ -246,7 +246,6 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
 		
 		 JOIN `st_receive_stock` AS rs ON rd.receiveId = rs.id ";
 
-
 		$from_date = (empty($search['start_date'])) ? '1' : " rs.receiveDate >= '" . $search['start_date'] . " 00:00:00'";
 		$to_date = (empty($search['end_date'])) ? '1' : " rs.receiveDate <= '" . $search['end_date'] . " 23:59:59'";
 		$where = '';
@@ -276,10 +275,13 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
 		$dbg = new Application_Model_DbTable_DbGlobal();
 		$where .= $dbg->getAccessPermission('rs.projectId');
 
+
 		$order = ' ORDER BY rd.id DESC  ';
 
 		$db = $this->getAdapter();
+
 		return $db->fetchAll($sql . $where . $where_date . $order);
+
 	}
 	function getAllAdjustStock($search)
 	{

@@ -187,6 +187,7 @@ class Report_StockreportController extends Zend_Controller_Action
 		$this->view->rows = $rs_rows;
 		$this->view->search = $search;
 
+
 		$frm_search = new Application_Form_FrmAdvanceSearchStock();
 		$frm = $frm_search->AdvanceSearch();
 		Application_Model_Decorator::removeAllDecorator($frm);
