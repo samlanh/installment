@@ -1,0 +1,362 @@
+<?php
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+$this->headTitle($tr->translate("USAGE_LETTER_DETAIL"));
+echo $this->headTitle();
+// print_r($this->rowdetail);
+?>
+<div class="reportblog">
+	<div class="card-box">
+		<div class="col-sm-12 border-botom">
+			<div class="col-sm-8 pd-0">
+				<h4 class="m-b-0"><i class="fa fa-file-text" aria-hidden="true"></i> <?php echo $tr->translate('USAGE_LETTER_DETAIL'); ?></h4>
+			</div>
+			<div class="col-sm-4 text-right">
+			</div>
+		</div>
+	</div>
+	<div class="card-box">
+		<div id="divPrint">
+			<style>
+				table.tableTop tr td,
+				span {
+					font-size: 12px;
+					font-family: 'Times New Roman', 'Khmer OS Battambang';
+				}
+
+				table.tableTop tr td span.project-name {
+					font-size: 12px;
+					font-family: "Times New Roman", "Khmer OS Muol Light";
+				}
+
+				table tr td {
+					padding: 0 2px;
+					line-height: 14px;
+				}
+
+				table.content-data {
+					border-collapse: collapse;
+					border: 1px solid #000;
+					font-size: 13px;
+				}
+
+				table.content-data thead tr.style {
+					line-height: 25px;
+					font-size: 12px !important;
+					padding: 1px 0px;
+					white-space: nowrap;
+					height: 22px;
+					background: #c1d0f3;
+					font-weight: 600;
+				}
+
+				table.content-data tr.regurlar {
+					background: #eee;
+				}
+
+				table.content-data tr td {
+					padding: 5px 3px;
+					border: 1;
+					vertical-align: middle;
+				}
+
+				table.content-data tr.headRow td {
+					border: solid 1px #000;
+					padding: 10px 2px;
+					vertical-align: middle;
+				}
+
+				.content-data tr.headRow td span {
+					display: block;
+					line-height: 14px;
+				}
+
+				.content-data tr.headRow td small {
+					display: block;
+					line-height: 12px;
+					font-size: 10px;
+				}
+
+				table.requestInfo {
+					width: 100%;
+					margin-top: 10px;
+				}
+
+				table.requestInfo tr td {
+					vertical-align: top;
+				}
+
+				table.requestInfo span.lbTitle {
+					line-height: 14px;
+					float: left;
+					vertical-align: top;
+					min-width: 20%;
+				}
+
+				table.requestInfo span.lbTitle small {
+					display: block;
+					font-style: italic;
+					font-weight: 200;
+					line-height: 10px;
+				}
+
+				table.requestInfo tr td span {
+					line-height: 14px;
+					vertical-align: top;
+					min-width: 75%;
+				}
+
+				td.centerText {
+					text-align: center;
+				}
+
+				.bold {
+					font-weight: 600;
+				}
+
+				.red {
+					color: red;
+				}
+
+				div.borderTop {
+					border-top: 1px dotted #000;
+					margin: 20px 30px;
+					padding-top: 10px;
+					font-weight: bold;
+					text-align: center;
+				}
+
+				.footerLableTitle {
+					font-weight: bold;
+					padding-top: 10px;
+				}
+			</style>
+
+			<table class="tableTop" width="100%">
+				<tr>
+					<td width="30%" id="projectlogo">
+						<br />
+						<img style="height:85px; max-width: 100%;" src="">
+					</td>
+					<td width="40%" valign="top" style=" padding-bottom: 40px;">
+					</td>
+					<td width="30%" align="right" style="vertical-align:top; position: relative;">
+						<?php echo $this->printByFormat; ?>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3" align="center">
+						<span style='font-family: "Times New Roman","Khmer OS Muol Light"; display: block;line-height: 16px;'>ប័ណ្ណដកទំនិញប្រើប្រាស់លម្អិត</span>
+						<span style='font-family: "Times New Roman","Khmer OS Muol Light";display: block;line-height: 16px;text-transform: uppercase;font-weight: 600;'>Usage Letter Detail</span>
+
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3" style="position:relative;">
+						<?php
+						$result = $this->row;
+						?>
+						<table class="requestInfo">
+							<tr>
+								<td width="30%">
+									<span class="lbTitle">
+										ប្រភេទឡូតិ៍/ផ្ទះ :
+										<small>land/house type : </small>
+									</span>
+									<span class="bold"><?php echo $result['houseType']; ?></span>
+								</td>
+								<td width="40%">&nbsp;</td>
+								<td width="30%">
+									<span class="lbTitle">
+										គម្រោង :
+										<small>Project Name: </small>
+									</span>
+									<span class="bold"><?php echo $result['projectName']; ?></span>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<span class="lbTitle">
+										លេខឡូតិ៍/ផ្ទះ :
+										<small>Land/House Code : </small>
+									</span>
+									<span class="bold"><?php echo $result['houseNo']; ?></span>
+								</td>
+								<td></td>
+								<td>
+									<span class="lbTitle">
+										លេខសំណើពីគម្រោង :
+										<small>Project Request N <sup>o</sup> : </small>
+									</span>
+									<span class="bold red"><?php echo $result['reqOutNo']; ?></span>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<span class="lbTitle">
+										ប្រភេទការងារ :
+										<small>Type of work : </small>
+									</span>
+									<span class="bold"><?php echo $result['workType']; ?></span>
+								</td>
+								<td></td>
+								<td>
+
+								</td>
+							</tr>
+
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">
+						<table class="content-data" width="100%" border="1" cellspacing="0" cellpadding="0">
+							<thead>
+								<tr class="style headRow" align="center">
+									<td scope="col" class="center" width="100px;" rowspan="2">
+										<span>ល.រ</span>
+										<small>N<sup>o</sup></small>
+									</td>
+									<td scope="col" class="center" style="width:400px;" colspan="3">
+										<span>ព័ត៍មានទំនិញ</span>
+										<small>Product Info</small>
+									</td>
+									<td scope="col" class="center" style="width:400px;" colspan="4">
+										<span>ព័ត៍មានដកប្រើ</span>
+										<small>Usage Info</small>
+									</td>
+									<td scope="col" class="center" style="width:100px;" rowspan="2">
+										<span>ស្តុកនៅសល់ជាក់ស្តែង</span>
+										<small>Current Stock Qty</small>
+									</td>
+								</tr>
+								<tr class="style headRow" align="center">
+
+									<td scope="col" class="center" style="width:300px;">
+										<span>ឈ្មោះទំនិញ</span>
+										<small>Product Name</small>
+									</td>
+									<td scope="col" class="center" style="width:100px;">
+										<span>លេខកូដទំនិញ</span>
+										<small>Product Code</small>
+									</td>
+									<td scope="col" class="center" style="width:100px;">
+										<span>ខ្នាត</span>
+										<small>Measure</small>
+									</td>
+									<td scope="col" class="center" style="width:200px;">
+										<span>លេខសំណើ</span>
+										<small>request No</small>
+									</td>
+									<td scope="col" class="center" style="width:200px;">
+										<span>កាលបរិច្ឆេទដកប្រើ</span>
+										<small>Usage Date</small>
+									</td>
+									<td scope="col" class="center" style="width:200px;">
+										<span>បរិមាណដកប្រើ</span>
+										<small>Usage Qty</small>
+									</td>
+									<td scope="col" class="center" style="width:300px;">
+										<span>ប្រភេទដកអីវ៉ាន់</span>
+										<small>Usage Type</small>
+									</td>
+								</tr>
+							</thead>
+							<?php
+							$i = 0;
+							if (!empty($this->rowdetail)) foreach ($this->rowdetail as $index => $rs) {
+								$i++;
+							?>
+								<tr class="style" style=" white-space:nowrap;">
+									<td data-label="ល.រ/N.o" class="centerText"><?php echo $index + 1; ?></td>
+									<td data-label="ឈ្មោះទំនិញ/Product Name" class="bold"><?php echo $rs['proName']; ?></td>
+									<td data-label="លេខកូដទំនិញ/Product Code"><?php echo $rs['proCode']; ?></td>
+									<td data-label="ខ្នាត/Measure"><?php echo $rs['measureLabel']; ?></td>
+									<td data-label="លេខសំណើពីគម្រោង/request No" class="bold red"><?php echo $rs['requestNo']; ?></td>
+									<td data-label="កាលបរិច្ឆេទដកប្រើ/Usage Date">
+										<?php
+										$format = 'd-M-Y';
+										$dateString = $rs["requestdate"];
+										$date = new DateTime($dateString);
+										$requestDate = $date->format($format);
+										echo $requestDate;
+										?>
+									</td>
+									<td data-label="បរិមាណដកប្រើ/Usage Qty" class="bold centerText"><?php echo $rs['qtyRequest']; ?></td>
+									<td data-label="ប្រភេទដកអីវ៉ាន់/Usage Type "><?php echo $rs['typeofWork']; ?></td>
+									<td data-label="ស្តុកនៅសល់ជាក់ស្តែង/Current Stock Qty " class="bold"><?php echo $rs['currentstock']; ?></td>
+								</tr>
+							<?php
+							}
+							for ($num = $i; $num <= 9; $num++) {
+							?>
+								<tr class="style" style=" white-space:nowrap;">
+									<td data-label="ល.រ/N.o" class="centerText">&nbsp;<?php echo $num + 1; ?></td>
+									<td data-label="ឈ្មោះទំនិញ/Product Name"></td>
+									<td data-label="លេខកូដទំនិញ/Product Code"></td>
+									<td data-label="ខ្នាត/Measure"></td>
+									<td data-label="លេខសំណើពីគម្រោង/request No"></td>
+									<td data-label="កាលបរិច្ឆេទដកប្រើ/Usage Date"></td>
+									<td data-label="បរិមាណដកប្រើ/Usage Qty"></td>
+									<td data-label="ប្រភេទដកអីវ៉ាន់/Usage Type "></td>
+									<td data-label="ស្តុកនៅសល់ជាក់ស្តែង/Current Stock Qty "></td>
+								</tr>
+							<?php } ?>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">
+						<table width="100%" style="text-align: center; margin-top: 10px;">
+							<tr class="footerLableTitle">
+								<td>ឈ្មោះអ្នកបើក /<small>Drawer Name</small></td>
+								<td>ឈ្មោះមេការ /<small>Contractor</small></td>
+								<td>ឈ្មោះជាង /<small>Workor</small></td>
+							</tr>
+							<tr>
+								<td height="80px;"></td>
+							</tr>
+							<tr>
+								<td>
+									<div class="borderTop"><?php echo $result['staffName']; ?></div>
+								</td>
+								<td>
+									<div class="borderTop"><?php echo $result['contractor']; ?></div>
+								</td>
+								<td>
+									<div class="borderTop"><?php echo $result['workerName']; ?></div>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>
+<script>
+	require(["dojo/ready"], function(ready) {
+		ready(function() {
+			getBranchInfo();
+		});
+	});
+
+	function getBranchInfo() {
+		var url_submit = '<?php echo $this->url(array('module' => 'loan', 'controller' => 'ilpayment', 'action' => 'getbranch')); ?>';
+		branch_id = '<?php echo empty($result['projectId']) ? 0 : $result['projectId']; ?>';
+		if (branch_id == "" || branch_id <= 0) {
+			return false;
+		}
+		dojo.xhrPost({
+			url: url_submit,
+			content: {
+				'branch_id': branch_id
+			},
+			load: function(data) {
+				var arr = JSON.parse(data);
+				var imagesUrl = '<img  style="height:65px; max-width: 100%;" src="' + arr.url_logo + '" />';
+				document.getElementById('projectlogo').innerHTML = imagesUrl;
+			},
+			error: function(e) {}
+		});
+	}
+</script>

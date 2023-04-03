@@ -1,37 +1,37 @@
-<?php 
-	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-	echo $this->headTitle($tr->translate("STOCK_USAGE"));
-	
-	$frm = $this->frm_search;
-	
-	$frm_stock=$this->frm_stock;
+<?php
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+echo $this->headTitle($tr->translate("STOCK_USAGE"));
+
+$frm = $this->frm_search;
+
+$frm_stock = $this->frm_stock;
 ?>
-<script src="<?php echo $this->baseUrl();?>/js/help.js"  type="text/javascript"></script>
+<script src="<?php echo $this->baseUrl(); ?>/js/help.js" type="text/javascript"></script>
 <div class="card pb-10 pt-10 pl-10 pr-10">
 	<div class="card-content collapse show">
 		<div class="card-box">
-               	<div class="col-sm-12 border-botom">
-		    		<div class="col-sm-8 pd-0">
-		    			<h4 class="m-b-0"><i class="fa fa fa-truck" aria-hidden="true"></i>&nbsp;<i class="fa fa fa-sign-out" aria-hidden="true"></i>&nbsp;&nbsp;<?php echo $tr->translate('STOCK_USAGE');?></h4>
-    			</div>
-    			<div class="col-sm-4 text-right">
-    			</div>
-    		</div>
-    	</div>
+			<div class="col-sm-12 border-botom">
+				<div class="col-sm-8 pd-0">
+					<h4 class="m-b-0"><i class="fa fa fa-truck" aria-hidden="true"></i>&nbsp;<i class="fa fa fa-sign-out" aria-hidden="true"></i>&nbsp;&nbsp;<?php echo $tr->translate('STOCK_USAGE'); ?></h4>
+				</div>
+				<div class="col-sm-4 text-right">
+				</div>
+			</div>
+		</div>
 		<div class="card-box">
 			<form id="list" name="list" action="" dojoType="dijit.form.Form" method="post">
-		   		<div class="form-group">
+				<div class="form-group">
 					<label class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frm->getElement('adv_search');?>
+						<?php echo $frm->getElement('adv_search'); ?>
 					</label>
 					<label class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frm->getElement('branch_id');?>
+						<?php echo $frm->getElement('branch_id'); ?>
 					</label>
 					<label class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frm_stock->getElement('propertyType');?>
+						<?php echo $frm_stock->getElement('propertyType'); ?>
 					</label>
 					<label class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frm_stock->getElement('workType');?>
+						<?php echo $frm_stock->getElement('workType'); ?>
 					</label>
 					<label class="col-md-2 col-sm-2 col-xs-12">
 						<input id="staffWithdraw" />
@@ -43,127 +43,149 @@
 				</div>
 				<div class="form-group">
 					<label class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frm->getElement('status');?>
+						<?php echo $frm->getElement('status'); ?>
 					</label>
 					<label class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frm->getElement('start_date');?>
+						<?php echo $frm->getElement('start_date'); ?>
 					</label>
 					<label class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frm->getElement('end_date');?>
+						<?php echo $frm->getElement('end_date'); ?>
 					</label>
 					<label class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frm->getElement('btn_search');?>
-					</label>		
+						<?php echo $frm->getElement('btn_search'); ?>
+					</label>
 				</div>
 			</form>
 			<input type="hidden" id="id_selected" name="id_selected" />
 		</div>
 		<div class="card-box">
-			<?php echo $this->list;?>
+			<?php echo $this->list; ?>
 		</div>
 	</div>
 </div>
-<script src="<?php echo $this->baseUrl();?>/admin/js/global.js"  type="text/javascript"></script>
+<script src="<?php echo $this->baseUrl(); ?>/admin/js/global.js" type="text/javascript"></script>
 <script type="text/javascript">
 	dojo.require('dijit.form.DateTextBox');
-	dojo.require("dojo.data.ItemFileWriteStore"); 
+	dojo.require("dojo.data.ItemFileWriteStore");
 
-new dijit.form.FilteringSelect({
- 	 autoComplete: false,
- 	 queryExpr: "*${0}*",                       
-     id: "staffWithdraw",
-     name: "staffWithdraw",  
-     class: 'fullside',  
-     required:false,
-     placeHolder:"<?php echo $tr->translate("SELECT_STAFF");?>", 
-     onChange: function(){
-     } 
- }, "staffWithdraw");
+	new dijit.form.FilteringSelect({
+		autoComplete: false,
+		queryExpr: "*${0}*",
+		id: "staffWithdraw",
+		name: "staffWithdraw",
+		class: 'fullside',
+		required: false,
+		placeHolder: "<?php echo $tr->translate("SELECT_STAFF"); ?>",
+		onChange: function() {}
+	}, "staffWithdraw");
 
-new dijit.form.FilteringSelect({
- 	autoComplete: false,
- 	queryExpr: "*${0}*",                       
-     id: "contractor",
-     name: "contractor",  
-     class: 'fullside',  
-     required:false,
-     placeHolder:"<?php echo $tr->translate("SELECT_CONTRACTOR");?>", 
-     onChange: function() {
-     } 
- }, "contractor");
+	new dijit.form.FilteringSelect({
+		autoComplete: false,
+		queryExpr: "*${0}*",
+		id: "contractor",
+		name: "contractor",
+		class: 'fullside',
+		required: false,
+		placeHolder: "<?php echo $tr->translate("SELECT_CONTRACTOR"); ?>",
+		onChange: function() {}
+	}, "contractor");
 
-require(["dojo/ready"], function(ready){
-	ready(function(){
-		var branch_id = dijit.byId('branch_id');
-		branch_id.on('change',function(){
+	require(["dojo/ready"], function(ready) {
+		ready(function() {
+			var branch_id = dijit.byId('branch_id');
+			branch_id.on('change', function() {
+				getDataByBranch();
+			});
 			getDataByBranch();
 		});
-		getDataByBranch();
 	});
-});
 
-function getDataByBranch(){
-	 branch_id = dijit.byId('branch_id').get('value');
-	 if(branch_id=='' || branch_id==0){
-		return false;
-	 }
-	 getAllStaff(branch_id);
-	 getAllContractor(branch_id);
-}
+	function getDataByBranch() {
+		branch_id = dijit.byId('branch_id').get('value');
+		if (branch_id == '' || branch_id == 0) {
+			return false;
+		}
+		getAllStaff(branch_id);
+		getAllContractor(branch_id);
+	}
 
-function getAllStaff(branch_id){
-	var urlGetAllStaff = '<?php echo $this->url(array('module'=>'stockinout','controller'=>'staff','action'=>'getallstaff')); ?>';
-	
-	objectContentFilter = {'branch_id':branch_id,'select':1};
-	getAllStaffbyBranch(urlGetAllStaff,objectContentFilter);
+	function getAllStaff(branch_id) {
+		var urlGetAllStaff = '<?php echo $this->url(array('module' => 'stockinout', 'controller' => 'staff', 'action' => 'getallstaff')); ?>';
 
-	setTimeout(function () {
-		dijit.byId('staffWithdraw').attr('value','<?php echo $this->search['staffWithdraw']?>');
-	}, 500);
-}
-function getAllContractor(branch_id){
-	var urlGetAllContractor = '<?php echo $this->url(array('module'=>'stockinout','controller'=>'contractor','action'=>'getallcontractor')); ?>';
-	objectContentFilter = {'branch_id':branch_id,'select':1};
-	getAllContractorbyBranch(urlGetAllContractor,objectContentFilter);
+		objectContentFilter = {
+			'branch_id': branch_id,
+			'select': 1
+		};
+		getAllStaffbyBranch(urlGetAllStaff, objectContentFilter);
 
-	setTimeout(function () {
-		dijit.byId('contractor').attr('value','<?php echo $this->search['contractor']?>');
-	}, 500);
-}
-<?php 
+		setTimeout(function() {
+			dijit.byId('staffWithdraw').attr('value', '<?php echo $this->search['staffWithdraw'] ?>');
+		}, 500);
+	}
+
+	function getAllContractor(branch_id) {
+		var urlGetAllContractor = '<?php echo $this->url(array('module' => 'stockinout', 'controller' => 'contractor', 'action' => 'getallcontractor')); ?>';
+		objectContentFilter = {
+			'branch_id': branch_id,
+			'select': 1
+		};
+		getAllContractorbyBranch(urlGetAllContractor, objectContentFilter);
+
+		setTimeout(function() {
+			dijit.byId('contractor').attr('value', '<?php echo $this->search['contractor'] ?>');
+		}, 500);
+	}
+	<?php
 	$edit_Text = $tr->translate("EDIT");
 	$View_Text = $tr->translate("USAGE_LETTER");
-	$urlEdit = $this->baseUrl()."/stockinout/usage/edit/id/";
-	$urlView = $this->baseUrl()."/report/stockreport/rpt-usagedetail/id/";
-?>
+	$View_Text_DETAIL = $tr->translate("USAGE_LETTER_DETAIL");
+	$urlEdit = $this->baseUrl() . "/stockinout/usage/edit/id/";
+	$urlView = $this->baseUrl() . "/report/stockreport/usage-letter/id/";
+	$urlViewDetail = $this->baseUrl() . "/report/stockreport/usage-info/id/";
+	?>
 
-var row=0;
-var url="";
-$(function(){
-	$.contextMenu({
-		selector: '.context-menu-one', 
-		callback: function(key, options) {
-			var m = "clicked: " + key;
-			if(key=="edit"){
-				url='<?php echo $urlEdit;?>';
+	var row = 0;
+	var url = "";
+	$(function() {
+		$.contextMenu({
+			selector: '.context-menu-one',
+			callback: function(key, options) {
+				var m = "clicked: " + key;
+				if (key == "edit") {
+					url = '<?php echo $urlEdit; ?>';
+				} else if (key == "view") {
+					url = '<?php echo $urlView; ?>';
+				} else if (key == "view_detail") {
+					url = '<?php echo $urlViewDetail; ?>';
+				}
+				gotoAction();
+			},
+			items: {
+				"edit": {
+					name: "<?php echo $edit_Text; ?>",
+					icon: "edit",
+					accesskey: "e"
+				},
+				"view": {
+					name: "<?php echo $View_Text; ?>",
+					icon: "fa-file-text",
+					accesskey: "e"
+				},
+				"view_detail": {
+					name: "<?php echo $View_Text_DETAIL; ?>",
+					icon: "fa-file-text",
+					accesskey: "e"
+				},
 			}
-			else if(key=="view"){
-				url='<?php echo $urlView;?>';
-			}
-			gotoAction();
-		},
-		items: {
-			"edit": {name: "<?php echo $edit_Text;?>", icon: "edit", accesskey: "e"},
-			"view": {name: "<?php echo $View_Text;?>", icon: "fa-file-text", accesskey: "e"},
-		}
+		});
 	});
-});
-function setrowdata(index){
-	row = index;
-}
-var recordid ='';
-function gotoAction(){
-	 window.open(url+row+'?rightclick=true', '_blank');
-}
 
+	function setrowdata(index) {
+		row = index;
+	}
+	var recordid = '';
+
+	function gotoAction() {
+		window.open(url + row + '?rightclick=true', '_blank');
+	}
 </script>

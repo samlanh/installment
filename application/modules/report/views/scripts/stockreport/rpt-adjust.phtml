@@ -176,8 +176,7 @@
 					table.totalBottom td.sideCol {
 						width: 20%;
 					}
-					table.totalBottom td.valueData {
-					}
+					
 					table.totalBottom td.valueData.totalVal {
 						font-weight: 600;
 					}
@@ -259,7 +258,15 @@
 				                	<tr>
 				                		<td data-label="ល.រ​ /N.o" align="center"><?php echo $index+1;?></td>
 				                		<td data-label="គម្រោង/Project Name" ><?php echo $rs['projectName'];?></td>
-				                		<td data-label="កាលបរិច្ឆេទ/Date"><?php echo $rs['adjustDate'];?></td>
+				                		<td data-label="កាលបរិច្ឆេទ/Date">
+											<?php
+											$format = 'd-M-Y';
+											$dateString = $rs["adjustDate"];
+											$date = new DateTime($dateString);
+											$adjustDate = $date->format($format);
+											echo $adjustDate;
+											?>
+										</td>
 				                		<td data-label="ឈ្មោះទំនិញ/Product Name"><?php echo $rs['proName'];?></td>
 				                		<td data-label="បរិមាណនៅសល់/Remaining QTY"><?php echo number_format($rs['currentQty'],2);?></td>
 				                		<td data-label="បរិមាណរាប់ក្នុងឃ្លាំង/Exact Qty"><?php echo number_format($rs['exactQty'],2);?></td>
