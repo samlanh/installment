@@ -112,6 +112,21 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
     		FROM $this->_name as sd WHERE sd.stockoutId=" . $recordId . " ";
 		return $db->fetchAll($sql);
 	}
+	function getUsgeDetail($recordId)
+	{
+		$db = $this->getAdapter();
+		$this->_name = 'st_stockout_detail';
+		$sql = "SELECT 
+		sd.*, 
+		(SELECT `proCode` FROM `st_product` WHERE st_product.`proId`=sd.proId LIMIT 1) AS proCode,
+		(SELECT `proName` FROM `st_product` WHERE st_product.`proId`=sd.proId LIMIT 1) AS proName,
+		(SELECT `measureLabel` FROM `st_product` WHERE st_product.`proId`=sd.proId LIMIT 1) AS measureLabel,
+		(SELECT qty FROM `st_product_location` WHERE st_product_location.`proId`=sd.proId LIMIT 1) AS currentstock,
+		(SELECT qty FROM `st_product_location` WHERE st_product_location.`proId`=sd.proId LIMIT 1) AS currentstock,
+		st.requestNo, st.requestdate,  st.typeofWork
+		FROM $this->_name AS sd JOIN `st_stockout` AS st ON st.id= sd.stockoutId  WHERE sd.stockoutId=" . $recordId . " ";
+		return $db->fetchAll($sql);
+	}
 	function getAllProductLocation($search)
 	{
 		if (!isset($search['btn_search'])) {
@@ -148,8 +163,8 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
 		}
 
 		//     		if($search['isCountStock']>-1){
-//     			$where.= " AND p.isCountStock = ".$search['isCountStock'];
-//     		}
+		//     			$where.= " AND p.isCountStock = ".$search['isCountStock'];
+		//     		}
 		if ($search['categoryId'] > 0) {
 			$where .= " AND p.categoryId = " . $search['categoryId'];
 		}
@@ -209,8 +224,8 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
 			$where .= ' AND ( ' . implode(' OR ', $s_where) . ')';
 		}
 		//     	if($search['status']>-1){
-//     		$where.= " AND r.status = ".$search['status'];
-//     	}
+		//     		$where.= " AND r.status = ".$search['status'];
+		//     	}
 		if ($search['verifyStatus'] > -1) {
 			$where .= " AND r.isIssueInvoice = " . $search['verifyStatus'];
 		}
@@ -278,7 +293,6 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
 		$db = $this->getAdapter();
 
 		return $db->fetchAll($sql . $where . $where_date . $order);
-
 	}
 	function getAllAdjustStock($search)
 	{
@@ -347,7 +361,7 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
     		 WHERE cl.id=cd.closingId ";
 
 		//     	$from_date =(empty($search['start_date']))? '1': " cl.closingDate >= '".$search['start_date']." 00:00:00'";
-//     	$to_date = (empty($search['end_date']))? '1': " cl.closingDate <= '".$search['end_date']." 23:59:59'";
+		//     	$to_date = (empty($search['end_date']))? '1': " cl.closingDate <= '".$search['end_date']." 23:59:59'";
 
 		//     	$where_date = " AND ".$from_date." AND ".$to_date;
 		$where = '';
@@ -395,9 +409,9 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
 				$records[$key]['qtyTransferInpending'] = 0;
 
 				//     			$qtyAdjust = $this->getAdjustEntry($result['adjustId'],$result['proId']);
-//     			if(!empty($qtyAdjust)){
-//     				$records[$key]['qtyAdjust']=$qtyAdjust;
-//     			}
+				//     			if(!empty($qtyAdjust)){
+				//     				$records[$key]['qtyAdjust']=$qtyAdjust;
+				//     			}
 
 				$param = array(
 					'projectId' => $result['projectId'],
@@ -446,12 +460,9 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
 				if (!empty($qtyTransferPending)) {
 					$records[$key]['qtyTransferInpending'] = $qtyTransferPending;
 				}
-
-
 			}
 		}
 		return $records;
-
 	}
 	function getPurchasebyClosingEntry($data)
 	{
@@ -494,7 +505,7 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
 
 		if (!empty($data['start_date'])) {
 			$from_date = (empty($data['start_date'])) ? '1' : " s.requestDate >= '" . $data['start_date'] . " 00:00:00'";
-			$to_date = (empty($data['end_date'])) ? '1' : " s.requestDate < '" . $data['end_date'] . " 00:00:00'";
+			$to_date = (empty($data['end_date'])) ? '1' : " s.requestDate <= '" . $data['end_date'] . " 00:00:00'";
 			$sql .= " AND " . $from_date . " AND " . $to_date;
 		}
 
@@ -531,7 +542,7 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
 
 		if (!empty($data['start_date'])) {
 			$from_date = (empty($data['start_date'])) ? '1' : " t.transferDate >= '" . $data['start_date'] . " 00:00:00'";
-			$to_date = (empty($data['end_date'])) ? '1' : " t.transferDate < '" . $data['end_date'] . " 00:00:00'";
+			$to_date = (empty($data['end_date'])) ? '1' : " t.transferDate <= '" . $data['end_date'] . " 00:00:00'";
 			$sql .= " AND " . $from_date . " AND " . $to_date;
 		}
 
@@ -698,8 +709,8 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
 			$where .= ' AND ( ' . implode(' OR ', $s_where) . ')';
 		}
 		//     	if($search['status']>-1){
-//     		$where.= " AND bi.status = ".$search['status'];
-//     	}
+		//     		$where.= " AND bi.status = ".$search['status'];
+		//     	}
 		if ($search['branch_id'] > -1) {
 			$where .= " AND bi.status = " . $search['branch_id'];
 		}
@@ -734,10 +745,10 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
 			}
 			$sql .= " GROUP BY bed.budgetItemId ";
 			//     		$sql="SELECT
-// 	    				SUM(ex.total_amount) AS totalbymonth
-// 	    			FROM 
-// 	    				`ln_expense` AS ex
-//     				WHERE ex.status=1 AND DATE_FORMAT(ex.date,'%Y-%m') ='$date'";
+			// 	    				SUM(ex.total_amount) AS totalbymonth
+			// 	    			FROM 
+			// 	    				`ln_expense` AS ex
+			//     				WHERE ex.status=1 AND DATE_FORMAT(ex.date,'%Y-%m') ='$date'";
 			$totatBudget = $db->fetchOne($sql);
 			if (empty($totatBudget)) {
 				$totatBudget = 0;
@@ -748,9 +759,9 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
 			//$date = date("Y",strtotime($date));
 
 			// 	    		$sql="SELECT
-// 			    		SUM(ex.total_amount) AS totalbymonth
-// 			    		FROM `ln_expense` AS ex
-// 	    			WHERE ex.status=1 AND DATE_FORMAT(ex.date,'%Y') ='$date'";
+			// 			    		SUM(ex.total_amount) AS totalbymonth
+			// 			    		FROM `ln_expense` AS ex
+			// 	    			WHERE ex.status=1 AND DATE_FORMAT(ex.date,'%Y') ='$date'";
 
 			$date = date("Y", strtotime($data['date']));
 			$sql = "SELECT
@@ -776,7 +787,6 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
 
 			return $totatBudget;
 		}
-
 	}
 
 	function getAllReceiveTransferStock($search)
@@ -890,6 +900,4 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
 		WHERE rtrd.receiveId=" . $recordId . " ";
 		return $db->fetchAll($sql);
 	}
-
-
 }
