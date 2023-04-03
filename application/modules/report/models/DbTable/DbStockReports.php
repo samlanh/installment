@@ -505,7 +505,7 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
 
 		if (!empty($data['start_date'])) {
 			$from_date = (empty($data['start_date'])) ? '1' : " s.requestDate >= '" . $data['start_date'] . " 00:00:00'";
-			$to_date = (empty($data['end_date'])) ? '1' : " s.requestDate < '" . $data['end_date'] . " 00:00:00'";
+			$to_date = (empty($data['end_date'])) ? '1' : " s.requestDate <= '" . $data['end_date'] . " 00:00:00'";
 			$sql .= " AND " . $from_date . " AND " . $to_date;
 		}
 
@@ -542,7 +542,7 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
 
 		if (!empty($data['start_date'])) {
 			$from_date = (empty($data['start_date'])) ? '1' : " t.transferDate >= '" . $data['start_date'] . " 00:00:00'";
-			$to_date = (empty($data['end_date'])) ? '1' : " t.transferDate < '" . $data['end_date'] . " 00:00:00'";
+			$to_date = (empty($data['end_date'])) ? '1' : " t.transferDate <= '" . $data['end_date'] . " 00:00:00'";
 			$sql .= " AND " . $from_date . " AND " . $to_date;
 		}
 
