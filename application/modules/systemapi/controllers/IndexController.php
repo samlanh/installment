@@ -26,6 +26,12 @@ class Systemapi_IndexController extends Zend_Controller_Action
     		
 			}else if ($GetData['url']=="allActionNotification"){
     			$_dbAction->allActionNotifyAction($GetData);
+			}else if ($GetData['url']=="checkingRequestNotification"){
+    			$_dbAction->checkingRequestNotifyAction($GetData);
+			}else if ($GetData['url']=="verifyRequestNotification"){
+    			$_dbAction->verifyRequestNotifyAction($GetData);
+			}else if ($GetData['url']=="approveRequestNotification"){
+    			$_dbAction->approveRequestNotifyAction($GetData);
 			}else if ($GetData['url']=="requestDetail"){
     			$_dbAction->requestDetailAction($GetData);
 				
@@ -95,11 +101,13 @@ class Systemapi_IndexController extends Zend_Controller_Action
     				$_dbAction->addTokenAction($postData);
 				}else if ($GetData['url']=="removeTokenApp"){
     				$_dbAction->removeTokenAction($postData);
+				}else if ($GetData['url']=="submitCheckingRequest"){
+    				$_dbAction->checkingRequestPOAction($postData);	
+				}else if ($GetData['url']=="submitVerifyRequestPO"){
+    				$_dbAction->submitVerifyRequestPOAction($postData);
+				}else if ($GetData['url']=="submitApproveRequestPO"){
+    				$_dbAction->submitApproveRequestPOAction($postData);	
 					
-				}else if ($GetData['url']=="authWeb"){
-    				$_dbAction->loginWebAction($postData);
-				}else if ($GetData['url']=="newsRead"){
-    				$_dbAction->newsReadAction($postData);
 				}else if ($GetData['url']=="notificationRead"){
     				$_dbAction->notificationReadAction($postData);
 					

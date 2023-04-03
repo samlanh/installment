@@ -197,4 +197,192 @@ class Systemapi_Model_DbTable_DbActions extends Zend_Db_Table_Abstract
 	}
 	
 	
+	public function checkingRequestPOAction($search){
+		try{
+			$search['userId'] = empty($search['userId'])?0:$search['userId'];
+			$search['mobileToken'] = empty($search['mobileToken'])?0:$search['mobileToken'];
+			
+			$db = new Systemapi_Model_DbTable_DbApi();
+			$submitRequest = $db->submitCheckingRequestPO($search);
+			
+			if($submitRequest){
+				$arrResult = array(
+					"code" => "SUCCESS",
+					"result" =>$submitRequest,
+				);			
+			}else{
+				$arrResult = array(
+					"code" => "FAIL",
+					"message" => "FAIL_TO_SUBMIT",
+				);
+			}
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}catch(Exception $e){
+			$arrResult = array(
+				"code" => "ERR_",
+				"message" => $e->getMessage(),
+			);
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}
+	}
+	
+	public function submitVerifyRequestPOAction($search){
+		try{
+			$search['userId'] = empty($search['userId'])?0:$search['userId'];
+			$search['mobileToken'] = empty($search['mobileToken'])?0:$search['mobileToken'];
+			
+			$db = new Systemapi_Model_DbTable_DbApi();
+			$submitRequest = $db->submitVerifyRequestPO($search);
+			
+			if($submitRequest){
+				$arrResult = array(
+					"code" => "SUCCESS",
+					"result" =>$submitRequest,
+				);			
+			}else{
+				$arrResult = array(
+					"code" => "FAIL",
+					"message" => "FAIL_TO_SUBMIT",
+				);
+			}
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}catch(Exception $e){
+			$arrResult = array(
+				"code" => "ERR_",
+				"message" => $e->getMessage(),
+			);
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}
+	}
+	public function submitApproveRequestPOAction($search){
+		try{
+			$search['userId'] = empty($search['userId'])?0:$search['userId'];
+			$search['mobileToken'] = empty($search['mobileToken'])?0:$search['mobileToken'];
+			
+			$db = new Systemapi_Model_DbTable_DbApi();
+			$submitRequest = $db->submitApproveRequestPO($search);
+			
+			if($submitRequest){
+				$arrResult = array(
+					"code" => "SUCCESS",
+					"result" =>$submitRequest,
+				);			
+			}else{
+				$arrResult = array(
+					"code" => "FAIL",
+					"message" => "FAIL_TO_SUBMIT",
+				);
+			}
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}catch(Exception $e){
+			$arrResult = array(
+				"code" => "ERR_",
+				"message" => $e->getMessage(),
+			);
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}
+	}
+	
+	public function checkingRequestNotifyAction($search){
+		try{
+			$search['userId'] = empty($search['userId'])?0:$search['userId'];
+			$search['mobileToken'] = empty($search['mobileToken'])?0:$search['mobileToken'];
+			$search['checkingStatus']="1";
+			
+			$db = new Systemapi_Model_DbTable_DbApi();
+			$row = $db->getAllRequestNotify($search);
+			if ($row['status']){
+				$arrResult = array(
+						"result" => $row['value'],
+						"code" => "SUCCESS",
+					);
+			}else{
+				$arrResult = array(
+					"code" => "ERR_",
+					"message" => $row['value'],
+				);
+			}
+			
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}catch(Exception $e){
+			$arrResult = array(
+				"code" => "ERR_",
+				"message" => $e->getMessage(),
+			);
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}
+	}
+	
+	public function verifyRequestNotifyAction($search){
+		try{
+			$search['userId'] = empty($search['userId'])?0:$search['userId'];
+			$search['mobileToken'] = empty($search['mobileToken'])?0:$search['mobileToken'];
+			$search['pCheckingStatus']="1";
+			
+			$db = new Systemapi_Model_DbTable_DbApi();
+			$row = $db->getAllRequestNotify($search);
+			if ($row['status']){
+				$arrResult = array(
+						"result" => $row['value'],
+						"code" => "SUCCESS",
+					);
+			}else{
+				$arrResult = array(
+					"code" => "ERR_",
+					"message" => $row['value'],
+				);
+			}
+			
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}catch(Exception $e){
+			$arrResult = array(
+				"code" => "ERR_",
+				"message" => $e->getMessage(),
+			);
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}
+	}
+	
+	public function approveRequestNotifyAction($search){
+		try{
+			$search['userId'] = empty($search['userId'])?0:$search['userId'];
+			$search['mobileToken'] = empty($search['mobileToken'])?0:$search['mobileToken'];
+			$search['approveStatus']="1";
+			
+			$db = new Systemapi_Model_DbTable_DbApi();
+			$row = $db->getAllRequestNotify($search);
+			if ($row['status']){
+				$arrResult = array(
+						"result" => $row['value'],
+						"code" => "SUCCESS",
+					);
+			}else{
+				$arrResult = array(
+					"code" => "ERR_",
+					"message" => $row['value'],
+				);
+			}
+			
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}catch(Exception $e){
+			$arrResult = array(
+				"code" => "ERR_",
+				"message" => $e->getMessage(),
+			);
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}
+	}
+	
 }

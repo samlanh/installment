@@ -8,8 +8,10 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 		$_data['password']=trim($_data['password']);
 		try{
 			$sql =" SELECT
-				s.id AS id
+				s.*
 				,s.user_type AS userType
+				,'1' AS userAction
+				,'' AS photo
 				,s.branch_list AS branchList
 				,CONCAT(COALESCE(s.last_name,''),' ',COALESCE(s.first_name,'')) as userName
 			FROM
@@ -245,6 +247,7 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
     	$sql="
 			SELECT 
 				'requestingRecord' AS recordType
+				
 				,rq.date AS recordDate
 				,rq.requestNo AS recordNo
 				,rq.*
@@ -268,7 +271,8 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 				(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.pCheckingBy LIMIT 1 ) AS pCheckingByName,
 				(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.approveBy LIMIT 1 ) AS approveByName,
 				(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.userId LIMIT 1 ) AS userName,
-				rq.processingStatus AS currentStep
+				rq.processingStatus AS currentStep,
+				'' AS itemsRequest
 		";
 		
 		
@@ -331,6 +335,16 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 		}else{
 			$sql.=" AND rq.processingStatus IN ($processingStatus) ";
 		}
+		if( !empty($_data['checkingStatus']) ){ //get Only First Step Request
+			$sql.=" AND rq.checkingStatus = 0 "; 
+		}
+		if( !empty($_data['pCheckingStatus']) ){ //get Only Request already checking
+			$sql.=" AND rq.checkingStatus = 1 AND rq.pCheckingStatus = 0 "; 
+		}
+		if( !empty($_data['approveStatus']) ){ //get Only Request already checking & verify
+			$sql.=" AND rq.checkingStatus = 1 AND rq.pCheckingStatus = 1 AND rq.approveStatus = 0 "; 
+		}
+		
 
 		$sql.=$this->getAccessPermission("rq.projectId",$_data);
     	$sql.=" ORDER BY rq.processingStatus ASC, rq.id DESC";
@@ -523,6 +537,39 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 		}
     }
 	
+	public function getAllRequestNotify($_data){
+		$db = $this->getAdapter();
+		try{
+			$_data['branchList'] = empty($_data['branchList'])?"0":$_data['branchList'];
+			$_data['userType']	 = empty($_data['userType'])?0:$_data['userType'];
+			$_data['userId'] 	 = empty($_data['userId'])?0:$_data['userId'];
+			
+	
+			$userAccessVerifyDN = $this->getAccessUrl("stockinout","index",'verify',$_data);
+			$userAccessTrn = $this->getAccessUrl("stockinout","transferin",'add',$_data);
+			
+			$row = array();
+		
+			$row = $this->getNotifyRequest($_data);
+				
+			$counting = count($row);
+			$allResult = array('rowData'=>$row,'countingRecord'=>$counting);
+			
+			$result = array(
+						'status' =>true,
+						'value' =>$allResult,
+					);
+			return $result;
+		}catch(Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$result = array(
+				'status' =>false,
+				'value' =>$e->getMessage(),
+			);
+			return $result;
+		}
+    }
+	
 	function getRequestDetail($_data){
 		$db = $this->getAdapter();
 		try{
@@ -553,6 +600,8 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 				$sql.=" AND rqd.adjustStatus = 1 ";
 			}
 			$sql.=$this->getAccessPermission("rq.projectId",$_data);
+			$sql.=" ORDER BY rqd.requestId DESC ";
+			
 			$rs = $db->fetchAll($sql);
 			
 			$result = array(
@@ -571,5 +620,257 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 		}
 	}
 	
+	function submitCheckingRequestPO($_data){
+    	$db = $this->getAdapter();
+    	try{
+			
+			$_data['branchList'] = empty($_data['branchList'])?"0":$_data['branchList'];
+			$_data['userType']	 = empty($_data['userType'])?0:$_data['userType'];
+			$_data['userId'] 	 = empty($_data['userId'])?0:$_data['userId'];
+			$checkingStatus 	 = empty($_data['checkingStatus'])?1:$_data['checkingStatus'];
+			
+			$listFromPost 	 = empty($_data['checkListRequestSubmit'])?null:$_data['checkListRequestSubmit'];
+			$requestList 	 = Zend_Json::decode($listFromPost);
+    		
+    		$dbGbSt = new Application_Model_DbTable_DbGlobalStock();
+			$arrStep = array(
+				'stepNum'=>2,
+				'typeStep'=>1,
+			);
+			$processingStatus = $dbGbSt->requestingProccess($arrStep);
+			if(!empty($requestList)) foreach($requestList AS $request){
+				$requestId = $request['id'];
+				
+				$arr = array(
+						'checkingNote'			=>$request['note'],
+						'checkingDate'			=>date("Y-m-d"),
+						'checkingStatus'		=>$checkingStatus,
+						'checkingCreateDate'	=>date("Y-m-d H:i:s"),
+						'checkingModifyDate'	=>date("Y-m-d H:i:s"),
+						'checkingBy'			=>$_data['userId'],
+						'processingStatus'		=>$processingStatus,//Warehouse Step checking Approved/Rejected
+				);
+				$this->_name = "st_request_po";
+				$where=" id = ".$requestId;
+				$this->update($arr, $where);
+				
+				$itemsRequest 	 = empty($request['itemsRequest'])?null:$request['itemsRequest'];
+				if(!empty($itemsRequest)){
+					foreach ($itemsRequest as $row){
+						if (!empty($row['id'])){
+							$adjustStatus = empty($row['adjustStatus']) ?1:$row['adjustStatus'];
+							if($checkingStatus==2){ //REJECTED
+								$adjustStatus = $checkingStatus;
+							}
+							$arr = array(
+								'requestId'			=>$requestId,
+								'proId'				=>$row['proId'],
+								
+								'qtyAdjust'			=>$row['qtyAdjust'],
+								'qtyVerify'			=>$row['qtyAdjust'],
+								'qtyApproved'		=>$row['qtyAdjust'],
+								
+								'note'				=>$row['note'],
+								'adjustStatus'		=>$adjustStatus,
+							);
+							$this->_name='st_request_po_detail';
+							$where =" id =".$row['id'];
+							$this->update($arr, $where);						
+						
+						}
+					}
+				}else{
+					$adjustStatus = $checkingStatus;
+					$arr = array(
+						'adjustStatus'		=>$adjustStatus,
+					);
+					$this->_name='st_request_po_detail';
+					$where =" requestId =".$requestId;
+					$this->update($arr, $where);
+				}
+			}
+			
+	
+    		return true;
+    	}catch (Exception $e){
+    		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+    		return false;
+    	}
+    }
+	
+	function submitVerifyRequestPO($_data){
+    	$db = $this->getAdapter();
+    	try{
+			
+			$_data['branchList'] = empty($_data['branchList'])?"0":$_data['branchList'];
+			$_data['userType']	 = empty($_data['userType'])?0:$_data['userType'];
+			$_data['userId'] 	 = empty($_data['userId'])?0:$_data['userId'];
+			$checkingStatus 	 = empty($_data['checkingStatus'])?1:$_data['checkingStatus'];
+			
+			$listFromPost 	 = empty($_data['listRequestSubmit'])?null:$_data['listRequestSubmit'];
+			$requestList 	 = Zend_Json::decode($listFromPost);
+    		
+    		$dbGbSt = new Application_Model_DbTable_DbGlobalStock();
+			$arrStep = array(
+				'stepNum'=>3,
+				'typeStep'=>1,
+			);
+			$processingStatus = $dbGbSt->requestingProccess($arrStep);
+			if(!empty($requestList)) foreach($requestList AS $request){
+				$requestId = $request['id'];
+						
+				$arr = array(
+						'pCheckingNote'			=>$request['pCheckingNote'],
+						'pCheckingDate'			=>date("Y-m-d"),
+						'pCheckingStatus'		=>$checkingStatus,
+						'pCheckingModifyDate'	=>date("Y-m-d H:i:s"),
+						'checkingCreateDate'	=>date("Y-m-d H:i:s"),
+						'pCheckingBy'			=>$_data['userId'],
+						'processingStatus'		=>$processingStatus,//Purchasing Step checking Approved/Rejected
+				);
+				$this->_name = "st_request_po";
+				$where=" id = ".$requestId;
+				$this->update($arr, $where);
+				
+				$itemsRequest 	 = empty($request['itemsRequest'])?null:$request['itemsRequest'];
+				if(!empty($itemsRequest)){
+					foreach ($itemsRequest as $row){
+						if (!empty($row['id'])){
+							$verifyStatus = empty($row['verifyStatus']) ?1:$row['verifyStatus'];
+							if($checkingStatus==2){ //REJECTED
+								$verifyStatus = $checkingStatus;
+							}
+							$arr = array(
+								'requestId'			=>$requestId,
+								'proId'				=>$row['proId'],
+								
+	
+								'qtyVerify'			=>$row['qtyVerify'],
+								'qtyApproved'		=>$row['qtyVerify'],
+								
+								'verifyNote'		=>$row['verifyNote'],
+								'verifyStatus'		=>$verifyStatus,
+							);
+							$this->_name='st_request_po_detail';
+							$where =" id =".$row['id'];
+							$this->update($arr, $where);						
+						
+						}
+					}
+				}else{
+					$verifyStatus = $checkingStatus;
+					$arr = array(
+						'verifyStatus'		=>$verifyStatus,
+					);
+					$this->_name='st_request_po_detail';
+					$where =" requestId =".$requestId;
+					$this->update($arr, $where);
+				}
+			}
+			
+	
+    		return true;
+    	}catch (Exception $e){
+    		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+    		return false;
+    	}
+    }
+	
+	function submitApproveRequestPO($_data){
+    	$db = $this->getAdapter();
+    	try{
+			
+			$_data['branchList'] = empty($_data['branchList'])?"0":$_data['branchList'];
+			$_data['userType']	 = empty($_data['userType'])?0:$_data['userType'];
+			$_data['userId'] 	 = empty($_data['userId'])?0:$_data['userId'];
+			$checkingStatus 	 = empty($_data['checkingStatus'])?1:$_data['checkingStatus'];
+			
+			$listFromPost 	 = empty($_data['listRequestSubmit'])?null:$_data['listRequestSubmit'];
+			$requestList 	 = Zend_Json::decode($listFromPost);
+    		
+    		$dbGbSt = new Application_Model_DbTable_DbGlobalStock();
+			$arrStep = array(
+				'stepNum'=>4,
+				'typeStep'=>1,
+			);
+			$processingStatus = $dbGbSt->requestingProccess($arrStep);
+			if(!empty($requestList)) foreach($requestList AS $request){
+				$requestId = $request['id'];
+					
+				$arr = array(
+						'approveNote'		=>$request['approveNote'],
+						'approveDate'		=>date("Y-m-d"),
+						'approveStatus'		=>$checkingStatus,
+						'approveModifyDate'	=>date("Y-m-d H:i:s"),
+						'approveCreateDate'	=>date("Y-m-d H:i:s"),
+						'approveBy'			=>$_data['userId'],
+						'processingStatus'	=>$processingStatus,//Purchasing Step checking Approved/Rejected
+				);
+				$this->_name = "st_request_po";
+				$where=" id = ".$requestId;
+				$this->update($arr, $where);
+				
+				$itemsRequest 	 = empty($request['itemsRequest'])?null:$request['itemsRequest'];
+				if(!empty($itemsRequest)){
+					foreach ($itemsRequest as $row){
+						if (!empty($row['id'])){
+							$approvedStatus = empty($row['approvedStatus']) ?1:$row['approvedStatus'];
+							if($checkingStatus==2){ //REJECTED
+								$approvedStatus = $checkingStatus;
+							}
+							if($row['verifyStatus']==2){
+								$approvedStatus =2;
+							}
+							$arr = array(
+								'requestId'			=>$requestId,
+								'proId'				=>$row['proId'],
+								
+	
+								'qtyApproved'		=>$row['qtyApproved'],
+								'qtyApprovedAfter'	=>$row['qtyApproved'],
+								
+								'approveNote'		=>$row['approveNote'],
+								'approvedStatus'	=>$approvedStatus,
+							);
+							$this->_name='st_request_po_detail';
+							$where =" id =".$row['id'];
+							$this->update($arr, $where);						
+						
+						}
+					}
+				}else{
+					
+					$_data["recordId"] = $requestId;
+					$_data["approvedrequest"] = 1;
+					$requseDetail = $this->getRequestDetail($_data);
+					if(!empty($requseDetail)){
+						foreach ($requseDetail as $row){
+							if (!empty($row['id'])){
+								$approvedStatus = $checkingStatus;
+								if($row['verifyStatus']==2){
+									$approvedStatus =2;
+								}
+								$arr = array(
+									'approvedStatus'	=>$approvedStatus,
+									'qtyApprovedAfter'	=>$row['qtyApproved'],
+								);
+								$this->_name='st_request_po_detail';
+								$where =" id =".$row['id'];
+								$this->update($arr, $where);						
+							
+							}
+						}
+					}
+					
+				}
+			}
+			
+	
+    		return true;
+    	}catch (Exception $e){
+    		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+    		return false;
+    	}
+    }
 	
 }

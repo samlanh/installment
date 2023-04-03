@@ -32,7 +32,6 @@ class Report_StockreportController extends Zend_Controller_Action
 		try {
 			$db = new Report_Model_DbTable_DbStockReports();
 			$rs_rows = $db->getAllProductLocation($search);
-
 		} catch (Exception $e) {
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			Application_Form_FrmMessage::message("APPLICATION_ERROR");
@@ -103,7 +102,7 @@ class Report_StockreportController extends Zend_Controller_Action
 	}
 
 
-	public function rptUsagedetailAction()
+	public function usageLetterAction()
 	{
 		try {
 			$db = new Report_Model_DbTable_DbStockReports();
@@ -116,7 +115,27 @@ class Report_StockreportController extends Zend_Controller_Action
 			}
 			$this->view->row = $row;
 			$this->view->rowdetail = $db->getDataAllRow($id);
+		} catch (Exception $e) {
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			Application_Form_FrmMessage::message("APPLICATION_ERROR");
+		}
 
+		$frmpopup = new Application_Form_FrmPopupGlobal();
+		$this->view->printByFormat = $frmpopup->printByFormat();
+	}
+	public function usageInfoAction()
+	{
+		try {
+			$db = new Report_Model_DbTable_DbStockReports();
+			$id = $this->getRequest()->getParam('id');
+			$id = empty($id) ? 0 : $id;
+			$row = $db->getDataRow($id);
+			if (empty($row)) {
+				Application_Form_FrmMessage::Sucessfull("NO_RECORD", "/report/stockreport/rpt-usage", 2);
+				exit();
+			}
+			$this->view->row = $row;
+			$this->view->rowdetail = $db->getUsgeDetail($id);
 		} catch (Exception $e) {
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			Application_Form_FrmMessage::message("APPLICATION_ERROR");
@@ -143,7 +162,6 @@ class Report_StockreportController extends Zend_Controller_Action
 		}
 		try {
 			$db = new Report_Model_DbTable_DbStockReports();
-
 		} catch (Exception $e) {
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			Application_Form_FrmMessage::message("APPLICATION_ERROR");
@@ -178,7 +196,6 @@ class Report_StockreportController extends Zend_Controller_Action
 		}
 		try {
 			$db = new Report_Model_DbTable_DbStockReports();
-
 		} catch (Exception $e) {
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			Application_Form_FrmMessage::message("APPLICATION_ERROR");
@@ -209,7 +226,6 @@ class Report_StockreportController extends Zend_Controller_Action
 				'dnId' => $id,
 				'transactionType' => 1, //dn request
 			);
-
 		} catch (Exception $e) {
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			Application_Form_FrmMessage::message("APPLICATION_ERROR");
@@ -241,7 +257,6 @@ class Report_StockreportController extends Zend_Controller_Action
 				'dnId' => $id,
 				'transactionType' => 1, //dn request
 			);
-
 		} catch (Exception $e) {
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			Application_Form_FrmMessage::message("APPLICATION_ERROR");
@@ -277,7 +292,6 @@ class Report_StockreportController extends Zend_Controller_Action
 			if (empty($id) or empty($rs)) {
 				Application_Form_FrmMessage::Sucessfull("NO_DATA", "/po/concret/index", 2);
 			}
-
 		} catch (Exception $e) {
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			Application_Form_FrmMessage::message("APPLICATION_ERROR");
@@ -315,7 +329,6 @@ class Report_StockreportController extends Zend_Controller_Action
 			$rs_rows = $db->getSummaryStockReport($search);
 			$this->view->rows = $rs_rows;
 			$this->view->search = $search;
-
 		} catch (Exception $e) {
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			Application_Form_FrmMessage::message("APPLICATION_ERROR");
@@ -354,7 +367,6 @@ class Report_StockreportController extends Zend_Controller_Action
 			$rs_rows = $db->getTransferAllReport($search);
 			$this->view->rows = $rs_rows;
 			$this->view->search = $search;
-
 		} catch (Exception $e) {
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			Application_Form_FrmMessage::message("APPLICATION_ERROR");
@@ -382,7 +394,6 @@ class Report_StockreportController extends Zend_Controller_Action
 			}
 			$this->view->row = $row;
 			$this->view->rowdetail = $db->getTransferAllRow($id);
-
 		} catch (Exception $e) {
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			Application_Form_FrmMessage::message("APPLICATION_ERROR");
@@ -390,7 +401,6 @@ class Report_StockreportController extends Zend_Controller_Action
 
 		$frmpopup = new Application_Form_FrmPopupGlobal();
 		$this->view->printByFormat = $frmpopup->printByFormat();
-
 	}
 
 
@@ -413,7 +423,6 @@ class Report_StockreportController extends Zend_Controller_Action
 			$db = new Report_Model_DbTable_DbStockReports();
 			$rs_rows = $db->getAllAdjustStock($search);
 			$this->view->rows = $rs_rows;
-
 		} catch (Exception $e) {
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			Application_Form_FrmMessage::message("APPLICATION_ERROR");
@@ -441,7 +450,6 @@ class Report_StockreportController extends Zend_Controller_Action
 			}
 			$this->view->row = $row;
 			$this->view->rowdetail = $db->getReceiveTransferDetail($id);
-
 		} catch (Exception $e) {
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			Application_Form_FrmMessage::message("APPLICATION_ERROR");
@@ -449,7 +457,6 @@ class Report_StockreportController extends Zend_Controller_Action
 
 		$frmpopup = new Application_Form_FrmPopupGlobal();
 		$this->view->printByFormat = $frmpopup->printByFormat();
-
 	}
 
 	public function rptReceivedTransferAction()
@@ -471,7 +478,6 @@ class Report_StockreportController extends Zend_Controller_Action
 			$rs_rows = $db->getAllReceiveTransferStock($search);
 			$this->view->rows = $rs_rows;
 			$this->view->search = $search;
-
 		} catch (Exception $e) {
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			Application_Form_FrmMessage::message("APPLICATION_ERROR");
@@ -510,7 +516,6 @@ class Report_StockreportController extends Zend_Controller_Action
 		try {
 			$db = new Report_Model_DbTable_DbStockReports();
 			$rs_rows = $db->getAllProductLocation($search);
-
 		} catch (Exception $e) {
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			Application_Form_FrmMessage::message("APPLICATION_ERROR");
@@ -533,5 +538,4 @@ class Report_StockreportController extends Zend_Controller_Action
 		$this->view->footerReport = $frmpopup->getFooterReport();
 		$this->view->headerReport = $frmpopup->getLetterHeadReport();
 	}
-
 }
