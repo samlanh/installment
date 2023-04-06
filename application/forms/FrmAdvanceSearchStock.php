@@ -383,7 +383,11 @@ class Application_Form_FrmAdvanceSearchStock extends Zend_Dojo_Form
 		$verifyStatus->setValue($request->getParam("verifyStatus"));
 
 		$isPaidStatus = new Zend_Dojo_Form_Element_FilteringSelect('isPaidStatus');
-		$isPaidStatus->setAttribs(array('dojoType' => $this->filter, 'class' => 'fullside'));
+		$isPaidStatus->setAttribs(array(
+			'dojoType' => $this->filter,
+			'required' => 'false',
+			 'class' => 'fullside'
+			 ));
 		$_isPaidStatusOpt = array(
 			0 => $this->tr->translate("ALL"),
 			1 => $this->tr->translate("NOT_YET_PAID"),
