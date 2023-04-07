@@ -106,7 +106,6 @@ class Stockinout_Model_DbTable_DbSaleStock extends Zend_Db_Table_Abstract
 				'requestDate' => $data['withdrawDate'],
 				'staffId' => $data['staffWithdraw'],
 				'contractor' => $data['contractor'],
-				'staffId' => $data['staffWithdraw'],
 				'workerName' => $data['ConstructionWorker'],
 				'houseType' => $data['propertyType'],
 				'saleId' => $data['saleId'],
@@ -165,7 +164,6 @@ class Stockinout_Model_DbTable_DbSaleStock extends Zend_Db_Table_Abstract
 				'requestDate' => $data['withdrawDate'],
 				'staffId' => $data['staffWithdraw'],
 				'contractor' => $data['contractor'],
-				'staffId' => $data['staffWithdraw'],
 				'workerName' => $data['ConstructionWorker'],
 				'houseType' => $data['propertyType'],
 				'houseId' => $data['houseId'],
@@ -174,8 +172,9 @@ class Stockinout_Model_DbTable_DbSaleStock extends Zend_Db_Table_Abstract
 				'note' => $data['note'],
 				'createDate' => $data['withdrawDate'],
 				'status' => 1,
-				'userId' => $this->getUserId(),
 				'tranType' => 2,
+				'userId' => $this->getUserId(),
+				
 			);
 			$stockId = $data['id'];
 			$where = "id=" . $stockId;

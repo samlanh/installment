@@ -169,8 +169,7 @@
 					table.totalBottom td.sideCol {
 						width: 20%;
 					}
-					table.totalBottom td.valueData {
-					}
+				
 					table.totalBottom td.valueData.totalVal {
 						font-weight: 600;
 					}
@@ -233,11 +232,11 @@
 											<small class="lbEng">Project Name</small>
 										</td>
 										<td scope="col" class="center">
-											<span class="lbTitle">លេខវេរចេញ</span> 
+											<span class="lbTitle">លេខទទួល</span> 
 											 <small class="lbEng">Receive No.</small>
 										</td>  
 										<td scope="col"  class="center">
-											<span class="lbTitle">ថ្ងៃផ្ទេរចេញ</span>
+											<span class="lbTitle">ថ្ងៃទទួលទំនិញ</span>
 											 <small class="lbEng">Received Date</small>
 										</td> 
 										
@@ -277,19 +276,33 @@
 				                if(!empty($this->rows)) foreach($this->rows as $index => $rs){
 								?>
 									<tr class="style context-menu-one" oncontextmenu="setrowdata(<?php echo $rs['id'];?>);return false;" style="font-family: 'Khmer OS Battambang'; white-space:nowrap; ">
-										<td align="center"><?php echo $index+1;?></td>
-										<td><?php echo $rs['projectName'];?></td>
-										<td><?php echo $rs['receiveNo'];?></td>
-										<td align="center"><?php echo date(DATE_FORMAT_FOR_PHP,strtotime($rs['receiveDate']));?></td>
+										<td data-label="ល.រ/No." align="center"><?php echo $index+1;?></td>
+										<td data-label="គម្រោង/Project Name"><?php echo $rs['projectName'];?></td>
+										<td data-label="លេខទទួល/Receive No." class="redBold"><?php echo $rs['receiveNo'];?></td>
+										<td data-label="ថ្ងៃទទួលទំនិញ/Received Date" align="center">
+											<?php
+												$format = 'd-M-Y';
+												$dateString = $rs["receiveDate"];
+												$date = new DateTime($dateString);
+												$receiveDate = $date->format($format);
+												echo $receiveDate;
+											?>
+										</td>
+										<td data-label="ពីគម្រោង/From Project Name"><?php echo $rs['fromProjectName'];?></td>
+										<td data-label="លេខវេរចេញ/Transfer No."  class="redBold"><?php echo $rs['transferNo'];?></td>
+										<td data-label="ថ្ងៃផ្ទេរចេញ/Transfer Date" align="center">
+											<?php
+												$tranDateString = $rs["transferDate"];
+												$transferdate = new DateTime($tranDateString);
+												$transferDate = $transferdate->format($format);
+												echo $transferDate;
+											?>
+										</td>
+										<td data-label="អ្នកដឹក/Deliver"><?php echo $rs['driver']?></td>
+										<td data-label="អ្នកបញ្ចេញទំនិញ/Transfer"><?php echo $rs['transferer']?></td>
 										
-										<td><?php echo $rs['fromProjectName'];?></td>
-										<td><?php echo $rs['transferNo'];?></td>
-										<td align="center"><?php echo date(DATE_FORMAT_FOR_PHP,strtotime($rs['transferDate']));?></td>
-										<td><?php echo $rs['driver']?></td>
-										<td><?php echo $rs['transferer']?></td>
-										
-										<td><?php echo $rs['userFor']?></td>
-										<td><?php echo $rs['note']?></td>
+										<td data-label="ប្រើសម្រាប់/Used For"><?php echo $rs['userFor']?></td>
+										<td data-label="សម្គាល់/note"><?php echo $rs['note']?></td>
 										
 									</tr>
 								

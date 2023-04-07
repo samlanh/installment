@@ -61,7 +61,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     		$where.=" AND lcrm.`payment_option`= ".$search['paymnet_type'];
     	}
     	if($search['land_id']>0){
-    		$where.=" AND lcrm.`land_id`= ".$search['land_id'];
+    		$where.=" AND (SELECT s.`house_id` FROM `ln_sale` AS s WHERE s.id = lcrm.sale_id LIMIT 1) = ".$search['land_id'];
     	}
     	if($search['payment_method']>0){
     		$where.=" AND lcrm.`payment_method`= ".$search['payment_method'];

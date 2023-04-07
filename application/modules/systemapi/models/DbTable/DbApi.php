@@ -36,6 +36,36 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 			return $result;
 		}
 	}
+	function getUserInfById($userId){
+		$db = $this->getAdapter();
+		try{
+			$sql =" SELECT
+				s.*
+				,s.user_type AS userType
+				,'1' AS userAction
+				,'' AS photo
+				,s.branch_list AS branchList
+				,CONCAT(COALESCE(s.last_name,''),' ',COALESCE(s.first_name,'')) as userName
+			FROM
+				rms_users AS s
+			WHERE s.active = 1 AND s.id = $userId ";
+			$row = $db->fetchRow($sql);
+			
+			$result = array(
+					'status' =>true,
+					'value' =>$row,
+			);
+			return $result;
+	
+		}catch(Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$result = array(
+					'status' =>false,
+					'value' =>$e->getMessage(),
+			);
+			return $result;
+		}
+	}
 	function generateToken($row){
     	$db = $this->getAdapter();
     	try{
@@ -214,9 +244,15 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 	
 	public function getAccessPermission($branchStr='branch_id',$_data = array()){
 		
-		$branchList 	= empty($_data['branchList'])?"0":$_data['branchList'];
+		$branchList= "0";
 		$userType 	= empty($_data['userType'])?0:$_data['userType'];
 		$userId 		= empty($_data['userId'])?0:$_data['userId'];
+		$userInfo = $this->getUserInfById($userId);
+		if(!empty($userInfo["value"])){
+			$row = $userInfo["value"];
+			$branchList = empty($row['branch_list'])?"0":$row['branch_list'];
+		}
+		
 		$result="";
 		if(!empty($branchList)){
 			if($userType==1){
@@ -437,7 +473,7 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 	public function getAllActionNotification($_data){
 		$db = $this->getAdapter();
 		try{
-			$_data['branchList'] = empty($_data['branchList'])?"0":$_data['branchList'];
+			
 			$_data['userType']	 = empty($_data['userType'])?0:$_data['userType'];
 			$_data['userId'] 	 = empty($_data['userId'])?0:$_data['userId'];
 	
@@ -540,7 +576,7 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 	public function getAllRequestNotify($_data){
 		$db = $this->getAdapter();
 		try{
-			$_data['branchList'] = empty($_data['branchList'])?"0":$_data['branchList'];
+			
 			$_data['userType']	 = empty($_data['userType'])?0:$_data['userType'];
 			$_data['userId'] 	 = empty($_data['userId'])?0:$_data['userId'];
 			
@@ -574,7 +610,7 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 		$db = $this->getAdapter();
 		try{
 			
-			$_data['branchList'] = empty($_data['branchList'])?"0":$_data['branchList'];
+			
 			$_data['userType']	 = empty($_data['userType'])?0:$_data['userType'];
 			$_data['userId'] 	 = empty($_data['userId'])?0:$_data['userId'];
 			$_data['pCheckingRequest'] 	 = empty($_data['pCheckingRequest'])?0:$_data['pCheckingRequest'];
@@ -624,7 +660,6 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	try{
 			
-			$_data['branchList'] = empty($_data['branchList'])?"0":$_data['branchList'];
 			$_data['userType']	 = empty($_data['userType'])?0:$_data['userType'];
 			$_data['userId'] 	 = empty($_data['userId'])?0:$_data['userId'];
 			$checkingStatus 	 = empty($_data['checkingStatus'])?1:$_data['checkingStatus'];
@@ -702,7 +737,6 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	try{
 			
-			$_data['branchList'] = empty($_data['branchList'])?"0":$_data['branchList'];
 			$_data['userType']	 = empty($_data['userType'])?0:$_data['userType'];
 			$_data['userId'] 	 = empty($_data['userId'])?0:$_data['userId'];
 			$checkingStatus 	 = empty($_data['checkingStatus'])?1:$_data['checkingStatus'];
@@ -780,7 +814,6 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	try{
 			
-			$_data['branchList'] = empty($_data['branchList'])?"0":$_data['branchList'];
 			$_data['userType']	 = empty($_data['userType'])?0:$_data['userType'];
 			$_data['userId'] 	 = empty($_data['userId'])?0:$_data['userId'];
 			$checkingStatus 	 = empty($_data['checkingStatus'])?1:$_data['checkingStatus'];

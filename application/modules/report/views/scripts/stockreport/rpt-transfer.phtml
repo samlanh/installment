@@ -166,8 +166,7 @@
 					table.totalBottom td.sideCol {
 						width: 20%;
 					}
-					table.totalBottom td.valueData {
-					}
+					
 					table.totalBottom td.valueData.totalVal {
 						font-weight: 600;
 					}
@@ -261,17 +260,25 @@
 				                if(!empty($this->rows)) foreach($this->rows as $index => $rs){
 								?>
 									<tr class="style context-menu-one" oncontextmenu="setrowdata(<?php echo $rs['id'];?>);return false;" style="font-family: 'Khmer OS Battambang'; white-space:nowrap; ">
-										<td align="center"><?php echo $index+1;?></td>
-										<td><?php echo $rs['fromProject'];?></td>
-										<td><?php echo $rs['transferNo'];?></td>
-										<td><?php echo $rs['transferDate']?></td>
-										<td><?php echo $rs['driverName']?></td>
-										<td><?php echo $rs['transferer']?></td>
-										<td><?php echo $rs['toProject']?></td>
-										<td><?php echo $rs['receiverId']?></td>
-										<td><?php echo $rs['useFor']?></td>
-										<td><?php echo $rs['note']?></td>
-										<td><?php echo $rs['isCompleted']?></td>
+										<td data-label="ល.រ/No." align="center"><?php echo $index+1;?></td>
+										<td data-label="គម្រោង/Project Name"><?php echo $rs['fromProject'];?></td>
+										<td data-label="លេខវេរចេញ/Transfer No" class="bold red"><?php echo $rs['transferNo'];?></td>
+										<td data-label="ថ្ងៃផ្ទេរចេញ/Transfer Date">
+											<?php
+												$format = 'd-M-Y';
+												$dateString = $rs["transferDate"];
+												$date = new DateTime($dateString);
+												$transferDate = $date->format($format);
+												echo $transferDate;
+											?>
+										</td>
+										<td data-label="អ្នកដឹក/Deliver"><?php echo $rs['driverName']?></td>
+										<td data-label="អ្នកបញ្ចេញទំនិញ/Transfer"><?php echo $rs['transferer']?></td>
+										<td data-label="សាខាទទួល/Receiving Branc"><?php echo $rs['toProject']?></td>
+										<td data-label="អ្នកទទួល/Receiver"><?php echo $rs['receiverId']?></td>
+										<td data-label="ប្រើសម្រាប់/Used For"><?php echo $rs['useFor']?></td>
+										<td data-label="សម្គាល់/note"><?php echo $rs['note']?></td>
+										<td data-label="ដំណើរការណ៍/ Status"><?php echo $rs['isCompleted']?></td>
 									</tr>
 								
 				                <?php }?>
@@ -296,7 +303,18 @@
 			 
 			 document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
 			 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("RPT_TRANSFER");?>';
-			 document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date(DATE_FORMAT_FOR_PHP); }else{ echo date(DATE_FORMAT_FOR_PHP,strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date(DATE_FORMAT_FOR_PHP,strtotime($this->search['end_date'])); }?>';
+			 <?php
+				$format = 'd-M-Y';
+				$dateString = $this->search['start_date'];
+				$date = new DateTime($dateString);
+				$start_date = $date->format($format);
+
+				$enddateString = $this->search['end_date'];
+				$enddate = new DateTime($enddateString);
+				$end_date = $enddate->format($format);
+			
+			?>
+			 document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( $start_date == date("d-M-Y") ){ echo $start_date; }else{ echo $start_date.' '.$tr->translate('TO').' ';echo $end_date;} }else{ echo $end_date; }?>';
 		});
 		
 	});
@@ -341,7 +359,7 @@ $(function(){
 			gotoAction();
 		},
 		items: {
-			"usage": {name: "<?php echo $tr->translate("TRANSFER_LETTER");?>", icon: "fa-file-text"},
+			"usage": {name: "<?php echo $tr->translate("RPT_TRANSFER_DERTAIL");?>", icon: "fa-file-text"},
 		}
 	});
 });
