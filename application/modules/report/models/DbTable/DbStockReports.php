@@ -226,7 +226,7 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
 		//     	if($search['status']>-1){
 		//     		$where.= " AND r.status = ".$search['status'];
 		//     	}
-		if ($search['verifyStatus'] > -1) {
+		if ($search['verifyStatus'] > -1 and $search['verifyStatus']!='') {
 			$where .= " AND r.isIssueInvoice = " . $search['verifyStatus'];
 		}
 		if ($search['branch_id'] > 0) {
@@ -326,7 +326,7 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
 		$where_date = " AND " . $from_date . " AND " . $to_date;
 		$where = '';
 
-		if ($search['branch_id'] > -1) {
+		if ($search['branch_id'] > -1 and $search['branch_id'] !='' ) {
 			$where .= " AND sa.projectId = " . $search['branch_id'];
 		}
 

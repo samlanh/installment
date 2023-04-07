@@ -530,7 +530,6 @@ class Report_Model_DbTable_DbAccountant extends Zend_Db_Table_Abstract
 		}
 		$order = ' ORDER BY inv.id DESC  ';
 		$where .= $dbGb->getAccessPermission("inv.projectId");
-
 		return $db->fetchAll($sql . $where . $order);
 	}
 	function getAllInvoiceSumByType($search)
@@ -561,7 +560,7 @@ class Report_Model_DbTable_DbAccountant extends Zend_Db_Table_Abstract
 
 		if (!empty($search['adv_search'])) {
 			$s_where = array();
-			$s_search = (trim($search['adv_search']));
+			$s_search = addslashes(trim($search['adv_search']));
 			$s_where[] = " inv.invoiceNo LIKE '%{$s_search}%'";
 			$s_where[] = " inv.supplierInvoiceNo LIKE '%{$s_search}%'";
 			$s_where[] = " po.purchaseNo LIKE '%{$s_search}%'";
