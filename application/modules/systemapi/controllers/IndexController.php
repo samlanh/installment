@@ -49,6 +49,7 @@ class Systemapi_IndexController extends Zend_Controller_Action
     				$_dbAction->addTokenAction($postData);
 				}else if ($GetData['url']=="removeTokenApp"){
     				$_dbAction->removeTokenAction($postData);
+					
 				}else if ($GetData['url']=="submitCheckingRequest"){
     				$_dbAction->checkingRequestPOAction($postData);	
 				}else if ($GetData['url']=="submitVerifyRequestPO"){

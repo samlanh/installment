@@ -45,11 +45,27 @@ class Requesting_RequestController extends Zend_Controller_Action {
 	}
     public function addAction()
     {	
+		$dbGbSt = new Application_Model_DbTable_DbGlobalStock();
+		$notify = array(
+			"userAction" => 2,
+			"typeNotify" => "Requesting",
+			"deviceType" => "1"
+		);
     	$db = new Requesting_Model_DbTable_DbRequest();
     	if($this->getRequest()->isPost()){
 	    	try{
 	    		$data = $this->getRequest()->getPost();
-	    		$db->addRequestPO($data);
+	    		$requestId = $db->addRequestPO($data);
+				
+				$row = $db->getRequestPOById($requestId);
+				if(!empty($row)){
+					$notify["notificationId"]  = $requestId;
+					$notify["notificationTitle"]  = "Request PO : ".$row["branch_name"]." ".$row["requestNo"];
+					$notify["branchId"]  = $row["projectId"];
+					$dbGbSt->pushNotificationForAndroid($notify);
+				}
+				
+				
 	    		if(isset($data['save_close'])){
 					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL."/index");
 				}else{
@@ -66,6 +82,14 @@ class Requesting_RequestController extends Zend_Controller_Action {
     	$this->view->frm = $frm;
     }
 	public function editAction(){
+		
+		$dbGbSt = new Application_Model_DbTable_DbGlobalStock();
+		$notify = array(
+			"userAction" => 2,
+			"typeNotify" => "Requesting",
+			"deviceType" => "1"
+		);
+		
 		$tr=Application_Form_FrmLanguages::getCurrentlanguage();
 		$db = new Requesting_Model_DbTable_DbRequest();
 		$id=$this->getRequest()->getParam('id');
@@ -74,6 +98,15 @@ class Requesting_RequestController extends Zend_Controller_Action {
 	    	try{
 	    		$data = $this->getRequest()->getPost();
 	    		$db->editRequestPO($data);
+				
+				$row = $db->getRequestPOById($id);
+				if(!empty($row)){
+					$notify["notificationId"]  = $id;
+					$notify["notificationTitle"]  = "Request PO : ".$row["branch_name"]." ".$row["requestNo"];
+					$notify["branchId"]  = $row["projectId"];
+					$dbGbSt->pushNotificationForAndroid($notify);
+				}
+				
 				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS",self::REDIRECT_URL."/index");
 	    	}catch(Exception $e){
 	    		Application_Form_FrmMessage::message("APPLICATION_ERROR");
@@ -86,7 +119,7 @@ class Requesting_RequestController extends Zend_Controller_Action {
     		exit();
     	}
 		
-		$dbGbSt = new Application_Model_DbTable_DbGlobalStock();
+		
 		$arrStep = array(
 			'stepNum'=>$row['processingStatus'],
 			'typeStep'=>2,

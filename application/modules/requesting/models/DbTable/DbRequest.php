@@ -149,6 +149,8 @@ class Requesting_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 					$this->insert($arr);
 				}
     		}
+			
+			return $id;
     	}catch(Exception $e){
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			Application_Form_FrmMessage::message("APPLICATION_ERROR");

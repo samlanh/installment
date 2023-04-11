@@ -10,8 +10,8 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 			$sql =" SELECT
 				s.*
 				,s.user_type AS userType
-				,'1' AS userAction
-				,'' AS photo
+				,s.userAction AS userAction
+				,s.photo AS photo
 				,s.branch_list AS branchList
 				,CONCAT(COALESCE(s.last_name,''),' ',COALESCE(s.first_name,'')) as userName
 			FROM
@@ -42,8 +42,8 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 			$sql =" SELECT
 				s.*
 				,s.user_type AS userType
-				,'1' AS userAction
-				,'' AS photo
+				,s.userAction AS userAction
+				,s.photo AS photo
 				,s.branch_list AS branchList
 				,CONCAT(COALESCE(s.last_name,''),' ',COALESCE(s.first_name,'')) as userName
 			FROM
@@ -76,9 +76,10 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
     		$rsid = $db->fetchOne($sql);
     		if(!empty($rsid)){
     			$_arr =array(
-    					'userId' 	=> $row['id'],
-    					'deviceType' => $row['deviceType'],
-    					'deviceModel' 		=> "",
+    					'userId' 		=> $row['id'],
+    					'deviceType' 	=> $row['deviceType'],
+    					'userAction' 	=> $row['userAction'],
+    					'deviceModel' 	=> "",
     			);
     			$where ='id= '.$rsid;
     			$this->update($_arr, $where);
@@ -92,9 +93,10 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 						$currentUserCheck = $db->fetchOne($sql);
 					}
 					$_arr =array(
-	    				'userId' 	=> $row['id'],
-	    				'token' 	=> $token,
-	    				'deviceType' => $row['deviceType'],
+	    				'userId' 	  => $row['id'],
+	    				'token' 	  => $token,
+	    				'deviceType'  => $row['deviceType'],
+	    				'userAction'  => $row['userAction'],
 	    				'deviceModel' => "",
 	    			);
 					if($currentUserCheck >0){
@@ -128,8 +130,8 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 				,s.branch_list AS branchList
 				,CONCAT(COALESCE(s.last_name,''),' ',COALESCE(s.first_name,'')) as userName
 			FROM rms_users AS s
-			WHERE s.status = 1 ";
-			$sql.= " AND ".$db->quoteInto('s.userId=?', $_data['userId']);
+			WHERE s.active = 1 ";
+			$sql.= " AND ".$db->quoteInto('s.id=?', $_data['userId']);
 			$sql.= " AND ".$db->quoteInto('s.password=?', md5($_data['oldPassword']));
 			$row = $db->fetchRow($sql);
 			if (empty($row)){
@@ -166,14 +168,16 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 	function addAppTokenId($_data){
 		$db = $this->getAdapter();
 		try{
-			
+			$_data['userAction'] = empty($_data['userAction']) ? "0" : $_data['userAction'];
+			$_data['deviceType'] = empty($_data['deviceType']) ? "0" : $_data['deviceType'];
 			$check = $this->checkTokenDevice($_data['token']);
 			$this->_name='mobile_mobile_token';
 			if(empty($check)){
 				$array = array(
-					'token'	=>$_data['token'],
-					'deviceType'=>1,
-					'date'	=>date('Y-m-d H:i:s'),
+					'token'			=> $_data['token'],
+					'userAction'	=> $_data['userAction'],
+					'deviceType'	=> $_data['deviceType'],
+					'date'			=> date('Y-m-d H:i:s'),
 				);
 				return $this->insert($array);
 			}
@@ -204,8 +208,8 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 					$_arr =array(
 	    				'userId' 	=> $userId,
 	    				'token' 	=> $mobileToken,		
-	    				'device_type' => $deviceType,
-	    				'device_model' => "",
+	    				'deviceType' => $deviceType,
+	    				'deviceModel' => "",
 	    			);
 					if($currentStudentCheck >0){
 						$this->_name = "mobile_mobile_token";

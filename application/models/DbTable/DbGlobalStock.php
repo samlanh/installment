@@ -1217,5 +1217,117 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		return $row;
 
 	}
+	
+	function getMobileToken($_data){
+		
+		$_data['branchId'] = empty($_data['branchId'])?0:$_data['branchId'];
+		$_data['userAction'] = empty($_data['userAction'])?0:$_data['userAction'];
+		
+		
+		$userList = $this->getUserList($_data);
+		$userList = empty($userList) ? "0" : $userList;
+		
+		$db = $this->getAdapter();
+		$sql="SELECT mb.`token`
+				FROM `mobile_mobile_token` AS mb
+				WHERE mb.userId != 0 ";
+		
+		$sql.=" AND mb.userAction=" . $_data['userAction'];
+		$sql.=" AND mb.userId IN ('".$userList."') ";
+		return  $db->fetchCol($sql);
+	}
+	
+	function getUserList($_data){
+		$_data['userAction'] = empty($_data['userAction'])?0:$_data['userAction'];
+		$recordBranchId = empty($_data['branchId'])?0:$_data['branchId'];
+		$db = $this->getAdapter();
+		$sql=" 
+			SELECT 
+				u.id,u.branch_list 
+			FROM `rms_users` AS u 
+			WHERE u.active =1 
+				AND u.userAction= ".$_data['userAction']."
+		";
+		$rowUser = $db->fetchAll($sql);
+		
+		$userList = "";
+		if(!empty($rowUser)){
+			foreach($rowUser AS $rs){
+				$branchList = empty($rs['branch_list']) ? "" : $rs['branch_list'];
+				$exp = explode(",", $branchList);
+				if(COUNT($exp)>1){
+					foreach ($exp as $branchId){
+						if($branchId == $recordBranchId){
+							if($userList==""){
+								$userList = $rs['id'];
+							}else{
+								$userList = $userList.",".$rs['id'];
+							}
+							break;
+						}					
+					}
+				}else{
+					if($branchList == $recordBranchId){
+						if($userList==""){
+							$userList = $rs['id'];
+						}else{
+							$userList = $userList.",".$rs['id'];
+						}
+						break;
+					}
+				}
+			}
+		}
+		return $userList;
+	}
+
+	function pushNotificationForAndroid($_data){
+		$_data['branchId'] = empty($_data['branchId'])?0:$_data['branchId'];
+		$_data['userAction'] = empty($_data['userAction'])?0:$_data['userAction'];
+		$_data['deviceType'] = empty($_data['deviceType'])?1:$_data['deviceType'];
+		
+		$notificationId = empty($_data['notificationId'])?0:$_data['notificationId'];
+		$notificationTitle = empty($_data['notificationTitle'])?"Title":$_data['notificationTitle'];
+		$typeNotify = empty($_data['typeNotify'])?"Requesting":$_data['typeNotify'];
+		
+		
+		$dataNotify = array(
+			"notificationId" 	=> $notificationId,
+			"title" 			=> $notificationTitle,
+			"userAction" 		=> $_data['userAction'],
+			"typeNotify" 		=> $typeNotify,
+		);
+		$content = array(
+        		"en" =>$notificationTitle,
+        	);
+		$androidToken = $this->getMobileToken($_data);
+		if(!empty($androidToken)){
+			$fields = array(
+        				'app_id' => APP_ID,
+        				'include_player_ids' => $androidToken,
+        				'data' => $dataNotify,
+        				'contents' => $content,
+						"external_id"=> null,
+        		);
+		
+			$fields = json_encode($fields);
+			
+			
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, "https://onesignal.com/api/v1/notifications");
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json; charset=utf-8',
+					'Authorization: Basic OGY3MGQ2M2EtMmQ3OS00MjZhLTk2MjYtYjYzMzExYTg5YWRm'));
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+			curl_setopt($ch, CURLOPT_HEADER, FALSE);
+			curl_setopt($ch, CURLOPT_POST, TRUE);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+			
+			$response = curl_exec($ch);
+
+			curl_close($ch);
+		}
+			
+	}
 }
 ?>
