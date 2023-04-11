@@ -1305,6 +1305,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		$content = array(
         		"en" =>$notificationSubTitle,
         	);
+		$bigPicture = "http://8.214.12.212/bppt.22.4.09/public/images/icon.png";
 		
 		$androidToken = $this->getMobileToken($_data);
 		$fields = array(
@@ -1314,6 +1315,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 						'headings' => $headings,
         				'contents' => $content,
 						"external_id"=> null,
+						"big_picture"=> $bigPicture,
         		);
 		
 			$fields = json_encode($fields);

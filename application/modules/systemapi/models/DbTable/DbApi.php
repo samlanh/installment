@@ -43,6 +43,12 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 				s.*
 				,s.user_type AS userType
 				,s.userAction AS userAction
+				,CASE
+					WHEN  s.userAction = 1 THEN 'Boss'
+					WHEN  s.userAction = 2 THEN 'Warehouse MG'
+					WHEN  s.userAction = 3 THEN 'PO Department'
+					WHEN  s.userAction = 4 THEN 'Warehouse Staff'
+				END AS userActionTitle
 				,s.photo AS photo
 				,s.branch_list AS branchList
 				,CONCAT(COALESCE(s.last_name,''),' ',COALESCE(s.first_name,'')) as userName
@@ -249,12 +255,13 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 	public function getAccessPermission($branchStr='branch_id',$_data = array()){
 		
 		$branchList= "0";
-		$userType 	= empty($_data['userType'])?0:$_data['userType'];
+		$userType 	= "0";
 		$userId 		= empty($_data['userId'])?0:$_data['userId'];
 		$userInfo = $this->getUserInfById($userId);
 		if(!empty($userInfo["value"])){
 			$row = $userInfo["value"];
 			$branchList = empty($row['branch_list'])?"0":$row['branch_list'];
+			$userType = empty($row['userType'])?"0":$row['userType'];
 		}
 		
 		$result="";
@@ -267,17 +274,6 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 			}
 		}
 		return $result;
-	}
-	
-	function getAccessUrl($module,$controller,$action,$_data = array()){
-		
-		$userType 	= empty($_data['userType'])?0:$_data['userType'];
-		if($userType==1){return 1;}
-		$db = $this->getAdapter();
-			$sql = "SELECT aa.module, aa.controller, aa.action FROM rms_acl_user_access AS ua  INNER JOIN rms_acl_acl AS aa 
-					ON (ua.acl_id=aa.acl_id) WHERE ua.user_type_id='".$userType."' AND aa.module='".$module."' AND aa.controller='".$controller."' AND aa.action='".$action."' limit 1";
-					$rows = $db->fetchAll($sql);
-	    return $rows;
 	}
 	
 	function getNotifyRequest($_data=array()){
@@ -329,25 +325,15 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 		$sql.=" FROM `st_request_po` AS rq WHERE rq.status=1 ";
 		
 		$processingStatus=null;
-		$rs = $this->getAccessUrl("requesting","checkingrequest","add",$_data);
-		if(!empty($rs)){
+		
+		$_data["userAction"] = empty($_data["userAction"]) ? "0" : $_data["userAction"];
+		if($_data["userAction"]=="2"){
 			if(is_null($processingStatus)){
 				$processingStatus =1; //forWarehouse
 			}
-			
 		}
-		$rs = $this->getAccessUrl("requesting","pcheckingrequest","add",$_data);
-		if(!empty($rs)){
-			//forPurchaseDept
-			if(is_null($processingStatus)){
-				$processingStatus =2; 
-			}else{
-				$processingStatus =$processingStatus.",2";
-			}
-			$sql.=" AND rq.checkingStatus!=2 ";
-		}
-		$rs = $this->getAccessUrl("requesting","approvedrequest","add",$_data);
-		if(!empty($rs)){
+		
+		if($_data["userAction"]=="1"){
 			//forApproved
 			if(is_null($processingStatus)){
 				$processingStatus =3; 
@@ -357,17 +343,26 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 			$sql.=" AND rq.pCheckingStatus!=2 ";
 		}
 		
-		$rs = $this->getAccessUrl("po","index","add",$_data);
-		if(!empty($rs)){
+		if($_data["userAction"]=="3"){
 			//forPurchasing
-			if(is_null($processingStatus)){
-				$processingStatus ="4,5"; 
+			if( !empty($_data['forPurchasing']) ){ //get Only Request Approved and go Make PO
+				if(is_null($processingStatus)){
+					$processingStatus ="4,5"; 
+				}else{
+					$processingStatus =$processingStatus.",4,5";
+				}
+				$sql.=" AND rq.approveStatus!=2 "; 
+				$sql.= " AND (SELECT rqd.isCompletedPO FROM `st_request_po_detail` AS rqd WHERE rqd.requestId =rq.id AND rqd.approvedStatus!=2 ORDER BY rqd.isCompletedPO  ASC LIMIT 1 )= 0 ";
+				$sql.=" AND rq.checkingStatus = 1 AND rq.pCheckingStatus = 1 "; 
 			}else{
-				$processingStatus =$processingStatus.",4,5";
+				//forPurchaseDept
+				if(is_null($processingStatus)){
+					$processingStatus =2; 
+				}else{
+					$processingStatus =$processingStatus.",2";
+				}
+				$sql.=" AND rq.checkingStatus!=2 ";
 			}
-			$sql.=" AND rq.approveStatus!=2 "; 
-			$sql.= " AND (SELECT rqd.isCompletedPO FROM `st_request_po_detail` AS rqd WHERE rqd.requestId =rq.id AND rqd.approvedStatus!=2 ORDER BY rqd.isCompletedPO  ASC LIMIT 1 )= 0 ";
-    	
 		}
 		
 		if(is_null($processingStatus)){
@@ -375,6 +370,7 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 		}else{
 			$sql.=" AND rq.processingStatus IN ($processingStatus) ";
 		}
+		
 		if( !empty($_data['checkingStatus']) ){ //get Only First Step Request
 			$sql.=" AND rq.checkingStatus = 0 "; 
 		}
@@ -395,6 +391,7 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 		}else if(!empty($_data['limitRecord'])){
 			$limit.=" LIMIT ".$_data['limitRecord'];
 		}
+		
     	return $db->fetchAll($sql.$limit);
 	}
 	
@@ -474,120 +471,12 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 		return $db->fetchAll($sql.$limit);
 	}
 	
-	public function getAllActionNotification($_data){
-		$db = $this->getAdapter();
-		try{
-			
-			$_data['userType']	 = empty($_data['userType'])?0:$_data['userType'];
-			$_data['userId'] 	 = empty($_data['userId'])?0:$_data['userId'];
-	
-			$userAccessVerifyDN = $this->getAccessUrl("stockinout","index",'verify',$_data);
-			$userAccessTrn = $this->getAccessUrl("stockinout","transferin",'add',$_data);
-			
-			$row = array();
-			
-			$countRequest = 0;
-			$countUnverify = 0;
-			$countTransfer = 0;
-			if(!empty($_data['limitRecord'])){
-				$limitRecordRequest=empty($_data['limitRecord'])?null:$_data['limitRecord'];
-				$limitStartRequest=empty($_data['LimitStart'])?null:$_data['LimitStart'];
-				
-				$limitRecordUnverify=empty($_data['limitRecord'])?null:$_data['limitRecord'];
-				$limitStartUnverify=empty($_data['LimitStart'])?null:$_data['LimitStart'];
-				
-				$limitRecordTransfer=empty($_data['limitRecord'])?null:$_data['limitRecord'];
-				$limitStartTransfer=empty($_data['LimitStart'])?null:$_data['LimitStart'];
-				
-				$_data['limitRecord'] =null;
-				$_data['LimitStart'] =null;
-				$countRequest = count($this->getNotifyRequest($_data));
-				if(!empty($userAccessVerifyDN)){
-					$countUnverify = count($this->getUnverifyReceiveDn($_data));
-				}
-				if(!empty($userAccessTrn)){
-					$countTransfer = count($this->getAllTransferStock($_data));
-				}
-				
-				
-				$_data['limitRecord'] = $limitRecordRequest;
-				$_data['LimitStart'] = $limitStartRequest;
-				$row = $this->getNotifyRequest($_data);
-				
-				if(!empty($userAccessVerifyDN)){
-					
-					$_data['limitRecord'] = $limitRecordUnverify;
-					$_data['LimitStart'] = $limitStartUnverify;
-					$rRow = $this->getUnverifyReceiveDn($_data);
-					$row = (object) array_merge((array) $rRow, (array) $row);//merg two object array list
-					
-					$row = (array) $row;//sort by key Value DESC
-					usort($row, function ($a, $b) {return $a['recordDate'] < $b['recordDate'];});
-				}
-				
-				if(!empty($userAccessTrn)){
-					$_data['limitRecord'] = $limitRecordTransfer;
-					$_data['LimitStart'] = $limitStartTransfer;
-					
-					$rowTransfer = $this->getAllTransferStock($_data);
-					$row = (object) array_merge((array) $rowTransfer, (array) $row);//merg two object array list
-					
-					$row = (array) $row;//sort by key Value DESC
-					usort($row, function ($a, $b) {return $a['recordDate'] < $b['recordDate'];});
-				}
-					
-			}else{
-				$row = $this->getNotifyRequest($_data);
-				if(!empty($userAccessVerifyDN)){
-					
-					$rRow = $this->getUnverifyReceiveDn($_data);
-					$row = (object) array_merge((array) $rRow, (array) $row);//merg two object array list
-					
-					$row = (array) $row;//sort by key Value DESC
-					usort($row, function ($a, $b) {return $a['recordDate'] < $b['recordDate'];});
-				}
-				
-				if(!empty($userAccessTrn)){
-					$rowTransfer = $this->getAllTransferStock($_data);
-					$row = (object) array_merge((array) $rowTransfer, (array) $row);//merg two object array list
-					
-					$row = (array) $row;//sort by key Value DESC
-					usort($row, function ($a, $b) {return $a['recordDate'] < $b['recordDate'];});
-				}
-			
-			}
-			
-			
-	
-			$counting = count($row);
-			$allResult = array('rowData'=>$row,'countingRecord'=>$counting);
-			
-			$result = array(
-						'status' =>true,
-						'value' =>$allResult,
-					);
-			return $result;
-		}catch(Exception $e){
-			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-			$result = array(
-				'status' =>false,
-				'value' =>$e->getMessage(),
-			);
-			return $result;
-		}
-    }
-	
 	public function getAllRequestNotify($_data){
 		$db = $this->getAdapter();
 		try{
 			
-			$_data['userType']	 = empty($_data['userType'])?0:$_data['userType'];
-			$_data['userId'] 	 = empty($_data['userId'])?0:$_data['userId'];
-			
-	
-			$userAccessVerifyDN = $this->getAccessUrl("stockinout","index",'verify',$_data);
-			$userAccessTrn = $this->getAccessUrl("stockinout","transferin",'add',$_data);
-			
+			$_data["userAction"] = empty($_data["userAction"]) ? "0" : $_data["userAction"];
+			$_data['userId'] 	 = empty($_data['userId'])?0:$_data['userId'];			
 			$row = array();
 		
 			$row = $this->getNotifyRequest($_data);
@@ -615,7 +504,6 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 		try{
 			
 			
-			$_data['userType']	 = empty($_data['userType'])?0:$_data['userType'];
 			$_data['userId'] 	 = empty($_data['userId'])?0:$_data['userId'];
 			$_data['pCheckingRequest'] 	 = empty($_data['pCheckingRequest'])?0:$_data['pCheckingRequest'];
 			$_data['approvedrequest'] 	 = empty($_data['approvedrequest'])?0:$_data['approvedrequest'];
@@ -664,7 +552,6 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	try{
 			
-			$_data['userType']	 = empty($_data['userType'])?0:$_data['userType'];
 			$_data['userId'] 	 = empty($_data['userId'])?0:$_data['userId'];
 			$checkingStatus 	 = empty($_data['checkingStatus'])?1:$_data['checkingStatus'];
 			
@@ -692,6 +579,21 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 				$this->_name = "st_request_po";
 				$where=" id = ".$requestId;
 				$this->update($arr, $where);
+				
+				
+				
+				if($checkingStatus==1){
+					$notify = array(
+						"userAction" => 3,
+						"typeNotify" => "checkingRequest",
+						"deviceType" => "1",
+						"notificationTitle" => "Requesting PO",
+					);
+					$notify["notificationId"]  = $requestId;
+					$notify["notificationSubTitle"]  = $request["projectName"]." ".$request["requestNo"];
+					$notify["branchId"]  = $request["projectId"];
+					$dbGbSt->pushNotificationForAndroid($notify);
+				}
 				
 				$itemsRequest 	 = empty($request['itemsRequest'])?null:$request['itemsRequest'];
 				if(!empty($itemsRequest)){
@@ -741,7 +643,6 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	try{
 			
-			$_data['userType']	 = empty($_data['userType'])?0:$_data['userType'];
 			$_data['userId'] 	 = empty($_data['userId'])?0:$_data['userId'];
 			$checkingStatus 	 = empty($_data['checkingStatus'])?1:$_data['checkingStatus'];
 			
@@ -769,6 +670,19 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 				$this->_name = "st_request_po";
 				$where=" id = ".$requestId;
 				$this->update($arr, $where);
+				
+				if($checkingStatus==1){
+					$notify = array(
+						"userAction" => 1,// push to Boss Approve
+						"typeNotify" => "poVerifyRequest",
+						"deviceType" => "1",
+						"notificationTitle" => "Requesting PO",
+					);
+					$notify["notificationId"]  = $requestId;
+					$notify["notificationSubTitle"]  = $request["projectName"]." ".$request["requestNo"];
+					$notify["branchId"]  = $request["projectId"];
+					$dbGbSt->pushNotificationForAndroid($notify);
+				}
 				
 				$itemsRequest 	 = empty($request['itemsRequest'])?null:$request['itemsRequest'];
 				if(!empty($itemsRequest)){
@@ -818,7 +732,6 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	try{
 			
-			$_data['userType']	 = empty($_data['userType'])?0:$_data['userType'];
 			$_data['userId'] 	 = empty($_data['userId'])?0:$_data['userId'];
 			$checkingStatus 	 = empty($_data['checkingStatus'])?1:$_data['checkingStatus'];
 			
@@ -846,6 +759,19 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 				$this->_name = "st_request_po";
 				$where=" id = ".$requestId;
 				$this->update($arr, $where);
+				
+				if($checkingStatus==1){
+					$notify = array(
+						"userAction" => 3,// push to PO Dept to Make PO
+						"typeNotify" => "approvedRequest",
+						"deviceType" => "1",
+						"notificationTitle" => "Approved Request",
+					);
+					$notify["notificationId"]  = $requestId;
+					$notify["notificationSubTitle"]  = $request["projectName"]." ".$request["requestNo"];
+					$notify["branchId"]  = $request["projectId"];
+					$dbGbSt->pushNotificationForAndroid($notify);
+				}
 				
 				$itemsRequest 	 = empty($request['itemsRequest'])?null:$request['itemsRequest'];
 				if(!empty($itemsRequest)){
@@ -909,5 +835,79 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
     		return false;
     	}
     }
+	
+	
+	function getPORequestToReceive($_data=array()){
+		$db=$this->getAdapter();
+		try{
+			
+			$_data['userId'] 	 = empty($_data['userId'])?0:$_data['userId'];
+			$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
+			$arrStep = array(
+					'keyIndex'=>1,
+					'typeKeyIndex'=>1,
+				);
+			$purchaseType = $dbGBstock->purchasingTypeKey($arrStep);
+		
+			$sql="
+				SELECT 
+					po.*
+					,po.date AS poDate
+					,spp.supplierName
+					,spp.address AS supplierAddress
+					,spp.supplierTel
+					,spp.contactName AS supplierContactName
+					,spp.contactNumber AS supplierContactNumber
+					,spp.email AS supplierEmail
+					,rq.requestNo
+					,rq.date AS requestDate
+					,rq.requestNoLetter
+					,rq.purpose
+					,(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = po.projectId LIMIT 1) AS projectName
+					,(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.checkingBy LIMIT 1 ) AS checkingByName
+					,(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.pCheckingBy LIMIT 1 ) AS pCheckingByName
+					,(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.approveBy LIMIT 1 ) AS approveByName
+					,(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.userId LIMIT 1 ) AS requestByName
+					,(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=po.userId LIMIT 1 ) AS purchaseByName
+				
+			";
+			
+			$sql.=" 
+				FROM `st_purchasing` AS po 
+					JOIN `st_request_po` AS rq ON rq.id = po.requestId AND rq.projectId = po.projectId 
+					LEFT JOIN `st_supplier` AS spp ON spp.id = po.supplierId  ";
+			$sql.=" WHERE po.purchaseType=".$purchaseType."
+					AND po.status = 1 ";
+			
+			$sql.=$this->getAccessPermission("po.projectId",$_data);
+			$sql.=" ORDER BY po.id DESC";
+			
+			$limit=" ";
+			if(!empty($_data['LimitStart'])){
+				$limit.=" LIMIT ".$_data['LimitStart'].",".$_data['limitRecord'];
+			}else if(!empty($_data['limitRecord'])){
+				$limit.=" LIMIT ".$_data['limitRecord'];
+			}
+
+			$row = $db->fetchAll($sql.$limit);	
+			$counting = count($row);
+			$allResult = array('rowData'=>$row,'countingRecord'=>$counting);
+			
+			$result = array(
+						'status' =>true,
+						'value' =>$allResult,
+					);
+			return $result;
+		}catch(Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$result = array(
+				'status' =>false,
+				'value' =>$e->getMessage(),
+			);
+			return $result;
+		}
+				
+    	
+	}
 	
 }

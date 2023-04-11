@@ -24,16 +24,19 @@ class Systemapi_IndexController extends Zend_Controller_Action
     		if($GetData['url']=="profile"){
     			$_dbAction->profileAction($GetData);
     		
-			}else if ($GetData['url']=="allActionNotification"){
-    			$_dbAction->allActionNotifyAction($GetData);
+			
 			}else if ($GetData['url']=="checkingRequestNotification"){
     			$_dbAction->checkingRequestNotifyAction($GetData);
 			}else if ($GetData['url']=="verifyRequestNotification"){
     			$_dbAction->verifyRequestNotifyAction($GetData);
 			}else if ($GetData['url']=="approveRequestNotification"){
     			$_dbAction->approveRequestNotifyAction($GetData);
+			}else if ($GetData['url']=="requestForPONotify"){
+    			$_dbAction->requestForPONotifyAction($GetData);
 			}else if ($GetData['url']=="requestDetail"){
     			$_dbAction->requestDetailAction($GetData);
+			}else if ($GetData['url']=="poRequestToReceiveNotify"){
+    			$_dbAction->PORequestToReceiveNotifyAction($GetData);
 			
     		}else{
     			echo Zend_Http_Response::responseCodeAsText(401,true);
