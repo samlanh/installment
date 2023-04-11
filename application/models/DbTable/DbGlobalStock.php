@@ -1288,7 +1288,9 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		
 		$notificationId = empty($_data['notificationId'])?0:$_data['notificationId'];
 		$notificationTitle = empty($_data['notificationTitle'])?"Title":$_data['notificationTitle'];
+		$notificationSubTitle = empty($_data['notificationSubTitle'])?"Sub Title":$_data['notificationSubTitle'];
 		$typeNotify = empty($_data['typeNotify'])?"Requesting":$_data['typeNotify'];
+	
 		
 		
 		$dataNotify = array(
@@ -1297,15 +1299,19 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 			"userAction" 		=> $_data['userAction'],
 			"typeNotify" 		=> $typeNotify,
 		);
+		$headings = array(
+			"en" =>$notificationTitle,
+		);
 		$content = array(
-        		"en" =>$notificationTitle,
+        		"en" =>$notificationSubTitle,
         	);
+		
 		$androidToken = $this->getMobileToken($_data);
-		if(!empty($androidToken)){
-			$fields = array(
+		$fields = array(
         				'app_id' => APP_ID,
         				'include_player_ids' => $androidToken,
         				'data' => $dataNotify,
+						'headings' => $headings,
         				'contents' => $content,
 						"external_id"=> null,
         		);
@@ -1326,7 +1332,6 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 			$response = curl_exec($ch);
 
 			curl_close($ch);
-		}
 			
 	}
 }

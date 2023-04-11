@@ -49,7 +49,8 @@ class Requesting_RequestController extends Zend_Controller_Action {
 		$notify = array(
 			"userAction" => 2,
 			"typeNotify" => "Requesting",
-			"deviceType" => "1"
+			"deviceType" => "1",
+			"notificationTitle" => "Requesting PO",
 		);
     	$db = new Requesting_Model_DbTable_DbRequest();
     	if($this->getRequest()->isPost()){
@@ -60,7 +61,7 @@ class Requesting_RequestController extends Zend_Controller_Action {
 				$row = $db->getRequestPOById($requestId);
 				if(!empty($row)){
 					$notify["notificationId"]  = $requestId;
-					$notify["notificationTitle"]  = "Request PO : ".$row["branch_name"]." ".$row["requestNo"];
+					$notify["notificationSubTitle"]  = $row["branch_name"]." ".$row["requestNo"];
 					$notify["branchId"]  = $row["projectId"];
 					$dbGbSt->pushNotificationForAndroid($notify);
 				}
@@ -87,7 +88,9 @@ class Requesting_RequestController extends Zend_Controller_Action {
 		$notify = array(
 			"userAction" => 2,
 			"typeNotify" => "Requesting",
-			"deviceType" => "1"
+			"deviceType" => "1",
+			"notificationTitle" => "Requesting PO",
+			
 		);
 		
 		$tr=Application_Form_FrmLanguages::getCurrentlanguage();
@@ -102,7 +105,7 @@ class Requesting_RequestController extends Zend_Controller_Action {
 				$row = $db->getRequestPOById($id);
 				if(!empty($row)){
 					$notify["notificationId"]  = $id;
-					$notify["notificationTitle"]  = "Request PO : ".$row["branch_name"]." ".$row["requestNo"];
+					$notify["notificationSubTitle"]  = $row["branch_name"]." ".$row["requestNo"];
 					$notify["branchId"]  = $row["projectId"];
 					$dbGbSt->pushNotificationForAndroid($notify);
 				}

@@ -45,8 +45,23 @@ class Requesting_CheckingrequestController extends Zend_Controller_Action {
 	}
     public function addAction()
     {	
-		$tr=Application_Form_FrmLanguages::getCurrentlanguage();
 	
+		$dbGbSt = new Application_Model_DbTable_DbGlobalStock();
+		$notify = array(
+			"userAction" => 3,
+			"typeNotify" => "checkingRequest",
+			"deviceType" => "1",
+			"notificationTitle" => "Requesting PO",
+		);
+		
+		
+		$id=$this->getRequest()->getParam('id');
+		$id = empty($id)?0:$id;
+		
+		$dbReq = new Requesting_Model_DbTable_DbRequest();
+    	$row = $dbReq->getRequestPOById($id);
+		
+		$tr=Application_Form_FrmLanguages::getCurrentlanguage();
     	$db = new Requesting_Model_DbTable_DbCheckingRequest();
     	if($this->getRequest()->isPost()){
 	    	try{
@@ -54,6 +69,17 @@ class Requesting_CheckingrequestController extends Zend_Controller_Action {
 				
 				$data['stepNum']=self::STEP_REQUEST;
 	    		$db->checkingRequestPO($data);
+				
+				if(!empty($row)){
+					$data['checkingStatus'] = empty($data['checkingStatus'])?0:$data['checkingStatus'];
+					if($data['checkingStatus']==1){
+						$notify["notificationId"]  = $id;
+						$notify["notificationSubTitle"]  = $row["branch_name"]." ".$row["requestNo"];
+						$notify["branchId"]  = $row["projectId"];
+						$dbGbSt->pushNotificationForAndroid($notify);
+					}
+				}
+				
 	    		Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL."/index");
 				
 	    	}catch(Exception $e){
@@ -62,11 +88,7 @@ class Requesting_CheckingrequestController extends Zend_Controller_Action {
 	    	}
     	}
 		
-		$id=$this->getRequest()->getParam('id');
-		$id = empty($id)?0:$id;
 		
-		$dbReq = new Requesting_Model_DbTable_DbRequest();
-    	$row = $dbReq->getRequestPOById($id);
     	if (empty($row)){
     		Application_Form_FrmMessage::Sucessfull("NO_RECORD", self::REDIRECT_URL."/index",2);
     		exit();

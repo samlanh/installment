@@ -89,7 +89,7 @@ class Requesting_Model_DbTable_DbPcheckingRequest extends Zend_Db_Table_Abstract
 				$arr['pCheckingCreateDate']=date("Y-m-d H:i:s");
 			}
     		$this->_name='st_request_po';
-			$where=" id = ".$data['id'];
+			$where=" id = ".$id;
 			$this->update($arr, $where);
 			
 			if(!empty($data['identity'])){
@@ -120,6 +120,8 @@ class Requesting_Model_DbTable_DbPcheckingRequest extends Zend_Db_Table_Abstract
 					}
 				}
 			}
+			
+			return $id;
 			
 
     	}catch(Exception $e){
