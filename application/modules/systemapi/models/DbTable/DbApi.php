@@ -415,6 +415,8 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 				,po.purpose
 				,po.date AS purchaseDate
 				,(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rst.userId LIMIT 1 ) AS userName
+				,(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.userId LIMIT 1 ) AS requestByName
+				,(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=po.userId LIMIT 1 ) AS purchaseByName
 		";
 		
 	
@@ -907,7 +909,34 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 			return $result;
 		}
 				
-    	
 	}
+	
+	public function getAllDNToVerifyNotify($_data){
+		$db = $this->getAdapter();
+		try{
+			
+			$_data["userAction"] = empty($_data["userAction"]) ? "0" : $_data["userAction"];
+			$_data['userId'] 	 = empty($_data['userId'])?0:$_data['userId'];			
+			$row = array();
+		
+			$row = $this->getUnverifyReceiveDn($_data);
+				
+			$counting = count($row);
+			$allResult = array('rowData'=>$row,'countingRecord'=>$counting);
+			
+			$result = array(
+						'status' =>true,
+						'value' =>$allResult,
+					);
+			return $result;
+		}catch(Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$result = array(
+				'status' =>false,
+				'value' =>$e->getMessage(),
+			);
+			return $result;
+		}
+    }
 	
 }

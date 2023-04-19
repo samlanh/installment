@@ -38,6 +38,9 @@ class Systemapi_IndexController extends Zend_Controller_Action
 			}else if ($GetData['url']=="poRequestToReceiveNotify"){
     			$_dbAction->PORequestToReceiveNotifyAction($GetData);
 			
+			}else if ($GetData['url']=="dnToVerifyNotify"){
+    			$_dbAction->getDNToVerifyNotifyAction($GetData);
+			
     		}else{
     			echo Zend_Http_Response::responseCodeAsText(401,true);
     		}
