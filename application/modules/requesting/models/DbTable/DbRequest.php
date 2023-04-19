@@ -257,6 +257,33 @@ class Requesting_Model_DbTable_DbRequest extends Zend_Db_Table_Abstract
 		$sql=" 
 		SELECT rq.*,
 			(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = rq.projectId LIMIT 1) AS branch_name
+			
+			,'requestingRecord' AS recordType
+			,rq.date AS recordDate
+			,rq.requestNo AS recordNo
+			,CASE
+					WHEN  rq.checkingStatus= 0 THEN  'PENDING'
+					WHEN  rq.checkingStatus = 1 THEN 'APPROVED'
+					WHEN  rq.checkingStatus = 2 THEN 'REJECTED'
+				END AS checkingStatusTitle,
+				CASE
+					WHEN  rq.pCheckingStatus= 0 THEN   'PENDING'
+					WHEN  rq.pCheckingStatus = 1 THEN  'APPROVED'
+					WHEN  rq.pCheckingStatus = 2 THEN  'REJECTED'
+				END AS pCheckingStatusTitle,
+				CASE
+					WHEN  rq.approveStatus= 0 THEN  'PENDING'
+					WHEN  rq.approveStatus = 1 THEN 'APPROVED'
+					WHEN  rq.approveStatus = 2 THEN 'REJECTED'
+				END AS approveStatusTitle,
+				(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = rq.projectId LIMIT 1) AS projectName,
+				(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.checkingBy LIMIT 1 ) AS checkingByName,
+				(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.pCheckingBy LIMIT 1 ) AS pCheckingByName,
+				(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.approveBy LIMIT 1 ) AS approveByName,
+				(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.userId LIMIT 1 ) AS userName,
+				rq.processingStatus AS currentStep,
+				'' AS itemsRequest
+				
 		FROM st_request_po AS rq WHERE 1 ";
 		if (!empty($id)){
 			$sql.=" AND id = $id ";

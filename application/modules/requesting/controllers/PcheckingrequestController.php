@@ -49,9 +49,8 @@ class Requesting_PcheckingrequestController extends Zend_Controller_Action {
 		$dbGbSt = new Application_Model_DbTable_DbGlobalStock();
 		$notify = array(
 			"userAction" => 1,// push to Boss Approve
-			"typeNotify" => "poVerifyRequest",
+			"typeNotify" => "toApproveRequest",
 			"deviceType" => "1",
-			"notificationTitle" => "Requesting PO",
 		);
 		
 		$id=$this->getRequest()->getParam('id');
@@ -72,7 +71,6 @@ class Requesting_PcheckingrequestController extends Zend_Controller_Action {
 					$data['pCheckingStatus'] = empty($data['pCheckingStatus'])?0:$data['pCheckingStatus'];
 					if($data['pCheckingStatus']==1){
 						$notify["notificationId"]  = $id;
-						$notify["notificationSubTitle"]  = $row["branch_name"]." ".$row["requestNo"];
 						$notify["branchId"]  = $row["projectId"];
 						$dbGbSt->pushNotificationForAndroid($notify);
 					}

@@ -49,9 +49,8 @@ class Requesting_CheckingrequestController extends Zend_Controller_Action {
 		$dbGbSt = new Application_Model_DbTable_DbGlobalStock();
 		$notify = array(
 			"userAction" => 3,
-			"typeNotify" => "checkingRequest",
+			"typeNotify" => "toPoVerifyRequest",
 			"deviceType" => "1",
-			"notificationTitle" => "Requesting PO",
 		);
 		
 		
@@ -74,7 +73,6 @@ class Requesting_CheckingrequestController extends Zend_Controller_Action {
 					$data['checkingStatus'] = empty($data['checkingStatus'])?0:$data['checkingStatus'];
 					if($data['checkingStatus']==1){
 						$notify["notificationId"]  = $id;
-						$notify["notificationSubTitle"]  = $row["branch_name"]." ".$row["requestNo"];
 						$notify["branchId"]  = $row["projectId"];
 						$dbGbSt->pushNotificationForAndroid($notify);
 					}

@@ -1218,6 +1218,8 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 
 	}
 	
+	
+	// Below For Push Notification Only
 	function getMobileToken($_data){
 		
 		$_data['branchId'] = empty($_data['branchId'])?0:$_data['branchId'];
@@ -1281,23 +1283,86 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		return $userList;
 	}
 
+	function getRequestPOInfoId($id=null){
+		$db = $this->getAdapter();
+		$dbGb = new Application_Model_DbTable_DbGlobal();
+		$sql=" 
+		SELECT 
+			'requestingRecord' AS recordType
+				
+				,rq.date AS recordDate
+				,rq.requestNo AS recordNo
+				,rq.*
+				,CASE
+					WHEN  rq.checkingStatus= 0 THEN  'PENDING'
+					WHEN  rq.checkingStatus = 1 THEN 'APPROVED'
+					WHEN  rq.checkingStatus = 2 THEN 'REJECTED'
+				END AS checkingStatusTitle,
+				CASE
+					WHEN  rq.pCheckingStatus= 0 THEN   'PENDING'
+					WHEN  rq.pCheckingStatus = 1 THEN  'APPROVED'
+					WHEN  rq.pCheckingStatus = 2 THEN  'REJECTED'
+				END AS pCheckingStatusTitle,
+				CASE
+					WHEN  rq.approveStatus= 0 THEN  'PENDING'
+					WHEN  rq.approveStatus = 1 THEN 'APPROVED'
+					WHEN  rq.approveStatus = 2 THEN 'REJECTED'
+				END AS approveStatusTitle,
+				(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = rq.projectId LIMIT 1) AS projectName,
+				(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.checkingBy LIMIT 1 ) AS checkingByName,
+				(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.pCheckingBy LIMIT 1 ) AS pCheckingByName,
+				(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.approveBy LIMIT 1 ) AS approveByName,
+				(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.userId LIMIT 1 ) AS userName,
+				rq.processingStatus AS currentStep,
+				'' AS itemsRequest
+				
+		FROM st_request_po AS rq WHERE 1 ";
+		if (!empty($id)){
+			$sql.=" AND id = $id ";
+		}
+		$sql.=" LIMIT 1 ";
+		return $db->fetchRow($sql);
+	}
+	
 	function pushNotificationForAndroid($_data){
 		$_data['branchId'] = empty($_data['branchId'])?0:$_data['branchId'];
 		$_data['userAction'] = empty($_data['userAction'])?0:$_data['userAction'];
 		$_data['deviceType'] = empty($_data['deviceType'])?1:$_data['deviceType'];
 		
 		$notificationId = empty($_data['notificationId'])?0:$_data['notificationId'];
-		$notificationTitle = empty($_data['notificationTitle'])?"Title":$_data['notificationTitle'];
-		$notificationSubTitle = empty($_data['notificationSubTitle'])?"Sub Title":$_data['notificationSubTitle'];
-		$typeNotify = empty($_data['typeNotify'])?"Requesting":$_data['typeNotify'];
-	
+		$notificationTitle = "Notification Title";
+		$notificationSubTitle = "Notification Sub Title";
+		$notificationDescription = "";
+		$typeNotify = empty($_data['typeNotify'])?"toCheckingRequest":$_data['typeNotify'];
+		
+		$recordDetail = array();
+		if($typeNotify=="toCheckingRequest" || $typeNotify=="toPoVerifyRequest" || $typeNotify=="toApproveRequest" || $typeNotify=="toPoPurchase" ){
+			$recordInfo = $this->getRequestPOInfoId($notificationId);
+			if(!empty($recordInfo)){
+				$notificationTitle = "សំណើបញ្ជាទិញពី : គម្រោង ".str_replace('គម្រោង', '', $recordInfo['projectName']);
+				$notificationSubTitle = "សំណើលេខ ".$recordInfo['requestNo']." ស្នើរដោយ : ".$recordInfo['userName'];
+				$notificationDescription = "សំណើលេខ ".$recordInfo['requestNo']." ស្នើរដោយ : ".$recordInfo['userName'];
+				if(!empty($recordInfo['purpose'])){
+					$notificationDescription = $notificationDescription." គោលបំណងស្នើ : ".$recordInfo['purpose'];
+				}
+				
+				if($typeNotify=="toPoPurchase"){
+					$notificationTitle = "សំណើបញ្ជាទិញបានអនុម័តសម្រាប់ :  គម្រោង".str_replace('គម្រោង', '', $recordInfo['projectName']);
+				}
+				$recordDetail = array($recordInfo);
+			}
+			
+			 
+		}
 		
 		
 		$dataNotify = array(
 			"notificationId" 	=> $notificationId,
 			"title" 			=> $notificationTitle,
+			"subTitle" 			=> $notificationDescription,
 			"userAction" 		=> $_data['userAction'],
 			"typeNotify" 		=> $typeNotify,
+			"recordDetail" 		=> $recordDetail,
 		);
 		$headings = array(
 			"en" =>$notificationTitle,
@@ -1315,7 +1380,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 						'headings' => $headings,
         				'contents' => $content,
 						"external_id"=> null,
-						"big_picture"=> $bigPicture,
+						
         		);
 		
 			$fields = json_encode($fields);

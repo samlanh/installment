@@ -587,12 +587,10 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 				if($checkingStatus==1){
 					$notify = array(
 						"userAction" => 3,
-						"typeNotify" => "checkingRequest",
+						"typeNotify" => "toPoVerifyRequest",
 						"deviceType" => "1",
-						"notificationTitle" => "Requesting PO",
 					);
 					$notify["notificationId"]  = $requestId;
-					$notify["notificationSubTitle"]  = $request["projectName"]." ".$request["requestNo"];
 					$notify["branchId"]  = $request["projectId"];
 					$dbGbSt->pushNotificationForAndroid($notify);
 				}
@@ -676,12 +674,10 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 				if($checkingStatus==1){
 					$notify = array(
 						"userAction" => 1,// push to Boss Approve
-						"typeNotify" => "poVerifyRequest",
+						"typeNotify" => "toApproveRequest",
 						"deviceType" => "1",
-						"notificationTitle" => "Requesting PO",
 					);
 					$notify["notificationId"]  = $requestId;
-					$notify["notificationSubTitle"]  = $request["projectName"]." ".$request["requestNo"];
 					$notify["branchId"]  = $request["projectId"];
 					$dbGbSt->pushNotificationForAndroid($notify);
 				}
@@ -765,12 +761,10 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 				if($checkingStatus==1){
 					$notify = array(
 						"userAction" => 3,// push to PO Dept to Make PO
-						"typeNotify" => "approvedRequest",
+						"typeNotify" => "toPoPurchase",
 						"deviceType" => "1",
-						"notificationTitle" => "Approved Request",
 					);
 					$notify["notificationId"]  = $requestId;
-					$notify["notificationSubTitle"]  = $request["projectName"]." ".$request["requestNo"];
 					$notify["branchId"]  = $request["projectId"];
 					$dbGbSt->pushNotificationForAndroid($notify);
 				}

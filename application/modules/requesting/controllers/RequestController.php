@@ -48,9 +48,8 @@ class Requesting_RequestController extends Zend_Controller_Action {
 		$dbGbSt = new Application_Model_DbTable_DbGlobalStock();
 		$notify = array(
 			"userAction" => 2,
-			"typeNotify" => "Requesting",
+			"typeNotify" => "toCheckingRequest",
 			"deviceType" => "1",
-			"notificationTitle" => "Requesting PO",
 		);
     	$db = new Requesting_Model_DbTable_DbRequest();
     	if($this->getRequest()->isPost()){
@@ -61,7 +60,6 @@ class Requesting_RequestController extends Zend_Controller_Action {
 				$row = $db->getRequestPOById($requestId);
 				if(!empty($row)){
 					$notify["notificationId"]  = $requestId;
-					$notify["notificationSubTitle"]  = $row["branch_name"]." ".$row["requestNo"];
 					$notify["branchId"]  = $row["projectId"];
 					$dbGbSt->pushNotificationForAndroid($notify);
 				}
