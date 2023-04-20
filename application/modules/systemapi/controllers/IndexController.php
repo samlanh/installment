@@ -25,6 +25,8 @@ class Systemapi_IndexController extends Zend_Controller_Action
     			$_dbAction->profileAction($GetData);
     		
 			
+			}else if ($GetData['url']=="allRequestList"){
+				$_dbAction->allRequestNotifyAction($GetData);
 			}else if ($GetData['url']=="checkingRequestNotification"){
     			$_dbAction->checkingRequestNotifyAction($GetData);
 			}else if ($GetData['url']=="verifyRequestNotification"){
@@ -40,6 +42,8 @@ class Systemapi_IndexController extends Zend_Controller_Action
 			
 			}else if ($GetData['url']=="dnToVerifyNotify"){
     			$_dbAction->getDNToVerifyNotifyAction($GetData);
+			}else if ($GetData['url']=="transferProductNotify"){
+    			$_dbAction->getTransferProductNotifyAction($GetData);
 			
     		}else{
     			echo Zend_Http_Response::responseCodeAsText(401,true);

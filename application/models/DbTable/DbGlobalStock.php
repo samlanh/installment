@@ -1235,7 +1235,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 				WHERE mb.userId != 0 ";
 		
 		$sql.=" AND mb.userAction=" . $_data['userAction'];
-		$sql.=" AND mb.userId IN ('".$userList."') ";
+		$sql.=" AND mb.userId IN (".$userList.") ";
 		return  $db->fetchCol($sql);
 	}
 	

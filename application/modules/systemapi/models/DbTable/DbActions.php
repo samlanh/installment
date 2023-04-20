@@ -288,7 +288,37 @@ class Systemapi_Model_DbTable_DbActions extends Zend_Db_Table_Abstract
 			exit();
 		}
 	}
-	
+	public function allRequestNotifyAction($search){
+		try{
+			$search['userId'] = empty($search['userId'])?0:$search['userId'];
+			$search['mobileToken'] = empty($search['mobileToken'])?0:$search['mobileToken'];
+			$search['isAllRequest']="1";
+			
+			$db = new Systemapi_Model_DbTable_DbApi();
+			$row = $db->getAllRequestNotify($search);
+			if ($row['status']){
+				$arrResult = array(
+						"result" => $row['value'],
+						"code" => "SUCCESS",
+					);
+			}else{
+				$arrResult = array(
+					"code" => "ERR_",
+					"message" => $row['value'],
+				);
+			}
+			
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}catch(Exception $e){
+			$arrResult = array(
+				"code" => "ERR_",
+				"message" => $e->getMessage(),
+			);
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}
+	}
 	public function checkingRequestNotifyAction($search){
 		try{
 			$search['userId'] = empty($search['userId'])?0:$search['userId'];
@@ -457,6 +487,37 @@ class Systemapi_Model_DbTable_DbActions extends Zend_Db_Table_Abstract
 			
 			$db = new Systemapi_Model_DbTable_DbApi();
 			$row = $db->getAllDNToVerifyNotify($search);
+			if ($row['status']){
+				$arrResult = array(
+						"result" => $row['value'],
+						"code" => "SUCCESS",
+					);
+			}else{
+				$arrResult = array(
+					"code" => "ERR_",
+					"message" => $row['value'],
+				);
+			}
+			
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}catch(Exception $e){
+			$arrResult = array(
+				"code" => "ERR_",
+				"message" => $e->getMessage(),
+			);
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}
+	}
+	
+	public function getTransferProductNotifyAction($search){
+		try{
+			$search['userId'] = empty($search['userId'])?0:$search['userId'];
+			$search['mobileToken'] = empty($search['mobileToken'])?0:$search['mobileToken'];
+			
+			$db = new Systemapi_Model_DbTable_DbApi();
+			$row = $db->getTransferNotify($search);
 			if ($row['status']){
 				$arrResult = array(
 						"result" => $row['value'],

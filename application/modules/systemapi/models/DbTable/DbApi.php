@@ -279,7 +279,6 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 	function getNotifyRequest($_data=array()){
 		$db=$this->getAdapter();
 		
-		
     	$sql="
 			SELECT 
 				'requestingRecord' AS recordType
@@ -324,62 +323,65 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 		
 		$sql.=" FROM `st_request_po` AS rq WHERE rq.status=1 ";
 		
-		$processingStatus=null;
-		
-		$_data["userAction"] = empty($_data["userAction"]) ? "0" : $_data["userAction"];
-		if($_data["userAction"]=="2"){
-			if(is_null($processingStatus)){
-				$processingStatus =1; //forWarehouse
-			}
-		}
-		
-		if($_data["userAction"]=="1"){
-			//forApproved
-			if(is_null($processingStatus)){
-				$processingStatus =3; 
-			}else{
-				$processingStatus =$processingStatus.",3";
-			}
-			$sql.=" AND rq.pCheckingStatus!=2 ";
-		}
-		
-		if($_data["userAction"]=="3"){
-			//forPurchasing
-			if( !empty($_data['forPurchasing']) ){ //get Only Request Approved and go Make PO
+		if( empty($_data['isAllRequest']) ){
+			$processingStatus=null;
+			$_data["userAction"] = empty($_data["userAction"]) ? "0" : $_data["userAction"];
+			if($_data["userAction"]=="2"){
 				if(is_null($processingStatus)){
-					$processingStatus ="4,5"; 
-				}else{
-					$processingStatus =$processingStatus.",4,5";
+					$processingStatus =1; //forWarehouse
 				}
-				$sql.=" AND rq.approveStatus!=2 "; 
-				$sql.= " AND (SELECT rqd.isCompletedPO FROM `st_request_po_detail` AS rqd WHERE rqd.requestId =rq.id AND rqd.approvedStatus!=2 ORDER BY rqd.isCompletedPO  ASC LIMIT 1 )= 0 ";
-				$sql.=" AND rq.checkingStatus = 1 AND rq.pCheckingStatus = 1 "; 
-			}else{
-				//forPurchaseDept
+			}
+			
+			if($_data["userAction"]=="1"){
+				//forApproved
 				if(is_null($processingStatus)){
-					$processingStatus =2; 
+					$processingStatus =3; 
 				}else{
-					$processingStatus =$processingStatus.",2";
+					$processingStatus =$processingStatus.",3";
 				}
-				$sql.=" AND rq.checkingStatus!=2 ";
+				$sql.=" AND rq.pCheckingStatus!=2 ";
+			}
+			
+			if($_data["userAction"]=="3"){
+				//forPurchasing
+				if( !empty($_data['forPurchasing']) ){ //get Only Request Approved and go Make PO
+					if(is_null($processingStatus)){
+						$processingStatus ="4,5"; 
+					}else{
+						$processingStatus =$processingStatus.",4,5";
+					}
+					$sql.=" AND rq.approveStatus!=2 "; 
+					$sql.= " AND (SELECT rqd.isCompletedPO FROM `st_request_po_detail` AS rqd WHERE rqd.requestId =rq.id AND rqd.approvedStatus!=2 ORDER BY rqd.isCompletedPO  ASC LIMIT 1 )= 0 ";
+					$sql.=" AND rq.checkingStatus = 1 AND rq.pCheckingStatus = 1 "; 
+				}else{
+					//forPurchaseDept
+					if(is_null($processingStatus)){
+						$processingStatus =2; 
+					}else{
+						$processingStatus =$processingStatus.",2";
+					}
+					$sql.=" AND rq.checkingStatus!=2 ";
+				}
+			}
+			
+			
+			if(is_null($processingStatus)){
+				return array();
+			}else{
+				$sql.=" AND rq.processingStatus IN ($processingStatus) ";
+			}
+			
+			if( !empty($_data['checkingStatus']) ){ //get Only First Step Request
+				$sql.=" AND rq.checkingStatus = 0 "; 
+			}
+			if( !empty($_data['pCheckingStatus']) ){ //get Only Request already checking
+				$sql.=" AND rq.checkingStatus = 1 AND rq.pCheckingStatus = 0 "; 
+			}
+			if( !empty($_data['approveStatus']) ){ //get Only Request already checking & verify
+				$sql.=" AND rq.checkingStatus = 1 AND rq.pCheckingStatus = 1 AND rq.approveStatus = 0 "; 
 			}
 		}
 		
-		if(is_null($processingStatus)){
-			return array();
-		}else{
-			$sql.=" AND rq.processingStatus IN ($processingStatus) ";
-		}
-		
-		if( !empty($_data['checkingStatus']) ){ //get Only First Step Request
-			$sql.=" AND rq.checkingStatus = 0 "; 
-		}
-		if( !empty($_data['pCheckingStatus']) ){ //get Only Request already checking
-			$sql.=" AND rq.checkingStatus = 1 AND rq.pCheckingStatus = 0 "; 
-		}
-		if( !empty($_data['approveStatus']) ){ //get Only Request already checking & verify
-			$sql.=" AND rq.checkingStatus = 1 AND rq.pCheckingStatus = 1 AND rq.approveStatus = 0 "; 
-		}
 		
 
 		$sql.=$this->getAccessPermission("rq.projectId",$_data);
@@ -914,6 +916,34 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 			$row = array();
 		
 			$row = $this->getUnverifyReceiveDn($_data);
+				
+			$counting = count($row);
+			$allResult = array('rowData'=>$row,'countingRecord'=>$counting);
+			
+			$result = array(
+						'status' =>true,
+						'value' =>$allResult,
+					);
+			return $result;
+		}catch(Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$result = array(
+				'status' =>false,
+				'value' =>$e->getMessage(),
+			);
+			return $result;
+		}
+    }
+	
+	public function getTransferNotify($_data){
+		$db = $this->getAdapter();
+		try{
+			
+			$_data["userAction"] = empty($_data["userAction"]) ? "0" : $_data["userAction"];
+			$_data['userId'] 	 = empty($_data['userId'])?0:$_data['userId'];			
+			$row = array();
+		
+			$row = $this->getAllTransferStock($_data);
 				
 			$counting = count($row);
 			$allResult = array('rowData'=>$row,'countingRecord'=>$counting);
