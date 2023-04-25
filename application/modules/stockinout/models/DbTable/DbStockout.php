@@ -33,7 +33,7 @@ class Stockinout_Model_DbTable_DbStockout extends Zend_Db_Table_Abstract
     	
     	if(!empty($search['adv_search'])){
     		$s_where = array();
-    		$s_search = (trim($search['adv_search']));
+    		$s_search = addslashes((trim($search['adv_search'])));
     		$s_where[] = " so.requestNo LIKE '%{$s_search}%'";
     		$s_where[] = " so.reqOutNo LIKE '%{$s_search}%'";
     		$s_where[] = " so.workerName LIKE '%{$s_search}%'";
@@ -42,7 +42,7 @@ class Stockinout_Model_DbTable_DbStockout extends Zend_Db_Table_Abstract
     		
     		$where .=' AND ( '.implode(' OR ',$s_where).')';
     	}
-    	if($search['branch_id']>-1){
+    	if($search['branch_id']>-1 AND $search['branch_id'] != ''){
     		$where.= " AND so.projectId = ".$search['branch_id'];
     	}
     	if($search['workType']>0){
@@ -57,7 +57,7 @@ class Stockinout_Model_DbTable_DbStockout extends Zend_Db_Table_Abstract
     	if($search['staffWithdraw']>0){
     		$where.= " AND so.staffId = ".$search['staffWithdraw'];
     	}
-    	if($search['status']>-1){
+    	if($search['status']>-1 AND $search['status'] != ''){
     		$where.= " AND so.status = ".$search['status'];
     	}
     	$dbg = new Application_Model_DbTable_DbGlobal();
@@ -87,7 +87,6 @@ class Stockinout_Model_DbTable_DbStockout extends Zend_Db_Table_Abstract
     				'requestDate'=>$data['withdrawDate'],
     				'staffId'=>$data['staffWithdraw'],
     				'contractor'=>$data['contractor'],
-    				'staffId'=>$data['staffWithdraw'],
     				'workerName'=>$data['ConstructionWorker'],
     				'houseType'=>$data['propertyType'],
     				'houseId'=>$data['houseId'],
@@ -144,7 +143,6 @@ class Stockinout_Model_DbTable_DbStockout extends Zend_Db_Table_Abstract
     				'requestDate'=>$data['withdrawDate'],
     				'staffId'=>$data['staffWithdraw'],
     				'contractor'=>$data['contractor'],
-    				'staffId'=>$data['staffWithdraw'],
     				'workerName'=>$data['ConstructionWorker'],
     				'houseType'=>$data['propertyType'],
     				'houseId'=>$data['houseId'],
@@ -228,7 +226,9 @@ class Stockinout_Model_DbTable_DbStockout extends Zend_Db_Table_Abstract
     	$sql=" SELECT 
     				 sd.*,
     				 (SELECT `proCode` FROM `st_product` where st_product.`proId`=sd.proId LIMIT 1) AS proCode,
-					 (SELECT `proName` FROM `st_product` where st_product.`proId`=sd.proId LIMIT 1) AS proName
+					 (SELECT `proName` FROM `st_product` where st_product.`proId`=sd.proId LIMIT 1) AS proName,
+					 (SELECT measureLabel FROM `st_product` WHERE st_product.`proId`=sd.proId LIMIT 1) AS measureLabel,
+					 (SELECT qty FROM `st_product_location` WHERE st_product_location.`proId`=sd.proId LIMIT 1) AS curentQty
     		FROM $this->_name as sd WHERE sd.stockoutId=".$recordId." ";
     	return $db->fetchAll($sql);
     }

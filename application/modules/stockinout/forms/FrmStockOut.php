@@ -23,6 +23,7 @@ Class Stockinout_Form_FrmStockOut extends Zend_Dojo_Form {
 		$_branch_id = new Zend_Dojo_Form_Element_FilteringSelect('branch_id');
 		$_branch_id->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
+				'placeholder'=>$this->tr->translate('SELECT_BRANCH'),
 				'class'=>'fullside',
 				'required' =>'true',
 				'onchange'=>'getDataByBranch();'
@@ -59,6 +60,8 @@ Class Stockinout_Form_FrmStockOut extends Zend_Dojo_Form {
 		$categoryId = new Zend_Dojo_Form_Element_FilteringSelect('categoryId');
 		$categoryId->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
+				'placeholder'=>$this->tr->translate('SELECT_CATEGORY'),
+				'required'=>'false',
 				'class'=>'fullside',
 				'onchange'=>'getAllProduct();'
 		));
@@ -72,7 +75,10 @@ Class Stockinout_Form_FrmStockOut extends Zend_Dojo_Form {
 			'dojoType'=>$this->tvalidate,
 			'required'=>'true',
 			'class'=>'fullside',
-			'readonly'=>true
+			'readonly'=>true,
+			'placeholder'=>$this->tr->translate("REQUEST_NO"),
+			'style'=>'color:red;font-weight: 600;',
+    		'missingMessage'=>$this->tr->translate("Forget Enter Data")
 			));
 		
 		$requestNoFromProject = new Zend_Dojo_Form_Element_TextBox('requestNoProject');
@@ -80,11 +86,13 @@ Class Stockinout_Form_FrmStockOut extends Zend_Dojo_Form {
 				'dojoType'=>$this->tvalidate,
 				'required'=>'true',
 				'class'=>'fullside',
+				'placeholder'=>$this->tr->translate("REQUEST_NO_FROM"),
 		));
 		
 		$workType = new Zend_Dojo_Form_Element_FilteringSelect('workType');
 		$workType->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
+				'placeholder'=>$this->tr->translate('SELECT_WORK_TYPE'),
 				'class'=>'fullside',
 				'required'=>'false'
 		));
@@ -103,10 +111,18 @@ Class Stockinout_Form_FrmStockOut extends Zend_Dojo_Form {
 		
 		
 		$typeofWork = new Zend_Dojo_Form_Element_TextBox('typeofWork');
-		$typeofWork->setAttribs(array('dojoType'=>$this->tvalidate,'class'=>'fullside',));
+		$typeofWork->setAttribs(array(
+			'dojoType'=>$this->tvalidate,
+			'placeholder'=>$this->tr->translate('WORK_TYPE'),
+			'class'=>'fullside',
+		));
 		
 		$ConstructionWorker = new Zend_Dojo_Form_Element_TextBox('ConstructionWorker');
-		$ConstructionWorker->setAttribs(array('dojoType'=>$this->text,'class'=>'fullside',));
+		$ConstructionWorker->setAttribs(array(
+			'dojoType'=>$this->text,
+			'class'=>'fullside',
+			'placeholder'=>$this->tr->translate('ConstructionWorker'),
+		));
 		
 		$_status=  new Zend_Dojo_Form_Element_FilteringSelect('status');
 		$_status->setAttribs(array('dojoType'=>$this->filter,'class'=>'fullside',));

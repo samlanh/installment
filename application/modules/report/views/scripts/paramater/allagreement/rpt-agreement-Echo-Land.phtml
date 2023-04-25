@@ -136,9 +136,13 @@ dojo.require("dijit.form.DateTextBox");
              </tr>
              <tr>
              	<td colspan="3" >
-             		<span style=" text-align:center; width: 100%; display: block; font-family:'Khmer OS Battambang'">កិច្ចសន្យានេះធ្វើនៅ <span style="border-bottom: solid 1px #000;display: inline-block;min-width: 90px;"></span> ថ្ងៃទី <?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['agreement_date'])));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['agreement_date']))];?> ឆ្នាំ <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['agreement_date'])));?></span>
+				<?php 
+					$arrgender = array(1=>"ប្រុស",2=>"ស្រី");
+					$arrTitle = array(1=>"លោក",2=>"លោកស្រី");
+				?>
+             		<span style=" text-align:center; width: 100%; display: block; font-family:'Khmer OS Battambang'">កិច្ចសន្យានេះធ្វើនៅ សៀមរាប ថ្ងៃទី <?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['agreement_date'])));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['agreement_date']))];?> ឆ្នាំ <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['agreement_date'])));?></span>
              		<div>
-             			<span class="margin-left"></span>លោក-លោកស្រី <span class="value" style="min-width:135px;font-family:'Khmer OS Muol Light';font-weight:200;"><?php echo $this->agreement['project_manager_namekh']; ?></span> ភេទ <span><?php if (!empty($arrgender[$this->agreement['p_sex']])){ echo $arrgender[$this->agreement['p_sex']];}?></span> 
+             			<span class="margin-left"></span><?php if (!empty($arrTitle[$this->agreement['p_sex']])){ echo $arrTitle[$this->agreement['p_sex']];}?> <span class="value" style="min-width:135px;font-family:'Khmer OS Muol Light';font-weight:200;"><?php echo $this->agreement['project_manager_namekh']; ?></span> ភេទ <span><?php if (!empty($arrgender[$this->agreement['p_sex']])){ echo $arrgender[$this->agreement['p_sex']];}?></span> 
              			អាយុ <span class="value" style="min-width:30px;"><?php 
 		             			if (!empty($this->agreement['manager_dob'])){ 
 		             				$from = new DateTime($this->agreement['manager_dob']);
@@ -163,7 +167,7 @@ dojo.require("dijit.form.DateTextBox");
 		             	<?php }?>
 		             	មានទីលំនៅ<?php echo $this->agreement['w_current_address'];?> 
 		             <?php }?>
-		         		    ត្រូវបានហៅថាជា(ម្ចាស់ដីឬអ្នកលក់ដី)ឬ<strong>ភាគី”ក”</strong> ។
+		         		   ត្រូវបានហៅថាជា(ម្ចាស់ដីឬអ្នកលក់ដី)    ឬ<strong>ភាគី“ក”</strong> ។
              		</div>
              		<span style=" text-align:center; width: 100%; display: block; font-family:'Khmer OS Muol Light'">និង</span>
              		<div>
@@ -198,13 +202,14 @@ dojo.require("dijit.form.DateTextBox");
 			             	 ឃុំ/សង្កាត់  <span class="value" style="min-width:50px;"><?php echo $this->agreement['join_commune'];?></span> 
 							ស្រុក/ខ័ណ្ឌ <span class="value" style="min-width:50px;"><?php echo $this->agreement['join_district'];?></span>
              				 ខេត្ត/ក្រុង <span class="value" style="min-width:50px;">&nbsp;<?php echo $this->agreement['join_province'];?></span> 
+							 ដែលមានលេខទូរស័ព្ទ<span class="value" style="min-width:50px;">&nbsp;<?php echo $this->agreement['with_phone'];?></span>
              			 <?php }?>
              			 ត្រូវបានហៅថា(អ្នកទិញដី) ឬ<strong>ភាគី”ខ”</strong>។
              		</div>
-					<span style="text-align:center; width: 100%; display: block; font-weight:200;font-family:'Khmer OS Muol Light';">គោលបំណងនៃកិច្ចសន្យា</span>
+					<span style="text-align:center; width: 100%; display: block; font-weight:200;font-family:'Khmer OS Muol Light'; padding:5px 0;">គោលបំណងនៃកិច្ចសន្យា</span>
              		<div>
-             			ដោយហេតុថាភាគី “ក” បានព្រមព្រៀងលក់ដីមួយកន្លែង ដែលមានលិខិតកាន់កាប់ក្បាលដីលេខ <span class="value" style="min-width:70px;"><?php echo $this->agreement['property_title'];?></span> ចុះថ្ងៃទី…….ខែ…………..ឆ្នាំ………
-             			ស្ថិតនៅ<?php echo $this->agreement['project_location'];?> 
+             			ដោយហេតុថា <strong>ភាគី“ក”</strong> បានព្រមព្រៀងលក់ដីមួយកន្លែង ដែលមានលិខិតកាន់កាប់ក្បាលដីលេខ <span class="value" style="min-width:70px;"><?php echo $this->agreement['property_title'];?></span> ចុះថ្ងៃទី…….ខែ…………..ឆ្នាំ………
+             			មានទីលំនៅ<?php echo $this->agreement['project_location'];?> 
              			និងមានផ្ទៃក្រឡាសរុប <span class="value" style="min-width:20px;"><?php echo $dbparmeter->getNumberInkhmer($this->agreement['property_land_size']);?></span> ម៉ែត្រការ៉េ
              			បណ្តោយ <span class="value" style="min-width:20px;"><?php echo $dbparmeter->getNumberInkhmer($this->agreement['property_height']);?></span> ម៉ែត្រ
              			ទទឹង <span class="value" style="min-width:20px;"><?php echo $dbparmeter->getNumberInkhmer($this->agreement['property_width']);?></span> ម៉ែត្រដែលមានព្រំប្រទល់ៈ
@@ -222,7 +227,7 @@ dojo.require("dijit.form.DateTextBox");
 								- ខាងលិចទល់នឹង <?php echo $this->agreement['border_west'];?>
 							</li>
 						</ul>
-						អោយទៅភាគី “ខ”  ក្នុងការលក់-ទិញនេះភាគីទាំងពីរបានព្រមព្រៀងគ្នានៅក្នុងតម្លៃជាក់លាក់ទៅលើទំហំទាំងមូល 
+						អោយទៅ<strong>ភាគី“ខ”</strong> ក្នុងការលក់-ទិញ នេះភាគីទាំងពីរបានព្រមព្រៀងគ្នានៅក្នុងតម្លៃជាក់លាក់ទៅលើទំហំទាំងមូល 
 						គឺចំនួន USD <span><?php echo number_format($this->agreement['price_sold'],2);?></span> ដុល្លារអាមេរិក ជាអក្សរ(<span id="lable_pricekhmer" style="font-family:'Khmer os battambang';"></span>ដុល្លារអាមេរិក)។
 						<script>
 									a_sold ='<?php echo ($this->agreement['price_sold']) ?>';
@@ -238,25 +243,23 @@ dojo.require("dijit.form.DateTextBox");
 									dojo.byId('lable_pricekhmer').innerHTML=money_khmersold;
 								</script>
              		</div>
-             		<span style="text-align:center; width: 100%; display: block; font-weight:200;font-family:'Khmer OS Muol Light';">លក្ខខ័ណ្ឌនៃកិច្ចសន្យា</span>
+             		<span style="text-align:center; width: 100%; display: block; font-weight:200;font-family:'Khmer OS Muol Light'; padding:10px 0;">លក្ខខណ្ឌនៃកិច្ចសន្យា</span>
+             		<span style="text-align:center; width: 100%; display: block; font-weight:200;font-family:'Khmer OS Muol Light';">ការទូទាត់ប្រាក់ៈ</span>
              		<div>
-             			-<span style="font-family:'Khmer OS Muol Light';">ការទូទាត់ប្រាក់</span><br />
-             			-ភាគីទាំងពីរបានឯកភាពទូទាត់ការបង់ប្រាក់លើអចលនវត្ថុតាមគោលការណ៍តារាងបង់ប្រាក់ក្នុង <strong>ឧបសម្ព័ន្ធទី១</strong> ជាប្រាក់សុទ្ធ ឫតាមគណនីធនាគារ។
-             			<!-- -ភាគីទាំងពីរបានឯកភាពទូទាត់ការបង់ប្រាក់លើអចលនវត្ថុតាមរយៈពេលកំណត់ចំនួន..........ខែ ជាប្រាក់សុទ្ធ ឫតាមគណនីធនាគារ។ -->
-             			<div style="margin-left: 40px;">
-             				&#10021; <span style="font-family:'Khmer OS Muol Light';">ការទទួលខុសត្រូវចំពោះមុខច្បាប់</span><br />
-             				- ភាគី ”ក”  ជាអ្នករ៉ាប់រងរត់ការផ្លូវច្បាប់ដើម្បី កាត់ឈ្មោះ ឫផ្ទេរសិទ្ធិកាន់កាប់¬ ជូនទៅ ភាគី”ខ” ដល់អាជ្ញាធរ <strong>ភូមិបាលស្រុក</strong><br />
-             				- រាល់ការចំណាយក្នុងការផ្ទេរសិទ្ធិ ជាបន្ទុករបស់ ភាគី ”ក” ។<br />
-             				- ភាគី ”ក” ជាអ្នកទទួលខុសត្រូវរាល់បញ្ហាផ្លូវច្បាប់ ក្នុងករណីមានផលប៉ះពាល់ដែលកើតឡើងពីការប្តឹងជំទាស់ ឫតវ៉ាក្នុងកំឡុងពេល និងក្រោយពេលលក់-ទិញដី ប្រសិនបើមានការតវ៉ាពីអ្នកពាក់ព័ន្ធផលប្រយោជន៍ជាមួយ ភាគី”ក” ឫ សមាជិកគ្រួសារ ទាយាទ និង ម្ចាស់បំណុលផ្សេងៗ ។<br />
-             				- បើមានការកែប្រែតម្លៃ ឫសម្រេចចិត្តឈប់លក់ពី ភាគី”ក” ត្រូវសងប្រាក់ទៅ ភាគី”ខ” ចំនួនពីរដង នៃប្រាក់ដែល ភាគី”ខ” បានទូទាត់រួច។<br />
-             				- បើ ភាគី”ខ” កែប្រែឈប់ទិញ ឫប្រព្រឹត្តផ្ទុយពីលក្ខខ័ណ្ឌខាងលើនេះ ប្រាក់ដែលបានបង់ត្រូវចាត់ទុកជាអាសារបង់។<br />
-             				&nbsp;&nbsp;&nbsp;&nbsp;ភាគីទាំងពីរមិនអាចកែប្រែអ្វីទាំងអស់ បន្ទាប់ពីភាគីអ្នកទិញបានកក់ប្រាក់ ហើយភាគីទាំងសងខាង ត្រូវទុកពេលវេលាជូន អោយគ្នាទៅវិញទៅមក អោយបានសមស្រប ដើម្បីបំពេញកាតព្វកិច្ចតបស្នង ទៅតាមតម្រូវការនៃកិច្ចសន្យា។<br />
-             				&nbsp;&nbsp;&nbsp;&nbsp;កិច្ចសន្យានេះចូលជាធរមានចាប់ពីថ្ងៃដែលភាគីទាំងពីរ បានផ្តិតមេដៃទុកជាភស្តុតាងខាងក្រោមនេះតទៅ។<br />
-             				&nbsp;&nbsp;&nbsp;&nbsp;បើភាគីណាមួយមិនគោរពតាមកិច្ចសន្យា ឫមានចេតនាធ្វើអោយខូចខាត ឫ ប្រព្រឹត្តិផ្ទុយពីលក្ខខ័ណ្ឌនៃកិច្ចសន្យាខាងលើ ភាគីនោះនឹងត្រូវទទួលខុសត្រូវចំពោះមុខច្បាប់ជាធរមាន។<br />
-             				&nbsp;&nbsp;&nbsp;&nbsp;កិច្ចសន្យានេះធ្វើឡើងជាភាសាខ្មែរ និងមានចំនួន02ច្បាប់ ត្រូវបានរក្សាទុកនៅភាគី ទាំងសងខាង ចំនួនមួយច្បាប់ម្នាក់។<br />
-             				
-             			</div>
+             			<span class="margin-left"></span>-ភាគីទាំងពីរឯកភាពទូទាត់ប្រាក់ក្នុងការទិញ-លក់ផ្ទះនេះតាមគោលការណ៍បង់ប្រាក់ក្នុង <strong>ឧបសម្ព័ន្ធទី១</strong> ជាសាច់ប្រាក់ ឬ តាមធនាគារ។ 
              		</div>
+					<span style="text-align:center; width: 100%; display: block; font-weight:200;font-family:'Khmer OS Muol Light';">ការទទួលខុសត្រូវចំពោះមុខច្បាប់</span>
+					<div>
+						- <strong>ភាគី“ក”</strong> ជាអ្នករ៉ាប់រងរត់ការផ្លូវច្បាប់ដើម្បី កាត់ឈ្មោះ ផ្ទេរសិទ្ធិកាន់កាប់អចលនទ្រព្យ <strong>ប្លង់បង្កាន់ដៃ (បង្កាន់ដៃសម្រាប់ទទួលប្លង់រឹង)</strong>  ជូនទៅ <strong>ភាគី“ខ”</strong> ។ <br />
+						- រាល់ការចំណាយក្នុងការផ្ទេរសិទ្ធិ ជាបន្ទុករបស់ <strong>ភាគី“ក”</strong> ។<br />
+						- <strong>ភាគី“ក”</strong> ជាអ្នកទទួលខុសត្រូវរាល់បញ្ហាផ្លូវច្បាប់ ក្នុងករណីមានផលប៉ះពាល់ដែលកើតឡើងពីការប្តឹងជំទាស់     ឬតវ៉ាក្នុងកំឡុងពេល និងក្រោយពេល លក់-ទិញដី ប្រសិនបើមានការតវ៉ាពីអ្នកពាក់ព័ន្ធផលប្រយោជន៍ជាមួយ  <strong>ភាគី“ក”</strong> ឬ សមាជិកគ្រួសារ ទាយាទ និងម្ចាស់បំណុលផ្សេងៗ ។<br />
+						- បើមានការកែប្រែតម្លៃ ឬសម្រេចចិត្តឈប់លក់ពី <strong>ភាគី“ក”</strong> ត្រូវសងប្រាក់ទៅ <strong>ភាគី“ខ”</strong> ចំនួនពីរដង នៃប្រាក់ដែល <strong>ភាគី“ខ”</strong> បានទូទាត់រួច។<br />
+						- បើ <strong>ភាគី“ខ”</strong> កែប្រែឈប់ទិញ ឬប្រព្រឹត្តផ្ទុយពីលក្ខខណ្ឌខាងលើនេះ ប្រាក់ដែលបានបង់ត្រូវចាត់ទុកជាអសារបង់។<br />
+						<span class="margin-left"></span>ភាគីទាំងពីរមិនអាចកែប្រែអ្វីទាំងអស់ បន្ទាប់ពីភាគីទាំងសងខាងបានផ្តិតមេដៃប្រគល់ និងទទួលប្រាក់ ហើយភាគីទាំងសងខាង ត្រូវទុកពេលវេលាជូនគ្នាទៅវិញទៅមក អោយបានសមស្រប ដើម្បីបំពេញកាតព្វកិច្ចតបស្នង ទៅតាមលក្ខខណ្ឌនៃកិច្ចសន្យាខាងលើ។<br />
+						<span class="margin-left"></span>កិច្ចសន្យានេះចូលជាធរមានចាប់ពីថ្ងៃដែលភាគីទាំងពីរ បានផ្តិតមេដៃទុកជាភស្តុតាងខាងក្រោមនេះតទៅ។<br />
+						<span class="margin-left"></span>បើភាគីណាមួយមិនគោរពតាមកិច្ចសន្យា ឬមានចេតនាធ្វើអោយខូចខាត ឬប្រព្រឹត្តផ្ទុយពីលក្ខខណ្ឌ នៃកិច្ចសន្យាខាងលើ ភាគីនោះនឹងត្រូវទទួលខុសត្រូវចំពោះមុខច្បាប់ជាធរមាន។<br />
+						<span class="margin-left"></span>កិច្ចសន្យានេះធ្វើឡើងជាភាសាខ្មែរ និងមានចំនួន 0២ ច្បាប់ ត្រូវបានរក្សាទុកនៅភាគី ទាំងសងខាង ចំនួនមួយច្បាប់ម្នាក់  ។
+					</div>
              		<div style="  text-align: right;  margin-right: 80px;">
              			ថ្ងៃទី <?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['agreement_date'])));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['agreement_date']))];?> ឆ្នាំ <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['agreement_date'])));?>
              		</div>
@@ -280,10 +283,10 @@ dojo.require("dijit.form.DateTextBox");
              				
              			</div>
              			<div style="width:20%; text-align: center; display: inline-block;">
-             				<span class="border_bt  value" style="width:80%;" >&nbsp;</span>
+             				<span class="border_bt  value" style="width:80%;" ><?php if(!empty($this->agreement['witness_i'])){ echo $this->agreement['witness_i']; }else{ echo "&nbsp;"; } ?></span>
              			</div>
              			<div style="width:20%; text-align: center; display: inline-block;">
-             				<span class="border_bt  value" style="width:80%;" >&nbsp;</span>
+             				<span class="border_bt  value" style="width:80%;" ><?php if(!empty($this->agreement['witness_ii'])){ echo $this->agreement['witness_ii']; }else{ echo "&nbsp;"; } ?></span>
              			</div>
              			<div style="width:28%; text-align: center; display: inline-block;">
              				<span class="border_bt  value" style="width:80%; white-space: nowrap;text-align: center;" >&nbsp;&nbsp;<?php echo $this->agreement['client_namekh'];echo (!empty($this->agreement['hname_kh']))?"/".$this->agreement['hname_kh']:"";?>&nbsp;</span>

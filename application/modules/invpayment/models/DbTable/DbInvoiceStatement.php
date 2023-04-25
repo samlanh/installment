@@ -220,7 +220,9 @@ class Invpayment_Model_DbTable_DbInvoiceStatement extends Zend_Db_Table_Abstract
 	function getStatementRow($recordId){
     	$db =$this->getAdapter();
     	$sql="SELECT *,
-			(SELECT sp.supplierName FROM `st_supplier` AS sp  WHERE sp.id = st.supplierId LIMIT 1) AS supplierName
+			(SELECT sp.supplierName FROM `st_supplier` AS sp  WHERE sp.id = st.supplierId LIMIT 1) AS supplierName,
+			(SELECT sp.contactName FROM `st_supplier` AS sp  WHERE sp.id = st.supplierId LIMIT 1) AS contactName,
+			(SELECT sp.contactNumber FROM `st_supplier` AS sp  WHERE sp.id = st.supplierId LIMIT 1) AS contactNumber
 			 FROM `st_statement_product` AS st  WHERE st.id = ".$recordId;
     	return $db->fetchRow($sql);
     }

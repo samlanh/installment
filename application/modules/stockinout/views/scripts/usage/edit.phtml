@@ -3,6 +3,7 @@
 	echo $this->headTitle($tr->translate('EDIT_STOCK_USAGE'));
 	$frm = $this->frm;
 	$result = $this->rs;
+
 ?>	
 <script src="<?php echo $this->baseUrl();?>/js/help.js"  type="text/javascript"></script>
 <div class="card">
@@ -39,108 +40,132 @@
 	    		</div>
 	    	</div>
 		    <div class="col-md-12">
-	        	<div class="col-md-4 col-sm-4 col-xs-12">
-					<div class="form-group">
-	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-cubes" aria-hidden="true"></i> <i class="fa fa-arrow-circle-down" aria-hidden="true"></i> <?php echo $tr->translate("WITHDRAW_INFO");?> 
-	                   </label>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BRANCH_NAME");?>
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('branch_id');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("REQUEST_NO");?>
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('requestNo');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><strong><?php echo $tr->translate("REQUEST_NO_FROM");?>*</strong>
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('requestNoProject');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("REQUEST_DATE");?>
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('withdrawDate');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("STAFF_WITHDRAW");?>
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<Input id="staffWithdraw" />
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CONTRACTOR_NAME");?>
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<Input id="contractor" />
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("ConstructionWorker");?>
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('ConstructionWorker');?>
-	                   </div>
-	                </div>
+	        	<div class="col-md-6 col-sm-6 col-xs-12">
+					<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="fa fa-cubes" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("WITHDRAW_INFO");?></p>
+										</div> 
+									</div>
+									<div class="form-group">
+										<label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BRANCH_NAME");?>
+										</label>
+										<div class="col-md-7 col-sm-7 col-xs-12">
+												<?php echo $frm->getElement('branch_id');?>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("REQUEST_NO");?>
+										</label>
+										<div class="col-md-7 col-sm-7 col-xs-12">
+												<?php echo $frm->getElement('requestNo');?>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-md-5 col-sm-5 col-xs-12" ><strong><?php echo $tr->translate("REQUEST_NO_FROM");?>*</strong>
+										</label>
+										<div class="col-md-7 col-sm-7 col-xs-12">
+												<?php echo $frm->getElement('requestNoProject');?>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("REQUEST_DATE");?>
+										</label>
+										<div class="col-md-4 col-sm-4 col-xs-12">
+												<?php echo $frm->getElement('withdrawDate');?>
+										</div>
+										<div class="col-md-3 col-sm-3 col-xs-12">
+											<input type="button" dojoType="dijit.form.Button" onclick="getDataByBranch();" label="<?php echo $tr->translate("GET_DATA");?>"
+											class="button-class button-primary" iconClass="	glyphicon glyphicon-refresh" /> 
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("STAFF_WITHDRAW");?>
+										</label>
+										<div class="col-md-7 col-sm-7 col-xs-12">
+												<Input id="staffWithdraw" />
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CONTRACTOR_NAME");?>
+										</label>
+										<div class="col-md-7 col-sm-7 col-xs-12">
+												<Input id="contractor" />
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("ConstructionWorker");?>
+										</label>
+										<div class="col-md-7 col-sm-7 col-xs-12">
+												<?php echo $frm->getElement('ConstructionWorker');?>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 	            </div>
-	            <div class="col-md-4 col-sm-4 col-xs-12">
-					<div class="form-group">
-	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold" ><i class="fa fa-home" aria-hidden="true"></i> <?php echo $tr->translate("USAGE_INFO");?> 
-	                   <input type="button" dojoType="dijit.form.Button" onclick="getDataByBranch();" label="<?php echo $tr->translate("GET_DATA");?>"
-					   class="button-class button-primary" iconClass="	glyphicon glyphicon-refresh" /> 
-	                   </label>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PROPERTY_TYPE");?>
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                   		<?php echo $frm->getElement('propertyType');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("LAND_CODE");?>
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                   		<Input id="houseId" />
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("USAGE_TYPE");?>
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                    	<?php echo $frm->getElement('workType');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("WORK_TYPE");?>
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                   		<?php echo $frm->getElement('typeofWork');?>
-	                   </div>
-	                </div>
-	                <div class="form-group">
-	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("NOTE");?>
-	                   </label>
-	                   <div class="col-md-7 col-sm-7 col-xs-12">
-	                   		<?php echo $frm->getElement('note');?>
-	                   </div>
-	                </div>
+	            <div class="col-md-6 col-sm-6 col-xs-12">
+					<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="glyphicon glyphicon-export" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("USAGE_INFO");?></p>
+										</div> 
+									</div>
+									<div class="form-group">
+										<label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PROPERTY_TYPE");?>
+										</label>
+										<div class="col-md-7 col-sm-7 col-xs-12">
+												<?php echo $frm->getElement('propertyType');?>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("LAND_CODE");?>
+										</label>
+										<div class="col-md-7 col-sm-7 col-xs-12">
+												<Input id="houseId" />
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("USAGE_TYPE");?>
+										</label>
+										<div class="col-md-7 col-sm-7 col-xs-12">
+												<?php echo $frm->getElement('workType');?>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("WORK_TYPE");?>
+										</label>
+										<div class="col-md-7 col-sm-7 col-xs-12">
+												<?php echo $frm->getElement('typeofWork');?>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("NOTE");?>
+										</label>
+										<div class="col-md-7 col-sm-7 col-xs-12">
+												<?php echo $frm->getElement('note');?>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 	            </div>
-	        <div class="col-md-4 col-sm-4 col-xs-12"></div>
-	        </div>
 	        	<div class="card-box">
-	        		<div class="col-md-8 col-sm-8 col-xs-12">
+	        		<div class="col-md-12 col-sm-12 col-xs-12">
 		        		<div class="form-group" style="background: #d8e0e2;padding: 5px 15px;margin: 0;border: solid 1px #697996;border-radius: 2px;margin-top: 10px;">
 							<label style=" margin: 0; line-height: 30px; " class="control-label bold col-md-2 col-sm-2 col-xs-12"><?php echo $tr->translate("CATEGORY");?> </label>
 							 <div class="col-md-3 col-sm-3 col-xs-12">
@@ -362,7 +387,7 @@
 			template+='<td width="2%" align="center"><img onclick="deleteRecord('+col+');" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
 			template+='<td align="center" width="2%">'+no+'</td>';
 			template+='<td class="productName"><?php echo $row['proCode']." ".$row['proName'];?><input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId'+col+'" name="proId'+col+'" type="text" value="<?php echo $row['proId'];?>"  ></td>';	
-			template+='<td class="currentQty"  width="10%"></td>';	
+			template+='<td align="center" class="currentQty bold red"  width="10%"><?php echo $row['curentQty']; ?>(<?php echo $row['measureLabel']; ?> )</td>';	
 			template+='<td><input dojoType="dijit.form.NumberTextBox" required="true" data-dojo-props="constraints:{min:0.0000001}" class="fullside" id="qtyRequest'+col+'" name="qtyRequest'+col+'" placeholder="<?php echo $tr->translate("QTY_REQUEST");?>"  type="text"  ></td>';	
 			template+='<td><input dojoType="dijit.form.TextBox" class="fullside" id="note'+col+'" name="note'+col+'" placeholder="'+'<?php echo $tr->translate("NOTE");?>'+'" value="" type="text"  ></td>';	
 
@@ -439,7 +464,7 @@
 				template+='<td width="2%" align="center"><img onclick="deleteRecord('+col+');" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
 				template+='<td align="center" width="2%">'+no+'</td>';
 				template+='<td class="productName" >'+data.proCode+' '+data.proName+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId'+col+'" name="proId'+col+'" value="'+data.id+'" type="text"  ></td>';	
-				template+='<td class="currentQty"  width="10%">'+data.currentQty+' ('+data.measureTitle+')</td>';	
+				template+='<td align="center" class="currentQty bold red"  width="10%">'+data.currentQty+' ('+data.measureTitle+')</td>';	
 				template+='<td><input dojoType="dijit.form.NumberTextBox" required="true" data-dojo-props="constraints:{min:0.0000001}" class="fullside" id="qtyRequest'+col+'" name="qtyRequest'+col+'" placeholder="'+'<?php echo $tr->translate("QTY_REQUEST");?> "  type="text"  ></td>';	
 				template+='<td><input dojoType="dijit.form.TextBox" class="fullside" id="note'+col+'" name="note'+col+'" placeholder="'+'<?php echo $tr->translate("NOTE");?> " value="" type="text"  ></td>';	
 				tmp='<tr class="rowData" id="row'+col+'">';

@@ -17,6 +17,7 @@ class Po_Form_FrmConcretStock extends Zend_Dojo_Form
 		$branch_id = new Zend_Dojo_Form_Element_FilteringSelect('branch_id');
 		$branch_id->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
+				'placeholder'=>$this->tr->translate("SELECT_BRANCH"),
 				'class'=>'fullside',
 				'required' =>'false',
 				'autoComplete'=>'false',
@@ -47,6 +48,7 @@ class Po_Form_FrmConcretStock extends Zend_Dojo_Form
 		$date = new Zend_Dojo_Form_Element_DateTextBox('date');
  		$date->setAttribs(array(
  			'dojoType'=>'dijit.form.DateTextBox',
+			 'readonly'=>'readonly',
  			'class'=>'fullside',
  			'constraints'=>"{datePattern:'dd/MM/yyyy'}",
  		));
@@ -57,6 +59,7 @@ class Po_Form_FrmConcretStock extends Zend_Dojo_Form
     	$_status->setMultiOptions($_arr);
     	$_status->setAttribs(array(
     			'dojoType'=>'dijit.form.FilteringSelect',
+				'placeholder'=>$this->tr->translate("STATUS"),
     			'required'=>'true',
     			'missingMessage'=>'Invalid Module!',
     			'class'=>'fullside height-text',));
@@ -64,7 +67,9 @@ class Po_Form_FrmConcretStock extends Zend_Dojo_Form
 		$categoryId = new Zend_Dojo_Form_Element_FilteringSelect('categoryId');
 		$categoryId->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
+				'placeholder'=>$this->tr->translate("SELECT_CATEGORY"),
 				'class'=>'fullside',
+				'required'=>'false',
 				'onchange'=>'getAllProduct();'
 		));
 		$rsCate = $dbGBStock->getAllCategoryProduct();
@@ -82,10 +87,10 @@ class Po_Form_FrmConcretStock extends Zend_Dojo_Form
 		));
 		$init->setValue(1);
 		
-		
 		$supplierId = new Zend_Dojo_Form_Element_FilteringSelect('supplierId');
 		$supplierId->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
+				'placeholder'=>$this->tr->translate("SELECT_SUPPLIER"),
 				'class'=>'fullside',
 				'onchange'=>'addNewSupplier();'
 		));

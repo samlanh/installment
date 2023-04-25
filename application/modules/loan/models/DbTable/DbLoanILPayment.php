@@ -61,7 +61,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     		$where.=" AND lcrm.`payment_option`= ".$search['paymnet_type'];
     	}
     	if($search['land_id']>0){
-    		$where.=" AND lcrm.`land_id`= ".$search['land_id'];
+    		$where.=" AND (SELECT s.`house_id` FROM `ln_sale` AS s WHERE s.id = lcrm.sale_id LIMIT 1) = ".$search['land_id'];
     	}
     	if($search['payment_method']>0){
     		$where.=" AND lcrm.`payment_method`= ".$search['payment_method'];
@@ -86,10 +86,9 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 				  rm.penalize_amount as penalize_amount_parent,
 				  rm.total_interest_permonth as total_interest_permonth_parent
 				FROM
-				  `ln_client_receipt_money` AS rm ,
-				  `ln_client_receipt_money_detail` AS rmd
+				  `ln_client_receipt_money` AS rm LEFT JOIN `ln_client_receipt_money_detail` AS rmd ON rm.id=rmd.`crm_id`
 				WHERE rm.id = $id
-				AND rm.id=rmd.`crm_id` ";
+				 ";
 		
 		$dbp = new Application_Model_DbTable_DbGlobal();
 		$sql.=$dbp->getAccessPermission("rm.branch_id");
@@ -522,9 +521,14 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 								$after_service = abs($remain_money);
 							}		    						
 							
-							if($after_principal<=0){
+							//if($after_principal<=0){
+								//$is_compleated_d=1;
+							//}
+							$total_payment_after = $after_principal+$after_interest;
+							if($total_payment_after<=0){
 								$is_compleated_d=1;
 							}
+							
 							if($data['option_pay']!=3){//ព្រោះបញ្ចូលជា Extra payment hz
 								 $arra = array(
 										'begining_balance_after'=>$after_outstanding-$paid_principal,

@@ -2,7 +2,7 @@
 Class Product_Form_FrmCategory extends Zend_Dojo_Form {
 
 	public function FrmAddCategory($data=null){
-		
+		$request=Zend_Controller_Front::getInstance()->getRequest();
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		$filter = 'dijit.form.FilteringSelect';
 		$tvalidate = 'dijit.form.ValidationTextBox';
@@ -28,12 +28,17 @@ Class Product_Form_FrmCategory extends Zend_Dojo_Form {
 			'autoComplete'=>'false',
 			'queryExpr'=>'*${0}*',
 		));
+		$_status_opt = array(
+			1=>$tr->translate("ACTIVE"),
+			0=>$tr->translate("DEACTIVE"));
+		$status->setMultiOptions($_status_opt);
+		$status->setValue($request->getParam("status"));
 		
-		$dbg = new Application_Model_DbTable_DbGlobal();
-		$optStatus = $dbg->getViewById(3,1);
-		unset($optStatus[-1]);
+		// $dbg = new Application_Model_DbTable_DbGlobal();
+		// $optStatus = $dbg->getViewById(3,1);
+		// unset($optStatus[-1]);
 		
-		$status->setMultiOptions($optStatus);
+		// $status->setMultiOptions($optStatus);
 		
 		
 		$categoryTitle = new Zend_Dojo_Form_Element_ValidationTextBox('categoryTitle');
