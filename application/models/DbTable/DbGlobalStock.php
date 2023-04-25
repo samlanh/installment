@@ -143,7 +143,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 					`st_product` AS p  ";
 
 		if (!empty($projectId)) {
-			if (!empty($_data['IsNotLocation;'])) {
+			if (!empty($_data['IsNotLocation'])) {
 				$sql .= " Left JOIN st_product_location AS l ON p.proId=l.proId AND l.projectId=" . $projectId;
 			} else {
 				$sql .= " JOIN st_product_location AS l ON p.proId=l.proId AND l.projectId=" . $projectId;
@@ -1339,6 +1339,17 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 				$notificationDescription = "សំណើលេខ " . $recordInfo['requestNo'] . " ស្នើរដោយ : " . $recordInfo['userName'];
 				if (!empty($recordInfo['purpose'])) {
 					$notificationDescription = $notificationDescription . " គោលបំណងស្នើ : " . $recordInfo['purpose'];
+				}
+
+				if ($typeNotify == "toPoVerifyRequest") {
+					if (!empty($recordInfo['checkingByName'])) {
+						$notificationDescription = $notificationDescription . " បានត្រួតពិនិត្យដោយ : " . $recordInfo['checkingByName'];
+					}
+				}
+				if ($typeNotify == "toApproveRequest") {
+					if (!empty($recordInfo['pCheckingByName'])) {
+						$notificationDescription = $notificationDescription . " បានផ្ទៀងផ្ទាត់ដោយ : " . $recordInfo['pCheckingByName'];
+					}
 				}
 
 				if ($typeNotify == "toPoPurchase") {

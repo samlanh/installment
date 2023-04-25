@@ -474,20 +474,14 @@ $frm = $this->frm;
 
 				var lastUnitPrice = data.latestUnitPrice;
 				var subTotalRow = data.qtyApprovedAfter * lastUnitPrice;
-				var currentQty = '';
-				var measureTitle = 'N/A';
-				if (data.currentQty != undefined) {
-					currentQty = data.currentQty;
-					measureTitle = data.measureTitle;
-				}
 
 				template += '<td rowspan="2" class="numberRecord infoCol" align="center"><span title="<?php echo $tr->translate("REMOVE_RECORD"); ?>" class="removeRow" onclick="deleteRecord(' + col + ');"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></span></td>';
 				template += '<td  class="numberRecord infoCol" data-label="<?php echo $tr->translate("N_O"); ?>" align="center" >' + no + '</td>';
 				template += '<td  data-label="<?php echo $tr->translate("PRODUCT_NAME"); ?>" class="productName infoCol" >' + productLabel + '<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId' + col + '" name="proId' + col + '" value="' + productId + '" type="text"  ></td>';
-				template += '<td  data-label="<?php echo $tr->translate("STOCK_REMAIN"); ?>" class="currentQty infoCol"  >' + currentQty + ' (' + measureTitle + ')</td>';
+				template += '<td  data-label="<?php echo $tr->translate("STOCK_REMAIN"); ?>" class="currentQty infoCol"  >' + data.currentQty + ' (' + data.measureTitle + ')</td>';
 				template += '<td  data-label="<?php echo $tr->translate("QTY_APPROVED"); ?>" class="currentQty infoCol"  >' + data.qtyApproved + '<small><?php echo $tr->translate("QTY_REMAIN"); ?> : ' + data.qtyApprovedAfter + '</small><input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="qtyApprovedAfter' + col + '" name="qtyApprovedAfter' + col + '" value="' + data.qtyApprovedAfter + '" type="text"  ></td>';
 				template += '<td  data-label="<?php echo $tr->translate("QTY"); ?>" ><input required dojoType="dijit.form.NumberTextBox" class="fullside" data-dojo-props="constraints:{min:0.01,max:' + data.qtyApprovedAfter + '},rangeMessage:' + "'<?php echo $tr->translate("MINIMUM_VALUE_IS_ZEROONE_AND_MAX_VALUE_IS"); ?> " + data.qtyApprovedAfter + "'" + '"  onKeyup="checkingQtyPO(' + col + '); calculateTotal(' + col + ');" id="qty' + col + '" name="qty' + col + '" placeholder="' + '<?php echo $tr->translate("QTY"); ?>" value="' + data.qtyApprovedAfter + '" type="text"  ></td>';
-				template += '<td data-label="<?php echo $tr->translate("UNIT_PRICE"); ?>"><input required dojoType="dijit.form.NumberTextBox" class="fullside" data-dojo-props="constraints:{min:0.01},rangeMessage:' + "'<?php echo $tr->translate("MINIMUM_VALUE_IS_ZEROONE"); ?>'" + '"  onKeyup="calculateTotal(' + col + ');" id="unitPrice' + col + '" name="unitPrice' + col + '" placeholder="' + '<?php echo $tr->translate("UNIT_PRICE"); ?> "  type="text"  ></td>';
+				template += '<td data-label="<?php echo $tr->translate("UNIT_PRICE"); ?>"><input required dojoType="dijit.form.NumberTextBox" class="fullside" data-dojo-props="constraints:{min:0.01},rangeMessage:' + "'<?php echo $tr->translate("MINIMUM_VALUE_IS_ZEROONE"); ?>'" + '"  onKeyup="calculateTotal(' + col + ');" id="unitPrice' + col + '" name="unitPrice' + col + '" placeholder="' + '<?php echo $tr->translate("UNIT_PRICE"); ?> " value="" type="text"  ></td>';
 
 
 				template += '<td data-label="<?php echo $tr->translate("DISCOUNT_PERCENT"); ?>">';
