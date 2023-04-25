@@ -1,0 +1,205 @@
+<?php
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+$this->headTitle($tr->translate('SLIDE_MANAGEMENT')); 
+echo $this->headTitle();
+?>
+<style>
+div.cke_contents.cke_reset {
+    height: 200px !important;
+}
+</style>
+<script type="text/javascript">	
+	dojo.require("dijit.form.ValidationTextBox");
+	dojo.require('dijit.form.Form');	
+	dojo.require('dijit.form.Button');
+	dojo.require('dijit.form.FilteringSelect');
+	dojo.require("dijit.Dialog");
+	require(["dijit/form/CheckBox","dijit/Dialog","dijit/layout/TabContainer"]);
+	dojo.require("dojo.parser");
+	dojo.require("dojo.NodeList-manipulate");
+</script>
+
+<style>
+input.btn_borwse_image {
+    position: absolute;
+    width: 100%;
+    height: 38px;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    opacity: 0;
+    cursor: pointer;
+}
+.button_browse {
+    margin-top: 10px;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    width: 100%;
+    height: 38px;
+    background: #fbf9f9;
+    border: 1px solid #e8e8e8;
+}
+
+.button_browse span {
+    line-height: 33px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+img.image_view {
+    width:250px;
+    height: 120px;
+}
+
+</style>
+<div class="card">
+	<div class="card-content collapse show">
+		<div class="card-box">
+			<div class="col-sm-12 border-botom">
+				<div class="col-sm-8 pd-0">
+					<h4 class="m-b-0"><i class="fa fa-cogs" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('SLIDE_MANAGEMENT');?></h4>
+				</div>
+				<div class="col-sm-4 text-right">
+				</div>
+			</div>
+		</div>
+		<form action="" dojoType="dijit.form.Form" method="post" enctype="multipart/form-data">
+			<script type="dojo/method" event="onSubmit">				
+					if(this.validate()) {
+						loadingBlock();
+						return true;
+					}
+					return false;
+			</script>
+			<div class="card-box">
+				<div class="form-group">
+					<div class="col-md-9 col-sm-9 col-xs-12">
+						<table  class="collape responsiveTable" >
+							<thead id="head-title">
+							</thead>
+							<tbody id="table_row">
+							</tbody>
+						</table>
+						<input type="button" class="button-class button-remove" iconClass="glyphicon glyphicon-sort-by-attributes" label="<?php echo $tr->translate('ADD_MORE');?>" dojoType="dijit.form.Button" onclick="addRow();" />
+						<input type="hidden" name="identity" id="identity"  value="" >
+					</div>
+				 </div>
+			</div>
+			<div class="clearfix"></div>
+			 <div class="card-box mt-20">
+				<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
+					<input type="button" class="button-class button-remove" iconClass="glyphicon glyphicon-floppy-disk" value="GO_BACK" label="<?php echo $tr->translate('GO_BACK');?>" id="back" dojoType="dijit.form.Button"  onclick="window.history.back();" />
+					<input type="submit" class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-disk" value="save_close" name="save_close" label="<?php echo $tr->translate('SAVE');?>" id="save_close" dojoType="dijit.form.Button"  /> 	
+				</div>
+			 </div>
+		</form>
+	</div>
+</div>
+
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" data-dojo-props="title:'<?php echo $tr->translate("DO_YOU_WANT_TO_DEL")?>'"  id="deleteForm" style="width:350px;" >
+		<div style=" text-align: center;">
+			<h4><?php echo $tr->translate("DO_YOU_WANT_TO_DEL")?></h4>
+			<input type="hidden" name="recorddelete" id="recorddelete" dojoType="dijit.form.TextBox" />
+			<button onclick="closeForm();" dojoType="dijit.form.Button" showLabel="true" type="button"><?php echo $tr->translate("CANCEL");?></button>
+			<button onclick="deleteRecord('',1);" iconclass="dijitIconDelete" dojoType="dijit.form.Button" showLabel="true" type="button"><?php echo $tr->translate("DELETE");?></button>
+		</div>
+	</div>
+</div>
+<script>
+function loading(){
+    document.getElementsByClassName("overlay")[0].style.display="block";
+}
+require(["dojo/ready"], function(ready){
+	ready(function(){
+		initailize();
+	});
+});
+var col = 0;
+var no = 0;
+var title = 0;
+func='';
+tmp = '';
+var temp='';
+function addRow() {
+		col++;no++;
+		template='';
+		if(title!=1){
+			temp+='<tr class="head-td" align="center">';
+				temp+='<th><?php echo $tr->translate("DELETE");?></th>';
+				temp+='<th colspan="2"><?php echo $tr->translate("IMAGE");?></th>';
+			temp+='</tr>';
+			dojo.query("#head-title").append(temp);
+			title=1;
+		}
+		
+			template+='<td width="3%" class="text-center"><span title="<?php echo $tr->translate("REMOVE_RECORD");?>" class="removeRow" onclick="deleteRecord('+col+')"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></span> </td>';
+			template+='<td style="text-align: center; ">';
+				template+='<img class="image_view" id="image_view'+col+'" src="<?php echo $this->baseUrl().'/images/slide/no-photo.png';?>" alt=""  />';
+			template+='</td>';
+			template+='<td><div class="button_browse"><span>Upload <span><i class="fa fa-camera" aria-hidden="true"></i></span></span><input class="btn_borwse_image" required="true" type="file" id="photo'+col+'" name="photo'+col+'" onchange="loadImage('+col+')"></div></td>';
+		tmp='<tr id="row'+col+'" style="background: #fff; border: solid 1px #bac;">';	
+		tmp+="</tr>";
+		dojo.query("#table_row").append(tmp);
+		if($("#identity").val()!='') {
+			var identity = $("#identity").val();
+			$("#identity").val(identity+','+col);
+		} else {$("#identity").val(col);}
+		dojo.html.set(dojo.byId("row"+col),template , {
+		     parseContent: true,
+		});
+ }
+/* <input type="text" class="fullside" dojoType="dijit.form.TextBox" required="required"  name="title'+col+'" id="title'+col+'" value="<?php echo $rs['title'];?>" placeholder="Title" style="text-align: center;" ><br/>*/
+function initailize() {
+	<?php if (!empty($this->slide)) foreach ($this->slide as $rs){?>
+	col++;no++;
+	template='';
+	if(title!=1){
+		temp+='<tr class="head-td" align="center">';
+			temp+='<th><?php echo $tr->translate("DELETE");?></th>';
+			temp+='<th colspan="2"><?php echo $tr->translate("IMAGE");?></th>';
+		temp+='</tr>';
+		dojo.query("#head-title").append(temp);
+		title=1;
+	}
+	template+='<td width="3%" class="text-center"><span title="<?php echo $tr->translate("REMOVE_RECORD");?>" class="removeRow" onclick="deleteRecord('+col+')"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></span><input type="hidden" id="detail_id'+col+'" name="detail_id'+col+'" value="<?php echo $rs['id'];?>" /></td>';
+		template+='<td style="text-align: center;">';
+			template+='<input type="hidden" id="old_phoyto'+col+'" name="old_photo'+col+'" value="<?php echo $rs['images'];?>" />';
+			template+='<img class="image_view" id="image_view'+col+'" src="<?php echo $this->baseUrl().'/images/slide/'.$rs['images'];?>" alt=""  />';
+		template+='</td>';
+		template+='<td><div class="button_browse"><span>Upload <span><i class="fa fa-camera" aria-hidden="true"></i></span></span><input class="btn_borwse_image" type="file" id="photo'+col+'" name="photo'+col+'" onchange="loadImage('+col+')"></div></td>';
+	tmp='<tr id="row'+col+'" style="background: #fff; border: solid 1px #bac;"">';
+	tmp+="</tr>";
+	dojo.query("#table_row").append(tmp);
+	if($("#identity").val()!='') {
+		var identity = $("#identity").val();
+		$("#identity").val(identity+','+col);
+	} else {$("#identity").val(col);}
+	dojo.html.set(dojo.byId("row"+col),template , {
+	     parseContent: true,
+	});
+	<?php }?>
+}
+function deleteRecord(index,type=''){
+	 if(type==''){
+		 dijit.byId("recorddelete").attr('value',index);
+		 dijit.byId('deleteForm').show();
+	 }else{
+		index = dijit.byId("recorddelete").get('value');
+		var identity = $('#identity').val();
+		var arrays = identity.split(',');
+		for(var i=0;i<arrays.length;i++) {
+		if(arrays[i] == index) arrays.splice(i,1);
+		}
+		var strings = arrays.join(',');
+		$('#identity').val(strings);
+		dojo.query("#row"+index).remove();
+		dijit.byId('deleteForm').hide();
+	 }
+}
+ function loadImage(index){
+	 var output = document.getElementById('image_view'+index);
+    output.src = URL.createObjectURL(event.target.files[0]);
+ }
+ </script>

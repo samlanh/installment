@@ -252,6 +252,30 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 		}
 	}
 	
+	public function getAllSlider($search){
+    	$db = $this->getAdapter();
+    	try{
+    		
+    		$currentLang = empty($search['currentLang'])?1:$search['currentLang'];
+    		$sql=" SELECT * FROM `mobile_slideshow` ";
+    		$rows = $db->fetchAll($sql);
+    		
+    
+    		$result = array(
+    				'status' =>true,
+    				'value' =>$rows,
+    				);
+    				return $result;
+    		}catch(Exception $e){
+    		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+    				$result = array(
+    				'status' =>false,
+    				'value' =>$e->getMessage(),
+    				);
+    				return $result;
+    	}
+    }
+	
 	public function getAccessPermission($branchStr='branch_id',$_data = array()){
 		
 		$branchList= "0";
