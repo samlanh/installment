@@ -1341,6 +1341,17 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 					$notificationDescription = $notificationDescription . " គោលបំណងស្នើ : " . $recordInfo['purpose'];
 				}
 
+				if ($typeNotify == "toPoVerifyRequest") {
+					if (!empty($recordInfo['checkingByName'])) {
+						$notificationDescription = $notificationDescription . " បានត្រួតពិនិត្យដោយ : " . $recordInfo['checkingByName'];
+					}
+				}
+				if ($typeNotify == "toApproveRequest") {
+					if (!empty($recordInfo['pCheckingByName'])) {
+						$notificationDescription = $notificationDescription . " បានផ្ទៀងផ្ទាត់ដោយ : " . $recordInfo['pCheckingByName'];
+					}
+				}
+
 				if ($typeNotify == "toPoPurchase") {
 					$notificationTitle = "សំណើបញ្ជាទិញបានអនុម័តសម្រាប់ :  គម្រោង" . str_replace('គម្រោង', '', $recordInfo['projectName']);
 				}
