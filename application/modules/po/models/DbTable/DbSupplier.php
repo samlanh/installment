@@ -45,7 +45,7 @@ class Po_Model_DbTable_DbSupplier extends Zend_Db_Table_Abstract
     	
     	if(!empty($search['adv_search'])){
     		$s_where = array();
-    		$s_search = (trim($search['adv_search']));
+    		$s_search = addslashes((trim($search['adv_search'])));
     		$s_where[] = " spp.supplierName LIKE '%{$s_search}%'";
     		$s_where[] = " spp.supplierTel LIKE '%{$s_search}%'";
     		$s_where[] = " spp.contactName LIKE '%{$s_search}%'";
@@ -56,7 +56,7 @@ class Po_Model_DbTable_DbSupplier extends Zend_Db_Table_Abstract
     		
     		$where .=' AND ( '.implode(' OR ',$s_where).')';
     	}
-    	if($search['status']>-1){
+    	if($search['status']>-1 AND $search['status']!=''){
     		$where.= " AND spp.status = ".$search['status'];
     	}
 		if(!empty($search['supplierType'])){
@@ -138,7 +138,7 @@ class Po_Model_DbTable_DbSupplier extends Zend_Db_Table_Abstract
 	function ifSupplierExisting($data){
 		
     	$db = $this->getAdapter();
-    	$sql=" SELECT * FROM $this->_name WHERE supplierName='".$data['supplierName']."'";
+    	$sql=" SELECT * FROM $this->_name WHERE supplierName='".addslashes((trim($data['supplierName'])))."'";
 		if(!empty($data['id'])){
 			$sql.=" AND id !=".$data['id'];
 		}	

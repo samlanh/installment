@@ -68,7 +68,7 @@ Class Accounting_Form_Frmfixedasset extends Zend_Dojo_Form {
 				));
 		$_id = new Zend_Form_Element_Hidden('id');
 		
-		$this->addElements(array($asset_name,$asset_type,$asset_cost,$useful_life,$salvage_value,'asset_code,
+		$this->addElements(array($asset_name,$asset_type,$asset_cost,$useful_life,$salvage_value,
 				$payment_method,
 				$Date,$branch));
 		return $this;

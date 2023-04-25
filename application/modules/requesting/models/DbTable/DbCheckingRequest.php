@@ -87,7 +87,7 @@ class Requesting_Model_DbTable_DbCheckingRequest extends Zend_Db_Table_Abstract
 				$arr['checkingCreateDate']=date("Y-m-d H:i:s");
 			}
     		$this->_name='st_request_po';
-			$where=" id = ".$data['id'];
+			$where=" id = ".$id;
 			$this->update($arr, $where);
 			
 			
@@ -121,6 +121,8 @@ class Requesting_Model_DbTable_DbCheckingRequest extends Zend_Db_Table_Abstract
 					}
 				}
 			}
+			
+			return $id;
     	}catch(Exception $e){
 	    	Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			Application_Form_FrmMessage::message("APPLICATION_ERROR");

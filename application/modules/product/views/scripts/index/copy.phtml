@@ -201,6 +201,15 @@ input.btn_borwse_image {
 									</div>
 									<div class="form-group">
 									   <label class="control-label col-md-5 col-sm-5 col-xs-12" >
+											<strong><?php echo $tr->translate("BUDGET_TYPE");?></strong>
+											<span class="control-label col-md-2 col-sm-2" ><i class="fa fa-usd" aria-hidden="true"></i></span>
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement('budgetType');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" >
 											<strong><?php echo $tr->translate("BUDGET_ITEM");?></strong>
 											<span class="control-label col-md-2 col-sm-2" ><i class="fa fa-usd" aria-hidden="true"></i></span>
 									   </label>
@@ -293,6 +302,7 @@ require(["dojo/ready"], function(ready){
 			dijit.byId('qtyMeasure').set('readOnly',false);
 			dijit.byId('labelMeasure').set('readOnly',false);
 			dijit.byId('costing').set('readOnly',false);
+			dijit.byId('isCountStock').set('readOnly',false);
 			
 			isService = dijit.byId('isService').get("value");
 				if(isService==1){
@@ -303,6 +313,7 @@ require(["dojo/ready"], function(ready){
 					dijit.byId('qtyMeasure').set('readOnly',true);
 					dijit.byId('labelMeasure').set('readOnly',true);
 					dijit.byId('costing').set('readOnly',true);
+					dijit.byId('isCountStock').set('readOnly',true);
 				}
 			});
 		});
@@ -385,6 +396,20 @@ function bs_input_file() {
 			dijit.byId('qtyMeasure').attr('value',1);
 		}
 	}
+
+	function getBudgetItem(){
+			budgetType = dijit.byId('budgetType').get('value');
+			 dijit.byId('budgetItem').attr('value',0);
+			if(budgetType){
+	    		urlGetBudgetItem = '<?php echo $this->url(array('module'=>'budget','controller'=>'item','action'=>'get-allbudgetitem'));?>';
+				contentData = {
+		    		'budgetType':budgetType,
+					'noBtnNew': 1
+		    	};
+				getAllBudgetItem(urlGetBudgetItem,contentData);
+	       }
+	 }
+	 
 	function checkCutStock(){
 		 dijit.byId('isCountStock').attr('value',1);
 		isService = dijit.byId('isService').get('value');

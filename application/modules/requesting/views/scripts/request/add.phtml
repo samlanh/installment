@@ -190,14 +190,14 @@
 		
 		var urlGetAllProduct = '<?php echo $this->url(array('module'=>'requesting','controller'=>'request','action'=>'getallproduct')); ?>';
 		branch_id = dijit.byId('branch_id').get('value');
-		if(branch_id=='' || branch_id<=0){
-			branch_id = 0;
-		}
+		// if(branch_id=='' || branch_id<=0){
+		// 	branch_id = 0;
+		// }
 		categoryId = dijit.byId('categoryId').get('value');
 		if(categoryId=='' || categoryId==0){
 			categoryId=0;
 		}
-		objectContentFilter = {'branch_id':branch_id,'categoryId':categoryId};
+		objectContentFilter = {'categoryId':categoryId};
 		getAllProductStoreFunction(urlGetAllProduct,objectContentFilter);
 	}
 	
@@ -284,14 +284,18 @@
 		dojo.xhrPost({
 			url:urlGetProductInfo,	
 			content:{ 
-				'branch_id':branch_id,'productId':productId
+				'branch_id':branch_id,
+				'productId':productId
 			},		    
 			handleAs:"json",
 			load: function(data) {
+				var currentQty ='';
+				var measureTitle='N/A';
+				if(data.currentQty != undefined){currentQty=  data.currentQty; measureTitle= '('+data.measureTitle+')' ;}
 				template+='<td class="numberRecord"  align="center"><span title="<?php echo $tr->translate("REMOVE_RECORD");?>" class="removeRow" onclick="deleteRecord('+col+');"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></span></td>';
 				template+='<td class="numberRecord"  align="center" data-label="<?php echo $tr->translate("N_O");?>">'+no+'</td>';
-				template+='<td data-label="<?php echo $tr->translate("PRODUCT_NAME");?>"  class="productName" >'+data.proCode+'<br />'+data.proName+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId'+col+'" name="proId'+col+'" value="'+data.id+'" type="text"  ></td>';	
-				template+='<td data-label="<?php echo $tr->translate("STOCK_REMAIN");?>"  class="currentQty">'+data.currentQty+' ('+data.measureTitle+')</td>';	
+				template+='<td data-label="<?php echo $tr->translate("PRODUCT_NAME");?>"  class="productName" >'+productLabel+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId'+col+'" name="proId'+col+'" value="'+productId+'" type="text"  ></td>';	
+				template+='<td data-label="<?php echo $tr->translate("STOCK_REMAIN");?>"  class="currentQty">'+currentQty+' '+measureTitle+'</td>';	
 				template+='<td data-label="<?php echo $tr->translate("QTY_REQUEST");?>" ><input required dojoType="dijit.form.NumberTextBox" data-dojo-props="constraints:{min:0.01},rangeMessage:'+"'<?php echo $tr->translate("MINIMUM_VALUE_IS_ZEROONE");?>'"+'" class="fullside" id="qtyRequest'+col+'" name="qtyRequest'+col+'" placeholder="'+'<?php echo $tr->translate("QTY_REQUEST");?> " value="1" type="text"  ></td>';	
 				template+='<td data-label="<?php echo $tr->translate("DATE_ENTRY");?>" ><input required dojoType="dijit.form.DateTextBox" class="fullside" constraints="{datePattern:'+"'dd/MM/yyyy'"+'}" id="dateReqStockIn'+col+'" name="dateReqStockIn'+col+'" placeholder="'+'<?php echo $tr->translate("DATE_ENTRY");?> " value="now" type="text"  ></td>';	
 				template+='<td data-label="<?php echo $tr->translate("NOTE");?>" ><input dojoType="dijit.form.TextBox" class="fullside" id="note'+col+'" name="note'+col+'" placeholder="'+'<?php echo $tr->translate("NOTE");?> " value="" type="text"  ></td>';	

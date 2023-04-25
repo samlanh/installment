@@ -52,6 +52,8 @@ public function getAllRequestPO($search){
 		);
 		$sql.= $dbGbSt->requestingProccess($arrStep);
 		$sql.=" ,(SELECT CASE
+					WHEN COALESCE((SELECT sp.id FROM `st_purchasing` AS sp WHERE  sp.status = 1 AND sp.requestId =rqd.requestId LIMIT 1),0) = 0 
+					THEN '".$tr->translate("NOT_YET_PO")."'
 					WHEN  rqd.isCompletedPO = 1 THEN '".$tr->translate("COMPLETED_PO")."'
 					ELSE   '".$tr->translate("UPCOMPLETED_PO")."'
 					END 
@@ -91,7 +93,7 @@ public function getAllRequestPO($search){
     	if(($search['branch_id'])>0){
     		$where.= " AND rq.projectId = ".$search['branch_id'];
     	}
-		if($search['reqPOStatus']>-1){
+		if($search['reqPOStatus']>-1 AND $search['reqPOStatus']!=''){
     		$where.= " AND (SELECT rqd.isCompletedPO FROM `st_request_po_detail` AS rqd WHERE rqd.requestId =rq.id AND rqd.approvedStatus=1 ORDER BY rqd.isCompletedPO ASC LIMIT 1 )= ".$search['reqPOStatus'];
     	}
 		$where.=$dbGb->getAccessPermission("rq.projectId");

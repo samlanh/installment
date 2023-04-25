@@ -62,9 +62,6 @@ class Po_Model_DbTable_DbRequestItemsPo extends Zend_Db_Table_Abstract
       		);
       		foreach ($ids as $i){
       			$this->_name="st_request_po_detail";
-      			//if (!empty($data['note_'.$i])){
-      				//$arr['closing_note']=$data['note_'.$i];
-      			//}
       			$where="id= ".$data['id_'.$i];
       			$this->update($arr, $where);
       		}

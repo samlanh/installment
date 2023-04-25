@@ -1,49 +1,52 @@
-<?php 
-	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-	echo $this->headTitle($tr->translate("RECEIVE_STOCK"));
-	$frm = $this->frm_search;
+<?php
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+echo $this->headTitle($tr->translate("RECEIVE_STOCK"));
+$frm = $this->frm_search;
 ?>
 <div class="card pb-10 pt-10 pl-10 pr-10">
 	<div class="card-content collapse show">
 		<div class="card-box">
-               	<div class="col-sm-12 border-botom">
-		    		<div class="col-sm-8 pd-0">
-		    			<h4 class="m-b-0"><i class="fa fa fa-truck" aria-hidden="true"></i>&nbsp;<i class="fa fa fa-list" aria-hidden="true"></i>&nbsp;&nbsp;<?php echo $tr->translate('RECEIVE_STOCK');?></h4>
-    			</div>
-    			<div class="col-sm-4 text-right">
-    			</div>
-    		</div>
-    	</div>
+			<div class="col-sm-12 border-botom">
+				<div class="col-sm-8 pd-0">
+					<h4 class="m-b-0"><i class="fa fa fa-truck" aria-hidden="true"></i>&nbsp;<i class="fa fa fa-list"
+							aria-hidden="true"></i>&nbsp;&nbsp;
+						<?php echo $tr->translate('RECEIVE_STOCK'); ?>
+					</h4>
+				</div>
+				<div class="col-sm-4 text-right">
+				</div>
+			</div>
+		</div>
 		<div class="card-box">
 			<form id="list" name="list" action="" dojoType="dijit.form.Form" method="post">
-			  <div class="form-group">
+				<div class="form-group">
 					<label class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frm->getElement("adv_search");?>
+						<?php echo $frm->getElement("adv_search"); ?>
 					</label>
 					<label class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frm->getElement("branch_id");?>
+						<?php echo $frm->getElement("branch_id"); ?>
 					</label>
 					<label class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frm->getElement("verifyStatus");?>
+						<?php echo $frm->getElement("verifyStatus"); ?>
 					</label>
 					<label class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frm->getElement("supplierId");?>
+						<?php echo $frm->getElement("supplierId"); ?>
 					</label>
-		
+
 				</div>
 				<div class="form-group">
 					<label class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frm->getElement("start_date");?>
+						<?php echo $frm->getElement("start_date"); ?>
 					</label>
 					<label class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frm->getElement("end_date");?>
+						<?php echo $frm->getElement("end_date"); ?>
 					</label>
 
 					<label class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frm->getElement("status");?>
+						<?php echo $frm->getElement("status"); ?>
 					</label>
 					<label class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frm->getElement("btn_search");?>
+						<?php echo $frm->getElement("btn_search"); ?>
 					</label>
 
 				</div>
@@ -51,51 +54,57 @@
 			<input type="hidden" id="id_selected" name="id_selected" />
 		</div>
 		<div class="card-box">
-			<?php echo $this->list;?>
+			<?php echo $this->list; ?>
 		</div>
 	</div>
 </div>
-<?php 
-	$edit_Text = $tr->translate("EDIT");
-	$verifyText = $tr->translate("VERIFY");
-	$view = $tr->translate("DELIVERY_NOTE");
-	$urlEdit = $this->baseUrl()."/stockinout/index/edit/id/";
-	$urlVerify = $this->baseUrl()."/stockinout/index/verify/id/";
-	$urlView = $this->baseUrl()."/report/stockreport/rpt-receivestockdetail/id/";
+<?php
+$edit_Text = $tr->translate("EDIT");
+$verifyText = $tr->translate("VERIFY");
+$view = $tr->translate("DELIVERY_NOTE");
+$viewdetail = $tr->translate("DELIVERY_NOTE_DETAIL");
+$urlEdit = $this->baseUrl() . "/stockinout/index/edit/id/";
+$urlVerify = $this->baseUrl() . "/stockinout/index/verify/id/";
+$urlView = $this->baseUrl() . "/report/stockreport/rpt-receivestock-letter/id/";
+$urlViewDetail = $this->baseUrl() . "/report/stockreport/rpt-receivestock-info/id/";
 ?>
 <script>
 	dojo.require("dijit.form.DateTextBox");
 
-var row=0;
-var url="";
-$(function(){
-	$.contextMenu({
-		selector: '.context-menu-one', 
-		callback: function(key, options) {
-			var m = "clicked: " + key;
-			if(key=="view"){
-				url='<?php echo $urlView;?>';
+	var row = 0;
+	var url = "";
+	$(function () {
+		$.contextMenu({
+			selector: '.context-menu-one',
+			callback: function (key, options) {
+				var m = "clicked: " + key;
+				 if (key == "edit") {
+					url = '<?php echo $urlEdit; ?>';
+				}
+				else if (key == "verify") {
+					url = '<?php echo $urlVerify; ?>';
+				}else if (key == "view") {
+					url = '<?php echo $urlView; ?>';
+				}
+				else if (key == "viewdetail") {
+					url = '<?php echo $urlViewDetail; ?>';
+				}
+				
+				gotoAction();
+			},
+			items: {
+				"edit": { name: "<?php echo $edit_Text; ?>", icon: "edit", accesskey: "e" },
+				"verify": { name: "<?php echo $verifyText; ?>", icon: "fa-check-square", accesskey: "e" },
+				"view": { name: "<?php echo $view; ?>", icon: "fa-file-text", accesskey: "e" },
+				"viewdetail": { name: "<?php echo $viewdetail; ?>", icon: "fa-file-text", accesskey: "e" },
 			}
-			else if(key=="edit"){
-				url='<?php echo $urlEdit;?>';
-			}
-			else if(key=="verify"){
-				url='<?php echo $urlVerify;?>';
-			}
-			gotoAction();
-		},
-		items: {
-			"view": {name: "<?php echo $view;?>", icon: "fa-file-text", accesskey: "e"},
-			"edit": {name: "<?php echo $edit_Text;?>", icon: "edit", accesskey: "e"},
-			"verify": {name: "<?php echo $verifyText;?>", icon: "fa-check-square", accesskey: "e"},
-		}
+		});
 	});
-});
-function setrowdata(index){
-	row = index;
-}
-var recordid ='';
-function gotoAction(){
-	 window.open(url+row+'?rightclick=true', '_blank');
-}
+	function setrowdata(index) {
+		row = index;
+	}
+	var recordid = '';
+	function gotoAction() {
+		window.open(url + row + '?rightclick=true', '_blank');
+	}
 </script>

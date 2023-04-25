@@ -1,307 +1,426 @@
-<?php 
-	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-	$frm = $this->frm_search;
-	$dbGB = new Application_Model_DbTable_DbGlobal();
+<?php
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+$frm = $this->frm_search;
+$dbGB = new Application_Model_DbTable_DbGlobal();
 
-	$montFomat=DATE_FORMAT_FOR_PHP;
-	
-	$headerReportType = REPORT_LETER_HEAD;
-	$classHideHeight="110px";
-	if($headerReportType==2){
-		$classHideHeight="125px";
-	}
-	
-	$branch_title = $tr->translate("BRAND_TITLE");
-	$search=$this->search;
+$montFomat = DATE_FORMAT_FOR_PHP;
+
+$headerReportType = REPORT_LETER_HEAD;
+$classHideHeight = "110px";
+if ($headerReportType == 2) {
+	$classHideHeight = "125px";
+}
+
+$branch_title = $tr->translate("BRAND_TITLE");
+$search = $this->search;
+
 ?>
-<title><?php echo $tr->translate("RPT_RECEIVE_STOCK");?></title>
+<title>
+	<?php echo $tr->translate("RPT_RECEIVE_STOCK"); ?>
+</title>
 <script>
-     dojo.require("dijit.form.DateTextBox");
+	dojo.require("dijit.form.DateTextBox");
 </script>
-	<div class="reportblog">
-		<div class="card-box">
-	       	<div class="col-sm-12 border-botom">
-		   		<div class="col-sm-8 pd-0">
-		    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i> <?php echo $tr->translate('RPT_RECEIVE_STOCK');?></h4>
-	    		</div>
-	    		<div class="col-sm-4 text-right">
-	    		</div>
-	    	</div>
-	    </div>
-		<form method="post">
-			<div class="card-box">
-		    	 <div class="form-group">
-					<label class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frm->getElement("adv_search");?>
-					</label>
-					<label class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frm->getElement("branch_id");?>
-					</label>
-					<label class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frm->getElement("verifyStatus");?>
-					</label>
-					<label class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frm->getElement("supplierId");?>
-					</label>
-	
-				</div>
-				<div class="form-group">
-					<label class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frm->getElement("start_date");?>
-					</label>
-					<label class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frm->getElement("end_date");?>
-					</label>
-					<label class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frm->getElement("status");?>
-					</label>
-					<label class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frm->getElement("btn_search");?>
-					</label>
-					
-				</div>
+<div class="reportblog">
+	<div class="card-box">
+		<div class="col-sm-12 border-botom">
+			<div class="col-sm-8 pd-0">
+				<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i>
+					<?php echo $tr->translate('RPT_RECEIVE_STOCK'); ?>
+				</h4>
 			</div>
-		</form>
-		<div style="width:100%; margin:0 auto;">
+			<div class="col-sm-4 text-right">
+			</div>
+		</div>
+	</div>
+	<form method="post">
+		<div class="card-box">
+			<div class="form-group">
+				<label class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frm->getElement("adv_search"); ?>
+				</label>
+				<label class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frm->getElement("branch_id"); ?>
+				</label>
+				<label class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frm->getElement("verifyStatus"); ?>
+				</label>
+				<label class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frm->getElement("supplierId"); ?>
+				</label>
+
+			</div>
+			<div class="form-group">
+				<label class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frm->getElement("start_date"); ?>
+				</label>
+				<label class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frm->getElement("end_date"); ?>
+				</label>
+				<label class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frm->getElement("status"); ?>
+				</label>
+				<label class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frm->getElement("btn_search"); ?>
+				</label>
+
+			</div>
+		</div>
+	</form>
+	<div style="width:100%; margin:0 auto;">
 		<div style="min-height:22cm; margin:0 auto;">
 			<style>
-				.hideblog{display: block !important;;border: 1px solid #fff; border-bottom: 1px solid #000;}
-				.hiddenblog{display: block !important;}
+				.hideblog {
+					display: block !important;
+					;
+					border: 1px solid #fff;
+					border-bottom: 1px solid #000;
+				}
+
+				.hiddenblog {
+					display: block !important;
+				}
 			</style>
 			<div id="divPrint">
 				<style type="text/css">
-					.style{
-						line-height: 20px;font-size: 11px !important;
-						font-family: 'Times New Roman','Khmer OS Battambang';
+					.style {
+						line-height: 20px;
+						font-size: 11px !important;
+						font-family: 'Times New Roman', 'Khmer OS Battambang';
 					}
-					.hideblog{display: none;}
-					.hiddenblog{display: block !important;}
-					.style1:hover{ background: #ccc; }
-					table tr td ul li{text-align: center;list-style: none;line-height: 25px; }
-					table { page-break-inside:auto }
-					tr{ page-break-inside:avoid; page-break-after:auto; }
+
+					.hideblog {
+						display: none;
+					}
+
+					.hiddenblog {
+						display: block !important;
+					}
+
+					.style1:hover {
+						background: #ccc;
+					}
+
+					table tr td ul li {
+						text-align: center;
+						list-style: none;
+						line-height: 25px;
+					}
+
+					table {
+						page-break-inside: auto
+					}
+
+					tr {
+						page-break-inside: avoid;
+						page-break-after: auto;
+					}
+
 					#header {
-					  display: table-header-group;
-					  page-break-inside:avoid; page-break-after:auto;
-					  margin-top: 100px;
+						display: table-header-group;
+						page-break-inside: avoid;
+						page-break-after: auto;
+						margin-top: 100px;
 					}
-					.hide{visibility: hidden;}
+
+					.hide {
+						visibility: hidden;
+					}
+
 					@media print {
-					 div.divFooter {
-					    position: fixed;
-					    top: 0;
-					  	width: 100%;
-					  	height: 100px;
-					  	bottom:0px;
-						margin:0;
-					  }
-						.hide{visibility: visible; height: <?php echo $classHideHeight;?>;}
-						@page {size: landscape;margin:0.5cm 0.2cm;}
+						div.divFooter {
+							position: fixed;
+							top: 0;
+							width: 100%;
+							height: 100px;
+							bottom: 0px;
+							margin: 0;
+						}
+
+						.hide {
+							visibility: visible;
+							height:
+								<?php echo $classHideHeight; ?>
+							;
+						}
+
+						@page {
+							size: landscape;
+							margin: 0.5cm 0.2cm;
+						}
 					}
-					.center{text-align: center !important;}
-					table.content-data{
-						border-collapse:collapse;
-						border:1px solid #000; 
-						font-size:13px;
+
+					.center {
+						text-align: center !important;
 					}
+
+					table.content-data {
+						border-collapse: collapse;
+						border: 1px solid #000;
+						font-size: 13px;
+					}
+
 					table.content-data thead tr.style {
-					   line-height: 25px; font-size:12px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
+						line-height: 25px;
+						font-size: 12px !important;
+						padding: 1px 0px;
+						white-space: nowrap;
+						height: 22px;
 						background: #c1d0f3;
-						font-weight:600;
+						font-weight: 600;
 					}
-					table tr td{
-						padding:0 2px;
+
+					table tr td {
+						padding: 0 2px;
 					}
+
 					td.rightText {
 						text-align: right;
 					}
+
 					.redBold {
 						font-weight: 600;
 						color: #f80000;
 					}
-					
-					.lbTitle{
-						display:block;
-					    line-height:20px;
-						
+
+					.lbTitle {
+						display: block;
+						line-height: 20px;
+
 					}
-					.lbEng{
-						
-					    line-height:14px;
-						
+
+					.lbEng {
+
+						line-height: 14px;
+
 					}
 				</style>
 				<table width="100%">
 					<tr>
-				    	<td align="center" valign="top">
-				        	<div class="divFooter">
-					        	<?php echo $this->headerReport;?>
-				            </div>
-				        </td>
-				    </tr>
-				    <tr>
-				    	<td id="exportExcel">
-				            <table class="content-data" width="100%" border="1"  cellspacing="0" cellpadding="0">
-					                <thead>
-					                <tr class="hide" style="border:1px solid #000;">
-					                	<td colspan="17" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
-					                </tr>
-					                <tr class="style" align="center" >
-					                    <td scope="col" rowspan="2" class="center">ល.រ <br> No.</td>
-										
+						<td align="center" valign="top">
+							<div class="divFooter">
+								<?php echo $this->headerReport; ?>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td id="exportExcel">
+							<table class="content-data" width="100%" border="1" cellspacing="0" cellpadding="0">
+								<thead>
+									<tr class="hide" style="border:1px solid #000;">
+										<td colspan="17" style="border:1px solid #fff;border-bottom:1px solid #000;">
+										</td>
+									</tr>
+									<tr class="style" align="center">
+										<td scope="col" rowspan="2" class="center">ល.រ <br> No.</td>
+
 										<td scope="col" colspan="8" class="center">
-											<span class="lbTitle">ព័ត៍មានទទួលទំនិញ</span> 
+											<span class="lbTitle">ព័ត៍មានទទួលទំនិញ</span>
 											<small class="lbEng">Receive Product Info</small>
-										</td>  
+										</td>
 										<td scope="col" colspan="4" class="center">
-											<span class="lbTitle">ព័ត៍មានបញ្ជាទិញ</span> 
+											<span class="lbTitle">ព័ត៍មានបញ្ជាទិញ</span>
 											<small class="lbEng">Purchasing Infomation</small>
-										</td>  
-						
-					                </tr>
-					                <tr class="style" align="center">
-						                	<td  scope="col">
-												<span class="lbTitle">គម្រោង​</span>  
-												<small class="lbEng">Project Name</small>
-											</td>                   
-						                    <td scope="col">
-												<span class="lbTitle">កាលបរិច្ឆេទទទួល</span> 
-												<small class="lbEng">Receive Date</small>
+										</td>
+
+									</tr>
+									<tr class="style" align="center">
+										<td scope="col">
+											<span class="lbTitle">គម្រោង​</span>
+											<small class="lbEng">Project Name</small>
+										</td>
+										<td scope="col">
+											<span class="lbTitle">កាលបរិច្ឆេទទទួល</span>
+											<small class="lbEng">Receive Date</small>
+										</td>
+										<td scope="col">
+											<span class="lbTitle">ប្រភេទឯកសាទទួល</span>
+											<small class="lbEng">Document Type</small>
+										</td>
+										<td scope="col">
+											<span class="lbTitle">លេខប័ណ្ណទទួល/វិក្កយបត្រ</span>
+											<small class="lbEng">DN/invoice No.</small>
+										</td>
+										<td scope="col">
+											<span class="lbTitle">ស្ថានការទទួល</span>
+											<small class="lbEng">Receive Status</small>
+										</td>
+										<td scope="col">
+											<span class="lbTitle">អ្នកប្រគល់ទំនិញ</span>
+											<small class="lbEng">Giver Name</small>
+										</td>
+										<td scope="col">
+											<span class="lbTitle">ស្លាកលេខឡាន</span>
+											<small class="lbEng">Plate No.</small>
+										</td>
+										<td scope="col">
+											<span class="lbTitle">អ្នករាប់ទំនិញ</span>
+											<small class="lbEng">Counter</small>
+										</td>
+
+										<td scope="col">
+											<span class="lbTitle">លេខបញ្ជាទិញ</span>
+											<small class="lbEng">Purchase No.</small>
+										</td>
+										<td scope="col">
+											<span class="lbTitle">ថ្ងៃបញ្ជាទិញ</span>
+											<small class="lbEng">Purchase Date</small>
+										</td>
+										<td scope="col">
+											<span class="lbTitle">អ្នកផ្គត់ផ្គង់</span>
+											<small class="lbEng">Supplier Name</small>
+										</td>
+										<td scope="col">
+											<span class="lbTitle">លេខសំណើ</span>
+											<small class="lbEng">Request No.</small>
+										</td>
+									</tr>
+								</thead>
+								<?php
+								if (!empty($this->rows))
+									foreach ($this->rows as $key => $rs) {
+										?>
+										<tr class="style context-menu-one"
+											oncontextmenu="setrowdata(<?php echo $rs['id']; ?>);return false;"
+											style="font-family: 'Khmer OS Battambang'; white-space:nowrap; ">
+											<td data-label="ល.រ/No." align="center">
+												<?php echo $key + 1; ?>
 											</td>
-						                    <td scope="col">
-												<span class="lbTitle">ប្រភេទឯកសាទទួល</span> 
-												<small class="lbEng">Document Type</small>
+											<td data-label="គម្រោង/Project Name" align="left">
+												<?php echo $rs['projectName']; ?>
 											</td>
-						                    <td scope="col">
-												<span class="lbTitle">លេខប័ណ្ណទទួល/វិក្កយបត្រ</span>
-												<small class="lbEng">DN/invoice No.</small>
-											 </td>
-											<td scope="col">
-												<span class="lbTitle">ស្ថានការទទួល</span> 
-												<small class="lbEng">Receive Status</small>
+											<td data-label="កាលបរិច្ឆេទទទួល/Receive Date">
+												<?php
+													$format = 'd-M-Y';
+													$dateString = $rs["receiveDate"];
+													$date = new DateTime($dateString);
+													$receiveDate = $date->format($format);
+													echo $receiveDate;
+												?>
 											</td>
-											<td scope="col">
-												<span class="lbTitle">អ្នកប្រគល់ទំនិញ</span> 
-												<small class="lbEng">Giver Name</small>
+											<td data-label="ប្រភេទឯកសាទទួល/Document Type" align="left">
+												<?php echo $rs['dnType']; ?>
 											</td>
-						                    <td scope="col">
-												<span class="lbTitle">ស្លាកលេខឡាន</span> 
-												<small class="lbEng">Plate No.</small>
-											</td>	                    
-						                    <td scope="col">
-												<span class="lbTitle">អ្នករាប់ទំនិញ</span>  
-												<small class="lbEng">Counter</small>
+											<td data-label="លេខប័ណ្ណទទួល/វិក្កយបត្រ/DN/invoice No" align="left">
+												<?php echo $rs['dnNumber']; ?>
 											</td>
-	
-						                    <td scope="col">
-												<span class="lbTitle">លេខបញ្ជាទិញ</span> 
-												<small class="lbEng">Purchase No.</small>
+											<td data-label="ស្ថានការទទួល/Receive Status">
+												<?php echo $rs['isVerified']; ?>
 											</td>
-						                    <td scope="col">
-												<span class="lbTitle">ថ្ងៃបញ្ជាទិញ</span> 
-												<small class="lbEng">Purchase Date</small>
-											</td>					
-						                    <td scope="col">
-												<span class="lbTitle">អ្នកផ្គត់ផ្គង់</span> 
-												<small class="lbEng">Supplier Name</small>
+											<td data-label="អ្នកប្រគល់ទំនិញ/Giver Name">
+												<?php echo $rs['driverName']; ?>
 											</td>
-						                    <td scope="col">
-												<span class="lbTitle">លេខសំណើ</span>
-												<small class="lbEng">Request No.</small>
+											<td data-label="ស្លាកលេខឡាន/Plate No.">
+												<?php echo $rs['plateNo']; ?>
 											</td>
-					                </tr>
-					            </thead>
-				                <?php 
-				                if(!empty($this->rows)) foreach ($this->rows as $key => $rs){
-								?>
-									<tr class="style context-menu-one" oncontextmenu="setrowdata(<?php echo $rs['id'];?>);return false;" style="font-family: 'Khmer OS Battambang'; white-space:nowrap; ">
-					                	<td data-label="ល.រ/No." align="center"><?php echo $key+1;?></td>                   
-					                    <td data-label="គម្រោង/Project Name" align="left"><?php echo $rs['projectName'];?></td>
-					                    <td data-label="កាលបរិច្ឆេទទទួល/Receive Date"><?php echo $rs['receiveDate'];?></td>                   
-					                    <td data-label="ប្រភេទឯកសាទទួល/Document Type" align="left"><?php echo $rs['dnType'];?></td>
-					                    <td data-label="លេខប័ណ្ណទទួល/វិក្កយបត្រ/DN/invoice No" align="left"><?php echo $rs['dnNumber'];?></td>                   
-					                    <td data-label="ស្ថានការទទួល/Receive Status"><?php echo $rs['isIssueInvoice'];?></td>
-					                    <td data-label="អ្នកប្រគល់ទំនិញ/Giver Name"><?php echo $rs['driverName'];?></td>                   
-					                    <td data-label="ស្លាកលេខឡាន/Plate No."><?php echo $rs['plateNo'];?></td>
-					                    <td data-label="អ្នករាប់ទំនិញ/Counter"><?php echo $rs['staffCounter'];?></td>                   
-					                    <td data-label="លេខបញ្ជាទិញ/Purchase No."><?php echo $rs['purchaseNo'];?></td>
-					                    <td data-label="ថ្ងៃបញ្ជាទិញ/Purchase Date"><?php echo $rs['purchaseDate'];?></td>
-					                    <td data-label="អ្នកផ្គត់ផ្គង់/Supplier Name" align="left"><?php echo $rs['supplierName'];?></td>
-					                    <td data-label="លេខសំណើ/Request No."><?php echo $rs['requestNo'];?></td>
-					                </tr>
-				                <?php }?>
-				            </table>
-							<?php echo $this->footerReport;?>
-				    	</td>
-				    </tr>
+											<td data-label="អ្នករាប់ទំនិញ/Counter">
+												<?php echo $rs['staffCounter']; ?>
+											</td>
+											<td data-label="លេខបញ្ជាទិញ/Purchase No.">
+												<?php echo $rs['purchaseNo']; ?>
+											</td>
+											<td data-label="ថ្ងៃបញ្ជាទិញ/Purchase Date">
+												<?php
+													$format = 'd-M-Y';
+													$dateString = $rs["purchaseDate"];
+													$date = new DateTime($dateString);
+													$purchaseDate = $date->format($format);
+													echo $purchaseDate;
+												?>
+											</td>
+											<td data-label="អ្នកផ្គត់ផ្គង់/Supplier Name" align="left">
+												<?php echo $rs['supplierName']; ?>
+											</td>
+											<td data-label="លេខសំណើ/Request No.">
+												<?php echo $rs['requestNo']; ?>
+											</td>
+										</tr>
+									<?php } ?>
+							</table>
+							<?php echo $this->footerReport; ?>
+						</td>
+					</tr>
 				</table>
 			</div>
 		</div>
 	</div>
 </div>
-<script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
+<script src="<?php echo $this->baseUrl(); ?>/js/help.js"></script>
 <script>
-	dojo.require("dojo.data.ItemFileWriteStore"); 
-	require(["dojo/ready"], function(ready){
-		ready(function(){
-			 
-			 getBranchInfo();
-			 
-			 document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
-			 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("RPT_RECEIVE_STOCK");?>';
-			 document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date(DATE_FORMAT_FOR_PHP); }else{ echo date(DATE_FORMAT_FOR_PHP,strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date(DATE_FORMAT_FOR_PHP,strtotime($this->search['end_date'])); }?>';
+	dojo.require("dojo.data.ItemFileWriteStore");
+	require(["dojo/ready"], function (ready) {
+		ready(function () {
+
+			getBranchInfo();
+
+			document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
+			document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("RPT_RECEIVE_STOCK"); ?>';
+			document.getElementById('dateReport').innerHTML = '<?php if (!empty($this->search['start_date'])) {
+				if (date("Y-m-d", strtotime($this->search['start_date'])) == date("Y-m-d")) {
+					echo date(DATE_FORMAT_FOR_PHP);
+				} else {
+					echo date(DATE_FORMAT_FOR_PHP, strtotime($this->search['start_date'])) . ' ' . $tr->translate('TO') . ' ';
+					echo date("D-d-M-Y", strtotime($this->search['end_date']));
+				}
+			} else {
+				echo date(DATE_FORMAT_FOR_PHP, strtotime($this->search['end_date']));
+			} ?>';
 		});
-		
+
 	});
 
-function getBranchInfo(){
-	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
-	branch_id = '<?php echo empty($this->search['branch_id'])?0:$this->search['branch_id'];?>';
-	if(branch_id=="" || branch_id<=0){
-		return false;
-	}
-	dojo.xhrPost({
-	    url: url_submit,	
-	    content:{ 
-		    'branch_id':branch_id
-		},	
-		load: function(data) {
-			var arr = JSON.parse(data);
-			var imagesUrl = '<img  style="height:85px; max-width: 100%;" src="'+arr.url_logo+'" />';
-			document.getElementById('projectlogo').innerHTML = imagesUrl;	
-			
-			<?php if($headerReportType==2){?>
-			document.getElementById('projectName').innerHTML = '('+arr.project_name+')';
-			<?php }else{?>
-			document.getElementById('projectName').innerHTML = arr.project_name;
-			<?php }?>
-		},
-		error: function(e) {
+	function getBranchInfo() {
+		var url_submit = '<?php echo $this->url(array('module' => 'loan', 'controller' => 'ilpayment', 'action' => 'getbranch')); ?>';
+		branch_id = '<?php echo empty($this->search['branch_id']) ? 0 : $this->search['branch_id']; ?>';
+		if (branch_id == "" || branch_id <= 0) {
+			return false;
 		}
-	});
-}
-var row=0;
-var url="";
-$(function(){
-	$.contextMenu({
-		selector: '.context-menu-one', 
-		callback: function(key, options) {
-			var m = "clicked: " + key;
-			if(key=="usage"){
-				url='<?php echo $this->baseUrl()."/report/stockreport/rpt-receivestockdetail/id/";?>';
+		dojo.xhrPost({
+			url: url_submit,
+			content: {
+				'branch_id': branch_id
+			},
+			load: function (data) {
+				var arr = JSON.parse(data);
+				var imagesUrl = '<img  style="height:85px; max-width: 100%;" src="' + arr.url_logo + '" />';
+				document.getElementById('projectlogo').innerHTML = imagesUrl;
+
+				<?php if ($headerReportType == 2) { ?>
+					document.getElementById('projectName').innerHTML = '(' + arr.project_name + ')';
+				<?php } else { ?>
+					document.getElementById('projectName').innerHTML = arr.project_name;
+				<?php } ?>
+			},
+			error: function (e) {
 			}
-			gotoAction();
-		},
-		items: {
-			"usage": {name: "<?php echo $tr->translate("DELIVERY_NOTE");?>", icon: "fa-file-text"},
-		}
+		});
+	}
+	var row = 0;
+	var url = "";
+	$(function () {
+		$.contextMenu({
+			selector: '.context-menu-one',
+			callback: function (key, options) {
+				var m = "clicked: " + key;
+				if (key == "r") {
+					url = '<?php echo $this->baseUrl() . "/report/stockreport/rpt-receivestock-letter/id/"; ?>';
+				}else 
+				if(key == "rd") {
+					url = '<?php echo $this->baseUrl() . "/report/stockreport/rpt-receivestock-info/id/"; ?>';
+				}
+				gotoAction();
+			},
+			items: {
+				"r": { name: "<?php echo $tr->translate("DELIVERY_NOTE"); ?>", icon: "fa-file-text" },
+				"rd": { name: "<?php echo $tr->translate("DELIVERY_NOTE_DETAIL"); ?>", icon: "fa-file-text" },
+			}
+		});
 	});
-});
-function setrowdata(index){
-	row = index;
-}
-var recordid ='';
-function gotoAction(){
-	 window.open(url+row, '_blank');
-}
+	function setrowdata(index) {
+		row = index;
+	}
+	var recordid = '';
+	function gotoAction() {
+		window.open(url + row, '_blank');
+	}
 </script>

@@ -1,57 +1,70 @@
-<?php 
-     $this->tr=Application_Form_FrmLanguages::getCurrentlanguage();
-     $tr = Application_Form_FrmLanguages::getCurrentlanguage();
-     $frm = $this->frm;
+<?php
+$this->tr = Application_Form_FrmLanguages::getCurrentlanguage();
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+$frm = $this->frm;
 ?>
-<script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
-<title><?php echo $this->tr->translate("INITIALIZE_QTY")?></title>
- <div class="card">
+<script src="<?php echo $this->baseUrl(); ?>/js/help.js"></script>
+<title>
+	<?php echo $this->tr->translate("INITIALIZE_QTY") ?>
+</title>
+<div class="card">
 	<div class="card-content collapse show">
 		<div class="card-box">
-               	<div class="col-sm-12 border-botom">
-		    		<div class="col-sm-8 pd-0">
-		    			<h4 class="m-b-0"><i class="fa fa-database" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('INITIALIZE_QTY');?></h4>
-    			</div>
-    			<div class="col-sm-4 text-right">
-    			</div>
-    		</div>
-    	</div>
-    	<form action="" dojoType="dijit.form.Form" method="post" enctype="multipart/form-data">
-			<script type="dojo/method" event="onSubmit">   
-	  			 if(this.validate()) {
+			<div class="col-sm-12 border-botom">
+				<div class="col-sm-8 pd-0">
+					<h4 class="m-b-0"><i class="fa fa-database" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;
+						<?php echo $tr->translate('INITIALIZE_QTY'); ?>
+					</h4>
+				</div>
+				<div class="col-sm-4 text-right">
+				</div>
+			</div>
+		</div>
+		<form action="" dojoType="dijit.form.Form" method="post" enctype="multipart/form-data">
+			<script type="dojo/method" event="onSubmit">
+				   if(this.validate()) {
 					branch_id = dijit.byId('branch_id').get('value');
 					if(branch_id=='' || branch_id<=0){
-						alert('<?php echo $tr->translate('PLEASE_SELECT_BRANCH');?>');
+						alert('<?php echo $tr->translate('PLEASE_SELECT_BRANCH'); ?>');
 						dijit.byId('branch_id').focus();
 						return false;
 					}
 					var rowId = $('#identity').val();
 					if(rowId==''){ 
-						alert("<?php echo $tr->translate("PLEASE_ADD_RECORD");?>");
+						alert("<?php echo $tr->translate("PLEASE_ADD_RECORD"); ?>");
 						return false;
 					}
 					loadingBlock();
 					return true;
-	  			 }else {
+				   }else {
 					return false;
-	   			}
+				   }
 			</script>
 			<div class="card-box">
 				<div class="col-md-12 col-sm-12 col-xs-12">
-					<div class="form-group" style="background: #d8e0e2;padding: 5px 15px;margin: 0;border: solid 1px #697996;border-radius: 2px;margin-top: 10px;">
-		                <div class="col-md-3 col-sm-3 col-xs-12">
-			                <label class="control-label bold col-md-3 col-sm-3 col-xs-12"><?php echo $tr->translate("BRANCH_NAME");?> </label>
-			                <div class="col-md-9 col-sm-9 col-xs-12">
-			                	<?php echo $frm->getElement("branch_id");?>
-			                </div>
-		                </div>
-		                <div class="col-md-1 col-sm-1 col-xs-12"></div>
-		                <div class="col-md-8 col-sm-8 col-xs-12">
-							<label style=" margin: 0; line-height: 30px; " class="control-label bold col-md-2 col-sm-2 col-xs-12"><?php echo $tr->translate("CATEGORY");?> </label>
-							 <div class="col-md-4 col-sm-4 col-xs-12">
-									<?php echo $frm->getElement("categoryId");?>
+					<div class="form-group"
+						style="background: #d8e0e2;padding: 5px 15px;margin: 0;border: solid 1px #697996;border-radius: 2px;margin-top: 10px;">
+						<div class="col-md-3 col-sm-3 col-xs-12">
+							<label class="control-label bold col-md-3 col-sm-3 col-xs-12">
+								<?php echo $tr->translate("BRANCH_NAME"); ?>
+							</label>
+							<div class="col-md-9 col-sm-9 col-xs-12">
+								<?php echo $frm->getElement("branch_id"); ?>
 							</div>
-							<label style=" margin: 0; line-height: 30px; text-align: center;" class="control-label bold col-md-1 col-sm-1 col-xs-12"><?php echo $tr->translate("PRODUCT");?> </label>
+						</div>
+						<div class="col-md-1 col-sm-1 col-xs-12"></div>
+						<div class="col-md-8 col-sm-8 col-xs-12">
+							<label style=" margin: 0; line-height: 30px; "
+								class="control-label bold col-md-2 col-sm-2 col-xs-12">
+								<?php echo $tr->translate("CATEGORY"); ?>
+							</label>
+							<div class="col-md-4 col-sm-4 col-xs-12">
+								<?php echo $frm->getElement("categoryId"); ?>
+							</div>
+							<label style=" margin: 0; line-height: 30px; text-align: center;"
+								class="control-label bold col-md-1 col-sm-1 col-xs-12">
+								<?php echo $tr->translate("PRODUCT"); ?>
+							</label>
 							<div class="col-md-5 col-sm-5 col-xs-12">
 								<input id="productId" />
 							</div>
@@ -60,198 +73,204 @@
 					<div class="card-box">
 						<div id="showrecord"></div>
 					</div>
-					<input type="hidden" name="identity" id="identity" dojoType="dijit.form.TextBox" value="" >
+					<input type="hidden" name="identity" id="identity" dojoType="dijit.form.TextBox" value="">
 				</div>
 				<div class="clearfix"></div>
 			</div>
 			<div class="clearfix"></div>
-	       	<div class="card-box mt-20">
-               	<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
-					<input type="submit" class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-disk" value="save_close" id="save_new" name="save_new" label="<?php echo $tr->translate("SAVE");?>" dojoType="dijit.form.Button"  />
-               	</div>
-             </div>
+			<div class="card-box mt-20">
+				<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
+					<input type="submit" class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-disk"
+						value="save_close" id="save_new" name="save_new" label="<?php echo $tr->translate("SAVE"); ?>"
+						dojoType="dijit.form.Button" />
+				</div>
+			</div>
 		</form>
-    </div>
+	</div>
 </div>
 <style>
-table#table_row td.productName {
-    font-size: 12px;
-    line-height: 14px;
-    font-weight: 600;
-}
-table#table_row td.currentQty {
-    text-align: center;
-    color: #f74545;
-    font-weight: 600;
-}
-tr.rowData {
-    border-bottom: solid 2px #02014a;
-}
-#table tr td{
-	border:1px solid #cccccc;
-	text-align: center;
-}
-#table tr th{
-	background: #cccccc;
-	border:1px solid #ddd;
-}
+	table#table_row td.productName {
+		font-size: 12px;
+		line-height: 14px;
+		font-weight: 600;
+	}
+
+	table#table_row td.currentQty {
+		text-align: center;
+		color: #f74545;
+		font-weight: 600;
+	}
+
+	tr.rowData {
+		border-bottom: solid 2px #02014a;
+	}
+
+	#table tr td {
+		border: 1px solid #cccccc;
+		text-align: center;
+	}
+
+	#table tr th {
+		background: #cccccc;
+		border: 1px solid #ddd;
+	}
 </style>
 <script type="text/javascript">
-	dojo.require("dojo.data.ItemFileWriteStore");  
+	dojo.require("dojo.data.ItemFileWriteStore");
 	dojo.require("dojo.NodeList-manipulate");
-    dojo.require("dijit.form.NumberTextBox");
-	
-	var productStore  = getDataStorefromJSON('id','name', null );
-    require(["dojo/ready"], function(ready){
-		ready(function(){
+	dojo.require("dijit.form.NumberTextBox");
+
+	var productStore = getDataStorefromJSON('id', 'name', null);
+	require(["dojo/ready"], function (ready) {
+		ready(function () {
 			onChageFunctionByBranch();
 		});
-		
+
 		new dijit.form.FilteringSelect({
 			store: productStore,
 			autoComplete: false,
 			queryExpr: "*${0}*",
-			required: false,		           
+			required: false,
 			name: "productId",
-			placeHolder:'<?php echo $tr->translate('PRODUCT_NAME');?>',
+			placeHolder: '<?php echo $tr->translate('PRODUCT_NAME'); ?>',
 			id: "productId",
 			searchAttr: "name",
 			class: 'fullside',
-			onChange: function() {
+			onChange: function () {
 				addRowProduct();
 			}
 		}, "productId");
-	 });
-    
-	function onChageFunctionByBranch(){
-		 title=0;
-		 dojo.query("#showrecord").append('');
-		 $("#identity").val('');
-		 
+	});
+
+	function onChageFunctionByBranch() {
+		title = 0;
+		dojo.query("#showrecord").append('');
+		$("#identity").val('');
+
 		getAllProduct();
 	}
-	var urlGetAllProduct = '<?php echo $this->url(array('module'=>'requesting','controller'=>'request','action'=>'getallproduct')); ?>';
-	function getAllProduct(){
+	var urlGetAllProduct = '<?php echo $this->url(array('module' => 'requesting', 'controller' => 'request', 'action' => 'getallproduct')); ?>';
+	function getAllProduct() {
 		dijit.byId('productId').reset();
-		productStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
+		productStore = getDataStorefromJSON('id', 'name', <?php print_r(Zend_Json::encode(array())); ?>);
 		dijit.byId('productId').set('store', productStore);
-		
+
 		branch_id = dijit.byId('branch_id').get('value');
-		if(branch_id=='' || branch_id<=0){
+		if (branch_id == '' || branch_id <= 0) {
 			branch_id = 0;
 		}
 		categoryId = dijit.byId('categoryId').get('value');
-		if(categoryId=='' || categoryId==0){
-			categoryId=0;
+		if (categoryId == '' || categoryId == 0) {
+			categoryId = 0;
 		}
 		dojo.xhrPost({
-			url:urlGetAllProduct,	
-			content:{ 
-				'notExistingProjectid':branch_id,
-				'categoryId':categoryId,
-				'isCountStock':1
-			},		    
-			handleAs:"json",
-			load: function(data) {
-				productStore  = getDataStorefromJSON('id','name', data);		
+			url: urlGetAllProduct,
+			content: {
+				'notExistingProjectid': branch_id,
+				'categoryId': categoryId,
+				'isCountStock': 1
+			},
+			handleAs: "json",
+			load: function (data) {
+				productStore = getDataStorefromJSON('id', 'name', data);
 				dijit.byId('productId').set('store', productStore);
 			},
-			error: function(err) {
+			error: function (err) {
 			}
 		});
 	}
-	
-	var col= 0; var no=0;
+
+	var col = 0; var no = 0;
 	var title = 0;
-	var urlGetProductInfo = '<?php echo $this->url(array('module'=>'requesting','controller'=>'request','action'=>'productinfo')); ?>';
-	function addRowProduct(){
+	var urlGetProductInfo = '<?php echo $this->url(array('module' => 'requesting', 'controller' => 'request', 'action' => 'productinfo')); ?>';
+	function addRowProduct() {
 		col++;
-		template='';
+		template = '';
 		temp = "";
-	
-		if(title!=1){
-			tmp='<table class="collape tablesorter" id="table_row" style="margin-top:10px;width:100%; white-space: nowrap;border:1px solid #ddd;">';
-			tmp+='<tr id="head-title" class="head-td" align="center"></tr>';
-			tmp+='</table>';
+
+		if (title != 1) {
+			tmp = '<table class="collape tablesorter" id="table_row" style="margin-top:10px;width:100%; white-space: nowrap;border:1px solid #ddd;">';
+			tmp += '<tr id="head-title" class="head-td" align="center"></tr>';
+			tmp += '</table>';
 			dojo.query("#showrecord").append(tmp);
-			
-			temp+='<td><?php echo $tr->translate("DEL");?></td>';
-			temp+='<td><?php echo $tr->translate("N_O");?></td>';
-			temp+='<td width="20%"><?php echo $tr->translate("PRODUCT_NAME");?></td>';
-			temp+='<td class="currentQty"><?php echo $tr->translate("MEASURE");?></td>';
-			temp+='<td width="10%"><?php echo $tr->translate("BEGINING_QTY");?></td>';
-			temp+='<td width="10%"><?php echo $tr->translate("COSTING");?></td>';
-			temp+='<td width="10%"><?php echo $tr->translate("ALERT_QTY");?></td>';
+
+			temp += '<td><?php echo $tr->translate("DEL"); ?></td>';
+			temp += '<td><?php echo $tr->translate("N_O"); ?></td>';
+			temp += '<td width="20%"><?php echo $tr->translate("PRODUCT_NAME"); ?></td>';
+			temp += '<td class="currentQty"><?php echo $tr->translate("MEASURE"); ?></td>';
+			temp += '<td width="10%"><?php echo $tr->translate("BEGINING_QTY"); ?></td>';
+			temp += '<td width="10%"><?php echo $tr->translate("COSTING"); ?></td>';
+			temp += '<td width="10%"><?php echo $tr->translate("ALERT_QTY"); ?></td>';
 			dojo.query("#head-title").append(temp);
-			title=1;
+			title = 1;
 		}
-		
+
 		branch_id = dijit.byId('branch_id').get('value');
-		if(branch_id=='' || branch_id<=0){
-			alert('<?php echo $tr->translate('PLEASE_SELECT_BRANCH');?>');
+		if (branch_id == '' || branch_id <= 0) {
+			alert('<?php echo $tr->translate('PLEASE_SELECT_BRANCH'); ?>');
 			dijit.byId('branch_id').focus();
 			return false;
 		}
 		productId = dijit.byId('productId').get('value');
-		if(productId=='' || productId<=0){
+		if (productId == '' || productId <= 0) {
 			dijit.byId('productId').focus();
 			return false;
 		}
-		
+
 		var iden = $("#identity").val();
 		var arrays = iden.split(',');
-		 if(arrays!=""){
-			 for(var i=0;i< arrays.length;i++) {
-				 readychoose = dijit.byId('proId'+arrays[i]).get('value');
-				 if(readychoose==productId){
-					 alert("<?php echo $tr->translate("Choosen ready")?>");
-					 return false;
-				 }
+		if (arrays != "") {
+			for (var i = 0; i < arrays.length; i++) {
+				readychoose = dijit.byId('proId' + arrays[i]).get('value');
+				if (readychoose == productId) {
+					alert("<?php echo $tr->translate("Choosen ready") ?>");
+					return false;
+				}
 			}
 		}
-		 dijit.byId('productId').attr('value','');
-		 
+		dijit.byId('productId').attr('value', '');
+
 		no++;
 		dojo.xhrPost({
-			url:urlGetProductInfo,	
-			content:{ 
-				'productId':productId
-			},		    
-			handleAs:"json",
-			load: function(data) {
-				template+='<td width="2%" align="center"><img onclick="deleteRecord('+col+');" src="<?php echo $this->baseUrl();?>/images/Delete_16.png"></td>';
-				template+='<td align="center" width="2%">'+no+'</td>';
-				template+='<td class="productName" >'+data.proCode+'<br />'+data.proName+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId'+col+'" name="proId'+col+'" value="'+data.id+'" type="text"  ></td>';	
-				measureTitle = (data.measureTitle=='')?'':data.measureTitle;
-				template+='<td class="currentQty"  width="10%">'+measureTitle+'</td>';	
-				template+='<td><input dojoType="dijit.form.NumberTextBox" class="fullside" id="qtyInit'+col+'" name="qtyInit'+col+'" placeholder="'+'<?php echo $tr->translate("QTY_BEGIN");?> " value="0" type="text"  ></td>';	
-				template+='<td><input dojoType="dijit.form.NumberTextBox" class="fullside" id="costing'+col+'" name="costing'+col+'" placeholder="'+'<?php echo $tr->translate("COSTING");?> " value="0" type="text"  ></td>';	
-				template+='<td><input dojoType="dijit.form.NumberTextBox" class="fullside" id="qtyAlert'+col+'" name="qtyAlert'+col+'" placeholder="'+'<?php echo $tr->translate("QTY_ALERT");?> "  type="text"  ></td>';	
-				
-				tmp='<tr class="rowData" id="row'+col+'">';
-				tmp+="</tr>";
+			url: urlGetProductInfo,
+			content: {
+				'productId': productId
+			},
+			handleAs: "json",
+			load: function (data) {
+				template += '<td width="2%" align="center"><img onclick="deleteRecord(' + col + ');" src="<?php echo $this->baseUrl(); ?>/images/Delete_16.png"></td>';
+				template += '<td align="center" width="2%">' + no + '</td>';
+				template += '<td class="productName" >' + data.proCode + '<br />' + data.proName + '<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId' + col + '" name="proId' + col + '" value="' + data.id + '" type="text"  ></td>';
+				measureTitle = (data.measureTitle == '') ? '' : data.measureTitle;
+				template += '<td class="currentQty"  width="10%">' + measureTitle + '</td>';
+				template += '<td><input dojoType="dijit.form.NumberTextBox" class="fullside" id="qtyInit' + col + '" name="qtyInit' + col + '" placeholder="' + '<?php echo $tr->translate("QTY_BEGIN"); ?> " value="0" type="text"  ></td>';
+				template += '<td><input dojoType="dijit.form.NumberTextBox" class="fullside" id="costing' + col + '" name="costing' + col + '" placeholder="' + '<?php echo $tr->translate("COSTING"); ?> " value="0" type="text"  ></td>';
+				template += '<td><input dojoType="dijit.form.NumberTextBox" class="fullside" id="qtyAlert' + col + '" name="qtyAlert' + col + '" placeholder="' + '<?php echo $tr->translate("QTY_ALERT"); ?> "  type="text"  ></td>';
+
+				tmp = '<tr class="rowData" id="row' + col + '">';
+				tmp += "</tr>";
 				dojo.query("#table_row").append(tmp);
-				if($("#identity").val()!="") {
+				if ($("#identity").val() != "") {
 					var identity = $("#identity").val();
-					$("#identity").val(identity+','+col);
-				} else {$("#identity").val(col);}
-				dojo.html.set(dojo.byId("row"+col),template , {
-					 parseContent: true,
+					$("#identity").val(identity + ',' + col);
+				} else { $("#identity").val(col); }
+				dojo.html.set(dojo.byId("row" + col), template, {
+					parseContent: true,
 				});
 			},
-			error: function(err) {
+			error: function (err) {
 			}
 		});
 	}
-	
+
 	function deleteRecord(index) {
 		var identity = $('#identity').val();
 		var arrays = identity.split(',');
-		for(var i=0;i<arrays.length;i++) {
-			if(arrays[i] == index) arrays.splice(i,1);
+		for (var i = 0; i < arrays.length; i++) {
+			if (arrays[i] == index) arrays.splice(i, 1);
 		}
 		var strings = arrays.join(',');
 		$('#identity').val(strings);
-		dojo.query("#row"+index).remove();
+		dojo.query("#row" + index).remove();
 	}
 </script>

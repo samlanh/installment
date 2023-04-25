@@ -31,7 +31,7 @@ class Po_IndexController extends Zend_Controller_Action {
 			
 			
 			$list = new Application_Form_Frmtable();
-    		$collumns = array("PROJECT_NAME","PO_NO","SUPPLIER","DATE","REQUEST_NO","REQUEST_DATE","REQUEST_BY","TOTAL","STATUS","BY");
+    		$collumns = array("PROJECT_NAME","PO_NO","SUPPLIER","PO_DATE","REQUEST_NO","REQUEST_DATE","REQUEST_BY","TOTAL","STATUS","BY");
     		$link=array(
     				'module'=>'po','controller'=>'index','action'=>'edit',
     		);

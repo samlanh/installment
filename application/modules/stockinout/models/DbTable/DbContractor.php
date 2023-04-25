@@ -2,13 +2,15 @@
 
 class Stockinout_Model_DbTable_DbContractor extends Zend_Db_Table_Abstract
 {
-    protected $_name = 'st_contractor';
-    public function getUserId(){
-    	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
-    	return $session_user->user_id;
-    }
-    function getAllStaffWorker($search){
-    	$sql="SELECT 
+	protected $_name = 'st_contractor';
+	public function getUserId()
+	{
+		$session_user = new Zend_Session_Namespace(SYSTEM_SES);
+		return $session_user->user_id;
+	}
+	function getAllStaffWorker($search)
+	{
+		$sql = "SELECT 
 		    		w.id,
 		    		(SELECT ln_project.project_name FROM `ln_project` WHERE ln_project.br_id = w.projectId LIMIT 1) AS branch_name,
 		    		w.staffName,
@@ -21,96 +23,115 @@ class Stockinout_Model_DbTable_DbContractor extends Zend_Db_Table_Abstract
 		    		(SELECT name_en FROM ln_view WHERE TYPE=3 AND key_code = w.status LIMIT 1) AS STATUS
 		    	FROM $this->_name AS w
 		    		WHERE 1 ";
-    	
-    	$from_date =(empty($search['start_date']))? '1': "w.createDate >= '".$search['start_date']." 00:00:00'";
-    	$to_date = (empty($search['end_date']))? '1': " w.createDate <= '".$search['end_date']." 23:59:59'";
-    	
-    	$where_date = " AND ".$from_date." AND ".$to_date;
-    	$where='';
-    	
-    	if(!empty($search['adv_search'])){
-    		$s_where = array();
-    		$s_search = (trim($search['adv_search']));
-    		$s_where[] = " w.staffName LIKE '%{$s_search}%'";
-    		$where .=' AND ( '.implode(' OR ',$s_where).')';
-    	}
-    	if($search['status']>-1){
-    		$where.= " AND w.status = ".$search['status'];
-    	}
-    	if($search['branch_id']>-1){
-    		$where.= " AND w.projectId = ".$search['branch_id'];
-    	}
-    	
-    	$dbg = new Application_Model_DbTable_DbGlobal();
-    	$where.= $dbg->getAccessPermission('w.projectId');
-    	
-    	$order=' ORDER BY w.id DESC  ';
-    	$db = $this->getAdapter();
-    	return $db->fetchAll($sql.$where_date.$where.$order);
-    }
-   
-    function addWorker($data){
-    	try
-    	{
-    		$db = new Application_Model_DbTable_DbGlobalStock();
-    		$result = $db->dataExisting($this->_name,"staffName='".$data['staffName']."'");
-    		
-    		if(empty($result)){
-	    		$arr = array(
-	    				'projectId'=>$data['branch_id'],
-	    				'staffName'=>$data['staffName'],
-	    				'gender'=>$data['gender'],
-	    				'position'=>$data['position'],
-	    				'tel'=>$data['tel'],
-	    				'pob'=>$data['pob'],
-	    				'dob'=>$data['dob'],
-	    				'address'=>$data['address'],
-	    				'createDate'=>date("Y-m-d"),
-	    				'status'=>1,
-	    				'userId'=>$this->getUserId(),
-	    			);
-	    		$this->insert($arr);
-    		}else{
-    			Application_Form_FrmMessage::Sucessfull("DATA_EXISTING", "/stockinout/staff/add");
-    		}
-    	}catch (Exception $e){
-    		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-    		Application_Form_FrmMessage::Sucessfull("INSERT_FAIL", "/stockinout/staff/add",2);
-    	}
-    }
-    function updateWorker($data){
-    	try
-    	{
-    		$arr = array(
-    				'projectId'=>$data['branch_id'],
-    				'staffName'=>$data['staffName'],
-    				'gender'=>$data['gender'],
-    				'position'=>$data['position'],
-    				'tel'=>$data['tel'],
-    				'pob'=>$data['pob'],
-    				'dob'=>$data['dob'],
-    				'address'=>$data['address'],
-    				'createDate'=>date("Y-m-d"),
-    				'status'=>$data['status'],
-    				'userId'=>$this->getUserId()
-    			);	;
-    		
-    		$where = 'id = '.$data['id'];
-			$this->update($arr, $where);
-			
-    	}catch (Exception $e){
-    		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-    		Application_Form_FrmMessage::Sucessfull("UPDATE_FAIL", "/stockinout/staff/index",2);
-    	}
-    }
-    function getDataRow($recordId){
-    	$db = $this->getAdapter();
-    	$sql=" SELECT * FROM $this->_name WHERE id=".$recordId;
-    	
-    	$dbg = new Application_Model_DbTable_DbGlobal();
-    	$sql.= $dbg->getAccessPermission('projectId');
-    	
-    	$sql.=" LIMIT 1";
-    	return $db->fetchRow($sql);
-    }
+
+		$from_date = (empty($search['start_date'])) ? '1' : "w.createDate >= '" . $search['start_date'] . " 00:00:00'";
+		$to_date = (empty($search['end_date'])) ? '1' : " w.createDate <= '" . $search['end_date'] . " 23:59:59'";
+
+		$where_date = " AND " . $from_date . " AND " . $to_date;
+		$where = '';
+
+		if (!empty($search['adv_search'])) {
+			$s_where = array();
+			$s_search = addslashes((trim($search['adv_search'])));
+			$s_where[] = " w.staffName LIKE '%{$s_search}%'";
+			$where .= ' AND ( ' . implode(' OR ', $s_where) . ')';
+		}
+		if ($search['status'] > -1 and $search['status'] != '') {
+			$where .= " AND w.status = " . $search['status'];
+		}
+		if ($search['branch_id'] > -1 and $search['branch_id'] != '') {
+			$where .= " AND w.projectId = " . $search['branch_id'];
+		}
+
+		$dbg = new Application_Model_DbTable_DbGlobal();
+		$where .= $dbg->getAccessPermission('w.projectId');
+
+		$order = ' ORDER BY w.id DESC  ';
+		$db = $this->getAdapter();
+		return $db->fetchAll($sql . $where_date . $where . $order);
+	}
+
+	function addWorker($data)
+	{
+		try {
+			$db = new Application_Model_DbTable_DbGlobalStock();
+			$existing = $this->ifContrExisting($data);
+
+			if (empty($existing)) {
+				$arr = array(
+					'projectId' => $data['branch_id'],
+					'staffName' => $data['staffName'],
+					'gender' => $data['gender'],
+					'position' => $data['position'],
+					'tel' => $data['tel'],
+					'pob' => $data['pob'],
+					'dob' => $data['dob'],
+					'address' => $data['address'],
+					'createDate' => date("Y-m-d"),
+					'status' => 1,
+					'userId' => $this->getUserId(),
+				);
+				$this->insert($arr);
+			} else {
+				Application_Form_FrmMessage::Sucessfull("DATA_EXISTING", "/stockinout/contractor/add", 2);
+			}
+		} catch (Exception $e) {
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			Application_Form_FrmMessage::Sucessfull("INSERT_FAIL", "/stockinout/contractor/add", 2);
+		}
+	}
+	function updateWorker($data)
+	{
+		try {
+
+			$existing = $this->ifContrExisting($data);
+			if (empty($existing)) {
+				$arr = array(
+					'projectId' => $data['branch_id'],
+					'staffName' => $data['staffName'],
+					'gender' => $data['gender'],
+					'position' => $data['position'],
+					'tel' => $data['tel'],
+					'pob' => $data['pob'],
+					'dob' => $data['dob'],
+					'address' => $data['address'],
+					'createDate' => date("Y-m-d"),
+					'status' => $data['status'],
+					'userId' => $this->getUserId()
+				);
+
+				$where = 'id = ' . $data['id'];
+				$this->update($arr, $where);
+
+			} else {
+				Application_Form_FrmMessage::Sucessfull("DATA_EXISTING", "/stockinout/contractor/index", 2);
+			}
+
+		} catch (Exception $e) {
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			Application_Form_FrmMessage::Sucessfull("UPDATE_FAIL", "/stockinout/contractor/index", 2);
+		}
+	}
+
+	function ifContrExisting($data)
+	{
+
+		$db = $this->getAdapter();
+		$sql = " SELECT * FROM $this->_name WHERE staffName='" . addslashes((trim($data['staffName']))) . "'";
+		if (!empty($data['id'])) {
+			$sql .= " AND id !=" . $data['id'];
+		}
+		return $db->fetchRow($sql);
+	}
+	function getDataRow($recordId)
+	{
+		$db = $this->getAdapter();
+		$sql = " SELECT * FROM $this->_name WHERE id=" . $recordId;
+
+		$dbg = new Application_Model_DbTable_DbGlobal();
+		$sql .= $dbg->getAccessPermission('projectId');
+
+		$sql .= " LIMIT 1";
+		return $db->fetchRow($sql);
+	}
 }

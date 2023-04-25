@@ -1,38 +1,46 @@
-  <?php 
-  	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-  ?>
-  <title><?php echo $tr->translate("REPORT");?></title>
-  <div class="card">
+<?php
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+?>
+<title>
+	<?php echo $tr->translate("REPORT"); ?>
+</title>
+<div class="card">
 	<div class="card-content collapse show">
 		<div class="card-box report-list">
-		  	<div class="row top_tiles">
-			  	 <?php
-			  	 	$db_user=new Application_Model_DbTable_DbUsers();
-			  		$report_url =  $db_user->getArrAclReport('stockreport');
-			   	   if(!empty($report_url)){
-			   	   foreach($report_url as $url){
-			   	   if($url['action']=='index' 
-							OR $url['action']=='rpt-usagedetail' 
-							 OR $url['action']=='rpt-receivestockdetail' 
-							 OR $url['action']=='rpt-salestockdetail' 
-							 OR $url['action']=='rpt-transferdetail' 
-							 OR $url['action']=='rpt-concretedn' 
-							 OR $url['action']=='rpt-receive-letter' 
-			   	   		){continue;}
-			   	   	?>
-					<div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
-						<a href="<?php echo $this->url(array('module'=>$url['module'],'controller'=>$url['controller'],'action'=>$url['action'])); ?>">
-						<div title="<?php echo $tr->translate($url['label']);?>" class="tile-stats report-list">
-							<div class="icon"><i class="fa fa-book"></i></div>
-							<div class="count">&nbsp;</div>
-			                 	<h3><?php echo $tr->translate($url['label']);?></h3>
+			<div class="row top_tiles">
+				<?php
+				$db_user = new Application_Model_DbTable_DbUsers();
+				$report_url = $db_user->getArrAclReport('stockreport');
+				if (!empty($report_url)) {
+					foreach ($report_url as $url) {
+						if (
+							$url['action'] == 'index'
+							or $url['action'] == 'rpt-usagedetail'
+							or $url['action'] == 'rpt-receivestock-info'
+							or $url['action'] == 'rpt-salestockdetail'
+							or $url['action'] == 'rpt-transferdetail'
+							or $url['action'] == 'rpt-concretedn'
+							or $url['action'] == 'rpt-receive-letter'
+						) {
+							continue;
+						}
+						?>
+						<div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+							<a
+								href="<?php echo $this->url(array('module' => $url['module'], 'controller' => $url['controller'], 'action' => $url['action'])); ?>">
+								<div title="<?php echo $tr->translate($url['label']); ?>" class="tile-stats report-list">
+									<div class="icon"><i class="fa fa-book"></i></div>
+									<div class="count">&nbsp;</div>
+									<h3>
+										<?php echo $tr->translate($url['label']); ?>
+									</h3>
+								</div>
+							</a>
 						</div>
-						</a>
-			        </div> 
-			        <?php }
-				}?>
-			   </div>
-		  </div>
+					<?php }
+				} ?>
+			</div>
 		</div>
 	</div>
-  <div style="clear: both;"></div>	
+</div>
+<div style="clear: both;"></div>

@@ -42,7 +42,7 @@ class Po_Model_DbTable_DbConcret extends Zend_Db_Table_Abstract
     		
     		$where .=' AND ( '.implode(' OR ',$s_where).')';
     	}
-    	if($search['status']>-1){
+    	if($search['status']>-1 AND $search['status']!='' ){
     		$where.= " AND r.status = ".$search['status'];
     	}
     	if($search['branch_id']>0){
