@@ -23,7 +23,8 @@ class Systemapi_IndexController extends Zend_Controller_Action
     	if ($_SERVER['REQUEST_METHOD'] == "GET"){
     		if($GetData['url']=="profile"){
     			$_dbAction->profileAction($GetData);
-    		
+    		}else if ($GetData['url']=="slieshow"){
+    			$_dbAction->slidshowAction($GetData);
 			
 			}else if ($GetData['url']=="allRequestList"){
 				$_dbAction->allRequestNotifyAction($GetData);
