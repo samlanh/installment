@@ -877,6 +877,7 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 				SELECT 
 					po.*
 					,po.date AS poDate
+					,po.createDate AS purchaseCreateDate
 					,spp.supplierName
 					,spp.address AS supplierAddress
 					,spp.supplierTel
@@ -885,6 +886,7 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 					,spp.email AS supplierEmail
 					,rq.requestNo
 					,rq.date AS requestDate
+					,rq.createDate AS requestCreateDate
 					,rq.requestNoLetter
 					,rq.purpose
 					,(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = po.projectId LIMIT 1) AS projectName
