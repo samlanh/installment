@@ -97,7 +97,7 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
 				'plateNo' => $data['truckNumber'],
 				'note' => $data['note'],
 				'userId' => $this->getUserId(),
-				'createDate' => date('Y-m-d'),
+				'createDate' => date('Y-m-d h:i:s'),
 			);
 
 			$part = PUBLIC_PATH . '/images/dndocument/';
@@ -260,7 +260,7 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
 				'plateNo' => $data['truckNumber'],
 				'note' => $data['note'],
 				'userId' => $this->getUserId(),
-				'createDate' => date('Y-m-d'),
+				'createDate' => date('Y-m-d h:i:s'),
 			);
 
 			$part = PUBLIC_PATH . '/images/dndocument/';
