@@ -43,6 +43,9 @@ class Systemapi_IndexController extends Zend_Controller_Action
 			
 			}else if ($GetData['url']=="dnToVerifyNotify"){
     			$_dbAction->getDNToVerifyNotifyAction($GetData);
+			}else if ($GetData['url']=="dnToVerifyDetail"){
+    			$_dbAction->dnToVerifyDetailAction($GetData);
+				
 			}else if ($GetData['url']=="transferProductNotify"){
     			$_dbAction->getTransferProductNotifyAction($GetData);
 			
@@ -66,10 +69,9 @@ class Systemapi_IndexController extends Zend_Controller_Action
 				}else if ($GetData['url']=="submitVerifyRequestPO"){
     				$_dbAction->submitVerifyRequestPOAction($postData);
 				}else if ($GetData['url']=="submitApproveRequestPO"){
-    				$_dbAction->submitApproveRequestPOAction($postData);	
-					
-				}else if ($GetData['url']=="notificationRead"){
-    				$_dbAction->notificationReadAction($postData);
+    				$_dbAction->submitApproveRequestPOAction($postData);		
+				}else if ($GetData['url']=="submitVerifyDN"){
+    				$_dbAction->submitVerifyDNAction($postData);
 					
 				}else if ($GetData['url']=="setReadNotification"){
     				$_dbAction->setReadNotificationAction($postData);

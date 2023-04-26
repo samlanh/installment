@@ -112,7 +112,6 @@ class Invpayment_Model_DbTable_DbConcreteStatement extends Zend_Db_Table_Abstrac
 	    			'invoiceNo'			=>$data['invoiceNo'],
 	    			'dnId'				=>$data['dnIdentity'],
 	    			'supplierId'		=>$data['supplierId'],
-	    				
 	    			'invoiceDate'				=>date('Y-m-d'),
 	    			'supplierInvoiceNo'			=>$data['supplierstMentNo'],
 	    			'receiveIvDate'				=>date('Y-m-d'),
