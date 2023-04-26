@@ -991,12 +991,12 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 				$where = 'projectId=' . $data['branch_id'] . " AND proId=" . $data['productId'];
 				$this->update($arr, $where);
 			}
-		} else { //for product not in project
+		}else{ //for product not in project
 			$param = array(
 				'productId' => $data['projectId']
 			);
 			$row = $this->getProductInfoByLocation($param);
-			if (!empty($row)) {
+			if (!empty($row)){
 				if ($row['isCountStock'] == 1 and $row['isService'] == 0) {
 					$arr = array(
 						'projectId' => $data['branch_id'],

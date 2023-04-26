@@ -43,8 +43,16 @@ class Systemapi_IndexController extends Zend_Controller_Action
 			
 			}else if ($GetData['url']=="dnToVerifyNotify"){
     			$_dbAction->getDNToVerifyNotifyAction($GetData);
+			}else if ($GetData['url']=="dnToVerifyDetail"){
+    			$_dbAction->dnToVerifyDetailAction($GetData);
+				
 			}else if ($GetData['url']=="transferProductNotify"){
     			$_dbAction->getTransferProductNotifyAction($GetData);
+			}else if ($GetData['url']=="purchaseConcreteList"){
+    			$_dbAction->getPurchaseConcreteListAction($GetData);
+			}else if ($GetData['url']=="purchaseConcreteForReAdjustment"){
+				$GetData['isForReAdjustment'] = "1";
+    			$_dbAction->getPurchaseConcreteListAction($GetData);
 			
     		}else{
     			echo Zend_Http_Response::responseCodeAsText(401,true);
@@ -66,13 +74,11 @@ class Systemapi_IndexController extends Zend_Controller_Action
 				}else if ($GetData['url']=="submitVerifyRequestPO"){
     				$_dbAction->submitVerifyRequestPOAction($postData);
 				}else if ($GetData['url']=="submitApproveRequestPO"){
-    				$_dbAction->submitApproveRequestPOAction($postData);	
-					
-				}else if ($GetData['url']=="notificationRead"){
-    				$_dbAction->notificationReadAction($postData);
-					
-				}else if ($GetData['url']=="setReadNotification"){
-    				$_dbAction->setReadNotificationAction($postData);
+    				$_dbAction->submitApproveRequestPOAction($postData);		
+				}else if ($GetData['url']=="submitVerifyDN"){
+    				$_dbAction->submitVerifyDNAction($postData);
+				}else if ($GetData['url']=="submitApproveToReAdjustPoConcrete"){
+    				$_dbAction->submitApproveToReAdjustPoConcreteAction($postData);
 				
     			}
     			else{
