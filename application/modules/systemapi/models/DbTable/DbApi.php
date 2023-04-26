@@ -44,10 +44,10 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 				,s.user_type AS userType
 				,s.userAction AS userAction
 				,CASE
-					WHEN  s.userAction = 1 THEN 'Boss'
+					WHEN  s.userAction = 1 THEN 'Warehouse Staff'
 					WHEN  s.userAction = 2 THEN 'Warehouse MG'
 					WHEN  s.userAction = 3 THEN 'PO Department'
-					WHEN  s.userAction = 4 THEN 'Warehouse Staff'
+					WHEN  s.userAction = 4 THEN 'Boss'
 				END AS userActionTitle
 				,s.photo AS photo
 				,s.branch_list AS branchList
@@ -356,7 +356,7 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 				}
 			}
 			
-			if($_data["userAction"]=="1"){
+			if($_data["userAction"]=="4"){
 				//forApproved
 				if(is_null($processingStatus)){
 					$processingStatus =3; 
@@ -434,12 +434,14 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 				,rq.requestNoLetter
 				,rq.purpose
 				,rq.date AS requestDate
+				,rq.createDate AS requestCreateDate
 				,rq.requestNo
 
 				,po.purchaseNo
 				,(SELECT spl.supplierName FROM `st_supplier` AS spl WHERE spl.id = po.supplierId LIMIT 1) AS supplierName
 				,po.purpose
 				,po.date AS purchaseDate
+				,po.createDate AS purchaseCreateDate
 				,(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rst.userId LIMIT 1 ) AS userName
 				,(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.userId LIMIT 1 ) AS requestByName
 				,(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=po.userId LIMIT 1 ) AS purchaseByName
@@ -699,7 +701,7 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 				
 				if($checkingStatus==1){
 					$notify = array(
-						"userAction" => 1,// push to Boss Approve
+						"userAction" => 4,// push to Boss Approve
 						"typeNotify" => "toApproveRequest",
 						"deviceType" => "1",
 					);
@@ -958,6 +960,75 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 			return $result;
 		}
     }
+	function getDNDetail($_data){
+		$db = $this->getAdapter();
+		try{
+			
+			$_data['userId'] 	 = empty($_data['userId'])?0:$_data['userId'];
+			$recordId 	 = empty($_data['recordId'])?0:$_data['recordId'];
+			
+			$sql="SELECT 
+					sd.*
+					,p.proCode
+					,p.proName
+					,p.image AS productImage
+					,p.measureLabel AS measureTitle
+				";
+			$sql.="	FROM 
+						`st_receive_stock_detail` AS sd 
+						JOIN st_receive_stock AS rst ON rst.id = sd.receiveId
+						LEFT JOIN `st_product` AS p  ON p.proId = sd.proId 
+			";
+			$sql.=" WHERE 1 AND sd.receiveId IN ($recordId) ";	
+			
+			$sql.=$this->getAccessPermission("rst.projectId",$_data);
+			$sql.=" ORDER BY sd.receiveId DESC, sd.id ASC ";
+			$rs = $db->fetchAll($sql);
+			
+			$result = array(
+						'status' =>true,
+						'value' =>$rs,
+					);
+			return $result;
+			
+		}catch(Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$result = array(
+				'status' =>false,
+				'value' =>$e->getMessage(),
+			);
+			return $result;
+		}
+	}
+	function submitVerifyDN($_data){
+    	$db = $this->getAdapter();
+    	try{
+			
+			$_data['userId'] 	 = empty($_data['userId'])?0:$_data['userId'];
+			$checkingStatus 	 = empty($_data['checkingStatus'])?1:$_data['checkingStatus'];
+			
+			$listFromPost 	 = empty($_data['listForVerifyDn'])?null:$_data['listForVerifyDn'];
+			$listForVerifyDn 	 = Zend_Json::decode($listFromPost);
+    		
+			if(!empty($listForVerifyDn)) foreach($listForVerifyDn AS $row){
+				$verifiedId = $row['id'];
+				$arr = array(
+					'verified' => 1,
+					'verifiedBy' => $_data['userId'],
+					'verifiedDate' => date('Y-m-d H:i:s')
+				);
+				$where = "id=" . $verifiedId;
+				$this->_name = "st_receive_stock";
+				$this->update($arr, $where);
+				
+			}
+			
+    		return true;
+    	}catch (Exception $e){
+    		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+    		return false;
+    	}
+    }
 	
 	public function getTransferNotify($_data){
 		$db = $this->getAdapter();
@@ -986,5 +1057,7 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 			return $result;
 		}
     }
+	
+	
 	
 }

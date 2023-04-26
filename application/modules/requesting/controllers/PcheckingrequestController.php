@@ -48,7 +48,7 @@ class Requesting_PcheckingrequestController extends Zend_Controller_Action {
 	
 		$dbGbSt = new Application_Model_DbTable_DbGlobalStock();
 		$notify = array(
-			"userAction" => 1,// push to Boss Approve
+			"userAction" => 4,// push to Boss Approve
 			"typeNotify" => "toApproveRequest",
 			"deviceType" => "1",
 		);
