@@ -58,7 +58,6 @@ class Invpayment_Model_DbTable_DbConcreteStatement extends Zend_Db_Table_Abstrac
 		$where .= $dbGb->getAccessPermission("st.projectId");
 
 		return $db->fetchAll($sql . $where . $order);
-
 	}
 
 	function getConcreteStatement($recordId)
@@ -179,3 +178,4 @@ class Invpayment_Model_DbTable_DbConcreteStatement extends Zend_Db_Table_Abstrac
     	}
     }
 }
+

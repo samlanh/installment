@@ -1,6 +1,7 @@
 <?php
 $this->tr = Application_Form_FrmLanguages::getCurrentlanguage();
 $tr = Application_Form_FrmLanguages::getCurrentlanguage();
+$db = new Po_Model_DbTable_DbPurchasing();
 $frm = $this->frm;
 ?>
 <style>
@@ -27,35 +28,35 @@ $frm = $this->frm;
 		</div>
 		<form action="" dojoType="dijit.form.Form" method="post" enctype="multipart/form-data">
 			<script type="dojo/method" event="onSubmit">
-				   if(this.validate()) {
+				if (this.validate()) {
 					branch_id = dijit.byId('branch_id').get('value');
-					if(branch_id=='' || branch_id<=0){
+					if (branch_id == '' || branch_id <= 0) {
 						infoMessageAlert('<?php echo $tr->translate('PLEASE_SELECT_BRANCH'); ?>');
 						dijit.byId('branch_id').focus();
 						return false;
 					}
 					requestId = dijit.byId('requestId').get('value');
-					if(requestId=='' || requestId<=0){
+					if (requestId == '' || requestId <= 0) {
 						infoMessageAlert('<?php echo $tr->translate('PLEASE_SELECT_REQUEST_NO'); ?>');
 						dijit.byId('requestId').focus();
 						return false;
 					}
 					supplierId = dijit.byId('supplierId').get('value');
-					if(supplierId=='' || supplierId<=0){
+					if (supplierId == '' || supplierId <= 0) {
 						infoMessageAlert('<?php echo $tr->translate('PLEASE_SELECT_SUPPLIER'); ?>');
 						dijit.byId('supplierId').focus();
 						return false;
 					}
 					var rowId = $('#identity').val();
-					if(rowId==''){ 
+					if (rowId == '') {
 						infoMessageAlert("<?php echo $tr->translate("PLEASE_ADD_RECORD"); ?>");
 						return false;
 					}
 					loadingBlock();
 					return true;
-				   }else {
+				} else {
 					return false;
-				   }
+				}
 			</script>
 			<div class="card-box">
 				<div class="col-md-6 col-sm-6 col-xs-12">
@@ -136,10 +137,7 @@ $frm = $this->frm;
 											<?php echo $frm->getElement("supplierId"); ?>
 										</div>
 										<div class="col-md-3 col-sm-3 col-xs-12">
-											<input type="button" class="button-class button-primary"
-												iconClass="glyphicon glyphicon-refresh" dojoType="dijit.form.Button"
-												onclick="getRefreshData();"
-												label="<?php echo $tr->translate("GET_DATA"); ?>" />
+											<input type="button" class="button-class button-primary" iconClass="glyphicon glyphicon-refresh" dojoType="dijit.form.Button" onclick="getRefreshData();" label="<?php echo $tr->translate("GET_DATA"); ?>" />
 										</div>
 									</div>
 									<div class="form-group">
@@ -160,15 +158,13 @@ $frm = $this->frm;
 				<div class="col-md-12 col-sm-12 col-xs-12">
 					<div id="request-info" class="information-style"></div>
 					<div class="form-group filterBoxItems">
-						<label style=" margin: 0; line-height: 30px; "
-							class="control-label bold col-md-2 col-sm-2 col-xs-12">
+						<label style=" margin: 0; line-height: 30px; " class="control-label bold col-md-2 col-sm-2 col-xs-12">
 							<?php echo $tr->translate("CATEGORY"); ?>
 						</label>
 						<div class="col-md-3 dark col-sm-3 col-xs-12">
 							<?php echo $frm->getElement("categoryId"); ?>
 						</div>
-						<label style=" margin: 0; line-height: 30px; text-align: center;"
-							class="control-label bold col-md-1 col-sm-1 col-xs-12">
+						<label style=" margin: 0; line-height: 30px; text-align: center;" class="control-label bold col-md-1 col-sm-1 col-xs-12">
 							<?php echo $tr->translate("PRODUCT"); ?>
 						</label>
 						<div class="col-md-3 col-sm-3 col-xs-12">
@@ -241,13 +237,8 @@ $frm = $this->frm;
 			<div class="clearfix"></div>
 			<div class="card-box mt-20">
 				<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
-					<input type="submit" class="button-class button-primary"
-						iconClass="glyphicon glyphicon-floppy-remove" value="save_close" id="save_close"
-						name="save_close" label="<?php echo $tr->translate("SAVE_CLOSE"); ?>"
-						dojoType="dijit.form.Button" />
-					<input type="submit" class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-disk"
-						value="save_close" id="save_new" name="save_new"
-						label="<?php echo $tr->translate("SAVENEW"); ?>" dojoType="dijit.form.Button" />
+					<input type="submit" class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-remove" value="save_close" id="save_close" name="save_close" label="<?php echo $tr->translate("SAVE_CLOSE"); ?>" dojoType="dijit.form.Button" />
+					<input type="submit" class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-disk" value="save_close" id="save_new" name="save_new" label="<?php echo $tr->translate("SAVENEW"); ?>" dojoType="dijit.form.Button" />
 				</div>
 			</div>
 		</form>
@@ -267,8 +258,8 @@ $frm = $this->frm;
 
 	var productStore = getDataStorefromJSON('id', 'name', null);
 	var requestStore = getDataStorefromJSON('id', 'name', null);
-	require(["dojo/ready"], function (ready) {
-		ready(function () {
+	require(["dojo/ready"], function(ready) {
+		ready(function() {
 			<?php if (!empty($this->reqResult['projectId'])) { ?>
 				dijit.byId('branch_id').set('value', currentProjectId);
 			<?php } ?>
@@ -285,7 +276,7 @@ $frm = $this->frm;
 			id: "requestId",
 			searchAttr: "name",
 			class: 'fullside',
-			onChange: function () {
+			onChange: function() {
 				getAllProduct();
 				getRequestInfo();
 			}
@@ -301,7 +292,7 @@ $frm = $this->frm;
 			id: "productId",
 			searchAttr: "name",
 			class: 'fullside',
-			onChange: function () {
+			onChange: function() {
 
 				addRowProductPO();
 			}
@@ -328,6 +319,7 @@ $frm = $this->frm;
 		//getPurchaseNoByBranch();
 	}
 	var urlGetAllApprovedRequest = '<?php echo $this->url(array('module' => 'requesting', 'controller' => 'request', 'action' => 'getallapprovedrequest')); ?>';
+
 	function getAllApprovedRequest() {
 		dijit.byId('requestId').reset();
 		requestStore = getDataStorefromJSON('id', 'name', <?php print_r(Zend_Json::encode(array())); ?>);
@@ -343,18 +335,18 @@ $frm = $this->frm;
 				'branch_id': branch_id
 			},
 			handleAs: "json",
-			load: function (data) {
+			load: function(data) {
 				requestStore = getDataStorefromJSON('id', 'name', data);
 				dijit.byId('requestId').set('store', requestStore);
 				<?php if (!empty($this->reqResult['projectId'])) { ?>
 					dijit.byId('requestId').set('value', currentRequestId);
 				<?php } ?>
 			},
-			error: function (err) {
-			}
+			error: function(err) {}
 		});
 	}
 	var urlGetAllProduct = '<?php echo $this->url(array('module' => 'requesting', 'controller' => 'request', 'action' => 'getallproduct')); ?>';
+
 	function getAllProduct() {
 		var no = 0;
 		branch_id = dijit.byId('branch_id').get('value');
@@ -373,13 +365,16 @@ $frm = $this->frm;
 		}
 
 		var urlGetAllProduct = '<?php echo $this->url(array('module' => 'requesting', 'controller' => 'request', 'action' => 'getallproduct')); ?>';
-		objectContentFilter = { 
-				//'branch_id': branch_id,
-				 'categoryId': categoryId, 'requestId': requestId };
+		objectContentFilter = {
+			//'branch_id': branch_id,
+			'categoryId': categoryId,
+			'requestId': requestId
+		};
 		getAllProductStoreFunction(urlGetAllProduct, objectContentFilter);
 
 	}
 	var urlGetRequestNo = '<?php echo $this->url(array('module' => 'po', 'controller' => 'index', 'action' => 'getpurchaseno')); ?>';
+
 	function getPurchaseNoByBranch() {
 
 		branch_id = dijit.byId('branch_id').get('value');
@@ -410,19 +405,21 @@ $frm = $this->frm;
 		dojo.xhrPost({
 			url: urlGetRequestNo,
 			content: {
-				'branch_id': branch_id, 'dateRequest': dateRequest
+				'branch_id': branch_id,
+				'dateRequest': dateRequest
 			},
 			handleAs: "json",
-			load: function (data) {
+			load: function(data) {
 				dijit.byId('purchaseNo').set('value', data);
 			},
-			error: function (err) {
-			}
+			error: function(err) {}
 		});
 	}
-	var col = 0; var no = 0;
+	var col = 0;
+	var no = 0;
 	var title = 0;
 	var urlGetProductInfo = '<?php echo $this->url(array('module' => 'requesting', 'controller' => 'request', 'action' => 'productinfo')); ?>';
+
 	function addRowProductPO() {
 
 		template = '';
@@ -461,28 +458,30 @@ $frm = $this->frm;
 				}
 			}
 		}
-		col++; no++;
-
-
+		col++;
+		no++;
 		dojo.xhrPost({
 			url: urlGetProductInfo,
 			content: {
-				'branch_id': branch_id, 
+				'branch_id': branch_id,
 				'productId': productId,
-				'requestId': requestId
+				'requestId': requestId,
+				'IsNotLocation': 1,
+
 			},
 			handleAs: "json",
-			load: function (data) {
+			load: function(data) {
 
-				var lastUnitPrice = data.latestUnitPrice;
-				var subTotalRow = data.qtyApprovedAfter * lastUnitPrice;
+				// var lastUnitPrice = data.latestUnitPrice;
+				// var subTotalRow = data.qtyApprovedAfter * lastUnitPrice;
+				var subTotalRow = 0;
 				template += '<td rowspan="2" class="numberRecord infoCol" align="center"><span title="<?php echo $tr->translate("REMOVE_RECORD"); ?>" class="removeRow" onclick="deleteRecord(' + col + ');"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></span></td>';
 				template += '<td  class="numberRecord infoCol" data-label="<?php echo $tr->translate("N_O"); ?>" align="center" >' + no + '</td>';
-				template += '<td  data-label="<?php echo $tr->translate("PRODUCT_NAME"); ?>" class="productName infoCol" >' + data.proCode + '<br />' + data.proName + '<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId' + col + '" name="proId' + col + '" value="' + data.id + '" type="text"  ></td>';
+				template += '<td  data-label="<?php echo $tr->translate("PRODUCT_NAME"); ?>" class="productName infoCol" >' + productLabel + '<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId' + col + '" name="proId' + col + '" value="' + productId + '" type="text"  ></td>';
 				template += '<td  data-label="<?php echo $tr->translate("STOCK_REMAIN"); ?>" class="currentQty infoCol"  >' + data.currentQty + ' (' + data.measureTitle + ')</td>';
 				template += '<td  data-label="<?php echo $tr->translate("QTY_APPROVED"); ?>" class="currentQty infoCol"  >' + data.qtyApproved + '<small><?php echo $tr->translate("QTY_REMAIN"); ?> : ' + data.qtyApprovedAfter + '</small><input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="qtyApprovedAfter' + col + '" name="qtyApprovedAfter' + col + '" value="' + data.qtyApprovedAfter + '" type="text"  ></td>';
 				template += '<td  data-label="<?php echo $tr->translate("QTY"); ?>" ><input required dojoType="dijit.form.NumberTextBox" class="fullside" data-dojo-props="constraints:{min:0.01,max:' + data.qtyApprovedAfter + '},rangeMessage:' + "'<?php echo $tr->translate("MINIMUM_VALUE_IS_ZEROONE_AND_MAX_VALUE_IS"); ?> " + data.qtyApprovedAfter + "'" + '"  onKeyup="checkingQtyPO(' + col + '); calculateTotal(' + col + ');" id="qty' + col + '" name="qty' + col + '" placeholder="' + '<?php echo $tr->translate("QTY"); ?>" value="' + data.qtyApprovedAfter + '" type="text"  ></td>';
-				template += '<td data-label="<?php echo $tr->translate("UNIT_PRICE"); ?>"><input required dojoType="dijit.form.NumberTextBox" class="fullside" data-dojo-props="constraints:{min:0.01},rangeMessage:' + "'<?php echo $tr->translate("MINIMUM_VALUE_IS_ZEROONE"); ?>'" + '"  onKeyup="calculateTotal(' + col + ');" id="unitPrice' + col + '" name="unitPrice' + col + '" placeholder="' + '<?php echo $tr->translate("UNIT_PRICE"); ?> "  type="text"  ></td>';
+				template += '<td data-label="<?php echo $tr->translate("UNIT_PRICE"); ?>"><input required dojoType="dijit.form.NumberTextBox" class="fullside" data-dojo-props="constraints:{min:0.01},rangeMessage:' + "'<?php echo $tr->translate("MINIMUM_VALUE_IS_ZEROONE"); ?>'" + '"  onKeyup="calculateTotal(' + col + ');" id="unitPrice' + col + '" name="unitPrice' + col + '" placeholder="' + '<?php echo $tr->translate("UNIT_PRICE"); ?> " value="" type="text"  ></td>';
 
 
 				template += '<td data-label="<?php echo $tr->translate("DISCOUNT_PERCENT"); ?>">';
@@ -509,7 +508,9 @@ $frm = $this->frm;
 				if ($("#identity").val() != "") {
 					var identity = $("#identity").val();
 					$("#identity").val(identity + ',' + col);
-				} else { $("#identity").val(col); }
+				} else {
+					$("#identity").val(col);
+				}
 				dojo.html.set(dojo.byId("row" + col), template, {
 					parseContent: true,
 				});
@@ -521,10 +522,10 @@ $frm = $this->frm;
 				dijit.byId('productId').reset();
 				netTotal();
 			},
-			error: function (err) {
-			}
+			error: function(err) {}
 		});
 	}
+
 	function checkingQtyPO(index) {
 		qtyApprovedAfter = dijit.byId('qtyApprovedAfter' + index).get('value');
 		qty = dijit.byId('qty' + index).get('value');
@@ -533,6 +534,7 @@ $frm = $this->frm;
 			infoMessageAlert("<?php echo $tr->translate("MAXIMUM_QTY_OF_THIS_ITEMS_IS_ONLY") ?>" + " " + qtyApprovedAfter);
 		}
 	}
+
 	function calculateTotal(index) {
 		unitPrice = dijit.byId('unitPrice' + index).get('value');
 		unitPrice = isNaN(unitPrice) ? 0 : unitPrice;
@@ -571,6 +573,7 @@ $frm = $this->frm;
 		dijit.byId('subTotal' + index).set('value', subtotal);
 		netTotal();
 	}
+
 	function netTotal() {
 		var netTotal = 0;
 		var rowId = $('#identity').val();
@@ -586,6 +589,7 @@ $frm = $this->frm;
 		}
 		dijit.byId('total').attr('value', netTotal.toFixed(3));
 	}
+
 	function deleteRecord(index) {
 		var identity = $('#identity').val();
 		var arrays = identity.split(',');
@@ -601,6 +605,7 @@ $frm = $this->frm;
 
 
 	var urlGetRequestInfo = '<?php echo $this->url(array('module' => 'requesting', 'controller' => 'request', 'action' => 'get-requestinfohtml')); ?>';
+
 	function getRequestInfo() {
 
 		dojo.query("#table_row").append('');
@@ -617,15 +622,14 @@ $frm = $this->frm;
 				'requestId': requestId
 			},
 			handleAs: "json",
-			load: function (data) {
+			load: function(data) {
 				if (data != '') {
 					dijit.byId('requestDate').set('value', data.rowResult.date);
 					dojo.byId("request-info").innerHTML = data.htmlBlog;
 				}
 				getPurchaseNoByBranch();
 			},
-			error: function (err) {
-			}
+			error: function(err) {}
 		});
 	}
 
@@ -639,19 +643,19 @@ $frm = $this->frm;
 
 
 	var urlGetAllSuppilyer = '<?php echo $this->url(array('module' => 'po', 'controller' => 'supplier', 'action' => 'getallsupplier')); ?>';
+
 	function getRefreshData() {
 
 		dojo.xhrPost({
 			url: urlGetAllSuppilyer,
 			handleAs: "json",
-			load: function (data) {
+			load: function(data) {
 				supplierStore = getDataStorefromJSON('id', 'name', data);
 				dijit.byId('supplierId').set('store', supplierStore);
 
 
 			},
-			error: function (err) {
-			}
+			error: function(err) {}
 		});
 
 	}

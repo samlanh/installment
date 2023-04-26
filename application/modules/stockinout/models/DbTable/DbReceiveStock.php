@@ -207,12 +207,12 @@ class Stockinout_Model_DbTable_DbReceiveStock extends Zend_Db_Table_Abstract
 						'branch_id' => $data['branch_id'],
 						'productId' => $data['productId' . $i],
 						'EntyQty' => $data['qtyReceive' . $i],
-						'EntyPrice' => $data['price' . $i]
+						'EntyPrice' => $data['price'.$i]
 					);
 
 					$dbs->updateStockbyBranchAndProductId($param); //Update Stock qty and new costing
 
-					$dbs->addProductHistoryQty($data['branch_id'], $data['productId' . $i], 2, $data['qtyReceive' . $i], $id); //movement'
+					$dbs->addProductHistoryQty($data['branch_id'], $data['productId'.$i], 2, $data['qtyReceive' . $i], $id); //movement'
 
 					$param = array(
 						'budgetExpenseId' => $budgetExpenseId,

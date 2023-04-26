@@ -97,7 +97,6 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		}
 		$row = $db->fetchAll($sql);
 		return $row;
-
 	}
 
 	function getProductInfoByLocation($_data = null)
@@ -144,9 +143,13 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 					`st_product` AS p  ";
 
 		if (!empty($projectId)) {
-			$sql .= " JOIN st_product_location AS l ON p.proId=l.proId AND l.projectId=" . $projectId;
-			$sql .= " WHERE p.status=1 ";
+			if (!empty($_data['IsNotLocation'])) {
+				$sql .= " Left JOIN st_product_location AS l ON p.proId=l.proId AND l.projectId=" . $projectId;
+			} else {
+				$sql .= " JOIN st_product_location AS l ON p.proId=l.proId AND l.projectId=" . $projectId;
+			}
 
+			$sql .= " WHERE p.status=1 ";
 		} else {
 			$sql .= " WHERE p.status=1 ";
 		}
@@ -159,7 +162,6 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		$sql .= " ORDER BY p.proId DESC LIMIT	1 ";
 
 		return $db->fetchRow($sql);
-
 	}
 
 	function generateRequestNo($_data = null)
@@ -440,7 +442,6 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		$sql .= $dbGb->getAccessPermission("rq.projectId");
 		$row = $db->fetchAll($sql);
 		return $row;
-
 	}
 
 	function getAllSupplier($_data = null)
@@ -460,7 +461,6 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 
 		$row = $db->fetchAll($sql);
 		return $row;
-
 	}
 
 	function getAllCateIncome($_data = null)
@@ -532,7 +532,6 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		$this->_name = 'st_product_story';
 		$where = " transId = $tranId AND tranType =" . $tranType;
 		$this->delete($where);
-
 	}
 	function getProductLocationbyProId($_data = null)
 	{
@@ -616,7 +615,6 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 			return $optionList;
 		}
 		return $cate_tree_array;
-
 	}
 	public function getAllBudgetItem($parent = 0, $spacing = '', $cate_tree_array = '', $option = null, $data = null)
 	{
@@ -662,7 +660,6 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 			}
 		}
 		return $cate_tree_array;
-
 	}
 
 	function purchasingTypeKey($data = array())
@@ -775,7 +772,6 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		$sql .= $dbGb->getAccessPermission("po.projectId");
 		$row = $db->fetchAll($sql);
 		return $row;
-
 	}
 
 
@@ -883,7 +879,6 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 			}
 		}
 		return $cate_tree_array;
-
 	}
 
 	function getWorkTypeOpt($option = null)
@@ -909,7 +904,6 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 			}
 			return $options;
 		}
-
 	}
 	function getProductPOInfo($data)
 	{
@@ -997,6 +991,32 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 				$where = 'projectId=' . $data['branch_id'] . " AND proId=" . $data['productId'];
 				$this->update($arr, $where);
 			}
+		}else{//for product not in project
+			$param = array(
+					'productId'=>$data['projectId']
+					);
+			$row = $this->getProductInfoByLocation($param);
+			if(!empty($row)){
+				if ($row['isCountStock'] == 1 and $row['isService'] == 0) {
+					$arr = array(
+							'projectId' => $data['branch_id'],
+							'qty' => $data['EntyQty'],
+							'proId' => $data['productId'],
+							'costing' => empty($data['EntyPrice']) ? 0 : $data['EntyPrice'],
+					);
+					$this->_name = 'st_product_location';
+					$this->insert($arr);
+			}
+			
+			$arr = array(
+					'projectId' => $data['branch_id'],
+					'productId' => $data['productId'],
+					'costing' => $currentPrice,
+					'date' => date('Y-m-d')
+			);
+			
+			$this->_name = 'st_product_costing';
+			$this->insert($arr);
 		}
 	}
 	function updateProductLocation($data)
@@ -1067,7 +1087,6 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		$sql .= $dbGb->getAccessPermission("pt.projectId");
 		$row = $db->fetchAll($sql);
 		return $row;
-
 	}
 
 	function getAllIssueChequeRecord($_data = null)
@@ -1096,12 +1115,11 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		}
 		$row = $db->fetchAll($sql);
 		return $row;
-
 	}
 	function updatePoStatusisClose($data)
 	{
-		//if all po detail of product close update po to close also
-		/*$data= array(* purchaseId,* isClosed,* fetchRow=1)
+			//if all po detail of product close update po to close also
+			/*$data= array(* purchaseId,* isClosed,* fetchRow=1)
 		 */;
 		$poResult = $this->getProductPOInfo($data);
 		if ($poResult['isClosed'] == 1) {
@@ -1215,65 +1233,66 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		$sql .= $dbGb->getAccessPermission("trs.toProjectId");
 		$row = $db->fetchAll($sql);
 		return $row;
-
 	}
-	
-	
+
+
 	// Below For Push Notification Only
-	function getMobileToken($_data){
-		
-		$_data['branchId'] = empty($_data['branchId'])?0:$_data['branchId'];
-		$_data['userAction'] = empty($_data['userAction'])?0:$_data['userAction'];
-		
-		
+	function getMobileToken($_data)
+	{
+
+		$_data['branchId'] = empty($_data['branchId']) ? 0 : $_data['branchId'];
+		$_data['userAction'] = empty($_data['userAction']) ? 0 : $_data['userAction'];
+
+
 		$userList = $this->getUserList($_data);
 		$userList = empty($userList) ? "0" : $userList;
-		
+
 		$db = $this->getAdapter();
-		$sql="SELECT mb.`token`
+		$sql = "SELECT mb.`token`
 				FROM `mobile_mobile_token` AS mb
 				WHERE mb.userId != 0 ";
-		
-		$sql.=" AND mb.userAction=" . $_data['userAction'];
-		$sql.=" AND mb.userId IN (".$userList.") ";
+
+		$sql .= " AND mb.userAction=" . $_data['userAction'];
+		$sql .= " AND mb.userId IN (" . $userList . ") ";
 		return  $db->fetchCol($sql);
 	}
-	
-	function getUserList($_data){
-		$_data['userAction'] = empty($_data['userAction'])?0:$_data['userAction'];
-		$recordBranchId = empty($_data['branchId'])?0:$_data['branchId'];
+
+	function getUserList($_data)
+	{
+		$_data['userAction'] = empty($_data['userAction']) ? 0 : $_data['userAction'];
+		$recordBranchId = empty($_data['branchId']) ? 0 : $_data['branchId'];
 		$db = $this->getAdapter();
-		$sql=" 
+		$sql = " 
 			SELECT 
 				u.id,u.branch_list 
 			FROM `rms_users` AS u 
 			WHERE u.active =1 
-				AND u.userAction= ".$_data['userAction']."
+				AND u.userAction= " . $_data['userAction'] . "
 		";
 		$rowUser = $db->fetchAll($sql);
-		
+
 		$userList = "";
-		if(!empty($rowUser)){
-			foreach($rowUser AS $rs){
+		if (!empty($rowUser)) {
+			foreach ($rowUser as $rs) {
 				$branchList = empty($rs['branch_list']) ? "" : $rs['branch_list'];
 				$exp = explode(",", $branchList);
-				if(COUNT($exp)>1){
-					foreach ($exp as $branchId){
-						if($branchId == $recordBranchId){
-							if($userList==""){
+				if (COUNT($exp) > 1) {
+					foreach ($exp as $branchId) {
+						if ($branchId == $recordBranchId) {
+							if ($userList == "") {
 								$userList = $rs['id'];
-							}else{
-								$userList = $userList.",".$rs['id'];
+							} else {
+								$userList = $userList . "," . $rs['id'];
 							}
 							break;
-						}					
+						}
 					}
-				}else{
-					if($branchList == $recordBranchId){
-						if($userList==""){
+				} else {
+					if ($branchList == $recordBranchId) {
+						if ($userList == "") {
 							$userList = $rs['id'];
-						}else{
-							$userList = $userList.",".$rs['id'];
+						} else {
+							$userList = $userList . "," . $rs['id'];
 						}
 						break;
 					}
@@ -1283,10 +1302,11 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		return $userList;
 	}
 
-	function getRequestPOInfoId($id=null){
+	function getRequestPOInfoId($id = null)
+	{
 		$db = $this->getAdapter();
 		$dbGb = new Application_Model_DbTable_DbGlobal();
-		$sql=" 
+		$sql = " 
 		SELECT 
 			'requestingRecord' AS recordType
 				
@@ -1317,45 +1337,55 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 				'' AS itemsRequest
 				
 		FROM st_request_po AS rq WHERE 1 ";
-		if (!empty($id)){
-			$sql.=" AND id = $id ";
+		if (!empty($id)) {
+			$sql .= " AND id = $id ";
 		}
-		$sql.=" LIMIT 1 ";
+		$sql .= " LIMIT 1 ";
 		return $db->fetchRow($sql);
 	}
-	
-	function pushNotificationForAndroid($_data){
-		$_data['branchId'] = empty($_data['branchId'])?0:$_data['branchId'];
-		$_data['userAction'] = empty($_data['userAction'])?0:$_data['userAction'];
-		$_data['deviceType'] = empty($_data['deviceType'])?1:$_data['deviceType'];
-		
-		$notificationId = empty($_data['notificationId'])?0:$_data['notificationId'];
+
+	function pushNotificationForAndroid($_data)
+	{
+		$_data['branchId'] = empty($_data['branchId']) ? 0 : $_data['branchId'];
+		$_data['userAction'] = empty($_data['userAction']) ? 0 : $_data['userAction'];
+		$_data['deviceType'] = empty($_data['deviceType']) ? 1 : $_data['deviceType'];
+
+		$notificationId = empty($_data['notificationId']) ? 0 : $_data['notificationId'];
 		$notificationTitle = "Notification Title";
 		$notificationSubTitle = "Notification Sub Title";
 		$notificationDescription = "";
-		$typeNotify = empty($_data['typeNotify'])?"toCheckingRequest":$_data['typeNotify'];
-		
+		$typeNotify = empty($_data['typeNotify']) ? "toCheckingRequest" : $_data['typeNotify'];
+
 		$recordDetail = array();
-		if($typeNotify=="toCheckingRequest" || $typeNotify=="toPoVerifyRequest" || $typeNotify=="toApproveRequest" || $typeNotify=="toPoPurchase" ){
+		if ($typeNotify == "toCheckingRequest" || $typeNotify == "toPoVerifyRequest" || $typeNotify == "toApproveRequest" || $typeNotify == "toPoPurchase") {
 			$recordInfo = $this->getRequestPOInfoId($notificationId);
-			if(!empty($recordInfo)){
-				$notificationTitle = "សំណើបញ្ជាទិញពី : គម្រោង ".str_replace('គម្រោង', '', $recordInfo['projectName']);
-				$notificationSubTitle = "សំណើលេខ ".$recordInfo['requestNo']." ស្នើរដោយ : ".$recordInfo['userName'];
-				$notificationDescription = "សំណើលេខ ".$recordInfo['requestNo']." ស្នើរដោយ : ".$recordInfo['userName'];
-				if(!empty($recordInfo['purpose'])){
-					$notificationDescription = $notificationDescription." គោលបំណងស្នើ : ".$recordInfo['purpose'];
+			if (!empty($recordInfo)) {
+				$notificationTitle = "សំណើបញ្ជាទិញពី : គម្រោង " . str_replace('គម្រោង', '', $recordInfo['projectName']);
+				$notificationSubTitle = "សំណើលេខ " . $recordInfo['requestNo'] . " ស្នើរដោយ : " . $recordInfo['userName'];
+				$notificationDescription = "សំណើលេខ " . $recordInfo['requestNo'] . " ស្នើរដោយ : " . $recordInfo['userName'];
+				if (!empty($recordInfo['purpose'])) {
+					$notificationDescription = $notificationDescription . " គោលបំណងស្នើ : " . $recordInfo['purpose'];
 				}
-				
-				if($typeNotify=="toPoPurchase"){
-					$notificationTitle = "សំណើបញ្ជាទិញបានអនុម័តសម្រាប់ :  គម្រោង".str_replace('គម្រោង', '', $recordInfo['projectName']);
+
+				if ($typeNotify == "toPoVerifyRequest") {
+					if (!empty($recordInfo['checkingByName'])) {
+						$notificationDescription = $notificationDescription . " បានត្រួតពិនិត្យដោយ : " . $recordInfo['checkingByName'];
+					}
+				}
+				if ($typeNotify == "toApproveRequest") {
+					if (!empty($recordInfo['pCheckingByName'])) {
+						$notificationDescription = $notificationDescription . " បានផ្ទៀងផ្ទាត់ដោយ : " . $recordInfo['pCheckingByName'];
+					}
+				}
+
+				if ($typeNotify == "toPoPurchase") {
+					$notificationTitle = "សំណើបញ្ជាទិញបានអនុម័តសម្រាប់ :  គម្រោង" . str_replace('គម្រោង', '', $recordInfo['projectName']);
 				}
 				$recordDetail = array($recordInfo);
 			}
-			
-			 
 		}
-		
-		
+
+
 		$dataNotify = array(
 			"notificationId" 	=> $notificationId,
 			"title" 			=> $notificationTitle,
@@ -1365,41 +1395,41 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 			"recordDetail" 		=> $recordDetail,
 		);
 		$headings = array(
-			"en" =>$notificationTitle,
+			"en" => $notificationTitle,
 		);
 		$content = array(
-        		"en" =>$notificationSubTitle,
-        	);
+			"en" => $notificationSubTitle,
+		);
 		$bigPicture = "http://8.214.12.212/bppt.22.4.09/public/images/icon.png";
-		
+
 		$androidToken = $this->getMobileToken($_data);
 		$fields = array(
-        				'app_id' => APP_ID,
-        				'include_player_ids' => $androidToken,
-        				'data' => $dataNotify,
-						'headings' => $headings,
-        				'contents' => $content,
-						"external_id"=> null,
-						
-        		);
-		
-			$fields = json_encode($fields);
-			
-			
-			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_URL, "https://onesignal.com/api/v1/notifications");
-			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json; charset=utf-8',
-					'Authorization: Basic OGY3MGQ2M2EtMmQ3OS00MjZhLTk2MjYtYjYzMzExYTg5YWRm'));
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-			curl_setopt($ch, CURLOPT_HEADER, FALSE);
-			curl_setopt($ch, CURLOPT_POST, TRUE);
-			curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
-			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-			
-			$response = curl_exec($ch);
+			'app_id' => APP_ID,
+			'include_player_ids' => $androidToken,
+			'data' => $dataNotify,
+			'headings' => $headings,
+			'contents' => $content,
+			"external_id" => null,
 
-			curl_close($ch);
-			
+		);
+
+		$fields = json_encode($fields);
+
+
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, "https://onesignal.com/api/v1/notifications");
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+			'Content-Type: application/json; charset=utf-8',
+			'Authorization: Basic OGY3MGQ2M2EtMmQ3OS00MjZhLTk2MjYtYjYzMzExYTg5YWRm'
+		));
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+		curl_setopt($ch, CURLOPT_HEADER, FALSE);
+		curl_setopt($ch, CURLOPT_POST, TRUE);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+
+		$response = curl_exec($ch);
+
+		curl_close($ch);
 	}
 }
-?>
