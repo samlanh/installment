@@ -122,23 +122,25 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 		
 		$dbGb = new Application_Model_DbTable_DbGlobal();
 		$sql = "SELECT
-		u.`id`,
-		u.`last_name` ,
-		u.`first_name` AS name,
-		u.`user_name` ,
-		u.`user_type`,
-		(SELECT user_type FROM `rms_acl_user_type` WHERE user_type_id=u.user_type LIMIT 1) aS users_type,
-		(SELECT project_name FROM `ln_project` WHERE br_id=u.branch_id) as project_name
-		,u.`active` as status
-		,u.`active`
+					u.`id`,
+					u.`last_name` ,
+					u.`first_name` AS name,
+					u.`user_name` ,
+					u.`user_type`,
+					(SELECT user_type FROM `rms_acl_user_type` WHERE user_type_id=u.user_type LIMIT 1) aS users_type,
+					(SELECT project_name FROM `ln_project` WHERE br_id=u.branch_id) as project_name
+					,u.`active` as status
+					,u.`active`
 		 ";
-		
 		$sql.=$dbGb->caseStatusShowImage("u.`active`");
+		
+		$session_user = new Zend_Session_Namespace(SYSTEM_SES);
+		$systemType = $session_user->systemType;
+		$systemAccess = $session_user->systemType;
 		$sql.="
 			FROM `rms_users` AS u
-			WHERE 1	
+			WHERE $systemType IN (systemAccess)
 		";
-		
 		$orderby = " ORDER BY u.user_type DESC";
 		if(empty($search)){
 			return $sql.$orderby;
