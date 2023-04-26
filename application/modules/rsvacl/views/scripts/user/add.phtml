@@ -5,180 +5,219 @@ echo $this->headTitle();
 
 $FOR_MULTISYSTEM = FOR_MULTISYSTEM;
 ?>
-<script src="<?php echo $this->baseUrl();?>/js/help.js"  type="text/javascript"></script>
-<script type="text/javascript">	
+<script src="<?php echo $this->baseUrl(); ?>/js/help.js" type="text/javascript"></script>
+<script type="text/javascript">
 	dojo.require("dijit.form.ValidationTextBox");
-	dojo.require('dijit.form.Form');	
+	dojo.require('dijit.form.Form');
 	dojo.require('dijit.form.Button');
 	dojo.require('dijit.form.FilteringSelect');
+	dojo.require("dijit.form.Textarea");
+	dojo.require("dijit.form.DateTextBox");
 </script>
 <style>
-ul.optListRow {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    padding-left: 20px;
-}
-.noDisplay{
-	display:none;
-}
-.image-box {
-    text-align: center;
-}
-.image-box img {
-    width: 120px;
-    height: 130px;
-    border: solid 1px #eee;
-}
-.button_browse {
-    position: relative;
-    overflow: hidden;
-    text-align: center;
-    width: 100%;
-    height: 30px;
-    cursor: pointer;
-    background: #fbf9f9;
-    border: 1px solid #e8e8e8;
-}
-.button_browse span {
-    line-height: 33px;
-    font-weight: 600;
-    cursor: pointer;
-}
-input.btn_borwse_image {
-    position: absolute;
-    width: 100%;
-    height: 35px;
-    top: 0;
-    left: 0;
-    z-index: 2;
-    opacity: 0;
-    cursor: pointer;
-}
+	ul.optListRow {
+		list-style-type: none;
+		margin: 0;
+		padding: 0;
+		padding-left: 20px;
+	}
+
+	.noDisplay {
+		display: none;
+	}
+
+	.image-box {
+		text-align: center;
+	}
+
+	.image-box img {
+		width: 120px;
+		height: 130px;
+		border: solid 1px #eee;
+	}
+
+	.button_browse {
+		position: relative;
+		overflow: hidden;
+		text-align: center;
+		width: 100%;
+		height: 30px;
+		cursor: pointer;
+		background: #fbf9f9;
+		border: 1px solid #e8e8e8;
+	}
+
+	.button_browse span {
+		line-height: 33px;
+		font-weight: 600;
+		cursor: pointer;
+	}
+
+	input.btn_borwse_image {
+		position: absolute;
+		width: 100%;
+		height: 35px;
+		top: 0;
+		left: 0;
+		z-index: 2;
+		opacity: 0;
+		cursor: pointer;
+	}
 </style>
 <div class="card">
 	<div class="card-content collapse show">
-		<form action="<?php echo $this->url(array('module'=>'rsvacl','controller'=>'user','action'=>'add')); ?>" dojoType="dijit.form.Form" method="post" enctype="multipart/form-data">
-			<script type="dojo/method" event="onSubmit">				
-			if(this.validate()) {
-				is_duplicate = dijit.byId('is_duplicate').get('value');
-				if(is_duplicate==1){
-					dijit.byId('user_name').focus();
-					return false;
+		<form action="<?php echo $this->url(array('module' => 'rsvacl', 'controller' => 'user', 'action' => 'add')); ?>" dojoType="dijit.form.Form" method="post" enctype="multipart/form-data">
+			<script type="dojo/method" event="onSubmit">
+				if (this.validate()) {
+					is_duplicate = dijit.byId('is_duplicate').get('value');
+					if (is_duplicate == 1) {
+						dijit.byId('user_name').focus();
+						return false;
+					}
+					if (dojo.byId('password').value != dojo.byId('con_password').value) {
+						infoMessageAlert('សូម​ពិនិត្រ ពាក្យ​​សំងាត់​ទាំង​ 2 របស់​អ្នក មិន​ដូច​គ្នា​ទេ, សូម​បញ្ចូល ​ម្តង​ទៀត..');
+						dojo.byId('password').value = '';
+						dojo.byId('con_password').value = '';
+						dijit.byId('password').focus();
+						return false;
+					}
+					loadingBlock();
+					dijit.byId('save_new').set('disabled', true);
+					return true;
 				}
-				if(dojo.byId('password').value != dojo.byId('con_password').value ){
-					infoMessageAlert('សូម​ពិនិត្រ ពាក្យ​​សំងាត់​ទាំង​ 2 របស់​អ្នក មិន​ដូច​គ្នា​ទេ, សូម​បញ្ចូល ​ម្តង​ទៀត..');
-					dojo.byId('password').value = '';
-					dojo.byId('con_password').value = '';
-					dijit.byId('password').focus();
-					return false;
-				}	
-				loadingBlock();			
-				dijit.byId('save_new').set('disabled',true);
-				return true;
-			}
 
-			return false;
+				return false;
 			</script>
 			<div class="card-box">
-               	<div class="col-sm-12 border-botom">
-		    		<div class="col-sm-8 pd-0">
-		    			<h4 class="m-b-0"><i class="glyphicon glyphicon-user" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('CREATE_USER');?></h4>
-	    				<span id="message" style="color: red; display: block;"></span>
-	    			</div>
-	    			<div class="col-sm-4 text-right">
-	    			</div>
-	    		</div>
-	    	</div>
-	    	<div class="card-box">
-	    		<div class="col-md-6 col-sm-6 col-xs-12">
-	    			<div class="card-blogform">
-						<div class="card-header"> 
-							<div class="row"> 
-								<div class="col-md-12 col-sm-12 col-xs-12"> 
-									<div class="d-flex"> 
+				<div class="col-sm-12 border-botom">
+					<div class="col-sm-8 pd-0">
+						<h4 class="m-b-0"><i class="glyphicon glyphicon-user" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('CREATE_USER'); ?></h4>
+						<span id="message" style="color: red; display: block;"></span>
+					</div>
+					<div class="col-sm-4 text-right">
+					</div>
+				</div>
+			</div>
+			<div class="card-box">
+				<div class="col-md-6 col-sm-6 col-xs-12">
+					<div class="card-blogform">
+						<div class="card-header">
+							<div class="row">
+								<div class="col-md-12 col-sm-12 col-xs-12">
+									<div class="d-flex">
 										<div class="settings-main-icon ">
 											<i class="glyphicon glyphicon-user" aria-hidden="true"></i>
-										</div> 
-										<div class="col-md-10 col-sm-10 col-xs-12"> 
-											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('USER')?> </p>
-											
-										</div> 
-									</div> 
-									<div class="form-group">
-									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("LAST_NAME");?>  :
-									   </label>
-									   <div class="col-md-7 col-sm-7 col-xs-12">
-											<input type="text" required="true" name="last_name" id="last_name" placeholder="<?php echo $tr->translate("LAST_NAME");?>" dojoType="dijit.form.ValidationTextBox" missingMessage="អ្នក​ភ្លេច​បំពេញ​ នាម​ត្រកូល!" class='fullside'/>
-									   </div>
+										</div>
+										<div class="col-md-10 col-sm-10 col-xs-12">
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('USER') ?> </p>
+
+										</div>
 									</div>
-									
 									<div class="form-group">
-									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("FIRST_NAME");?>  :
-									   </label>
-									   <div class="col-md-7 col-sm-7 col-xs-12">
-											<input type="text" required="true" name="first_name" id="first_name" placeholder="<?php echo $tr->translate("FIRST_NAME");?>" dojoType="dijit.form.ValidationTextBox" missingMessage="អ្នក​ភ្លេច​បំពេញ​ នាមខ្លួន!" class='fullside'/>
-									   </div>
+										<label class="control-label col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("LAST_NAME"); ?> :
+										</label>
+										<div class="col-md-7 col-sm-7 col-xs-12">
+											<input type="text" required="true" name="last_name" id="last_name" placeholder="<?php echo $tr->translate("LAST_NAME"); ?>" dojoType="dijit.form.ValidationTextBox" missingMessage="អ្នក​ភ្លេច​បំពេញ​ នាម​ត្រកូល!" class='fullside' />
+										</div>
 									</div>
-							 
-									
-							
-									 <div class="form-group">
-									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("USER_NAME");?>  :
-									   </label>
-									   <div class="col-md-7 col-sm-7 col-xs-12">
-											<input type="text" onKeyup="checkTitle();" required="true" name="user_name" id="user_name" placeholder="<?php echo $tr->translate("USER_NAME");?>" 
-															dojoType="dijit.form.ValidationTextBox" missingMessage="អ្នក​ភ្លេច​បំពេញ​ ឈ្មោះ​អ្នក​ប្រើ​ប្រាស់!" class='fullside'/>
+
+									<div class="form-group">
+										<label class="control-label col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("FIRST_NAME"); ?> :
+										</label>
+										<div class="col-md-7 col-sm-7 col-xs-12">
+											<input type="text" required="true" name="first_name" id="first_name" placeholder="<?php echo $tr->translate("FIRST_NAME"); ?>" dojoType="dijit.form.ValidationTextBox" missingMessage="អ្នក​ភ្លេច​បំពេញ​ នាមខ្លួន!" class='fullside' />
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("NATIONALITY"); ?> :
+										</label>
+										<div class="col-md-7 col-sm-7 col-xs-12">
+											<input type="text" name="nationality" id="nationality" placeholder="<?php echo $tr->translate("NATIONALITY"); ?>" class='fullside' />
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="control-label col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("PERSONAL_DOC_NO"); ?> :
+										</label>
+										<div class="col-md-7 col-sm-7 col-xs-12">
+											<input type="text" name="personal_doc_no" id="personal_doc_no" placeholder="<?php echo $tr->translate("PERSONAL_DOC_NO"); ?>" dojoType="dijit.form.ValidationTextBox" class='fullside' />
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="control-label col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("USER_NAME"); ?> :
+										</label>
+										<div class="col-md-7 col-sm-7 col-xs-12">
+											<input type="text" onKeyup="checkTitle();" required="true" name="user_name" id="user_name" placeholder="<?php echo $tr->translate("USER_NAME"); ?>" dojoType="dijit.form.ValidationTextBox" missingMessage="អ្នក​ភ្លេច​បំពេញ​ ឈ្មោះ​អ្នក​ប្រើ​ប្រាស់!" class='fullside' />
 											<input type="hidden" name="is_duplicate" id="is_duplicate" dojoType="dijit.form.TextBox" />
-									   </div>
+										</div>
 									</div>
-									
+
 									<div class="form-group">
-									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PASSWORD");?>  :
-									   </label>
-									   <div class="col-md-7 col-sm-7 col-xs-12">
-											<input type="password" required="true" name="password" id="password" placeholder="<?php echo $tr->translate("PASSWORD");?>" 
-											regExp="\w{6,}" invalidMessage="ពាក្យ​សំងាត់យ៉ាង​តិច មាន 6​ តួអក្សរ"
-											dojoType="dijit.form.ValidationTextBox" missingMessage="អ្នក​ភ្លេច​បំពេញ​ ពាក្យ​​សំងាត់!" class='fullside'/>
-									   </div>
+										<label class="control-label col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("PASSWORD"); ?> :
+										</label>
+										<div class="col-md-7 col-sm-7 col-xs-12">
+											<input type="password" required="true" name="password" id="password" placeholder="<?php echo $tr->translate("PASSWORD"); ?>" regExp="\w{6,}" invalidMessage="ពាក្យ​សំងាត់យ៉ាង​តិច មាន 6​ តួអក្សរ" dojoType="dijit.form.ValidationTextBox" missingMessage="អ្នក​ភ្លេច​បំពេញ​ ពាក្យ​​សំងាត់!" class='fullside' />
+										</div>
 									</div>
-							
+
 									<div class="form-group">
-									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CONFIRM_PASSWORD");?>  :
-									   </label>
-									   <div class="col-md-7 col-sm-7 col-xs-12">
-										  <input type="password" required="true" name="con_password" id="con_password" placeholder="<?php echo $tr->translate("CONFIRM_PASSWORD");?>" 
-											regExp="\w{6,}" invalidMessage="ពាក្យ​សំងាត់យ៉ាង​តិច មាន 6​ តួអក្សរ"
-											dojoType="dijit.form.ValidationTextBox" missingMessage="អ្នក​ភ្លេច​បំពេញ​ បញ្ជាក់ពាក្យ​​សំងាត់!" class='fullside'/>
-									   </div>
+										<label class="control-label col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("CONFIRM_PASSWORD"); ?> :
+										</label>
+										<div class="col-md-7 col-sm-7 col-xs-12">
+											<input type="password" required="true" name="con_password" id="con_password" placeholder="<?php echo $tr->translate("CONFIRM_PASSWORD"); ?>" regExp="\w{6,}" invalidMessage="ពាក្យ​សំងាត់យ៉ាង​តិច មាន 6​ តួអក្សរ" dojoType="dijit.form.ValidationTextBox" missingMessage="អ្នក​ភ្លេច​បំពេញ​ បញ្ជាក់ពាក្យ​​សំងាត់!" class='fullside' />
+										</div>
 									</div>
-							 
+
 									<div class="form-group">
-									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("USER_TYPE");?>  :
-									   </label>
-									   <div class="col-md-7 col-sm-7 col-xs-12">
+										<label class="control-label col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("USER_TYPE"); ?> :
+										</label>
+										<div class="col-md-7 col-sm-7 col-xs-12">
 											<input id="user_type" />
-									   </div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("USER_ACTION"); ?> :
+										</label>
+										<div class="col-md-7 col-sm-7 col-xs-12">
+											<select class='fullside' id="userAction" name="userAction" required="true" missingMessage="Select User Action!" placeholder="<?php echo $tr->translate("SELECT_USER_ACION"); ?>" dojoType="dijit.form.FilteringSelect">
+												<option value=""><?php echo $tr->translate("SELECT_USER_ACION"); ?></option>
+												<option value="1"><?php echo $tr->translate("WEREHOUSE_STAFF"); ?></option>
+												<option value="2"><?php echo $tr->translate("SITE_DIRECTOR"); ?></option>
+												<option value="3"><?php echo $tr->translate("ORDER"); ?></option>
+												<option value="4"><?php echo $tr->translate("BOSS"); ?></option>
+												<option value="5"><?php echo $tr->translate("ACCOUNT_HEAD_OFFICE"); ?></option>
+											</select>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="control-label col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("CURRENT_ADDRESS"); ?> :
+										</label>
+										<div class="col-md-7 col-sm-7 col-xs-12">
+											<textarea dojoType="dijit.form.Textarea" class="fullside" style="min-height:60px; font-size:13px;" id="current_address" name="current_address"></textarea>
+										</div>
 									</div>
 									<div class="form-group ">
-									   <label class="control-label col-md-12 col-sm-12 col-xs-12 border-bottom" >										  
-									  		 &nbsp; 
-									   </label>
-									   
+										<label class="control-label col-md-12 col-sm-12 col-xs-12 border-bottom">
+											&nbsp;
+										</label>
+
 									</div>
-									
-						  
+
+
 									<div class="form-group noDisplay">
-									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BRANCH_NAME");?>  :
-									   </label>
-									   <div class="col-md-7 col-sm-7 col-xs-12">
+										<label class="control-label col-md-5 col-sm-5 col-xs-12"><?php echo $tr->translate("BRANCH_NAME"); ?> :
+										</label>
+										<div class="col-md-7 col-sm-7 col-xs-12">
 											<select class="fullside" dojoType="dijit.form.FilteringSelect" id="branch_id" name="branch_id">
 												<option value="">គ្រប់គម្រោង</option>
-												<?php if(!empty($this->rs)){foreach($this->rs as $r){?>
-													<option value="<?php echo $r['br_id'];?>"><?php echo $r['project_name'];?></option>
-												<?php }}?>
+												<?php if (!empty($this->rs)) {
+													foreach ($this->rs as $r) { ?>
+														<option value="<?php echo $r['br_id']; ?>"><?php echo $r['project_name']; ?></option>
+												<?php }
+												} ?>
 											</select>
-									   </div>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -187,41 +226,73 @@ input.btn_borwse_image {
 							<div class="row">
 								<div class="col-md-12 col-sm-12 col-xs-12">
 									<div class="form-group">
-									   
-									   <div class="col-md-5 col-sm-5 col-xs-12">
-												<div class="row"> 
-													<div class="col-md-12 col-sm-12 col-xs-12"> 
-															<div class="d-flex"> 
-																<div class="settings-main-icon ">
-																	<i class="fa fa-image" aria-hidden="true"></i>
-																</div> 
-																<div class="col-md-10 col-sm-10 col-xs-12"> 
-																	<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("SIGNATURE_IMAGE");?></p>
-																</div> 
-															</div>
-											
-															<div class="form-group">
-																<div class="col-md-12 col-sm-12 col-xs-12">
-																<?php 
-																		$images = $this->baseUrl().'/images/no-photo.png';
-																	?>
-																	<div class="account-image" >
-																		<div class="image-box">
-																			<img id="profile_wiew" src="<?php echo $images;?>" alt=""  />
-																		</div>
-																		<div class="button_browse">
-																		<div id='preview'></div>	
-																			<span><?php echo $tr->translate("UPLOAD_SIGNATURE");?> <span ><i class="fa fa-camera" aria-hidden="true"></i></span></span>
-																			<input class="btn_borwse_image" type="file" id="photo" name="photo" />
-																		</div>
-																	</div>
+
+										<div class="col-md-5 col-sm-5 col-xs-12">
+											<div class="row">
+												<div class="col-md-12 col-sm-12 col-xs-12">
+													<div class="d-flex">
+														<div class="settings-main-icon ">
+															<i class="glyphicon glyphicon-user" aria-hidden="true"></i>
+														</div>
+														<div class="col-md-10 col-sm-10 col-xs-12">
+															<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("PROFILE_PICTURE"); ?></p>
+														</div>
+													</div>
+
+													<div class="form-group">
+														<div class="col-md-12 col-sm-12 col-xs-12">
+															<?php
+															$images = $this->baseUrl() . '/images/no-profile.png';
+															?>
+															<div class="account-image">
+																<div class="image-box">
+																	<img id="profile_wiew" src="<?php echo $images; ?>" alt="" />
+																</div>
+																<div class="button_browse">
+																	<div id='preview'></div>
+																	<span><?php echo $tr->translate("UPLOAD_PROFILE"); ?> <span><i class="fa fa-camera" aria-hidden="true"></i></span></span>
+																	<input class="btn_borwse_image" type="file" id="photo" name="photo" />
 																</div>
 															</div>
+														</div>
 													</div>
 												</div>
-									  	 </div>
-										   <label class="control-label col-md-7 col-sm-7 col-xs-12" >
-									   </label>
+											</div>
+										</div>
+										<div class="col-md-2 col-sm-2 col-xs-12"></div>
+										<div class="col-md-5 col-sm-5 col-xs-12">
+											<div class="row">
+												<div class="col-md-12 col-sm-12 col-xs-12">
+													<div class="d-flex">
+														<div class="settings-main-icon ">
+															<i class="fa fa-image" aria-hidden="true"></i>
+														</div>
+														<div class="col-md-10 col-sm-10 col-xs-12">
+															<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("SIGNATURE_IMAGE"); ?></p>
+														</div>
+													</div>
+
+													<div class="form-group">
+														<div class="col-md-12 col-sm-12 col-xs-12">
+															<?php
+															$images = $this->baseUrl() . '/images/no-photo.png';
+															?>
+															<div class="account-image">
+																<div class="image-box">
+																	<img id="signature_wiew" src="<?php echo $images; ?>" alt="" />
+																</div>
+																<div class="button_browse">
+																	<div id='preview'></div>
+																	<span><?php echo $tr->translate("UPLOAD_SIGNATURE"); ?> <span><i class="fa fa-camera" aria-hidden="true"></i></span></span>
+																	<input class="btn_borwse_image" type="file" id="signature_pic" name="signature_pic" />
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+
 									</div>
 
 								</div>
@@ -230,293 +301,287 @@ input.btn_borwse_image {
 						</div>
 					</div>
 
-	            </div>
-	            <div class="col-md-6 col-sm-6 col-xs-12">
-					<div class="card-blogform <?php if($FOR_MULTISYSTEM!=1){ echo "noDisplay";}?>">
-						<div class="card-header "> 
+				</div>
+				<div class="col-md-6 col-sm-6 col-xs-12">
+					<div class="card-blogform <?php if ($FOR_MULTISYSTEM != 1) {
+													echo "noDisplay";
+												} ?>">
+						<div class="card-header ">
 							<div class="custom-control custom-checkbox float-start ">
-								<input type="checkbox" class="checkboxSystem custom-control-input" name="checkAllSystem" id="checkAllSystem" value="all" OnChange="CheckAllSystem(0);" >
+								<input type="checkbox" class="checkboxSystem custom-control-input" name="checkAllSystem" id="checkAllSystem" value="all" OnChange="CheckAllSystem(0);">
 								<label class="custom-control-label" for="checkAllSystem">
-									<?php echo $tr->translate('ALL');?>
+									<?php echo $tr->translate('ALL'); ?>
 								</label>
 							</div>
 						</div>
-						<div class="card-body"> 
-							<div class="row"> 
-								<div class="col-md-12 col-sm-12 col-xs-12"> 
-									<div class="d-flex"> 
+						<div class="card-body">
+							<div class="row">
+								<div class="col-md-12 col-sm-12 col-xs-12">
+									<div class="d-flex">
 										<div class="settings-main-icon ">
 											<i class="fa fa-television" aria-hidden="true"></i>
-										</div> 
-										<div class="col-md-10 col-sm-10 col-xs-12"> 
-											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('Assign Working Access')?> </p>
-											
+										</div>
+										<div class="col-md-10 col-sm-10 col-xs-12">
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('Assign Working Access') ?> </p>
+
 											<ul class="optListRow">
-												<li class="opt-items"> 
+												<li class="opt-items">
 													<div class="custom-control custom-checkbox">
-														<input type="checkbox" id="system1"  class="checkboxSystem custom-control-input" checked  type="checkbox"  class="checkboxSystem"  value="1" name="selectorSystem[]" onClick="CheckAllSystem(1);"  >
+														<input type="checkbox" id="system1" class="checkboxSystem custom-control-input" checked type="checkbox" class="checkboxSystem" value="1" name="selectorSystem[]" onClick="CheckAllSystem(1);">
 														<label class="custom-control-label" for="system1">
-															<?php echo $tr->translate("Installment System");?>
+															<?php echo $tr->translate("Installment System"); ?>
 														</label>
 													</div>
 												</li>
-												<li class="opt-items"> 
+												<li class="opt-items">
 													<div class="custom-control custom-checkbox">
-														<input type="checkbox" id="system2"  class="checkboxSystem custom-control-input" type="checkbox"  class="checkboxSystem"  value="2" name="selectorSystem[]" onClick="CheckAllSystem(1);"  >
+														<input type="checkbox" id="system2" class="checkboxSystem custom-control-input" type="checkbox" class="checkboxSystem" value="2" name="selectorSystem[]" onClick="CheckAllSystem(1);">
 														<label class="custom-control-label" for="system2">
-															<?php echo $tr->translate("Stock System");?>
+															<?php echo $tr->translate("Stock System"); ?>
 														</label>
 													</div>
-												</li>	
+												</li>
 											</ul>
-										</div> 
-									</div> 
-								</div> 
-							</div> 
-						</div> 
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
-					
+
 					<div class="card-blogform">
-						<div class="card-header "> 
+						<div class="card-header ">
 							<div class="custom-control custom-checkbox float-start ">
-								<input type="checkbox" checked class="checkbox custom-control-input" name="check_all" id="check_all" value="all" OnChange="CheckAllTotal(0);"  >
+								<input type="checkbox" checked class="checkbox custom-control-input" name="check_all" id="check_all" value="all" OnChange="CheckAllTotal(0);">
 								<label class="custom-control-label" for="check_all">
-									<?php echo $tr->translate('ALL');?>
+									<?php echo $tr->translate('ALL'); ?>
 								</label>
 							</div>
 						</div>
-						<div class="card-body"> 
-							<div class="row"> 
-								<div class="col-md-12 col-sm-12 col-xs-12"> 
-									<div class="d-flex"> 
+						<div class="card-body">
+							<div class="row">
+								<div class="col-md-12 col-sm-12 col-xs-12">
+									<div class="d-flex">
 										<div class="settings-main-icon ">
 											<i class="fa fa-university" aria-hidden="true"></i>
-										</div> 
-										<div class="col-md-10 col-sm-10 col-xs-12"> 
-											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('Assign Branch Access')?> </p>
-											
+										</div>
+										<div class="col-md-10 col-sm-10 col-xs-12">
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('Assign Branch Access') ?> </p>
+
 											<ul class="optListRow">
-												<?php $identityCheck = ""; if (!empty($this->rs)) foreach ($this->rs AS $key => $rs){?>
-												<li class="opt-items"> 
-													<div class="custom-control custom-checkbox">
-														<input checked type="checkbox" id="branchKey<?php echo $key;?>"  class="checkbox custom-control-input" value="<?php echo $rs['br_id'];?>" name="selector[]" onClick="CheckAllTotal(1);"  >
-														<label class="custom-control-label" for="branchKey<?php echo $key;?>">
-															<?php echo $rs['project_name'];?>
-														</label>
-													</div>
-													<?php 
-														if (empty($identityCheck)){ 
-														$identityCheck = $rs['br_id'];}else{
-															$identityCheck = $identityCheck.",".$rs['br_id'];
-														}
-													}?>
+												<?php $identityCheck = "";
+												if (!empty($this->rs)) foreach ($this->rs as $key => $rs) { ?>
+													<li class="opt-items">
+														<div class="custom-control custom-checkbox">
+															<input checked type="checkbox" id="branchKey<?php echo $key; ?>" class="checkbox custom-control-input" value="<?php echo $rs['br_id']; ?>" name="selector[]" onClick="CheckAllTotal(1);">
+															<label class="custom-control-label" for="branchKey<?php echo $key; ?>">
+																<?php echo $rs['project_name']; ?>
+															</label>
+														</div>
+													<?php
+													if (empty($identityCheck)) {
+														$identityCheck = $rs['br_id'];
+													} else {
+														$identityCheck = $identityCheck . "," . $rs['br_id'];
+													}
+												} ?>
 											</ul>
-										</div> 
-									</div> 
-								</div> 
-							</div> 
-						</div> 
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
-					
-	            </div>
-				
-	            <div class="clearfix"></div>
-               		<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
-               			<input type="button" class="button-class button-danger"  iconClass="glyphicon glyphicon-repeat" value="GO_BACK" label="<?php echo $tr->translate('GO_BACK');?>" id="back" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module'=>'rsvacl','controller'=>"user",'action'=>'index'),null,true); ?>';" />
-						<input type="submit" class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-disk" value="រក្សាទុក" label="<?php echo $tr->translate('GO_SAVE');?>" id="save_new" dojoType="dijit.form.Button" />
-			    	</div>
-	    	</div>
+
+				</div>
+
+				<div class="clearfix"></div>
+				<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
+					<input type="button" class="button-class button-danger" iconClass="glyphicon glyphicon-repeat" value="GO_BACK" label="<?php echo $tr->translate('GO_BACK'); ?>" id="back" dojoType="dijit.form.Button" onclick="window.location = '<?php echo $this->url(array('module' => 'rsvacl', 'controller' => "user", 'action' => 'index'), null, true); ?>';" />
+					<input type="submit" class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-disk" value="រក្សាទុក" label="<?php echo $tr->translate('GO_SAVE'); ?>" id="save_new" dojoType="dijit.form.Button" />
+				</div>
+			</div>
 		</form>
 	</div>
 </div>
 <div class="dijitHidden">
-	<div data-dojo-type="dijit.Dialog" style="width:500px;overflow-y:scroll;" id="popup_usertype" >
-		<form  id='frm_usertype' name='frm_usertype' dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+	<div data-dojo-type="dijit.Dialog" style="width:500px;overflow-y:scroll;" id="popup_usertype">
+		<form id='frm_usertype' name='frm_usertype' dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
 			<table cellspacing="15">
 				<tr>
 					<td>User Type</td>
 					<td width="300px">
-						<input type="text" required="true" name="user_typename" id="user_typename" placeholder="User Type" 
-						dojoType="dijit.form.ValidationTextBox" value="<?php echo $this->usertype['user_type'];?>"
-						missingMessage="Invalid User type!" class='fullside'/>
+						<input type="text" required="true" name="user_typename" id="user_typename" placeholder="User Type" dojoType="dijit.form.ValidationTextBox" value="<?php echo $this->usertype['user_type']; ?>" missingMessage="Invalid User type!" class='fullside' />
 					</td>
 				</tr>
 				<tr>
 					<td>Parent Name</td>
 					<td>
-						<select class='fullside' id="parent_id"  name="parent_id" required="true" 
-						 missingMessage="Invalid Parent Name!" dojoType="dijit.form.FilteringSelect"> 
-						 	<?php foreach ($this->user_typelist as $key => $ust) : ?>
-								<option value="<?php echo $ust['id'];?>"><?php echo $ust['name'];?></option>
-							<?php endforeach;?>																															
-						</select> 
+						<select class='fullside' id="parent_id" name="parent_id" required="true" missingMessage="Invalid Parent Name!" dojoType="dijit.form.FilteringSelect">
+							<?php foreach ($this->user_typelist as $key => $ust) : ?>
+								<option value="<?php echo $ust['id']; ?>"><?php echo $ust['name']; ?></option>
+							<?php endforeach; ?>
+						</select>
 					</td>
-				</tr>	
+				</tr>
 				<tr>
 					<td colspan="2" align="center">
-						<input type="button" onclick="addUsrType();" value="រក្សាទុក" label="រក្សាទុក" dojoType="dijit.form.Button"  iconClass="dijitEditorIcon dijitEditorIconSave"/> 							
+						<input type="button" onclick="addUsrType();" value="រក្សាទុក" label="រក្សាទុក" dojoType="dijit.form.Button" iconClass="dijitEditorIcon dijitEditorIconSave" />
 					</td>
-				</tr>								
+				</tr>
 			</table>
 		</form>
 	</div>
 </div>
 <script>
-dojo.require("dojo.data.ObjectStore");
-dojo.require("dojo.data.ItemFileWriteStore");  
-dojo.require("dijit.Dialog");
+	dojo.require("dojo.data.ObjectStore");
+	dojo.require("dojo.data.ItemFileWriteStore");
+	dojo.require("dijit.Dialog");
+	dojo.require("dijit.form.SimpleTextarea");
 
-var usertype_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->user_type));?> );
-dojo.ready(function(){
-	new dijit.form.FilteringSelect({
-		store: usertype_store,
-		autoComplete: true,                        
-		id: "user_type",
-		name: "user_type",
-		class: "fullside", 		
-		placeHolder:"Select User Type",          
-		onChange: function() {  
-			user_type = dijit.byId('user_type').get('value');
-			if(user_type==-1){
-				dijit.byId("popup_usertype").show();
+
+	var usertype_store = getDataStorefromJSON('id', 'name', <?php print_r(Zend_Json::encode($this->user_type)); ?>);
+	dojo.ready(function() {
+		new dijit.form.FilteringSelect({
+			store: usertype_store,
+			autoComplete: true,
+			id: "user_type",
+			name: "user_type",
+			class: "fullside",
+			placeHolder: "Select User Type",
+			onChange: function() {
+				user_type = dijit.byId('user_type').get('value');
+				if (user_type == -1) {
+					dijit.byId("popup_usertype").show();
+				}
 			}
-		}
-	}, "user_type");
-});
+		}, "user_type");
+	});
 
-function getpopupUsertype(){
-	user_type = dijit.byId("user_type").get("value");
-	if(user_type==-1){
-		dijit.byId("popup_usertype").show();
+	function getpopupUsertype() {
+		user_type = dijit.byId("user_type").get("value");
+		if (user_type == -1) {
+			dijit.byId("popup_usertype").show();
+		}
 	}
-}
-var url_addusertype = '<?php echo $this->url(array("module"=>"rsvacl","controller"=>"usertype","action"=>"addusertype")); ?>';
-function addUsrType(){
-	if(dijit.byId('frm_usertype').validate()){
-		dojo.xhrPost({
-			url:url_addusertype,
-			form: dojo.byId("frm_usertype"),
-			handleAs:"json",
-			load: function(data) {
-				var myNewItem = {					
+	var url_addusertype = '<?php echo $this->url(array("module" => "rsvacl", "controller" => "usertype", "action" => "addusertype")); ?>';
+
+	function addUsrType() {
+		if (dijit.byId('frm_usertype').validate()) {
+			dojo.xhrPost({
+				url: url_addusertype,
+				form: dojo.byId("frm_usertype"),
+				handleAs: "json",
+				load: function(data) {
+					var myNewItem = {
 						id: data,
 						name: dijit.byId('user_typename').get('value')
-				};			
-				addDataToSelectbox(dijit.byId('user_type'), usertype_store, myNewItem, data);
-				dijit.byId("frm_usertype").reset();
-				dijit.byId("popup_usertype").hide();
-				
+					};
+					addDataToSelectbox(dijit.byId('user_type'), usertype_store, myNewItem, data);
+					dijit.byId("frm_usertype").reset();
+					dijit.byId("popup_usertype").hide();
+
+				},
+				error: function(err) {
+					alert(err);
+				}
+			});
+		}
+	}
+
+	function CheckAllTotal(index) {
+		if (index == 0) {
+			if ($('#check_all').is(":checked")) {
+				$('.checkbox').each(function() { //loop through each checkbox
+					this.checked = true;
+				});
+			} else {
+				$('.checkbox').each(function() { //loop through each checkbox
+					this.checked = false;
+				});
+			}
+		} else {
+			var a = $("input:checked").val();
+			var identity = [];
+			$('.checkbox:checked').each(function(i) {
+				identity[i] = $(this).val();
+			});
+		}
+	}
+
+	function CheckAllSystem(index) {
+		if (index == 0) {
+			if ($('#checkAllSystem').is(":checked")) {
+				$('.checkboxSystem').each(function() { //loop through each checkbox
+					this.checked = true;
+				});
+			} else {
+				$('.checkboxSystem').each(function() { //loop through each checkbox
+					this.checked = false;
+				});
+			}
+		} else {
+			var identity = [];
+			$('.checkboxSystem:checked').each(function(i) {
+				identity[i] = $(this).val();
+			});
+		}
+	}
+	url_CheckTitle = '<?php echo $this->url(array('module' => 'rsvacl', 'controller' => 'user', 'action' => 'check-title')); ?>';
+
+	function checkTitle() {
+		user_name = dijit.byId('user_name').get('value');
+		if (user_name == '') {
+			return false;
+		}
+		dojo.xhrPost({
+			url: url_CheckTitle,
+			content: {
+				'user_name': user_name,
+			},
+			handleAs: "json",
+			load: function(data) {
+				if (data !== false) {
+					document.getElementById('message').innerHTML = '<?php echo '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i> ' . $tr->translate("USER_EXISTING_READY"); ?>';
+					dijit.byId('user_name').focus();
+					dijit.byId('is_duplicate').attr('value', 1);
+				} else {
+					document.getElementById('message').innerHTML = '';
+					dijit.byId('is_duplicate').attr('value', 0);
+				}
 			},
 			error: function(err) {
 				alert(err);
 			}
 		});
-   }
-}
-function CheckAllTotal(index){
-	if(index==0){
-			if($('#check_all').is(":checked")){
-				$('.checkbox').each(function() { //loop through each checkbox
-		            this.checked = true;  
-				});
-			}else{
-				$('.checkbox').each(function() { //loop through each checkbox
-		            this.checked = false;  
-				});
-			}
-	}else{
-		var a = $("input:checked").val();
-		 var identity = [];
-	     $('.checkbox:checked').each(function(i){
-	    	 identity[i] = $(this).val();
-	     });
 	}
-}
-
-function CheckAllSystem(index){
-	if(index==0){
-			if($('#checkAllSystem').is(":checked")){
-				$('.checkboxSystem').each(function() { //loop through each checkbox
-		            this.checked = true;  
-				});
-			}else{
-				$('.checkboxSystem').each(function() { //loop through each checkbox
-		            this.checked = false;  
-				});
-			}
-	}else{
-		 var identity = [];
-	     $('.checkboxSystem:checked').each(function(i){
-	    	 identity[i] = $(this).val();
-	     });
-	}
-}
-url_CheckTitle = '<?php echo $this->url(array('module'=>'rsvacl','controller'=>'user','action'=>'check-title'));?>';
-function checkTitle(){
-	user_name = dijit.byId('user_name').get('value');
-	if(user_name==''){ return false;}
-	dojo.xhrPost({
-		url:url_CheckTitle,	
-		content:{ 
-			'user_name': user_name ,
-		},
-		handleAs:"json",
-		load: function(data) {	
-			if(data !== false ){
-				document.getElementById('message').innerHTML ='<?php echo '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i> '.$tr->translate("USER_EXISTING_READY");?>';
-				dijit.byId('user_name').focus();
-				dijit.byId('is_duplicate').attr('value',1);
-			}else{
-				document.getElementById('message').innerHTML ='';
-				dijit.byId('is_duplicate').attr('value',0);
-			}
-		},
-		error: function(err) {
-			alert(err);
-		}
-	});
-}
 
 
-$("#photo").change(function(){
-	    readURL(this);
+	$("#photo").change(function() {
+		readURL(this);
 	});
-	$(function(){
-		bs_input_file();
+	$("#signature_pic").change(function() {
+		readURLSignature(this);
 	});
-	
+
+
 	function readURL(input) {
-	    if (input.files && input.files[0]) {
-	        var reader = new FileReader();
-	        reader.onload = function (e) {
-	            $('#profile_wiew').attr('src', e.target.result);
-	        }
-	        reader.readAsDataURL(input.files[0]);
-	    }
-	}
-
-	function bs_input_file() {
-		$(".input-file").before(
-			function() {
-			if ( ! $(this).prev().hasClass('input-ghost') ) {
-				var element = $("<input  type='file' accept='image/*' class='input-ghost' style='visibility:hidden; height:0'>");
-				element.attr("name",$(this).attr("name"));
-				element.change(function(){
-					element.next(element).find('input').val((element.val()).split('\\').pop());
-				});
-				$(this).find("button.btn-choose").click(function(){
-					element.click();
-				});
-				$(this).find('input').css("cursor","pointer");
-				$(this).find('input').mousedown(function() {
-					$(this).parents('.input-file').prev().click();
-					return false;
-				});
-				return element;
+		if (input.files && input.files[0]) {
+			var reader = new FileReader();
+			reader.onload = function(e) {
+				$('#profile_wiew').attr('src', e.target.result);
 			}
+			reader.readAsDataURL(input.files[0]);
 		}
-	   );
 	}
-	
 
+	function readURLSignature(input) {
+		if (input.files && input.files[0]) {
+			var reader = new FileReader();
+			reader.onload = function(e) {
+				$('#signature_wiew').attr('src', e.target.result);
+			}
+			reader.readAsDataURL(input.files[0]);
+		}
+	}
 </script>
