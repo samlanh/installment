@@ -67,7 +67,6 @@ class Invpayment_StatementController extends Zend_Controller_Action {
 			$id = $this->getRequest()->getParam('id');
 			$id = empty($id)?0:$id;
 			$this->view->rows = $db->getConcreteStatement($id);
-
 			$this->view->rs = $db->getStatementRow($id);
 	
 		}catch (Exception $e){

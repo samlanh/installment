@@ -176,6 +176,9 @@ class Invpayment_Model_DbTable_DbDnconcrete extends Zend_Db_Table_Abstract
     	if(!empty($data['supplierId'])){
     		$sql.=" AND rst.supplierId= ".$data['supplierId'];
     	}
+    	if(!empty($data['transactionType'])){
+    		$sql.=" AND rst.transactionType= ".$data['transactionType'];
+    	}
     	if(isset($data['isissueStatement'])){
     		$sql.=" AND rst.isissueStatement= ".$data['isissueStatement'];
     	}
@@ -191,6 +194,7 @@ class Invpayment_Model_DbTable_DbDnconcrete extends Zend_Db_Table_Abstract
     	if(!empty($DNListFromInvoice)){ 
     		$sql.=" AND rst.id NOT IN ($DNListFromInvoice) ";
     	}
+    	$sql.=" ORDER BY rst.id ASC ";
     	$results =  $db->fetchAll($sql);
     	if(!empty($data['labelList'])){
     		return $this->getAllDnbyData($results,$data);

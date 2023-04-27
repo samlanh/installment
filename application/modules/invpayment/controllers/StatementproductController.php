@@ -69,9 +69,7 @@ class Invpayment_StatementproductController extends Zend_Controller_Action {
 			$id = $this->getRequest()->getParam('id');
 			$id = empty($id)?0:$id;
 			$this->view->rows = $db->getProductStatement($id);
-
 			$this->view->rs = $db->getStatementRow($id);
-	
 		}catch (Exception $e){
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			Application_Form_FrmMessage::message("APPLICATION_ERROR");

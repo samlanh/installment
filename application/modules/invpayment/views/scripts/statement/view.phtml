@@ -24,7 +24,7 @@
 		<div class="card-box">
 	       	<div class="col-sm-12 border-botom">
 		   		<div class="col-sm-8 pd-0">
-		    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i> <?php echo $tr->translate('CONCRETED_STATEMENT');?></h4>
+		    		<h2 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i> <?php echo $tr->translate('CONCRETED_STATEMENT');?></h2>
 	    		</div>
 	    		<div class="col-sm-4 text-right">
 	    		</div>
@@ -167,19 +167,25 @@
 				                	<td colspan="10" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
 				                </tr>
 								<tr>
-									<td colspan="5" style="border:1px solid #fff;" >
+									<td colspan="3" style="border:1px solid #fff;text-align: left;" >
 										<ul class="sideLeft">
-											<li>Supplier Name : <?php echo $row['supplierName']?></li>
+											<li>Supplier Name : <?php echo $row['supplierName'];?></li>
 											<li>Contact Name: </li>
 											<li>Contact Number: </li>
 										</ul>
 									</td>
-									<td colspan="5" style="border:1px solid #fff;" >
+									<td colspan="4" style="border:1px solid #fff;" >
 										<ul class="sideRight">
-											<li>Reference: </li>
-											<li>From Date: <?php echo $row['fromDate']?> </li>
-											<li>To Date: <?php echo $row['toDate']?></li>
-											<li>Create Date: <?php echo $row['createDate']?></li>
+											<li>Reference: <strong><?php echo $row['supplierStmentNo'];?></strong></li>
+											<li>From Date: <?php echo $row['fromDate'];?> </li>
+											<li>To Date: <?php echo $row['toDate'];?></li>
+											<li>Create Date: <strong><?php echo date("d-m-Y",strtotime($row['stmentDate']));?></strong></li>
+										</ul>
+									</td>
+									<td colspan="3" style="border:1px solid #fff;" >
+										<ul class="sideRight">
+											<li>Invoice No.: <strong><?php echo $row['invoiceNo'];?></strong></li>
+											<li>Note: <?php echo $row['note'];?></li>
 										</ul>
 									</td>
 								</tr>
@@ -203,23 +209,23 @@
 								?>
 									<tr class="style <?php if($index%2!=0)echo "eventStyle";?>" align="left">
 										<td data-label="ល.រ​ /N.o" class="padding" style="text-align: center;"><?php echo $index+1;?></td>
-										<td data-label="ឈ្មោះទំនិញ/Product Name"><strong><?php echo $rs['proName']?> - <?php echo $rs['proCode']?></strong></td>
-										<td data-label="កាលបរិច្ឆេទ/ Date"><?php echo $rs['stmentDate']?></td>
-										<td data-label="ប្រភេទការងារ/Work Type"><?php echo $rs['workType']?></td>
-										<td data-label="លេខបេតុង/Strength"><?php echo $rs['strength']?></td>
-										<td data-label="លេខ DN/DN Number"><?php echo $rs['dnNumber']?></td>
-										<td data-label="បរិមាណ/ QTY"><strong><?php echo number_format($rs['qtyPo'],2)?></strong><span style="float: right;">(<?php echo $rs['measureLabel'];?>)</span></td>
-										<td data-label="តម្លៃ/Cost"><strong><?php echo number_format($rs['unitPrice'],2)?></strong></td>	  
-										<td data-label="សរុប/SubTotal"><strong><span style="float: left; color:red;"><?php echo number_format($rs['subTotal'],2)?></span></strong></td>	                                      
-										<td data-label="ផ្សេងៗ/Other" style="min-width: 200px;"><?php echo $rs['note']?></td>
+										<td data-label="ឈ្មោះទំនិញ/Product Name"><strong><?php echo $rs['proName'];?> - <?php echo $rs['proCode'];?></strong></td>
+										<td data-label="កាលបរិច្ឆេទ/ Date"><?php echo date("d-m-Y",strtotime($rs['stmentDate']));?></td>
+										<td data-label="ប្រភេទការងារ/Work Type"><?php echo $rs['workType'];?></td>
+										<td data-label="លេខបេតុង/Strength"><?php echo $rs['strength'];?></td>
+										<td data-label="លេខ DN/DN Number"><?php echo $rs['dnNumber'];?></td>
+										<td data-label="បរិមាណ/ QTY"><strong><?php echo number_format($rs['qtyPo'],2);?></strong><span style="float: right;">(<?php echo $rs['measureLabel'];?>)</span></td>
+										<td data-label="តម្លៃ/Cost"><strong><?php echo number_format($rs['unitPrice'],2);?></strong></td>	  
+										<td data-label="សរុប/SubTotal"><strong><span style="float: left; color:red;"><?php echo number_format($rs['subTotal'],2);?></span></strong></td>	                                      
+										<td data-label="ផ្សេងៗ/Other" style="min-width: 200px;"><?php echo $rs['note'];?></td>
 									</tr>
 				                <?php }?>
 				                <tr>
-				                	<td colspan="8" align="right" style="border-left:1px solid #fff;border-bottom:1px solid #fff;">សរុបរួម / Grand Total</td>
+				                	<td colspan="8" align="right" style="border-left:1px solid #fff;border-bottom:1px solid #fff;font-size:16px;">សរុបរួម / Grand Total</td>
 				                	<td colspan="2"  style="border:1px solid #fff;border-top:1px solid #000;">$ <strong><?php echo number_format($grandTotal,2);?></strong></td>
 				                </tr>
-
 				            </table>
+				            <?php echo $this->footerReport;?>
 				    	</td>
 				    </tr>
 				</table>

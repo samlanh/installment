@@ -207,7 +207,6 @@
 			<div class="clearfix"></div>
 	       	<div class="card-box mt-20">
                	<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
-               		<input type="button" onclick="previewStatement();" class="button-class button-primary" iconClass="glyphicon glyphicon glyphicon-list-alt" value="save_close" id="save_close" name="save_close" label="<?php echo $tr->translate("PREVIEW_STATEMENT");?>" dojoType="dijit.form.Button" />
 					<input type="submit" class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-disk" value="save_close" id="save_new" name="save_new" label="<?php echo $tr->translate("SAVENEW");?>" dojoType="dijit.form.Button"  />
                	</div>
              </div>
@@ -345,14 +344,11 @@ ul.listDn li small {
 			parseContent: true,
 		});
 		
-		var urlGetAlldn = '<?php echo $this->url(array('module'=>'invpayment','controller'=>'statement','action'=>'getalldn')); ?>';
-		
 		branch_id = dijit.byId('branch_id').get('value');
 		if(branch_id=='' || branch_id<=0){
 			branch_id = 0;
 		}
 		
-		purchaseType =3;
 		supplierId = dijit.byId('supplierId').get('value');
 		if(supplierId==''){
 			return false;
@@ -400,6 +396,7 @@ ul.listDn li small {
 		if(toDate!=''){
 			dijit.byId('endDate').attr('value',toDate);
 		}
+		var urlGetAlldn = '<?php echo $this->url(array('module'=>'invpayment','controller'=>'statement','action'=>'getalldn')); ?>';
 		
 		objectContentFilter = {
 				'branch_id':branch_id,
@@ -407,7 +404,7 @@ ul.listDn li small {
 				'isissueStatement':0,
 				'fromDate':fromDate,
 				'toDate':toDate,
-				'purchaseType':purchaseType,
+				'transactionType':2,
 				'keyindex':keyindex};
 		if(generate!=null){
 			objectContentFilter['labelList']=1;

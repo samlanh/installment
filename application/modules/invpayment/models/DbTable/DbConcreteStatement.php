@@ -80,6 +80,8 @@ class Invpayment_Model_DbTable_DbConcreteStatement extends Zend_Db_Table_Abstrac
 	{
 		$db = $this->getAdapter();
 		$sql = "SELECT *,
+				(SELECT invoiceNo FROM st_invoice
+					WHERE statementId = st.id LIMIT 1) AS invoiceNo,
 			(SELECT sp.supplierName FROM `st_supplier` AS sp  WHERE sp.id = st.supplierId LIMIT 1) AS supplierName
 			 FROM `st_statement` AS st  WHERE st.id = ".$recordId;
     	return $db->fetchRow($sql);
@@ -91,6 +93,7 @@ class Invpayment_Model_DbTable_DbConcreteStatement extends Zend_Db_Table_Abstrac
     	
 	    	$arr = array(
 	    			'statementType'=>3,
+	    			'isInvoice'		=>1,
 	    			'projectId'=>$data['branch_id'],
 	    			'supplierId'=>$data['supplierId'],
 	    			'stmentNo'=>$data['invoiceNo'],
@@ -105,10 +108,10 @@ class Invpayment_Model_DbTable_DbConcreteStatement extends Zend_Db_Table_Abstrac
 	    	);
 	    	$stmentId  = $this->insert($arr);
 	    	
-	    	
 	    	$arr = array(
 	    			'projectId'			=>$data['branch_id'],
 	    			'ivType'			=>3,
+	    			'statementId'		=>$stmentId,
 	    			'invoiceNo'			=>$data['invoiceNo'],
 	    			'dnId'				=>$data['dnIdentity'],
 	    			'supplierId'		=>$data['supplierId'],
@@ -137,6 +140,7 @@ class Invpayment_Model_DbTable_DbConcreteStatement extends Zend_Db_Table_Abstrac
 	    				'dnId'=>$data['rsId'.$i],
 	    				'proId'=>$data['proId'.$i],
 	    				'qtyPo'=>$data['qty'.$i],
+	    				'unitPrice'=>$data['unitPrice'.$i],
 	    				'subTotal'=>$data['subTotal'.$i],
 	    			);
 	    		$this->_name='st_statement_detail';

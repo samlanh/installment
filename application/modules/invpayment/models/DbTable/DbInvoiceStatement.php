@@ -63,7 +63,7 @@ class Invpayment_Model_DbTable_DbInvoiceStatement extends Zend_Db_Table_Abstract
     	try{
     	
 	    	$arr = array(
-	    		//	'statementType'=>3,
+	    			'statementType'=>1,
 	    			'projectId'=>$data['branch_id'],
 	    			'supplierId'=>$data['supplierId'],
 	    			'stProductNo'=>$data['invoiceNo'],
@@ -114,11 +114,11 @@ class Invpayment_Model_DbTable_DbInvoiceStatement extends Zend_Db_Table_Abstract
 
     	$db =$this->getAdapter();
     	$sql="SELECT iv.id,iv.invoiceNo,
-            vd.proId,
-            (SELECT proName FROM `st_product` AS p WHERE p.proId=vd.proId) AS proName,
-            (SELECT proCode FROM `st_product` AS p WHERE p.proId=vd.proId) AS proCode,
-            (SELECT NAME FROM `st_measure`AS m WHERE m.id= (SELECT measureId FROM `st_product` WHERE proId = vd.proId)) AS measure,
-            vd.totalQtyreceive, vd.unitPriceReceive, vd.totalReceiveDiscount, vd.totalReceive
+	            vd.proId,
+	            (SELECT proName FROM `st_product` AS p WHERE p.proId=vd.proId) AS proName,
+	            (SELECT proCode FROM `st_product` AS p WHERE p.proId=vd.proId) AS proCode,
+	            (SELECT NAME FROM `st_measure`AS m WHERE m.id= (SELECT measureId FROM `st_product` WHERE proId = vd.proId)) AS measure,
+	            vd.totalQtyreceive, vd.unitPriceReceive, vd.totalReceiveDiscount, vd.totalReceive
             FROM `st_invoice`  AS iv
                 JOIN `st_invoice_detail` AS vd
             ON iv.id =vd.invId
@@ -135,6 +135,9 @@ class Invpayment_Model_DbTable_DbInvoiceStatement extends Zend_Db_Table_Abstract
     	if(isset($data['isInvoiceStatement'])){
     		$sql.=" AND iv.isInvoiceStatement= ".$data['isInvoiceStatement'];
     	}
+//     	if(!empty($data['transactionType'])){
+//     		$sql.=" AND iv.transactionType= ".$data['transactionType'];
+//     	}
     	
     	$fromDate =(empty($data['fromDate']))? '1': " iv.invoiceDate >= '".$data['fromDate']." 00:00:00'";
     	$toDate = (empty($data['toDate']))? '1': " iv.invoiceDate <= '".$data['toDate']." 23:59:59'";

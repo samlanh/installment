@@ -336,14 +336,11 @@ ul.listDn li small {
 	}
 	var keyindex=1;
 	function getAllInvoice(generate=null){
-	// dijit.byId('invoiceList').reset();
 		no = 0;
 		$("#identity").val("");
 		dojo.html.set(dojo.byId("table_row"),"" , {
 			parseContent: true,
 		});
-		
-		var urlGetAllinvoice = '<?php echo $this->url(array('module'=>'invpayment','controller'=>'statementproduct','action'=>'getallinvoice')); ?>';
 		
 		branch_id = dijit.byId('branch_id').get('value');
 		if(branch_id=='' || branch_id<=0){
@@ -394,27 +391,30 @@ ul.listDn li small {
 		}else{
 			toDate='';
 			}
+		if(fromDate!=''){
+			dijit.byId('startDate').attr('value',fromDate);
+		}
+		if(toDate!=''){
+			dijit.byId('endDate').attr('value',toDate);
+		}
 		objectContentFilter = {
 				'branch_id':branch_id,
 				'supplierId':supplierId,
 				'isInvoiceStatement':0,
 				'fromDate':fromDate,
 				'toDate':toDate,
-			//	'purchaseType':purchaseType,
+				'transactionType':1,
 				'keyindex':keyindex
 		};
-		
+
+		var urlGetAllinvoice = '<?php echo $this->url(array('module'=>'invpayment','controller'=>'statementproduct','action'=>'getallinvoice')); ?>';
+
 		if(generate!=null){
 			objectContentFilter['labelList']=1;
 			generateAllInvoice(urlGetAllinvoice,objectContentFilter);//internal page
 		}
-		// else{
-		// 	getAllInvoiceList(urlGetAllinvoice,objectContentFilter);//external page
-		// }
 	}
 	function generateAllInvoice(urlGetAllinvoice,objectContentFilter){
-
-
 		dojo.byId("table_row").innerHTML="";
 		dojo.xhrPost({
 			url:urlGetAllinvoice,	
@@ -427,7 +427,6 @@ ul.listDn li small {
 				dojo.html.set(dojo.byId("table_row"),data.stringrow , {
 					parseContent: true,
 				});
-				
 				dijit.byId('totalAmountExternal').set('value',data.gTotalExternal);
 			},
 			error: function(err) {
@@ -456,92 +455,6 @@ ul.listDn li small {
 		});
 	}
 
-	// var col= 0; var no=0;
-	// var title = 0;
-	// var urlGetInvoiceInfo = '<?php echo $this->url(array('module'=>'invpayment','controller'=>'statementproduct','action'=>'get-invoice-info')); ?>';
-	// function addRowInvoice(invId=null){
-	// 	template='';
-	// 	temp = "";
-	// 	branch_id = dijit.byId('branch_id').get('value');
-	// 	if(branch_id=='' || branch_id<=0){
-	// 		infoMessageAlert('<?php echo $tr->translate('PLEASE_SELECT_BRANCH');?>');
-	// 		dijit.byId('branch_id').focus();
-	// 		return false;
-	// 	}
-	// 	if(invId!=null){
-	// 		invId = invId;
-	// 	}
-	// 	else{
-	// 		invId = dijit.byId('invoiceList').get('value');
-	// 		if(invId=='' || invId<=0){
-	// 			dijit.byId('invoiceList').reset();
-	// 			dijit.byId('invoiceList').focus();
-	// 			return false;
-	// 		}
-	// 	}
-		
-	// 	var iden = $("#identity").val();
-	// 	var arrays = iden.split(',');
-	// 	 if(arrays!=""){
-	// 		 for(var i=0;i< arrays.length;i++) {
-	// 			readychoose = dijit.byId('rsId'+arrays[i]).get('value');
-	// 			 if(readychoose==invId){
-	// 				 infoMessageAlert("<?php echo $tr->translate("Choosen ready")?> ");
-	// 				 dijit.byId('invoiceList').reset();
-	// 				 return false;
-	// 			 }
-	// 		}
-			
-	// 	}
-	// 	col++;no++;
-		
-	// 	dojo.xhrPost({
-	// 		url:urlGetInvoiceInfo,	
-	// 		content:{ 
-	// 			'invId':invId
-	// 		},		    
-	// 		handleAs:"json",
-	// 		load: function(data) {
-	// 			alert(data);
-	// 			template+='<td  class="numberRecord infoCol" align="center"><span title="<?php echo $tr->translate("REMOVE_RECORD");?>" class="removeRow" onclick="deleteRecord('+col+');"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></span></td>';
-	// 			template+='<td  class="numberRecord infoCol" data-label="<?php echo $tr->translate("N_O");?>" align="center" >'+no+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="rsId'+col+'" name="rsId'+col+'" value="'+data.id+'"   ></td>';
-	// 			template+='<td  data-label="<?php echo $tr->translate("PRODUCT_NAME");?>" class="productName infoCol" >'+data.proCode+'<br />'+data.proName+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId'+col+'" name="proId'+col+'" value="'+data.proId+'" type="text"  ></td>';	
-	// 			template+='<td  data-label="<?php echo $tr->translate("MEASURE");?>" class="red infoCol"  >'+data.measure+'</td>';	
-				
-	// 			template+='<td  data-label="<?php echo $tr->translate("INVOICE_NO");?>" class="red infoCol" ><input   dojoType="dijit.form.ValidationTextBox" class="fullside" id="invId'+col+'" name="invId'+col+'" value="'+data.id+'" type="hidden"  >'+data.invoiceNo+'</td>';
-	// 			template+='<td data-label="<?php echo $tr->translate("QTY");?>" class=" bold" ><input readOnly dojoType="dijit.form.NumberTextBox" required="true" class="fullside" id="qty'+col+'" name="qty'+col+'" placeholder="'+'<?php echo $tr->translate("QTY");?> " value="'+data.totalQtyreceive+'" type="text"  ></td>';	
-	// 			template+='<td data-label="<?php echo $tr->translate("UNIT_PRICE");?>" class=" bold"><input readOnly  dojoType="dijit.form.NumberTextBox" required="true"  class="fullside" id="unitPrice'+col+'" name="unitPrice'+col+'" placeholder="'+'<?php echo $tr->translate("UNIT_PRICE");?>" value="'+data.unitPriceReceive+'" type="text"  ></td>';
-	// 			template+='<td data-label="<?php echo $tr->translate("DISCOUNT");?>" class=" bold"><input readOnly  dojoType="dijit.form.NumberTextBox" required="true"  class="fullside" id="unitPrice'+col+'" name="unitPrice'+col+'" placeholder="'+'<?php echo $tr->translate("DISCOUNT");?>" value="'+data.totalReceiveDiscount+'" type="text"  ></td>';		
-	// 			template+='<td data-label="<?php echo $tr->translate("SUBTOTAL");?>" class=" bold"><input dojoType="dijit.form.NumberTextBox" readOnly required="true" class="fullside" id="subTotal'+col+'" name="subTotal'+col+'" placeholder="'+'<?php echo $tr->translate("TOTAL");?> " value="'+data.totalReceive+'" type="text"  ></td>';	
-				
-	// 			tmp='<tr class="rowData" id="row'+col+'">';
-	// 			tmp+="</tr>";
-				
-	// 			dojo.query("#table_row").append(tmp);
-	// 			if($("#identity").val()!="") {
-	// 				var identity = $("#identity").val();
-	// 				$("#identity").val(identity+','+col);
-
-	// 				var identityinv = $("#invIdentity").val();
-	// 				$("#invIdentity").val(identityinv+','+data.id);
-	// 			} else {
-	// 				$("#identity").val(col);
-					
-	// 				$("#invIdentity").val(data.id);
-	// 			}
-	// 			dojo.html.set(dojo.byId("row"+col),template , {
-	// 				 parseContent: true,
-	// 			});
-				
-	// 			dijit.byId('invoiceList').reset();
-	// 			calculateRowAmount();
-	// 		},
-	// 		error: function(err) {
-	// 		}
-			
-	// 	});
-	
-	// }
 	function deleteRecord(index) {
 		var identityinv = $('#invIdentity').val();
 		var arraysDn = identityinv.split(',');
