@@ -1060,6 +1060,101 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 		}
     }
 	
+	public function getPurchaseConcreteList($_data){
+		$db = $this->getAdapter();
+		try{
+			
+			$_data['userId'] = empty($_data['userId'])?0:$_data['userId'];
+			$sql="SELECT 
+					r.*
+					,(SELECT pro.project_name FROM `ln_project` AS pro WHERE pro.br_id=r.projectId LIMIT 1) AS projectName
+					,(SELECT s.supplierName FROM st_supplier s WHERE s.id=r.supplierId LIMIT 1) AS supplierName
+					,(SELECT s.supplierTel FROM st_supplier s WHERE s.id=r.supplierId LIMIT 1) AS supplierTel
+					,(SELECT s.address FROM st_supplier s WHERE s.id=r.supplierId LIMIT 1) AS supplierAddress
+					,p.proName
+					,p.proCode
+					,p.measureLabel
+					,(SELECT CONCAT(COALESCE(s.last_name,''),' ',COALESCE(s.first_name,'')) FROM rms_users AS s WHERE s.id=r.userId LIMIT 1 ) AS byUserName
+					,rd.qtyReceive
+					,rd.price
+					,rd.discountPercent
+					,rd.discountAmount
+					,rd.totalDiscount
+					,rd.subTotal
+					,rd.strength
+					,rd.note AS descriptionConcreteInfo 
+					,rd.workType AS workTypeId
+					,(SELECT wt.workTitle FROM `st_work_type` AS wt WHERE wt.id =rd.workType LIMIT 1) AS workTypeTitle
+				";
+			$sql.="	FROM `st_receive_stock` AS r 
+						JOIN st_receive_stock_detail AS rd  ON r.id=rd.receiveId 
+						JOIN `st_purchasing` AS po ON po.id=r.poId and po.purchasetype = 3 
+						Left Join `st_product` AS p On p.proId=rd.proId 
+			";
+			$sql.=" WHERE r.status = 1 ";	
+			
+			$sql.=$this->getAccessPermission("r.projectId",$_data);
+			if(!empty($_data['isForReAdjustment'])){
+				$sql.=" AND r.isissueStatement = 2 ";	
+			}
+			$sql.=" ORDER BY r.id DESC ";
+			
+			$limit=" ";
+			if(!empty($_data['LimitStart'])){
+				$limit.=" LIMIT ".$_data['LimitStart'].",".$_data['limitRecord'];
+			}else if(!empty($_data['limitRecord'])){
+				$limit.=" LIMIT ".$_data['limitRecord'];
+			}
+			$row = $db->fetchAll($sql.$limit);
+			
+			$counting = count($row);
+			$allResult = array('rowData'=>$row,'countingRecord'=>$counting);
+			
+			$result = array(
+						'status' =>true,
+						'value' =>$allResult,
+					);
+			return $result;
+			
+		}catch(Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$result = array(
+				'status' =>false,
+				'value' =>$e->getMessage(),
+			);
+			return $result;
+		}
+	}
 	
+	function submitApproveToReAdjustPoConcrete($_data){
+    	$db = $this->getAdapter();
+    	try{
+			
+			$_data['userId'] 	 = empty($_data['userId'])?0:$_data['userId'];
+			
+			
+			$listFromPost 	 = empty($_data['listForVerify'])?null:$_data['listForVerify'];
+			$listForVerify 	 = Zend_Json::decode($listFromPost);
+    		
+			if(!empty($listForVerify)) foreach($listForVerify AS $row){
+				$verifiedId = $row['id'];
+				$arr = array(
+					'verified' 		=> 0,
+					'isissueStatement' => 0,
+					'verifiedBy' 	=> $_data['userId'],
+					'modifyDate' 	=> date('Y-m-d H:i:s')
+				);
+				$where = "id=" . $verifiedId;
+				$this->_name = "st_receive_stock";
+				$this->update($arr, $where);
+				
+			}
+			
+    		return true;
+    	}catch (Exception $e){
+    		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+    		return false;
+    	}
+    }
 	
 }
