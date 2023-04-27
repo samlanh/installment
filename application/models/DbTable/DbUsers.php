@@ -201,7 +201,12 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 					u.`id`,
 					u.`branch_list`,
 					u.`systemAccess`,
-					u.`signature_pic`  
+					u.`signature_pic`,
+					u.`photo` ,
+					u.`nationality` ,
+					u.`current_address`,
+					u.`personal_doc_no` ,
+					u.`userAction`    
 					
 				FROM `rms_users` AS u
 				WHERE u.id = ".$id;	
@@ -259,6 +264,10 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 				'branch_id'=>$data['branch_id'],
 				'last_name'=>$data['last_name'],
 				'first_name'=>$data['first_name'],
+				'nationality'=>$data['nationality'],
+				'current_address'=>$data['current_address'],
+				'personal_doc_no'=>$data['personal_doc_no'],
+				'userAction'=>$data['userAction'],
 				'user_name'=>$data['user_name'],
 				'password'=> MD5($data['password']),
 				'user_type'=> $data['user_type'],
@@ -271,15 +280,30 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 			if (!file_exists($part)) {
 				mkdir($part, 0777, true);
 			}
-    		$photo_name = $_FILES['photo']['name'];
-    		if (!empty($photo_name)){
-    			$tem =explode(".", $photo_name);
+    		$signature_pic_name = $_FILES['signature_pic']['name'];
+    		if (!empty($signature_pic_name)){
+    			$tem =explode(".", $signature_pic_name);
     			$image_name = "user_sign_".date("Y").date("m").date("d").time().".".end($tem);
-    			$tmp = $_FILES['photo']['tmp_name'];
+    			$tmp = $_FILES['signature_pic']['tmp_name'];
     			if(move_uploaded_file($tmp, $part.$image_name)){
     				move_uploaded_file($tmp, $part.$image_name);
     				$photo = $image_name;
     				$_user_data['signature_pic']=$photo;
+    			}
+    		}
+			$part1= PUBLIC_PATH.'/images/photo/profile/';
+			if (!file_exists($part1)) {
+				mkdir($part1, 0777, true);
+			}
+    		$photo_name = $_FILES['photo']['name'];
+    		if (!empty($photo_name)){
+    			$tem =explode(".", $photo_name);
+    			$image_name = "user_profile_".date("Y").date("m").date("d").time().".".end($tem);
+    			$tmp = $_FILES['photo']['tmp_name'];
+    			if(move_uploaded_file($tmp, $part1.$image_name)){
+    				move_uploaded_file($tmp, $part1.$image_name);
+    				$photo_profile = $image_name;
+    				$_user_data['photo']=$photo_profile;
     			}
     		}
 			
@@ -313,6 +337,10 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 				'branch_id'=>$data['branch_id'],
 		    	'last_name'=>$data['last_name'],
 				'first_name'=>$data['first_name'],
+				'nationality'=>$data['nationality'],
+				'current_address'=>$data['current_address'],
+				'personal_doc_no'=>$data['personal_doc_no'],
+				'userAction'=>$data['userAction'],
 				'user_name'=>$data['user_name'],
 				'user_type'=> $data['user_type'],
 				'active'=> $status,
@@ -323,19 +351,38 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 			if (!file_exists($part)) {
 				mkdir($part, 0777, true);
 			}
-    		$photo_name = $_FILES['photo']['name'];
-    		if (!empty($photo_name)){
-    			$tem =explode(".", $photo_name);
+    		$signature_pic_name = $_FILES['signature_pic']['name'];
+    		if (!empty($signature_pic_name)){
+    			$tem =explode(".", $signature_pic_name);
     			$image_name = "user_sign_".date("Y").date("m").date("d").time().".".end($tem);
-    			$tmp = $_FILES['photo']['tmp_name'];
+    			$tmp = $_FILES['signature_pic']['tmp_name'];
     			if(move_uploaded_file($tmp, $part.$image_name)){
     				move_uploaded_file($tmp, $part.$image_name);
     				$photo = $image_name;
     				$_user_data['signature_pic']=$photo;
     			}
     		}
-			if(!empty($photo_name) AND file_exists($part.$data['old_sign'])){//delelete old file
+			if(!empty($signature_pic_name) AND file_exists($part.$data['old_sign'])){//delelete old file
     			unlink($part.$data['old_sign']);
+    		}
+
+			$part1= PUBLIC_PATH.'/images/photo/profile/';
+			if (!file_exists($part1)) {
+				mkdir($part1, 0777, true);
+			}
+    		$photo_name = $_FILES['photo']['name'];
+    		if (!empty($photo_name)){
+    			$tem =explode(".", $photo_name);
+    			$image_name = "user_profile_".date("Y").date("m").date("d").time().".".end($tem);
+    			$tmp = $_FILES['photo']['tmp_name'];
+    			if(move_uploaded_file($tmp, $part1.$image_name)){
+    				move_uploaded_file($tmp, $part1.$image_name);
+    				$photo_profile = $image_name;
+    				$_user_data['photo']=$photo_profile;
+    			}
+    		}
+			if(!empty($photo_name) AND file_exists($part.$data['old_photo'])){//delelete old file
+    			unlink($part.$data['old_photo']);
     		}
 			
 			if (!empty($data['check_change'])){
@@ -346,7 +393,7 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 			
 			return $data['id'];
 		}catch (Exception $e){
-			Application_Form_FrmMessage::message($this->tr->translate("INSERT_SUCCSS"));
+			Application_Form_FrmMessage::message("INSERT_SUCCSS");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}
 	}

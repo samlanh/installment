@@ -620,4 +620,66 @@ class Systemapi_Model_DbTable_DbActions extends Zend_Db_Table_Abstract
 		}
 	}
 	
+	public function getPurchaseConcreteListAction($search){
+		try{
+			$search['userId'] = empty($search['userId'])?0:$search['userId'];
+			$search['mobileToken'] = empty($search['mobileToken'])?0:$search['mobileToken'];
+			
+			$db = new Systemapi_Model_DbTable_DbApi();
+			$row = $db->getPurchaseConcreteList($search);
+			if ($row['status']){
+				$arrResult = array(
+						"result" => $row['value'],
+						"code" => "SUCCESS",
+					);
+			}else{
+				$arrResult = array(
+					"code" => "ERR_",
+					"message" => $row['value'],
+				);
+			}
+			
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}catch(Exception $e){
+			$arrResult = array(
+				"code" => "ERR_",
+				"message" => $e->getMessage(),
+			);
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}
+	}
+	public function submitApproveToReAdjustPoConcreteAction($search){
+		try{
+			$search['userId'] = empty($search['userId'])?0:$search['userId'];
+			$search['mobileToken'] = empty($search['mobileToken'])?0:$search['mobileToken'];
+			
+			$db = new Systemapi_Model_DbTable_DbApi();
+			$submitVerify = $db->submitApproveToReAdjustPoConcrete($search);
+			
+			if($submitVerify){
+				$arrResult = array(
+					"code" => "SUCCESS",
+					"result" =>$submitVerify,
+				);			
+			}else{
+				$arrResult = array(
+					"code" => "FAIL",
+					"message" => "FAIL_TO_SUBMIT",
+				);
+			}
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}catch(Exception $e){
+			$arrResult = array(
+				"code" => "ERR_",
+				"message" => $e->getMessage(),
+			);
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}
+	}
+	
+	
 }
