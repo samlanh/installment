@@ -1387,7 +1387,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 	{
 		$_data['branchId'] = empty($_data['branchId']) ? 0 : $_data['branchId'];
 		$_data['userAction'] = empty($_data['userAction']) ? 0 : $_data['userAction'];
-		$_data['deviceType'] = empty($_data['deviceType']) ? 1 : $_data['deviceType'];
+		$_data['deviceType'] = 1;
 
 		$notificationId = empty($_data['notificationId']) ? 0 : $_data['notificationId'];
 		$notificationTitle = "Notification Title";
