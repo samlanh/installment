@@ -675,7 +675,6 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 					$notify = array(
 						"userAction" => 3,
 						"typeNotify" => "toPoVerifyRequest",
-						"deviceType" => "1",
 					);
 					$notify["notificationId"]  = $requestId;
 					$notify["branchId"]  = $request["projectId"];
@@ -762,7 +761,6 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 					$notify = array(
 						"userAction" => 4,// push to Boss Approve
 						"typeNotify" => "toApproveRequest",
-						"deviceType" => "1",
 					);
 					$notify["notificationId"]  = $requestId;
 					$notify["branchId"]  = $request["projectId"];
@@ -849,7 +847,6 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 					$notify = array(
 						"userAction" => 3,// push to PO Dept to Make PO
 						"typeNotify" => "toPoPurchase",
-						"deviceType" => "1",
 					);
 					$notify["notificationId"]  = $requestId;
 					$notify["branchId"]  = $request["projectId"];

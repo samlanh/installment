@@ -50,7 +50,6 @@ class Requesting_CheckingrequestController extends Zend_Controller_Action {
 		$notify = array(
 			"userAction" => 3,
 			"typeNotify" => "toPoVerifyRequest",
-			"deviceType" => "1",
 		);
 		
 		
