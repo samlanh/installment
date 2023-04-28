@@ -239,22 +239,21 @@ class Invpayment_Model_DbTable_DbDnconcrete extends Zend_Db_Table_Abstract
 	    			
 	    			$strength = ($rowDn['workType']!=null) ? $rowDn['workType']:'';
 	    			
-	    			$string.='<td  data-label="'.$tr->translate("STRENGTH").'" class="infoCol"  >'.$strength.'</td>';
-	    			$string.='<td  data-label="'.$tr->translate("RECEIVE_DATE").'" class="infoCol"  >'.$rowDn['receiveDate'].'</td>';
-	    			$string.='<td  data-label="'.$tr->translate("DN_NO").'" class="red bold" ><input readOnly dojoType="dijit.form.ValidationTextBox" class="fullside" id="dnId'.$no.'" name="dnId'.$no.'" value="'.$rowDn['dnNumber'].'" type="text" ></td>';
+	    			$string.='<td data-label="'.$tr->translate("STRENGTH").'" class="infoCol"  >'.$strength.'</td>';
+	    			$string.='<td data-label="'.$tr->translate("RECEIVE_DATE").'" class="infoCol"  >'.$rowDn['receiveDate'].'</td>';
+	    			$string.='<td data-label="'.$tr->translate("DN_NO").'" class="red bold" ><input readOnly dojoType="dijit.form.ValidationTextBox" class="fullside" id="dnId'.$no.'" name="dnId'.$no.'" value="'.$rowDn['dnNumber'].'" type="text" ></td>';
 	    			$string.='<td data-label="'.$tr->translate("QTY").'" class=" bold" ><input readOnly dojoType="dijit.form.NumberTextBox" required="true" class="fullside" id="qty'.$no.'" name="qty'.$no.'"  value="'.$rowDn['qtyReceive'].'" type="text" ></td>';
 	    			$string.='<td data-label="'.$tr->translate("UNIT_PRICE").'" class=" bold"><input readOnly  dojoType="dijit.form.NumberTextBox" required="true"  class="fullside" id="unitPrice'.$no.'" name="unitPrice'.$no.'" value="'.$rowDn['price'].'" type="text" ></td>';
 	    			$string.='<td data-label="'.$tr->translate("SUBTOTAL").'" class=" bold"><input dojoType="dijit.form.NumberTextBox" readOnly required="true" class="fullside" id="subTotal'.$no.'" name="subTotal'.$no.'" value="'.$rowDn['subTotal'].'" type="text"  ></td>';
     			$string.='</tr>';
     			$string.='<tr id="rowsub'.$no.'" class="rowData '.$classRowBg.'" >';
-	    			$string.='<td  class="numberRecord infoCol" align="center"></td>';
-	    			$string.='<td  class="numberRecord infoCol" align="center" ></td>';
-	    			$string.='<td  class="productName infoCol" ></td>';
-	    			$string.='<td colspan="4" class="red infoCol"  >&nbsp;'.$rowDn['note'].'</td>';
-	    			$string.='<td class="red bold"></td>';
-	    			$string.='<td class="bold" ></td>';
-	    			$string.='<td class="bold"></td>';
-	    			$string.='<td></td>';
+	    			$string.='<td class="numberRecord infoCol" align="center"></td>';
+	    			$string.='<td class="numberRecord infoCol" align="center" ></td>';
+	    			$string.='<td class="productName infoCol" ></td>';
+	    			$string.='<td colspan="3" class="red infoCol"  >&nbsp;'.$rowDn['note'].'</td>';
+	    			$string.='<td class="red infoCol" >&nbsp;'.$tr->translate('REJECT_NOTE').'</td>';
+	    			$string.='<td colspan="3" class="bold" ><textarea dojoType="dijit.form.Textarea" required="true" class="fullside" placeHolder"'.$tr->translate('REJECT_NOTE').'" id="rejectNote'.$no.'" name="rejectNote'.$no.'"  ></textarea></td>';
+	    			$string.='<td class="red bold"><input type="button" onclick="rejectRecordReceived('.$no.');" class="button-class button-danger" iconClass="glyphicon glyphicon-repeat" id="reject'.$no.'" name="reject'.$no.'" label="'.$tr->translate('REJECT').'" dojoType="dijit.form.Button"  /></td>';
     			$string.='</tr>';
     			$no++;
     		}
@@ -292,4 +291,32 @@ class Invpayment_Model_DbTable_DbDnconcrete extends Zend_Db_Table_Abstract
 		return $db->fetchRow($sql);
 		
 	}  
+	function rejectDnbyId($data){
+		try{
+			$this->_name='st_receive_stock';	
+			$arr = array(
+				'verified'=>2,
+				'rejectReason'=>$data['rejectNote']
+			);
+			$where ="transactionType = 2 AND id=".$data['dnId'];
+			$this->update($arr, $where);
+			
+			//push notification
+			$dbGbSt = new Application_Model_DbTable_DbGlobalStock();
+			$notify = array(
+					"userAction" => 2,
+					"typeNotify" => "toReviewPOConcrete",
+			);
+			
+			$notify["notificationId"]  = $data['dnId'];
+			$notify["branchId"]  = $data["projectId"];
+			$dbGbSt->pushNotificationForAndroid($notify);
+			
+		}catch (Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			Application_Form_FrmMessage::message($e);
+		}
+		//Add push notification here
+		
+	}
 }

@@ -7,6 +7,14 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		$session_user = new Zend_Session_Namespace(SYSTEM_SES);
 		return $session_user->user_id;
 	}
+
+	function  getAllStrength(){
+		$db = $this->getAdapter();
+		$sql = 'SELECT DISTINCT strength AS name,strength AS id FROM `st_receive_stock_detail` WHERE strength!="" ORDER BY strength DESC';
+		$rows =  $db->fetchAll($sql);
+		return $rows;
+	}
+
 	public function getAllCategoryProduct($parent = 0, $spacing = '', $cate_tree_array = '', $option = null)
 	{
 
@@ -1345,6 +1353,36 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		return $db->fetchRow($sql);
 	}
 
+	function getPurchaseConcreteInfoById($id = null)
+	{
+		$db = $this->getAdapter();
+		$dbGb = new Application_Model_DbTable_DbGlobal();
+		$sql = " 
+			SELECT 
+				r.*
+				,(SELECT pro.project_name FROM `ln_project` AS pro WHERE pro.br_id=r.projectId LIMIT 1) AS projectName
+				,(SELECT s.supplierName FROM st_supplier s WHERE s.id=r.supplierId LIMIT 1) AS supplierName
+				,(SELECT s.supplierTel FROM st_supplier s WHERE s.id=r.supplierId LIMIT 1) AS supplierTel
+				,(SELECT s.address FROM st_supplier s WHERE s.id=r.supplierId LIMIT 1) AS supplierAddress
+				,p.proName
+				,p.proCode
+				,p.measureLabel
+				,rd.strength
+				,rd.note AS descriptionConcreteInfo 
+				,rd.workType AS workTypeId
+				,(SELECT wt.workTitle FROM `st_work_type` AS wt WHERE wt.id =rd.workType LIMIT 1) AS workTypeTitle
+			FROM `st_receive_stock` AS r 
+				JOIN st_receive_stock_detail AS rd  ON r.id=rd.receiveId 
+				JOIN `st_purchasing` AS po ON po.id=r.poId and po.purchasetype = 3 
+				Left Join `st_product` AS p On p.proId=rd.proId ";
+		$sql.= " WHERE 1 ";
+		if (!empty($id)) {
+			$sql .= " AND r.id = $id ";
+		}
+		$sql .= " LIMIT 1 ";
+		return $db->fetchRow($sql);
+	}
+	
 	function pushNotificationForAndroid($_data)
 	{
 		$_data['branchId'] = empty($_data['branchId']) ? 0 : $_data['branchId'];
@@ -1384,6 +1422,24 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 				}
 				$recordDetail = array($recordInfo);
 			}
+		}else if($typeNotify == "toReviewPOConcrete"){
+			$recordInfo = $this->getPurchaseConcreteInfoById($notificationId);
+			if(!empty($recordInfo)){
+				$notificationTitle = "វិក្កយបត្របេតុងត្រូវកែ សម្រាប់គម្រោង " . str_replace('គម្រោង', '', $recordInfo['projectName']);
+				$notificationSubTitle = "លេខ " . $recordInfo['dnNumber'] . " សម្រាប : " . $recordInfo['workTypeTitle'];
+				if(!empty($recordInfo['strength'])){
+					$notificationSubTitle = $notificationSubTitle." កម្លាំង : " . $recordInfo['strength'];
+				}
+				$notificationDescription = $notificationSubTitle;
+				if (!empty($recordInfo['descriptionConcreteInfo'])) {
+					$notificationDescription = $notificationDescription . " " . $recordInfo['descriptionConcreteInfo'];
+				}
+				if (!empty($recordInfo['rejectReason'])) {
+					$notificationDescription = $notificationDescription . " មូលហតុ : " . $recordInfo['rejectReason'];
+				}
+				$recordDetail = array($recordInfo);
+			}
+			
 		}
 
 
@@ -1433,4 +1489,6 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 
 		curl_close($ch);
 	}
+
+	
 }

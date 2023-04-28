@@ -48,7 +48,6 @@ class Requesting_RequestController extends Zend_Controller_Action
 		$notify = array(
 			"userAction" => 2,
 			"typeNotify" => "toCheckingRequest",
-			"deviceType" => "1",
 		);
 		$db = new Requesting_Model_DbTable_DbRequest();
 		if ($this->getRequest()->isPost()) {
@@ -86,9 +85,6 @@ class Requesting_RequestController extends Zend_Controller_Action
 		$notify = array(
 			"userAction" => 2,
 			"typeNotify" => "Requesting",
-			"deviceType" => "1",
-			"notificationTitle" => "Requesting PO",
-
 		);
 
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();

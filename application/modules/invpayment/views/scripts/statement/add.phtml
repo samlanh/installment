@@ -26,12 +26,7 @@
 						dijit.byId('branch_id').focus();
 						return false;
 					}
-					purId = dijit.byId('purId').get('value');
-					if(purId=='' || purId<=0){
-						infoMessageAlert('<?php echo $tr->translate('PLEASE_SELECT_PO_NO');?>');
-						dijit.byId('purId').focus();
-						return false;
-					}
+					
 					totalAmountExternalVal = dijit.byId('totalAmountExternal').get('value');
 					if(totalAmountExternalVal<=0){
 						infoMessageAlert('<?php echo $tr->translate('NO_AMOUNT_TO_SAVE');?>');
@@ -179,13 +174,13 @@
 							<td width="2%"><?php echo $tr->translate("DEL");?></td>
 							<td width="5%"><?php echo $tr->translate("N_O");?></td>
 							<td width="20%"><?php echo $tr->translate("PRODUCT_NAME");?></td>
-							<td width="10%"><?php echo $tr->translate("MEASURE");?></td>
+							<td><?php echo $tr->translate("MEASURE");?></td>
 							<td width="10%"><?php echo $tr->translate("WORK_TYPE");?></td>
 							<td width="10%"><?php echo $tr->translate("STRENGTH");?></td>
 							<td width="10%"><?php echo $tr->translate("RECEIVE_DATE");?></td>
 							<td width="10%"><?php echo $tr->translate("DN_NO");?></td>
 							<td width="10%"><?php echo $tr->translate("QTY");?></td>
-							<td width="10%"><?php echo $tr->translate("UNIT_PRICE")." ".$tr->translate("CURRENCY_SIGN");?></td>
+							<td width="10%"><?php echo $tr->translate("UNIT_PRICE");?></td>
 							<td width="10%"><?php echo $tr->translate("TOTAL");?></td>
 						</tr>
 						<tbody id="table_row">
@@ -212,6 +207,23 @@
              </div>
 		</form>
     </div>
+</div>
+<div class="dijitHidden" style="padding: 0px; margin: 0px;">
+	<div id="confirmId" data-dojo-type="dijit.Dialog" style="width:10cm;height: 5cm ;" align="center" data-dojo-props="title:'Confirmation'"  >
+		<table width="100%"  class="print" cellspacing="0"  cellpadding="0" style="height:4cm;color:red; font-family: 'Khmer OS Battambang' !important;font-size:15px !important;white-space:nowrap;">
+			<tr>
+				<td align="center" >
+					Are your sure to reject this record ?
+				</td>
+			</tr>
+			<tr>
+				<td align="center">
+					<input type="button" onclick="checkStatus(1);" class="button-class button-danger" iconClass="glyphicon glyphicon-off" label="No" dojoType="dijit.form.Button"  />
+					<input type="button" onclick="checkStatus(2);" class="button-class button-primary" iconClass="glyphicon glyphicon glyphicon-check" label="Yes" dojoType="dijit.form.Button"  />
+				</td>
+			</tr>
+		</table>
+	</div>
 </div>
 <style>
 
@@ -296,23 +308,14 @@ ul.listDn li small {
     dojo.require("dijit.form.Textarea");
     dojo.require("dijit.form.NumberTextBox");
     dojo.require("dijit.form.DateTextBox");
-
-	var purchaseStore  = getDataStorefromJSON('id','name', null );
-	var productStore  = getDataStorefromJSON('id','name', null );
+	
     require(["dojo/ready"], function(ready){
 		ready(function(){
-			
 			onChageFunctionByBranch();
-			var totalAmountExternal = dijit.byId('totalAmountExternal');
-			 totalAmountExternal.on('keyup', function(evt) {
-				 checkingDeposit();
-			});
 			dijit.byId("totalAmountExternal").set("readOnly",true);
 		});
 
-
 		new dijit.form.FilteringSelect({
-			store: productStore,
 			autoComplete: false,
 			queryExpr: "*${0}*",
 			required: false,		           
@@ -327,15 +330,15 @@ ul.listDn li small {
 		}, "dnList");
 	 
 	 });
-    function previewStatement(){
-		identity = $('#dnIdentity').val();
-		window.open('<?php echo $this->url(array('module'=>'invpayment','controller'=>'statement','action'=>'view'));?>'+'/id/'+identity,'_blank');
-    }
+   
 	function onChageFunctionByBranch(){
 		getAllDN();
 		getInvoiceNoByBranch();
 	}
 	var keyindex=1;
+	var col= 0; 
+	var no=0;
+	
 	function getAllDN(generate=null){
 		dijit.byId('dnList').reset();
 		no = 0;
@@ -351,14 +354,15 @@ ul.listDn li small {
 		
 		supplierId = dijit.byId('supplierId').get('value');
 		if(supplierId==''){
+			dijit.byId('supplierId').focus();
 			return false;
 		}
 
 		fromDate = dijit.byId('fromDate').get('value');
 		if(fromDate!=null){
-			var a = new Date(fromDate);
+			let a = new Date(fromDate);
 			mm = a.getMonth()+1;
-			var dd = a.getDate();
+			let dd = a.getDate();
 			 if(dd<10){
 				 dd = "0"+dd;
 			}
@@ -367,17 +371,17 @@ ul.listDn li small {
 				 month = "0"+mm;
 			}
 			
-			var y = a.getFullYear();
-			var fromDate = y +'-'+month+'-'+dd ;
+			let y = a.getFullYear();
+			let fromDate = y +'-'+month+'-'+dd ;
 		}else{
 			fromDate='';
 			}
 		
 		toDate = dijit.byId('toDate').get('value');
 		if(toDate!=null){
-			var a = new Date(toDate);
+			let a = new Date(toDate);
 			mm = a.getMonth()+1;
-			var dd = a.getDate();
+			let dd = a.getDate();
 			 if(dd<10){
 				 dd = "0"+dd;
 			}
@@ -385,8 +389,8 @@ ul.listDn li small {
 			if(mm<10){
 				 month = "0"+mm;
 			}
-			var y = a.getFullYear();
-			var toDate = y +'-'+month+'-'+dd ;
+			let y = a.getFullYear();
+			let toDate = y +'-'+month+'-'+dd ;
 		}else{
 			toDate='';
 			}
@@ -396,7 +400,7 @@ ul.listDn li small {
 		if(toDate!=''){
 			dijit.byId('endDate').attr('value',toDate);
 		}
-		var urlGetAlldn = '<?php echo $this->url(array('module'=>'invpayment','controller'=>'statement','action'=>'getalldn')); ?>';
+		let urlGetAlldn = '<?php echo $this->url(array('module'=>'invpayment','controller'=>'statement','action'=>'getalldn')); ?>';
 		
 		objectContentFilter = {
 				'branch_id':branch_id,
@@ -423,7 +427,8 @@ ul.listDn li small {
 			handleAs:"json",
 			load: function(data){
 				keyindex=data.keyindex;
-				no=keyindex+1;
+				 no=keyindex;
+				 col = keyindex;
 				$("#identity").val(data.identity);
 				$("#dnIdentity").val(data.dnIdentity);
 				$("#totalAmountExternal").val(data.totalAmount);
@@ -439,8 +444,9 @@ ul.listDn li small {
 			}
 		});
 	}
-	var urlGetRequestNo = '<?php echo $this->url(array('module'=>'invpayment','controller'=>'index','action'=>'getinvoiceno')); ?>';
 	function getInvoiceNoByBranch(){
+		let urlGetRequestNo = '<?php echo $this->url(array('module'=>'invpayment','controller'=>'index','action'=>'getinvoiceno')); ?>';
+		
 		branch_id = dijit.byId('branch_id').get('value');
 		if(branch_id=='' || branch_id<=0){
 			return false;
@@ -449,7 +455,7 @@ ul.listDn li small {
 			url:urlGetRequestNo,	
 			content:{ 
 				'branch_id':branch_id,
-				'receiveIvDate':'<?php echo date('d-m-Y');?>'//receiveIvDate
+				'receiveIvDate':'<?php echo date('d-m-Y');?>'
 			},		    
 			handleAs:"json",
 			load: function(data) {
@@ -460,11 +466,10 @@ ul.listDn li small {
 		});
 	}
 
-	var col= 0; var no=0;
-	var title = 0;
-	var urlGetReceiiveInfo = '<?php echo $this->url(array('module'=>'invpayment','controller'=>'statement','action'=>'get-receive-info')); ?>';
+	
 	function addRowProductReceive(dnId=null){
 		template='';
+		templatesub='';
 		temp = "";
 		branch_id = dijit.byId('branch_id').get('value');
 		if(branch_id=='' || branch_id<=0){
@@ -496,7 +501,8 @@ ul.listDn li small {
 				 }
 			}
 		}
-		col++;no++;
+		
+		let urlGetReceiiveInfo = '<?php echo $this->url(array('module'=>'invpayment','controller'=>'statement','action'=>'get-receive-info')); ?>';
 		
 		dojo.xhrPost({
 			url:urlGetReceiiveInfo,	
@@ -504,14 +510,14 @@ ul.listDn li small {
 				'receiveId':receiveId
 			},		    
 			handleAs:"json",
-			load: function(data) {
-				keyindex = no+1;
+			load: function(data){
+				
 				classRowBg = "odd";
     			if((col%2)==0){
     				classRowBg = "regurlar";
     			}
 				template+='<td  class="numberRecord" align="center"><span title="<?php echo $tr->translate("REMOVE_RECORD");?>" class="removeRow" onclick="deleteRecord('+col+');"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></span></td>';
-				template+='<td  class="numberRecord" data-label="<?php echo $tr->translate("N_O");?>" align="center" >'+no+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="rsId'+col+'" name="rsId'+col+'" value="'+data.id+'"   ></td>';
+				template+='<td  class="numberRecord" data-label="<?php echo $tr->translate("N_O");?>" align="center" >'+no+'</td>';
 				template+='<td  data-label="<?php echo $tr->translate("PRODUCT_NAME");?>" class="productName" >'+data.proCode+'<br />'+data.proName+'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId'+col+'" name="proId'+col+'" value="'+data.proId+'" type="text"  ></td>';	
 				template+='<td  data-label="<?php echo $tr->translate("MEASURE");?>" class="red">'+data.measure+'</td>';	
 				template+='<td  data-label="<?php echo $tr->translate("WORK_TYPE");?>"  >'+data.workType+' </td>';
@@ -522,11 +528,25 @@ ul.listDn li small {
 				template+='<td data-label="<?php echo $tr->translate("QTY");?>" class=" bold" ><input readOnly dojoType="dijit.form.NumberTextBox" required="true" class="fullside" id="qty'+col+'" name="qty'+col+'" placeholder="'+'<?php echo $tr->translate("QTY");?> " value="'+data.qtyReceive+'" type="text"  ></td>';	
 				template+='<td data-label="<?php echo $tr->translate("UNIT_PRICE");?>" class="bold"><input readOnly  dojoType="dijit.form.NumberTextBox" required="true"  class="fullside" id="unitPrice'+col+'" name="unitPrice'+col+'" placeholder="'+'<?php echo $tr->translate("UNIT_PRICE");?>" value="'+data.price+'" type="text"  ></td>';	
 				template+='<td data-label="<?php echo $tr->translate("SUBTOTAL");?>" class="bold"><input dojoType="dijit.form.NumberTextBox" readOnly required="true" class="fullside" id="subTotal'+col+'" name="subTotal'+col+'" placeholder="'+'<?php echo $tr->translate("TOTAL");?> " value="'+data.subTotal+'" type="text"  ></td>';	
-				
-				tmp='<tr class="rowData '+classRowBg+'" id="row'+col+'">';
+
+				templatesub+='<td class="numberRecord infoCol" align="center"></td>';
+				templatesub+='<td class="numberRecord infoCol" align="center" ></td>';
+				templatesub+='<td class="productName infoCol" ></td>';
+				templatesub+='<td colspan="3" class="red infoCol"  >&nbsp;'+data.note+'</td>';
+				templatesub+='<td class="red infoCol" >&nbsp;<?php echo $tr->translate("REJECT_NOTE");?></td>';
+				templatesub+='<td colspan="3" class="bold" ><textarea dojoType="dijit.form.Textarea" required="true" class="fullside" id="rejectNote'+col+'" name="rejectNote'+col+'"  ></textarea></td>';
+				templatesub+='<td class="red bold"><input type="button" onclick="rejectRecordReceived('+col+');" class="button-class button-danger" iconClass="glyphicon glyphicon-repeat" id="reject'+col+'" name="reject'+col+'" label="<?php echo $tr->translate("REJECT");?>" dojoType="dijit.form.Button" ></td>';
+				templatesub+='</tr>';
+			
+				tmp='<tr class="'+classRowBg+'" id="row'+col+'">';
 				tmp+="</tr>";
+
+				tmpsub='<tr class="rowData '+classRowBg+'" id="rowsub'+col+'">';
+				tmpsub+="</tr>";
 				
 				dojo.query("#table_row").append(tmp);
+				dojo.query("#table_row").append(tmpsub);
+				
 				if($("#identity").val()!="") {
 					var identity = $("#identity").val();
 					$("#identity").val(identity+','+col);
@@ -535,56 +555,103 @@ ul.listDn li small {
 					$("#dnIdentity").val(identitydn+','+data.id);
 				} else {
 					$("#identity").val(col);
-					
 					$("#dnIdentity").val(data.id);
 				}
 				dojo.html.set(dojo.byId("row"+col),template , {
 					 parseContent: true,
 				});
+				dojo.html.set(dojo.byId("rowsub"+col),templatesub , {
+					 parseContent: true,
+				});
+				
+				col++;
+				no++;
+				keyindex=no;
+				keyindex = no+1;
 				
 				dijit.byId('dnList').reset();
 				calculateRowAmount();
 			},
 			error: function(err) {
 			}
-			
 		});
 	
 	}
 	function deleteRecord(index) {
-		var identityDn = $('#dnIdentity').val();
-		var arraysDn = identityDn.split(',');
+		let identityDn = $('#dnIdentity').val();
+		let arraysDn = identityDn.split(',');
 		
-		var identity = $('#identity').val();
-		var arrays = identity.split(',');
-		for(var i=0;i<arrays.length;i++) {
+		let identity = $('#identity').val();
+		let arrays = identity.split(',');
+		for(let i=0;i<arrays.length;i++) {
 			if(arrays[i] == index){
 				arrays.splice(i,1);
 				arraysDn.splice(i,1);
 			}
 		}
-		var strings = arrays.join(',');
-		var stringsDn = arraysDn.join(',');
+		let strings = arrays.join(',');
+		let stringsDn = arraysDn.join(',');
 		
 		$('#identity').val(strings);
 		$('#dnIdentity').val(stringsDn);
 		
 		dojo.query("#row"+index).remove();
+		dojo.query("#rowsub"+index).remove();
+		
 		calculateRowAmount();
 	}
 
 	function calculateRowAmount(){
-		var rowId = $('#identity').val();
+		let rowId = $('#identity').val();
 		if(rowId==""){
 			return false;
 		}
-		var payment=0;
+		let payment=0;
 		
-		var rowIDArray = rowId.split(',');
+		let rowIDArray = rowId.split(',');
 			for(var n = 0; n < rowIDArray.length; n++) {
 				payment+= parseFloat(dijit.byId('subTotal'+rowIDArray[n]).get('value'));
 			}
 		amount = parseFloat(payment).toFixed(2);
 		dijit.byId('totalAmountExternal').attr('value',payment.toFixed(2));
 	}
+	
+	var recordId=0;
+	function rejectRecordReceived(Id){
+		recordId = Id;
+		dijit.byId('confirmId').show();
+	}
+	function checkStatus(status){
+		if(status==1){
+			dijit.byId('confirmId').hide();
+		}else{
+			dnId  = dijit.byId('rsId'+recordId).get('value');
+			rejectNote  = dijit.byId('rejectNote'+recordId).get('value');
+			let urlReject = '<?php echo $this->url(array('module'=>'invpayment','controller'=>'statement','action'=>'rejectdn')); ?>';
+			projectId = dijit.byId('branch_id').get('value');
+			if(branch_id=='' || branch_id<=0){
+				infoMessageAlert('<?php echo $tr->translate('PLEASE_SELECT_BRANCH');?>');
+				dijit.byId('branch_id').focus();
+				return false;
+			}
+			
+			dojo.xhrPost({
+				url:urlReject,	
+				content:{ 
+					'dnId':dnId,
+					'rejectNote':rejectNote,
+					'projectId':projectId
+				},		    
+				handleAs:"json",
+				load: function(data) {
+					infoMessageAlert("<?php echo $tr->translate("Submit to side manager succeed")?> ");
+					deleteRecord(recordId);
+					dijit.byId('confirmId').hide();
+				},
+				error: function(err) {
+					dijit.byId('confirmId').hide();
+				}
+			});
+		}
+   }
 </script>
