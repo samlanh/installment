@@ -363,28 +363,25 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 				$sql .= "
 				AND ( 
 					   (rq.checkingStatus=1 AND rq.pCheckingStatus=1 AND rq.approveStatus=1) 
-					OR (rq.checkingStatus=1 AND rq.pCheckingStatus=1 AND rq.approveStatus=0) 
-					OR (rq.checkingStatus=1 AND rq.pCheckingStatus=0 AND rq.approveStatus=0) 
-					OR (rq.checkingStatus=1 AND rq.pCheckingStatus=0 AND rq.approveStatus=1) 
-					OR (rq.checkingStatus=0 AND rq.pCheckingStatus=0 AND rq.approveStatus=1)
-					OR (rq.checkingStatus=0 AND rq.pCheckingStatus=1 AND rq.approveStatus=1)  
+					
 				)
 				";
+				/*
+				OR (rq.checkingStatus=1 AND rq.pCheckingStatus=1 AND rq.approveStatus=0) 
+					OR (rq.checkingStatus=1 AND rq.pCheckingStatus=0 AND rq.approveStatus=0) 
+				OR (rq.checkingStatus=1 AND rq.pCheckingStatus=0 AND rq.approveStatus=1) 
+					OR (rq.checkingStatus=0 AND rq.pCheckingStatus=0 AND rq.approveStatus=1)
+					OR (rq.checkingStatus=0 AND rq.pCheckingStatus=1 AND rq.approveStatus=1) 
+				*/
 			} else if ($_data['requestStatus'] == 2) {
 				$sql .= "
 				AND ( 
-					   (rq.checkingStatus=2 AND rq.pCheckingStatus AND rq.approveStatus=2) 
-					OR (rq.checkingStatus=2 AND rq.pCheckingStatus AND rq.approveStatus=0) 
-					OR (rq.checkingStatus=2 AND rq.pCheckingStatus AND rq.approveStatus=0) 
-					OR (rq.checkingStatus=2 AND rq.pCheckingStatus AND rq.approveStatus=2) 
-					OR (rq.checkingStatus=0 AND rq.pCheckingStatus AND rq.approveStatus=2)
-					OR (rq.checkingStatus=0 AND rq.pCheckingStatus AND rq.approveStatus=2)  
-					OR (rq.checkingStatus=2 AND rq.pCheckingStatus AND rq.approveStatus=1) 
-					OR (rq.checkingStatus=2 AND rq.pCheckingStatus AND rq.approveStatus=1) 
-					OR (rq.checkingStatus=2 AND rq.pCheckingStatus AND rq.approveStatus=2) 
-					OR (rq.checkingStatus=1 AND rq.pCheckingStatus AND rq.approveStatus=2)
-					OR (rq.checkingStatus=1 AND rq.pCheckingStatus AND rq.approveStatus=2)  
-					OR (rq.checkingStatus=1 AND rq.pCheckingStatus AND rq.approveStatus=0)
+					   (rq.checkingStatus=2 AND rq.pCheckingStatus=2 AND rq.approveStatus=2) 
+					OR (rq.checkingStatus=2 AND rq.pCheckingStatus=2 AND rq.approveStatus=0) 
+					OR (rq.checkingStatus=2 AND rq.pCheckingStatus=0 AND rq.approveStatus=0)
+					OR (rq.checkingStatus=1 AND rq.pCheckingStatus=1 AND rq.approveStatus=2)
+					OR (rq.checkingStatus=1 AND rq.pCheckingStatus=2 AND rq.approveStatus=0)
+					
 				)";
 			} else if ($_data['requestStatus'] == 3) {
 				$sql .= "
@@ -1154,6 +1151,12 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 						Left Join `st_product` AS p On p.proId=rd.proId 
 			";
 			$sql.=" WHERE r.status = 1 ";	
+			
+			if(!empty($_data['endDate'])){
+				$from_date =(empty($_data['startDate']))? '1': " r.receiveDate >= '".date("Y-m-d",strtotime($_data['startDate']))." 00:00:00'";
+				$to_date = (empty($_data['endDate']))? '1': " r.receiveDate <= '".date("Y-m-d",strtotime($_data['endDate']))." 23:59:59'";
+				$sql.= " AND ".$from_date." AND ".$to_date;
+			}
 			
 			$sql.=$this->getAccessPermission("r.projectId",$_data);
 			if(!empty($_data['isForReAdjustment'])){
