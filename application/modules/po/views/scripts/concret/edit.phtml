@@ -144,6 +144,33 @@
 		</form>
     </div>
 </div>
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" data-dojo-props="title:'<?php echo $tr->translate("ADD_STRENGTH")?>'"  id="frm_strength" >
+		<form id="frm_strength" >
+			<table style="margin: 0 auto; width: 100%;" cellspacing="7">
+				<tr>
+					<td>
+						<?php echo $tr->translate("STRENGTH")?>
+					</td>
+					<td>&nbsp;</td>
+					<td>
+						<input dojoType="dijit.form.TextBox" placeholder="<?php echo $tr->translate("STRENGTH")?>" class="fullside" id="strength_new" name="strength_new"  type="text">
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">&nbsp;</td>
+				</tr>
+				<tr>
+					
+					<td colspan="3" align="center">
+						<input type="button" id="save_strength" value="Save" label="<?php echo $tr->translate('GO_SAVE');?>" dojoType="dijit.form.Button"
+						class="button-class button-primary" iconClass="	glyphicon glyphicon-floppy-open" onclick="addNewStrength(index);"/>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>
 <style>
 table#table_row td.productName {
     font-size: 12px;
@@ -282,7 +309,13 @@ function addRecords(data){
 						template+='<option value="'+<?php echo $rswt['id']?>+'"><?php echo addslashes($rswt['name']);?></option>';
 					<?php }?>
 				template+='</select></td>';	
-				template+='<td><input required="true" dojoType="dijit.form.ValidationTextBox" class="fullside" id="strength'+col+'" name="strength'+col+'" placeholder="'+'<?php echo $tr->translate("STRENGTH");?> "type="text"  ></td>';	
+				template+='<td ><select required placeHolder="<?php echo $tr->translate('STRENGTH');?>" class="fullside" onchange="CheckStrength('+col+');" required="false" dojoType="dijit.form.FilteringSelect" name="strength'+col+'" id="strength'+col+'" >';
+				template+='<option value="<?php echo $row['strength']?>"><?php echo $row['strength']?></option>';	
+					<?php if(!empty($this->strength))foreach($this->strength as $str_row){?>
+						template+='<option value="<?php echo $str_row['id']?>"><?php echo $str_row['name'];?></option>';
+					<?php }?>
+				template+='</select></td>';	
+			//	template+='<td><input required="true" dojoType="dijit.form.ValidationTextBox" class="fullside" id="strength'+col+'" name="strength'+col+'" placeholder="'+'<?php echo $tr->translate("STRENGTH");?> "type="text"  ></td>';	
 				template+='<td><input required="true" dojoType="dijit.form.ValidationTextBox" class="fullside" id="dnNO'+col+'" name="dnNO'+col+'" placeholder="'+'<?php echo $tr->translate("DN_INFO");?> "type="text"  ></td>';	
 				template+='<td><input onkeyup="calculateTotal('+col+');" dojoType="dijit.form.NumberTextBox" required="true" data-dojo-props="constraints:{min:0.0001},rangeMessage:'+"'<?php echo $tr->translate("MINIMUM_VALUE_IS_ONE");?>'"+'" class="fullside" id="qty'+col+'" name="qty'+col+'" placeholder="'+'<?php echo $tr->translate("QTY");?> " value="1" type="text"  ></td>';	
 				template+='<td><input onkeyup="calculateTotal('+col+');" dojoType="dijit.form.NumberTextBox" required="true" data-dojo-props="constraints:{min:0.0001},rangeMessage:'+"'<?php echo $tr->translate("MINIMUM_VALUE_IS_ONE");?>'"+'" class="fullside" id="unitPrice'+col+'" name="unitPrice'+col+'" placeholder="'+'<?php echo $tr->translate("UNIT_PRICE");?>" type="text"  ></td>';	
@@ -306,7 +339,7 @@ function addRecords(data){
 				dojo.html.set(dojo.byId("rowii"+col),templateii , {
 					 parseContent: true,
 				});
-				dijit.byId('strength'+col).attr('value','<?php echo $row['strength']?>');
+				//dijit.byId('strength'+col).attr('value','<?php echo $row['strength']?>');
 				dijit.byId('dnNO'+col).attr('value','<?php echo $this->rs['dnNumber']?>');
 				dijit.byId('qty'+col).attr('value','<?php echo $row['qtyReceive']?>');
 				dijit.byId('unitPrice'+col).attr('value','<?php echo $row['price']?>');
@@ -367,5 +400,33 @@ function addRecords(data){
 			}
 		});
 		getWorkType();
+	}
+
+	function CheckStrength(col){
+		strength = dijit.byId('strength'+col).get('value');
+		if(strength==''){
+			alert("<?php echo $tr->translate("PLEASE_SELECT_STREET")?>");
+			dijit.byId('street').focus();
+			return false;
+
+		}else if(strength==-1){
+			index=col;
+			dijit.byId('frm_strength').show(index);
+			return index;
+		}	
+	}	
+	
+	var StrengthStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->strength));?> );
+	function addNewStrength(index){
+		if(dijit.byId('frm_strength').validate()) {
+			var Itemmake = {					
+					id: dijit.byId('strength_new').get('value'),
+					name: dijit.byId('strength_new').get('value')
+			};		
+			addDataToSelectbox(dijit.byId('strength'+index), StrengthStore, Itemmake, dijit.byId('strength_new').get('value'));	
+			dijit.byId('frm_strength').reset();
+			dijit.byId('frm_strength').hide();
+			//dijit.byId('save_strength').set('disabled',true);	
+		}
 	}
 </script>

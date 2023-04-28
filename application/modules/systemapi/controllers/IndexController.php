@@ -53,6 +53,13 @@ class Systemapi_IndexController extends Zend_Controller_Action
 			}else if ($GetData['url']=="purchaseConcreteForReAdjustment"){
 				$GetData['isForReAdjustment'] = "1";
     			$_dbAction->getPurchaseConcreteListAction($GetData);
+				
+			}else if ($GetData['url']=="formRequestStatus"){
+				$GetData['getControlType'] = "requestStatus";
+    			$_dbAction->getFormSearchOptionAction($GetData);
+			}else if ($GetData['url']=="formRequestStep"){
+				$GetData['getControlType'] = "requestStep";
+    			$_dbAction->getFormSearchOptionAction($GetData);
 			
     		}else{
     			echo Zend_Http_Response::responseCodeAsText(401,true);

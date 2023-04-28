@@ -51,9 +51,7 @@ class Requesting_ApprovedrequestController extends Zend_Controller_Action {
 		$notify = array(
 			"userAction" => 3,// push to PO Dept to Make PO
 			"typeNotify" => "toPoPurchase",
-			"deviceType" => "1",
 		);
-		
 		
 		$id=$this->getRequest()->getParam('id');
 		$id = empty($id)?0:$id;
