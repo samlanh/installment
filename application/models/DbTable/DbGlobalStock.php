@@ -7,6 +7,14 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		$session_user = new Zend_Session_Namespace(SYSTEM_SES);
 		return $session_user->user_id;
 	}
+
+	function  getAllStrength(){
+		$db = $this->getAdapter();
+		$sql = 'SELECT DISTINCT strength AS name,strength AS id FROM `st_receive_stock_detail` WHERE strength!="" ORDER BY strength DESC';
+		$rows =  $db->fetchAll($sql);
+		return $rows;
+	}
+
 	public function getAllCategoryProduct($parent = 0, $spacing = '', $cate_tree_array = '', $option = null)
 	{
 
@@ -1433,4 +1441,6 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 
 		curl_close($ch);
 	}
+
+	
 }
