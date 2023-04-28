@@ -50,7 +50,6 @@ class Requesting_PcheckingrequestController extends Zend_Controller_Action {
 		$notify = array(
 			"userAction" => 4,// push to Boss Approve
 			"typeNotify" => "toApproveRequest",
-			"deviceType" => "1",
 		);
 		
 		$id=$this->getRequest()->getParam('id');

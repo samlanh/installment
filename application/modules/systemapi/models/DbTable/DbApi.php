@@ -347,6 +347,52 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 		
 		$sql.=" FROM `st_request_po` AS rq WHERE rq.status=1 ";
 		
+		if(!empty($_data['endDate'])){
+			$from_date =(empty($_data['startDate']))? '1': " rq.date >= '".date("Y-m-d",strtotime($_data['startDate']))." 00:00:00'";
+			$to_date = (empty($_data['endDate']))? '1': " rq.date <= '".date("Y-m-d",strtotime($_data['endDate']))." 23:59:59'";
+			$sql.= " AND ".$from_date." AND ".$to_date;
+		}
+		
+		if( !empty($_data['requestStep']) ){
+			if($_data['requestStep']>0){
+				$sql.=" AND rq.processingStatus = ".$_data['requestStep'];
+			}
+		}
+		if( !empty($_data['requestStatus']) ){
+			if ($_data['requestStatus'] == 1) {
+				$sql .= "
+				AND ( 
+					   (rq.checkingStatus=1 AND rq.pCheckingStatus=1 AND rq.approveStatus=1) 
+					
+				)
+				";
+				/*
+				OR (rq.checkingStatus=1 AND rq.pCheckingStatus=1 AND rq.approveStatus=0) 
+					OR (rq.checkingStatus=1 AND rq.pCheckingStatus=0 AND rq.approveStatus=0) 
+				OR (rq.checkingStatus=1 AND rq.pCheckingStatus=0 AND rq.approveStatus=1) 
+					OR (rq.checkingStatus=0 AND rq.pCheckingStatus=0 AND rq.approveStatus=1)
+					OR (rq.checkingStatus=0 AND rq.pCheckingStatus=1 AND rq.approveStatus=1) 
+				*/
+			} else if ($_data['requestStatus'] == 2) {
+				$sql .= "
+				AND ( 
+					   (rq.checkingStatus=2 AND rq.pCheckingStatus=2 AND rq.approveStatus=2) 
+					OR (rq.checkingStatus=2 AND rq.pCheckingStatus=2 AND rq.approveStatus=0) 
+					OR (rq.checkingStatus=2 AND rq.pCheckingStatus=0 AND rq.approveStatus=0)
+					OR (rq.checkingStatus=1 AND rq.pCheckingStatus=1 AND rq.approveStatus=2)
+					OR (rq.checkingStatus=1 AND rq.pCheckingStatus=2 AND rq.approveStatus=0)
+					
+				)";
+			} else if ($_data['requestStatus'] == 3) {
+				$sql .= "
+				AND ( 
+					   (rq.checkingStatus=1 AND rq.pCheckingStatus=0 AND rq.approveStatus=0) 
+					OR (rq.checkingStatus=1 AND rq.pCheckingStatus=1 AND rq.approveStatus=0) 
+					OR (rq.checkingStatus=0 AND rq.pCheckingStatus=0 AND rq.approveStatus=0)
+				)
+				";
+			}
+		}
 		if( empty($_data['isAllRequest']) ){
 			$processingStatus=null;
 			$_data["userAction"] = empty($_data["userAction"]) ? "0" : $_data["userAction"];
@@ -417,6 +463,7 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 		}else if(!empty($_data['limitRecord'])){
 			$limit.=" LIMIT ".$_data['limitRecord'];
 		}
+		
 		
     	return $db->fetchAll($sql.$limit);
 	}
@@ -547,6 +594,18 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 					(SELECT COALESCE(pl.qty,0) FROM st_product_location AS pl WHERE pl.proId=p.proId AND pl.projectId= rq.projectId LIMIT 1) AS currentQty,
 					(SELECT COALESCE(pod.unitPrice,0) FROM `st_purchasing_detail` AS pod WHERE pod.proId=p.proId ORDER BY pod.purchaseId DESC LIMIT 1) AS latestUnitPrice,
 					p.measureLabel AS measureTitle
+					,(SELECT SUM(pod1.qty) FROM st_purchasing AS po,st_purchasing_detail AS pod1 WHERE pod1.purchaseId=po.id AND pod1.proId = rqd.proId AND rqd.requestId=po.requestId  AND  po.status =1 ) AS purchaseQty
+					,(SELECT GROUP_CONCAT(po.purchaseNo) FROM st_purchasing AS po,st_purchasing_detail AS pod1 WHERE pod1.purchaseId=po.id AND pod1.proId = rqd.proId AND rqd.requestId=po.requestId  AND  po.status =1 ) AS purchaseNoList
+					,(SELECT GROUP_CONCAT(po.id) FROM st_purchasing AS po,st_purchasing_detail AS pod1 WHERE pod1.purchaseId=po.id AND pod1.proId = rqd.proId AND rqd.requestId=po.requestId  AND  po.status =1 ) AS purchaseIdList
+					,(SELECT GROUP_CONCAT(po.date) FROM st_purchasing AS po,st_purchasing_detail AS pod1 WHERE pod1.purchaseId=po.id AND pod1.proId = rqd.proId AND rqd.requestId=po.requestId  AND  po.status =1 ) AS purchaseDateList
+					,(SELECT GROUP_CONCAT(po.createDate) FROM st_purchasing AS po,st_purchasing_detail AS pod1 WHERE pod1.purchaseId=po.id AND pod1.proId = rqd.proId AND rqd.requestId=po.requestId  AND  po.status =1 ) AS purchaseCreateDateList
+					,(SELECT GROUP_CONCAT((SELECT spp.supplierName FROM st_supplier AS spp WHERE spp.id = po.supplierId LIMIT 1 )) FROM st_purchasing AS po,st_purchasing_detail AS pod1 WHERE pod1.purchaseId=po.id AND pod1.proId = rqd.proId AND rqd.requestId=po.requestId  AND  po.status =1 ) AS supplierNameList
+					
+					,(SELECT GROUP_CONCAT(rsd1.qtyReceive) FROM st_receive_stock AS rs,st_receive_stock_detail AS rsd1 WHERE rsd1.receiveId=rs.id AND rsd1.proId = rqd.proId AND rqd.requestId=rs.requestId AND rs.status =1 ) AS totalReceiveQty
+					,(SELECT GROUP_CONCAT(rs.dnNumber) FROM st_receive_stock AS rs,st_receive_stock_detail AS rsd1 WHERE rsd1.receiveId=rs.id AND rsd1.proId = rqd.proId AND rqd.requestId=rs.requestId AND rs.status =1 ) AS dnNumberList
+					,(SELECT GROUP_CONCAT(rs.id) FROM st_receive_stock AS rs,st_receive_stock_detail AS rsd1 WHERE rsd1.receiveId=rs.id AND rsd1.proId = rqd.proId AND rqd.requestId=rs.requestId AND rs.status =1 ) AS dnIdList
+					,(SELECT GROUP_CONCAT(rs.receiveDate) FROM st_receive_stock AS rs,st_receive_stock_detail AS rsd1 WHERE rsd1.receiveId=rs.id AND rsd1.proId = rqd.proId AND rqd.requestId=rs.requestId AND rs.status =1 ) AS dnReceiveDateList
+					
 				";
 			$sql.="	FROM 
 						`st_request_po_detail` as rqd
@@ -616,7 +675,6 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 					$notify = array(
 						"userAction" => 3,
 						"typeNotify" => "toPoVerifyRequest",
-						"deviceType" => "1",
 					);
 					$notify["notificationId"]  = $requestId;
 					$notify["branchId"]  = $request["projectId"];
@@ -703,7 +761,6 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 					$notify = array(
 						"userAction" => 4,// push to Boss Approve
 						"typeNotify" => "toApproveRequest",
-						"deviceType" => "1",
 					);
 					$notify["notificationId"]  = $requestId;
 					$notify["branchId"]  = $request["projectId"];
@@ -790,7 +847,6 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 					$notify = array(
 						"userAction" => 3,// push to PO Dept to Make PO
 						"typeNotify" => "toPoPurchase",
-						"deviceType" => "1",
 					);
 					$notify["notificationId"]  = $requestId;
 					$notify["branchId"]  = $request["projectId"];
@@ -1093,9 +1149,15 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 			";
 			$sql.=" WHERE r.status = 1 ";	
 			
+			if(!empty($_data['endDate'])){
+				$from_date =(empty($_data['startDate']))? '1': " r.receiveDate >= '".date("Y-m-d",strtotime($_data['startDate']))." 00:00:00'";
+				$to_date = (empty($_data['endDate']))? '1': " r.receiveDate <= '".date("Y-m-d",strtotime($_data['endDate']))." 23:59:59'";
+				$sql.= " AND ".$from_date." AND ".$to_date;
+			}
+			
 			$sql.=$this->getAccessPermission("r.projectId",$_data);
 			if(!empty($_data['isForReAdjustment'])){
-				$sql.=" AND r.isissueStatement = 2 ";	
+				$sql.=" AND r.verified = 2 ";	
 			}
 			$sql.=" ORDER BY r.id DESC ";
 			
@@ -1140,7 +1202,6 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 				$verifiedId = $row['id'];
 				$arr = array(
 					'verified' 		=> 0,
-					'isissueStatement' => 0,
 					'verifiedBy' 	=> $_data['userId'],
 					'modifyDate' 	=> date('Y-m-d H:i:s')
 				);
@@ -1156,5 +1217,43 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
     		return false;
     	}
     }
+	
+	public function getFormSearchOption($search){
+		$db = $this->getAdapter();
+		try{
+			
+			$currentLang = empty($search['currentLang'])?1:$search['currentLang'];
+			$getControlType = empty($search['getControlType'])?"requestStatus":$search['getControlType'];
+			$row=array();
+			if($getControlType=="requestStatus"){
+				$row = array(
+					array("id"=>3,"name"=>$currentLang==1 ? "កំពុងរង់ចាំ" : "Pending"),
+					array("id"=>1,"name"=>$currentLang==1 ? "បានយល់ព្រម" : "Approved"),
+					array("id"=>2,"name"=>$currentLang==1 ? "បានបដិសេធ" : "Rejected"),
+					
+				);
+			}else if($getControlType=="requestStep"){
+				$row = array(
+					array("id"=>1,"name"=>$currentLang==1 ? "ផ្នែកសំណើ" : "Request Dept"),
+					array("id"=>2,"name"=>$currentLang==1 ? "ប្រធានឃ្លាំង ត្រួតពិនិត្យ" : "Manager Review"),
+					array("id"=>3,"name"=>$currentLang==1 ? "ផ្នែកបញ្ជាទិញ ត្រួតពិនិត្យ" : "PO Review"),
+					array("id"=>4,"name"=>$currentLang==1 ? "អគ្គនាយក ត្រួតពិនិត្យ" : "Boss Review"),
+				);
+			}
+			
+			$result = array(
+				'status' =>true,
+				'value' =>$row,
+			);
+			return $result;
+		}catch(Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$result = array(
+				'status' =>false,
+				'value' =>$e->getMessage(),
+			);
+			return $result;
+		}
+	}
 	
 }
