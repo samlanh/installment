@@ -1256,4 +1256,154 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 		}
 	}
 	
+	
+	public function getAllProductList($_data){
+		$db = $this->getAdapter();
+		try{
+			
+			$_data['userId'] = empty($_data['userId'])?0:$_data['userId'];
+			$sql="SELECT 
+					p.*
+					,p.proId AS id
+					,p.proName AS `name`
+					,proCate.categoryName
+					,pl.qty AS currentQtyAll
+					,pl.qtyAlert AS qtyWarningAlert
+					,(SELECT GROUP_CONCAT(prl.qty) FROM st_product_location AS prl WHERE p.proId = prl.proId ORDER BY prl.projectId ASC LIMIT 1) AS qtyByLocationList
+					,(SELECT GROUP_CONCAT(pj.project_name) FROM st_product_location AS prl JOIN ln_project AS pj ON pj.br_id = prl.projectId WHERE p.proId = prl.proId ORDER BY prl.projectId ASC LIMIT 1) AS branchNameList
+					
+				";
+			$sql.="	FROM `st_product` AS p 
+					LEFT JOIN st_category AS proCate ON proCate.id = p.categoryId
+					LEFT JOIN st_product_location AS pl ON p.proId = pl.proId
+			";
+			$sql.="  WHERE p.status=1 ";	
+			
+			if (!empty($_data['isService'])) {
+				$sql .= " AND p.isService=1 "; //Case Service Items
+			} else {
+				$sql .= " AND p.isService=0 ";
+			}
+			if (isset($_data['isCountStock'])) {
+				$sql .= " AND p.isCountStock= " . $_data['isCountStock'];
+			}
+
+			if (!empty($_data['branch_id'])) {
+				$sql .= " AND p.proId IN (SELECT l.proId FROM `st_product_location` AS l  WHERE l.projectId=" . $_data['branch_id'] . " )";
+			}
+			if (!empty($_data['categoryId'])) {
+				$sql .= " AND p.categoryId= " . $_data['categoryId'];
+			}
+			if (!empty($_data['requestId'])) {
+				$sql .= " AND p.proId IN (SELECT rqd.proId FROM `st_request_po_detail` AS rqd  WHERE rqd.requestId=" . $_data['requestId'] . " AND rqd.approvedStatus=1 AND rqd.isCompletedPO=0 GROUP BY rqd.proId )";
+				if (!empty($_data['purchaseId'])) { //Case Purchase Edit
+					$sql .= " OR p.proId IN (SELECT pod.proId FROM `st_purchasing_detail` AS pod  WHERE pod.purchaseId=" . $_data['purchaseId'] . " GROUP BY pod.proId ) ";
+				}
+			}
+			if (isset($_data['isMaterial'])) {
+				$sql .= " AND (SELECT id FROM `st_category` AS ct  WHERE ct.id= p.categoryId AND ct.isMaterial=" . $_data['isMaterial'] . ")";
+			}
+			
+			$limit=" ";
+			if(!empty($_data['LimitStart'])){
+				$limit.=" LIMIT ".$_data['LimitStart'].",".$_data['limitRecord'];
+			}else if(!empty($_data['limitRecord'])){
+				$limit.=" LIMIT ".$_data['limitRecord'];
+			}
+			$row = $db->fetchAll($sql.$limit);
+			
+			$counting = count($row);
+			$allResult = array('rowData'=>$row,'countingRecord'=>$counting);
+			
+			$result = array(
+						'status' =>true,
+						'value' =>$allResult,
+					);
+			return $result;
+			
+		}catch(Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$result = array(
+				'status' =>false,
+				'value' =>$e->getMessage(),
+			);
+			return $result;
+		}
+	}
+	
+	public function getAllSupplierList($_data){
+		$db = $this->getAdapter();
+		try{
+			
+			$_data['userId'] = empty($_data['userId'])?0:$_data['userId'];
+			$currentLang = empty($_data['currentLang'])?1:$_data['currentLang'];
+			$localTitle1 = $currentLang == 1 ? "ក្នុងស្រក" : "Local";
+			$localTitle2 = $currentLang == 1 ? "ក្រៅប្រទេស" : "OverSea";
+			$sql="SELECT 
+					spp.*
+					,spp.id AS id
+					,spp.supplierName AS `name`
+					,CASE
+					WHEN  spp.supplierType = 1 THEN '".$localTitle1."'
+					WHEN  spp.supplierType= 2 THEN '".$localTitle2."'
+					END AS supplierTypeTitle 
+					
+				";
+			$sql.="	FROM `st_supplier` AS spp
+			";
+			$sql.="  WHERE spp.status=1 ";	
+			
+			if(!empty($_data['supplierType'])){
+				$sql.= " AND spp.supplierType = ".$search['supplierType'];
+			}
+			
+			$limit=" ";
+			if(!empty($_data['LimitStart'])){
+				$limit.=" LIMIT ".$_data['LimitStart'].",".$_data['limitRecord'];
+			}else if(!empty($_data['limitRecord'])){
+				$limit.=" LIMIT ".$_data['limitRecord'];
+			}
+			$row = $db->fetchAll($sql.$limit);
+			
+			$counting = count($row);
+			$allResult = array('rowData'=>$row,'countingRecord'=>$counting);
+			
+			$result = array(
+						'status' =>true,
+						'value' =>$allResult,
+					);
+			return $result;
+			
+		}catch(Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$result = array(
+				'status' =>false,
+				'value' =>$e->getMessage(),
+			);
+			return $result;
+		}
+	}
+	
+	function getGetProductCategory($_data){
+		$db = $this->getAdapter();
+		try{
+			
+			$dbGbSt = new Application_Model_DbTable_DbGlobalStock();
+			$row = $dbGbSt->getAllCategoryProduct(0,'','',null);
+			$result = array(
+					'status' =>true,
+					'value' =>$row,
+			);
+			return $result;
+	
+		}catch(Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$result = array(
+					'status' =>false,
+					'value' =>$e->getMessage(),
+			);
+			return $result;
+		}
+	}
+	
 }

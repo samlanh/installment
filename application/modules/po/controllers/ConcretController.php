@@ -1,6 +1,7 @@
 <?php
 class Po_ConcretController extends Zend_Controller_Action {
 	const REDIRECT_URL = '/po/concret';
+	
 	public function init()
 	{
 		header('content-type: text/html; charset=utf8');
@@ -44,6 +45,7 @@ class Po_ConcretController extends Zend_Controller_Action {
 		
 	}
 	function addAction(){
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try{		
@@ -59,12 +61,19 @@ class Po_ConcretController extends Zend_Controller_Action {
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
+		
+		$dbg = new Application_Model_DbTable_DbGlobalStock();
+		$str_row = $dbg->getAllStrength();
+		array_unshift($str_row, array('id'=>-1,'name' => $tr->translate("ADD_NEW")));
+		$this->view->strength = $str_row;
+
 		$fm = new Po_Form_FrmConcretStock();
 		$frm = $fm->Frmconcret();
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm = $frm;
 	}
 	function editAction(){
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		$db = new Po_Model_DbTable_DbConcret();
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
@@ -82,6 +91,9 @@ class Po_ConcretController extends Zend_Controller_Action {
 		if(empty($id) OR empty($row) OR ($row['isIssueInvoice']==1)){
 			Application_Form_FrmMessage::Sucessfull("ALREADY_INVOICE",self::REDIRECT_URL,2);
 		}
+
+		
+
 		$fm = new Po_Form_FrmConcretStock();
 		$frm = $fm->Frmconcret($row);
 		$this->view->rs = $row;
@@ -93,6 +105,10 @@ class Po_ConcretController extends Zend_Controller_Action {
 		$dbg = new Application_Model_DbTable_DbGlobalStock();	
 		$work_type = $dbg->getWorkTypeOpt();
 		$this->view->worktype = $work_type;
+
+		$str_row = $dbg->getAllStrength();
+		array_unshift($str_row, array('id'=>-1,'name' => $tr->translate("ADD_NEW")));
+		$this->view->strength = $str_row;
 	}
 
 	
