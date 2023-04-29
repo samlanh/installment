@@ -89,6 +89,17 @@ class Invpayment_StatementController extends Zend_Controller_Action {
 			
 		}
 	}
+	function rejectdnAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Invpayment_Model_DbTable_DbDnconcrete();
+			$_row =$db->rejectDnbyId($data);
+			print_r(Zend_Json::encode($_row));
+			exit();
+				
+		}
+	}
+	
 	function getReceiveInfoAction(){
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();

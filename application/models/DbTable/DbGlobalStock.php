@@ -1424,7 +1424,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 			}
 		}else if($typeNotify == "toReviewPOConcrete"){
 			$recordInfo = $this->getPurchaseConcreteInfoById($notificationId);
-			if (!empty($recordInfo)) {
+			if(!empty($recordInfo)){
 				$notificationTitle = "វិក្កយបត្របេតុងត្រូវកែ សម្រាប់គម្រោង " . str_replace('គម្រោង', '', $recordInfo['projectName']);
 				$notificationSubTitle = "លេខ " . $recordInfo['dnNumber'] . " សម្រាប : " . $recordInfo['workTypeTitle'];
 				if(!empty($recordInfo['strength'])){
