@@ -1385,109 +1385,114 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 	
 	function pushNotificationForAndroid($_data)
 	{
-		$_data['branchId'] = empty($_data['branchId']) ? 0 : $_data['branchId'];
-		$_data['userAction'] = empty($_data['userAction']) ? 0 : $_data['userAction'];
-		$_data['deviceType'] = 1;
-
-		$notificationId = empty($_data['notificationId']) ? 0 : $_data['notificationId'];
-		$notificationTitle = "Notification Title";
-		$notificationSubTitle = "Notification Sub Title";
-		$notificationDescription = "";
-		$typeNotify = empty($_data['typeNotify']) ? "toCheckingRequest" : $_data['typeNotify'];
-
-		$recordDetail = array();
-		if ($typeNotify == "toCheckingRequest" || $typeNotify == "toPoVerifyRequest" || $typeNotify == "toApproveRequest" || $typeNotify == "toPoPurchase") {
-			$recordInfo = $this->getRequestPOInfoId($notificationId);
-			if (!empty($recordInfo)) {
-				$notificationTitle = "សំណើបញ្ជាទិញពី : គម្រោង " . str_replace('គម្រោង', '', $recordInfo['projectName']);
-				$notificationSubTitle = "សំណើលេខ " . $recordInfo['requestNo'] . " ស្នើរដោយ : " . $recordInfo['userName'];
-				$notificationDescription = "សំណើលេខ " . $recordInfo['requestNo'] . " ស្នើរដោយ : " . $recordInfo['userName'];
-				if (!empty($recordInfo['purpose'])) {
-					$notificationDescription = $notificationDescription . " គោលបំណងស្នើ : " . $recordInfo['purpose'];
-				}
-
-				if ($typeNotify == "toPoVerifyRequest") {
-					if (!empty($recordInfo['checkingByName'])) {
-						$notificationDescription = $notificationDescription . " បានត្រួតពិនិត្យដោយ : " . $recordInfo['checkingByName'];
+		try{
+		
+			$_data['branchId'] = empty($_data['branchId']) ? 0 : $_data['branchId'];
+			$_data['userAction'] = empty($_data['userAction']) ? 0 : $_data['userAction'];
+			$_data['deviceType'] = 1;
+	
+			$notificationId = empty($_data['notificationId']) ? 0 : $_data['notificationId'];
+			$notificationTitle = "Notification Title";
+			$notificationSubTitle = "Notification Sub Title";
+			$notificationDescription = "";
+			$typeNotify = empty($_data['typeNotify']) ? "toCheckingRequest" : $_data['typeNotify'];
+	
+			$recordDetail = array();
+			if ($typeNotify == "toCheckingRequest" || $typeNotify == "toPoVerifyRequest" || $typeNotify == "toApproveRequest" || $typeNotify == "toPoPurchase") {
+				$recordInfo = $this->getRequestPOInfoId($notificationId);
+				if (!empty($recordInfo)) {
+					$notificationTitle = "សំណើបញ្ជាទិញពី : គម្រោង " . str_replace('គម្រោង', '', $recordInfo['projectName']);
+					$notificationSubTitle = "សំណើលេខ " . $recordInfo['requestNo'] . " ស្នើរដោយ : " . $recordInfo['userName'];
+					$notificationDescription = "សំណើលេខ " . $recordInfo['requestNo'] . " ស្នើរដោយ : " . $recordInfo['userName'];
+					if (!empty($recordInfo['purpose'])) {
+						$notificationDescription = $notificationDescription . " គោលបំណងស្នើ : " . $recordInfo['purpose'];
 					}
-				}
-				if ($typeNotify == "toApproveRequest") {
-					if (!empty($recordInfo['pCheckingByName'])) {
-						$notificationDescription = $notificationDescription . " បានផ្ទៀងផ្ទាត់ដោយ : " . $recordInfo['pCheckingByName'];
+	
+					if ($typeNotify == "toPoVerifyRequest") {
+						if (!empty($recordInfo['checkingByName'])) {
+							$notificationDescription = $notificationDescription . " បានត្រួតពិនិត្យដោយ : " . $recordInfo['checkingByName'];
+						}
 					}
+					if ($typeNotify == "toApproveRequest") {
+						if (!empty($recordInfo['pCheckingByName'])) {
+							$notificationDescription = $notificationDescription . " បានផ្ទៀងផ្ទាត់ដោយ : " . $recordInfo['pCheckingByName'];
+						}
+					}
+	
+					if ($typeNotify == "toPoPurchase") {
+						$notificationTitle = "សំណើបញ្ជាទិញបានអនុម័តសម្រាប់ :  គម្រោង" . str_replace('គម្រោង', '', $recordInfo['projectName']);
+					}
+					$recordDetail = array($recordInfo);
 				}
-
-				if ($typeNotify == "toPoPurchase") {
-					$notificationTitle = "សំណើបញ្ជាទិញបានអនុម័តសម្រាប់ :  គម្រោង" . str_replace('គម្រោង', '', $recordInfo['projectName']);
+			}else if($typeNotify == "toReviewPOConcrete"){
+				$recordInfo = $this->getPurchaseConcreteInfoById($notificationId);
+				if(!empty($recordInfo)){
+					$notificationTitle = "វិក្កយបត្របេតុងត្រូវកែ សម្រាប់គម្រោង " . str_replace('គម្រោង', '', $recordInfo['projectName']);
+					$notificationSubTitle = "លេខ " . $recordInfo['dnNumber'] . " សម្រាប : " . $recordInfo['workTypeTitle'];
+					if(!empty($recordInfo['strength'])){
+						$notificationSubTitle = $notificationSubTitle." កម្លាំង : " . $recordInfo['strength'];
+					}
+					$notificationDescription = $notificationSubTitle;
+					if (!empty($recordInfo['descriptionConcreteInfo'])) {
+						$notificationDescription = $notificationDescription . " " . $recordInfo['descriptionConcreteInfo'];
+					}
+					if (!empty($recordInfo['rejectReason'])) {
+						$notificationDescription = $notificationDescription . " មូលហតុ : " . $recordInfo['rejectReason'];
+					}
+					$recordDetail = array($recordInfo);
 				}
-				$recordDetail = array($recordInfo);
+				
 			}
-		}else if($typeNotify == "toReviewPOConcrete"){
-			$recordInfo = $this->getPurchaseConcreteInfoById($notificationId);
-			if(!empty($recordInfo)){
-				$notificationTitle = "វិក្កយបត្របេតុងត្រូវកែ សម្រាប់គម្រោង " . str_replace('គម្រោង', '', $recordInfo['projectName']);
-				$notificationSubTitle = "លេខ " . $recordInfo['dnNumber'] . " សម្រាប : " . $recordInfo['workTypeTitle'];
-				if(!empty($recordInfo['strength'])){
-					$notificationSubTitle = $notificationSubTitle." កម្លាំង : " . $recordInfo['strength'];
-				}
-				$notificationDescription = $notificationSubTitle;
-				if (!empty($recordInfo['descriptionConcreteInfo'])) {
-					$notificationDescription = $notificationDescription . " " . $recordInfo['descriptionConcreteInfo'];
-				}
-				if (!empty($recordInfo['rejectReason'])) {
-					$notificationDescription = $notificationDescription . " មូលហតុ : " . $recordInfo['rejectReason'];
-				}
-				$recordDetail = array($recordInfo);
-			}
+	
+	
+			$dataNotify = array(
+				"notificationId" 	=> $notificationId,
+				"title" 			=> $notificationTitle,
+				"subTitle" 			=> $notificationDescription,
+				"userAction" 		=> $_data['userAction'],
+				"typeNotify" 		=> $typeNotify,
+				"recordDetail" 		=> $recordDetail,
+			);
+			$headings = array(
+				"en" => $notificationTitle,
+			);
+			$content = array(
+				"en" => $notificationSubTitle,
+			);
+			$bigPicture = "http://8.214.12.212/bppt.22.4.09/public/images/icon.png";
+	
+			$androidToken = $this->getMobileToken($_data);
+			$fields = array(
+				'app_id' => APP_ID,
+				'include_player_ids' => $androidToken,
+				'data' => $dataNotify,
+				'headings' => $headings,
+				'contents' => $content,
+				"external_id" => null,
+	
+			);
+	
+			$fields = json_encode($fields);
+	
+	
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, "https://onesignal.com/api/v1/notifications");
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+				'Content-Type: application/json; charset=utf-8',
+				'Authorization: Basic OGY3MGQ2M2EtMmQ3OS00MjZhLTk2MjYtYjYzMzExYTg5YWRm'
+			));
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+			curl_setopt($ch, CURLOPT_HEADER, FALSE);
+			curl_setopt($ch, CURLOPT_POST, TRUE);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+	
+			$response = curl_exec($ch);
 			
+			curl_close($ch);
+		}catch (Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}
-
-
-		$dataNotify = array(
-			"notificationId" 	=> $notificationId,
-			"title" 			=> $notificationTitle,
-			"subTitle" 			=> $notificationDescription,
-			"userAction" 		=> $_data['userAction'],
-			"typeNotify" 		=> $typeNotify,
-			"recordDetail" 		=> $recordDetail,
-		);
-		$headings = array(
-			"en" => $notificationTitle,
-		);
-		$content = array(
-			"en" => $notificationSubTitle,
-		);
-		$bigPicture = "http://8.214.12.212/bppt.22.4.09/public/images/icon.png";
-
-		$androidToken = $this->getMobileToken($_data);
-		$fields = array(
-			'app_id' => APP_ID,
-			'include_player_ids' => $androidToken,
-			'data' => $dataNotify,
-			'headings' => $headings,
-			'contents' => $content,
-			"external_id" => null,
-
-		);
-
-		$fields = json_encode($fields);
-
-
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, "https://onesignal.com/api/v1/notifications");
-		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-			'Content-Type: application/json; charset=utf-8',
-			'Authorization: Basic OGY3MGQ2M2EtMmQ3OS00MjZhLTk2MjYtYjYzMzExYTg5YWRm'
-		));
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-		curl_setopt($ch, CURLOPT_HEADER, FALSE);
-		curl_setopt($ch, CURLOPT_POST, TRUE);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-
-		$response = curl_exec($ch);
-
-		curl_close($ch);
 	}
 
 	

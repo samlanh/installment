@@ -314,7 +314,6 @@ class Invpayment_Model_DbTable_DbDnconcrete extends Zend_Db_Table_Abstract
 			
 		}catch (Exception $e){
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-			Application_Form_FrmMessage::message($e);
 		}
 		//Add push notification here
 		
