@@ -54,6 +54,12 @@ class Systemapi_IndexController extends Zend_Controller_Action
 				$GetData['isForReAdjustment'] = "1";
     			$_dbAction->getPurchaseConcreteListAction($GetData);
 				
+			}else if ($GetData['url']=="productCategory"){
+				$_dbAction->getProductCategoryAction($GetData);
+			}else if ($GetData['url']=="productList"){
+				$_dbAction->getProductListAction($GetData);
+			}else if ($GetData['url']=="supplierList"){
+				$_dbAction->getSupplierListAction($GetData);
 			}else if ($GetData['url']=="formRequestStatus"){
 				$GetData['getControlType'] = "requestStatus";
     			$_dbAction->getFormSearchOptionAction($GetData);
