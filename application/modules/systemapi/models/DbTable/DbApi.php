@@ -1262,15 +1262,19 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 		try{
 			
 			$_data['userId'] = empty($_data['userId'])?0:$_data['userId'];
+			$userLoaction=$this->getAccessPermission("prl.projectId",$_data);
+			
 			$sql="SELECT 
 					p.*
 					,p.proId AS id
 					,p.proName AS `name`
+					,p.image AS `productImage`
+					,p.measureLabel AS measureTitle
 					,proCate.categoryName
 					,pl.qty AS currentQtyAll
 					,pl.qtyAlert AS qtyWarningAlert
-					,(SELECT GROUP_CONCAT(prl.qty) FROM st_product_location AS prl WHERE p.proId = prl.proId ORDER BY prl.projectId ASC LIMIT 1) AS qtyByLocationList
-					,(SELECT GROUP_CONCAT(pj.project_name) FROM st_product_location AS prl JOIN ln_project AS pj ON pj.br_id = prl.projectId WHERE p.proId = prl.proId ORDER BY prl.projectId ASC LIMIT 1) AS branchNameList
+					,(SELECT GROUP_CONCAT(prl.qty) FROM st_product_location AS prl JOIN ln_project AS pj ON pj.br_id = prl.projectId  WHERE p.proId = prl.proId ".$userLoaction." ORDER BY prl.projectId ASC LIMIT 1) AS qtyByLocationList
+					,(SELECT GROUP_CONCAT(pj.project_name) FROM st_product_location AS prl JOIN ln_project AS pj ON pj.br_id = prl.projectId WHERE p.proId = prl.proId ".$userLoaction." ORDER BY prl.projectId ASC LIMIT 1) AS branchNameList
 					
 				";
 			$sql.="	FROM `st_product` AS p 
@@ -1284,7 +1288,7 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 			} else {
 				$sql .= " AND p.isService=0 ";
 			}
-			if (isset($_data['isCountStock'])) {
+			if (!empty($_data['isCountStock'])) {
 				$sql .= " AND p.isCountStock= " . $_data['isCountStock'];
 			}
 
@@ -1300,16 +1304,30 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 					$sql .= " OR p.proId IN (SELECT pod.proId FROM `st_purchasing_detail` AS pod  WHERE pod.purchaseId=" . $_data['purchaseId'] . " GROUP BY pod.proId ) ";
 				}
 			}
-			if (isset($_data['isMaterial'])) {
+			if (!empty($_data['isMaterial'])) {
 				$sql .= " AND (SELECT id FROM `st_category` AS ct  WHERE ct.id= p.categoryId AND ct.isMaterial=" . $_data['isMaterial'] . ")";
 			}
+			if (isset($_data['searchValue'])) {
+				$s_where = array();
+				$s_search = addslashes(trim($_data['searchValue']));
+				$s_search = str_replace(' ', '', addslashes(trim($_data['searchValue'])));
+				$s_where[]=" REPLACE(p.proCode,' ','')   	LIKE '%{$s_search}%'";
+				$s_where[]=" REPLACE(p.proName,' ','')   	LIKE '%{$s_search}%'";
+				$s_where[]=" REPLACE(p.measureLabel,' ','')  	LIKE '%{$s_search}%'";
+				$s_where[]=" REPLACE(proCate.categoryName,' ','')  	LIKE '%{$s_search}%'";
+				
+				$sql .=' AND ( '.implode(' OR ',$s_where).')';
+			}
 			
+			$sql.=" Group BY p.proId ";
 			$limit=" ";
 			if(!empty($_data['LimitStart'])){
 				$limit.=" LIMIT ".$_data['LimitStart'].",".$_data['limitRecord'];
 			}else if(!empty($_data['limitRecord'])){
 				$limit.=" LIMIT ".$_data['limitRecord'];
 			}
+			
+			
 			$row = $db->fetchAll($sql.$limit);
 			
 			$counting = count($row);
