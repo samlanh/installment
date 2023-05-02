@@ -2781,6 +2781,7 @@ function getAllBranch($search=null){
 				//AND p.`hardtitle` !=''
 				$where.="  AND p.id NOT IN (SELECT pr.property_id FROM ln_processing_plong AS pr WHERE `p`.`id` = `pr`.`property_id`)";
 				$where.="  AND p.id NOT IN (SELECT rps.house_id FROM ln_receiveplong AS rps WHERE `p`.`id` = rps.`house_id` AND rps.status=1 ) " ;
+				
 			}elseif($search['plong_processtype']==2){
 				$where.=" AND p.id IN (SELECT rp.house_id FROM ln_receiveplong AS pr WHERE `p`.`id` = rp.`house_id` ) ";
 				$where.=" AND p.id NOT IN (SELECT pr.property_id FROM ln_processing_plong AS pr WHERE `p`.`id` = `pr`.`property_id`) ";

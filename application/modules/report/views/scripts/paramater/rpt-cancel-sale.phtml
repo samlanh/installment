@@ -130,7 +130,6 @@
 								<td scope="col" colspan="5"><?php echo $tr->translate("INFO_INDILOAN");?></td>
 								<td scope="col" colspan="3"><?php echo $tr->translate("PAYMENT_INFO");?></td>
 								<td scope="col" colspan="5"><?php echo $tr->translate("CANCEL_INFO");?></td>
-								
 								<td scope="col" rowspan="2"><?php echo $tr->translate("BY_USER");?></td>
 							</tr>
 							<tr bgcolor="#a0baf5" class="style" align="center"  >
@@ -139,11 +138,9 @@
 								<td scope="col"><?php echo $tr->translate("PROPERTY_TYPE");?></td>
 								<td scope="col"><?php echo $tr->translate("PROPERTY_CODE");?></td>
 								<td scope="col"><?php echo $tr->translate("SOLD_PRICE");?></td>
-								
 								<td scope="col"><?php echo $tr->translate("PAID");?></td>
 								<td scope="col"><?php echo $tr->translate("BALANCE");?></td>
 								<td scope="col"><?php echo $tr->translate("INSTALLMENT_PAID");?></td>
-								
 								<td scope="col"><?php echo $tr->translate("DATE");?></td>
 								<td scope="col"><?php echo $tr->translate("CANCEL_TYPE");?></td>
 								<td scope="col"><?php echo $tr->translate("RETURN_MONEY_BACK");?></td>
@@ -152,6 +149,7 @@
 							</tr>
 						</thead>
 					   <?php $property_type=''; $i=0; $total=0; 
+					   $total_return=0;
 					   if(!empty($this->row))foreach($this->row as $key =>$row){ $i++;?>
 						<?php 
 							$property_type= $row['property_type'];
@@ -166,23 +164,21 @@
 							 <td data-label="<?php echo $tr->translate("PAID");?>" align="right" style="white-space: nowrap;"><?php echo number_format($row['paid_amount'],2);?></td>
 							 <td data-label="<?php echo $tr->translate("BALANCE");?>" align="right" style="white-space: nowrap;"><?php echo number_format($row['price_sold']-$row['paid_amount'],2);?></td>
 							 <td data-label="<?php echo $tr->translate("INSTALLMENT_PAID");?>" align="center" style="white-space: nowrap;"><?php echo (empty($row['installment_paid'])?"កក់ដំបូង":$row['installment_paid']);?></td>
-							
 							 <td data-label="<?php echo $tr->translate("DATE");?>" align="center" style="white-space: nowrap;"><?php echo date("d-m-Y",strtotime($row['create_date']));?></td>
 							 <td data-label="<?php echo $tr->translate("CANCEL_TYPE");?>"  align="left" ><?php echo $row['cancelTypeTitle'];?></td>
 							 <td data-label="<?php echo $tr->translate("RETURN_MONEY_BACK");?>" align="right" ><?php if($row['cancel_type']==1){ echo "-";}else{ echo number_format($row['return_back'],2);}?></td>
 							 <td data-label="<?php echo $tr->translate("PAID");?>" align="right" ><?php if($row['cancel_type']==1){ echo "-";}else{echo number_format($row['totalReturnPaid'],2);}?></td>
-							
 							 <td data-label="<?php echo $tr->translate("REASON");?>" align="left" ><?php echo $row['reason'];?></td>
 							 <td data-label="<?php echo $tr->translate("BY_USER");?>" align="center" ><?php echo $row['user_name'];?></td>
 						  </tr>
 						<?php 
-						//$total = $total+$row['return_back'];
+						$total_return = $total_return+$row['return_back'];
 						$total = $total+$row['totalReturnPaid'];
 					   }?>
 					   <tr style="height: 30px; font-weight:bold; text-align: center;background:#87acff;">
-							<td colspan="12" align="right"><?php echo $tr->translate("ប្រាក់ប្រគល់សរុប");?></td>
-							<td><?php echo number_format($total,2);?></td>
-							<td colspan="3">
+							<td colspan="11" align="right"><?php echo $tr->translate("TOTAL");?></td>
+							<td><?php echo number_format($total_return,2);?></td>
+							<td colspan="2">
 							</td>
 						</tr>
 					</table>

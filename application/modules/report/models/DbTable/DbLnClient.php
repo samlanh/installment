@@ -26,7 +26,6 @@ class Report_Model_DbTable_DbLnClient extends Zend_Db_Table_Abstract
 			$s_where[] = " client_number LIKE '%{$s_search}%'";
 			$s_where[] = " client_name LIKE '%{$s_search}%'";
 			$s_where[] = " doc_name LIKE '%{$s_search}%'";
-			
 			$s_where[] = " phone LIKE '%{$s_search}%'";
 			$s_where[] = " house LIKE '%{$s_search}%'";
 			$s_where[] = " street LIKE '%{$s_search}%'";
