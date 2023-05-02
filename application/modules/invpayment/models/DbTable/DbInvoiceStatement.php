@@ -150,6 +150,7 @@ class Invpayment_Model_DbTable_DbInvoiceStatement extends Zend_Db_Table_Abstract
         $string='';
     	$no = $data['keyindex'];
     	$identity='';
+		$invIdentity='';
     	$baseurl= Zend_Controller_Front::getInstance()->getBaseUrl();
         $gTotalExternal = 0;
 		
@@ -160,7 +161,7 @@ class Invpayment_Model_DbTable_DbInvoiceStatement extends Zend_Db_Table_Abstract
                     $invIdentity=$row['id'];
     			}else{
                     $identity=$identity.",".$no;
-                    $invIdentity=$invIdentity.",".$row['id'];
+                    $invIdentity = $invIdentity.",".$row['id'];
     			}
 				
 				$classRowBg = "odd";
@@ -174,7 +175,7 @@ class Invpayment_Model_DbTable_DbInvoiceStatement extends Zend_Db_Table_Abstract
 	    			$string.='<td  class="numberRecord infoCol" align="center"><span title="'.$tr->translate("REMOVE_RECORD").'" class="removeRow" onclick="deleteRecord('.$no.');"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></span></td>';
 	    			$string.='<td  class="numberRecord infoCol" data-label="'.$tr->translate("N_O").'" align="center" >'.($key+1).'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="rsId'.$no.'" name="rsId'.$no.'" value="'.$row['id'].'"></td>';
 	    			$string.='<td  data-label="'.$tr->translate("PRODUCT_NAME").'" class="productName infoCol" >'.$row['proCode'].'<br />'.$row['proName'].'<input type="hidden" dojoType="dijit.form.TextBox" class="fullside" id="proId'.$no.'" name="proId'.$no.'" value="'.$row['proId'].'" type="text" ></td>';
-	    			$string.='<td  data-label="'.$tr->translate("MEASURE").'" class="red infoCol"  >'.$row['measure'].'</td>';
+	    			$string.='<td  data-label="'.$tr->translate("MEASURE").'" class="red infoCol"  style="color:red;" >'.$row['measure'].'</td>';
 	    			$string.='<td  data-label="'.$tr->translate("INVOICE_NO").'" class="red infoCol" ><input readOnly dojoType="dijit.form.ValidationTextBox" class="fullside" id="invId'.$no.'" name="invId'.$no.'" value="'.$row['id'].'" type="hidden" >'.$row['invoiceNo'].'</td>';
 	    			$string.='<td data-label="'.$tr->translate("QTY").'" class=" bold" ><input readOnly dojoType="dijit.form.NumberTextBox" required="true" class="fullside" id="qty'.$no.'" name="qty'.$no.'" placeholder="'.$tr->translate("QTY").'" value="'.$row['totalQtyreceive'].'" type="text" ></td>';
 	    			$string.='<td data-label="'.$tr->translate("UNIT_PRICE").'" class=" bold"><input readOnly  dojoType="dijit.form.NumberTextBox" required="true"  class="fullside" id="unitPrice'.$no.'" name="unitPrice'.$no.'" placeholder="'.$tr->translate("UNIT_PRICE").'" value="'.$row['unitPriceReceive'].'" type="text" ></td>';
