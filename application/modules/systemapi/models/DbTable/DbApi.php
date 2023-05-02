@@ -1307,7 +1307,7 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 			if (!empty($_data['isMaterial'])) {
 				$sql .= " AND (SELECT id FROM `st_category` AS ct  WHERE ct.id= p.categoryId AND ct.isMaterial=" . $_data['isMaterial'] . ")";
 			}
-			if (isset($_data['searchValue'])) {
+			if (!empty($_data['searchValue'])) {
 				$s_where = array();
 				$s_search = addslashes(trim($_data['searchValue']));
 				$s_search = str_replace(' ', '', addslashes(trim($_data['searchValue'])));
@@ -1318,7 +1318,9 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 				
 				$sql .=' AND ( '.implode(' OR ',$s_where).')';
 			}
-			
+			if (!empty($_data['productIdList'])) {
+				$sql.=" AND p.proId IN (".$_data['productIdList'].") ";
+			}
 			$sql.=" Group BY p.proId ";
 			$limit=" ";
 			if(!empty($_data['LimitStart'])){
