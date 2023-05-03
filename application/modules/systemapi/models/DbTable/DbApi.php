@@ -749,7 +749,7 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 						'pCheckingDate'			=>date("Y-m-d"),
 						'pCheckingStatus'		=>$checkingStatus,
 						'pCheckingModifyDate'	=>date("Y-m-d H:i:s"),
-						'checkingCreateDate'	=>date("Y-m-d H:i:s"),
+						'pCheckingCreateDate'	=>date("Y-m-d H:i:s"),
 						'pCheckingBy'			=>$_data['userId'],
 						'processingStatus'		=>$processingStatus,//Purchasing Step checking Approved/Rejected
 				);
@@ -1256,7 +1256,57 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 		}
 	}
 	
-	
+	public function getAllBranchList($_data){
+		$db = $this->getAdapter();
+		try{
+			
+			$userId = empty($_data['userId'])?0:$_data['userId'];
+			$userInfo = $this->getUserInfById($userId);
+			$branchList="";
+			$userType=0;
+			if(!empty($userInfo["value"])){
+				$row = $userInfo["value"];
+				$branchList = empty($row['branch_list'])?"0":$row['branch_list'];
+				$userType = empty($row['userType'])?"0":$row['userType'];
+			}
+			
+			$sql="SELECT 
+					p.*
+					,p.br_id AS id
+					,p.project_name AS `name`
+				";
+			$sql.="	FROM `ln_project` AS p 
+			";
+			$sql.="  WHERE p.status=1 ";	
+			
+			if (!empty($branchList)) {
+				$sql.=" AND p.br_id IN (".$branchList.") ";
+			}
+			$sql.=" ORDER BY p.br_id DESC ";
+			$limit=" ";
+			if(!empty($_data['LimitStart'])){
+				$limit.=" LIMIT ".$_data['LimitStart'].",".$_data['limitRecord'];
+			}else if(!empty($_data['limitRecord'])){
+				$limit.=" LIMIT ".$_data['limitRecord'];
+			}
+			
+			
+			$row = $db->fetchAll($sql.$limit);
+			$result = array(
+						'status' =>true,
+						'value' =>$row,
+					);
+			return $result;
+			
+		}catch(Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$result = array(
+				'status' =>false,
+				'value' =>$e->getMessage(),
+			);
+			return $result;
+		}
+	}
 	public function getAllProductList($_data){
 		$db = $this->getAdapter();
 		try{
@@ -1425,5 +1475,107 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 			return $result;
 		}
 	}
+	
+	function getRequestNumberGenerate($_data){
+		$db = $this->getAdapter();
+		try{
+			
+			$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
+			$_data['dateRequest']=date("Y-m-d");
+			$_data['userId'] = empty($_data['userId'])?0:$_data['userId'];
+			$_data['branch_id'] = empty($_data['branchId'])?0:$_data['branchId'];
+			$requestNo =$dbGBstock->generateRequestNo($_data);
+			
+			$result = array(
+					'status' =>true,
+					'value' =>$requestNo,
+			);
+			return $result;
+	
+		}catch(Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$result = array(
+					'status' =>false,
+					'value' =>$e->getMessage(),
+			);
+			return $result;
+		}
+	}
+	
+	function submitNewRequest($_data){
+    	$db = $this->getAdapter();
+		$db->beginTransaction();
+    	try{
+			
+			$_data['userId']	= empty($_data['userId'])?0:$_data['userId'];
+			$_data['branch_id']	= empty($_data['projectId'])?0:$_data['projectId'];
+			$_data['requestNoLetter'] 	= empty($_data['requestNoLetter'])?"":$_data['requestNoLetter'];
+			$_data['purpose']	= empty($_data['purpose'])?"":$_data['purpose'];
+			$_data['note']	= empty($_data['note'])?"":$_data['note'];
+			
+			$listFromPost 	 = empty($_data['listRequestSubmit'])?null:$_data['listRequestSubmit'];
+			$listItems 	 = Zend_Json::decode($listFromPost);
+			
+			$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
+			$_data['dateRequest']=date("Y-m-d");
+			$requestNo =$dbGBstock->generateRequestNo($_data);
+			
+    		$arr = array(
+    				'projectId'			=>$_data['branch_id'],
+    				'requestNo'			=>$requestNo,
+    				'requestNoLetter'	=>$_data['requestNoLetter'],
+    				'purpose'			=>$_data['purpose'],
+    				'date'				=>$_data['dateRequest'],
+    				'note'				=>$_data['note'],
+										
+    				'status'			=>1,
+    				'createDate'		=>date("Y-m-d H:i:s"),
+    				'modifyDate'		=>date("Y-m-d H:i:s"),
+    				'userId'			=>$_data['userId'],
+    		);
+    		$this->_name='st_request_po';
+    		$requestId = $this->insert($arr);
+    		
+			if(!empty($listItems)) foreach($listItems AS $row){
+				
+				$arrDetail = array(
+				
+						'requestId'		=>$requestId,
+						'proId'			=>$row['proId'],
+						
+						'qtyRequest'	=>$row['qtyRequest'],
+						'qtyAdjust'		=>$row['qtyRequest'],
+						'qtyVerify'		=>$row['qtyRequest'],
+						'qtyApproved'	=>$row['qtyRequest'],
+						
+						'dateReqStockIn' =>$row['dateReqStockIn'],
+						'note'			=>$row['note'],
+						
+						'createDate'	=>date("Y-m-d H:i:s"),
+						'modifyDate'	=>date("Y-m-d H:i:s"),
+						'userId'		=>$_data['userId'],
+							
+				);
+				$this->_name='st_request_po_detail';	
+				$this->insert($arrDetail);
+				
+			}
+			
+			$notify = array(
+				"userAction" => 2,
+				"typeNotify" => "toCheckingRequest",
+				"notificationId" => $requestId,
+				"branchId" => $_data['branch_id'],
+			);
+			$dbGBstock->pushNotificationForAndroid($notify);
+			
+			$db->commit();
+    		return true;
+    	}catch (Exception $e){
+			$db->rollBack();
+    		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+    		return false;
+    	}
+    }
 	
 }
