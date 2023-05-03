@@ -1560,6 +1560,15 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 				$this->insert($arrDetail);
 				
 			}
+			
+			$notify = array(
+				"userAction" => 2,
+				"typeNotify" => "toCheckingRequest",
+				"notificationId" => $requestId,
+				"branchId" => $_data['branch_id'],
+			);
+			$dbGBstock->pushNotificationForAndroid($notify);
+			
 			$db->commit();
     		return true;
     	}catch (Exception $e){
