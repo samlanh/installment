@@ -53,7 +53,11 @@ class Systemapi_IndexController extends Zend_Controller_Action
 			}else if ($GetData['url']=="purchaseConcreteForReAdjustment"){
 				$GetData['isForReAdjustment'] = "1";
     			$_dbAction->getPurchaseConcreteListAction($GetData);
-				
+			
+			}else if ($GetData['url']=="requestNumber"){
+				$_dbAction->getRequestNumberGenerateAction($GetData);	
+			}else if ($GetData['url']=="branchList"){
+				$_dbAction->getBranchListAction($GetData);				
 			}else if ($GetData['url']=="productCategory"){
 				$_dbAction->getProductCategoryAction($GetData);
 			}else if ($GetData['url']=="productList"){
@@ -82,6 +86,8 @@ class Systemapi_IndexController extends Zend_Controller_Action
 				}else if ($GetData['url']=="removeTokenApp"){
     				$_dbAction->removeTokenAction($postData);
 					
+				}else if ($GetData['url']=="submitNewRequest"){
+					$_dbAction->submitNewRequestAction($postData);	
 				}else if ($GetData['url']=="submitCheckingRequest"){
     				$_dbAction->checkingRequestPOAction($postData);	
 				}else if ($GetData['url']=="submitVerifyRequestPO"){
