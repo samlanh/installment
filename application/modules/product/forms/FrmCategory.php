@@ -19,6 +19,9 @@ Class Product_Form_FrmCategory extends Zend_Dojo_Form {
 			'queryExpr'=>'*${0}*',
 		));
 		$options = $db->getAllCategoryProduct(0,'','',1);
+		if($request->getControllerName()=='category'){
+			unset($options[-1]);
+		}
 		$parentId->setMultiOptions($options);
 		
 		$status = new Zend_Dojo_Form_Element_FilteringSelect('status');
