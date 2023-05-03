@@ -71,6 +71,12 @@ class Systemapi_IndexController extends Zend_Controller_Action
 				$GetData['getControlType'] = "requestStep";
     			$_dbAction->getFormSearchOptionAction($GetData);
 			
+			}else if ($GetData['url']=="usageNumber"){
+				$_dbAction->getUsageNumberGenerateAction($GetData);
+			}else if ($GetData['url']=="usageStockList"){
+				$_dbAction->getUsageStockListAction($GetData);
+			}else if ($GetData['url']=="usageStockDetail"){
+				$_dbAction->getUsageStockDetailAction($GetData);
     		}else{
     			echo Zend_Http_Response::responseCodeAsText(401,true);
     		}

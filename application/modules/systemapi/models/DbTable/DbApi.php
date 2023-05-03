@@ -1578,4 +1578,140 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
     	}
     }
 	
+	function getUsageNumberGenerate($_data){
+		$db = $this->getAdapter();
+		try{
+			
+			$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
+			$_data['createDate']=date("Y-m-d");
+			$_data['userId'] = empty($_data['userId'])?0:$_data['userId'];
+			$_data['branch_id'] = empty($_data['branchId'])?0:$_data['branchId'];
+			$_data['tranType'] = 1;
+			$usageNo =$dbGBstock->generateRequestUsageNo($_data);
+			
+			$result = array(
+					'status' =>true,
+					'value' =>$usageNo,
+			);
+			return $result;
+	
+		}catch(Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$result = array(
+					'status' =>false,
+					'value' =>$e->getMessage(),
+			);
+			return $result;
+		}
+	}
+	
+	public function getAllUsageStockList($_data){
+		$db = $this->getAdapter();
+		try{
+			
+			$_data['userId'] = empty($_data['userId'])?0:$_data['userId'];
+			$currentLang = empty($_data['currentLang'])?1:$_data['currentLang'];
+			
+			$titleColumn = 'name_en';
+			if ($currentLang == 1) {
+				$titleColumn = 'name_kh';
+			}
+			$sql="SELECT 
+				so.*
+				,(SELECT project_name FROM `ln_project` WHERE br_id=so.projectId LIMIT 1) AS projectName
+				
+				,(SELECT w.staffName FROM `st_worker` w where w.id=so.staffId LIMIT 1) AS staffName
+				,(SELECT c.staffName FROM `st_contractor` c where c.id=so.contractor LIMIT 1) AS contractor
+				
+				,(SELECT pt.type_nameen FROM `ln_properties_type` pt where pt.id=so.houseType LIMIT 1) AS houseType
+				,(SELECT p.land_address FROM `ln_properties` p where p.id=so.houseId LIMIT 1) AS houseNo
+				,(SELECT w.workTitle FROM `st_work_type` w where w.id=so.workType LIMIT 1) workTypeTitle
+				
+				,(SELECT CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=so.userId LIMIT 1 ) AS userName
+				,(SELECT ".$titleColumn." FROM ln_view WHERE type=3 and key_code = so.status LIMIT 1) AS status
+								
+			 ";
+			
+			$sql.="	
+				FROM `st_stockout` AS so WHERE so.tranType=1 AND so.status= 1
+			";
+			if(!empty($_data['endDate'])){
+				$from_date =(empty($_data['startDate']))? '1': " so.createDate >= '".date("Y-m-d",strtotime($_data['startDate']))." 00:00:00'";
+				$to_date = (empty($_data['endDate']))? '1': " so.createDate <= '".date("Y-m-d",strtotime($_data['endDate']))." 23:59:59'";
+				$sql.= " AND ".$from_date." AND ".$to_date;
+			}
+			
+			$sql.=" AND so.userId = ".$_data['userId'];
+			$sql.=$this->getAccessPermission("so.projectId",$_data);
+	
+			$limit=" ";
+			if(!empty($_data['LimitStart'])){
+				$limit.=" LIMIT ".$_data['LimitStart'].",".$_data['limitRecord'];
+			}else if(!empty($_data['limitRecord'])){
+				$limit.=" LIMIT ".$_data['limitRecord'];
+			}
+			
+			
+			$row = $db->fetchAll($sql.$limit);
+			
+			$counting = count($row);
+			$allResult = array('rowData'=>$row,'countingRecord'=>$counting);
+			
+			$result = array(
+						'status' =>true,
+						'value' =>$allResult,
+					);
+			return $result;
+			
+		}catch(Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$result = array(
+				'status' =>false,
+				'value' =>$e->getMessage(),
+			);
+			return $result;
+		}
+	}
+	
+	public function getUsageStockDetail($_data){
+		$db = $this->getAdapter();
+		try{
+			
+			$_data['userId'] = empty($_data['userId'])?0:$_data['userId'];
+			$_data['recordId'] = empty($_data['recordId'])?0:$_data['recordId'];
+			$currentLang = empty($_data['currentLang'])?1:$_data['currentLang'];
+			
+			$sql="select 
+					stkd.* 
+					,p.proName AS `name`
+					,p.image AS `productImage` 
+					,p.measureLabel AS measureTitle
+					,(SELECT proCate.categoryName FROM  st_category AS proCate WHERE proCate.id = p.categoryId LIMIT 1) as categoryName			
+			 ";
+			
+			$sql.="	
+				FROM st_stockout_detail AS stkd 
+					LEFT JOIN `st_product` AS p ON p.proId = stkd.proId 
+				WHERE 1 
+			";
+			
+			$sql.=" AND stkd.stockoutId = ".$_data['recordId'];
+			$row = $db->fetchAll($sql);
+		
+			$result = array(
+						'status' =>true,
+						'value' =>$row,
+					);
+			return $result;
+			
+		}catch(Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$result = array(
+				'status' =>false,
+				'value' =>$e->getMessage(),
+			);
+			return $result;
+		}
+	}
+	
 }
