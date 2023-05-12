@@ -124,6 +124,8 @@ class Systemapi_IndexController extends Zend_Controller_Action
 					$_dbAction->submitNewUsageAction($postData);
 				}else if ($GetData['url']=="submitUpdateUsage"){
 					$_dbAction->submitUpdateUsageAction($postData);
+				}else if ($GetData['url']=="submitPreCountingStock"){
+					$_dbAction->submitPreCountingStockAction($postData);
     			}
     			else{
     				echo Zend_Http_Response::responseCodeAsText(401,true);

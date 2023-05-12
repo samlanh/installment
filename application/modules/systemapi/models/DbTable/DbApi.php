@@ -1441,8 +1441,8 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 				$sql .= " AND p.isCountStock= " . $_data['isCountStock'];
 			}
 
-			if (!empty($_data['branch_id'])) {
-				$sql .= " AND p.proId IN (SELECT l.proId FROM `st_product_location` AS l  WHERE l.projectId=" . $_data['branch_id'] . " )";
+			if (!empty($_data['branchId'])) {
+				$sql .= " AND p.proId IN (SELECT l.proId FROM `st_product_location` AS l  WHERE l.projectId=" . $_data['branchId'] . " )";
 			}
 			if (!empty($_data['categoryId'])) {
 				$sql .= " AND p.categoryId= " . $_data['categoryId'];
@@ -1996,6 +1996,65 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 				$where ='stockoutId='.$stockId;
 				$this->delete($where);	
 			}
+    	}
+    }
+	
+	function submitPreCountingStock($_data){
+    	$db = $this->getAdapter();
+		$db->beginTransaction();
+    	try{
+			
+			
+			$_data['userId']	= empty($_data['userId'])?0:$_data['userId'];
+			$_data['branchId']	= empty($_data['branchId'])?0:$_data['branchId'];
+			$_data['note']	= empty($_data['note'])?"":$_data['note'];
+			
+			$listFromPost 	 = empty($_data['listRequestSubmit'])?null:$_data['listRequestSubmit'];
+			$listItems 	 = Zend_Json::decode($listFromPost);
+			
+			$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
+			$_data['inputDate']=date("Y-m-d");
+			
+			
+			$arr = array(
+    				'projectId'		=>$_data['branchId'],
+    				'inputDate'		=>$_data['inputDate'],
+    				'note'			=>$_data['note'],
+    				'createDate'	=>date("Y-m-d H:i:s"),
+    				'status'		=>1,
+    				'userId'		=>$_data['userId'],
+    			);
+			
+    		$this->_name='st_precount_product';
+    		$countId = $this->insert($arr);
+    		
+			if(!empty($listItems)) foreach($listItems AS $row){
+				$arr = array(
+						'branch_id' => $_data['branchId'],
+						'productId' => $row['proId'],
+					);
+				$rsProduct = $dbGBstock->getProductInfoByLocation($arr);
+				if (!empty($rsProduct)) {
+					$arrDetail = array(
+						'countId'		=>$countId,
+						'proId'			=>$row['proId'],
+						'currentQty'	=>$row['currentQty'],
+						'countQty'		=>$row['countQty'],
+						'closingDate'	=>$row['closingDate'],
+						'note'			=>$row['note'],
+					);
+					$this->_name='st_precount_product_detail';
+					$id = $this->insert($arrDetail);
+				}					
+				
+			}
+			
+			$db->commit();
+    		return true;
+    	}catch (Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$db->rollBack();
+    		return false;
     	}
     }
 }
