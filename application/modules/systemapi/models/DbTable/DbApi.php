@@ -1218,12 +1218,101 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
     	}
     }
 	
-	public function getFormSearchOption($search){
+	function getAllStaffbyBranch($_data)
+	{
+		$db = $this->getAdapter();
+		$sql = "SELECT  
+					w.*
+					,w.id
+					,w.staffName AS name
+				FROM st_worker AS w
+					WHERE w.status=1 ";
+		if (!empty($_data['branchId'])) {
+			$sql .= " AND w.projectId=" . $_data['branchId'];
+		}
+		$rows = $db->fetchAll($sql);
+		
+		return $rows;
+	}
+	function getAllContractorbyBranch($_data)
+	{
+		$db = $this->getAdapter();
+		$sql = "
+		SELECT
+			ct.*
+			,ct.id AS id
+			,ct.staffName AS name
+		FROM st_contractor AS ct
+		WHERE ct.status=1 ";
+		if (!empty($_data['branchId'])) {
+			$sql .= " AND ct.projectId=" . $_data['branchId'];
+		}
+		$rows = $db->fetchAll($sql);
+		
+		return $rows;
+	}
+	public function getAllWorkType($parent = 0, $spacing = '', $cate_tree_array = '')
+	{
+
+		$db = $this->getAdapter();
+		if (!is_array($cate_tree_array))
+			$cate_tree_array = array();
+
+		$sql = "SELECT
+				wt.id AS id,
+				wt.workTitle AS `name` ";
+		$sql .= " FROM `st_work_type` AS wt  ";
+		$sql .= " WHERE wt.status=1 AND wt.parentId = $parent ";
+		$query = $db->fetchAll($sql);
+		$rowCount = count($query);
+		$id = '';
+		if ($rowCount > 0) {
+			foreach ($query as $row) {
+				$cate_tree_array[] = array("id" => $row['id'], "name" => $spacing . $row['name']);
+				$cate_tree_array = $this->getAllWorkType($row['id'], $spacing . ' - ', $cate_tree_array);
+			}
+		}
+		return $cate_tree_array;
+	}
+	public function getPropertyType(){
+		$db= $this->getAdapter();
+		$sql="SELECT t.`id`,t.`type_nameen` AS `name` FROM `ln_properties_type` AS t WHERE t.`status`=1";
+		$rows =  $db->fetchAll($sql);
+		return $rows;
+	  }
+	public function getAllLand($_data){
+  	   $db = $this->getAdapter();
+  	   
+	   $sql="
+			SELECT 
+				`id`,
+				CONCAT(COALESCE(`land_address`,''),',',COALESCE(street,'')) AS name 
+			FROM `ln_properties` 
+			WHERE `land_address`!='' ";
+	   $sql.=" AND  status Not IN (-1,0) ";
+	   
+		if (!empty($_data['branchId'])) {
+			$sql .= " AND `branch_id`=" . $_data['branchId'];
+		}
+		if (!empty($_data['propertyType'])) {
+			$sql .= " AND `property_type`=" . $_data['propertyType'];
+		}
+ 
+		$sql.=" ORDER BY id DESC";
+  	    $rows = $db->fetchAll($sql);
+  	    
+  		return $rows;
+  }
+	
+	public function getFormSearchOption($_data){
 		$db = $this->getAdapter();
 		try{
 			
-			$currentLang = empty($search['currentLang'])?1:$search['currentLang'];
-			$getControlType = empty($search['getControlType'])?"requestStatus":$search['getControlType'];
+			
+			$currentLang = empty($_data['currentLang'])?1:$_data['currentLang'];
+			$getControlType = empty($_data['getControlType'])?"requestStatus":$_data['getControlType'];
+			$_data['userId'] = empty($_data['userId'])?0:$_data['userId'];
+			$_data['branchId'] = empty($_data['branchId'])?0:$_data['branchId'];
 			$row=array();
 			if($getControlType=="requestStatus"){
 				$row = array(
@@ -1239,6 +1328,16 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 					array("id"=>3,"name"=>$currentLang==1 ? "ផ្នែកបញ្ជាទិញ ត្រួតពិនិត្យ" : "PO Review"),
 					array("id"=>4,"name"=>$currentLang==1 ? "អគ្គនាយក ត្រួតពិនិត្យ" : "Boss Review"),
 				);
+			}else if($getControlType=="warehouseStaff"){
+				$row = $this->getAllStaffbyBranch($_data);
+			}else if($getControlType=="contractorStaff"){	
+				$row = $this->getAllContractorbyBranch($_data);
+			}else if($getControlType=="workType"){	
+				$row = $this->getAllWorkType(0,'','');
+			}else if($getControlType=="property"){	
+				$row = $this->getAllLand($_data);
+			}else if($getControlType=="propertyType"){	
+				$row = $this->getPropertyType();
 			}
 			
 			$result = array(
@@ -1572,8 +1671,8 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 			$db->commit();
     		return true;
     	}catch (Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			$db->rollBack();
-    		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     		return false;
     	}
     }
@@ -1621,29 +1720,35 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 				,(SELECT project_name FROM `ln_project` WHERE br_id=so.projectId LIMIT 1) AS projectName
 				
 				,(SELECT w.staffName FROM `st_worker` w where w.id=so.staffId LIMIT 1) AS staffName
-				,(SELECT c.staffName FROM `st_contractor` c where c.id=so.contractor LIMIT 1) AS contractor
-				
-				,(SELECT pt.type_nameen FROM `ln_properties_type` pt where pt.id=so.houseType LIMIT 1) AS houseType
+				,(SELECT c.staffName FROM `st_contractor` c where c.id=so.contractor LIMIT 1) AS contractorName
+			
+				,(SELECT pt.type_nameen FROM `ln_properties_type` pt where pt.id=so.houseType LIMIT 1) AS houseTypeTitle
 				,(SELECT p.land_address FROM `ln_properties` p where p.id=so.houseId LIMIT 1) AS houseNo
 				,(SELECT w.workTitle FROM `st_work_type` w where w.id=so.workType LIMIT 1) workTypeTitle
 				
 				,(SELECT CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=so.userId LIMIT 1 ) AS userName
-				,(SELECT ".$titleColumn." FROM ln_view WHERE type=3 and key_code = so.status LIMIT 1) AS status
+				,(SELECT ".$titleColumn." FROM ln_view WHERE type=3 and key_code = so.status LIMIT 1) AS statusTitle
 								
 			 ";
 			
 			$sql.="	
-				FROM `st_stockout` AS so WHERE so.tranType=1 AND so.status= 1
+				FROM `st_stockout` AS so WHERE so.tranType=1 
 			";
 			if(!empty($_data['endDate'])){
 				$from_date =(empty($_data['startDate']))? '1': " so.createDate >= '".date("Y-m-d",strtotime($_data['startDate']))." 00:00:00'";
 				$to_date = (empty($_data['endDate']))? '1': " so.createDate <= '".date("Y-m-d",strtotime($_data['endDate']))." 23:59:59'";
 				$sql.= " AND ".$from_date." AND ".$to_date;
 			}
+			if(!empty($_data['houseType'])){
+				$sql.=" AND so.houseType = ".$_data['houseType'];
+			}
+			if(!empty($_data['workType'])){
+				$sql.=" AND so.workType = ".$_data['workType'];
+			}
 			
 			$sql.=" AND so.userId = ".$_data['userId'];
 			$sql.=$this->getAccessPermission("so.projectId",$_data);
-	
+			$sql.=" ORDER BY so.id DESC";
 			$limit=" ";
 			if(!empty($_data['LimitStart'])){
 				$limit.=" LIMIT ".$_data['LimitStart'].",".$_data['limitRecord'];
@@ -1683,7 +1788,8 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 			
 			$sql="select 
 					stkd.* 
-					,p.proName AS `name`
+					,p.proName AS `proName`
+					,p.proCode AS `proCode`
 					,p.image AS `productImage` 
 					,p.measureLabel AS measureTitle
 					,(SELECT proCate.categoryName FROM  st_category AS proCate WHERE proCate.id = p.categoryId LIMIT 1) as categoryName			
@@ -1714,4 +1820,182 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 		}
 	}
 	
+	function submitNewUsage($_data){
+    	$db = $this->getAdapter();
+		$db->beginTransaction();
+    	try{
+			
+			
+			$_data['userId']	= empty($_data['userId'])?0:$_data['userId'];
+			$_data['branch_id']	= empty($_data['branchId'])?0:$_data['branchId'];
+			$_data['branchId']	= empty($_data['branchId'])?0:$_data['branchId'];
+			$_data['reqOutNo'] 	= empty($_data['reqOutNo'])?"":$_data['reqOutNo'];
+			$_data['note']	= empty($_data['note'])?"":$_data['note'];
+			$_data['tranType'] = 1;
+			
+			$listFromPost 	 = empty($_data['listRequestSubmit'])?null:$_data['listRequestSubmit'];
+			$listItems 	 = Zend_Json::decode($listFromPost);
+			
+			$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
+			$_data['dateRequest']=date("Y-m-d");
+			
+			$requestStock =$dbGBstock->generateRequestUsageNo($_data);
+			$arr = array(
+    				'projectId'		=>$_data['branch_id'],
+    				'requestNo'		=>$requestStock,
+    				'reqOutNo'		=>$_data['reqOutNo'],
+    				'requestDate'	=>$_data['dateRequest'],
+    				'staffId'		=>$_data['staffId'],
+    				'contractor'	=>$_data['contractor'],
+    				'workerName'	=>$_data['workerName'],
+    				'houseType'		=>$_data['houseType'],
+    				'houseId'		=>$_data['houseId'],
+    				'workType'		=>$_data['workType'],
+    				'typeofWork'	=>$_data['typeofWork'],
+    				'note'			=>$_data['note'],
+    				'createDate'	=>date("Y-m-d H:i:s"),
+    				'status'		=>1,
+    				'userId'		=>$_data['userId'],
+    				'tranType'		=>1,
+    			);
+			
+    		$this->_name='st_stockout';
+    		$requestId = $this->insert($arr);
+    		
+			if(!empty($listItems)) foreach($listItems AS $row){
+				
+				$arrDetail = array(
+    					'stockoutId'	=>$requestId,
+    					'proId'			=>$row['proId'],
+    					'qtyRequest'	=>$row['qtyRequest'],
+    					'unitPrice'		=>0,
+    					'totalPrice'	=>0,
+    					'note'			=>$row['note'],
+    				);
+    				$this->_name='st_stockout_detail';
+    				$id = $this->insert($arrDetail);
+    				
+    				$param = array(
+    					'EntyQty'=> -$row['qtyRequest'],
+    					'branch_id'=> $_data['branch_id'],
+    					'productId'=> $row['proId'],
+    				);
+    				$dbGBstock->updateProductLocation($param);//Update Stock qty and new costing
+    				$dbGBstock->addProductHistoryQty($_data['branch_id'],$row['proId'],3,$row['qtyRequest'],$id);//movement'	
+				
+			}
+			
+			$db->commit();
+    		return true;
+    	}catch (Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$db->rollBack();
+    		return false;
+    	}
+    }
+	
+	function submitUpdateUsageStock($_data){
+    	$db = $this->getAdapter();
+		$db->beginTransaction();
+    	try{
+			
+			
+			$_data['userId']	= empty($_data['userId'])?0:$_data['userId'];
+			$stockId	= empty($_data['recordId'])?0:$_data['recordId'];
+			$_data['branch_id']	= empty($_data['branchId'])?0:$_data['branchId'];
+			$_data['branchId']	= empty($_data['branchId'])?0:$_data['branchId'];
+			$_data['reqOutNo'] 	= empty($_data['reqOutNo'])?"":$_data['reqOutNo'];
+			$_data['note']	= empty($_data['note'])?"":$_data['note'];
+			$_data['tranType'] = 1;
+			
+			$listFromPost 	 = empty($_data['listRequestSubmit'])?null:$_data['listRequestSubmit'];
+			$listItems 	 = Zend_Json::decode($listFromPost);
+			
+			$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
+			$_data['dateRequest']=date("Y-m-d");
+			
+			$requestStock =$dbGBstock->generateRequestUsageNo($_data);
+			$arr = array(
+    				'reqOutNo'		=>$_data['reqOutNo'],
+    				'requestDate'	=>$_data['dateRequest'],
+    				'staffId'		=>$_data['staffId'],
+    				'contractor'	=>$_data['contractor'],
+    				'workerName'	=>$_data['workerName'],
+    				'houseType'		=>$_data['houseType'],
+    				'houseId'		=>$_data['houseId'],
+    				'workType'		=>$_data['workType'],
+    				'typeofWork'	=>$_data['typeofWork'],
+    				'note'			=>$_data['note'],
+    				'createDate'	=>date("Y-m-d H:i:s"),
+    				'status'		=>$_data['status'],
+    				'userId'		=>$_data['userId'],
+    				
+    			);
+			
+    		$this->_name='st_stockout';
+			$where="id=".$stockId;
+    		$this->update($arr, $where);
+			
+			
+			$this->resetUsageStock($_data);
+    		
+			if($_data['status']=="1"){
+				if(!empty($listItems)) foreach($listItems AS $row){
+					$arrDetail = array(
+						'stockoutId'	=>$stockId,
+						'proId'			=>$row['proId'],
+						'qtyRequest'	=>$row['qtyRequest'],
+						'unitPrice'		=>0,
+						'totalPrice'	=>0,
+						'note'			=>$row['note'],
+					);
+					$this->_name='st_stockout_detail';
+					$id = $this->insert($arrDetail);
+					
+					$param = array(
+						'EntyQty'=> -$row['qtyRequest'],
+						'branch_id'=> $_data['branch_id'],
+						'productId'=> $row['proId'],
+					);
+					$dbGBstock->updateProductLocation($param);//Update Stock qty and new costing
+					$dbGBstock->addProductHistoryQty($_data['branch_id'],$row['proId'],3,$row['qtyRequest'],$id);//movement'	
+					
+				}
+			}
+			
+			
+			$db->commit();
+    		return true;
+    	}catch (Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$db->rollBack();
+    		return false;
+    	}
+    }
+	
+	function resetUsageStock($_data){
+    	$dbs = new Application_Model_DbTable_DbGlobalStock();
+		$stockId	= empty($_data['recordId'])?0:$_data['recordId'];
+		$branchId	= empty($_data['branchId'])?0:$_data['branchId'];
+		
+		$dbStockOut = new Stockinout_Model_DbTable_DbStockout();
+    	$results = $dbStockOut->getDataAllRow($stockId);
+    	if(!empty($results)){
+    		foreach($results as $row){
+    			$param = array(
+    				'EntyQty'=> $row['qtyRequest'],
+    				'branch_id'=> $branchId,
+    				'productId'=> $row['proId'],
+    			);
+    			$dbs->updateProductLocation($param);
+    			$dbs->DeleteProductHistoryQty($row['id'],3);
+    		}
+			
+			if($_data['status']=="1"){
+				$this->_name='st_stockout_detail';
+				$where ='stockoutId='.$stockId;
+				$this->delete($where);	
+			}
+    	}
+    }
 }

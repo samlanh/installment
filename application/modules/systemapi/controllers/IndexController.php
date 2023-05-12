@@ -70,6 +70,21 @@ class Systemapi_IndexController extends Zend_Controller_Action
 			}else if ($GetData['url']=="formRequestStep"){
 				$GetData['getControlType'] = "requestStep";
     			$_dbAction->getFormSearchOptionAction($GetData);
+			}else if ($GetData['url']=="formWarehouseStaff"){
+				$GetData['getControlType'] = "warehouseStaff";
+    			$_dbAction->getFormSearchOptionAction($GetData);
+			}else if ($GetData['url']=="formContractorStaff"){
+				$GetData['getControlType'] = "contractorStaff";
+    			$_dbAction->getFormSearchOptionAction($GetData);
+			}else if ($GetData['url']=="formWorkType"){
+				$GetData['getControlType'] = "workType";
+    			$_dbAction->getFormSearchOptionAction($GetData);
+			}else if ($GetData['url']=="formProperty"){
+				$GetData['getControlType'] = "property";
+    			$_dbAction->getFormSearchOptionAction($GetData);
+			}else if ($GetData['url']=="formPropertyType"){
+				$GetData['getControlType'] = "propertyType";
+    			$_dbAction->getFormSearchOptionAction($GetData);
 			
 			}else if ($GetData['url']=="usageNumber"){
 				$_dbAction->getUsageNumberGenerateAction($GetData);
@@ -92,8 +107,7 @@ class Systemapi_IndexController extends Zend_Controller_Action
 				}else if ($GetData['url']=="removeTokenApp"){
     				$_dbAction->removeTokenAction($postData);
 					
-				}else if ($GetData['url']=="submitNewRequest"){
-					$_dbAction->submitNewRequestAction($postData);	
+				
 				}else if ($GetData['url']=="submitCheckingRequest"){
     				$_dbAction->checkingRequestPOAction($postData);	
 				}else if ($GetData['url']=="submitVerifyRequestPO"){
@@ -104,7 +118,12 @@ class Systemapi_IndexController extends Zend_Controller_Action
     				$_dbAction->submitVerifyDNAction($postData);
 				}else if ($GetData['url']=="submitApproveToReAdjustPoConcrete"){
     				$_dbAction->submitApproveToReAdjustPoConcreteAction($postData);
-				
+				}else if ($GetData['url']=="submitNewRequest"){
+					$_dbAction->submitNewRequestAction($postData);	
+				}else if ($GetData['url']=="submitNewUsage"){
+					$_dbAction->submitNewUsageAction($postData);
+				}else if ($GetData['url']=="submitUpdateUsage"){
+					$_dbAction->submitUpdateUsageAction($postData);
     			}
     			else{
     				echo Zend_Http_Response::responseCodeAsText(401,true);
