@@ -92,6 +92,11 @@ class Systemapi_IndexController extends Zend_Controller_Action
 				$_dbAction->getUsageStockListAction($GetData);
 			}else if ($GetData['url']=="usageStockDetail"){
 				$_dbAction->getUsageStockDetailAction($GetData);
+				
+			}else if ($GetData['url']=="preCountStock"){
+				$_dbAction->getPreCountStockListAction($GetData);
+			}else if ($GetData['url']=="preCountStockDetail"){
+				$_dbAction->getPreCountStockDetailAction($GetData);
     		}else{
     			echo Zend_Http_Response::responseCodeAsText(401,true);
     		}
@@ -126,6 +131,8 @@ class Systemapi_IndexController extends Zend_Controller_Action
 					$_dbAction->submitUpdateUsageAction($postData);
 				}else if ($GetData['url']=="submitPreCountingStock"){
 					$_dbAction->submitPreCountingStockAction($postData);
+				}else if ($GetData['url']=="submitEditPreCountingStock"){
+					$_dbAction->submitEditPreCountingStockAction($postData);
     			}
     			else{
     				echo Zend_Http_Response::responseCodeAsText(401,true);

@@ -1420,12 +1420,16 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 					,p.image AS `productImage`
 					,p.measureLabel AS measureTitle
 					,proCate.categoryName
-					,pl.qty AS currentQtyAll
+					,SUM(pl.qty) AS currentQtyAll
 					,pl.qtyAlert AS qtyWarningAlert
 					,(SELECT GROUP_CONCAT(prl.qty) FROM st_product_location AS prl JOIN ln_project AS pj ON pj.br_id = prl.projectId  WHERE p.proId = prl.proId ".$userLoaction." ORDER BY prl.projectId ASC LIMIT 1) AS qtyByLocationList
 					,(SELECT GROUP_CONCAT(pj.project_name) FROM st_product_location AS prl JOIN ln_project AS pj ON pj.br_id = prl.projectId WHERE p.proId = prl.proId ".$userLoaction." ORDER BY prl.projectId ASC LIMIT 1) AS branchNameList
 					
 				";
+				if (!empty($_data['branchId'])) {
+					$sql .= ",(SELECT l.qty FROM `st_product_location` AS l  WHERE l.projectId=" . $_data['branchId'] . " AND l.proId = p.proId LIMIT 1) AS currentQty ";
+				}
+				
 			$sql.="	FROM `st_product` AS p 
 					LEFT JOIN st_category AS proCate ON proCate.id = p.categoryId
 					LEFT JOIN st_product_location AS pl ON p.proId = pl.proId
@@ -1999,6 +2003,118 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
     	}
     }
 	
+	public function getAllPreCountStockList($_data){
+		$db = $this->getAdapter();
+		try{
+			
+			$_data['userId'] = empty($_data['userId'])?0:$_data['userId'];
+			$currentLang = empty($_data['currentLang'])?1:$_data['currentLang'];
+			
+			$titleColumn = 'name_en';
+			if ($currentLang == 1) {
+				$titleColumn = 'name_kh';
+			}
+			$sql="SELECT 
+				pre.*
+				,(SELECT project_name FROM `ln_project` WHERE br_id=pre.projectId LIMIT 1) AS projectName
+				
+				,(SELECT CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=pre.userId LIMIT 1 ) AS userName
+				,(SELECT ".$titleColumn." FROM ln_view WHERE type=3 and key_code = pre.status LIMIT 1) AS statusTitle
+				,(SELECT pred.isClosed FROM `st_precount_product_detail` AS pred WHERE pred.countId = pre.id ORDER BY pred.isClosed ASC LIMIT 1) AS isLocked
+								
+			 ";
+			
+			$sql.="	
+				FROM `st_precount_product` AS pre WHERE 1 
+			";
+			if(!empty($_data['endDate'])){
+				$from_date =(empty($_data['startDate']))? '1': " pre.inputDate >= '".date("Y-m-d",strtotime($_data['startDate']))." 00:00:00'";
+				$to_date = (empty($_data['endDate']))? '1': " pre.inputDate <= '".date("Y-m-d",strtotime($_data['endDate']))." 23:59:59'";
+				$sql.= " AND ".$from_date." AND ".$to_date;
+			}
+			
+			$userType 	= "0";
+			$userInfo = $this->getUserInfById($_data['userId']);
+			if(!empty($userInfo["value"])){
+				$row = $userInfo["value"];
+				$userType = empty($row['userType'])?"0":$row['userType'];
+			}
+			if($userType!="1"){
+				$sql.=" AND pre.userId = ".$_data['userId'];
+			}
+			
+			$sql.=$this->getAccessPermission("pre.projectId",$_data);
+			$sql.=" ORDER BY pre.id DESC";
+			$limit=" ";
+			if(!empty($_data['LimitStart'])){
+				$limit.=" LIMIT ".$_data['LimitStart'].",".$_data['limitRecord'];
+			}else if(!empty($_data['limitRecord'])){
+				$limit.=" LIMIT ".$_data['limitRecord'];
+			}
+			
+			
+			$row = $db->fetchAll($sql.$limit);
+			
+			$counting = count($row);
+			$allResult = array('rowData'=>$row,'countingRecord'=>$counting);
+			
+			$result = array(
+						'status' =>true,
+						'value' =>$allResult,
+					);
+			return $result;
+			
+		}catch(Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$result = array(
+				'status' =>false,
+				'value' =>$e->getMessage(),
+			);
+			return $result;
+		}
+	}
+	public function getPreCountStockDetail($_data){
+		$db = $this->getAdapter();
+		try{
+			
+			$_data['userId'] = empty($_data['userId'])?0:$_data['userId'];
+			$_data['recordId'] = empty($_data['recordId'])?0:$_data['recordId'];
+			$currentLang = empty($_data['currentLang'])?1:$_data['currentLang'];
+			
+			$sql="select 
+					stkd.* 
+					,p.proName AS `proName`
+					,p.proCode AS `proCode`
+					,p.image AS `productImage` 
+					,p.measureLabel AS measureTitle
+					,(SELECT proCate.categoryName FROM  st_category AS proCate WHERE proCate.id = p.categoryId LIMIT 1) as categoryName			
+			 ";
+			
+			$sql.="	
+				FROM st_precount_product_detail AS stkd 
+					LEFT JOIN `st_product` AS p ON p.proId = stkd.proId 
+				WHERE 1 
+			";
+			
+			$sql.=" AND stkd.countId = ".$_data['recordId'];
+			$row = $db->fetchAll($sql);
+		
+			$result = array(
+						'status' =>true,
+						'value' =>$row,
+					);
+			return $result;
+			
+		}catch(Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$result = array(
+				'status' =>false,
+				'value' =>$e->getMessage(),
+			);
+			return $result;
+		}
+	}
+	
 	function submitPreCountingStock($_data){
     	$db = $this->getAdapter();
 		$db->beginTransaction();
@@ -2057,4 +2173,74 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
     		return false;
     	}
     }
+	
+	function submitEditPreCountingStock($_data){
+    	$db = $this->getAdapter();
+		$db->beginTransaction();
+    	try{
+			
+			
+			$_data['userId']	= empty($_data['userId'])?0:$_data['userId'];
+			$_data['branchId']	= empty($_data['branchId'])?0:$_data['branchId'];
+			$_data['note']	= empty($_data['note'])?"":$_data['note'];
+			$countId	= empty($_data['recordId'])?0:$_data['recordId'];
+			
+			$listFromPost 	 = empty($_data['listRequestSubmit'])?null:$_data['listRequestSubmit'];
+			$listItems 	 = Zend_Json::decode($listFromPost);
+			
+			$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
+			$_data['inputDate']=date("Y-m-d");
+			
+			
+			$arr = array(
+    				
+    				'inputDate'		=>$_data['inputDate'],
+    				'note'			=>$_data['note'],
+    				'createDate'	=>date("Y-m-d H:i:s"),
+    				'status'		=>$_data['status'],
+    				'userId'		=>$_data['userId'],
+    			);
+			$this->_name = 'st_precount_product';
+			$where = "id=" . $countId;
+			$this->update($arr, $where);
+			
+    		if($_data['status']=="1"){
+				
+				$this->_name = 'st_precount_product_detail';
+				$whereDl = 'countId = ' . $countId;
+				$this->delete($whereDl);
+
+				if(!empty($listItems)) foreach($listItems AS $row){
+					$arr = array(
+							'branch_id' => $_data['branchId'],
+							'productId' => $row['proId'],
+						);
+					$rsProduct = $dbGBstock->getProductInfoByLocation($arr);
+					if (!empty($rsProduct)) {
+						$arrDetail = array(
+							'countId'		=>$countId,
+							'proId'			=>$row['proId'],
+							'currentQty'	=>$row['currentQty'],
+							'countQty'		=>$row['countQty'],
+							'closingDate'	=>$row['closingDate'],
+							'note'			=>$row['note'],
+						);
+						$this->_name='st_precount_product_detail';
+						$id = $this->insert($arrDetail);
+					}					
+					
+				}
+			}
+			
+			
+			$db->commit();
+    		return true;
+    	}catch (Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$db->rollBack();
+    		return false;
+    	}
+    }
+	
+	
 }

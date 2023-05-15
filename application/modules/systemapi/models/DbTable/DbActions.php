@@ -1049,6 +1049,67 @@ class Systemapi_Model_DbTable_DbActions extends Zend_Db_Table_Abstract
 		}
 	}
 	
+	
+	public function getPreCountStockListAction($search){
+		try{
+			$search['userId'] = empty($search['userId'])?0:$search['userId'];
+			$search['mobileToken'] = empty($search['mobileToken'])?0:$search['mobileToken'];
+			
+			$db = new Systemapi_Model_DbTable_DbApi();
+			$row = $db->getAllPreCountStockList($search);
+			if ($row['status']){
+				$arrResult = array(
+						"result" => $row['value'],
+						"code" => "SUCCESS",
+					);
+			}else{
+				$arrResult = array(
+					"code" => "ERR_",
+					"message" => $row['value'],
+				);
+			}
+			
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}catch(Exception $e){
+			$arrResult = array(
+				"code" => "ERR_",
+				"message" => $e->getMessage(),
+			);
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}
+	}
+	public function getPreCountStockDetailAction($search){
+		try{
+			$search['userId'] = empty($search['userId'])?0:$search['userId'];
+			$search['mobileToken'] = empty($search['mobileToken'])?0:$search['mobileToken'];
+			
+			$db = new Systemapi_Model_DbTable_DbApi();
+			$row = $db->getPreCountStockDetail($search);
+			if ($row['status']){
+				$arrResult = array(
+						"result" => $row['value'],
+						"code" => "SUCCESS",
+					);
+			}else{
+				$arrResult = array(
+					"code" => "ERR_",
+					"message" => $row['value'],
+				);
+			}
+			
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}catch(Exception $e){
+			$arrResult = array(
+				"code" => "ERR_",
+				"message" => $e->getMessage(),
+			);
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}
+	}
 	public function submitPreCountingStockAction($search){
 		try{
 			$search['userId'] = empty($search['userId'])?0:$search['userId'];
@@ -1056,6 +1117,38 @@ class Systemapi_Model_DbTable_DbActions extends Zend_Db_Table_Abstract
 			
 			$db = new Systemapi_Model_DbTable_DbApi();
 			$submitRequest = $db->submitPreCountingStock($search);
+			if($submitRequest){
+				$arrResult = array(
+					"code" => "SUCCESS",
+					"result" =>$submitRequest,
+				);		
+				
+			}else{
+				$arrResult = array(
+					"code" => "FAIL",
+					"message" => "FAIL_TO_SUBMIT",
+				);
+			}
+			
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}catch(Exception $e){
+			$arrResult = array(
+				"code" => "ERR_",
+				"message" => $e->getMessage(),
+			);
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}
+	}
+	
+	public function submitEditPreCountingStockAction($search){
+		try{
+			$search['userId'] = empty($search['userId'])?0:$search['userId'];
+			$search['mobileToken'] = empty($search['mobileToken'])?0:$search['mobileToken'];
+			
+			$db = new Systemapi_Model_DbTable_DbApi();
+			$submitRequest = $db->submitEditPreCountingStock($search);
 			if($submitRequest){
 				$arrResult = array(
 					"code" => "SUCCESS",
