@@ -59,7 +59,8 @@ class Systemapi_IndexController extends Zend_Controller_Action
 			}else if ($GetData['url']=="branchList"){
 				$_dbAction->getBranchListAction($GetData);				
 			}else if ($GetData['url']=="productCategory"){
-				$_dbAction->getProductCategoryAction($GetData);
+				$GetData['getControlType']="productCategory";
+    			$_dbAction->getFormSearchOptionAction($GetData);
 			}else if ($GetData['url']=="productList"){
 				$_dbAction->getProductListAction($GetData);
 			}else if ($GetData['url']=="supplierList"){
@@ -85,7 +86,16 @@ class Systemapi_IndexController extends Zend_Controller_Action
 			}else if ($GetData['url']=="formPropertyType"){
 				$GetData['getControlType'] = "propertyType";
     			$_dbAction->getFormSearchOptionAction($GetData);
-			
+			}else if ($GetData['url']=="formProductMeasure"){
+				$GetData['getControlType'] = "productMeasure";
+    			$_dbAction->getFormSearchOptionAction($GetData);
+			}else if ($GetData['url']=="formBudgetType"){
+				$GetData['getControlType'] = "budgetType";
+    			$_dbAction->getFormSearchOptionAction($GetData);
+			}else if ($GetData['url']=="formBudgetItem"){
+				$GetData['getControlType'] = "budgetItem";
+    			$_dbAction->getFormSearchOptionAction($GetData);
+				
 			}else if ($GetData['url']=="usageNumber"){
 				$_dbAction->getUsageNumberGenerateAction($GetData);
 			}else if ($GetData['url']=="usageStockList"){
@@ -97,6 +107,8 @@ class Systemapi_IndexController extends Zend_Controller_Action
 				$_dbAction->getPreCountStockListAction($GetData);
 			}else if ($GetData['url']=="preCountStockDetail"){
 				$_dbAction->getPreCountStockDetailAction($GetData);
+			}else if ($GetData['url']=="productCodeGenerate"){
+				$_dbAction->getProductCodeGenerateAction($GetData);	
     		}else{
     			echo Zend_Http_Response::responseCodeAsText(401,true);
     		}
@@ -133,6 +145,10 @@ class Systemapi_IndexController extends Zend_Controller_Action
 					$_dbAction->submitPreCountingStockAction($postData);
 				}else if ($GetData['url']=="submitEditPreCountingStock"){
 					$_dbAction->submitEditPreCountingStockAction($postData);
+				}else if ($GetData['url']=="submitNewProduct"){
+					$_dbAction->submitNewProductAction($postData);
+				}else if ($GetData['url']=="submitEditProduct"){
+					$_dbAction->submitEditProductAction($postData);
     			}
     			else{
     				echo Zend_Http_Response::responseCodeAsText(401,true);

@@ -1217,7 +1217,30 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
     		return false;
     	}
     }
-	
+	public function getAllCategoryProduct($parent = 0, $spacing = '', $cate_tree_array = '')
+	{
+
+		$db = $this->getAdapter();
+		if (!is_array($cate_tree_array))
+			$cate_tree_array = array();
+
+		$sql = "SELECT
+					c.id AS id,
+					c.categoryName AS `name` ";
+		$sql .= " FROM `st_category` AS c ";
+		$sql .= " WHERE c.status=1 AND c.parentId = $parent ";
+		$sql.=" ORDER BY c.categoryName ASC ";
+		$query = $db->fetchAll($sql);
+		$rowCount = count($query);
+		$id = '';
+		if ($rowCount > 0) {
+			foreach ($query as $row) {
+				$cate_tree_array[] = array("id" => $row['id'], "name" => $spacing . $row['name']);
+				$cate_tree_array = $this->getAllCategoryProduct($row['id'], $spacing . ' - ', $cate_tree_array);
+			}
+		}
+		return $cate_tree_array;
+	}
 	function getAllStaffbyBranch($_data)
 	{
 		$db = $this->getAdapter();
@@ -1279,7 +1302,7 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 		$sql="SELECT t.`id`,t.`type_nameen` AS `name` FROM `ln_properties_type` AS t WHERE t.`status`=1";
 		$rows =  $db->fetchAll($sql);
 		return $rows;
-	  }
+	}
 	public function getAllLand($_data){
   	   $db = $this->getAdapter();
   	   
@@ -1302,7 +1325,81 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
   	    $rows = $db->fetchAll($sql);
   	    
   		return $rows;
-  }
+	}
+	
+	public function getAllMeasureList(){
+  	   $db = $this->getAdapter();
+  	   
+	   $sql="
+			SELECT 
+				m.id AS id,
+				m.name AS name 
+			FROM 
+				`st_measure` AS m 
+			WHERE m.status = 1 ";
+		$sql.=" ORDER BY m.name ASC ";
+  	    $rows = $db->fetchAll($sql);
+  		return $rows;
+	}
+	public function getAllBudgetType($parent = 0, $spacing = '', $cate_tree_array = '')
+	{
+
+		$db = $this->getAdapter();
+		if (!is_array($cate_tree_array))
+			$cate_tree_array = array();
+
+		$sql = "SELECT
+					bt.id AS id,
+					bt.budgetTitle AS `name` ";
+		$sql .= " FROM `st_budget_type` AS bt ";
+		$sql .= " WHERE bt.status=1 AND bt.parentId = $parent ";
+		$sql.=" ORDER BY bt.budgetTitle ASC ";
+		$query = $db->fetchAll($sql);
+		$rowCount = count($query);
+		$id = '';
+		if ($rowCount > 0) {
+			foreach ($query as $row) {
+				$cate_tree_array[] = array("id" => $row['id'], "name" => $spacing . $row['name']);
+				$cate_tree_array = $this->getAllBudgetType($row['id'], $spacing . ' - ', $cate_tree_array);
+			}
+		}
+		return $cate_tree_array;
+	}
+	
+	public function getAllBudgetItem($parent = 0, $spacing = '', $cate_tree_array = '',$_data=null)
+	{
+
+		$db = $this->getAdapter();
+		if (!is_array($cate_tree_array))
+			$cate_tree_array = array();
+
+		$sql = "SELECT
+					bi.id AS id,
+					bi.budgetTitle AS `name` ";
+		$sql .= " FROM `st_budget_item` AS bi ";
+		$sql .= " WHERE bi.status=1 AND bi.parentId = $parent ";
+		if (!empty($_data['budgetType'])) {
+			$sql .= " AND bi.budgetTypeId=" . $_data['budgetType'];
+		}
+		if (!empty($_data['notinBranchId'])) {
+			$sql .= " AND bi.id NOT IN (SELECT budgetId FROM `st_budget_project_item` WHERE projectId=" . $_data['notinBranchId'] . " )";
+		}
+		if (!empty($_data['branchId'])) {
+			$sql .= " AND bi.id IN (SELECT budgetId FROM `st_budget_project_item` WHERE projectId=" . $_data['branchId'] . ")";
+		}
+		
+		$sql.=" ORDER BY bi.budgetTitle ASC ";
+		$query = $db->fetchAll($sql);
+		$rowCount = count($query);
+		$id = '';
+		if ($rowCount > 0) {
+			foreach ($query as $row) {
+				$cate_tree_array[] = array("id" => $row['id'], "name" => $spacing . $row['name']);
+				$cate_tree_array = $this->getAllBudgetItem($row['id'], $spacing . ' - ', $cate_tree_array);
+			}
+		}
+		return $cate_tree_array;
+	}
 	
 	public function getFormSearchOption($_data){
 		$db = $this->getAdapter();
@@ -1338,6 +1435,14 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 				$row = $this->getAllLand($_data);
 			}else if($getControlType=="propertyType"){	
 				$row = $this->getPropertyType();
+			}else if($getControlType=="productCategory"){	
+				$row = $this->getAllCategoryProduct(0,'','');
+			}else if($getControlType=="productMeasure"){	
+				$row = $this->getAllMeasureList();
+			}else if($getControlType=="budgetType"){	
+				$row = $this->getAllBudgetType(0,'','');
+			}else if($getControlType=="budgetItem"){	
+				$row = $this->getAllBudgetItem(0,'','',$_data);
 			}
 			
 			$result = array(
@@ -2232,6 +2337,153 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 				}
 			}
 			
+			
+			$db->commit();
+    		return true;
+    	}catch (Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$db->rollBack();
+    		return false;
+    	}
+    }
+	
+	function getProductCodeGenerate($_data){
+		$db = $this->getAdapter();
+		try{
+			
+			$dbPro = new Product_Model_DbTable_DbProduct();
+			$productCode = $dbPro->generateProductCode();
+			
+			$result = array(
+					'status' =>true,
+					'value' =>$productCode,
+			);
+			return $result;
+	
+		}catch(Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$result = array(
+					'status' =>false,
+					'value' =>$e->getMessage(),
+			);
+			return $result;
+		}
+	}
+	function submitNewProduct($_data){
+    	$db = $this->getAdapter();
+		$db->beginTransaction();
+    	try{
+			Application_Model_DbTable_DbUserLog::writeMessageError("A");
+			$_data['userId']	= empty($_data['userId'])?0:$_data['userId'];
+			$_data['branchId']	= empty($_data['branchId'])?0:$_data['branchId'];
+			$_data['note']	= empty($_data['note'])?"":$_data['note'];
+			
+			$dbPro = new Product_Model_DbTable_DbProduct();
+			$productCode = $dbPro->generateProductCode();
+			Application_Model_DbTable_DbUserLog::writeMessageError("B");
+			$arr = array(
+				'proName' 		=> $_data['proName'],
+				'proCode' 		=> $productCode,
+				'barCode' 		=> $_data['barCode'],
+				'isService' 	=> $_data['isService'],
+				'categoryId' 	=> $_data['categoryId'],
+				'isConvertMeasure' 	=> $_data['isConvertMeasure'],
+				'measureId' 		=> $_data['measureId'],
+				'measureLabel' 		=> $_data['measureLabel'],
+				'measureValue' 		=> $_data['measureValue'],
+				'userId' 			=> $_data['userId'],
+				'createDate' 		=> date("Y-m-d"),
+				'isCountStock' 		=> $_data['isCountStock'],
+				'note' 				=> $_data['note'],
+				'status' 		=> 1,
+				'budgetId' 		=> $_data['budgetId'],
+			);
+			Application_Model_DbTable_DbUserLog::writeMessageError("C");
+			$part = PUBLIC_PATH . '/images/proimage/';
+			if (!file_exists($part)) {
+				mkdir($part, 0777, true);
+			}
+			if(!empty($_data['photo'])){
+				$fileExtension="jpg";
+				if(!empty($_data['imageName'])){
+					$tem = explode(".", $_data['imageName']);
+					$fileExtension=end($tem);
+					if( end($tem) !="jpg" || end($tem) !="png"){
+						$fileExtension="jpg";
+					}
+				}
+				$image_name = "product_" . date("Y") . date("m") . date("d") . time() . ".".$fileExtension;
+				$outputFile = $part.$image_name;
+				$fileHandle = fopen($outputFile,"wb");
+				fwrite($fileHandle,base64_decode($_data["photo"]));
+				fclose($fileHandle);
+				$arr['image'] = $image_name;
+			}
+			
+    		$this->_name='st_product';
+    		$productId = $this->insert($arr);
+    		
+			
+			$db->commit();
+    		return true;
+    	}catch (Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$db->rollBack();
+    		return false;
+    	}
+    }
+	
+	function submitEditProduct($_data){
+    	$db = $this->getAdapter();
+		$db->beginTransaction();
+    	try{
+			
+			$_data['userId']	= empty($_data['userId'])?0:$_data['userId'];
+			$_data['branchId']	= empty($_data['branchId'])?0:$_data['branchId'];
+			$_data['note']	= empty($_data['note'])?"":$_data['note'];
+			$productId	= empty($_data['recordId'])?0:$_data['recordId'];
+			
+			$dbPro = new Product_Model_DbTable_DbProduct();
+			$productCode = $dbPro->generateProductCode();
+			$arr = array(
+				'proName' 		=> $_data['productName'],
+				'barCode' 		=> $_data['barCode'],
+				'isService' 	=> $_data['isService'],
+				'categoryId' 	=> $_data['categoryId'],
+				'isConvertMeasure' 	=> $_data['isConvertMeasure'],
+				'measureId' 		=> $_data['measureId'],
+				'measureLabel' 		=> $_data['measureLabel'],
+				'measureValue' 		=> $_data['measureValue'],
+				'userId' 			=> $_data['userId'],
+				'createDate' 		=> date("Y-m-d"),
+				'isCountStock' 		=> $_data['isCountStock'],
+				'note' 				=> $_data['note'],
+				'status' 		=> $_data['status'],
+				'budgetId' 		=> $_data['budgetId'],
+			);
+			$part = PUBLIC_PATH . '/images/proimage/';
+			if (!file_exists($part)) {
+				mkdir($part, 0777, true);
+			}
+			if(!empty($_data['photo'])){
+				$fileExtension="jpg";
+				if(!empty($_data['imageName'])){
+					$tem = explode(".", $_data['imageName']);
+					$fileExtension=end($tem);
+					if( end($tem) !="jpg" || end($tem) !="png"){
+						$fileExtension="jpg";
+					}
+				}
+				$image_name = "product_" . date("Y") . date("m") . date("d") . time() . ".".$fileExtension;
+				$outputFile = $part.$image_name;
+				$fileHandle = fopen($outputFile,"wb");
+				fwrite($fileHandle,base64_decode($_data["photo"]));
+				fclose($fileHandle);
+				$arr['image'] = $image_name;
+			}
+    		$where = 'proId = ' . $productId;
+			$this->update($arr, $where);
+    		
 			
 			$db->commit();
     		return true;
