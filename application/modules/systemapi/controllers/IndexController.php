@@ -95,6 +95,15 @@ class Systemapi_IndexController extends Zend_Controller_Action
 			}else if ($GetData['url']=="formBudgetItem"){
 				$GetData['getControlType'] = "budgetItem";
     			$_dbAction->getFormSearchOptionAction($GetData);
+			}else if ($GetData['url']=="formStatus"){
+				$GetData['getControlType'] = "status";
+    			$_dbAction->getFormSearchOptionAction($GetData);
+			}else if ($GetData['url']=="formIsCountStock"){
+				$GetData['getControlType'] = "isCountStock";
+    			$_dbAction->getFormSearchOptionAction($GetData);
+			}else if ($GetData['url']=="formIsService"){
+				$GetData['getControlType'] = "isService";
+    			$_dbAction->getFormSearchOptionAction($GetData);
 				
 			}else if ($GetData['url']=="usageNumber"){
 				$_dbAction->getUsageNumberGenerateAction($GetData);

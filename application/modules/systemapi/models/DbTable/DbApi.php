@@ -1425,6 +1425,21 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 					array("id"=>3,"name"=>$currentLang==1 ? "ផ្នែកបញ្ជាទិញ ត្រួតពិនិត្យ" : "PO Review"),
 					array("id"=>4,"name"=>$currentLang==1 ? "អគ្គនាយក ត្រួតពិនិត្យ" : "Boss Review"),
 				);
+			}else if($getControlType=="status"){
+				$row = array(
+					array("id"=>1,"name"=>$currentLang==1 ? "ប្រើប្រាស់" : "Active"),
+					array("id"=>2,"name"=>$currentLang==1 ? "មិនប្រើប្រាស់" : "Deactive"),
+				);
+			}else if($getControlType=="isCountStock"){
+				$row = array(
+					array("id"=>1,"name"=>$currentLang==1 ? "រាប់ស្តុក" : "Counting stock"),
+					array("id"=>2,"name"=>$currentLang==1 ? "មិនរាប់ស្តុក" : "Non Stock"),
+				);
+			}else if($getControlType=="isService"){
+				$row = array(
+					array("id"=>1,"name"=>$currentLang==1 ? "សេវាកម្ម" : "Service"),
+					array("id"=>2,"name"=>$currentLang==1 ? "ទំនិញ" : "Product"),
+				);
 			}else if($getControlType=="warehouseStaff"){
 				$row = $this->getAllStaffbyBranch($_data);
 			}else if($getControlType=="contractorStaff"){	
@@ -1516,7 +1531,12 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 		try{
 			
 			$_data['userId'] = empty($_data['userId'])?0:$_data['userId'];
+			$currentLang = empty($_data['currentLang'])?1:$_data['currentLang'];
 			$userLoaction=$this->getAccessPermission("prl.projectId",$_data);
+			$strLable = 'name_kh';
+			if ($currentLang == 2) {
+				$strLable = 'name_en';
+			}
 			
 			$sql="SELECT 
 					p.*
@@ -1525,6 +1545,12 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 					,p.image AS `productImage`
 					,p.measureLabel AS measureTitle
 					,proCate.categoryName
+					,(SELECT m.name FROM `st_measure` as m WHERE m.id=p.measureId LIMIT 1) measureName
+					,(SELECT $strLable FROM `st_view` WHERE type=2 AND key_code=p.isService LIMIT 1) isServiceTitle
+					,(SELECT $strLable FROM `st_view` WHERE type=1 AND key_code=p.isCountStock LIMIT 1) isCountStockTitle
+					,(SELECT i.budgetTypeId FROM `st_budget_item` AS i WHERE i.id=p.budgetId LIMIT 1) budgetTypeId
+					,(SELECT i.budgetTitle FROM `st_budget_item` AS i WHERE i.id=p.budgetId LIMIT 1) budgetTitle
+					,(SELECT ".$strLable." FROM ln_view WHERE type=3 and key_code = p.status LIMIT 1) AS statusTitle
 					,SUM(pl.qty) AS currentQtyAll
 					,pl.qtyAlert AS qtyWarningAlert
 					,(SELECT GROUP_CONCAT(prl.qty) FROM st_product_location AS prl JOIN ln_project AS pj ON pj.br_id = prl.projectId  WHERE p.proId = prl.proId ".$userLoaction." ORDER BY prl.projectId ASC LIMIT 1) AS qtyByLocationList
@@ -1539,16 +1565,36 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 					LEFT JOIN st_category AS proCate ON proCate.id = p.categoryId
 					LEFT JOIN st_product_location AS pl ON p.proId = pl.proId
 			";
-			$sql.="  WHERE p.status=1 ";	
+			$sql.="  WHERE 1 ";	
+			
+			if (!empty($_data['forListCreateNEdit'])) {
+				if (!empty($_data['status'])) {
+					if ($_data['status'] == "1") {
+						$sql .= " AND p.status=1 ";
+					}else if ($_data['status'] == "2") {
+						$sql .= " AND p.status=0 ";
+					}
+				}
+			}else{
+				$sql.="  AND p.status=1 ";	
+			}
 			
 			if (!empty($_data['isService'])) {
-				$sql .= " AND p.isService=1 "; //Case Service Items
-			} else {
-				$sql .= " AND p.isService=0 ";
+				if ($_data['isService'] == "1") {
+					$sql .= " AND p.isService=1 "; //Case Service Items
+				}else if ($_data['isService'] == "2") {
+					$sql .= " AND p.isService=0 ";
+				}
 			}
+			
 			if (!empty($_data['isCountStock'])) {
-				$sql .= " AND p.isCountStock= " . $_data['isCountStock'];
+				if ($_data['isCountStock'] == "1") {
+					$sql .= " AND p.isCountStock=1 ";
+				}else if ($_data['isCountStock'] == "2") {
+					$sql .= " AND p.isCountStock=0 ";
+				}
 			}
+			
 
 			if (!empty($_data['branchId'])) {
 				$sql .= " AND p.proId IN (SELECT l.proId FROM `st_product_location` AS l  WHERE l.projectId=" . $_data['branchId'] . " )";
@@ -1580,6 +1626,11 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 				$sql.=" AND p.proId IN (".$_data['productIdList'].") ";
 			}
 			$sql.=" Group BY p.proId ";
+			if (!empty($_data['forListCreateNEdit'])) {
+				$sql.="  ORDER BY p.proId DESC ";	
+			}else{
+				
+			}
 			$limit=" ";
 			if(!empty($_data['LimitStart'])){
 				$limit.=" LIMIT ".$_data['LimitStart'].",".$_data['limitRecord'];
@@ -2446,7 +2497,7 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 			$dbPro = new Product_Model_DbTable_DbProduct();
 			$productCode = $dbPro->generateProductCode();
 			$arr = array(
-				'proName' 		=> $_data['productName'],
+				'proName' 		=> $_data['proName'],
 				'barCode' 		=> $_data['barCode'],
 				'isService' 	=> $_data['isService'],
 				'categoryId' 	=> $_data['categoryId'],
@@ -2455,7 +2506,7 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 				'measureLabel' 		=> $_data['measureLabel'],
 				'measureValue' 		=> $_data['measureValue'],
 				'userId' 			=> $_data['userId'],
-				'createDate' 		=> date("Y-m-d"),
+				'createDate' 		=> date("Y-m-d H:i:s"),
 				'isCountStock' 		=> $_data['isCountStock'],
 				'note' 				=> $_data['note'],
 				'status' 		=> $_data['status'],
@@ -2480,8 +2531,14 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 				fwrite($fileHandle,base64_decode($_data["photo"]));
 				fclose($fileHandle);
 				$arr['image'] = $image_name;
+				
+				if(!empty($_data['oldPhotoName'])){
+					unlink($part . $_data['oldPhotoName']);
+				}
+				
 			}
     		$where = 'proId = ' . $productId;
+			$this->_name='st_product';
 			$this->update($arr, $where);
     		
 			
