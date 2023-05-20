@@ -655,7 +655,7 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 			$processingStatus = $dbGbSt->requestingProccess($arrStep);
 			if(!empty($requestList)) foreach($requestList AS $request){
 				$requestId = $request['id'];
-				
+				$request['note'] = empty($request['note'])?"":$request['note'];
 				$arr = array(
 						'checkingNote'			=>$request['note'],
 						'checkingDate'			=>date("Y-m-d"),
@@ -743,7 +743,7 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 			$processingStatus = $dbGbSt->requestingProccess($arrStep);
 			if(!empty($requestList)) foreach($requestList AS $request){
 				$requestId = $request['id'];
-						
+				$request['pCheckingNote'] = empty($request['pCheckingNote'])?"":$request['pCheckingNote'];		
 				$arr = array(
 						'pCheckingNote'			=>$request['pCheckingNote'],
 						'pCheckingDate'			=>date("Y-m-d"),
@@ -829,7 +829,7 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 			$processingStatus = $dbGbSt->requestingProccess($arrStep);
 			if(!empty($requestList)) foreach($requestList AS $request){
 				$requestId = $request['id'];
-					
+				$request['approveNote'] = empty($request['approveNote'])?"":$request['approveNote'];
 				$arr = array(
 						'approveNote'		=>$request['approveNote'],
 						'approveDate'		=>date("Y-m-d"),
