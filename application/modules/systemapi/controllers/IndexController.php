@@ -59,7 +59,8 @@ class Systemapi_IndexController extends Zend_Controller_Action
 			}else if ($GetData['url']=="branchList"){
 				$_dbAction->getBranchListAction($GetData);				
 			}else if ($GetData['url']=="productCategory"){
-				$_dbAction->getProductCategoryAction($GetData);
+				$GetData['getControlType']="productCategory";
+    			$_dbAction->getFormSearchOptionAction($GetData);
 			}else if ($GetData['url']=="productList"){
 				$_dbAction->getProductListAction($GetData);
 			}else if ($GetData['url']=="supplierList"){
@@ -70,7 +71,53 @@ class Systemapi_IndexController extends Zend_Controller_Action
 			}else if ($GetData['url']=="formRequestStep"){
 				$GetData['getControlType'] = "requestStep";
     			$_dbAction->getFormSearchOptionAction($GetData);
-			
+			}else if ($GetData['url']=="formWarehouseStaff"){
+				$GetData['getControlType'] = "warehouseStaff";
+    			$_dbAction->getFormSearchOptionAction($GetData);
+			}else if ($GetData['url']=="formContractorStaff"){
+				$GetData['getControlType'] = "contractorStaff";
+    			$_dbAction->getFormSearchOptionAction($GetData);
+			}else if ($GetData['url']=="formWorkType"){
+				$GetData['getControlType'] = "workType";
+    			$_dbAction->getFormSearchOptionAction($GetData);
+			}else if ($GetData['url']=="formProperty"){
+				$GetData['getControlType'] = "property";
+    			$_dbAction->getFormSearchOptionAction($GetData);
+			}else if ($GetData['url']=="formPropertyType"){
+				$GetData['getControlType'] = "propertyType";
+    			$_dbAction->getFormSearchOptionAction($GetData);
+			}else if ($GetData['url']=="formProductMeasure"){
+				$GetData['getControlType'] = "productMeasure";
+    			$_dbAction->getFormSearchOptionAction($GetData);
+			}else if ($GetData['url']=="formBudgetType"){
+				$GetData['getControlType'] = "budgetType";
+    			$_dbAction->getFormSearchOptionAction($GetData);
+			}else if ($GetData['url']=="formBudgetItem"){
+				$GetData['getControlType'] = "budgetItem";
+    			$_dbAction->getFormSearchOptionAction($GetData);
+			}else if ($GetData['url']=="formStatus"){
+				$GetData['getControlType'] = "status";
+    			$_dbAction->getFormSearchOptionAction($GetData);
+			}else if ($GetData['url']=="formIsCountStock"){
+				$GetData['getControlType'] = "isCountStock";
+    			$_dbAction->getFormSearchOptionAction($GetData);
+			}else if ($GetData['url']=="formIsService"){
+				$GetData['getControlType'] = "isService";
+    			$_dbAction->getFormSearchOptionAction($GetData);
+				
+			}else if ($GetData['url']=="usageNumber"){
+				$_dbAction->getUsageNumberGenerateAction($GetData);
+			}else if ($GetData['url']=="usageStockList"){
+				$_dbAction->getUsageStockListAction($GetData);
+			}else if ($GetData['url']=="usageStockDetail"){
+				$_dbAction->getUsageStockDetailAction($GetData);
+				
+			}else if ($GetData['url']=="preCountStock"){
+				$_dbAction->getPreCountStockListAction($GetData);
+			}else if ($GetData['url']=="preCountStockDetail"){
+				$_dbAction->getPreCountStockDetailAction($GetData);
+			}else if ($GetData['url']=="productCodeGenerate"){
+				$_dbAction->getProductCodeGenerateAction($GetData);	
     		}else{
     			echo Zend_Http_Response::responseCodeAsText(401,true);
     		}
@@ -86,8 +133,7 @@ class Systemapi_IndexController extends Zend_Controller_Action
 				}else if ($GetData['url']=="removeTokenApp"){
     				$_dbAction->removeTokenAction($postData);
 					
-				}else if ($GetData['url']=="submitNewRequest"){
-					$_dbAction->submitNewRequestAction($postData);	
+				
 				}else if ($GetData['url']=="submitCheckingRequest"){
     				$_dbAction->checkingRequestPOAction($postData);	
 				}else if ($GetData['url']=="submitVerifyRequestPO"){
@@ -98,7 +144,20 @@ class Systemapi_IndexController extends Zend_Controller_Action
     				$_dbAction->submitVerifyDNAction($postData);
 				}else if ($GetData['url']=="submitApproveToReAdjustPoConcrete"){
     				$_dbAction->submitApproveToReAdjustPoConcreteAction($postData);
-				
+				}else if ($GetData['url']=="submitNewRequest"){
+					$_dbAction->submitNewRequestAction($postData);	
+				}else if ($GetData['url']=="submitNewUsage"){
+					$_dbAction->submitNewUsageAction($postData);
+				}else if ($GetData['url']=="submitUpdateUsage"){
+					$_dbAction->submitUpdateUsageAction($postData);
+				}else if ($GetData['url']=="submitPreCountingStock"){
+					$_dbAction->submitPreCountingStockAction($postData);
+				}else if ($GetData['url']=="submitEditPreCountingStock"){
+					$_dbAction->submitEditPreCountingStockAction($postData);
+				}else if ($GetData['url']=="submitNewProduct"){
+					$_dbAction->submitNewProductAction($postData);
+				}else if ($GetData['url']=="submitEditProduct"){
+					$_dbAction->submitEditProductAction($postData);
     			}
     			else{
     				echo Zend_Http_Response::responseCodeAsText(401,true);

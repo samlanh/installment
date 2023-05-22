@@ -741,36 +741,7 @@ class Systemapi_Model_DbTable_DbActions extends Zend_Db_Table_Abstract
 			exit();
 		}
 	}
-	public function getProductCategoryAction($search){
-		try{
-			$search['userId'] = empty($search['userId'])?0:$search['userId'];
-			$search['mobileToken'] = empty($search['mobileToken'])?0:$search['mobileToken'];
-			
-			$db = new Systemapi_Model_DbTable_DbApi();
-			$row = $db->getGetProductCategory($search);
-			if ($row['status']){
-				$arrResult = array(
-						"result" => $row['value'],
-						"code" => "SUCCESS",
-					);
-			}else{
-				$arrResult = array(
-					"code" => "ERR_",
-					"message" => $row['value'],
-				);
-			}
-			
-			print_r(Zend_Json::encode($arrResult));
-			exit();
-		}catch(Exception $e){
-			$arrResult = array(
-				"code" => "ERR_",
-				"message" => $e->getMessage(),
-			);
-			print_r(Zend_Json::encode($arrResult));
-			exit();
-		}
-	}
+	
 	public function getProductListAction($search){
 		try{
 			$search['userId'] = empty($search['userId'])?0:$search['userId'];
@@ -881,7 +852,6 @@ class Systemapi_Model_DbTable_DbActions extends Zend_Db_Table_Abstract
 					"message" => "FAIL_TO_SUBMIT",
 				);
 			}
-			Application_Model_DbTable_DbUserLog::writeMessageError(Zend_Json::encode($arrResult));	
 			print_r(Zend_Json::encode($arrResult));
 			exit();
 		}catch(Exception $e){
@@ -894,5 +864,379 @@ class Systemapi_Model_DbTable_DbActions extends Zend_Db_Table_Abstract
 		}
 	}
 	
+	public function getUsageNumberGenerateAction($search){
+		try{
+			$search['userId'] = empty($search['userId'])?0:$search['userId'];
+			$search['mobileToken'] = empty($search['mobileToken'])?0:$search['mobileToken'];
+			
+			$db = new Systemapi_Model_DbTable_DbApi();
+			$row = $db->getUsageNumberGenerate($search);
+			if ($row['status']){
+				$arrResult = array(
+						"result" => $row['value'],
+						"code" => "SUCCESS",
+					);
+			}else{
+				$arrResult = array(
+					"code" => "ERR_",
+					"message" => $row['value'],
+				);
+			}
+			
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}catch(Exception $e){
+			$arrResult = array(
+				"code" => "ERR_",
+				"message" => $e->getMessage(),
+			);
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}
+	}
+	
+	public function getUsageStockListAction($search){
+		try{
+			$search['userId'] = empty($search['userId'])?0:$search['userId'];
+			$search['mobileToken'] = empty($search['mobileToken'])?0:$search['mobileToken'];
+			
+			$db = new Systemapi_Model_DbTable_DbApi();
+			$row = $db->getAllUsageStockList($search);
+			if ($row['status']){
+				$arrResult = array(
+						"result" => $row['value'],
+						"code" => "SUCCESS",
+					);
+			}else{
+				$arrResult = array(
+					"code" => "ERR_",
+					"message" => $row['value'],
+				);
+			}
+			
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}catch(Exception $e){
+			$arrResult = array(
+				"code" => "ERR_",
+				"message" => $e->getMessage(),
+			);
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}
+	}
+	
+	public function getUsageStockDetailAction($search){
+		try{
+			$search['userId'] = empty($search['userId'])?0:$search['userId'];
+			$search['mobileToken'] = empty($search['mobileToken'])?0:$search['mobileToken'];
+			
+			$db = new Systemapi_Model_DbTable_DbApi();
+			$row = $db->getUsageStockDetail($search);
+			if ($row['status']){
+				$arrResult = array(
+						"result" => $row['value'],
+						"code" => "SUCCESS",
+					);
+			}else{
+				$arrResult = array(
+					"code" => "ERR_",
+					"message" => $row['value'],
+				);
+			}
+			
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}catch(Exception $e){
+			$arrResult = array(
+				"code" => "ERR_",
+				"message" => $e->getMessage(),
+			);
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}
+	}
+	
+	public function submitNewUsageAction($search){
+		try{
+			$search['userId'] = empty($search['userId'])?0:$search['userId'];
+			$search['mobileToken'] = empty($search['mobileToken'])?0:$search['mobileToken'];
+			
+			$db = new Systemapi_Model_DbTable_DbApi();
+			$submitRequest = $db->submitNewUsage($search);
+			if($submitRequest){
+				$arrResult = array(
+					"code" => "SUCCESS",
+					"result" =>$submitRequest,
+				);		
+				
+			}else{
+				$arrResult = array(
+					"code" => "FAIL",
+					"message" => "FAIL_TO_SUBMIT",
+				);
+			}
+			
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}catch(Exception $e){
+			$arrResult = array(
+				"code" => "ERR_",
+				"message" => $e->getMessage(),
+			);
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}
+	}
+	public function submitUpdateUsageAction($search){
+		try{
+			$search['userId'] = empty($search['userId'])?0:$search['userId'];
+			$search['mobileToken'] = empty($search['mobileToken'])?0:$search['mobileToken'];
+			
+			$db = new Systemapi_Model_DbTable_DbApi();
+			$submitRequest = $db->submitUpdateUsageStock($search);
+			if($submitRequest){
+				$arrResult = array(
+					"code" => "SUCCESS",
+					"result" =>$submitRequest,
+				);		
+				
+			}else{
+				$arrResult = array(
+					"code" => "FAIL",
+					"message" => "FAIL_TO_SUBMIT",
+				);
+			}
+			
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}catch(Exception $e){
+			$arrResult = array(
+				"code" => "ERR_",
+				"message" => $e->getMessage(),
+			);
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}
+	}
+	
+	
+	public function getPreCountStockListAction($search){
+		try{
+			$search['userId'] = empty($search['userId'])?0:$search['userId'];
+			$search['mobileToken'] = empty($search['mobileToken'])?0:$search['mobileToken'];
+			
+			$db = new Systemapi_Model_DbTable_DbApi();
+			$row = $db->getAllPreCountStockList($search);
+			if ($row['status']){
+				$arrResult = array(
+						"result" => $row['value'],
+						"code" => "SUCCESS",
+					);
+			}else{
+				$arrResult = array(
+					"code" => "ERR_",
+					"message" => $row['value'],
+				);
+			}
+			
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}catch(Exception $e){
+			$arrResult = array(
+				"code" => "ERR_",
+				"message" => $e->getMessage(),
+			);
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}
+	}
+	public function getPreCountStockDetailAction($search){
+		try{
+			$search['userId'] = empty($search['userId'])?0:$search['userId'];
+			$search['mobileToken'] = empty($search['mobileToken'])?0:$search['mobileToken'];
+			
+			$db = new Systemapi_Model_DbTable_DbApi();
+			$row = $db->getPreCountStockDetail($search);
+			if ($row['status']){
+				$arrResult = array(
+						"result" => $row['value'],
+						"code" => "SUCCESS",
+					);
+			}else{
+				$arrResult = array(
+					"code" => "ERR_",
+					"message" => $row['value'],
+				);
+			}
+			
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}catch(Exception $e){
+			$arrResult = array(
+				"code" => "ERR_",
+				"message" => $e->getMessage(),
+			);
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}
+	}
+	public function submitPreCountingStockAction($search){
+		try{
+			$search['userId'] = empty($search['userId'])?0:$search['userId'];
+			$search['mobileToken'] = empty($search['mobileToken'])?0:$search['mobileToken'];
+			
+			$db = new Systemapi_Model_DbTable_DbApi();
+			$submitRequest = $db->submitPreCountingStock($search);
+			if($submitRequest){
+				$arrResult = array(
+					"code" => "SUCCESS",
+					"result" =>$submitRequest,
+				);		
+				
+			}else{
+				$arrResult = array(
+					"code" => "FAIL",
+					"message" => "FAIL_TO_SUBMIT",
+				);
+			}
+			
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}catch(Exception $e){
+			$arrResult = array(
+				"code" => "ERR_",
+				"message" => $e->getMessage(),
+			);
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}
+	}
+	
+	public function submitEditPreCountingStockAction($search){
+		try{
+			$search['userId'] = empty($search['userId'])?0:$search['userId'];
+			$search['mobileToken'] = empty($search['mobileToken'])?0:$search['mobileToken'];
+			
+			$db = new Systemapi_Model_DbTable_DbApi();
+			$submitRequest = $db->submitEditPreCountingStock($search);
+			if($submitRequest){
+				$arrResult = array(
+					"code" => "SUCCESS",
+					"result" =>$submitRequest,
+				);		
+				
+			}else{
+				$arrResult = array(
+					"code" => "FAIL",
+					"message" => "FAIL_TO_SUBMIT",
+				);
+			}
+			
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}catch(Exception $e){
+			$arrResult = array(
+				"code" => "ERR_",
+				"message" => $e->getMessage(),
+			);
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}
+	}
+	
+	public function submitNewProductAction($search){
+		try{
+			$search['userId'] = empty($search['userId'])?0:$search['userId'];
+			$search['mobileToken'] = empty($search['mobileToken'])?0:$search['mobileToken'];
+			
+			$db = new Systemapi_Model_DbTable_DbApi();
+			$submitPro = $db->submitNewProduct($search);
+			if($submitPro){
+				$arrResult = array(
+					"code" => "SUCCESS",
+					"result" =>$submitPro,
+				);		
+				
+			}else{
+				$arrResult = array(
+					"code" => "FAIL",
+					"message" => "FAIL_TO_SUBMIT",
+				);
+			}
+			
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}catch(Exception $e){
+			$arrResult = array(
+				"code" => "ERR_",
+				"message" => $e->getMessage(),
+			);
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}
+	}
+	public function submitEditProductAction($search){
+		try{
+			$search['userId'] = empty($search['userId'])?0:$search['userId'];
+			$search['mobileToken'] = empty($search['mobileToken'])?0:$search['mobileToken'];
+			
+			$db = new Systemapi_Model_DbTable_DbApi();
+			$submitPro = $db->submitEditProduct($search);
+			if($submitPro){
+				$arrResult = array(
+					"code" => "SUCCESS",
+					"result" =>$submitPro,
+				);		
+				
+			}else{
+				$arrResult = array(
+					"code" => "FAIL",
+					"message" => "FAIL_TO_SUBMIT",
+				);
+			}
+			
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}catch(Exception $e){
+			$arrResult = array(
+				"code" => "ERR_",
+				"message" => $e->getMessage(),
+			);
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}
+	}
+	
+	public function getProductCodeGenerateAction($search){
+		try{
+			$search['userId'] = empty($search['userId'])?0:$search['userId'];
+			$search['mobileToken'] = empty($search['mobileToken'])?0:$search['mobileToken'];
+			
+			$db = new Systemapi_Model_DbTable_DbApi();
+			$row = $db->getProductCodeGenerate($search);
+			if ($row['status']){
+				$arrResult = array(
+						"result" => $row['value'],
+						"code" => "SUCCESS",
+					);
+			}else{
+				$arrResult = array(
+					"code" => "ERR_",
+					"message" => $row['value'],
+				);
+			}
+			
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}catch(Exception $e){
+			$arrResult = array(
+				"code" => "ERR_",
+				"message" => $e->getMessage(),
+			);
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}
+	}
 	
 }

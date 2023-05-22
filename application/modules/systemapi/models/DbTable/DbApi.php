@@ -1217,13 +1217,199 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
     		return false;
     	}
     }
+	public function getAllCategoryProduct($parent = 0, $spacing = '', $cate_tree_array = '')
+	{
+
+		$db = $this->getAdapter();
+		if (!is_array($cate_tree_array))
+			$cate_tree_array = array();
+
+		$sql = "SELECT
+					c.id AS id,
+					c.categoryName AS `name` ";
+		$sql .= " FROM `st_category` AS c ";
+		$sql .= " WHERE c.status=1 AND c.parentId = $parent ";
+		$sql.=" ORDER BY c.categoryName ASC ";
+		$query = $db->fetchAll($sql);
+		$rowCount = count($query);
+		$id = '';
+		if ($rowCount > 0) {
+			foreach ($query as $row) {
+				$cate_tree_array[] = array("id" => $row['id'], "name" => $spacing . $row['name']);
+				$cate_tree_array = $this->getAllCategoryProduct($row['id'], $spacing . ' - ', $cate_tree_array);
+			}
+		}
+		return $cate_tree_array;
+	}
+	function getAllStaffbyBranch($_data)
+	{
+		$db = $this->getAdapter();
+		$sql = "SELECT  
+					w.*
+					,w.id
+					,w.staffName AS name
+				FROM st_worker AS w
+					WHERE w.status=1 ";
+		if (!empty($_data['branchId'])) {
+			$sql .= " AND w.projectId=" . $_data['branchId'];
+		}
+		$rows = $db->fetchAll($sql);
+		
+		return $rows;
+	}
+	function getAllContractorbyBranch($_data)
+	{
+		$db = $this->getAdapter();
+		$sql = "
+		SELECT
+			ct.*
+			,ct.id AS id
+			,ct.staffName AS name
+		FROM st_contractor AS ct
+		WHERE ct.status=1 ";
+		if (!empty($_data['branchId'])) {
+			$sql .= " AND ct.projectId=" . $_data['branchId'];
+		}
+		$rows = $db->fetchAll($sql);
+		
+		return $rows;
+	}
+	public function getAllWorkType($parent = 0, $spacing = '', $cate_tree_array = '')
+	{
+
+		$db = $this->getAdapter();
+		if (!is_array($cate_tree_array))
+			$cate_tree_array = array();
+
+		$sql = "SELECT
+				wt.id AS id,
+				wt.workTitle AS `name` ";
+		$sql .= " FROM `st_work_type` AS wt  ";
+		$sql .= " WHERE wt.status=1 AND wt.parentId = $parent ";
+		$query = $db->fetchAll($sql);
+		$rowCount = count($query);
+		$id = '';
+		if ($rowCount > 0) {
+			foreach ($query as $row) {
+				$cate_tree_array[] = array("id" => $row['id'], "name" => $spacing . $row['name']);
+				$cate_tree_array = $this->getAllWorkType($row['id'], $spacing . ' - ', $cate_tree_array);
+			}
+		}
+		return $cate_tree_array;
+	}
+	public function getPropertyType(){
+		$db= $this->getAdapter();
+		$sql="SELECT t.`id`,t.`type_nameen` AS `name` FROM `ln_properties_type` AS t WHERE t.`status`=1";
+		$rows =  $db->fetchAll($sql);
+		return $rows;
+	}
+	public function getAllLand($_data){
+  	   $db = $this->getAdapter();
+  	   
+	   $sql="
+			SELECT 
+				`id`,
+				CONCAT(COALESCE(`land_address`,''),',',COALESCE(street,'')) AS name 
+			FROM `ln_properties` 
+			WHERE `land_address`!='' ";
+	   $sql.=" AND  status Not IN (-1,0) ";
+	   
+		if (!empty($_data['branchId'])) {
+			$sql .= " AND `branch_id`=" . $_data['branchId'];
+		}
+		if (!empty($_data['propertyType'])) {
+			$sql .= " AND `property_type`=" . $_data['propertyType'];
+		}
+ 
+		$sql.=" ORDER BY id DESC";
+  	    $rows = $db->fetchAll($sql);
+  	    
+  		return $rows;
+	}
 	
-	public function getFormSearchOption($search){
+	public function getAllMeasureList(){
+  	   $db = $this->getAdapter();
+  	   
+	   $sql="
+			SELECT 
+				m.id AS id,
+				m.name AS name 
+			FROM 
+				`st_measure` AS m 
+			WHERE m.status = 1 ";
+		$sql.=" ORDER BY m.name ASC ";
+  	    $rows = $db->fetchAll($sql);
+  		return $rows;
+	}
+	public function getAllBudgetType($parent = 0, $spacing = '', $cate_tree_array = '')
+	{
+
+		$db = $this->getAdapter();
+		if (!is_array($cate_tree_array))
+			$cate_tree_array = array();
+
+		$sql = "SELECT
+					bt.id AS id,
+					bt.budgetTitle AS `name` ";
+		$sql .= " FROM `st_budget_type` AS bt ";
+		$sql .= " WHERE bt.status=1 AND bt.parentId = $parent ";
+		$sql.=" ORDER BY bt.budgetTitle ASC ";
+		$query = $db->fetchAll($sql);
+		$rowCount = count($query);
+		$id = '';
+		if ($rowCount > 0) {
+			foreach ($query as $row) {
+				$cate_tree_array[] = array("id" => $row['id'], "name" => $spacing . $row['name']);
+				$cate_tree_array = $this->getAllBudgetType($row['id'], $spacing . ' - ', $cate_tree_array);
+			}
+		}
+		return $cate_tree_array;
+	}
+	
+	public function getAllBudgetItem($parent = 0, $spacing = '', $cate_tree_array = '',$_data=null)
+	{
+
+		$db = $this->getAdapter();
+		if (!is_array($cate_tree_array))
+			$cate_tree_array = array();
+
+		$sql = "SELECT
+					bi.id AS id,
+					bi.budgetTitle AS `name` ";
+		$sql .= " FROM `st_budget_item` AS bi ";
+		$sql .= " WHERE bi.status=1 AND bi.parentId = $parent ";
+		if (!empty($_data['budgetType'])) {
+			$sql .= " AND bi.budgetTypeId=" . $_data['budgetType'];
+		}
+		if (!empty($_data['notinBranchId'])) {
+			$sql .= " AND bi.id NOT IN (SELECT budgetId FROM `st_budget_project_item` WHERE projectId=" . $_data['notinBranchId'] . " )";
+		}
+		if (!empty($_data['branchId'])) {
+			$sql .= " AND bi.id IN (SELECT budgetId FROM `st_budget_project_item` WHERE projectId=" . $_data['branchId'] . ")";
+		}
+		
+		$sql.=" ORDER BY bi.budgetTitle ASC ";
+		$query = $db->fetchAll($sql);
+		$rowCount = count($query);
+		$id = '';
+		if ($rowCount > 0) {
+			foreach ($query as $row) {
+				$cate_tree_array[] = array("id" => $row['id'], "name" => $spacing . $row['name']);
+				$cate_tree_array = $this->getAllBudgetItem($row['id'], $spacing . ' - ', $cate_tree_array);
+			}
+		}
+		return $cate_tree_array;
+	}
+	
+	public function getFormSearchOption($_data){
 		$db = $this->getAdapter();
 		try{
 			
-			$currentLang = empty($search['currentLang'])?1:$search['currentLang'];
-			$getControlType = empty($search['getControlType'])?"requestStatus":$search['getControlType'];
+			
+			$currentLang = empty($_data['currentLang'])?1:$_data['currentLang'];
+			$getControlType = empty($_data['getControlType'])?"requestStatus":$_data['getControlType'];
+			$_data['userId'] = empty($_data['userId'])?0:$_data['userId'];
+			$_data['branchId'] = empty($_data['branchId'])?0:$_data['branchId'];
 			$row=array();
 			if($getControlType=="requestStatus"){
 				$row = array(
@@ -1239,6 +1425,39 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 					array("id"=>3,"name"=>$currentLang==1 ? "ផ្នែកបញ្ជាទិញ ត្រួតពិនិត្យ" : "PO Review"),
 					array("id"=>4,"name"=>$currentLang==1 ? "អគ្គនាយក ត្រួតពិនិត្យ" : "Boss Review"),
 				);
+			}else if($getControlType=="status"){
+				$row = array(
+					array("id"=>1,"name"=>$currentLang==1 ? "ប្រើប្រាស់" : "Active"),
+					array("id"=>2,"name"=>$currentLang==1 ? "មិនប្រើប្រាស់" : "Deactive"),
+				);
+			}else if($getControlType=="isCountStock"){
+				$row = array(
+					array("id"=>1,"name"=>$currentLang==1 ? "រាប់ស្តុក" : "Counting stock"),
+					array("id"=>2,"name"=>$currentLang==1 ? "មិនរាប់ស្តុក" : "Non Stock"),
+				);
+			}else if($getControlType=="isService"){
+				$row = array(
+					array("id"=>1,"name"=>$currentLang==1 ? "សេវាកម្ម" : "Service"),
+					array("id"=>2,"name"=>$currentLang==1 ? "ទំនិញ" : "Product"),
+				);
+			}else if($getControlType=="warehouseStaff"){
+				$row = $this->getAllStaffbyBranch($_data);
+			}else if($getControlType=="contractorStaff"){	
+				$row = $this->getAllContractorbyBranch($_data);
+			}else if($getControlType=="workType"){	
+				$row = $this->getAllWorkType(0,'','');
+			}else if($getControlType=="property"){	
+				$row = $this->getAllLand($_data);
+			}else if($getControlType=="propertyType"){	
+				$row = $this->getPropertyType();
+			}else if($getControlType=="productCategory"){	
+				$row = $this->getAllCategoryProduct(0,'','');
+			}else if($getControlType=="productMeasure"){	
+				$row = $this->getAllMeasureList();
+			}else if($getControlType=="budgetType"){	
+				$row = $this->getAllBudgetType(0,'','');
+			}else if($getControlType=="budgetItem"){	
+				$row = $this->getAllBudgetItem(0,'','',$_data);
 			}
 			
 			$result = array(
@@ -1312,7 +1531,12 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 		try{
 			
 			$_data['userId'] = empty($_data['userId'])?0:$_data['userId'];
+			$currentLang = empty($_data['currentLang'])?1:$_data['currentLang'];
 			$userLoaction=$this->getAccessPermission("prl.projectId",$_data);
+			$strLable = 'name_kh';
+			if ($currentLang == 2) {
+				$strLable = 'name_en';
+			}
 			
 			$sql="SELECT 
 					p.*
@@ -1321,29 +1545,59 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 					,p.image AS `productImage`
 					,p.measureLabel AS measureTitle
 					,proCate.categoryName
-					,pl.qty AS currentQtyAll
+					,(SELECT m.name FROM `st_measure` as m WHERE m.id=p.measureId LIMIT 1) measureName
+					,(SELECT $strLable FROM `st_view` WHERE type=2 AND key_code=p.isService LIMIT 1) isServiceTitle
+					,(SELECT $strLable FROM `st_view` WHERE type=1 AND key_code=p.isCountStock LIMIT 1) isCountStockTitle
+					,(SELECT i.budgetTypeId FROM `st_budget_item` AS i WHERE i.id=p.budgetId LIMIT 1) budgetTypeId
+					,(SELECT i.budgetTitle FROM `st_budget_item` AS i WHERE i.id=p.budgetId LIMIT 1) budgetTitle
+					,(SELECT ".$strLable." FROM ln_view WHERE type=3 and key_code = p.status LIMIT 1) AS statusTitle
+					,SUM(pl.qty) AS currentQtyAll
 					,pl.qtyAlert AS qtyWarningAlert
 					,(SELECT GROUP_CONCAT(prl.qty) FROM st_product_location AS prl JOIN ln_project AS pj ON pj.br_id = prl.projectId  WHERE p.proId = prl.proId ".$userLoaction." ORDER BY prl.projectId ASC LIMIT 1) AS qtyByLocationList
 					,(SELECT GROUP_CONCAT(pj.project_name) FROM st_product_location AS prl JOIN ln_project AS pj ON pj.br_id = prl.projectId WHERE p.proId = prl.proId ".$userLoaction." ORDER BY prl.projectId ASC LIMIT 1) AS branchNameList
 					
 				";
+				if (!empty($_data['branchId'])) {
+					$sql .= ",(SELECT l.qty FROM `st_product_location` AS l  WHERE l.projectId=" . $_data['branchId'] . " AND l.proId = p.proId LIMIT 1) AS currentQty ";
+				}
+				
 			$sql.="	FROM `st_product` AS p 
 					LEFT JOIN st_category AS proCate ON proCate.id = p.categoryId
 					LEFT JOIN st_product_location AS pl ON p.proId = pl.proId
 			";
-			$sql.="  WHERE p.status=1 ";	
+			$sql.="  WHERE 1 ";	
+			
+			if (!empty($_data['forListCreateNEdit'])) {
+				if (!empty($_data['status'])) {
+					if ($_data['status'] == "1") {
+						$sql .= " AND p.status=1 ";
+					}else if ($_data['status'] == "2") {
+						$sql .= " AND p.status=0 ";
+					}
+				}
+			}else{
+				$sql.="  AND p.status=1 ";	
+			}
 			
 			if (!empty($_data['isService'])) {
-				$sql .= " AND p.isService=1 "; //Case Service Items
-			} else {
-				$sql .= " AND p.isService=0 ";
+				if ($_data['isService'] == "1") {
+					$sql .= " AND p.isService=1 "; //Case Service Items
+				}else if ($_data['isService'] == "2") {
+					$sql .= " AND p.isService=0 ";
+				}
 			}
+			
 			if (!empty($_data['isCountStock'])) {
-				$sql .= " AND p.isCountStock= " . $_data['isCountStock'];
+				if ($_data['isCountStock'] == "1") {
+					$sql .= " AND p.isCountStock=1 ";
+				}else if ($_data['isCountStock'] == "2") {
+					$sql .= " AND p.isCountStock=0 ";
+				}
 			}
+			
 
-			if (!empty($_data['branch_id'])) {
-				$sql .= " AND p.proId IN (SELECT l.proId FROM `st_product_location` AS l  WHERE l.projectId=" . $_data['branch_id'] . " )";
+			if (!empty($_data['branchId'])) {
+				$sql .= " AND p.proId IN (SELECT l.proId FROM `st_product_location` AS l  WHERE l.projectId=" . $_data['branchId'] . " )";
 			}
 			if (!empty($_data['categoryId'])) {
 				$sql .= " AND p.categoryId= " . $_data['categoryId'];
@@ -1372,6 +1626,11 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 				$sql.=" AND p.proId IN (".$_data['productIdList'].") ";
 			}
 			$sql.=" Group BY p.proId ";
+			if (!empty($_data['forListCreateNEdit'])) {
+				$sql.="  ORDER BY p.proId DESC ";	
+			}else{
+				
+			}
 			$limit=" ";
 			if(!empty($_data['LimitStart'])){
 				$limit.=" LIMIT ".$_data['LimitStart'].",".$_data['limitRecord'];
@@ -1572,10 +1831,725 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 			$db->commit();
     		return true;
     	}catch (Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			$db->rollBack();
-    		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     		return false;
     	}
     }
+	
+	function getUsageNumberGenerate($_data){
+		$db = $this->getAdapter();
+		try{
+			
+			$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
+			$_data['createDate']=date("Y-m-d");
+			$_data['userId'] = empty($_data['userId'])?0:$_data['userId'];
+			$_data['branch_id'] = empty($_data['branchId'])?0:$_data['branchId'];
+			$_data['tranType'] = 1;
+			$usageNo =$dbGBstock->generateRequestUsageNo($_data);
+			
+			$result = array(
+					'status' =>true,
+					'value' =>$usageNo,
+			);
+			return $result;
+	
+		}catch(Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$result = array(
+					'status' =>false,
+					'value' =>$e->getMessage(),
+			);
+			return $result;
+		}
+	}
+	
+	public function getAllUsageStockList($_data){
+		$db = $this->getAdapter();
+		try{
+			
+			$_data['userId'] = empty($_data['userId'])?0:$_data['userId'];
+			$currentLang = empty($_data['currentLang'])?1:$_data['currentLang'];
+			
+			$titleColumn = 'name_en';
+			if ($currentLang == 1) {
+				$titleColumn = 'name_kh';
+			}
+			$sql="SELECT 
+				so.*
+				,(SELECT project_name FROM `ln_project` WHERE br_id=so.projectId LIMIT 1) AS projectName
+				
+				,(SELECT w.staffName FROM `st_worker` w where w.id=so.staffId LIMIT 1) AS staffName
+				,(SELECT c.staffName FROM `st_contractor` c where c.id=so.contractor LIMIT 1) AS contractorName
+			
+				,(SELECT pt.type_nameen FROM `ln_properties_type` pt where pt.id=so.houseType LIMIT 1) AS houseTypeTitle
+				,(SELECT p.land_address FROM `ln_properties` p where p.id=so.houseId LIMIT 1) AS houseNo
+				,(SELECT w.workTitle FROM `st_work_type` w where w.id=so.workType LIMIT 1) workTypeTitle
+				
+				,(SELECT CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=so.userId LIMIT 1 ) AS userName
+				,(SELECT ".$titleColumn." FROM ln_view WHERE type=3 and key_code = so.status LIMIT 1) AS statusTitle
+								
+			 ";
+			
+			$sql.="	
+				FROM `st_stockout` AS so WHERE so.tranType=1 
+			";
+			if(!empty($_data['endDate'])){
+				$from_date =(empty($_data['startDate']))? '1': " so.createDate >= '".date("Y-m-d",strtotime($_data['startDate']))." 00:00:00'";
+				$to_date = (empty($_data['endDate']))? '1': " so.createDate <= '".date("Y-m-d",strtotime($_data['endDate']))." 23:59:59'";
+				$sql.= " AND ".$from_date." AND ".$to_date;
+			}
+			if(!empty($_data['houseType'])){
+				$sql.=" AND so.houseType = ".$_data['houseType'];
+			}
+			if(!empty($_data['workType'])){
+				$sql.=" AND so.workType = ".$_data['workType'];
+			}
+			
+			$sql.=" AND so.userId = ".$_data['userId'];
+			$sql.=$this->getAccessPermission("so.projectId",$_data);
+			$sql.=" ORDER BY so.id DESC";
+			$limit=" ";
+			if(!empty($_data['LimitStart'])){
+				$limit.=" LIMIT ".$_data['LimitStart'].",".$_data['limitRecord'];
+			}else if(!empty($_data['limitRecord'])){
+				$limit.=" LIMIT ".$_data['limitRecord'];
+			}
+			
+			
+			$row = $db->fetchAll($sql.$limit);
+			
+			$counting = count($row);
+			$allResult = array('rowData'=>$row,'countingRecord'=>$counting);
+			
+			$result = array(
+						'status' =>true,
+						'value' =>$allResult,
+					);
+			return $result;
+			
+		}catch(Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$result = array(
+				'status' =>false,
+				'value' =>$e->getMessage(),
+			);
+			return $result;
+		}
+	}
+	
+	public function getUsageStockDetail($_data){
+		$db = $this->getAdapter();
+		try{
+			
+			$_data['userId'] = empty($_data['userId'])?0:$_data['userId'];
+			$_data['recordId'] = empty($_data['recordId'])?0:$_data['recordId'];
+			$currentLang = empty($_data['currentLang'])?1:$_data['currentLang'];
+			
+			$sql="select 
+					stkd.* 
+					,p.proName AS `proName`
+					,p.proCode AS `proCode`
+					,p.image AS `productImage` 
+					,p.measureLabel AS measureTitle
+					,(SELECT proCate.categoryName FROM  st_category AS proCate WHERE proCate.id = p.categoryId LIMIT 1) as categoryName			
+			 ";
+			
+			$sql.="	
+				FROM st_stockout_detail AS stkd 
+					LEFT JOIN `st_product` AS p ON p.proId = stkd.proId 
+				WHERE 1 
+			";
+			
+			$sql.=" AND stkd.stockoutId = ".$_data['recordId'];
+			$row = $db->fetchAll($sql);
+		
+			$result = array(
+						'status' =>true,
+						'value' =>$row,
+					);
+			return $result;
+			
+		}catch(Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$result = array(
+				'status' =>false,
+				'value' =>$e->getMessage(),
+			);
+			return $result;
+		}
+	}
+	
+	function submitNewUsage($_data){
+    	$db = $this->getAdapter();
+		$db->beginTransaction();
+    	try{
+			
+			
+			$_data['userId']	= empty($_data['userId'])?0:$_data['userId'];
+			$_data['branch_id']	= empty($_data['branchId'])?0:$_data['branchId'];
+			$_data['branchId']	= empty($_data['branchId'])?0:$_data['branchId'];
+			$_data['reqOutNo'] 	= empty($_data['reqOutNo'])?"":$_data['reqOutNo'];
+			$_data['note']	= empty($_data['note'])?"":$_data['note'];
+			$_data['tranType'] = 1;
+			
+			$listFromPost 	 = empty($_data['listRequestSubmit'])?null:$_data['listRequestSubmit'];
+			$listItems 	 = Zend_Json::decode($listFromPost);
+			
+			$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
+			$_data['dateRequest']=date("Y-m-d");
+			
+			$requestStock =$dbGBstock->generateRequestUsageNo($_data);
+			$arr = array(
+    				'projectId'		=>$_data['branch_id'],
+    				'requestNo'		=>$requestStock,
+    				'reqOutNo'		=>$_data['reqOutNo'],
+    				'requestDate'	=>$_data['dateRequest'],
+    				'staffId'		=>$_data['staffId'],
+    				'contractor'	=>$_data['contractor'],
+    				'workerName'	=>$_data['workerName'],
+    				'houseType'		=>$_data['houseType'],
+    				'houseId'		=>$_data['houseId'],
+    				'workType'		=>$_data['workType'],
+    				'typeofWork'	=>$_data['typeofWork'],
+    				'note'			=>$_data['note'],
+    				'createDate'	=>date("Y-m-d H:i:s"),
+    				'status'		=>1,
+    				'userId'		=>$_data['userId'],
+    				'tranType'		=>1,
+    			);
+			
+    		$this->_name='st_stockout';
+    		$requestId = $this->insert($arr);
+    		
+			if(!empty($listItems)) foreach($listItems AS $row){
+				
+				$arrDetail = array(
+    					'stockoutId'	=>$requestId,
+    					'proId'			=>$row['proId'],
+    					'qtyRequest'	=>$row['qtyRequest'],
+    					'unitPrice'		=>0,
+    					'totalPrice'	=>0,
+    					'note'			=>$row['note'],
+    				);
+    				$this->_name='st_stockout_detail';
+    				$id = $this->insert($arrDetail);
+    				
+    				$param = array(
+    					'EntyQty'=> -$row['qtyRequest'],
+    					'branch_id'=> $_data['branch_id'],
+    					'productId'=> $row['proId'],
+    				);
+    				$dbGBstock->updateProductLocation($param);//Update Stock qty and new costing
+    				$dbGBstock->addProductHistoryQty($_data['branch_id'],$row['proId'],3,$row['qtyRequest'],$id);//movement'	
+				
+			}
+			
+			$db->commit();
+    		return true;
+    	}catch (Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$db->rollBack();
+    		return false;
+    	}
+    }
+	
+	function submitUpdateUsageStock($_data){
+    	$db = $this->getAdapter();
+		$db->beginTransaction();
+    	try{
+			
+			
+			$_data['userId']	= empty($_data['userId'])?0:$_data['userId'];
+			$stockId	= empty($_data['recordId'])?0:$_data['recordId'];
+			$_data['branch_id']	= empty($_data['branchId'])?0:$_data['branchId'];
+			$_data['branchId']	= empty($_data['branchId'])?0:$_data['branchId'];
+			$_data['reqOutNo'] 	= empty($_data['reqOutNo'])?"":$_data['reqOutNo'];
+			$_data['note']	= empty($_data['note'])?"":$_data['note'];
+			$_data['tranType'] = 1;
+			
+			$listFromPost 	 = empty($_data['listRequestSubmit'])?null:$_data['listRequestSubmit'];
+			$listItems 	 = Zend_Json::decode($listFromPost);
+			
+			$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
+			$_data['dateRequest']=date("Y-m-d");
+			
+			$requestStock =$dbGBstock->generateRequestUsageNo($_data);
+			$arr = array(
+    				'reqOutNo'		=>$_data['reqOutNo'],
+    				'requestDate'	=>$_data['dateRequest'],
+    				'staffId'		=>$_data['staffId'],
+    				'contractor'	=>$_data['contractor'],
+    				'workerName'	=>$_data['workerName'],
+    				'houseType'		=>$_data['houseType'],
+    				'houseId'		=>$_data['houseId'],
+    				'workType'		=>$_data['workType'],
+    				'typeofWork'	=>$_data['typeofWork'],
+    				'note'			=>$_data['note'],
+    				'createDate'	=>date("Y-m-d H:i:s"),
+    				'status'		=>$_data['status'],
+    				'userId'		=>$_data['userId'],
+    				
+    			);
+			
+    		$this->_name='st_stockout';
+			$where="id=".$stockId;
+    		$this->update($arr, $where);
+			
+			
+			$this->resetUsageStock($_data);
+    		
+			if($_data['status']=="1"){
+				if(!empty($listItems)) foreach($listItems AS $row){
+					$arrDetail = array(
+						'stockoutId'	=>$stockId,
+						'proId'			=>$row['proId'],
+						'qtyRequest'	=>$row['qtyRequest'],
+						'unitPrice'		=>0,
+						'totalPrice'	=>0,
+						'note'			=>$row['note'],
+					);
+					$this->_name='st_stockout_detail';
+					$id = $this->insert($arrDetail);
+					
+					$param = array(
+						'EntyQty'=> -$row['qtyRequest'],
+						'branch_id'=> $_data['branch_id'],
+						'productId'=> $row['proId'],
+					);
+					$dbGBstock->updateProductLocation($param);//Update Stock qty and new costing
+					$dbGBstock->addProductHistoryQty($_data['branch_id'],$row['proId'],3,$row['qtyRequest'],$id);//movement'	
+					
+				}
+			}
+			
+			
+			$db->commit();
+    		return true;
+    	}catch (Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$db->rollBack();
+    		return false;
+    	}
+    }
+	
+	function resetUsageStock($_data){
+    	$dbs = new Application_Model_DbTable_DbGlobalStock();
+		$stockId	= empty($_data['recordId'])?0:$_data['recordId'];
+		$branchId	= empty($_data['branchId'])?0:$_data['branchId'];
+		
+		$dbStockOut = new Stockinout_Model_DbTable_DbStockout();
+    	$results = $dbStockOut->getDataAllRow($stockId);
+    	if(!empty($results)){
+    		foreach($results as $row){
+    			$param = array(
+    				'EntyQty'=> $row['qtyRequest'],
+    				'branch_id'=> $branchId,
+    				'productId'=> $row['proId'],
+    			);
+    			$dbs->updateProductLocation($param);
+    			$dbs->DeleteProductHistoryQty($row['id'],3);
+    		}
+			
+			if($_data['status']=="1"){
+				$this->_name='st_stockout_detail';
+				$where ='stockoutId='.$stockId;
+				$this->delete($where);	
+			}
+    	}
+    }
+	
+	public function getAllPreCountStockList($_data){
+		$db = $this->getAdapter();
+		try{
+			
+			$_data['userId'] = empty($_data['userId'])?0:$_data['userId'];
+			$currentLang = empty($_data['currentLang'])?1:$_data['currentLang'];
+			
+			$titleColumn = 'name_en';
+			if ($currentLang == 1) {
+				$titleColumn = 'name_kh';
+			}
+			$sql="SELECT 
+				pre.*
+				,(SELECT project_name FROM `ln_project` WHERE br_id=pre.projectId LIMIT 1) AS projectName
+				
+				,(SELECT CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=pre.userId LIMIT 1 ) AS userName
+				,(SELECT ".$titleColumn." FROM ln_view WHERE type=3 and key_code = pre.status LIMIT 1) AS statusTitle
+				,(SELECT pred.isClosed FROM `st_precount_product_detail` AS pred WHERE pred.countId = pre.id ORDER BY pred.isClosed ASC LIMIT 1) AS isLocked
+								
+			 ";
+			
+			$sql.="	
+				FROM `st_precount_product` AS pre WHERE 1 
+			";
+			if(!empty($_data['endDate'])){
+				$from_date =(empty($_data['startDate']))? '1': " pre.inputDate >= '".date("Y-m-d",strtotime($_data['startDate']))." 00:00:00'";
+				$to_date = (empty($_data['endDate']))? '1': " pre.inputDate <= '".date("Y-m-d",strtotime($_data['endDate']))." 23:59:59'";
+				$sql.= " AND ".$from_date." AND ".$to_date;
+			}
+			
+			$userType 	= "0";
+			$userInfo = $this->getUserInfById($_data['userId']);
+			if(!empty($userInfo["value"])){
+				$row = $userInfo["value"];
+				$userType = empty($row['userType'])?"0":$row['userType'];
+			}
+			if($userType!="1"){
+				$sql.=" AND pre.userId = ".$_data['userId'];
+			}
+			
+			$sql.=$this->getAccessPermission("pre.projectId",$_data);
+			$sql.=" ORDER BY pre.id DESC";
+			$limit=" ";
+			if(!empty($_data['LimitStart'])){
+				$limit.=" LIMIT ".$_data['LimitStart'].",".$_data['limitRecord'];
+			}else if(!empty($_data['limitRecord'])){
+				$limit.=" LIMIT ".$_data['limitRecord'];
+			}
+			
+			
+			$row = $db->fetchAll($sql.$limit);
+			
+			$counting = count($row);
+			$allResult = array('rowData'=>$row,'countingRecord'=>$counting);
+			
+			$result = array(
+						'status' =>true,
+						'value' =>$allResult,
+					);
+			return $result;
+			
+		}catch(Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$result = array(
+				'status' =>false,
+				'value' =>$e->getMessage(),
+			);
+			return $result;
+		}
+	}
+	public function getPreCountStockDetail($_data){
+		$db = $this->getAdapter();
+		try{
+			
+			$_data['userId'] = empty($_data['userId'])?0:$_data['userId'];
+			$_data['recordId'] = empty($_data['recordId'])?0:$_data['recordId'];
+			$currentLang = empty($_data['currentLang'])?1:$_data['currentLang'];
+			
+			$sql="select 
+					stkd.* 
+					,p.proName AS `proName`
+					,p.proCode AS `proCode`
+					,p.image AS `productImage` 
+					,p.measureLabel AS measureTitle
+					,(SELECT proCate.categoryName FROM  st_category AS proCate WHERE proCate.id = p.categoryId LIMIT 1) as categoryName			
+			 ";
+			
+			$sql.="	
+				FROM st_precount_product_detail AS stkd 
+					LEFT JOIN `st_product` AS p ON p.proId = stkd.proId 
+				WHERE 1 
+			";
+			
+			$sql.=" AND stkd.countId = ".$_data['recordId'];
+			$row = $db->fetchAll($sql);
+		
+			$result = array(
+						'status' =>true,
+						'value' =>$row,
+					);
+			return $result;
+			
+		}catch(Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$result = array(
+				'status' =>false,
+				'value' =>$e->getMessage(),
+			);
+			return $result;
+		}
+	}
+	
+	function submitPreCountingStock($_data){
+    	$db = $this->getAdapter();
+		$db->beginTransaction();
+    	try{
+			
+			
+			$_data['userId']	= empty($_data['userId'])?0:$_data['userId'];
+			$_data['branchId']	= empty($_data['branchId'])?0:$_data['branchId'];
+			$_data['note']	= empty($_data['note'])?"":$_data['note'];
+			
+			$listFromPost 	 = empty($_data['listRequestSubmit'])?null:$_data['listRequestSubmit'];
+			$listItems 	 = Zend_Json::decode($listFromPost);
+			
+			$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
+			$_data['inputDate']=date("Y-m-d");
+			
+			
+			$arr = array(
+    				'projectId'		=>$_data['branchId'],
+    				'inputDate'		=>$_data['inputDate'],
+    				'note'			=>$_data['note'],
+    				'createDate'	=>date("Y-m-d H:i:s"),
+    				'status'		=>1,
+    				'userId'		=>$_data['userId'],
+    			);
+			
+    		$this->_name='st_precount_product';
+    		$countId = $this->insert($arr);
+    		
+			if(!empty($listItems)) foreach($listItems AS $row){
+				$arr = array(
+						'branch_id' => $_data['branchId'],
+						'productId' => $row['proId'],
+					);
+				$rsProduct = $dbGBstock->getProductInfoByLocation($arr);
+				if (!empty($rsProduct)) {
+					$arrDetail = array(
+						'countId'		=>$countId,
+						'proId'			=>$row['proId'],
+						'currentQty'	=>$row['currentQty'],
+						'countQty'		=>$row['countQty'],
+						'closingDate'	=>$row['closingDate'],
+						'note'			=>$row['note'],
+					);
+					$this->_name='st_precount_product_detail';
+					$id = $this->insert($arrDetail);
+				}					
+				
+			}
+			
+			$db->commit();
+    		return true;
+    	}catch (Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$db->rollBack();
+    		return false;
+    	}
+    }
+	
+	function submitEditPreCountingStock($_data){
+    	$db = $this->getAdapter();
+		$db->beginTransaction();
+    	try{
+			
+			
+			$_data['userId']	= empty($_data['userId'])?0:$_data['userId'];
+			$_data['branchId']	= empty($_data['branchId'])?0:$_data['branchId'];
+			$_data['note']	= empty($_data['note'])?"":$_data['note'];
+			$countId	= empty($_data['recordId'])?0:$_data['recordId'];
+			
+			$listFromPost 	 = empty($_data['listRequestSubmit'])?null:$_data['listRequestSubmit'];
+			$listItems 	 = Zend_Json::decode($listFromPost);
+			
+			$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
+			$_data['inputDate']=date("Y-m-d");
+			
+			
+			$arr = array(
+    				
+    				'inputDate'		=>$_data['inputDate'],
+    				'note'			=>$_data['note'],
+    				'createDate'	=>date("Y-m-d H:i:s"),
+    				'status'		=>$_data['status'],
+    				'userId'		=>$_data['userId'],
+    			);
+			$this->_name = 'st_precount_product';
+			$where = "id=" . $countId;
+			$this->update($arr, $where);
+			
+    		if($_data['status']=="1"){
+				
+				$this->_name = 'st_precount_product_detail';
+				$whereDl = 'countId = ' . $countId;
+				$this->delete($whereDl);
+
+				if(!empty($listItems)) foreach($listItems AS $row){
+					$arr = array(
+							'branch_id' => $_data['branchId'],
+							'productId' => $row['proId'],
+						);
+					$rsProduct = $dbGBstock->getProductInfoByLocation($arr);
+					if (!empty($rsProduct)) {
+						$arrDetail = array(
+							'countId'		=>$countId,
+							'proId'			=>$row['proId'],
+							'currentQty'	=>$row['currentQty'],
+							'countQty'		=>$row['countQty'],
+							'closingDate'	=>$row['closingDate'],
+							'note'			=>$row['note'],
+						);
+						$this->_name='st_precount_product_detail';
+						$id = $this->insert($arrDetail);
+					}					
+					
+				}
+			}
+			
+			
+			$db->commit();
+    		return true;
+    	}catch (Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$db->rollBack();
+    		return false;
+    	}
+    }
+	
+	function getProductCodeGenerate($_data){
+		$db = $this->getAdapter();
+		try{
+			
+			$dbPro = new Product_Model_DbTable_DbProduct();
+			$productCode = $dbPro->generateProductCode();
+			
+			$result = array(
+					'status' =>true,
+					'value' =>$productCode,
+			);
+			return $result;
+	
+		}catch(Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$result = array(
+					'status' =>false,
+					'value' =>$e->getMessage(),
+			);
+			return $result;
+		}
+	}
+	function submitNewProduct($_data){
+    	$db = $this->getAdapter();
+		$db->beginTransaction();
+    	try{
+			Application_Model_DbTable_DbUserLog::writeMessageError("A");
+			$_data['userId']	= empty($_data['userId'])?0:$_data['userId'];
+			$_data['branchId']	= empty($_data['branchId'])?0:$_data['branchId'];
+			$_data['note']	= empty($_data['note'])?"":$_data['note'];
+			
+			$dbPro = new Product_Model_DbTable_DbProduct();
+			$productCode = $dbPro->generateProductCode();
+			Application_Model_DbTable_DbUserLog::writeMessageError("B");
+			$arr = array(
+				'proName' 		=> $_data['proName'],
+				'proCode' 		=> $productCode,
+				'barCode' 		=> $_data['barCode'],
+				'isService' 	=> $_data['isService'],
+				'categoryId' 	=> $_data['categoryId'],
+				'isConvertMeasure' 	=> $_data['isConvertMeasure'],
+				'measureId' 		=> $_data['measureId'],
+				'measureLabel' 		=> $_data['measureLabel'],
+				'measureValue' 		=> $_data['measureValue'],
+				'userId' 			=> $_data['userId'],
+				'createDate' 		=> date("Y-m-d"),
+				'isCountStock' 		=> $_data['isCountStock'],
+				'note' 				=> $_data['note'],
+				'status' 		=> 1,
+				'budgetId' 		=> $_data['budgetId'],
+			);
+			Application_Model_DbTable_DbUserLog::writeMessageError("C");
+			$part = PUBLIC_PATH . '/images/proimage/';
+			if (!file_exists($part)) {
+				mkdir($part, 0777, true);
+			}
+			if(!empty($_data['photo'])){
+				$fileExtension="jpg";
+				if(!empty($_data['imageName'])){
+					$tem = explode(".", $_data['imageName']);
+					$fileExtension=end($tem);
+					if( end($tem) !="jpg" || end($tem) !="png"){
+						$fileExtension="jpg";
+					}
+				}
+				$image_name = "product_" . date("Y") . date("m") . date("d") . time() . ".".$fileExtension;
+				$outputFile = $part.$image_name;
+				$fileHandle = fopen($outputFile,"wb");
+				fwrite($fileHandle,base64_decode($_data["photo"]));
+				fclose($fileHandle);
+				$arr['image'] = $image_name;
+			}
+			
+    		$this->_name='st_product';
+    		$productId = $this->insert($arr);
+    		
+			
+			$db->commit();
+    		return true;
+    	}catch (Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$db->rollBack();
+    		return false;
+    	}
+    }
+	
+	function submitEditProduct($_data){
+    	$db = $this->getAdapter();
+		$db->beginTransaction();
+    	try{
+			
+			$_data['userId']	= empty($_data['userId'])?0:$_data['userId'];
+			$_data['branchId']	= empty($_data['branchId'])?0:$_data['branchId'];
+			$_data['note']	= empty($_data['note'])?"":$_data['note'];
+			$productId	= empty($_data['recordId'])?0:$_data['recordId'];
+			
+			$dbPro = new Product_Model_DbTable_DbProduct();
+			$productCode = $dbPro->generateProductCode();
+			$arr = array(
+				'proName' 		=> $_data['proName'],
+				'barCode' 		=> $_data['barCode'],
+				'isService' 	=> $_data['isService'],
+				'categoryId' 	=> $_data['categoryId'],
+				'isConvertMeasure' 	=> $_data['isConvertMeasure'],
+				'measureId' 		=> $_data['measureId'],
+				'measureLabel' 		=> $_data['measureLabel'],
+				'measureValue' 		=> $_data['measureValue'],
+				'userId' 			=> $_data['userId'],
+				'createDate' 		=> date("Y-m-d H:i:s"),
+				'isCountStock' 		=> $_data['isCountStock'],
+				'note' 				=> $_data['note'],
+				'status' 		=> $_data['status'],
+				'budgetId' 		=> $_data['budgetId'],
+			);
+			$part = PUBLIC_PATH . '/images/proimage/';
+			if (!file_exists($part)) {
+				mkdir($part, 0777, true);
+			}
+			if(!empty($_data['photo'])){
+				$fileExtension="jpg";
+				if(!empty($_data['imageName'])){
+					$tem = explode(".", $_data['imageName']);
+					$fileExtension=end($tem);
+					if( end($tem) !="jpg" || end($tem) !="png"){
+						$fileExtension="jpg";
+					}
+				}
+				$image_name = "product_" . date("Y") . date("m") . date("d") . time() . ".".$fileExtension;
+				$outputFile = $part.$image_name;
+				$fileHandle = fopen($outputFile,"wb");
+				fwrite($fileHandle,base64_decode($_data["photo"]));
+				fclose($fileHandle);
+				$arr['image'] = $image_name;
+				
+				if(!empty($_data['oldPhotoName'])){
+					unlink($part . $_data['oldPhotoName']);
+				}
+				
+			}
+    		$where = 'proId = ' . $productId;
+			$this->_name='st_product';
+			$this->update($arr, $where);
+    		
+			
+			$db->commit();
+    		return true;
+    	}catch (Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$db->rollBack();
+    		return false;
+    	}
+    }
+	
 	
 }
