@@ -158,6 +158,9 @@ class Systemapi_IndexController extends Zend_Controller_Action
 					$_dbAction->submitNewProductAction($postData);
 				}else if ($GetData['url']=="submitEditProduct"){
 					$_dbAction->submitEditProductAction($postData);
+					
+				}else if ($GetData['url']=="submitEditProfile"){
+					$_dbAction->submitEditUserProfileAction($postData);
     			}
     			else{
     				echo Zend_Http_Response::responseCodeAsText(401,true);

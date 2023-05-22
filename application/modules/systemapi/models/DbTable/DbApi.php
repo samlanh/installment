@@ -2551,5 +2551,55 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
     	}
     }
 	
+	function submitEditUserProfile($_data){
+    	$db = $this->getAdapter();
+		$db->beginTransaction();
+    	try{
+			
+			$_data['userId']	= empty($_data['userId'])?0:$_data['userId'];
+			
+			$arr = array(
+				'personal_doc_no' 		=> $_data['personal_doc_no'],
+				'current_address' 		=> $_data['current_address'],
+				'nationality' 	=> $_data['nationality'],
+			);
+			$part = PUBLIC_PATH . '/images/photo/profile/';
+			if (!file_exists($part)) {
+				mkdir($part, 0777, true);
+			}
+			if(!empty($_data['photo'])){
+				$fileExtension="jpg";
+				if(!empty($_data['imageName'])){
+					$tem = explode(".", $_data['imageName']);
+					$fileExtension=end($tem);
+					if( end($tem) !="jpg" || end($tem) !="png"){
+						$fileExtension="jpg";
+					}
+				}
+				$image_name = "user_profile_" . date("Y") . date("m") . date("d") . time() . ".".$fileExtension;
+				$outputFile = $part.$image_name;
+				$fileHandle = fopen($outputFile,"wb");
+				fwrite($fileHandle,base64_decode($_data["photo"]));
+				fclose($fileHandle);
+				$arr['photo'] = $image_name;
+				
+				if(!empty($_data['oldPhotoName'])){
+					unlink($part . $_data['oldPhotoName']);
+				}
+			}
+    		$where = 'id = ' . $_data['userId'];
+			$this->_name='rms_users';
+			$this->update($arr, $where);
+    		
+			
+			$db->commit();
+    		return true;
+    	}catch (Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$db->rollBack();
+    		return false;
+    	}
+    }
+	
 	
 }
