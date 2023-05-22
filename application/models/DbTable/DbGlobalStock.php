@@ -1317,7 +1317,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		$dbGb = new Application_Model_DbTable_DbGlobal();
 		$sql = " 
 		SELECT 
-			'requestingRecord' AS recordType
+				'requestingRecord' AS recordType
 				
 				,rq.date AS recordDate
 				,rq.requestNo AS recordNo
@@ -1422,6 +1422,11 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 					if ($typeNotify == "toPoPurchase") {
 						$notificationTitle = "សំណើបញ្ជាទិញបានអនុម័តសម្រាប់ :  គម្រោង" . str_replace('គម្រោង', '', $recordInfo['projectName']);
 					}
+					
+					$recordInfo['note'] = empty($recordInfo['note'])?"":$recordInfo['note'];
+					$recordInfo['checkingNote'] = empty($recordInfo['checkingNote'])?"":$recordInfo['checkingNote'];
+					$recordInfo['pCheckingNote'] = empty($recordInfo['pCheckingNote'])?"":$recordInfo['pCheckingNote'];
+					$recordInfo['approveNote'] = empty($recordInfo['approveNote'])?"":$recordInfo['approveNote'];
 					$recordDetail = array($recordInfo);
 				}
 			}else if($typeNotify == "toReviewPOConcrete"){
