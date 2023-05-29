@@ -78,13 +78,14 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 	function getIlPaymentByID($id){
 		$db = $this->getAdapter();
 		$sql="SELECT 
-				  *,
-				  rm.id AS paymentid,
-				  rm.status as status_parent,
-				  rm.total_payment as total_payment_parent,
-				  rm.service_charge as service_charge_parent,
-				  rm.penalize_amount as penalize_amount_parent,
-				  rm.total_interest_permonth as total_interest_permonth_parent
+				  *
+				  ,rm.id AS paymentid
+				  ,rm.status as status_parent
+				  ,rm.total_payment as total_payment_parent
+				  ,rm.service_charge as service_charge_parent
+				  ,rm.penalize_amount as penalize_amount_parent
+				  ,rm.total_interest_permonth as total_interest_permonth_parent
+				  ,(SELECT s.price_sold FROM ln_sale AS s WHERE s.id = rm.sale_id LIMIT 1) AS price_sold
 				FROM
 				  `ln_client_receipt_money` AS rm LEFT JOIN `ln_client_receipt_money_detail` AS rmd ON rm.id=rmd.`crm_id`
 				WHERE rm.id = $id
@@ -1785,26 +1786,63 @@ function getLoanPaymentByLoanNumberEdit($data){
 		return $db->fetchRow($sql);
 	}
 	
-		public function setVoidReceiptReason($data){
-      			$db = $this->getAdapter();
-      			$db->beginTransaction();
-      			try{
-      		
-      				$arr = array(
-      						'void_reason'	=>$data['reason'],
-      						'void_by'		=>$this->getUserId(),
-      						'void_date'		=>date("Y-m-d H:i:s"),
-      				);
-      				$where=" id = ".$data['id'];
-      				$this->_name="ln_client_receipt_money";
-      				$this->update($arr, $where);
-      		
-      				$db->commit();
-      				return 1;
-      			}catch (Exception $e){
-      				$err =$e->getMessage();
-      				Application_Model_DbTable_DbUserLog::writeMessageError($err);
-      				$db->rollBack();
-      			}
-      	}
+	public function setVoidReceiptReason($data){
+			$db = $this->getAdapter();
+			$db->beginTransaction();
+			try{
+		
+				$arr = array(
+						'void_reason'	=>$data['reason'],
+						'void_by'		=>$this->getUserId(),
+						'void_date'		=>date("Y-m-d H:i:s"),
+				);
+				$where=" id = ".$data['id'];
+				$this->_name="ln_client_receipt_money";
+				$this->update($arr, $where);
+		
+				$db->commit();
+				return 1;
+			}catch (Exception $e){
+				$err =$e->getMessage();
+				Application_Model_DbTable_DbUserLog::writeMessageError($err);
+				$db->rollBack();
+			}
+	}
+	
+	function getTotalPrinciplePaidForSale($saleId){
+		$db = $this->getAdapter();
+		$sql="
+				SELECT 
+					(SUM(crm.total_principal_permonthpaid) + SUM(COALESCE(crm.extra_payment,0))) AS totalPrincipalPaid
+				FROM `ln_client_receipt_money` AS crm 
+				WHERE crm.sale_id = $saleId 
+		 ";
+		$sql.=" LIMIT 1 ";
+		return $db->fetchRow($sql);
+	}
+	function checkSaleCompletedPaymentPrincipleAmount($receiptId){
+		$db = $this->getAdapter();
+		$row = $this->getIlPaymentByID($receiptId);
+		if(!empty($row)){
+			$saleId = empty($row["sale_id"])? 0 : $row["sale_id"];
+			$priceSold = empty($row["price_sold"])? 0 : $row["price_sold"];
+			
+			$rowPaid = $this->getTotalPrinciplePaidForSale($saleId);
+			$totalPrincipalPaid = empty($rowPaid["totalPrincipalPaid"])? 0 : $rowPaid["totalPrincipalPaid"];
+			
+			
+			$isCompleted =0;
+			if($priceSold==$totalPrincipalPaid){
+				$isCompleted =1;
+			}
+			if($totalPrincipalPaid==0){
+				$isCompleted =0;
+			}
+			$arr = array("is_completed"=>$isCompleted);
+			
+			$where=" id = ".$saleId;
+			$this->_name="ln_sale";
+			$this->update($arr, $where);
+		}
+	}
 }

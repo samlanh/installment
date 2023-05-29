@@ -38,8 +38,12 @@ class Systemapi_IndexController extends Zend_Controller_Action
     			$_dbAction->requestForPONotifyAction($GetData);
 			}else if ($GetData['url']=="requestDetail"){
     			$_dbAction->requestDetailAction($GetData);
+			}else if ($GetData['url']=="poRequestList"){
+				$_dbAction->getAllListPurchaseByRequestAction($GetData);
 			}else if ($GetData['url']=="poRequestToReceiveNotify"){
     			$_dbAction->PORequestToReceiveNotifyAction($GetData);
+			}else if ($GetData['url']=="detailPoRequest"){
+    			$_dbAction->getDetailPurchaseByRequestAction($GetData);
 			
 			}else if ($GetData['url']=="dnToVerifyNotify"){
     			$_dbAction->getDNToVerifyNotifyAction($GetData);
@@ -65,6 +69,7 @@ class Systemapi_IndexController extends Zend_Controller_Action
 				$_dbAction->getProductListAction($GetData);
 			}else if ($GetData['url']=="supplierList"){
 				$_dbAction->getSupplierListAction($GetData);
+				
 			}else if ($GetData['url']=="formRequestStatus"){
 				$GetData['getControlType'] = "requestStatus";
     			$_dbAction->getFormSearchOptionAction($GetData);

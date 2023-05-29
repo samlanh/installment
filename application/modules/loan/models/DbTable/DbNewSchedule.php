@@ -271,6 +271,7 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     				'status'=>0,
     				'collect_by'=>2,
 					'note'=>$data['other_feenote'],
+					'received_userid'=>$this->getUserId(),
 	    		);
 	    		$this->insert($datapayment);
 	    		$start_id=$start_id+1;

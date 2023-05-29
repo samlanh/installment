@@ -917,10 +917,9 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
     }
 	
 	
-	function getPORequestToReceive($_data=array()){
+	function getAllPurchasingByRequest($_data=array()){
 		$db=$this->getAdapter();
 		try{
-			
 			$_data['userId'] 	 = empty($_data['userId'])?0:$_data['userId'];
 			$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
 			$arrStep = array(
@@ -951,7 +950,7 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 					,(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.approveBy LIMIT 1 ) AS approveByName
 					,(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.userId LIMIT 1 ) AS requestByName
 					,(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=po.userId LIMIT 1 ) AS purchaseByName
-				
+					,(SELECT pod.isClosed FROM st_purchasing_detail AS pod WHERE pod.purchaseId = po.id ORDER BY pod.isClosed ASC LIMIT 1) isCompletedReceive
 			";
 			
 			$sql.=" 
@@ -960,6 +959,9 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 					LEFT JOIN `st_supplier` AS spp ON spp.id = po.supplierId  ";
 			$sql.=" WHERE po.purchaseType=".$purchaseType."
 					AND po.status = 1 ";
+			if(!empty($_data['forReceivedDn'])){
+				$sql.=" AND (SELECT pod.isClosed FROM st_purchasing_detail AS pod WHERE pod.purchaseId = po.id ORDER BY pod.isClosed ASC LIMIT 1) = 0 ";
+			}				
 			
 			$sql.=$this->getAccessPermission("po.projectId",$_data);
 			$sql.=" ORDER BY po.id DESC";
@@ -989,6 +991,54 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 			return $result;
 		}
 				
+	}
+	
+	function getDetailPurchaseByRequest($_data){
+		$db = $this->getAdapter();
+		try{
+
+			$_data['userId'] 	 = empty($_data['userId'])?0:$_data['userId'];
+			$recordId 	 = empty($_data['recordId'])?0:$_data['recordId'];
+			
+			$sql=" 	SELECT 
+					pod.*,
+					p.proCode,
+					p.proName,
+					p.image AS productImage,
+					p.measureLabel AS measureTitle
+					
+					,(SELECT GROUP_CONCAT(rsd1.qtyReceive) FROM st_receive_stock AS rs,st_receive_stock_detail AS rsd1 WHERE rsd1.receiveId=rs.id AND rsd1.proId = pod.proId AND po.requestId=rs.requestId AND rs.status =1 ) AS totalReceiveQty
+					,(SELECT GROUP_CONCAT(rs.dnNumber) FROM st_receive_stock AS rs,st_receive_stock_detail AS rsd1 WHERE rsd1.receiveId=rs.id AND rsd1.proId = pod.proId AND po.requestId=rs.requestId AND rs.status =1 ) AS dnNumberList
+					,(SELECT GROUP_CONCAT(rs.id) FROM st_receive_stock AS rs,st_receive_stock_detail AS rsd1 WHERE rsd1.receiveId=rs.id AND rsd1.proId = pod.proId AND po.requestId=rs.requestId AND rs.status =1 ) AS dnIdList
+					,(SELECT GROUP_CONCAT(rs.receiveDate) FROM st_receive_stock AS rs,st_receive_stock_detail AS rsd1 WHERE rsd1.receiveId=rs.id AND rsd1.proId = pod.proId AND po.requestId=rs.requestId AND rs.status =1 ) AS dnReceiveDateList
+					
+				";
+			$sql.="	FROM 
+						`st_purchasing_detail` as pod
+						JOIN `st_purchasing` AS po ON po.id = pod.purchaseId
+						LEFT JOIN `st_product` AS p  ON p.proId = pod.proId 
+			";
+			$sql.=" WHERE 1 AND pod.purchaseId IN ($recordId) ";	
+			
+			$sql.=$this->getAccessPermission("po.projectId",$_data);
+			$sql.=" ORDER BY pod.purchaseId DESC ";
+			
+			$rs = $db->fetchAll($sql);
+			
+			$result = array(
+						'status' =>true,
+						'value' =>$rs,
+					);
+			return $result;
+			
+		}catch(Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$result = array(
+				'status' =>false,
+				'value' =>$e->getMessage(),
+			);
+			return $result;
+		}
 	}
 	
 	public function getAllDNToVerifyNotify($_data){

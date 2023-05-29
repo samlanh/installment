@@ -792,6 +792,8 @@ class Report_LoanController extends Zend_Controller_Action {
   		else{
   			$formdata = array(
   					"adv_search"=>'',
+  					"branch_id"=>0,
+  					"property_type"=>0,
   					"currency_type"=>-1,
   					"status"=>-1,
   					'start_date'=> date('Y-m-d'),
@@ -802,6 +804,11 @@ class Report_LoanController extends Zend_Controller_Action {
   		$this->view->rs_paid = $db->getRealPaid($formdata);
   		$this->view->rs_schedule = $db->getScheduleCompletednotUpdate($formdata);
   		$this->view->rs_begining = $db->getBeginingBalance($formdata);
+		
+		$frm = new Loan_Form_FrmSearchLoan();
+		$frm = $frm->AdvanceSearch();
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frm_search = $frm;
   }
   function paymenthistoryAction(){
   	$db  = new Report_Model_DbTable_DbLandreport();

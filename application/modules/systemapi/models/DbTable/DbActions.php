@@ -465,15 +465,78 @@ class Systemapi_Model_DbTable_DbActions extends Zend_Db_Table_Abstract
 		}
 	}
 	
-	public function PORequestToReceiveNotifyAction($search){
+	public function getAllListPurchaseByRequestAction($search){
 		try{
 			$search['userId'] = empty($search['userId'])?0:$search['userId'];
 			$search['userType'] = empty($search['userType'])?0:$search['userType'];
 			$search['mobileToken'] = empty($search['mobileToken'])?0:$search['mobileToken'];
 		
+			$db = new Systemapi_Model_DbTable_DbApi();
+			$row = $db->getAllPurchasingByRequest($search);
+			if ($row['status']){
+				$arrResult = array(
+						"result" => $row['value'],
+						"code" => "SUCCESS",
+					);
+			}else{
+				$arrResult = array(
+					"code" => "ERR_",
+					"message" => $row['value'],
+				);
+			}
+			
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}catch(Exception $e){
+			$arrResult = array(
+				"code" => "ERR_",
+				"message" => $e->getMessage(),
+			);
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}
+	}
+	
+	public function PORequestToReceiveNotifyAction($search){
+		try{
+			$search['userId'] = empty($search['userId'])?0:$search['userId'];
+			$search['userType'] = empty($search['userType'])?0:$search['userType'];
+			$search['mobileToken'] = empty($search['mobileToken'])?0:$search['mobileToken'];
+			$search['forReceivedDn'] = 1;
+		
+			$db = new Systemapi_Model_DbTable_DbApi();
+			$row = $db->getAllPurchasingByRequest($search);
+			if ($row['status']){
+				$arrResult = array(
+						"result" => $row['value'],
+						"code" => "SUCCESS",
+					);
+			}else{
+				$arrResult = array(
+					"code" => "ERR_",
+					"message" => $row['value'],
+				);
+			}
+			
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}catch(Exception $e){
+			$arrResult = array(
+				"code" => "ERR_",
+				"message" => $e->getMessage(),
+			);
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}
+	}
+	
+	public function getDetailPurchaseByRequestAction($search){
+		try{
+			$search['userId'] = empty($search['userId'])?0:$search['userId'];
+			$search['mobileToken'] = empty($search['mobileToken'])?0:$search['mobileToken'];
 			
 			$db = new Systemapi_Model_DbTable_DbApi();
-			$row = $db->getPORequestToReceive($search);
+			$row = $db->getDetailPurchaseByRequest($search);
 			if ($row['status']){
 				$arrResult = array(
 						"result" => $row['value'],

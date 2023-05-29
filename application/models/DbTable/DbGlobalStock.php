@@ -1474,6 +1474,9 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 				'headings' => $headings,
 				'contents' => $content,
 				"external_id" => null,
+				"ios_badgeType" => "Increase",
+				"ios_badgeCount" => 1,
+				
 	
 			);
 	
