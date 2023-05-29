@@ -5,6 +5,8 @@ let bitOutput = document.getElementById("bits");
 let kboutput = document.getElementById("kbs");
 let mboutput = document.getElementById("mbs");
 
+let isNoInternet = false;
+
 //Gets random image from unsplash.com
 let imageLink = "https://source.unsplash.com/random?topics=nature";
 function checkInternet(){	
@@ -28,13 +30,17 @@ function calculateSpeed() {
   let speedInKbps = (speedInBps / 1024).toFixed(2);
   let speedInMbps = (speedInKbps / 1024).toFixed(2);
 	if(speedInKbps<5){
+	   isNoInternet = true;
 	   $('.offline-background').delay(10).fadeIn('slow');
 	  }else{
+	   isNoInternet = false;
 	   $('.offline-background').delay(10).fadeOut('slow');
+	   
 	}
 }
 const initCheckInternet = async () => {
 	if(navigator.onLine==false){
+		isNoInternet = true;
 	   $('.offline-background').delay(10).fadeIn('slow');
 	}else{
 	   startTime = new Date().getTime();
