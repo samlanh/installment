@@ -32,7 +32,6 @@ function calculateSpeed() {
 	  }else{
 	   $('.offline-background').delay(10).fadeOut('slow');
 	}
-	console.log(speedInKbps);
 }
 const initCheckInternet = async () => {
 	if(navigator.onLine==false){
