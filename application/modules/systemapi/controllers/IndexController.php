@@ -25,6 +25,10 @@ class Systemapi_IndexController extends Zend_Controller_Action
     			$_dbAction->profileAction($GetData);
     		}else if ($GetData['url']=="slieshow"){
     			$_dbAction->slidshowAction($GetData);
+			}else if ($GetData['url']=="news"){
+    			$_dbAction->newsAction($GetData);
+    		}else if ($GetData['url']=="contactus"){
+    			$_dbAction->contactUsAction($GetData);
 			
 			}else if ($GetData['url']=="allRequestList"){
 				$_dbAction->allRequestNotifyAction($GetData);
@@ -109,6 +113,9 @@ class Systemapi_IndexController extends Zend_Controller_Action
 			}else if ($GetData['url']=="formIsService"){
 				$GetData['getControlType'] = "isService";
     			$_dbAction->getFormSearchOptionAction($GetData);
+			}else if ($GetData['url']=="formUserRole"){
+				$GetData['getControlType'] = "roleForApp";
+    			$_dbAction->getFormSearchOptionAction($GetData);
 				
 			}else if ($GetData['url']=="usageNumber"){
 				$_dbAction->getUsageNumberGenerateAction($GetData);
@@ -166,6 +173,17 @@ class Systemapi_IndexController extends Zend_Controller_Action
 					
 				}else if ($GetData['url']=="submitEditProfile"){
 					$_dbAction->submitEditUserProfileAction($postData);
+					
+				}else if ($GetData['url']=="checkExistingUser"){
+    				$_dbAction->checkExistingUserAction($postData);
+				}else if ($GetData['url']=="submitNewUser"){
+					$_dbAction->submitNewUserAction($postData);
+				}else if ($GetData['url']=="resentVerifyCode"){
+					$_dbAction->submitResentVerifyCode($postData);
+				}else if ($GetData['url']=="submitVerifyCode"){
+					$_dbAction->submitVerifyAccountAction($postData);
+				}else if ($GetData['url']=="submitRequestRole"){
+					$_dbAction->submitRequestRoleAccountAction($postData);
     			}
     			else{
     				echo Zend_Http_Response::responseCodeAsText(401,true);
