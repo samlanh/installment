@@ -177,6 +177,17 @@
 </head>
 <body class="nav-md <?php echo $them_style;?> footer_fixed ">
 	<div class="container body">
+		<div class="offline-background">
+			<div class="content-offline">
+				<div class="offline-icon">
+					<i class="fa fa-wifi"></i> 
+				</div>
+				<div class="offline-msg">
+					<h3><?php echo $tr->translate("NO_CONNECTION"); ?></h3>
+					<p><?php echo $tr->translate("PLEASE_CHECK_YOUR_INTERNET_CONNECTION"); ?></p>
+				</div>
+			</div>
+		</div>
     	<div class="main_container">
         	<div class="col-md-3 left_col ">
           		<div class="left_col scroll-view">
@@ -363,6 +374,7 @@ function changeLange(lang){
 	});
 }
 
+
 $(document).ready(function(){
 	$("body").hover(function() {
 		updateTimeOut();
@@ -370,14 +382,17 @@ $(document).ready(function(){
 	});
 	
 	<?php if($systemType==2){?>
-		loadRequestNotification();
-		
-		
-		
+		loadRequestNotification();		
 		 setInterval(function(){ 
 			loadRequestNotification();
 			//loadRequestNotificationConcrete();
 		 }, 60000);
+	<?php } ?>
+	
+	<?php if(INSTALL_TYPE !='1' ){?>
+		setInterval(function(){ 
+			initCheckInternet();
+		 }, 5000);
 	<?php } ?>
 
 	<?php if($module=="loan" AND $action=="add"){ ?>
@@ -619,5 +634,9 @@ function infoMessageAlert(messsageTitle){
 <?php }?>
 <script src="<?php echo $this->baseUrl()?>/admin/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="<?php echo $this->baseUrl()?>/admin/build/js/custom.min.js"></script>
+
+<?php if(INSTALL_TYPE !='1' ){?>
+<script src="<?php echo $this->baseUrl()?>/admin/js/connectivity_status.js"></script>
+<?php } ?>
 <iframe name=print_frame width=0 height=0 frameborder=0 src=about:blank></iframe>
 </body>

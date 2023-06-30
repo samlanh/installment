@@ -8,6 +8,72 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
 		$session_user = new Zend_Session_Namespace(SYSTEM_SES);
 		return $session_user->user_id;
 	}
+	function getAllUsageStockDetail($search)
+	{
+		$DATE_FORMAT = DATE_FORMAT_FOR_SQL;
+		$sql = "SELECT *, 
+		(SELECT project_name FROM `ln_project` WHERE br_id=s.projectId LIMIT 1) AS projectName,
+		(SELECT `proCode` FROM `st_product` WHERE st_product.`proId`=sd.proId LIMIT 1) AS proCode,
+		(SELECT `proName` FROM `st_product` WHERE st_product.`proId`=sd.proId LIMIT 1) AS proName,
+		(SELECT `measureLabel` FROM `st_product` WHERE st_product.`proId`=sd.proId LIMIT 1) AS measureLabel,
+		
+		s.requestNo, s.reqOutNo, s.requestDate, sd.qtyRequest, 
+		
+		(SELECT w.staffName FROM `st_worker` w WHERE w.id=s.staffId LIMIT 1) AS staffName,
+		(SELECT c.staffName FROM `st_contractor` c WHERE c.id=s.contractor LIMIT 1) AS contractor,
+		s.workerName,
+		(SELECT w.workTitle FROM `st_work_type` w WHERE w.id=s.workType LIMIT 1) workType,
+		
+				
+		(SELECT first_name FROM rms_users WHERE id=s.userId LIMIT 1 ) AS user_name,
+		(SELECT name_en FROM ln_view WHERE TYPE=3 AND key_code = s.status LIMIT 1) AS STATUS
+		
+		 FROM `st_stockout` AS s 
+		 INNER JOIN `st_stockout_detail` AS sd  WHERE s.id = sd.stockoutid AND  s.tranType = 1 ";
+
+		$from_date = (empty($search['start_date'])) ? '1' : " s.createDate >= '" . $search['start_date'] . " 00:00:00'";
+		$to_date = (empty($search['end_date'])) ? '1' : " s.createDate <= '" . $search['end_date'] . " 23:59:59'";
+
+		$where_date = " AND " . $from_date . " AND " . $to_date;
+		$where = '';
+
+		if (!empty($search['adv_search'])) {
+			$s_where = array();
+			$s_search = addslashes(trim($search['adv_search']));
+			$s_where[] = " s.requestNo LIKE '%{$s_search}%'";
+			$s_where[] = " s.reqOutNo LIKE '%{$s_search}%'";
+			$s_where[] = " s.workerName LIKE '%{$s_search}%'";
+			$s_where[] = " s.typeofWork LIKE '%{$s_search}%'";
+			$s_where[] = " (SELECT p.id FROM `ln_properties` p WHERE p.id=s.houseId AND p.land_address LIKE '%{$s_search}%' LIMIT 1)";
+
+			$where .= ' AND ( ' . implode(' OR ', $s_where) . ')';
+		}
+		if ($search['branch_id'] > -1 and $search['branch_id'] != '') {
+			$where .= " AND s.projectId = " . $search['branch_id'];
+		}
+		if ($search['workType'] > 0) {
+			$where .= " AND s.workType = " . $search['workType'];
+		}
+		if (!empty($search['propertyType'])) {
+			$where .= " AND s.houseType = " . $search['propertyType'];
+		}
+		if ($search['contractor'] > 0) {
+			$where .= " AND s.contractor = " . $search['contractor'];
+		}
+		if ($search['staffWithdraw'] > 0) {
+			$where .= " AND s.staffId = " . $search['staffWithdraw'];
+		}
+		if ($search['status'] > -1 and $search['status'] != '') {
+			$where .= " AND s.status = " . $search['status'];
+		}
+		$dbg = new Application_Model_DbTable_DbGlobal();
+		$where .= $dbg->getAccessPermission('s.projectId');
+
+		$order = ' ORDER BY s.id DESC  ';
+		$db = $this->getAdapter();
+		return $db->fetchAll($sql . $where_date . $where . $order);
+	}
+
 	function getAllUsageStock($search)
 	{
 		$DATE_FORMAT = DATE_FORMAT_FOR_SQL;

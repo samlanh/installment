@@ -58,9 +58,13 @@ class Product_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 			$isCountStock = ($data[$i]['H']=="មិនរាប់")?0:1;
 			$dbp = new Product_Model_DbTable_DbProduct();
 			$proCode = $dbp->generateProductCode();
+         
+			$str_Replace = str_replace( $data[$i]['B'] , ' ', $data[$i]['C']);
+			$proName = $data[$i]['B'].' '.$str_Replace;
+			
 			$this->_name = "st_product";
 			$_arr=array(
-				'proName'  	  => $data[$i]['C'],
+				'proName'  	  => $proName,
 				'proCode'  	  => $proCode ,
 				'categoryId'  	  => $cateId,
 				'measureId'   	 => $measureId,
