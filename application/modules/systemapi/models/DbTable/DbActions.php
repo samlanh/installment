@@ -1615,4 +1615,114 @@ class Systemapi_Model_DbTable_DbActions extends Zend_Db_Table_Abstract
 		}
 	}
 	
+	public function deleteMyAccountAction($search){
+		try{
+			$search['userId'] = empty($search['userId'])?0:$search['userId'];
+			$search['mobileToken'] = empty($search['mobileToken'])?0:$search['mobileToken'];
+			
+			$db = new Systemapi_Model_DbTable_DbApi();
+			$row = $db->getUserInfById($search['userId']);
+			
+			$rs = $db->deleteMyAccount($search);
+			if($rs){
+				if ($row['status']){
+					if(!empty($row['value'])){
+						$userInfo = $row['value'];
+						$dbGbSt = new Application_Model_DbTable_DbGlobalStock();
+						$userName = empty($userInfo["userName"])?"":$userInfo["userName"];
+						$subjectEmail = "Your account has been delete from BPPT Mobile";
+						if(!empty($userInfo["email"])){
+							$_dataEmail = array(
+								"email" => $userInfo["email"],
+								"subjectEmail" => $subjectEmail,
+								"userName" => $userName,
+								"emailFor" => "deleteAccount",
+							);
+							$dbGbSt->sentEmailFunction($_dataEmail);
+						}
+					}
+				}
+					
+					
+				
+				$arrResult = array(
+					"code" => "SUCCESS",
+					"result" =>$rs,
+				);		
+				
+			}else{
+				$arrResult = array(
+					"code" => "FAIL",
+					"message" => "FAIL_TO_SUBMIT",
+				);
+			}
+			
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}catch(Exception $e){
+			$arrResult = array(
+				"code" => "ERR_",
+				"message" => $e->getMessage(),
+			);
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}
+	}
+	
+	public function forgetPasswordAction($search){
+		try{
+			$search['userId'] = empty($search['userId'])?0:$search['userId'];
+			$search['mobileToken'] = empty($search['mobileToken'])?0:$search['mobileToken'];
+			
+			$db = new Systemapi_Model_DbTable_DbApi();
+			$passwordGenerate = $db->generateNewPasswordNumber();
+			$search['passwordGenerate'] = $passwordGenerate;
+			
+			$rs = $db->forgetMyPassword($search);
+			$row = $db->getUserInfById($search['userId']);
+			if($rs){
+				if ($row['status']){
+					if(!empty($row['value'])){
+						$userInfo = $row['value'];
+						$dbGbSt = new Application_Model_DbTable_DbGlobalStock();
+						$userName = empty($userInfo["userName"])?"":$userInfo["userName"];
+						$subjectEmail = "Forgeting password for BPPT Mobile";
+						if(!empty($userInfo["email"])){
+							$_dataEmail = array(
+								"email" => $userInfo["email"],
+								"subjectEmail" => $subjectEmail,
+								"userName" => $userName,
+								"accountName" => $userInfo["user_name"],
+								"passwordGenerate" => $passwordGenerate,
+								"emailFor" => "forgetPassword",
+							);
+							$dbGbSt->sentEmailFunction($_dataEmail);
+						}
+					}
+				}
+				
+				$arrResult = array(
+					"code" => "SUCCESS",
+					"result" =>$rs,
+				);		
+				
+			}else{
+				$arrResult = array(
+					"code" => "FAIL",
+					"message" => "FAIL_TO_SUBMIT",
+				);
+			}
+			
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}catch(Exception $e){
+			$arrResult = array(
+				"code" => "ERR_",
+				"message" => $e->getMessage(),
+			);
+			print_r(Zend_Json::encode($arrResult));
+			exit();
+		}
+	}
+	
 }
