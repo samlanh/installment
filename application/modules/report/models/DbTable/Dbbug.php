@@ -14,10 +14,19 @@ class Report_Model_DbTable_Dbbug extends Zend_Db_Table_Abstract
       	 FROM `ln_sale`  AS s 
       	 	WHERE s.status =1 AND s.is_cancel=0 AND s.payment_id!=1 AND s.payment_id!=2  ";
       	 //New codiction make query fastest than before
-      	 $sql.=" AND s.price_sold != (SELECT SUM(COALESCE(`principal_permonth`,0)) FROM `ln_saleschedule` WHERE ln_saleschedule.sale_id=s.id  GROUP BY ln_saleschedule.sale_id LIMIT 1)";
-      	 return $db->fetchAll($sql);
+      	 //$sql.=" AND s.price_sold != (SELECT SUM(COALESCE(`principal_permonth`,0)) FROM `ln_saleschedule` WHERE ln_saleschedule.sale_id=s.id  GROUP BY ln_saleschedule.sale_id LIMIT 1)";
+      	
+		$sql.= " AND s.is_completed = 0 "; 
+		$sql.=" AND s.price_sold != (SELECT SUM(COALESCE(`principal_permonth`,0)) FROM `ln_saleschedule` WHERE ln_saleschedule.sale_id=s.id AND (ln_saleschedule.received_userid !=0 OR ln_saleschedule.is_completed =0) GROUP BY ln_saleschedule.sale_id LIMIT 1)";
+		if(!empty($search['branch_id'])){
+    		$sql.= " AND s.branch_id = ".$search['branch_id'];
+		}
+		if(!empty($search['property_type'])){
+    		$sql.= " AND (SELECT pro.property_type FROM ln_properties AS pro WHERE pro.id = s.house_id LIMIT 1) = ".$search['property_type'];
+		}
+		 return $db->fetchAll($sql);
       }
-      function getRealPaid(){//ប្រាក់បានបង់ និងប្រាក់ដែលដកក្នុងតារាង
+      function getRealPaid($search = null){//ប្រាក់បានបង់ និងប្រាក់ដែលដកក្នុងតារាង
       	$db = $this->getAdapter();
       	$sql="
       	SELECT s.id,
@@ -36,10 +45,18 @@ class Report_Model_DbTable_Dbbug extends Zend_Db_Table_Abstract
 	     
 	  	FROM `ln_sale` AS s WHERE s.is_completed=0 AND s.status=1 AND s.is_cancel=0 AND s.payment_id!=1 AND s.payment_id!=2 ";
       	//New codiction make query fastest than before
-      	 $sql.=" AND s.price_sold != (SELECT SUM(COALESCE(`principal_permonth`,0)) FROM `ln_saleschedule` WHERE ln_saleschedule.sale_id=s.id  GROUP BY ln_saleschedule.sale_id LIMIT 1)";
-      	return $db->fetchAll($sql);
+      	 //$sql.=" AND s.price_sold != (SELECT SUM(COALESCE(`principal_permonth`,0)) FROM `ln_saleschedule` WHERE ln_saleschedule.sale_id=s.id  GROUP BY ln_saleschedule.sale_id LIMIT 1)";
+      	
+		$sql.=" AND s.price_sold != (SELECT SUM(COALESCE(`principal_permonth`,0)) FROM `ln_saleschedule` WHERE ln_saleschedule.sale_id=s.id AND (ln_saleschedule.received_userid !=0 OR ln_saleschedule.is_completed =0) GROUP BY ln_saleschedule.sale_id LIMIT 1)";
+		if(!empty($search['branch_id'])){
+    		$sql.= " AND s.branch_id = ".$search['branch_id'];
+		}
+		if(!empty($search['property_type'])){
+    		$sql.= " AND (SELECT pro.property_type FROM ln_properties AS pro WHERE pro.id = s.house_id LIMIT 1) = ".$search['property_type'];
+		}
+		return $db->fetchAll($sql);
       }
-      function getScheduleCompletednotUpdate(){
+      function getScheduleCompletednotUpdate($search = null){
       	$db = $this->getAdapter();
       	$sql="SELECT s.id,
 				(SELECT p.`project_name`  FROM `ln_project` AS p   WHERE p.`br_id` = `s`.`branch_id` LIMIT 1) AS branch_name,
@@ -60,10 +77,17 @@ class Report_Model_DbTable_Dbbug extends Zend_Db_Table_Abstract
       				 AND ss.total_payment_after=0 
       				 AND ss.is_completed=0 
       				";
+		$sql.= " AND s.is_completed = 0 ";
+		if(!empty($search['branch_id'])){
+    		$sql.= " AND s.branch_id = ".$search['branch_id'];
+		}
+		if(!empty($search['property_type'])){
+    		$sql.= " AND (SELECT pro.property_type FROM ln_properties AS pro WHERE pro.id = s.house_id LIMIT 1) = ".$search['property_type'];
+		}
       	$sql.=" GROUP BY s.id ";
       	return $db->fetchAll($sql);
       }
-      function getBeginingBalance(){
+      function getBeginingBalance($search = null){
       	$db = $this->getAdapter();
       	$sql="SELECT 
 		(SELECT p.`project_name`  FROM `ln_project` AS p   WHERE p.`br_id` = `s`.`branch_id` LIMIT 1) AS branch_name,
@@ -86,6 +110,13 @@ class Report_Model_DbTable_Dbbug extends Zend_Db_Table_Abstract
       	$sql.="
       	AND ((s.price_sold - (SELECT SUM(`cr`.`total_principal_permonthpaid`+`cr`.`extra_payment`) FROM `ln_client_receipt_money` `cr` WHERE (`cr`.`sale_id` = `s`.`id`))) - ( COALESCE((SELECT ss.begining_balance FROM `ln_saleschedule` AS ss WHERE ss.sale_id= `s`.`id` AND is_completed=0 AND STATUS=1 ORDER BY ss.no_installment ASC  LIMIT 1  ),0) - COALESCE((SELECT (COALESCE(ss.principal_permonth,0)-COALESCE(ss.principal_permonthafter,0)) FROM `ln_saleschedule` AS ss WHERE ss.sale_id= `s`.`id` AND is_completed=0 AND STATUS=1 AND ss.principal_permonthafter>0 ORDER BY ss.no_installment ASC  LIMIT 1  ),0) ) ) !=0
       	";
+		$sql.= " AND s.is_completed = 0 ";
+		if(!empty($search['branch_id'])){
+    		$sql.= " AND s.branch_id = ".$search['branch_id'];
+		}
+		if(!empty($search['property_type'])){
+    		$sql.= " AND (SELECT pro.property_type FROM ln_properties AS pro WHERE pro.id = s.house_id LIMIT 1) = ".$search['property_type'];
+		}
       	return $db->fetchAll($sql);
       }
  }

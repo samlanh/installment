@@ -76,12 +76,12 @@ class Product_Model_DbTable_DbPreCountProduct extends Zend_Db_Table_Abstract
 					if (!empty($rsProduct)) {
 						$arr = array(
 							'countId' => $tranId,
-							'proId' => $data['proId' . $i],
+							'proId' => $data['proId'.$i],
 							'currentQty' => $rsProduct['currentQty'],
 							//$data['currentQty'.$i],
 							'countQty' => $data['count_qty' . $i],
-							'closingDate' => $data['closing_date' . $i],
-							'note' => $data['note' . $i],
+							'closingDate' => $data['closing_date'.$i],
+							'note' => $data['note'.$i],
 						);
 						$this->_name = 'st_precount_product_detail';
 						$this->insert($arr);

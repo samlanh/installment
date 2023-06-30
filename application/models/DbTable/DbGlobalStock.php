@@ -1317,7 +1317,7 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		$dbGb = new Application_Model_DbTable_DbGlobal();
 		$sql = " 
 		SELECT 
-			'requestingRecord' AS recordType
+				'requestingRecord' AS recordType
 				
 				,rq.date AS recordDate
 				,rq.requestNo AS recordNo
@@ -1422,6 +1422,11 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 					if ($typeNotify == "toPoPurchase") {
 						$notificationTitle = "សំណើបញ្ជាទិញបានអនុម័តសម្រាប់ :  គម្រោង" . str_replace('គម្រោង', '', $recordInfo['projectName']);
 					}
+					
+					$recordInfo['note'] = empty($recordInfo['note'])?"":$recordInfo['note'];
+					$recordInfo['checkingNote'] = empty($recordInfo['checkingNote'])?"":$recordInfo['checkingNote'];
+					$recordInfo['pCheckingNote'] = empty($recordInfo['pCheckingNote'])?"":$recordInfo['pCheckingNote'];
+					$recordInfo['approveNote'] = empty($recordInfo['approveNote'])?"":$recordInfo['approveNote'];
 					$recordDetail = array($recordInfo);
 				}
 			}else if($typeNotify == "toReviewPOConcrete"){
@@ -1469,6 +1474,9 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 				'headings' => $headings,
 				'contents' => $content,
 				"external_id" => null,
+				"ios_badgeType" => "Increase",
+				"ios_badgeCount" => 1,
+				
 	
 			);
 	
@@ -1493,6 +1501,59 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		}catch (Exception $e){
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}
+	}
+	
+	function getMobileContact(){
+		$db = $this->getAdapter();
+		$sql="SELECT l.* FROM mobile_location AS l ORDER BY l.id DESC LIMIT 1 ";
+		return $db->fetchRow($sql);
+	}
+	function sentEmailFunction($data){
+		
+		$email = empty($data["email"]) ? "" : $data["email"];
+		$verifyCode = empty($data["verifyCode"]) ? "" : $data["verifyCode"];
+		$expireDateVerifyCode = empty($data["expireDateVerifyCode"]) ? "" : $data["expireDateVerifyCode"];
+		$userName = empty($data["userName"]) ? "" : $data["userName"];
+		$emailFor = empty($data["emailFor"]) ? "verification" : $data["emailFor"];
+		
+		
+		$rsContact = $this->getMobileContact();
+		//sender
+		$to_Email_admin = empty($rsContact["email"])? 'info@boreyphnompenhthmey.com' : $rsContact["email"];
+		$companyPhone = empty($rsContact["phone"])? '' : $rsContact["phone"];
+		$companyTelegram = empty($rsContact["instagram"])? '' : $rsContact["instagram"];
+		$subject = empty($data["subjectEmail"]) ? "Verification code for BPPT Mobile" : $data["subjectEmail"];
+		
+		
+		
+		$url="http://mailapi.cam-app.com/public/systemapi/index?url=sentEmail";
+		$headers = array('Content-Type: application/x-www-form-urlencoded');
+		$fields =(
+		'email='.$email.'&fromEmail='.$to_Email_admin
+		.'&fromEmail='.$to_Email_admin
+		.'&companyPhone='.$companyPhone
+		.'&companyTelegram='.$companyTelegram
+		.'&subjectEmail='.$subject
+		.'&verifyCode='.$verifyCode
+		.'&expireDateVerifyCode='.$expireDateVerifyCode
+		.'&userName='.$userName
+		.'&emailFor='.$emailFor
+		);
+		
+		$curl = curl_init();
+		  curl_setopt_array($curl, array(
+			  CURLOPT_URL => $url,
+			  CURLOPT_RETURNTRANSFER => true,
+			  CURLOPT_TIMEOUT => 300000,
+			  CURLOPT_POST => true,
+			  CURLOPT_POSTFIELDS =>$fields,
+			  CURLOPT_HTTPHEADER => $headers));
+		  $respone = curl_exec($curl);
+		  $err = curl_error($curl);//you can echo curl error
+		  curl_close($curl);//you need to close curl connection
+		  
+		  Application_Model_DbTable_DbUserLog::writeMessageError($respone);
+		return $respone;
 	}
 
 	
