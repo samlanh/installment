@@ -57,6 +57,7 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 			WHERE s.active = 1 AND s.id = $userId ";
 			$row = $db->fetchRow($sql);
 			
+			$row = empty($row) ? array():$row;
 			$result = array(
 					'status' =>true,
 					'value' =>$row,
@@ -655,7 +656,7 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 			$processingStatus = $dbGbSt->requestingProccess($arrStep);
 			if(!empty($requestList)) foreach($requestList AS $request){
 				$requestId = $request['id'];
-				
+				$request['note'] = empty($request['note'])?"":$request['note'];
 				$arr = array(
 						'checkingNote'			=>$request['note'],
 						'checkingDate'			=>date("Y-m-d"),
@@ -743,7 +744,7 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 			$processingStatus = $dbGbSt->requestingProccess($arrStep);
 			if(!empty($requestList)) foreach($requestList AS $request){
 				$requestId = $request['id'];
-						
+				$request['pCheckingNote'] = empty($request['pCheckingNote'])?"":$request['pCheckingNote'];		
 				$arr = array(
 						'pCheckingNote'			=>$request['pCheckingNote'],
 						'pCheckingDate'			=>date("Y-m-d"),
@@ -829,7 +830,7 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 			$processingStatus = $dbGbSt->requestingProccess($arrStep);
 			if(!empty($requestList)) foreach($requestList AS $request){
 				$requestId = $request['id'];
-					
+				$request['approveNote'] = empty($request['approveNote'])?"":$request['approveNote'];
 				$arr = array(
 						'approveNote'		=>$request['approveNote'],
 						'approveDate'		=>date("Y-m-d"),
@@ -917,10 +918,9 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
     }
 	
 	
-	function getPORequestToReceive($_data=array()){
+	function getAllPurchasingByRequest($_data=array()){
 		$db=$this->getAdapter();
 		try{
-			
 			$_data['userId'] 	 = empty($_data['userId'])?0:$_data['userId'];
 			$dbGBstock = new Application_Model_DbTable_DbGlobalStock();
 			$arrStep = array(
@@ -951,7 +951,7 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 					,(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.approveBy LIMIT 1 ) AS approveByName
 					,(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=rq.userId LIMIT 1 ) AS requestByName
 					,(SELECT  CONCAT(COALESCE(u.last_name,''),' ',COALESCE(u.first_name,'')) FROM rms_users AS u WHERE u.id=po.userId LIMIT 1 ) AS purchaseByName
-				
+					,(SELECT pod.isClosed FROM st_purchasing_detail AS pod WHERE pod.purchaseId = po.id ORDER BY pod.isClosed ASC LIMIT 1) isCompletedReceive
 			";
 			
 			$sql.=" 
@@ -960,6 +960,9 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 					LEFT JOIN `st_supplier` AS spp ON spp.id = po.supplierId  ";
 			$sql.=" WHERE po.purchaseType=".$purchaseType."
 					AND po.status = 1 ";
+			if(!empty($_data['forReceivedDn'])){
+				$sql.=" AND (SELECT pod.isClosed FROM st_purchasing_detail AS pod WHERE pod.purchaseId = po.id ORDER BY pod.isClosed ASC LIMIT 1) = 0 ";
+			}				
 			
 			$sql.=$this->getAccessPermission("po.projectId",$_data);
 			$sql.=" ORDER BY po.id DESC";
@@ -989,6 +992,54 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 			return $result;
 		}
 				
+	}
+	
+	function getDetailPurchaseByRequest($_data){
+		$db = $this->getAdapter();
+		try{
+
+			$_data['userId'] 	 = empty($_data['userId'])?0:$_data['userId'];
+			$recordId 	 = empty($_data['recordId'])?0:$_data['recordId'];
+			
+			$sql=" 	SELECT 
+					pod.*,
+					p.proCode,
+					p.proName,
+					p.image AS productImage,
+					p.measureLabel AS measureTitle
+					
+					,(SELECT GROUP_CONCAT(rsd1.qtyReceive) FROM st_receive_stock AS rs,st_receive_stock_detail AS rsd1 WHERE rsd1.receiveId=rs.id AND rsd1.proId = pod.proId AND po.requestId=rs.requestId AND rs.status =1 ) AS totalReceiveQty
+					,(SELECT GROUP_CONCAT(rs.dnNumber) FROM st_receive_stock AS rs,st_receive_stock_detail AS rsd1 WHERE rsd1.receiveId=rs.id AND rsd1.proId = pod.proId AND po.requestId=rs.requestId AND rs.status =1 ) AS dnNumberList
+					,(SELECT GROUP_CONCAT(rs.id) FROM st_receive_stock AS rs,st_receive_stock_detail AS rsd1 WHERE rsd1.receiveId=rs.id AND rsd1.proId = pod.proId AND po.requestId=rs.requestId AND rs.status =1 ) AS dnIdList
+					,(SELECT GROUP_CONCAT(rs.receiveDate) FROM st_receive_stock AS rs,st_receive_stock_detail AS rsd1 WHERE rsd1.receiveId=rs.id AND rsd1.proId = pod.proId AND po.requestId=rs.requestId AND rs.status =1 ) AS dnReceiveDateList
+					
+				";
+			$sql.="	FROM 
+						`st_purchasing_detail` as pod
+						JOIN `st_purchasing` AS po ON po.id = pod.purchaseId
+						LEFT JOIN `st_product` AS p  ON p.proId = pod.proId 
+			";
+			$sql.=" WHERE 1 AND pod.purchaseId IN ($recordId) ";	
+			
+			$sql.=$this->getAccessPermission("po.projectId",$_data);
+			$sql.=" ORDER BY pod.purchaseId DESC ";
+			
+			$rs = $db->fetchAll($sql);
+			
+			$result = array(
+						'status' =>true,
+						'value' =>$rs,
+					);
+			return $result;
+			
+		}catch(Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$result = array(
+				'status' =>false,
+				'value' =>$e->getMessage(),
+			);
+			return $result;
+		}
 	}
 	
 	public function getAllDNToVerifyNotify($_data){
@@ -1458,6 +1509,13 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 				$row = $this->getAllBudgetType(0,'','');
 			}else if($getControlType=="budgetItem"){	
 				$row = $this->getAllBudgetItem(0,'','',$_data);
+				
+			}else if($getControlType=="roleForApp"){
+				$row = array(
+					array("id"=>1,"name"=>$currentLang==1 ? "Warehouse Staff" : "Warehouse Staff"),
+					array("id"=>2,"name"=>$currentLang==1 ? "Warehouse MG" : "Warehouse MG"),
+					array("id"=>3,"name"=>$currentLang==1 ? "PO Department" : "PO Department"),
+				);
 			}
 			
 			$result = array(
@@ -2424,7 +2482,7 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
 		$db->beginTransaction();
     	try{
-			Application_Model_DbTable_DbUserLog::writeMessageError("A");
+			
 			$_data['userId']	= empty($_data['userId'])?0:$_data['userId'];
 			$_data['branchId']	= empty($_data['branchId'])?0:$_data['branchId'];
 			$_data['note']	= empty($_data['note'])?"":$_data['note'];
@@ -2550,6 +2608,372 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
     		return false;
     	}
     }
+	
+	function submitEditUserProfile($_data){
+    	$db = $this->getAdapter();
+		$db->beginTransaction();
+    	try{
+			
+			$_data['userId']	= empty($_data['userId'])?0:$_data['userId'];
+			
+			$arr = array(
+				'personal_doc_no' 		=> $_data['personal_doc_no'],
+				'current_address' 		=> $_data['current_address'],
+				'nationality' 	=> $_data['nationality'],
+			);
+			$part = PUBLIC_PATH . '/images/photo/profile/';
+			if (!file_exists($part)) {
+				mkdir($part, 0777, true);
+			}
+			if(!empty($_data['photo'])){
+				$fileExtension="jpg";
+				if(!empty($_data['imageName'])){
+					$tem = explode(".", $_data['imageName']);
+					$fileExtension=end($tem);
+					if( end($tem) !="jpg" || end($tem) !="png"){
+						$fileExtension="jpg";
+					}
+				}
+				$image_name = "user_profile_" . date("Y") . date("m") . date("d") . time() . ".".$fileExtension;
+				$outputFile = $part.$image_name;
+				$fileHandle = fopen($outputFile,"wb");
+				fwrite($fileHandle,base64_decode($_data["photo"]));
+				fclose($fileHandle);
+				$arr['photo'] = $image_name;
+				
+				if(!empty($_data['oldPhotoName'])){
+					unlink($part . $_data['oldPhotoName']);
+				}
+			}
+    		$where = 'id = ' . $_data['userId'];
+			$this->_name='rms_users';
+			$this->update($arr, $where);
+    		
+			
+			$db->commit();
+    		return true;
+    	}catch (Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$db->rollBack();
+    		return false;
+    	}
+    }
+	
+	
+	public function getAllContact($search){
+    	$db = $this->getAdapter();
+    	try{
+    		$currentLang = empty($search['currentLang'])?1:$search['currentLang'];
+    		
+    		$sql=" SELECT 
+						ad.title,ad.description
+					FROM `mobile_about` AS a,
+						`mobile_about_detail` AS ad
+					WHERE a.id=ad.abouts_id
+						AND ad.lang= $currentLang AND a.status=1 ";
+    		if (!empty($search['isForHome'])){
+				$sql.=" AND a.isForHome = 1 ";
+			}
+    		$rowabout = $db->fetchAll($sql);
+    		
+    		$sql=" SELECT
+    		l.*,
+    		ld.title,ld.description
+    		FROM `mobile_location` AS l,
+    		`mobile_location_detail` AS ld
+    		WHERE l.id=ld.location_id
+    		AND ld.lang= $currentLang ";
+    		
+    		$rowcontact = $db->fetchRow($sql);
+    		
+    		$all_result = array('about'=>$rowabout,'contact'=>$rowcontact);
+    		
+    		$result = array(
+    				'status' =>true,
+    				'value' =>$all_result,
+    		);
+    		return $result;
+    	}catch(Exception $e){
+    		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+    		$result = array(
+    				'status' =>false,
+    				'value' =>$e->getMessage(),
+    		);
+    		return $result;
+    	}
+    }
+	public function getAllNews($search){
+    	$db = $this->getAdapter();
+    	try{
+	    		$currentLang = empty($search['currentLang'])?1:$search['currentLang'];
+	    		$base_url = Zend_Controller_Front::getInstance()->getBaseUrl()."/images/";
+		    	
+		    	$sql="SELECT
+			    	act.*,
+			    	(SELECT ad.description FROM `mobile_news_event_detail` AS ad WHERE ad.news_id = act.`id` AND ad.lang=$currentLang LIMIT 1) AS description,
+			    	(SELECT ad.title FROM `mobile_news_event_detail` AS ad WHERE ad.news_id = act.`id` AND ad.lang=$currentLang LIMIT 1) AS title,
+			    	DATE_FORMAT(act.`publish_date`, '%d-%m-%Y') AS publishDateFormat,
+			    	act.image_feature,
+			    	(SELECT u.first_name FROM `rms_users` AS u WHERE u.id = act.`user_id` LIMIT 1) AS user_name,
+			    	CASE
+					   	WHEN  act.`status` = 1 THEN '$base_url'
+					  END AS imageUrl
+					,CASE
+						WHEN  re.`is_read` IS NULL THEN 0
+						ELSE  re.`is_read`
+						END AS isRead
+		    	";
+		    	$sql.=" FROM `mobile_news_event` AS act  ";
+				$userId = empty($search['userId'])?0:$search['userId'];
+				$sql.=" LEFT JOIN `mobile_news_event_read` AS re ON act.`id` = re.newsId  AND re.`userId` =$userId ";
+				
+		    	$sql.=" WHERE act.`status` =1 ";
+		    	$sql_order= "  ORDER BY act.publish_date DESC,act.`id` DESC";
+		    	
+		    	if (!empty($search['limit'])){
+		    		$sql_order.= "  LIMIT ".$search['limit'];
+		    	}
+				
+				//New Added
+				if(!empty($search['LimitStart'])){
+					$sql_order.=" LIMIT ".$search['LimitStart'].",".$search['limitRecord'];
+				}else if(!empty($search['limitRecord'])){
+					$sql_order.=" LIMIT ".$search['limitRecord'];
+				}
+				if(!empty($search['unreadRecord'])){
+					$sql.=" AND  0 = CASE
+						WHEN  re.`is_read` IS NULL THEN 0
+						ELSE  re.`is_read`
+						END  ";
+					return $row = $db->fetchAll($sql.$sql_order);
+				}
+			
+		    $row = $db->fetchAll($sql.$sql_order);
+		    
+		    $sql.=" AND is_feature=2 ";
+		    
+		    $row_feature = $db->fetchAll($sql.$sql_order);
+		     
+		    $merch_result = array('feature_news'=>$row_feature,'normal_news'=>$row);
+		   
+		    $result = array(
+		    		'status' =>true,
+		    		'value' =>$merch_result,
+		    );
+		    return $result;
+	    }catch(Exception $e){
+	    	Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+	    	$result = array(
+	    			'status' =>false,
+	    			'value' =>$e->getMessage(),
+	    	);
+	    	return $result;
+	    }
+    }
+	
+	
+	function getCheckExistingUser($_data){
+		$db = $this->getAdapter();
+		$_data['phoneNumber']=trim($_data['phoneNumber']);
+		$_data['countryCode']=trim($_data['countryCode']);
+		$_data['userName']=trim($_data['userName']);
+		$_data['emailAddress']=trim($_data['emailAddress']);
+		
+		$_data['isCheckUserName'] = empty($_data['isCheckUserName'])?0:$_data['isCheckUserName'];
+		try{
+			$sql =" SELECT
+				s.*
+				,s.user_type AS userType
+				,s.userAction AS userAction
+				,s.photo AS photo
+				,s.branch_list AS branchList
+				,CONCAT(COALESCE(s.last_name,''),' ',COALESCE(s.first_name,'')) as userName
+			FROM
+				rms_users AS s
+			WHERE 1 ";
+			
+			if($_data['isCheckUserName']=="0"){
+				$sql.= " AND s.phoneNumber= '".$_data['phoneNumber']."'";
+				$sql.= " AND s.countryCode='".$_data['countryCode']."'";
+			}else if($_data['isCheckUserName']=="1"){
+				$sql.= " AND s.user_name='".$_data['userName']."'";
+			}else if($_data['isCheckUserName']=="2"){
+				$sql.= " AND s.email='".$_data['emailAddress']."'";
+			}
+			
+			$sql.=" LIMIT 1 ";
+			$row = $db->fetchRow($sql);
+			$row = empty($row) ? null : $row;
+			$result = array(
+					'status' =>true,
+					'value' =>$row,
+			);
+			return $result;
+	
+		}catch(Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$result = array(
+					'status' =>false,
+					'value' =>$e->getMessage(),
+			);
+			return $result;
+		}
+	}
+	
+	function radomNumber(){
+		$digits = 4;
+		return str_pad(rand(0, pow(10, $digits)-1), $digits, '0', STR_PAD_LEFT);
+	}
+	function submitNewUser($_data){
+    	$db = $this->getAdapter();
+		$db->beginTransaction();
+    	try{
+			
+			$_data['userId']	= empty($_data['userId'])?0:$_data['userId'];
+			$_data['branchId']	= empty($_data['branchId'])?0:$_data['branchId'];
+			$_data['note']	= empty($_data['note'])?"":$_data['note'];
+		
+			$arr = array(
+				'first_name' 		=> $_data['firstName'],
+				'last_name' 		=> $_data['lastName'],
+				'nationality' 		=> $_data['nationality'],
+				'personal_doc_no' 	=> $_data['nationId'],
+				'current_address' 	=> $_data['currentAddress'],
+				'email' 			=> $_data['emailAddress'],
+				
+				'user_name' 		=> $_data['userName'],
+				'password' 			=> md5($_data['password']),
+				
+				'systemAccess' 		=> 2,
+				'createDate' 		=> date("Y-m-d H:i:s"),
+				'modifyDate' 		=> date("Y-m-d H:i:s"),
+				'active' 			=> 1,
+				'isVerifiedAccount' 	=> 0,
+				'requestRoleCompleted' 	=> 0,
+				'verifyCode' 			=> $this->radomNumber(),
+				'expireDateVerifyCode' 	=> date("Y-m-d H:i:s",strtotime("+1 day")),
+			);
+			
+    		$this->_name='rms_users';
+    		$userId = $this->insert($arr);
+    		
+			
+			$db->commit();
+			$result = array(
+					'status' =>true,
+					'value' =>$userId,
+			);
+			return $result;
+    		
+    	}catch (Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$db->rollBack();
+			$result = array(
+					'status' =>false,
+					'value' =>$e->getMessage(),
+			);
+			return $result;
+    	}
+    }
+	
+	function updateVerifcationCode($_data){
+    	$db = $this->getAdapter();
+		$db->beginTransaction();
+    	try{
+			
+			$userId	= empty($_data['userId'])?0:$_data['userId'];
+			$arr = array(
+				'verifyCode' 			=> $this->radomNumber(),
+				'expireDateVerifyCode' 	=> date("Y-m-d H:i:s",strtotime("+1 day")),
+			);
+			
+    		$where = 'id = ' . $userId;
+			$this->_name='rms_users';
+			$this->update($arr, $where);
+		
+			$db->commit();
+			$result = array(
+					'status' =>true,
+					'value' =>$userId,
+			);
+			return $result;
+    		
+    	}catch (Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$db->rollBack();
+			$result = array(
+					'status' =>false,
+					'value' =>$e->getMessage(),
+			);
+			return $result;
+    	}
+    }
+	
+	function verifyCodeAndUpdateAccount($_data){
+		$db = $this->getAdapter();
+		$userId = empty($_data['userId'])?"0":$_data['userId'];
+		$_data['verifyCode'] = empty($_data['verifyCode'])?"":$_data['verifyCode'];
+		$verifyCode=trim($_data['verifyCode']);
+		
+		
+		$_data['isCheckUserName'] = empty($_data['isCheckUserName'])?0:$_data['isCheckUserName'];
+		try{
+			$sql =" SELECT
+				s.*
+				,s.user_type AS userType
+				,s.userAction AS userAction
+				,s.photo AS photo
+				,s.branch_list AS branchList
+				,CONCAT(COALESCE(s.last_name,''),' ',COALESCE(s.first_name,'')) as userName
+			FROM
+				rms_users AS s
+			WHERE 1 ";
+			$sql.= " AND s.id= '".$userId."'";
+			$sql.= " AND s.verifyCode= '".$verifyCode."'";
+			$sql.=" LIMIT 1 ";
+			$row = $db->fetchRow($sql);
+			if(!empty($row)){
+				$arr = array(
+					'isVerifiedAccount'  => 1,
+					'modifyDate' 		 => date("Y-m-d H:i:s"),
+				);
+				$where = 'id = ' . $userId;
+				$this->_name='rms_users';
+				$this->update($arr, $where);
+				return true;
+			}else{
+				return false;
+			}
+			
+		}catch(Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			return false;
+		}
+	}
+	
+	function requestRoleForAccount($_data){
+		$db = $this->getAdapter();
+		$userId = empty($_data['userId'])?"0":$_data['userId'];
+		$_data['branchId'] = empty($_data['branchId'])?"0":$_data['branchId'];
+		$_data['userAction'] = empty($_data['userAction'])?"0":$_data['userAction'];
+		
+		
+		try{
+			$arr = array(
+				'requestUserAction'  => $_data['branchId'],
+				'requestBranchId'  => $_data['userAction'],
+				'modifyDate' 		 => date("Y-m-d H:i:s"),
+			);
+			$where = 'id = ' . $userId;
+			$this->_name='rms_users';
+			$this->update($arr, $where);
+			return true;
+			
+		}catch(Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			return false;
+		}
+	}
 	
 	
 }
