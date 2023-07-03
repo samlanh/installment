@@ -791,7 +791,9 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
 	{
 		$db = $this->getAdapter();
 		if ($data['monthlytype'] == 1) { //month
+			
 			$date = date("Y-m", strtotime($date));
+			
 			$sql = "SELECT 
 					SUM(total)
 				FROM `st_budget_expense` be,
@@ -810,17 +812,36 @@ class Report_Model_DbTable_DbStockReports extends Zend_Db_Table_Abstract
 				$sql .= " AND DATE_FORMAT(be.createDate,'%Y-%m')='" . $data['date'] . "'";
 			}
 			$sql .= " GROUP BY bed.budgetItemId ";
-			//     		$sql="SELECT
-			// 	    				SUM(ex.total_amount) AS totalbymonth
-			// 	    			FROM 
-			// 	    				`ln_expense` AS ex
-			//     				WHERE ex.status=1 AND DATE_FORMAT(ex.date,'%Y-%m') ='$date'";
+			
 			$totatBudget = $db->fetchOne($sql);
+			
+			
+			$sql="SELECT
+					SUM(ex.totalAmount) AS totalbymonth
+					FROM
+						`st_expense` AS ex
+				WHERE ex.status=1 ";
+			if (!empty($data['date'])) {
+				$sql .= " AND DATE_FORMAT(ex.paymentDate,'%Y-%m')='".$data['date']."'";
+			}
+			if (!empty($data['budgetItemId'])) {
+				$sql .= " AND ex.budgetId=" . $data['budgetItemId'];
+			}
+			if (!empty($data['projectId'])) {
+				$sql .= " AND ex.projectId=" . $data['projectId'];
+			}
+			$sql .= " GROUP BY ex.budgetId ";
+			
+			$totatBudgetExpense = $db->fetchOne($sql);
+			if(empty($totatBudgetExpense)){
+				$totatBudgetExpense=0;
+			}
+			
 			if (empty($totatBudget)) {
 				$totatBudget = 0;
 			}
 
-			return $totatBudget;
+			return $totatBudget+$totatBudgetExpense;
 		} else { //year
 			//$date = date("Y",strtotime($date));
 
