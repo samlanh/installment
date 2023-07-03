@@ -67,11 +67,16 @@ class Product_Model_DbTable_DbClosingStock extends Zend_Db_Table_Abstract
 			$this->updatePreviousClosingEntry($projectId, $data['date']);
 
 			$dbs = new Application_Model_DbTable_DbGlobalStock();
+			
+			$date= new DateTime($data['date']);
+			$date->modify('+1 day');
+			$next_payment = $date->format("Y-m-d");
+			
 			$arr = array(
 				'projectId' => $projectId,
 				'adjustId' => $data['adjustDate'],
-				'closingDate' => $data['date'],
-				'fromDate' => $data['date'],
+				'closingDate' => $next_payment,
+				'fromDate' => $next_payment,//increase 1 day
 				'note' => $data['note'],
 				'userId' => $this->getUserId(),
 				'createDate' => date('Y-m-d h:s'),

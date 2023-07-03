@@ -1042,7 +1042,7 @@ public function getAllOutstadingLoan($search=null){
       
       	
       	$dbp = new Application_Model_DbTable_DbGlobal();
-      	$sql.=$dbp->getAccessPermission("s.branch_id");
+      	$where.=$dbp->getAccessPermission("s.branch_id");
       	
       	if(!empty($search['adv_search'])){
 			$s_search = addslashes(trim($search['adv_search']));

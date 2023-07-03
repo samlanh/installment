@@ -875,7 +875,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	if($this->currentlang()==2){
   		$string = "name_en";
   	}
-  	$sql = " SELECT key_code AS id,$string as name FROM ln_view where type=$type AND $string!='' AND `parent_id` = $parent ";
+  	$sql = " SELECT key_code AS id,$string as name FROM ln_view where status=1 AND type=$type AND $string!='' AND `parent_id` = $parent ";
   	$query = $db->fetchAll($sql);
   	$rowCount = count($query);
   	$id='';
