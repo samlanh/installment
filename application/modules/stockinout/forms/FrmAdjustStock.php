@@ -59,7 +59,7 @@ class Stockinout_Form_FrmAdjustStock extends Zend_Dojo_Form
  			'dojoType'=>'dijit.form.DateTextBox',
  			'class'=>'fullside',
  			'constraints'=>"{datePattern:'dd/MM/yyyy'}",
-			'readOnly'=>'readOnly ',
+			//'readOnly'=>'readOnly ',
  		));
 		$date->setValue(date("Y-m-d"));
 		
