@@ -1556,8 +1556,6 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		  $respone = curl_exec($curl);
 		  $err = curl_error($curl);//you can echo curl error
 		  curl_close($curl);//you need to close curl connection
-		  
-		  Application_Model_DbTable_DbUserLog::writeMessageError($respone);
 		return $respone;
 	}
 
