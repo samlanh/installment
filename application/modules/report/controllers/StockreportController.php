@@ -110,15 +110,15 @@ class Report_StockreportController extends Zend_Controller_Action
 				$search = $this->getRequest()->getPost();
 			} else {
 				$search = array(
-					// 'adv_search' => '',
-					// 'branch_id' => -1,
-					// 'status' => -1,
-					// 'propertyType' => '',
-					// 'workType' => 0,
-					// 'contractor' => 0,
-					// 'staffWithdraw' => 0,
-					// 'start_date' => date('Y-m-d'),
-					// 'end_date' => date('Y-m-d'),
+					'adv_search' => '',
+					'branch_id' => -1,
+					'status' => -1,
+					'propertyType' => '',
+					'workType' => 0,
+					'contractor' => 0,
+					'staffWithdraw' => 0,
+					'start_date' => date('Y-m-d'),
+					'end_date' => date('Y-m-d'),
 				);
 			}
 
