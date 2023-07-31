@@ -57,7 +57,7 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 			WHERE s.active = 1 AND s.id = $userId ";
 			$row = $db->fetchRow($sql);
 			
-			$row = empty($row) ? array():$row;
+			$row = empty($row) ? null:$row;
 			$result = array(
 					'status' =>true,
 					'value' =>$row,
@@ -2614,10 +2614,11 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 		$db->beginTransaction();
     	try{
 			
-			$_data['userId']	= empty($_data['userId'])?0:$_data['userId'];
+			$_data['userId'] = empty($_data['userId'])?0:$_data['userId'];
+			$_data['dob'] 	 = empty($_data['dob']) ? "" :$_data['dob'];
 			
 			$arr = array(
-				'personal_doc_no' 		=> $_data['personal_doc_no'],
+				'dob' 		=> $_data['dob'],
 				'current_address' 		=> $_data['current_address'],
 				'nationality' 	=> $_data['nationality'],
 			);
@@ -2790,7 +2791,7 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 				,CONCAT(COALESCE(s.last_name,''),' ',COALESCE(s.first_name,'')) as userName
 			FROM
 				rms_users AS s
-			WHERE 1 ";
+			WHERE s.active != '-1' ";
 			
 			if($_data['isCheckUserName']=="0"){
 				$sql.= " AND s.phoneNumber= '".$_data['phoneNumber']."'";
@@ -2837,7 +2838,6 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 				'first_name' 		=> $_data['firstName'],
 				'last_name' 		=> $_data['lastName'],
 				'nationality' 		=> $_data['nationality'],
-				'personal_doc_no' 	=> $_data['nationId'],
 				'current_address' 	=> $_data['currentAddress'],
 				'email' 			=> $_data['emailAddress'],
 				
@@ -2965,6 +2965,57 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 				'modifyDate' 		 => date("Y-m-d H:i:s"),
 			);
 			$where = 'id = ' . $userId;
+			$this->_name='rms_users';
+			$this->update($arr, $where);
+			return true;
+			
+		}catch(Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			return false;
+		}
+	}
+	
+	function deleteMyAccount($_data){
+		$db = $this->getAdapter();
+		$userId = empty($_data['userId'])?"0":$_data['userId'];
+		$_data['branchId'] = empty($_data['branchId'])?"0":$_data['branchId'];
+		$_data['emailAddress'] = empty($_data['emailAddress'])?"0":$_data['emailAddress'];
+		
+		
+		try{
+			$arr = array(
+				'active'  => -1,
+				'modifyDate' 		 => date("Y-m-d H:i:s"),
+			);
+			$where = 'id = ' . $userId." AND email ='".$_data['emailAddress']."'";
+			$this->_name='rms_users';
+			$this->update($arr, $where);
+			return true;
+			
+		}catch(Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			return false;
+		}
+	}
+	
+	
+	function generateNewPasswordNumber(){
+		$digits = 8;
+		return str_pad(rand(0, pow(10, $digits)-1), $digits, '0', STR_PAD_LEFT);
+	}
+	function forgetMyPassword($_data){
+		$db = $this->getAdapter();
+		$userId = empty($_data['userId'])?"0":$_data['userId'];
+		$_data['branchId'] = empty($_data['branchId'])?"0":$_data['branchId'];
+		$_data['emailAddress'] = empty($_data['emailAddress'])?"0":$_data['emailAddress'];
+		$_data['passwordGenerate'] = empty($_data['passwordGenerate'])?"0":$_data['passwordGenerate'];
+		
+		try{
+			$arr = array(
+				'password' 			=> md5($_data['passwordGenerate']),
+				'modifyDate' 		 => date("Y-m-d H:i:s"),
+			);
+			$where = "email ='".$_data['emailAddress']."'";
 			$this->_name='rms_users';
 			$this->update($arr, $where);
 			return true;

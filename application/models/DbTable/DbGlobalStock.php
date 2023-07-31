@@ -1516,6 +1516,9 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		$userName = empty($data["userName"]) ? "" : $data["userName"];
 		$emailFor = empty($data["emailFor"]) ? "verification" : $data["emailFor"];
 		
+		$accountName = empty($data["accountName"]) ? "" : $data["accountName"];
+		$passwordGenerate = empty($data["passwordGenerate"]) ? "" : $data["passwordGenerate"];
+		
 		
 		$rsContact = $this->getMobileContact();
 		//sender
@@ -1538,6 +1541,8 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		.'&expireDateVerifyCode='.$expireDateVerifyCode
 		.'&userName='.$userName
 		.'&emailFor='.$emailFor
+		.'&accountName='.$accountName
+		.'&passwordGenerate='.$passwordGenerate
 		);
 		
 		$curl = curl_init();
@@ -1551,8 +1556,6 @@ class Application_Model_DbTable_DbGlobalStock extends Zend_Db_Table_Abstract
 		  $respone = curl_exec($curl);
 		  $err = curl_error($curl);//you can echo curl error
 		  curl_close($curl);//you need to close curl connection
-		  
-		  Application_Model_DbTable_DbUserLog::writeMessageError($respone);
 		return $respone;
 	}
 

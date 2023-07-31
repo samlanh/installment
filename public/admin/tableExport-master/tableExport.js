@@ -19,7 +19,7 @@
                 displayTableName: false,
                 escape: false,
                 excelstyles: [],       // e.g. ['border-bottom', 'border-top', 'border-left', 'border-right']
-                fileName: 'tableExport',
+                fileName: 'documentExport',
                 htmlContent: false,
                 ignoreColumn: [],
                 ignoreRow:[],

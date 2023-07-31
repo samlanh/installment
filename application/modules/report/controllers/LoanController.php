@@ -509,6 +509,7 @@ class Report_LoanController extends Zend_Controller_Action {
  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
  }
 
+ /*
  function rptPaymentschedulesttAction(){
 	$db = new Report_Model_DbTable_DbRptPaymentSchedule();
 	$id =$this->getRequest()->getParam('id');
@@ -534,6 +535,7 @@ class Report_LoanController extends Zend_Controller_Action {
 	$key = new Application_Model_DbTable_DbKeycode();
 	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
 }
+ */
  function rptPaymentreminderAction(){
  	$db = new Report_Model_DbTable_DbRptPaymentSchedule();
  	$id =$this->getRequest()->getParam('id');
