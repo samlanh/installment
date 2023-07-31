@@ -1,0 +1,447 @@
+<?php $tran = $this->tran_schedule;
+	$client = $this->client;
+	$filter = $this->form_filter;
+	$dayin_khmer = $this->day_inkhmer;
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$key = new Application_Model_DbTable_DbKeycode();
+	$dataterm = $key->getKeyCodeMiniInv(TRUE);
+	
+	$dbparmeter = new Report_Model_DbTable_DbParamater();
+	$paymentCondiction = PAYMENT_CONDICTION_SCHEDULE;
+	$month = array("01"=>"មករា","02"=>"កុម្ភៈ","03"=>"មីនា","04"=>"មេសា","05"=>"ឧសភា","06"=>"មិថុនា","07"=>"កក្កដា","08"=>"សីហា","09"=>"កញ្ញា","10"=>"តុលា","11"=>"វិច្ឆិកា","12"=>"ធ្នូ",);
+?>
+<title><?php echo $tr->translate('Payment Schedule');?></title>
+<style>
+	td p{ margin-top:0px !important;}
+	#printfooter{display: none !important;}
+	h2{line-height: 25px !important;}
+</style>
+<div style="margin:0 auto; padding: 0 40px;">
+	<div id="divPrint">
+		<style type="text/css">
+			.style{
+				line-height: 20px;font-size: 12px;
+				font-family: 'Times New Roman','Khmer OS Battambang';
+			}
+			.font_bold{
+				font-family:'Khmer OS Muol Light Light';
+				font-size: 14px;
+			}
+			td p{ margin-top:-12px;}
+			table#exportExcel { page-break-inside:auto }
+			table#exportExcel tr{ page-break-inside:avoid; page-break-after:auto; }
+			#header {
+			  display: table-header-group;
+			  page-break-inside:avoid; page-break-after:auto;
+			}
+			.hover:hover{background: #ccc;}
+			#printfooter {
+					 position: absolute;
+		    bottom: 0;
+		    position: fixed;
+		    display: block ;
+			width:100%;
+				}
+			h2{line-height: 10px;}
+			p.lblhousecode{
+			 overflow-wrap: break-word;
+			white-space: normal;
+			width: 250px;
+			display: block;
+			line-height: 24px;
+			}
+			@media print{
+				@page {
+					page: A4;
+					size: portrait;;
+					margin: 0.8cm 0.8cm 0.2cm 0.8cm;
+				}
+			}
+	</style>
+<table style="font-family: 'Khmer OS Content'; width:100%;"  >
+		<tr>
+	    	<td align="center">
+	        	<table width="100%" style="font-family:khmer;margin:0 auto;padding:0px; border:none;">
+	            	<tr>
+	                	<td width="25%" style="">
+	                		
+	                	</td>
+	                	<td width="50%" valign="top">
+		                	<h2 style="text-align:center; font-weight:normal; font-size:13px; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate("BRANCH_NAME");?> : <?php echo  $client['branch_name']; ;?></h2>
+		                	<h2 style="text-align:center;  font-weight:normal; font-size:13px; font-family:'Khmer OS Muol Light'"> <?php echo $tr->translate('តារាងឧបសម្ព័ន្ធ១បង់ប្រាក់');?></h2>
+	                	</td>
+	                    <td width="25%" ><h2 style="text-align:center; font-weight:normal; font-size:13px; font-family:'Khmer OS Muol Light';white-space:nowrap;"> <?php //echo $tr->translate('ARTICLE_1');?></h2></td>
+	                </tr>
+	                <?php 
+	                	$db = new Application_Model_DbTable_DbGlobal();
+	                	$row = $db->getClientByType(null,$client['client_id'],1);
+	                ?> 
+	                <tr>
+	                	<td colspan="3">
+	                		<table width="100%" style="margin-top:10px;">
+			                	<tr class='style'>
+				                   <td width="35%" valign="top">
+				                	    <p><?php echo $tr->translate('CUSTOMER_NAME');?>: <?php echo $client['client_name_kh'];echo !empty($client['hname_kh'])?"/".$client['hname_kh']:"";?> </p>
+				                		<p><?php echo $tr->translate("TEL");?>  : <?php echo $client['tel'];?></p> 
+										<?php 
+											$discount = 0;
+											if($client['price_sold']<$client['price_before']){
+												$discount = $client['price_before']-$client['price_sold'];
+											}
+									  ?>
+									  <p class="lblhousecode"><?php echo $tr->translate("PROPERTY_CODE");?> : <strong><?php echo $client['land_address'].",".$client['stree'];?></strong></p>
+									  <p class="lblhousecode">ទំហំសរុប: <?php echo $client['land_size'];?> ម៉ែត្រការ៉េ</p>
+				                	</td>
+				                    <td valign="top" style="" width="33%">
+				                      <p>តម្លៃមុនបញ្ចុះ  : $ <strong><?php echo number_format($client['price_before'],2);?></strong></p>
+				                      <p><?php echo $tr->translate("Discount");?>  : $ <strong><?php echo number_format($discount,2);?></strong></p>
+				                      <p><?php echo $tr->translate("SOLD_PRICE");?>  : $ <strong><?php echo number_format($client['price_sold'],2);?></strong></p>
+									  <?php if($client['payment_id']==4){?>				                	 
+									  <p><?php echo $tr->translate("INSTALLMENT_AMOUNT");?>  : $ <?php echo number_format($client['for_installamount'],2);//echo number_format($client['price_sold']-$client['total_installamount'],2);?></p>
+																				<?php if($client['interest_rate']>0){ ?>
+									  <p><?php echo $tr->translate("INTEREST_RATE");?> : <?php if ($client['interest_policy']>0){ echo $client['interest_policy_title'];}else{ echo $client['interest_rate']."&nbsp;%";}?></p>
+																				<?php }}?>
+									  <p><?php echo $tr->translate("TERM_BORROWINYEAR");?> : <?php echo number_format($client['total_duration'],0);?>&nbsp;
+										<?php if($client['payment_id']!=4){
+											echo $tr->translate("TIMES");
+											//echo $tr->translate("MONTH");
+										}else{
+											echo ($dataterm['install_by']==12)?$tr->translate("YEAR"):$tr->translate("MONTH");
+										}?>
+									  </p>
+				                    </td>
+				                    <td width="30%" valign="top">
+				                      <p><?php echo $tr->translate("RELEASED_DATE");?> : <?php echo date('d-m-Y',strtotime($client['buy_date']));?> </p>
+				                      <p><?php echo $tr->translate("FIRST_PAYMENT");?> : <?php echo date('d-m-Y',strtotime($client['first_payment'])); ?></p>
+				                      <p><?php echo $tr->translate("LIFE_LOAN");?> : 
+				                      <span id="life_date">
+				                      <?php 
+				                      	$date= new DateTime($client['end_line']);
+				                      	echo $LIFE_LOAN = $date->format("d-m-Y");
+				                       ?>
+				                       </span>
+				                       </p>
+				                    </td>
+				                </tr>
+			                </table>
+			              </td>
+			           </tr>   
+	            </table>
+	        </td>
+	    </tr>
+	    <tr>
+	    	<td>
+	            <table id="exportExcel" border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:12px;" width="100%">
+	                 <thead>
+		                 <tr class="style" align="center" style=" line-height: 20px;">
+		                    <td rowspan="2"><?php echo $tr->translate("NUM");?></td>
+		                    <td rowspan="2"><?php echo $tr->translate("DAY_PAYMENT");?></td>
+		                    <td rowspan="2"><?php echo $tr->translate("BEGENING_TYPE");?></td>
+		                    <td colspan="2"><?php echo $tr->translate("AMOUNT");?></td>
+		                    <td rowspan="2"><?php echo $tr->translate("ប្រាក់ដើមចុងគ្រា");?></td>
+		                </tr>
+		                <tr class="style" align="center" style="line-height: 20px;">
+		                    <td><?php echo $tr->translate("PRINCIPAL");?></td>
+		                    <td><?php echo $tr->translate("TOTAL_INTEREST");?></td>
+		                </tr>
+	                </thead>
+	               <?php $set=1; 
+	               $i=0;
+	               if(!empty($tran)) foreach($tran as $key =>$row){ ?>
+	               	<?php if($row['status']==0 AND $row['collect_by']==2){?>
+	               	<tr align="center" style=" height: 20px;" class="style">
+	               		<td colspan="10" style="background: #d3d3ff;"><span style="font-family:'Khmer OS Muol Light'"><?php if(!empty($row['note'])){echo $row['note']; }else{?>បានរំលស់ប្រាក់ដើម ចំនួន<?php }?></span><span style="font-family:Arail;font-size:16px;"> $ <?php echo str_replace('.00', '', number_format($row['total_payment'],2)); ?></span><span style="font-family:'Khmer OS Muol Light'"> នៅថ្ងៃទី  <?php echo date('d-m-Y',strtotime($row['date_payment']));?></span></td>
+	               	</tr>
+	               	<?php continue;}
+	               	$i++; ?>
+	               	<tr align="center" style=" height: 20px;" class="style hover" >
+	                    <td><?php echo sprintf("%02d", $i); //($i<10)?"0":"";echo $i;?></td>
+		                    <?php $str_day = date('D',strtotime($row['date_payment']));
+		                    	$day_as_khmer = $dayin_khmer[$str_day];
+		                    ?>
+	                    <td align="center">
+	                    	<?php 
+		                    	if($row['last_optiontype']==1){//by date
+		                    		if($row['ispay_bank']==0){
+		                    			$date= new DateTime($row['date_payment']);
+		                    			$LIFE_LOAN =  $date->format("d-m-Y");
+		                    			echo $LIFE_LOAN;
+		                    		}else{
+		                    			$LIFE_LOAN = $row['payment_type'];
+		                    			echo $LIFE_LOAN;
+		                    		}
+		                    	}else{//by last payment
+		                    		if($row['ispay_bank']==0){
+		                    			$LIFE_LOAN = $tr->translate("RECEIVED_PROPERTY");
+		                    			echo $LIFE_LOAN;
+		                    		}else{
+		                    			$LIFE_LOAN = $row['payment_type'];
+		                    			echo $LIFE_LOAN;
+		                    		}
+		                    	}
+	                    		
+	                    	?>
+	                    </td>
+	                    <td><?php echo str_replace('.00', '', number_format($row['begining_balance'],2));?></td>
+	                    <td><?php echo str_replace('.00', '', number_format($row['principal_permonth'],2));?></td>
+	                    <td><?php echo ($row['total_interest'])==0?"គ្មាន":str_replace('.00', '', number_format($row['total_interest'],2));?></td>
+	                    <!-- <td ><?php //echo str_replace('.00', '', number_format($row['total_payment'],2)); ?></td> -->
+	                    <?php 
+	                   		$remain = $row['ending_balance'];
+	                    ?>
+	                    <td><?php echo number_format($remain,(!strrpos($remain,"."))? 0 : 2);?></td>
+	                </tr>
+	               <?php }
+	               ?>
+	            </table>
+	            <?php if ($paymentCondiction==1){?>
+	            	<div style="padding: 2px; margin-top: 10px;">
+	            		<table width="100%" cellpadding="0"  border="0" style=" font-family:'Times New Roman','Khmer OS Battambang';  font-size:12px; line-height: 14px;">
+						<?php 
+						$bankInfo = $this->branchinfo;
+							$bankName="";
+							$bankName = empty($bankInfo['bank_account1'])?$bankName:$bankInfo['bank_account1'];
+							$bankAccName="";
+							$bankAccName = empty($bankInfo['bank_account_name1'])?$bankAccName:$bankInfo['bank_account_name1'];
+							$bankAccNo="";
+							$bankAccNo = empty($bankInfo['bank_account1number'])?$bankAccNo:$bankInfo['bank_account1number'];
+							
+							$bankNameI="";
+							$bankNameI = empty($bankInfo['bank_account2'])?$bankNameI:$bankInfo['bank_account2'];
+							$bankAccNameI="";
+							$bankAccNameI = empty($bankInfo['bank_account_name2'])?$bankAccNameI:$bankInfo['bank_account_name2'];
+							$bankAccNoI="";
+							$bankAccNoI = empty($bankInfo['bank_account2number'])?$bankAccNoI:$bankInfo['bank_account2number'];
+							?>
+						
+						<tr>
+							<td valign="top" colspan="4"><?php echo $tr->translate('SCHEDULE_INSTRUCTION_NOTE');?></td>
+						</tr>
+						<tr>
+							<td>លេខគណនីៈ </td>
+							<td align="left"><?php echo $bankAccNo;?></td>
+							<?php if(!empty($bankNameI)){ ?>
+							<td>លេខគណនីៈ </td>
+							<td align="left"><?php echo $bankAccNoI;?></td>
+							<?php }?>
+						</tr>
+						<tr>
+							<td>ឈ្មោះគណនីៈ</td>
+							<td align="left"><?php echo $bankAccName;?><span style="padding-left:50px;">តេឡេក្រាម ៖ 078 755 586</span></td>
+							<?php if(!empty($bankNameI)){ ?>
+							<td>- ឈ្មោះគណនីៈ</td>
+							<td align="left"><?php echo $bankAccNameI;?></td>
+							<?php }?>
+						</tr>
+						
+					</table>	
+					</div>
+					<table width="100%" cellpadding="3" style="font-family:'Khmer OS Muol Light'">
+		            <?php 
+						$agreementDate = $client['agreement_date'];
+						$dayKh = $dbparmeter->getNumberInkhmer(date("d",strtotime($agreementDate)));
+						$monthkh = $month[date("m",strtotime($agreementDate))];
+						$yearKh=$dbparmeter->getNumberInkhmer(date("Y",strtotime($agreementDate)));
+		            
+		            ?>
+	            	<tr class="font_bold" style="height:25px; font-family:'Times New Roman','Khmer OS Battambang'">
+	            		<td align="center" width="50%"></td>
+	            		<td align="center" valign="bottom" style="font-style: italic;">
+	            		ធ្វើនៅថ្ងៃទី  <span style="display: inline-block; width: 30px;"><?php echo $dayKh;?></span> 
+	            		ខែ <span style="display: inline-block; width: 60px;"><?php echo $monthkh;?></span>
+	            		ឆ្នាំ <?php echo $yearKh;?>
+	            		</td>
+	            	</tr>
+	            	</table>
+	            <?php }else if($paymentCondiction==2){?>
+				<div style="border: solid 1px #000; padding: 2px; margin-top: 10px;">
+	            		<table width="100%" cellpadding="0"  border="0" style=" font-family:'Times New Roman','Khmer OS Battambang';  font-size:11.5px; line-height: 14px;">
+						<?php 
+							$bankName="";
+							$bankName = empty($this->data['bank_account1'])?$bankName:$this->data['bank_account1'];
+							$bankAccName="";
+							$bankAccName = empty($this->data['bank_account_name1'])?$bankAccName:$this->data['bank_account_name1'];
+							$bankAccNo="";
+							$bankAccNo = empty($this->data['bank_account1number'])?$bankAccNo:$this->data['bank_account1number'];
+							
+							$bankNameI="";
+							$bankNameI = empty($this->data['bank_account2'])?$bankNameI:$this->data['bank_account2'];
+							$bankAccNameI="";
+							$bankAccNameI = empty($this->data['bank_account_name2'])?$bankAccNameI:$this->data['bank_account_name2'];
+							$bankAccNoI="";
+							$bankAccNoI = empty($this->data['bank_account2number'])?$bankAccNoI:$this->data['bank_account2number'];
+							
+							$bankNameIII="";
+							$bankNameIII = empty($this->data['bank_account3'])?$bankNameI:$this->data['bank_account3'];
+							$bankAccNameIII="";
+							$bankAccNameIII = empty($this->data['bank_account_name3'])?$bankAccNameI:$this->data['bank_account_name3'];
+							$bankAccNoIII="";
+							$bankAccNoIII = empty($this->data['bank_account3number'])?$bankAccNoI:$this->data['bank_account3number'];
+							
+							$colspan=2;
+							if(!empty($bankNameI)){ 
+								$colspan=$colspan+2;
+							}
+							if(!empty($bankNameIII)){ 
+								$colspan=$colspan+2;
+							}
+							?>
+						<tr>
+							<td valign="top" colspan="<?php echo $colspan; ?>">មធ្យោយបាយបង់ប្រាក់</td>
+						</tr>
+						<tr>
+							<td valign="top" colspan="<?php echo $colspan; ?>">- <?php echo $tr->translate('SCHEDULE_INSTRUCTION_NOTE');?></td>
+						</tr>
+						<tr style="white-space:nowrap">
+							<td width="50px">- ឈ្មោះធនាគារៈ </td>
+							<td width="22%" align="left"><?php echo $bankName;?></td>
+							<?php if(!empty($bankNameI)){?>
+							<td >- ឈ្មោះធនាគារៈ </td>
+							<td width="22%" align="left"><?php echo $bankNameI;?></td>
+							<?php }?>
+							<?php if(!empty($bankNameIII)){ ?>
+							<td >- ឈ្មោះធនាគារៈ </td>
+							<td width="22%" align="left"><?php echo $bankNameIII;?></td>
+							<?php }?>
+						</tr>
+						<tr style="white-space:nowrap">
+							<td>- ឈ្មោះគណនីៈ</td>
+							<td align="left"><?php echo $bankAccName;?></td>
+							<?php if(!empty($bankNameI)){ ?>
+							<td>- ឈ្មោះគណនីៈ</td>
+							<td align="left"><?php echo $bankAccNameI;?></td>
+							<?php }?>
+							<?php if(!empty($bankNameIII)){ ?>
+							<td>- ឈ្មោះគណនីៈ</td>
+							<td align="left"><?php echo $bankAccNameIII;?></td>
+							<?php }?>
+						</tr>
+						<tr style="white-space:nowrap">
+							<td>- លេខគណនីៈ </td>
+							<td align="left"><?php echo $bankAccNo;?></td>
+							<?php if(!empty($bankNameI)){ ?>
+							<td>- លេខគណនីៈ </td>
+							<td align="left"><?php echo $bankAccNoI;?></td>
+							<?php }?>
+							<?php if(!empty($bankNameIII)){ ?>
+							<td>- លេខគណនីៈ </td>
+							<td align="left"><?php echo $bankAccNoIII;?></td>
+							<?php }?>
+						</tr>
+						<tr>
+							<td colspan="<?php echo $colspan; ?>" style="font-family:'Times New Roman','Khmer OS Muol Light'">* រាល់ការទូទាត់តាមគណនីធនាគារសូមអតិថិជនវាយលេខសម្គាល់: <strong><?php echo $client['sale_number'];?></strong></td>
+						</tr>
+					</table>	
+					</div>
+				 <?php }else if($paymentCondiction==3){ //angkor eco residence?>
+				 <div style="border: solid 1px #000; padding: 2px; margin-top: 10px;">
+	            		<table width="100%" cellpadding="0"  border="0" style="font-family:'Times New Roman','Khmer OS Battambang';font-size:11.5px;line-height: 14px;">
+						<?php 
+							$bankName="";
+							$bankName = empty($this->data['bank_account1'])?$bankName:$this->data['bank_account1'];
+							$bankAccName="";
+							$bankAccName = empty($this->data['bank_account_name1'])?$bankAccName:$this->data['bank_account_name1'];
+							$bankAccNo="";
+							$bankAccNo = empty($this->data['bank_account1number'])?$bankAccNo:$this->data['bank_account1number'];
+							
+							$bankNameI="";
+							$bankNameI = empty($this->data['bank_account2'])?$bankNameI:$this->data['bank_account2'];
+							$bankAccNameI="";
+							$bankAccNameI = empty($this->data['bank_account_name2'])?$bankAccNameI:$this->data['bank_account_name2'];
+							$bankAccNoI="";
+							$bankAccNoI = empty($this->data['bank_account2number'])?$bankAccNoI:$this->data['bank_account2number'];
+							
+							$bankNameIII="";
+							$bankNameIII = empty($this->data['bank_account3'])?$bankNameI:$this->data['bank_account3'];
+							$bankAccNameIII="";
+							$bankAccNameIII = empty($this->data['bank_account_name3'])?$bankAccNameI:$this->data['bank_account_name3'];
+							$bankAccNoIII="";
+							$bankAccNoIII = empty($this->data['bank_account3number'])?$bankAccNoI:$this->data['bank_account3number'];
+							
+							$colspan=2;
+							if(!empty($bankNameI)){ 
+								$colspan=$colspan+2;
+							}
+							if(!empty($bankNameIII)){ 
+								$colspan=$colspan+2;
+							}
+							?>
+						<tr>
+							<td valign="top" colspan="2">មធ្យោយបាយបង់ប្រាក់</td>
+						</tr>
+						<tr>
+							<td valign="top" colspan="2">- <?php echo $tr->translate('SCHEDULE_INSTRUCTION_NOTE');?></td>
+						</tr>
+						<tr style="white-space:nowrap">
+							<td>- ឈ្មោះធនាគារៈ </td>
+							<td align="left"><?php echo $bankName;?></td>
+						</tr>
+						<tr style="white-space:nowrap">
+							<td>- ឈ្មោះគណនីៈ</td>
+							<td align="left"><?php echo $bankAccName;?></td>
+						</tr>
+						<tr style="white-space:nowrap">
+							<td>- លេខគណនីៈ </td>
+							<td align="left"><?php echo $bankAccNo;?></td>
+						</tr>
+						<?php if(!empty($bankNameI)){?>
+							<tr style="white-space:nowrap">
+								<td >- ឈ្មោះធនាគារៈ </td>
+								<td width="22%" align="left"><?php echo $bankNameI;?></td>
+							</tr>
+							<tr style="white-space:nowrap">
+								<td>- ឈ្មោះគណនីៈ</td>
+								<td align="left"><?php echo $bankAccNameI;?></td>
+							</tr>
+							<tr style="white-space:nowrap">
+								<td>- លេខគណនីៈ </td>
+								<td align="left"><?php echo $bankAccNoI;?></td>
+							</tr>
+						<?php }?>
+						<?php if(!empty($bankNameIII)){ ?>
+							<tr style="white-space:nowrap">
+								<td >- ឈ្មោះធនាគារៈ </td>
+								<td width="22%" align="left"><?php echo $bankNameIII;?></td>
+							</tr>
+							<tr style="white-space:nowrap">
+								<td>- ឈ្មោះគណនីៈ</td>
+								<td align="left"><?php echo $bankAccNameIII;?></td>
+							</tr>
+							<tr style="white-space:nowrap">
+								<td>- លេខគណនីៈ </td>
+								<td align="left"><?php echo $bankAccNoIII;?></td>
+							</tr>
+						<?php }?>
+					</table>	
+					</div>
+	            <?php }?>
+	            <table width="100%" cellpadding="3" style="font-family:'Khmer OS Muol Light'">
+	            	<tr class="font_bold" style="height:25px;">
+	            		<td align="center" valign="bottom" style="font-family:'Khmer OS Muol Light'">ភាគីអ្នកលក់<?php //echo $tr->translate('ACCOUNTING_SIGN');?></td>
+	            		<td align="center" valign="bottom"></td> 
+	            		<td align="center" valign="bottom" style="font-family:'Khmer OS Muol Light'">ភាគីអ្នកទិញ<?php //echo $tr->translate('BORROWER');?></td>
+	            	</tr>
+	            	<tr class="font_bold">
+	            		<td align="center" height="120px" valign="bottom" style="font-family:'Khmer OS Muol Light'">តាន់ ស៊ុនស៊ា<?php //echo $client['user_name'];?></td>
+	            		<td align="center"  valign="bottom"></td>
+	            		<td align="center" valign="bottom" style="font-family:'Khmer OS Muol Light'"><?php echo $client['client_name_kh'];echo !empty($client['hname_kh'])?"/".$client['hname_kh']:"";?></td>
+	            	</tr>
+	            </table>
+	    	</td>
+	    </tr>
+	</table>
+	</div>
+</div>
+<script>
+require(["dojo/ready"], function(ready){
+	 ready(function(){
+		 printSave();
+		 
+	 });
+});	 
+
+function printSave(){
+	symbal=" $";
+	dojo.byId("life_date").innerHTML = '<?php echo preg_replace( "/\r|\n/", "", strip_tags(htmlspecialchars($LIFE_LOAN)));?>';
+}
+</script>

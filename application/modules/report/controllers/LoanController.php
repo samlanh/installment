@@ -82,11 +82,8 @@ class Report_LoanController extends Zend_Controller_Action {
   		//print_r($db->getALLGroupDisburse($id));
     }
   }
- 
   function rptPaymentAction(){
   	$db  = new Report_Model_DbTable_DbLandreport();	
-// 	$key = new Application_Model_DbTable_DbKeycode();
-// 	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
 	if($this->getRequest()->isPost()){
 		$search = $this->getRequest()->getPost();
 	}else {
@@ -507,33 +504,39 @@ class Report_LoanController extends Zend_Controller_Action {
  	$this->view->day_inkhmer = $day_inkhmer;
  	$key = new Application_Model_DbTable_DbKeycode();
  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+ 	
+ 	$dbp = new Project_Model_DbTable_DbProject();
+ 	$this->view->branchinfo = $dbp->getBranchById($rs['branch_id']);//for to get bank info
+ }
+ function rptPaymentschedulesclientAction(){
+ 	$db = new Report_Model_DbTable_DbRptPaymentSchedule();
+ 	$id =$this->getRequest()->getParam('id');
+ 	$id = empty($id)?0:$id;
+ 	$row = $db->getPaymentSchedule($id);
+ 	$this->view->tran_schedule=$row;
+ 	if(empty($row) or $row==''){
+ 		Application_Form_FrmMessage::Sucessfull("RECORD_NOT_EXIST",'/report/loan/rpt-sold',2);
+ 	}
+ 	$db = new Application_Model_DbTable_DbGlobal();
+ 	$rs = $db->getClientByMemberId($id);
+ 	if(empty($rs)){
+ 		Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND",'/report/loan/rpt-sold',2);
+ 		exit();
+ 	}
+ 	$this->view->client =$rs;
+ 	$frm = new Application_Form_FrmSearchGlobal();
+ 	$form = $frm->FrmSearchLoadSchedule();
+ 	Application_Model_Decorator::removeAllDecorator($form);
+ 	$this->view->form_filter = $form;
+ 	$day_inkhmer = $db->getDayInkhmerBystr(null);
+ 	$this->view->day_inkhmer = $day_inkhmer;
+ 	$key = new Application_Model_DbTable_DbKeycode();
+ 	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+ 
+ 	$dbp = new Project_Model_DbTable_DbProject();
+ 	$this->view->branchinfo = $dbp->getBranchById($rs['branch_id']);//for to get bank info
  }
 
- function rptPaymentschedulesttAction(){
-	$db = new Report_Model_DbTable_DbRptPaymentSchedule();
-	$id =$this->getRequest()->getParam('id');
-	$id = empty($id)?0:$id;
-	$row = $db->getPaymentSchedule($id);
-	$this->view->tran_schedule=$row;
-	if(empty($row) or $row==''){
-		Application_Form_FrmMessage::Sucessfull("RECORD_NOT_EXIST",'/report/loan/rpt-sold',2);
-	}
-	$db = new Application_Model_DbTable_DbGlobal();
-	$rs = $db->getClientByMemberId($id);
-	if(empty($rs)){
-		Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND",'/report/loan/rpt-sold',2);
-		exit();
-	}
-	$this->view->client =$rs;
-	$frm = new Application_Form_FrmSearchGlobal();
-	$form = $frm->FrmSearchLoadSchedule();
-	Application_Model_Decorator::removeAllDecorator($form);
-	$this->view->form_filter = $form;
-	$day_inkhmer = $db->getDayInkhmerBystr(null);
-	$this->view->day_inkhmer = $day_inkhmer;
-	$key = new Application_Model_DbTable_DbKeycode();
-	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
-}
  function rptPaymentreminderAction(){
  	$db = new Report_Model_DbTable_DbRptPaymentSchedule();
  	$id =$this->getRequest()->getParam('id');
@@ -562,7 +565,6 @@ class Report_LoanController extends Zend_Controller_Action {
  function rptCombineschedulesAction(){
  	$db = new Report_Model_DbTable_DbRptPaymentSchedule();
  	$id =$this->getRequest()->getParam('id');
-//  	echo $id;exit();
  	$row = $db->getScheduleCombine($id);
  	$this->view->tran_schedule=$row;
  	if(empty($row) or $row==''){
@@ -582,28 +584,7 @@ class Report_LoanController extends Zend_Controller_Action {
  	$key = new Application_Model_DbTable_DbKeycode();
  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
  }
-//  function rptExpenseAction(){
-//  	$db = new Accounting_Model_DbTable_DbExpense();
-//  	if($this->getRequest()->isPost()){
-//  		$formdata=$this->getRequest()->getPost();
-//  	}
-//  	else{
-//  		$formdata = array(
-//  				"adv_search"=>'',
-//  				"currency_type"=>-1,
-//  				"status"=>-1,
-//  				'start_date'=> date('Y-m-d'),
-//  				'end_date'=>date('Y-m-d'),
-//  		);
-//  	}
-//  	$this->view->rs= $db->getAllExpenseReport($formdata);//call frome model
-//  	$this->view->list_end_date=$formdata;
- 	 
-//  	$frm = new Loan_Form_FrmSearchLoan();
-//  	$frm = $frm->AdvanceSearch();
-//  	Application_Model_Decorator::removeAllDecorator($frm);
-//  	$this->view->frm_search = $frm;
-//  }
+
  function rptIncomestatementAction(){
  	$db  = new Report_Model_DbTable_DbLandreport();
  		
@@ -628,7 +609,6 @@ class Report_LoanController extends Zend_Controller_Action {
   	$this->view->LoanCollectionco_list =$db->getALLLoanPayment($search);
  	
  	$db = new Accounting_Model_DbTable_DbExpense();
- 	//$this->view->rs = $db->getAllExpenseReport($search);
  
  	$this->view->list_end_date=$search;
  	$frm = new Loan_Form_FrmSearchGroupPayment();

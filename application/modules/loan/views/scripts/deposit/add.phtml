@@ -54,29 +54,30 @@
 				if(this.validate()) {
            			 branch_id = dijit.byId('branch_id').get('value');
            			 if (branch_id=='' || branch_id==-1){
-						infoMessageAlert('<?php echo $tr->translate("PLEASE_SELECT_BRANCH")?>!');
 						dijit.byId('branch_id').focus();
+						infoMessageAlert('<?php echo $tr->translate("PLEASE_SELECT_BRANCH")?>!');
 						return false;
 					}
 					client = dijit.byId('member').get('value');
 					if (client=='' || client==-1){
-						infoMessageAlert('<?php echo $tr->translate("PLEASE_SELECT_CUSTOMER")?> !');
 						dijit.byId('member').focus();
+						infoMessageAlert('<?php echo $tr->translate("PLEASE_SELECT_CUSTOMER")?> !');
 						return false;
 					}
             		payment_id =dijit.byId("schedule_opt").get("value");
               		date_agreement = dijit.byId("date_line").get("value");
             
               		if(payment_id==1 && date_agreement==null){ 
+						dijit.byId("date_line").focus();
 						infoMessageAlert("សូមបញ្ចូលថ្ងៃត្រូវមកធ្វើកិច្ចសន្យា");
-						dijit.byId("date_line").focus();return false;
+						return false;
              		 }
 					if(payment_id==2){//បង់ផ្តាច់
 				  		sold_price = dijit.byId("sold_price").get("value");
   				  		deposit = dijit.byId("deposit").get("value");
 					 	if(sold_price!=deposit){
-							infoMessageAlert("បង់ផ្តាច់តម្លៃលក់ ត្រូវស្មើរ នឹងប្រាក់ដែលត្រូវទទួល!");
 							dijit.byId("deposit").focus();
+							infoMessageAlert("បង់ផ្តាច់តម្លៃលក់ ត្រូវស្មើរ នឹងប្រាក់ដែលត្រូវទទួល!");
 							return false;
 				 		}
 					}
@@ -891,8 +892,8 @@ var url_getloan = '<?php echo $this->url(array('module'=>'loan','controller'=>'i
 function getLoanByBranch(condition){
 	branch_id = dijit.byId('branch_id').get('value');
 	if(branch_id==''){
-		infoMessageAlert('Please Select Branch');
 		dijit.byId('branch_id').focus();
+		infoMessageAlert('Please Select Branch');
 		return false;
 	}
 	dojo.xhrPost({
@@ -916,8 +917,8 @@ var url_getreceipt = '<?php echo $this->url(array('module'=>'loan','controller'=
 function getReceiptByBranch(new_sale_id){
 	branch_id = dijit.byId('branch_id').get('value');
 	if(branch_id==''){
-		infoMessageAlert('Please Select Branch');
 		dijit.byId('branch_id').focus();
+		infoMessageAlert('Please Select Branch');
 		return false;
 	}
 	dojo.xhrPost({
@@ -945,8 +946,8 @@ function getReceiptByBranch(new_sale_id){
     		deposit=0;
     	}
     	if(deposit>price){
-    		infoMessageAlert("Deposit can not biger than price ");
     		dijit.byId('deposit').focus();
+    		infoMessageAlert("Deposit can not biger than price ");
     		dijit.byId('deposit').attr('value',price)
     	}
         dijit.byId('balance').attr('value',price-deposit);
@@ -1012,8 +1013,8 @@ require(["dojo/ready"], function(ready){
 	     	staff_id = dijit.byId('staff_id').get('value');
 	     	if(branch_id==0){
 	     		if(staff_id==-1){
-	     			infoMessageAlert('<?php echo $tr->translate("PLEASE_SELECT_BRANCH")?>');
 	     			dijit.byId('branch_id').focus();
+	     			infoMessageAlert('<?php echo $tr->translate("PLEASE_SELECT_BRANCH")?>');
 	     			return false;
 	         	}
 	     	}else{
@@ -1333,20 +1334,22 @@ function printSave(new_stu_id,new_receipt_no){
 
     date_agreement = dijit.byId("date_line").get("value");
     if(schedule_opt==1 && date_agreement==null){ 
+    	dijit.byId("date_line").focus();
 		infoMessageAlert("សូមបញ្ចូលថ្ងៃត្រូវមកធ្វើកិច្ចសន្យា");
-		dijit.byId("date_line").focus();return false;
+		return false;
     }
     
 	deposit = dijit.byId('deposit').get('value');
 	if (deposit=='' || deposit==-1){
-		infoMessageAlert('សូមបញ្ចូលប្រាក់ត្រូវបង់ ទើបបោះពុម្ភបង្កាន់ដៃបង់ប្រាក់បាន!');
 		dijit.byId('deposit').focus();
+		infoMessageAlert('សូមបញ្ចូលប្រាក់ត្រូវបង់ ទើបបោះពុម្ភបង្កាន់ដៃបង់ប្រាក់បាន!');
 		return false;
 	}
 	date_line = dijit.byId('date_line').get('value');
 	if(date_line=="" || date_line==null){
+		dijit.byId("date_line").focus();
 		infoMessageAlert("<?php echo $tr->translate("ALERT_DEPOSIT_WARNING");?>");
-		dijit.byId("date_line").focus();return false;
+		return false;
 	}
 	
 	if(schedule_opt==1 && new_receipt_no!=''){
@@ -1612,15 +1615,6 @@ function getAllStaffByBranch(staff_id=null){
 }
 function getAllStaffByBranchPop(){
 	dijit.byId('parent_id').reset();
-	/*
-	branch_id = dijit.byId('branch_id').get('value');
-	if(branch_id=='' || branch_id==-1){
-		var group_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode(array()));?> );
-		dijit.byId('parent_id').set('store',group_store);  
-		dijit.byId('branch_id').focus();
-		return false;
-	}
-	*/
 	branch_id=null;
 	dojo.xhrPost({
 		url: url_getgroup,

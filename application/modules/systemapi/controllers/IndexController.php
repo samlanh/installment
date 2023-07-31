@@ -184,6 +184,10 @@ class Systemapi_IndexController extends Zend_Controller_Action
 					$_dbAction->submitVerifyAccountAction($postData);
 				}else if ($GetData['url']=="submitRequestRole"){
 					$_dbAction->submitRequestRoleAccountAction($postData);
+				}else if ($GetData['url']=="deleteMyAccount"){
+					$_dbAction->deleteMyAccountAction($postData);
+				}else if ($GetData['url']=="forgetPassword"){
+					$_dbAction->forgetPasswordAction($postData);
     			}
     			else{
     				echo Zend_Http_Response::responseCodeAsText(401,true);

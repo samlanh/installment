@@ -255,6 +255,9 @@ class Report_ParamaterController extends Zend_Controller_Action {
 		$this->view->lastpaiddate = $db->getLastDatePaidById($id);
 	  	$db_keycode = new Application_Model_DbTable_DbKeycode();
 	  	$this->view->keyValue = $db_keycode->getKeyCodeMiniInv();
+	  	
+	  	$dbp = new Project_Model_DbTable_DbProject();
+	  	$this->view->branchinfo = $dbp->getBranchById($rsagreement['branch_id']);//for to get bank info
   }
   //--by seyha --
 

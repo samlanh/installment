@@ -1360,7 +1360,6 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     				'full_commission'=>$data['full_commission'],
     				'other_discount'=>$data['other_discount'],//Other Discount
     				'store_number'=>$data['store_number'],
-					
 					'witness_i'=>empty($data['witness_i'])?"":$data['witness_i'],
     			   	'witness_ii'=>empty($data['witness_ii'])?"":$data['witness_ii'],
     			   	'date_setcommission'=>$data['date_buy'],
@@ -1388,6 +1387,12 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		$this->_name='ln_sale';
     		$where = $db->quoteInto('id=?', $id);
     		$this->update($arr, $where);
+    		
+    		if($data['schedule_opt']==1){
+	    		$this->_name='ln_saleschedule';
+	    		$where = $db->quoteInto('sale_id=?', $id);
+	    		$this->delete($where);
+    		}
 			
     		$this->_name="ln_properties";
     		$where = "id =".$data["old_landid"];
