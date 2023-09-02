@@ -588,13 +588,15 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 			$recordId 	 = empty($_data['recordId'])?0:$_data['recordId'];
 			
 			$sql=" 	SELECT 
-					rqd.*,p.proCode,
-					p.proName,
-					p.image AS productImage,
-					(SELECT COALESCE(SUM(pl.qty),0) FROM st_product_location AS pl WHERE pl.proId=p.proId LIMIT 1) AS currentQtyAllBranch,
-					(SELECT COALESCE(pl.qty,0) FROM st_product_location AS pl WHERE pl.proId=p.proId AND pl.projectId= rq.projectId LIMIT 1) AS currentQty,
-					(SELECT COALESCE(pod.unitPrice,0) FROM `st_purchasing_detail` AS pod WHERE pod.proId=p.proId ORDER BY pod.purchaseId DESC LIMIT 1) AS latestUnitPrice,
-					p.measureLabel AS measureTitle
+					rqd.*
+					,p.proCode
+					,p.proName
+					,p.image AS productImage
+					,cat.categoryName AS categoryTitle
+					,(SELECT COALESCE(SUM(pl.qty),0) FROM st_product_location AS pl WHERE pl.proId=p.proId LIMIT 1) AS currentQtyAllBranch
+					,(SELECT COALESCE(pl.qty,0) FROM st_product_location AS pl WHERE pl.proId=p.proId AND pl.projectId= rq.projectId LIMIT 1) AS currentQty
+					,(SELECT COALESCE(pod.unitPrice,0) FROM `st_purchasing_detail` AS pod WHERE pod.proId=p.proId ORDER BY pod.purchaseId DESC LIMIT 1) AS latestUnitPrice
+					,p.measureLabel AS measureTitle
 					,(SELECT SUM(pod1.qty) FROM st_purchasing AS po,st_purchasing_detail AS pod1 WHERE pod1.purchaseId=po.id AND pod1.proId = rqd.proId AND rqd.requestId=po.requestId  AND  po.status =1 ) AS purchaseQty
 					,(SELECT GROUP_CONCAT(pod1.qty) FROM st_purchasing AS po,st_purchasing_detail AS pod1 WHERE pod1.purchaseId=po.id AND pod1.proId = rqd.proId AND rqd.requestId=po.requestId  AND  po.status =1 ) AS purchaseQtyList
 					,(SELECT GROUP_CONCAT(po.purchaseNo) FROM st_purchasing AS po,st_purchasing_detail AS pod1 WHERE pod1.purchaseId=po.id AND pod1.proId = rqd.proId AND rqd.requestId=po.requestId  AND  po.status =1 ) AS purchaseNoList
@@ -613,6 +615,7 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 						`st_request_po_detail` as rqd
 						JOIN `st_request_po` AS rq ON rq.id = rqd.requestId
 						LEFT JOIN `st_product` AS p  ON p.proId = rqd.proId 
+						LEFT JOIN `st_category` AS cat ON cat.id = p.categoryId
 			";
 			$sql.=" WHERE 1 AND rqd.requestId IN ($recordId) ";	
 			if (!empty($_data['pCheckingRequest']) OR !empty($_data['approvedrequest'])){
@@ -1083,11 +1086,13 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 					,p.proName
 					,p.image AS productImage
 					,p.measureLabel AS measureTitle
+					,cat.categoryName AS categoryTitle
 				";
 			$sql.="	FROM 
 						`st_receive_stock_detail` AS sd 
 						JOIN st_receive_stock AS rst ON rst.id = sd.receiveId
 						LEFT JOIN `st_product` AS p  ON p.proId = sd.proId 
+						LEFT JOIN `st_category` AS cat ON cat.id = p.categoryId
 			";
 			$sql.=" WHERE 1 AND sd.receiveId IN ($recordId) ";	
 			
