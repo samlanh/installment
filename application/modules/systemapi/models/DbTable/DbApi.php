@@ -1629,7 +1629,20 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 					LEFT JOIN st_category AS proCate ON proCate.id = p.categoryId
 					LEFT JOIN st_product_location AS pl ON p.proId = pl.proId
 			";
+			$sqlCountWhere="";
+			if (!empty($_data['countingProduct'])) {
+				$format = 'Y-m-d';
+				$date = new DateTime();
+				$currentDate = $date->format($format);
+			
+				$sql.="  LEFT JOIN (`st_precount_product` AS preMain JOIN `st_precount_product_detail` AS preCount ON preMain.id = preCount.countId ) ON p.proId =preCount.proId ";
+				if (!empty($_data['branchId'])) {
+					$sql .= " AND preMain.projectId IN (".$_data['branchId'].")";
+				}
+				$sqlCountWhere=" AND (preCount.closingDate < '".$currentDate."' OR preCount.closingDate IS NULL) ";				
+			}
 			$sql.="  WHERE 1 ";	
+			$sql.=$sqlCountWhere;	
 			
 			if (!empty($_data['forListCreateNEdit'])) {
 				if (!empty($_data['status'])) {
@@ -1689,6 +1702,9 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 			if (!empty($_data['productIdList'])) {
 				$sql.=" AND p.proId IN (".$_data['productIdList'].") ";
 			}
+			if (!empty($_data['outProductIdList'])) {
+				$sql.=" AND p.proId NOT IN (".$_data['outProductIdList'].") ";
+			}
 			$sql.=" Group BY p.proId ";
 			if (!empty($_data['forListCreateNEdit'])) {
 				$sql.="  ORDER BY p.proId DESC ";	
@@ -1701,7 +1717,6 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 			}else if(!empty($_data['limitRecord'])){
 				$limit.=" LIMIT ".$_data['limitRecord'];
 			}
-			
 			
 			$row = $db->fetchAll($sql.$limit);
 			
@@ -2271,7 +2286,6 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 			}else if(!empty($_data['limitRecord'])){
 				$limit.=" LIMIT ".$_data['limitRecord'];
 			}
-			
 			
 			$row = $db->fetchAll($sql.$limit);
 			
