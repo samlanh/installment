@@ -1516,7 +1516,19 @@ function updateReceipt($data){
 		    $this->_name="ln_client_receipt_money_detail";
 		    $this->update($array, $where);
 		    
-		   
+			//update saleSchedule paidDate Info
+			$rsInfo = $this->getClientReciptInfo($data['id']);
+			if(!empty($rsInfo)){
+				$schDetailId = empty($rsInfo["scheduleDetailId"]) ? 0 : $rsInfo["scheduleDetailId"];
+				$saleId = empty($rsInfo["sale_id"]) ? 0 : $rsInfo["sale_id"];
+				$arrSchedule = array(
+					"received_date" => $data['date_input'],
+				);
+				$whereSchedule = " id = ".$schDetailId." AND sale_id=".$saleId;
+				$this->_name="ln_saleschedule";
+				$this->update($arrSchedule, $whereSchedule);
+			}
+			
 		    $dbgb = new Application_Model_DbTable_DbGlobal();
 		    $_datas = array('description'=>'Edit OFFICIAL RECEIPT','activityold'=>$activityold,'after_edit_info'=>$after_edit_info);
 		    $dbgb->addActivityUser($_datas);
@@ -1527,8 +1539,25 @@ function updateReceipt($data){
 		Application_Form_FrmMessage::message("INSERT_FAIL");
 		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 	}
-	
 }
+
+function getClientReciptInfo($recieptId){
+	$db = $this->getAdapter();
+	$recieptId = empty($recieptId) ? 0 : $recieptId;
+	$sql="
+		SELECT 
+			crmd.lfd_id AS scheduleDetailId
+			,crm.*
+			FROM `ln_client_receipt_money` AS crm	
+				JOIN `ln_client_receipt_money_detail` AS crmd ON crmd.crm_id=crm.id
+		WHERE crm.id = $recieptId
+		ORDER BY crmd.id ASC
+	";
+	$sql.=" LIMIT 1";
+	return $db->fetchRow($sql);
+}
+
+
 function updatePaymentStatus($data){
 	  	$db = $this->getAdapter();
 	  	$db->beginTransaction();
