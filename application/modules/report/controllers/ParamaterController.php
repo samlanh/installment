@@ -89,7 +89,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
 	$this->view->headerReport = $frmpopup->getLetterHeadReport();
   
   }
-  function rptIncomeAction(){ // by Vandy
+  function rptIncomeAction(){
   	if($this->getRequest()->isPost()){
   		$search=$this->getRequest()->getPost();
   	}
@@ -124,7 +124,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$this->view->footerReport = $frmpopup->getFooterReport();
 	$this->view->headerReport = $frmpopup->getLetterHeadReport();
   }
-  function rptExpenseAction(){ // by Vandy
+  function rptExpenseAction(){
  	 if($this->getRequest()->isPost()){
     			$search=$this->getRequest()->getPost();
    	}else{

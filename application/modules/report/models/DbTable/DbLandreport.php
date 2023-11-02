@@ -1516,7 +1516,19 @@ function updateReceipt($data){
 		    $this->_name="ln_client_receipt_money_detail";
 		    $this->update($array, $where);
 		    
-		   
+			//update saleSchedule paidDate Info
+			$rsInfo = $this->getClientReciptInfo($data['id']);
+			if(!empty($rsInfo)){
+				$schDetailId = empty($rsInfo["scheduleDetailId"]) ? 0 : $rsInfo["scheduleDetailId"];
+				$saleId = empty($rsInfo["sale_id"]) ? 0 : $rsInfo["sale_id"];
+				$arrSchedule = array(
+					"received_date" => $data['date_input'],
+				);
+				$whereSchedule = " id = ".$schDetailId." AND sale_id=".$saleId;
+				$this->_name="ln_saleschedule";
+				$this->update($arrSchedule, $whereSchedule);
+			}
+			
 		    $dbgb = new Application_Model_DbTable_DbGlobal();
 		    $_datas = array('description'=>'Edit OFFICIAL RECEIPT','activityold'=>$activityold,'after_edit_info'=>$after_edit_info);
 		    $dbgb->addActivityUser($_datas);
@@ -1527,8 +1539,25 @@ function updateReceipt($data){
 		Application_Form_FrmMessage::message("INSERT_FAIL");
 		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 	}
-	
 }
+
+function getClientReciptInfo($recieptId){
+	$db = $this->getAdapter();
+	$recieptId = empty($recieptId) ? 0 : $recieptId;
+	$sql="
+		SELECT 
+			crmd.lfd_id AS scheduleDetailId
+			,crm.*
+			FROM `ln_client_receipt_money` AS crm	
+				JOIN `ln_client_receipt_money_detail` AS crmd ON crmd.crm_id=crm.id
+		WHERE crm.id = $recieptId
+		ORDER BY crmd.id ASC
+	";
+	$sql.=" LIMIT 1";
+	return $db->fetchRow($sql);
+}
+
+
 function updatePaymentStatus($data){
 	  	$db = $this->getAdapter();
 	  	$db->beginTransaction();
@@ -2974,8 +3003,8 @@ function updatePaymentStatus($data){
    	if($lang==1){
    		$str = 'name_kh';
    	}
-   	$from_date =(empty($search['start_date']))? '1': " date_pay >= '".$search['start_date']." 00:00:00'";
-   	$to_date = (empty($search['end_date']))? '1': " date_pay <= '".$search['end_date']." 23:59:59'";
+   	$from_datePayment =(empty($search['start_date']))? '1': " date_pay >= '".$search['start_date']." 00:00:00'";
+   	$to_datePayment = (empty($search['end_date']))? '1': " date_pay <= '".$search['end_date']." 23:59:59'";
    	
    	$from_dateCredit =(empty($search['start_date']))? '1': " date >= '".$search['start_date']." 00:00:00'";
    	$to_dateCredit = (empty($search['end_date']))? '1': " date <= '".$search['end_date']." 23:59:59'";
@@ -2985,9 +3014,9 @@ function updatePaymentStatus($data){
    	$sql= $statement['sql'];
    	$sql.="
    
-   	,(SELECT SUM(rm.total_principal_permonthpaid+rm.extra_payment) FROM `ln_client_receipt_money` as rm WHERE rm.status=1 AND sale_id=s.id  AND $from_date AND $to_date LIMIT 1) AS paid_amount,
-   	(SELECT SUM(rm.total_interest_permonthpaid) FROM `ln_client_receipt_money` AS rm WHERE rm.status=1  AND sale_id = s.id AND $from_date AND $to_date LIMIT 1) AS total_interest_permonthpaid,
-   	(SELECT SUM(rm.penalize_amountpaid) FROM `ln_client_receipt_money` AS rm WHERE rm.status=1 AND sale_id = s.id AND $from_date AND $to_date LIMIT 1) AS penalize_amountpaid,
+   	,(SELECT SUM(rm.total_principal_permonthpaid+rm.extra_payment) FROM `ln_client_receipt_money` as rm WHERE rm.status=1 AND sale_id=s.id  AND $from_datePayment AND $to_datePayment LIMIT 1) AS paid_amount,
+   	(SELECT SUM(rm.total_interest_permonthpaid) FROM `ln_client_receipt_money` AS rm WHERE rm.status=1  AND sale_id = s.id AND $from_datePayment AND $to_datePayment LIMIT 1) AS total_interest_permonthpaid,
+   	(SELECT SUM(rm.penalize_amountpaid) FROM `ln_client_receipt_money` AS rm WHERE rm.status=1 AND sale_id = s.id AND $from_datePayment AND $to_datePayment LIMIT 1) AS penalize_amountpaid,
    	
    	(SELECT SUM(total_amount) FROM `ln_credit` WHERE status=1 AND $from_dateCredit AND $to_dateCredit  AND sale_id = s.id LIMIT 1) AS totalAmountCreadit,
    	
@@ -3068,9 +3097,9 @@ function updatePaymentStatus($data){
 	$search['sale_status'] = empty($search['sale_status'])?0:$search['sale_status'];
    	if($search['sale_status']>0){
    		if($search['sale_status']==1){//full paid
-   			$where.=" AND s.price_sold <= ((SELECT COALESCE(SUM(rm.total_principal_permonthpaid+rm.extra_payment),0) FROM `ln_client_receipt_money` as rm WHERE rm.status=1 AND sale_id=s.id  AND $from_date AND $to_date LIMIT 1) + (SELECT COALESCE(SUM(total_amount),0) FROM `ln_credit` WHERE status=1 AND $from_dateCredit AND $to_dateCredit  AND sale_id = s.id LIMIT 1)) ";
+   			$where.=" AND s.price_sold <= ((SELECT COALESCE(SUM(rm.total_principal_permonthpaid+rm.extra_payment),0) FROM `ln_client_receipt_money` as rm WHERE rm.status=1 AND sale_id=s.id  AND $from_datePayment AND $to_datePayment LIMIT 1) + (SELECT COALESCE(SUM(total_amount),0) FROM `ln_credit` WHERE status=1 AND $from_dateCredit AND $to_dateCredit  AND sale_id = s.id LIMIT 1)) ";
    		}else if($search['sale_status']==2){
-			$where.=" AND s.price_sold > ((SELECT COALESCE(SUM(rm.total_principal_permonthpaid+rm.extra_payment),0) FROM `ln_client_receipt_money` as rm WHERE rm.status=1 AND sale_id=s.id  AND $from_date AND $to_date LIMIT 1) + (SELECT COALESCE(SUM(total_amount),0) FROM `ln_credit` WHERE status=1 AND $from_dateCredit AND $to_dateCredit  AND sale_id = s.id LIMIT 1) ) ";
+			$where.=" AND s.price_sold > ((SELECT COALESCE(SUM(rm.total_principal_permonthpaid+rm.extra_payment),0) FROM `ln_client_receipt_money` as rm WHERE rm.status=1 AND sale_id=s.id  AND $from_datePayment AND $to_datePayment LIMIT 1) + (SELECT COALESCE(SUM(total_amount),0) FROM `ln_credit` WHERE status=1 AND $from_dateCredit AND $to_dateCredit  AND sale_id = s.id LIMIT 1) ) ";
    		}else if($search['sale_status']==3){
 			$where.=" AND s.is_cancel = 0 ";
 		}else if($search['sale_status']==4){
