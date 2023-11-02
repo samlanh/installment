@@ -325,7 +325,7 @@ div.expenseItem.showFeature{
 </div>
 <div class="dijitHidden">
 	<div data-dojo-type="dijit.Dialog" data-dojo-props="title:'<?php echo $tr->translate("CHEQUE_ISSUER")?>'"  id="frm_cheque" >
-		<form id="form_cheque"​ dojoType="dijit.form.Form" >
+		<form id="form_cheque" dojoType="dijit.form.Form" >
 			<table style="margin: 0 auto; width: 100%;" cellspacing="7">
 				<tr>
 					<td>
@@ -492,11 +492,13 @@ function enablePayment(){
 	dijit.byId("cheque").set("readOnly",false);
 	dijit.byId("cheque").attr("value",'');
 	dijit.byId("cheque_issuer").set("readOnly",false);
+	dijit.byId("cheque_issuer").set("required",true);
 	if(payment_method==1){
 		dijit.byId("cheque").attr("value",'N/A');
 		dijit.byId("cheque").set("readOnly",true);
 		dijit.byId('cheque_issuer').reset();
 		dijit.byId("cheque_issuer").set("readOnly",true);
+		dijit.byId("cheque_issuer").set("required",false);
 
 		dijit.byId("bank_id").set("readOnly",true);
 		dijit.byId("bank_id").attr("value",'');

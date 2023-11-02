@@ -2472,28 +2472,28 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 	//    // Load the stamp and the photo to apply the watermark to
 		if (end($temp) == 'jpg') {
 		  $im = imagecreatefromjpeg($uploadimage);
-		} else
-		  if (end($temp) == 'jpeg') {
+		} else if (end($temp) == 'jpeg') {
 		  $im = imagecreatefromjpeg($uploadimage);
-		} else
-		  if (end($temp) == 'png') {
+		} else if (end($temp) == 'png') {
 		  $im = imagecreatefrompng($uploadimage);
-		} else
-		  if (end($temp) == 'gif') {
+		} else if (end($temp) == 'gif') {
 		  $im = imagecreatefromgif($uploadimage);
 		}
-	  
+		
+		
 		if ($image['size']>(1000000*5)){
-		  // Save the image to file and free memory quality 50%
-		  imagejpeg($im, $uploadimage, 50);
+		  // Save the image to file and free memory quality 70%
+		  imagejpeg($im, $uploadimage, 10);
+		}else if($image['size']>(1200000)){
+			imagejpeg($im, $uploadimage, 15); //quality 50%
 		}else if($image['size']>(1000000)){
-		  imagejpeg($im, $uploadimage, 70); //quality 80%
+		  imagejpeg($im, $uploadimage, 20); //quality 50%
 		}else if($image['size']>512000){
-		  // Save the image to file and free memory quality 60%
-		  imagejpeg($im, $uploadimage, 80);
-		}else if($image['size']>=1024000){
-			// Save the image to file and free memory quality 60%
-			imagejpeg($im, $uploadimage, 90);
+		  // Save the image to file and free memory quality 80%
+		  imagejpeg($im, $uploadimage, 60);
+		}else if($image['size']>=102400){
+			// Save the image to file and free memory quality 90%
+			imagejpeg($im, $uploadimage, 70);
 		}
 	  //  imagedestroy($uploadimage);
 		return $new_name;

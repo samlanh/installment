@@ -772,6 +772,40 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     		if(empty($rows)){
     			$this->updatePayoff($data['loan_number'],$client_pay);
     		}
+			
+			
+			if (!empty($data['identity1'])){
+				$part= PUBLIC_PATH.'/images/document/expense/';
+				if (!file_exists($part)) {
+					mkdir($part, 0777, true);
+				}
+				
+				$identity = $data['identity1'];
+				$ids = explode(',', $identity);
+				$image_name="";
+				$photo="";
+				foreach ($ids as $i){
+					$name = $_FILES['attachment'.$i]['name'];
+					if (!empty($name)){
+						$ss = 	explode(".", $name);
+						Application_Model_DbTable_DbUserLog::writeMessageError($_FILES['attachment'.$i]["size"]);
+						$newDocName = "document_payment_".date("Y").date("m").date("d").time().$i.".".end($ss);
+						$newDocConvert = $dbc->resizeImase($_FILES['attachment'.$i], $part,$newDocName);
+						if(!empty($newDocConvert)){
+							$photo = $newDocConvert;
+							$arr = array(
+									'exspense_id'		=>$client_pay,
+									'document_name'		=>$photo,
+									'title'				=>$data['title_'.$i],
+									'date'   			=> date('Y-m-d H:i:s'),
+									'documentforType'   =>3,
+							);
+							$this->_name = "ln_expense_document";
+							$this->insert($arr);
+						}
+					}
+				}
+			}
     		$db->commit();
     		return $client_pay;
     	}catch (Exception $e){

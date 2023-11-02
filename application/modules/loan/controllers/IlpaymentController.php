@@ -130,6 +130,11 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 			}
 			$_data = $this->getRequest()->getPost();
 			try{
+				if (empty($_data)){
+					Application_Form_FrmMessage::Sucessfull("File Attachment to large can't upload and Save data !","/loan/ilpayment",2);
+					exit();
+				}
+				
 				$receipt = $db->addILPayment($_data);
 				$db->recordHistoryReceipt($_data, $receipt);
 				$db->checkSaleCompletedPaymentPrincipleAmount($receipt);

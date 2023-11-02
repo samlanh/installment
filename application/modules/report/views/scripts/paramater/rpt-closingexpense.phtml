@@ -63,7 +63,7 @@
 				<?php echo $frm->getElement('is_closed');?>
         	</div>
         	<div class="col-md-2 col-sm-2 col-xs-12">
-        		<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+        		<button class="button-class button-primary " iconclass="glyphicon glyphicon-search" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
         	</div>
         	
         	<div class="col-md-2 col-sm-2 col-xs-12">
@@ -78,49 +78,54 @@
 	    	<td align="center">
 	    	 <div id="divPrint">
 	    	 	<style>
-				.style{
-					line-height: 20px;font-size: 14px !important;
-					font-family: 'Times New Roman','Khmer OS Battambang';
+					.style{
+						line-height: 20px;font-size: 11px !important;
+						font-family: 'Times New Roman','Khmer OS Battambang';
+					   }
+					.hideblog{display: none;}
+					.hiddenblog{display: block !important;}
+					.style1:hover{ background: #ccc; }
+					table tr td ul li{text-align: center;list-style: none;line-height: 25px; }
+					
+					table.content-data { page-break-inside:auto }
+					table.content-data tr{ page-break-inside:avoid; page-break-after:auto; }
+					.center{text-align: center !important;}
+					table.content-data{
+						border-collapse:collapse;
+						border:1px solid #000; 
+						font-size:11px;
 					}
-					th{padding:1px;}
-					.hide{visibility: hidden;}
-						@media print {
-						  div.divFooter {
-						    position: fixed;
-						    top: 0;
-						  	width: 100%;
-						  	height: 100px;
-						  	bottom:0px;
-							margin:0;
-						 }
-					.hide{visibility: visible; height: 110px;}
-				}
-				table.content-data{
-					border-collapse:collapse;
-					border:1px solid #000; 
-					font-size:10px;
-					font-family: 'Times New Roman','Khmer OS Battambang';
-					white-space: nowrap;
-					line-height: 22px;
-				}
-				table.content-data tr.style,
-				table.content-data thead tr.style {
-				   line-height: 25px; font-size:10px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
-					background: #c1d0f3;
-				}
-				table.content-data td{
-					padding: 3px;
-				}
-				table.tb-footer{
-					border-collapse:collapse;
-					border:1px solid #000; 
-					font-family: 'Times New Roman','Khmer OS Battambang';
-					font-size:11px;
-				}
-				table.tb-footer tr{
-				 line-height: 14px;  padding:1px 0px; height: 25px;
-				}
-						</style>
+					table.content-data  tr.style {
+						line-height: 25px; font-size:10px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
+						background: #c1d0f3;
+						font-weight:600;
+					}
+					table.content-data tr.style {
+						white-space: nowrap;
+					}
+					table.tb-footer{
+						border-collapse:collapse;
+						border:1px solid #000; 
+						font-size: 11px;
+						font-family: 'Times New Roman','Khmer OS Battambang';
+					}
+					table.tb-footer tr{
+						line-height: 14px; font-size:11px; padding:2px 0px; height: 25px;
+					}
+					table tr td{
+						padding:0 2px;
+					}
+					tr.voidclass {
+						background: #fff7f7;
+					}
+					td.centerText{
+						text-align: center;
+					}
+					.redBold {
+						font-weight: 600;
+						color: #f80000;
+					}
+				</style>
 				<div class="divFooter">
 		        	<table width="100%" style="font-family: 'Times New Roman','Khmer OS Battambang';margin:0; padding:0px;border:none;">
 		            	<tr>
@@ -177,7 +182,7 @@
 							<?php if($expenseFeatureList==1){?>
 							<?php 
 				           if (!empty($this->rowExpensePayment)){?>
-								<tr class="style" align="center">
+								<tr class="style" align="center" >
 									<td>&nbsp;<?php echo $tr->translate('NUM');?>&nbsp;</td>
 									<td>&nbsp;<?php echo $tr->translate('BRANCH_NAME');?>&nbsp;</td>
 									<td >&nbsp;<?php echo $tr->translate('SUPPLIER_NAME');?>&nbsp;</td>
@@ -195,8 +200,7 @@
 									foreach($this->rowExpensePayment as $key =>$rows){ $i++; $k++;
 									?>
 									<tr align="left" class="stylehover">
-										<td align="center">
-										<input style="height: 15px;margin-top: 5px;" type="checkBox" onClick="checked_id(<?php echo $k;?>)" name="check_box<?php echo $k;?>" id="check_box<?php echo $k;?>" />
+										<td align="center"><input style="height: 15px;margin-top: 5px;" type="checkBox" onClick="checked_id(<?php echo $k;?>)" name="check_box<?php echo $k;?>" id="check_box<?php echo $k;?>" />
 										<input type="hidden" id="id_<?php echo $k;?>" name="id_<?php echo $k;?>" value="<?php echo $rows['id'];?>" dojoType="dijit.form.TextBox" />
 										<input type="hidden" id="type_record<?php echo $k;?>" name="type_record<?php echo $k;?>" value="5" dojoType="dijit.form.TextBox" /><!-- 1= Other Expense payment -->
 									
@@ -409,24 +413,19 @@
 							   ?>
 								<?php }?>
 							<?php }?>
+							<tr class="style style1" style="font-weight: 600; background: #c1d0f3;">
+								<td colspan="7" align="right"><?php echo $tr->translate('TOTAL_EXPENSE');?></td>
+								<td colspan="2"  align="right">$ <?php echo number_format($total,2);?></td>
+								<td colspan="4"></td>
+							</tr>
 					    </table>
 				    
 	            	</td>
 	            </tr>
-	            <tr style=" border-bottom: solid 1px #fff; border-left: solid 1px #fff;  border-right: solid 1px #fff;">
-					<td colspan="11">
-						<table align="right" style="margin-right: 6px;">
-							  <tr style="font-size:14px; color:#000; height: 18px;"​ align="center">
-								<td style="  width:146px;  font-size: 14px;">&nbsp;<?php echo $tr->translate('TOTAL_EXPENSE');?>&nbsp;</td>
-								<td style=" background: rgba(249, 225, 11, 0.7);  color:#000; width:112px; font-size: 14px;"></td>
-								<td style="background: rgba(249, 225, 11, 0.7); color:#000; width:112px; font-size: 14px;">$ <?php echo number_format($total,2);?></td>
-							  </tr>
-						</table>
-					</td>
-				</tr>
 				<tr style=" border-bottom: solid 1px #fff; border-left: solid 1px #fff;  border-right: solid 1px #fff;">
 						<td colspan="11" align="center">
-							 <button iconclass="dijitIconSave" dojoType="dijit.form.Button" showLabel="true" type="submit">Closing Entry</button>
+							<br />
+							 <button class="button-class button-primary " iconclass="glyphicon glyphicon-floppy-saved" dojoType="dijit.form.Button" showLabel="true" type="submit">Closing Entry</button>
 						</td>
 					</tr>
 	            </table>

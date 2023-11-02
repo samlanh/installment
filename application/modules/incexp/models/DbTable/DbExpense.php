@@ -297,7 +297,7 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 			$this->_name='ln_expense_detail';
 			$this->delete($whereDetail);
 			
-			if (!empty($data['identity1'])){
+			if (!empty($data['identity'])){
 				$ids = explode(',', $data['identity']);
 				if (!empty($ids)){
 					foreach ($ids as $i){
@@ -507,7 +507,7 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 	
 	function getExpenseDocumentbyid($id){
 		$db = $this->getAdapter();
-		$sql=" SELECT * FROM ln_expense_document WHERE exspense_id=$id ";
+		$sql=" SELECT * FROM ln_expense_document WHERE exspense_id=$id AND documentforType = 1 ";
 		return $db->fetchAll($sql);
 	}
 	
