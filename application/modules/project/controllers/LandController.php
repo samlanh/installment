@@ -124,7 +124,12 @@ class Project_LandController extends Zend_Controller_Action {
 					exit();
 				}
 				$db->addLandinfoAuto($data);
-				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL."/addauto");
+				if(!empty($data["saveCloseValue"])){
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL."/index");
+				}else{
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS",self::REDIRECT_URL."/addauto");
+				}
+				
 			}catch (Exception $e){
 				Application_Form_FrmMessage::message("Application Error");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());

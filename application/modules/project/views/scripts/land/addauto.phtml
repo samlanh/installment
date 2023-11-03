@@ -324,6 +324,7 @@
 	    	<div class="clearfix"></div>
 			    <div class="card-box">
                		<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
+						<input type="hidden" dojoType="dijit.form.TextBox" id="saveCloseValue" name="saveCloseValue" value="0" />
 		    			<input type="reset" class="button-class button-danger" iconClass="glyphicon glyphicon-repeat" label="<?php echo $tr->translate('CLEAR');?>" dojoType="dijit.form.Button"  /> 
 						<input type="submit" class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-disk" value="SAVE_NEW" tabindex="1" label="<?php echo $tr->translate('SAVENEW');?>" id="save_new" dojoType="dijit.form.Button" name="save_new" />
 					   <input type="button"  class="button-class button-primary" iconClass="glyphicon glyphicon-search" onclick="Preview();" value="preview" name="preview" label="<?php echo $tr->translate('PREVIEW');?>" dojoType="dijit.form.Button" /> 
@@ -369,8 +370,15 @@
 	.tablesorter th{text-align: center !important;}
 	</style>
 	<div data-dojo-type="dijit.Dialog" data-dojo-props="title:'Properties List'" id="lbl_properties" style="width: 1020px !important;">
-		<div class="print" style="text-align: center;">
-			<div id="t_amountmoneytype" name="t_amountmoneytype">
+		<div class="card-box">
+			<div class="print" style="text-align: center;">
+				<div id="t_amountmoneytype" name="t_amountmoneytype">
+				</div>
+			</div>
+		</div>
+		<div class="card-box">
+			<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
+				<input type="button"  id="saveClose" value="Save" label="<?php echo $tr->translate('GO_SAVE');?>" dojoType="dijit.form.Button" class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-disk" onclick="submitData();"/>
 			</div>
 		</div>
 	</div>
@@ -641,4 +649,12 @@ function checkTitle(){
 		}
 	});
 }
+function submitData(new_receipt){	
+	if(dijit.byId('add_client').validate()) {
+		dijit.byId('saveCloseValue').attr('value',"1");
+		loadingBlock();
+		dijit.byId('save_new').set('disabled',true);
+		dijit.byId('add_client').submit();
+	}		
+}		
 </script>
