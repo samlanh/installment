@@ -215,7 +215,7 @@ class Project_LandController extends Zend_Controller_Action {
 		
 		$db = new Application_Model_DbTable_DbGlobal();		
 		$rs_street = $db->getAllStreetForOpt();
-		array_unshift($rs_street, array('id'=>-1,'name' => $tr->translate("Add New Property Type")));
+		array_unshift($rs_street, array('id'=>-1,'name' => $tr->translate("ADD_NEW")));
 		$this->view->street = $rs_street;
 	}
 	function viewAction(){
@@ -223,6 +223,7 @@ class Project_LandController extends Zend_Controller_Action {
 		$db = new Project_Model_DbTable_DbLand();
 		$this->view->propertyinfor = $db->getPropertyInfor($id);
 	}
+	/*
 	function deleteAction(){
 		
 		// Check Session Expire
@@ -285,6 +286,7 @@ class Project_LandController extends Zend_Controller_Action {
 			Application_Form_FrmMessage::message("DELETE_FAIL");
 		}
 	}
+	*/
 	public function addNewclientAction(){//ajax
 		if($this->getRequest()->isPost()){
 			$db = new Group_Model_DbTable_DbClient();
@@ -483,7 +485,9 @@ class Project_LandController extends Zend_Controller_Action {
 		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
 		
 		$db = new Application_Model_DbTable_DbGlobal();
-		$this->view->street = $db->getAllStreetForOpt();
+		$rs_street = $db->getAllStreetForOpt();
+		array_unshift($rs_street, array('id'=>-1,'name' => $tr->translate("ADD_NEW")));
+		$this->view->street = $rs_street;
 	}
 
 	function getpropertyamountAction(){
@@ -502,4 +506,35 @@ class Project_LandController extends Zend_Controller_Action {
 			exit();
 		}
 	}
+	function deleleLandRecordAction(){
+	 	$db = new Project_Model_DbTable_DbLand();
+	 	try {	
+	 		if($this->getRequest()->isPost()){
+				$data = $this->getRequest()->getPost();
+				$id = empty($data['id'])?0:$data['id'];	
+				
+				$rsChecking = $db->getCheckPropertyInSale($id);
+				if(empty(!$rsChecking)){
+					print_r(Zend_Json::encode(2));
+					exit();
+				}
+				$row = $db->getClientById($id);
+				if(!empty($row)){
+					$db->deleteLand($id);
+					print_r(Zend_Json::encode(1));
+					exit();//Void Success
+					
+				}else{
+					print_r(Zend_Json::encode(0));
+					exit();//Void Failed
+				}
+			}else{
+				print_r(Zend_Json::encode(0));
+				exit();//Void Failed
+			}
+	 	}catch (Exception $e) {
+	 		Application_Form_FrmMessage::message("INSERT_FAIL");
+	 		echo $e->getMessage();
+	 	}
+  }
 }

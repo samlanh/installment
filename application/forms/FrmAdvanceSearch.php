@@ -255,7 +255,12 @@ class Application_Form_FrmAdvanceSearch extends Zend_Dojo_Form
 		$_proccessSearch->setValue($request->getParam('proccessSearch'));
 
 		$_type_of_property = new Zend_Dojo_Form_Element_FilteringSelect('type_property_sale');
-		$_type_of_property->setAttribs(array('dojoType' => $this->filter, 'class' => 'fullside', ));
+		$_type_of_property->setAttribs(array(
+			'dojoType' => $this->filter, 
+			'class' => 'fullside', 
+			'required' => 'false', 
+			
+			));
 		$_type_of = array(
 			'-1' => $this->tr->translate("SELECT_TYPE"),
 			'1' => $this->tr->translate("SOLD_OUT"),

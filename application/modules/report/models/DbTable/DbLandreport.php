@@ -644,44 +644,44 @@ public function getAllOutstadingLoan($search=null){
 			   FROM `ln_project`
 			   WHERE (`ln_project`.`br_id` = `crm`.`branch_id`)
 			   LIMIT 1) AS `branchShortCode`,
-			  `c`.`client_id`                      AS `client_id`,
-			  `c`.`client_number`                  AS `client_number`,
-			  `c`.`name_kh`                        AS `name_kh`,
-			  `c`.`name_en`                        AS `client_name`,
-			  `crm`.`id`                           AS `id`,
-			  `crm`.`sale_id`                      AS `sale_id`,
-			  `crm`.`branch_id`                    AS `branch_id`,
-			  `crm`.`receipt_no`                   AS `receipt_no`,
-			  `crm`.`date_pay`                     AS `date_pay`,
-			  `crm`.`date_input`                   AS `date_input`,
-			  `crm`.`note`                         AS `note`,
-			  `crm`.`user_id`                      AS `user_id`,
-			  `crm`.`return_amount`                AS `return_amount`,
-			  `crm`.`status`                       AS `status`,
-			  `crm`.`payment_option`               AS `payment_option`,
-			  `crm`.`principal_amount`             AS `principal_amount`,
-			  `crm`.`is_payoff`                    AS `is_payoff`,
-			  `crm`.`total_principal_permonth`     AS `total_principal_permonth`,
-			  `crm`.`total_principal_permonthpaid` AS `total_principal_permonthpaid`,
-			  `crm`.`total_interest_permonth`      AS `total_interest_permonth`,
-			  `crm`.`total_interest_permonthpaid`  AS `total_interest_permonthpaid`,
-			  `crm`.`penalize_amount`              AS `penalize_amount`,
-			  `crm`.`penalize_amountpaid`          AS `penalize_amountpaid`,
-			  `crm`.`service_chargepaid`           AS `service_chargepaid`,
-			  `crm`.`service_charge`               AS `service_charge`,
-			  `crm`.`amount_payment`               AS `amount_payment`,
-			  `crm`.`total_payment`                AS `total_payment`,
-			  `crm`.`recieve_amount`               AS `amount_recieve`,
-			  `crm`.`penalize_amount`              AS `penelize`,
-			  `crm`.`service_charge`               AS `service`,
-			  `crm`.`extra_payment`                AS `extra_payment`,
-			  `crm`.`payment_times`                AS `payment_times`,
-			  `crm`.`field3`                       AS `field3`,
-			  `crm`.`is_closed`                    AS `is_closed`,
-			  `crm`.`closing_note`                    AS `closing_note`,
-			  `sl`.`sale_number`                   AS `sale_number`,
-			  `sl`.`price_sold`                   AS `sold_price`,
-			  `sl`.`total_duration`                   AS `times`,
+				`c`.`client_id`                      AS `client_id`,
+				`c`.`client_number`                  AS `client_number`,
+				`c`.`name_kh`                        AS `name_kh`,
+				`c`.`name_en`                        AS `client_name`,
+				`crm`.`id`                           AS `id`,
+				`crm`.`sale_id`                      AS `sale_id`,
+				`crm`.`branch_id`                    AS `branch_id`,
+				`crm`.`receipt_no`                   AS `receipt_no`,
+				`crm`.`date_pay`                     AS `date_pay`,
+				`crm`.`date_input`                   AS `date_input`,
+				`crm`.`note`                         AS `note`,
+				`crm`.`user_id`                      AS `user_id`,
+				`crm`.`return_amount`                AS `return_amount`,
+				`crm`.`status`                       AS `status`,
+				`crm`.`payment_option`               AS `payment_option`,
+				`crm`.`principal_amount`             AS `principal_amount`,
+				`crm`.`is_payoff`                    AS `is_payoff`,
+				`crm`.`total_principal_permonth`     AS `total_principal_permonth`,
+				`crm`.`total_principal_permonthpaid` AS `total_principal_permonthpaid`,
+				`crm`.`total_interest_permonth`      AS `total_interest_permonth`,
+				`crm`.`total_interest_permonthpaid`  AS `total_interest_permonthpaid`,
+				`crm`.`penalize_amount`              AS `penalize_amount`,
+				`crm`.`penalize_amountpaid`          AS `penalize_amountpaid`,
+				`crm`.`service_chargepaid`           AS `service_chargepaid`,
+				`crm`.`service_charge`               AS `service_charge`,
+				`crm`.`amount_payment`               AS `amount_payment`,
+				`crm`.`total_payment`                AS `total_payment`,
+				`crm`.`recieve_amount`               AS `amount_recieve`,
+				`crm`.`penalize_amount`              AS `penelize`,
+				`crm`.`service_charge`               AS `service`,
+				`crm`.`extra_payment`                AS `extra_payment`,
+				`crm`.`payment_times`                AS `payment_times`,
+				`crm`.`field3`                       AS `field3`,
+				`crm`.`is_closed`                    AS `is_closed`,
+				`crm`.`closing_note`                    AS `closing_note`,
+				`sl`.`sale_number`                   AS `sale_number`,
+				`sl`.`price_sold`                   AS `sold_price`,
+				`sl`.`total_duration`                   AS `times`,
 			  
 			  
 			  (SELECT `l`.`land_address` FROM `ln_properties` `l` WHERE `l`.`id` = `sl`.`house_id` LIMIT 1 ) AS land_address,
@@ -699,30 +699,20 @@ public function getAllOutstadingLoan($search=null){
 			  `crm`.`void_reason`           AS `void_reason`,
 			  `crm`.`void_date`             AS `void_date`,
 			  `crm`.`void_by`               AS `void_by`,
-			  (SELECT first_name FROM `rms_users` WHERE id=`crm`.`void_by` LIMIT 1) AS voidByUserName,
+			  (SELECT u.first_name FROM `rms_users` AS u WHERE u.id = `crm`.`void_by` LIMIT 1) AS voidByUserName,
 			  
-			  (SELECT
-			     `ln_view`.`name_kh`
-			   FROM `ln_view`
-			   WHERE ((`ln_view`.`key_code` = `crm`.`payment_method`)
-			          AND (`ln_view`.`type` = 2))
-			   LIMIT 1) AS `payment_method`,
-			  (SELECT
-			     `ln_view`.`name_en`
-			   FROM `ln_view`
-			   WHERE ((`ln_view`.`key_code` = `crm`.`payment_option`)
-			          AND (`ln_view`.`type` = 7))
-			   LIMIT 1) AS `paymentoption`,
-			   (SELECT first_name FROM `rms_users` WHERE id=crm.user_id LIMIT 1) AS user_name,
-			    (SELECT
-		     `ln_staff`.`co_khname`
-		   FROM `ln_staff`
-		   WHERE (`ln_staff`.`co_id` = `sl`.`staff_id`)
-		   LIMIT 1) AS `staff_name`
-		   
-			FROM ((`ln_client_receipt_money` `crm`
-			    JOIN `ln_sale` `sl`)
-			   JOIN `ln_client` `c`)
+			  (SELECT `v`.`name_kh` FROM `ln_view` AS v  WHERE `v`.`key_code` = `crm`.`payment_method` AND `v`.`type` = 2 LIMIT 1) AS `payment_method`,
+			  (SELECT `v`.`name_en` FROM `ln_view` AS v  WHERE `v`.`key_code` = `crm`.`payment_option` AND `v`.`type` = 7 LIMIT 1) AS `paymentoption`,
+			  (SELECT u.first_name FROM `rms_users` AS u WHERE u.id = crm.user_id LIMIT 1) AS user_name,
+			  (SELECT `staf`.`co_khname`  FROM `ln_staff` AS staf WHERE `staf`.`co_id` = `sl`.`staff_id` LIMIT 1) AS `staff_name`
+				
+				,(SELECT doc.document_name FROM `ln_expense_document` AS doc WHERE doc.exspense_id = crm.id AND doc.documentforType = 3 LIMIT 1) AS documentFile
+				,(SELECT doc.title FROM `ln_expense_document` AS doc WHERE doc.exspense_id = crm.id AND doc.documentforType = 3 LIMIT 1) AS documentTitle
+				
+			FROM ( 
+					(`ln_client_receipt_money` `crm` JOIN `ln_sale` `sl`)
+					JOIN `ln_client` `c` 
+				) 
 			WHERE ((`crm`.`client_id` = `c`.`client_id`)
 			       AND (`sl`.`id` = `crm`.`sale_id`)
 			      ) " ;

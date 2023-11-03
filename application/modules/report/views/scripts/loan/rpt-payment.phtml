@@ -80,7 +80,7 @@
 						<?php echo $frm->getElement('end_date');?>
 					</div>
 					<div class="col-md-2 col-sm-2 col-xs-12">
-						<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+						<button class="button-class button-primary" iconClass="glyphicon glyphicon-search" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
 					</div>
 				</div>
 				<div class="form-group"> 
@@ -337,7 +337,7 @@
 									}
 									?>
 									
-				                <tr class="<?php echo $classVoid;?> style style1" >
+				                <tr oncontextmenu="setrowdata(<?php echo $rs['id'];?>);return false;" class="context-menu-one <?php echo $classVoid;?> style style1" >
 				               		<td data-label="<?php echo $tr->translate("N_O");?>" style="text-align: center;"><?php echo $i++; ?></td>
 				               		<td data-label="<?php echo $tr->translate("BRANCH_NAME");?>"><?php echo $rs["branchShortCode"];?></td>
 				               		<td data-label="<?php echo $tr->translate("CUSTOMER_NAME");?>"><?php echo $rs["name_kh"];?></td>                 		
@@ -353,8 +353,19 @@
 				               		<td data-label="<?php echo $tr->translate("INPUT_DATE");?>" align="center" ><?php echo date($montFomat,strtotime($rs["date_pay"]));?></td>
 				               		<td data-label="<?php echo $tr->translate("RECIEPT_NO");?>" class="redText" align="center"><?php echo $rs["receipt_no"];?></td>
 				               		<td data-label="<?php echo $tr->translate("PAYMENT_OPTION");?>" style=" <?php if($rs["payment_option"]==4){echo " background:#ccc";} ?>" align="center" >
-									<a target="_blank" style="color:#000; text-decoration: none;" href="<?php echo $url_receipt.'/id/'.$rs["id"];?>">
-										<?php echo $rs["paymentoption"];?></a>
+										<a target="_blank" style="color:#000; text-decoration: none;" href="<?php echo $url_receipt.'/id/'.$rs["id"];?>">
+										<?php echo $rs["paymentoption"];?>
+										</a>
+										<?php 
+										   $documentFile ="";
+										   if (!empty($rs['documentFile'])){
+												if (file_exists(PUBLIC_PATH."/images/document/expense/".$rs['documentFile'])){
+													$documentFile = $rs['documentFile'];
+												}
+											}
+											
+										   ?>
+										<input type="hidden" dojoType="dijit.form.TextBox" name="documentFile<?php echo $rs['id'];?>" id="documentFile<?php echo $rs['id'];?>" value="<?php echo $documentFile;?>"  />
 									</td>
 									<td data-label="<?php echo $tr->translate("AGENTCY");?>"><?php echo $rs["staff_name"];?></td>
 				               		<td align="center"><?php echo $rs['user_name']?></td>
@@ -420,6 +431,9 @@
 			</div>
 		</div>
 	</div>
+<?php 
+	$urlReciept = $this->baseUrl()."/report/loan/receipt/id/";
+?>
 <script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
 <script>
 	dojo.require("dojo.data.ItemFileWriteStore"); 
@@ -509,5 +523,44 @@ function PrintPage(pages) {
 	window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint'+pages).innerHTML;
     window.frames["print_frame"].window.focus();
     window.frames["print_frame"].window.print();
+}
+
+
+var row=0;
+var url="";
+$(function(){
+	$.contextMenu({
+		selector: '.context-menu-one', 
+		callback: function(key, options) {
+			var m = "clicked: " + key;
+			if(key=="reciept"){
+				url='<?php echo $urlReciept;?>';
+				gotoAction();
+			}else if(key=="documentFile"){
+				viewAttachment();
+			}
+			
+		},
+		items: {
+			"reciept": {name: "<?php echo $tr->translate("RECEIPT");?>", icon: "fa-print", },
+			"documentFile": {name: "<?php echo $tr->translate("ATTACHMENT_FILE");?>", icon: "fa-paperclip", },
+		}
+	});
+});
+function setrowdata(index){
+	row = index;
+}
+var recordid ='';
+function gotoAction(){
+	 window.open(url+row);
+}
+
+function viewAttachment() {
+	documentFile = dijit.byId('documentFile'+row).get('value');
+	if(documentFile==""){
+		alert("<?php echo $tr->translate("THIS_RECORD_NO_ATTACHMENT_FILE");?>");
+		return false;
+	}
+	window.open("<?PHP echo $this->baseUrl().'/images/document/expense/';?>"+documentFile);
 }
 </script>

@@ -20,6 +20,11 @@ Class Project_Form_FrmLand extends Zend_Dojo_Form {
 	
 		$request=Zend_Controller_Front::getInstance()->getRequest();
 		$db = new Application_Model_DbTable_DbGlobal();
+		
+		$indexPage="";
+		if($request->getControllerName()=='land' && $request->getActionName()=='index'){
+			$indexPage="1";
+		}
 	
 		$_landcode = new Zend_Dojo_Form_Element_TextBox('landcode');
 		$_landcode->setAttribs(array(
@@ -36,6 +41,11 @@ Class Project_Form_FrmLand extends Zend_Dojo_Form {
 			'autoComplete'=>'false',
 			'queryExpr'=>'*${0}*',
 		));
+		if($indexPage=='1'){
+			$streetlist->setAttribs(array(
+				'required' =>'false',
+			));
+		}
 		$streetopt = $db->getAllStreet();
 		$streetlist->setMultiOptions($streetopt);
 		$streetlist->setValue($request->getParam("streetlist"));
@@ -168,14 +178,16 @@ Class Project_Form_FrmLand extends Zend_Dojo_Form {
 		
 		$propertiestype = new Zend_Dojo_Form_Element_FilteringSelect('property_type');
 		$propertiestype->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect',
-				'required'=>false,
+				'required'=>"false",
 				'autoComplete'=>'false',
 				'queryExpr'=>'*${0}*',
 				'class'=>'fullside','onChange'=>'showPopupForm();'));
+				
 		
 		$propertiestype_search = new Zend_Dojo_Form_Element_FilteringSelect('property_type_search');
 		$propertiestype_search->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
+				'required'=>'false',
 				'autoComplete'=>'false',
 				'queryExpr'=>'*${0}*'));
 		$propertiestype_search_opt = $db->getPropertyTypeForsearch();
@@ -314,8 +326,13 @@ Class Project_Form_FrmLand extends Zend_Dojo_Form {
 				'class'=>'fullside',
 				'autoComplete'=>'false',
 				'queryExpr'=>'*${0}*',
-				'onchange'=>'popupIssuer();'
+				'onchange'=>'popupIssuer();',
 		));
+		if($indexPage=='1'){
+			$type_tob->setAttribs(array(
+				'required' =>'false',
+			));
+		}
 		
 		$dbe = new Project_Model_DbTable_DbLand();
 		$rscheque = $dbe->getAllTypeTob();

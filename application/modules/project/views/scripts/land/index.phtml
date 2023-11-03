@@ -4,6 +4,12 @@ echo $this->headTitle($tr->translate("PROPERTY"));
 $frm = $this->frm_search;
 $frms=$this->frm_land;
 $formList = new Application_Form_Frmtable();
+
+
+$request=Zend_Controller_Front::getInstance()->getRequest();
+$action=$request->getActionName();
+$controller=$request->getControllerName();
+$module=$request->getModuleName();
 ?>
 <div class="card pb-10 pt-10 pl-10 pr-10">
 	<div class="card-content collapse show">
@@ -51,7 +57,8 @@ $formList = new Application_Form_Frmtable();
                    <div class="col-md-3 col-sm-3 col-xs-12">
                    		<button class="button-class button-primary" iconclass="glyphicon glyphicon-search" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
                    		<button class="button-class button-primary" iconclass="glyphicon glyphicon-export" onclick="window.open('<?php echo $this->url(array('module'=>'project','controller'=>'land','action'=>'addauto'));?>')" iconclass="dijitIconnew" dojoType="dijit.form.Button" showLabel="true" type="button"><?php echo $tr->translate("QUICK_ADD");?></button>
-                   </div>
+						<input type="hidden" dojoType="dijit.form.TextBox" name="id" id="id"  />
+				   </div>
                 </div>
 			</form>
 		</div>
@@ -106,20 +113,30 @@ dojo.require("dijit.form.DateTextBox");
 				var m = "clicked: " + key;
 				if(key=="edit"){
 					url='<?php echo $urlEdit;?>';
+					gotoAction();
 				}else if(key=="copy"){
 					url='<?php echo $urlCopy;?>';
+					gotoAction();
 				}else if(key=="info"){
 					url='<?php echo $urlView;?>';
+					gotoAction();
 				}else if(key=="delete"){
-					url='<?php echo $urlDelete;?>';
+					dijit.byId('id').set('value',row);
+					deleteRecord();
 				}
-				gotoAction();
+				
 			},
 			items: {
 				"edit": {name: "<?php echo $tr->translate("EDIT");?>", icon: "edit", accesskey: "e"},
 				"copy": {name: "<?php echo $tr->translate("COPY");?>", icon: "fa-copy", accesskey: "e"},
 				"info": {name: "<?php echo $tr->translate("INFORMATION");?>", icon: "fa-info"},
+				<?php 
+				$dbacc = new Application_Model_DbTable_DbUsers();
+				$rs = $dbacc->getAccessUrl($module,$controller,'delete');
+				if(!empty($rs)){
+				?>
 				"delete": {name: "<?php echo $tr->translate("DELETE");?>", icon: "fa-trash"},
+				<?php } ?>
 			}
 		});
 	});
@@ -130,4 +147,40 @@ dojo.require("dijit.form.DateTextBox");
 	function gotoAction(){
 		 window.open(url+row+'?rightclick=true', '_blank');
 	}
+	
+	
+		
+var urlDeleteRecord = '<?php echo $this->url(array('module'=>'project','controller'=>'land','action'=>'delele-land-record')); ?>';
+function deleteRecord(){
+	
+	var id = dijit.byId('id').get('value');
+	if (confirm("<?php echo $tr->translate("CONFIRM_DELETE");?>")) {
+	} else {
+		dijit.byId('id').set('value','');
+		return false;
+	}
+	loadingBlock();
+	dojo.xhrPost({
+		url: urlDeleteRecord,
+		content:{
+			'id':id,
+			},
+		handleAs:"json",
+		load: function(data) {
+			dijit.byId('id').set('value','');
+			if(data==1){
+				alert("<?php echo $tr->translate("DELETE_SUCCESS");?>");
+				location.reload();
+			}else if(data==2){
+				alert("<?php echo $tr->translate("Can not delete this record");?>");
+			}else{
+				alert("<?php echo $tr->translate("DELETE_FAIL");?>");
+			}
+			HideloadingBlock();
+		},
+		error: function(err) {
+			alert(err);
+		}
+	});
+}
 </script>
