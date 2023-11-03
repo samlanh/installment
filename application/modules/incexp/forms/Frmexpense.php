@@ -293,6 +293,12 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
 			$_cheque->setValue($data['cheque']);
 			$payment_type->setValue($data['payment_id']);
 			
+			$data['qty'] = empty($data['qty']) ? 0 : $data['qty'];
+			$data['unit_price'] = empty($data['unit_price']) ? 0 : $data['unit_price'];
+			$data['amount'] = empty($data['amount']) ? 0 : $data['amount'];
+			$data['from_date'] = empty($data['from_date']) ? 0 : $data['from_date'];
+			$data['next_date'] = empty($data['next_date']) ? 0 : $data['next_date'];
+			
 			$qty->setValue($data['qty']);
 			$price->setValue($data['unit_price']);
 			$amount->setValue($data['amount']);

@@ -107,11 +107,13 @@ class Report_LoanController extends Zend_Controller_Action {
 	$this->view->search = $search;
 	$this->view->loantotalcollect_list = $db->getALLLoanPayment($search);
 	$this->view->list_end_date = $search;	
+	$this->view->bankList = $db->getPayemtTotalByBankList($search);
 	
 	$frm = new Loan_Form_FrmSearchLoan();
 	$frm = $frm->AdvanceSearch();
 	Application_Model_Decorator::removeAllDecorator($frm);
 	$this->view->frm_search = $frm;
+	
 	
 	$frmpopup = new Application_Form_FrmPopupGlobal();
 	$this->view->footerReport = $frmpopup->getFooterReport();
@@ -644,6 +646,13 @@ class Report_LoanController extends Zend_Controller_Action {
   		}
   	}
   	$this->view->dateLimit = $dateLimit;
+	
+	$db  = new Report_Model_DbTable_DbParamater();
+	$conditionArr = array(
+		"id" => $id,
+		"documentforType" => 3,
+	);
+	$this->view->document=$db->getExpenseDocumentbyid($conditionArr);
 //   	$rss = $db->UpdatePaytimeBooking();
   		$frmpopup = new Application_Form_FrmPopupGlobal();
 		$this->view->footer = $frmpopup->getFooterReceipt();

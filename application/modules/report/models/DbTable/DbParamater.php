@@ -3592,7 +3592,8 @@ function getAllBranch($search=null){
 	function getExpenseDocumentbyid($search){
 		$db = $this->getAdapter();
 		$id = empty($search['id'])?0:$search['id'];
-		$sql=" SELECT * FROM ln_expense_document WHERE exspense_id=$id ";
+		$documentforType = empty($search['documentforType'])?1:$search['documentforType'];
+		$sql=" SELECT * FROM ln_expense_document WHERE exspense_id=$id AND documentforType = $documentforType ";
 		if(!empty($search['adv_search'])){
 			$s_where = array();
 			$s_search = str_replace(' ', '', addslashes(trim($search['adv_search'])));
