@@ -678,9 +678,10 @@ public function getAllOutstadingLoan($search=null){
 				`crm`.`payment_times`                AS `payment_times`,
 				`crm`.`field3`                       AS `field3`,
 				`crm`.`is_closed`                    AS `is_closed`,
-				`crm`.`closing_note`                    AS `closing_note`,
+				`crm`.`closing_note`                 AS `closing_note`,
+				`crm`.`bank_id`                   	 AS `bankId`,
 				`sl`.`sale_number`                   AS `sale_number`,
-				`sl`.`price_sold`                   AS `sold_price`,
+				`sl`.`price_sold`                    AS `sold_price`,
 				`sl`.`total_duration`                   AS `times`,
 			  
 			  
@@ -3393,6 +3394,7 @@ function updatePaymentStatus($data){
    	   	(SELECT `ln_view`.`name_kh` FROM `ln_view` WHERE `key_code` = `op`.`payment_method`
          		 AND `type` = 2 LIMIT 1) AS `payment_method`,
 		(SELECT bank_name FROM `st_bank` WHERE id =op.bank_id LIMIT 1) AS bank,
+		`op`.`bank_id` AS bankId,
 		`op`.`payment_method` AS payment_id,
    	   	oi.client_id,
    	   	op.for_date AS date,
@@ -3984,110 +3986,20 @@ function updatePaymentStatus($data){
       			$this->update($arr, $where);
       		}
       	}
-      }
-	  
-	function paymentFilterCondiction($search){
-	
-		$from_date =(empty($search['start_date']))? '1': " `crm`.`date_pay` >= '".$search['start_date']." 00:00:00'";
-      	$to_date = (empty($search['end_date']))? '1': " `crm`.`date_pay` <= '".$search['end_date']." 23:59:59'";
-      	$where = " AND ".$from_date." AND ".$to_date;
-      	
-      	$dbp = new Application_Model_DbTable_DbGlobal();
-      	$where.=$dbp->getAccessPermission("`crm`.`branch_id`");
-      	
-      	if(!empty($search['user_id']) AND $search['user_id']>0){
-      		$where.=" AND `crm`.`user_id` = ".$search['user_id'];
-      	}
-      	if($search['client_name']>0){
-      		$where.=" AND `crm`.`client_id` = ".$search['client_name'];
-      	} 
-		if($search['branch_id']>0){
-		        $where.=" AND `crm`.`branch_id` = ".$search['branch_id'];
-		}
-		if(!empty($search['land_id']) AND $search['land_id']>0){
-			$where.=" AND `sl`.`house_id` = ".$search['land_id'];
-		}
-		if(@$search['payment_method']>0){
-			$where.=" AND `crm`.`payment_method` = ".$search['payment_method'];
-		}
-		if (!empty($search['streetlist'])){
-			$where.=" AND `l`.`street` = '".$search['streetlist']."'";
-		}
-		if (!empty($search['agency_id'])){
-			$where.=" AND `sl`.`staff_id` = '".$search['agency_id']."'";
-		}
-		$search['is_closed'] = empty($search['is_closed'])?0:$search['is_closed'];
-		if (!empty($search['is_closed'])){
-			if($search['is_closed']!=1){
-				$search['is_closed']=0;
-			}
-			$where.=" AND `crm`.`is_closed` = '".$search['is_closed']."'";
-		}
-		if (!empty($search['option_pay'])){
-			if($search['option_pay']>0){
-				$where.=" AND `crm`.`payment_option` = ".$search['option_pay'];
-			}
-		}
-		if (!empty($search['receipt_type'])){
-			if($search['receipt_type']>0){
-				if($search['receipt_type']==1){
-					$where.=" AND `crm`.`field3` = ".$search['receipt_type'];
-				}else{
-					$where.=" AND `crm`.`field3` !=1 ";
-				}
-			}
-		}else{
-			$where.=" AND `crm`.`field3` !=1 ";
-		}
-		
-      	if(!empty($search['adv_search'])){
-      		$s_where = array();
-      		$s_search = addslashes(trim($search['adv_search']));
-      		$s_where[] = " `sl`.`sale_number`  LIKE '%{$s_search}%'";
-      		$s_where[] = " `crm`.`total_principal_permonthpaid` LIKE '%{$s_search}%'";
-      		$s_where[] = " `crm`.`total_interest_permonth`  LIKE '%{$s_search}%'";
-            
-      		$s_where[] = " `crm`.`penalize_amountpaid` LIKE '%{$s_search}%'";  
-      		$s_where[] = " `crm`.`service_chargepaid` LIKE '%{$s_search}%'";
-      		$s_where[] = " `crm`.`amount_payment` LIKE '%{$s_search}%'";
-      		$s_where[] = " `crm`.`receipt_no` LIKE '%{$s_search}%'";
-      		$s_where[] = " `crm`.`cheque` LIKE '%{$s_search}%'";
-      		$where .=' AND ('.implode(' OR ',$s_where).')';
-      	}
-		if(!empty($search['receiptStatus'])){
-			if($search['receiptStatus']==1){
-				$where.=" AND `crm`.total_payment >0 ";
-			}else if($search['receiptStatus']==2){
-				$where.=" AND `crm`.total_payment <=0 ";
-			}
-		}
-		return $where;
 	}
-	function getPayemtTotalByBankList($search){
+	
+	function getPayemtTotalByBankList(){
 		$db = $this->getAdapter();
-		$where = $this->paymentFilterCondiction($search);
 		$sql="
-		SELECT 
-			b.id
-			,b.bank_name AS bankName
-			,COALESCE(SUM(IF(crm.payment_method = '2', crm.total_payment, NULL)),0) AS totalBankRecieve
-			,COALESCE(SUM(IF(crm.payment_method = '3', crm.total_payment, NULL)),0) AS totalCheckRecieve
-		
+			SELECT 
+				b.id
+				,b.bank_name AS bankName
+				,'0' AS totalBankRecieve
+				,'0' AS totalCheckRecieve
 		";
-		$sql.="
-			FROM `st_bank` AS b
-				LEFT JOIN (`ln_client_receipt_money` AS crm JOIN ln_sale AS sl ON sl.id = crm.sale_id ) ON crm.bank_id = b.id AND crm.status= 1 AND crm.payment_method !=1 $where
-		";
-		
-		$sql.="
-			WHERE b.status = 1
-		";
-		$sql.="  ";
-      	
-		$sql.="
-			GROUP BY b.id
-			ORDER BY b.bank_name ASC
-		";
+		$sql.=" FROM `st_bank` AS b ";
+		$sql.=" WHERE b.status = 1 ";
+		$sql.=" ORDER BY b.bank_name ASC ";
 		return $db->fetchAll($sql);
 	}
  }

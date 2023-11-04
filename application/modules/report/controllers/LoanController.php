@@ -107,7 +107,7 @@ class Report_LoanController extends Zend_Controller_Action {
 	$this->view->search = $search;
 	$this->view->loantotalcollect_list = $db->getALLLoanPayment($search);
 	$this->view->list_end_date = $search;	
-	$this->view->bankList = $db->getPayemtTotalByBankList($search);
+	$this->view->bankList = $db->getPayemtTotalByBankList();
 	
 	$frm = new Loan_Form_FrmSearchLoan();
 	$frm = $frm->AdvanceSearch();

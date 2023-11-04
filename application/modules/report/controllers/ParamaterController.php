@@ -212,6 +212,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$db  = new Report_Model_DbTable_DbLandreport();
   	$this->view->houserepair =$db->getAllIncomeOtherPayment($search,12);
   	$this->view->houserepairExpense =$db->getAllIncomeOtherPayment($search,13);
+	$this->view->bankList = $db->getPayemtTotalByBankList();
 	
 	
   	

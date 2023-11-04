@@ -26,6 +26,8 @@
 	}
 	$pages=0;
 	$limitNumberRow=7000;
+	
+	$arrayBank = $this->bankList;
 ?>
 <title><?php echo $tr->translate("RPT_CLIENT_PAYMENT");?></title>
 <script>
@@ -308,10 +310,28 @@
 									$total_d=$amt_d1+$amt_d2+$amt_d3+$amt_d5;
 									if($rs['payment_methodid']==1){
 										$total_cash = $total_cash + $rs['total_principal_permonthpaid']+$rs['total_interest_permonthpaid']+$rs['penalize_amountpaid']+$rs['extra_payment'];
-									}elseif($rs['payment_methodid']==2){
-										$total_bank = $total_bank  + $rs['total_principal_permonthpaid']+$rs['total_interest_permonthpaid']+$rs['penalize_amountpaid']+$rs['extra_payment'];
 									}else{
-										$total_cheque = $total_cheque + $rs['total_principal_permonthpaid']+$rs['total_interest_permonthpaid']+$rs['penalize_amountpaid']+$rs['extra_payment'];
+										
+										$foundKey="-1";
+										if(!empty($rs["bankId"])){
+											$foundKey = array_search($rs["bankId"], array_column($arrayBank, 'id'));
+										}
+										
+										if($rs['payment_methodid']==2){
+											$recordTotal = $rs['total_principal_permonthpaid']+$rs['total_interest_permonthpaid']+$rs['penalize_amountpaid']+$rs['extra_payment'];
+											if($foundKey > -1 ){
+												$totalBankRecieve = $arrayBank[$foundKey]['totalBankRecieve'];
+												$arrayBank[$foundKey]['totalBankRecieve'] = $totalBankRecieve  + $recordTotal;
+											}
+											$total_bank = $total_bank  + $recordTotal;
+										}else{
+											$recordTotal = $rs['total_principal_permonthpaid']+$rs['total_interest_permonthpaid']+$rs['penalize_amountpaid']+$rs['extra_payment'];
+											if($foundKey > -1 ){
+												$totalCheckRecieve = $arrayBank[$foundKey]['totalCheckRecieve'];
+												$arrayBank[$foundKey]['totalCheckRecieve'] = $totalCheckRecieve  + $recordTotal;
+											}
+											$total_cheque = $total_cheque + $recordTotal;
+										}
 									}
 									
 									$stringPaid = $rs["payment_times"];
@@ -386,7 +406,7 @@
 									echo $strHead;
 				                }?>
 				                
-				                <?php }?>
+				                <?php } ?>
 				                <tr class="style style" style="font-weight: 600; background: #c1d0f3;">
 				                	<td colspan="6"></td>
 				                	<td align="right"><?php echo number_format($amt_d1,2);?></td>
@@ -399,7 +419,6 @@
 				            </table>
 				             <br />
 							 <table style="margin: 0 auto;" class="summaryTotal" border="0" width="50%" cellspacing="0">
-								
 				                <tr align="center" bgcolor="#c1d0f3" class="syle" style="border-bottom: 1px solid #637fc0;">
 				                	<td></td>
 									<td><?php echo $tr->translate("PAYWITH_BANK");?></td>
@@ -407,13 +426,31 @@
 									<td><?php echo $tr->translate("CASH");?></td>
 				                </tr>
 				                
-								<?php if(!empty($this->bankList)) foreach($this->bankList as $key=> $bank){?>
+								<?php 
+								$totalBankRecieve=0;
+								$totalCheckRecieve=0;
+								if(!empty($arrayBank)) foreach($arrayBank as $key=> $bank){
+									$totalBankRecieve = $totalBankRecieve+$bank["totalBankRecieve"];
+									$totalCheckRecieve = $totalCheckRecieve+$bank["totalCheckRecieve"];
+								?>
 									<tr class="style1 <?php if(($key%2) ==1 ){ echo "odd"; } ?>">
 										<td><?php echo $bank["bankName"];?></td>
-										<td class="moneyAlign"><?php echo $bank["totalBankRecieve"];?></td>
-										<td class="moneyAlign"><?php echo $bank["totalCheckRecieve"];?></td>
+										<td class="moneyAlign"><?php echo number_format($bank["totalBankRecieve"],2);?></td>
+										<td class="moneyAlign"><?php echo number_format($bank["totalCheckRecieve"],2);?></td>
 										<td></td>
 									</tr>
+								<?php } ?>
+								<?php 
+								$otherBankRecieve = $total_bank - $totalBankRecieve;
+								$otherCheckRecieve = $total_cheque - $totalCheckRecieve;
+								if($otherBankRecieve>0 || $otherCheckRecieve>0){
+								?>
+								<tr class="style1 <?php if((count($arrayBank)%2) ==1 ){ echo "odd"; } ?>">
+									<td><?php echo $tr->translate("OTHER");?></td>
+									<td class="moneyAlign"><?php echo number_format($otherBankRecieve,2);?></td>
+									<td class="moneyAlign"><?php echo number_format($otherCheckRecieve,2);?></td>
+									<td></td>
+								</tr>
 								<?php } ?>
 								<tr class="style style hover" style="font-weight: 600; background: #c1d0f3; border-top: 1px solid #637fc0;">
 				                	<td></td>

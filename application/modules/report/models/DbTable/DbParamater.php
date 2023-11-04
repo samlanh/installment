@@ -270,19 +270,29 @@ function getAllBranch($search=null){
     		$to_date = (empty($search['end_date']))? '1': " date <= '".$search['end_date']." 23:59:59'";
     		$where = " AND ".$from_date." AND ".$to_date;
     	
-    		$sql=" SELECT id,
-    		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id = branch_id LIMIT 1) AS branch_name,
-    		 title, invoice,branch_id,
-    		(SELECT CONCAT(land_address,',',street) FROM `ln_properties` WHERE id =ln_income.house_id LIMIT 1) as house_name,
-    		(SELECT name_kh FROM `ln_view` WHERE type=12 and key_code=category_id LIMIT 1) AS category_name,
-    		(SELECT name_kh FROM `ln_view` WHERE type=2 and key_code=payment_id LIMIT 1) AS payment_type,
-			(SELECT bank_name FROM `st_bank` WHERE  id=ln_income.bank_id LIMIT 1) AS bank,
-			payment_id,
-    		(SELECT name_kh FROM `ln_client` WHERE ln_client.client_id=ln_income.client_id limit 1) AS client_name,
-    		 cheque,total_amount,description,date,is_closed,
-    		(SELECT  first_name FROM rms_users WHERE rms_users.id=ln_income.user_id LIMIT 1 ) AS user_name,
-    		status 
-			FROM ln_income WHERE status=1 ";
+    		$sql=" 
+			SELECT 
+				id
+				,(SELECT project_name FROM `ln_project` WHERE ln_project.br_id = branch_id LIMIT 1) AS branch_name
+				,title
+				,invoice
+				,branch_id
+				,(SELECT CONCAT(land_address,',',street) FROM `ln_properties` WHERE id =ln_income.house_id LIMIT 1) as house_name
+				,(SELECT name_kh FROM `ln_view` WHERE type=12 and key_code=category_id LIMIT 1) AS category_name
+				,(SELECT name_kh FROM `ln_view` WHERE type=2 and key_code=payment_id LIMIT 1) AS payment_type
+				,(SELECT bank_name FROM `st_bank` WHERE  id=ln_income.bank_id LIMIT 1) AS bank
+				,bank_id AS bankId
+				,payment_id
+				,(SELECT name_kh FROM `ln_client` WHERE ln_client.client_id=ln_income.client_id limit 1) AS client_name
+				,cheque
+				,total_amount
+				,description
+				,date
+				,is_closed
+				,(SELECT  first_name FROM rms_users WHERE rms_users.id=ln_income.user_id LIMIT 1 ) AS user_name
+				,status 
+			FROM ln_income 
+			WHERE status=1 ";
     		
     		$dbp = new Application_Model_DbTable_DbGlobal();
     		$sql.=$dbp->getAccessPermission("branch_id");
@@ -337,6 +347,9 @@ function getAllBranch($search=null){
     		}
     		if($search['branch_id']>0){
     			$where.= " AND branch_id = ".$search['branch_id'];
+    		}
+			if (!empty($search['payment_method'])){
+				$where.= " AND payment_id = '".$search['payment_method']."'";
     		}
 //     		if(@$search['category_id']>-1 AND !@empty($search['category_id'])){
 //     			$where.= " AND category_id = ".$search['category_id'];
@@ -400,26 +413,39 @@ function getAllBranch($search=null){
     		$where = " AND ".$from_date." AND ".$to_date;
     	
     		$sql=" 
-				SELECT id,
-					(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS branch_name,
-					(SELECT ls.name FROM `ln_supplier` AS ls WHERE ls.id = supplier_id LIMIT 1) AS supplier_name,
-					(SELECT name_kh FROM `ln_view` WHERE type=2 and key_code=payment_id limit 1) AS payment_type,
-					payment_id,
-					title,invoice,is_closed,
-					cheque_issuer,other_invoice,
-					(SELECT name_kh FROM `ln_view` WHERE type=13 and key_code=category_id limit 1) AS category_name,
-					cheque,total_amount,description,date,
-					(SELECT  CONCAT(COALESCE(last_name,''),' ',COALESCE(first_name,'')) FROM rms_users WHERE id=user_id limit 1 ) AS user_name,
-					status,
-					cancelSale_id,
-					CASE
+				SELECT 
+					id
+					,(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS branch_name
+					,(SELECT ls.name FROM `ln_supplier` AS ls WHERE ls.id = supplier_id LIMIT 1) AS supplier_name
+					,(SELECT name_kh FROM `ln_view` WHERE type=2 and key_code=payment_id limit 1) AS payment_type
+					,payment_id
+					,title
+					,invoice
+					,is_closed
+					,cheque_issuer
+					,other_invoice
+					,(SELECT name_kh FROM `ln_view` WHERE type=13 and key_code=category_id limit 1) AS category_name
+					,cheque
+					,total_amount
+					,description
+					,date
+					,(SELECT  CONCAT(COALESCE(last_name,''),' ',COALESCE(first_name,'')) FROM rms_users WHERE id=user_id limit 1 ) AS user_name
+					,status
+					,cancelSale_id
+					,(SELECT bank_name FROM `st_bank` WHERE  id = ln_expense.bank_id LIMIT 1) AS bank
+					,bank_id AS bankId
+					,CASE
 						WHEN  cancelSale_id > 0 THEN (SELECT c.name_kh FROM ln_client AS c WHERE c.client_id = (SELECT s.client_id FROM `ln_sale` AS s WHERE s.id = sale_id LIMIT 1 ) LIMIT 1) 
 						ELSE  (SELECT ls.name FROM `ln_supplier` AS ls WHERE ls.id = supplier_id LIMIT 1)
-					END AS supplierOrCustomer,
-					(SELECT c.name_kh FROM ln_client AS c WHERE c.client_id = (SELECT s.client_id FROM `ln_sale` AS s WHERE s.id = sale_id LIMIT 1 ) LIMIT 1) AS cancelCustomer,
-					(SELECT CONCAT(p.land_address,',',p.street) FROM `ln_properties` AS p WHERE p.id = (SELECT s.house_id FROM `ln_sale` AS s WHERE s.id = sale_id LIMIT 1 ) LIMIT 1) AS cancelProperty
+					END AS supplierOrCustomer
+					,(SELECT c.name_kh FROM ln_client AS c WHERE c.client_id = (SELECT s.client_id FROM `ln_sale` AS s WHERE s.id = sale_id LIMIT 1 ) LIMIT 1) AS cancelCustomer
+					,(SELECT CONCAT(p.land_address,',',p.street) FROM `ln_properties` AS p WHERE p.id = (SELECT s.house_id FROM `ln_sale` AS s WHERE s.id = sale_id LIMIT 1 ) LIMIT 1) AS cancelProperty
 					
-    			FROM ln_expense WHERE status=1 AND total_amount>0 ";
+    			FROM ln_expense 
+				WHERE 
+					status=1 
+					AND total_amount>0 
+			";
     		$sql.=" AND (SELECT v.capital_widthdrawal FROM `ln_view` AS v WHERE v.type =13 AND v.key_code = ln_expense.`category_id` LIMIT 1)=0 ";
 			
     		$dbp = new Application_Model_DbTable_DbGlobal();
@@ -483,12 +509,16 @@ function getAllBranch($search=null){
     		if(@$search['payment_type']>0){
     			$where.= " AND payment_id = ".$search['payment_type'];
     		}
+			if (!empty($search['payment_method'])){
+				$where.= " AND payment_id = '".$search['payment_method']."'";
+    		}
     		if (!empty($search['supplier_id'])){
     			$where.= " AND supplier_id = ".$search['supplier_id'];
     		}
     		if (!empty($search['cheque_issuer_search'])){
     			$where.= " AND cheque_issuer = '".$search['cheque_issuer_search']."'";
     		}
+			
 			
 			$search['is_closed'] = empty($search['is_closed'])?0:$search['is_closed'];
 			if (!empty($search['is_closed'])){
@@ -2072,27 +2102,34 @@ function getAllBranch($search=null){
     		$from_date =(empty($search['start_date']))? '1': "c.`for_date` >= '".$search['start_date']." 00:00:00'";
     		$to_date = (empty($search['end_date']))? '1': "c.`for_date` <= '".$search['end_date']." 23:59:59'";
     		$where = " AND ".$from_date." AND ".$to_date;
-    		$sql ='SELECT c.`id`,
-    			s.id AS saleid,
-	    		p.`project_name`,
-	    		s.`sale_number`,
-	    		s.full_commission,
-	    		clie.`name_kh` AS client_name,
-	    		(SELECT protype.type_nameen FROM `ln_properties_type` AS protype WHERE protype.id = pro.`property_type` LIMIT 1) AS property_type,
-	    		pro.`land_address`,pro.`street`,
-	    		s.price_sold,
-	    		c.cheque,
-	    		c.cheque_issuer,
-	    		(SELECT name_kh FROM `ln_view` WHERE type=2 and key_code=c.payment_id limit 1) AS payment_type,
-	    		(SELECT co_khname FROM `ln_staff` WHERE co_id=c.staff_id LIMIT 1) AS staff_name,
-	    		(SELECT co_code FROM `ln_staff` WHERE co_id=c.staff_id LIMIT 1) AS co_code,
-	    		(SELECT sex FROM `ln_staff` WHERE co_id=c.staff_id LIMIT 1) AS sex,
-	    		(SELECT tel FROM `ln_staff` WHERE co_id=c.staff_id LIMIT 1) AS tel,
-	    		c.total_amount,
-	    		c.invoice,
-	    		c.payment_id,
-	    		for_date AS `create_date`, c.`status`,c.is_closed,
-	    		(SELECT CONCAT(COALESCE(last_name,"")," ",COALESCE(first_name,""))  FROM rms_users WHERE id = c.user_id LIMIT 1 ) AS user_name
+    		$sql ='
+				SELECT 
+					c.`id`
+					,s.id AS saleid
+					,p.`project_name`
+					,s.`sale_number`
+					,s.full_commission
+					,clie.`name_kh` AS client_name
+					,(SELECT protype.type_nameen FROM `ln_properties_type` AS protype WHERE protype.id = pro.`property_type` LIMIT 1) AS property_type
+					,pro.`land_address`
+					,pro.`street`
+					,s.price_sold
+					,c.cheque
+					,c.cheque_issuer
+					,(SELECT name_kh FROM `ln_view` WHERE type=2 and key_code=c.payment_id limit 1) AS payment_type
+					,(SELECT co_khname FROM `ln_staff` WHERE co_id=c.staff_id LIMIT 1) AS staff_name
+					,(SELECT co_code FROM `ln_staff` WHERE co_id=c.staff_id LIMIT 1) AS co_code
+					,(SELECT sex FROM `ln_staff` WHERE co_id=c.staff_id LIMIT 1) AS sex
+					,(SELECT tel FROM `ln_staff` WHERE co_id=c.staff_id LIMIT 1) AS tel
+					,c.total_amount
+					,c.invoice
+					,c.payment_id
+					,(SELECT bank_name FROM `st_bank` WHERE id =c.bank_id LIMIT 1) AS bank
+					,c.`bank_id` AS bankId
+					,c.for_date AS `create_date`
+					, c.`status`
+					,c.is_closed
+					,(SELECT CONCAT(COALESCE(last_name,"")," ",COALESCE(first_name,""))  FROM rms_users WHERE id = c.user_id LIMIT 1 ) AS user_name
 	    		FROM `ln_comission` AS c ,
 	    			`ln_sale` AS s,
 	    			`ln_project` AS p,
@@ -2120,6 +2157,9 @@ function getAllBranch($search=null){
     		}
     		if(!empty($search['category_id_expense']) AND $search['category_id_expense']>0){
     			$where.= " AND c.category_id = ".$search['category_id_expense'];
+    		}
+			if (!empty($search['payment_method'])){
+				$where.= " AND c.payment_id = '".$search['payment_method']."'";
     		}
     		
     		if(!empty($search['adv_search'])){
@@ -3608,18 +3648,22 @@ function getAllBranch($search=null){
     	try{
     		$sql="
     		SELECT
-    		pp.*,
-    		(SELECT b.project_name FROM `ln_project` AS b  WHERE b.br_id = pp.branch_id LIMIT 1) AS branch_name,
-    		pp.receipt_no,
-    		(SELECT s.name FROM `ln_supplier` AS s WHERE s.id = pp.supplier_id LIMIT 1 ) AS supplier_name,
-    		pp.balance,
-    		pp.total_paid,pp.total_due,
-			 pp.paid_by as paid_by_id,
-    		(SELECT v.name_kh FROM `ln_view` AS v WHERE v.key_code = pp.paid_by AND v.type=26 LIMIT 1) AS paid_by,
-    		pp.date_payment,
-			(SELECT  first_name FROM rms_users WHERE id=pp.user_id limit 1 ) AS user_name,
-    		pp.status
-    		FROM `rms_expense_payment` AS pp WHERE pp.status=1 
+				,pp.*,
+				,(SELECT b.project_name FROM `ln_project` AS b  WHERE b.br_id = pp.branch_id LIMIT 1) AS branch_name
+				,pp.receipt_no
+				,(SELECT s.name FROM `ln_supplier` AS s WHERE s.id = pp.supplier_id LIMIT 1 ) AS supplier_name
+				,pp.balance
+				,pp.total_paid,pp.total_due
+				,pp.paid_by as paid_by_id
+				,(SELECT v.name_kh FROM `ln_view` AS v WHERE v.key_code = pp.paid_by AND v.type=26 LIMIT 1) AS paid_by
+				,pp.date_payment
+				,(SELECT  first_name FROM rms_users WHERE id=pp.user_id limit 1 ) AS user_name
+				,pp.status
+				,(SELECT bank_name FROM `st_bank` WHERE id =pp.bank_id LIMIT 1) AS bank
+				,pp.bank_id AS bankId
+    		FROM 
+				`rms_expense_payment` AS pp 
+			WHERE pp.status=1 
     		";
     		$from_date =(empty($search['start_date']))? '1': " pp.date_payment >= '".date("Y-m-d",strtotime($search['start_date']))." 00:00:00'";
     		$to_date = (empty($search['end_date']))? '1': " pp.date_payment <= '".date("Y-m-d",strtotime($search['end_date']))." 23:59:59'";
