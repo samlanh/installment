@@ -1,7 +1,7 @@
 <?php 
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$frm = $this->frm_search;
-	
+	$url_receipt = $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt'));
 	$dbGB = new Application_Model_DbTable_DbGlobal();
 	$logo = $this->baseUrl()."/images/logo.jpg";
 	$branch_title = $tr->translate("BRAND_TITLE");
@@ -24,6 +24,13 @@
 ?>
 <style>
 	.hover:hover{background: #ccc;}
+	a.attachFile {
+		color: #008;
+		padding: 0 5px;
+	}
+	a.attachFile.whiteColor {
+		color: transparent;
+	}
 </style>
 <meta charset="utf-8">
 <title><?php echo $tr->translate("REPORT_DAILY_CASH");?></title>
@@ -107,17 +114,21 @@
 					}
 					.hide{visibility: hidden;}
 					@media print {
-					div.divFooter {
-						position: fixed;
-						top: 0;
-						width: 100%;
-						height: 100px;
-						bottom:0px;
-						margin:0;
-					}
+						div.divFooter {
+							position: fixed;
+							top: 0;
+							width: 100%;
+							height: 100px;
+							bottom:0px;
+							margin:0;
+						}
 						.hide{visibility: visible; height: <?php echo $classHideHeight;?>;}
+						.attachFile{
+							display : none;
+						}
 						
 					}
+					.right{text-align: right !important;}
 					.center{text-align: center !important;}
 					table.content-data{
 						border-collapse:collapse;
@@ -338,28 +349,47 @@
 			               		<td data-label="<?php echo $tr->translate("CUSTOMER_NAME");?>" ><?php echo $rs["name_kh"];?></td>                 		
 			               		<td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>"><?php echo $rs["land_address"].",".$rs["street"];?></td>
 			               		<td data-label="<?php echo $tr->translate("PAYMENT_TYPE");?>" ><?php echo $rs["payment_method"];?> <?php if(!empty($rs["bank"])){ echo "(". $rs["bank" ].")";}else{echo  "";} ?></td>
-			               		<td data-label="<?php echo $tr->translate("PAID_PRINCIPAL");?>" >
+			               		<td class="right" data-label="<?php echo $tr->translate("PAID_PRINCIPAL");?>" >
 			               			<?php echo number_format($rs['total_principal_permonthpaid'],2);
 			               			$principal = $principal+$rs['total_principal_permonthpaid'];
 			               			?></td>
-			               		<td data-label="<?php echo $tr->translate("EXTRA_PAYMENT");?>"><?php if($rs['extra_payment']>0){ echo number_format($rs['extra_payment'],2);}?></td>       		
-			               		<td data-label="<?php echo $tr->translate("INTEREST");?>" ><?php echo number_format($rs['total_interest_permonthpaid'],2);?></td>
-			               		<td data-label="<?php echo $tr->translate("PENALIZE AMOUNT");?>" ><?php echo number_format($rs['penalize_amountpaid'],2);?></td>
-			               		<td data-label="<?php echo $tr->translate("TOTAL");?>" ><?php echo number_format($rs['amount_payment'],2);?></td>
+			               		<td class="right" data-label="<?php echo $tr->translate("EXTRA_PAYMENT");?>"><?php if($rs['extra_payment']>0){ echo number_format($rs['extra_payment'],2);}?></td>       		
+			               		<td class="right" data-label="<?php echo $tr->translate("INTEREST");?>" ><?php echo number_format($rs['total_interest_permonthpaid'],2);?></td>
+			               		<td class="right" data-label="<?php echo $tr->translate("PENALIZE AMOUNT");?>" ><?php echo number_format($rs['penalize_amountpaid'],2);?></td>
+			               		<td class="right bold" data-label="<?php echo $tr->translate("TOTAL");?>" ><?php echo number_format($rs['amount_payment'],2);?></td>
 			               		<td data-label="<?php echo $tr->translate("INPUT_DATE");?>" ><?php echo date("d-m-Y",strtotime($rs["date_pay"]));?></td>
-			               		<td data-label="<?php echo $tr->translate("RECIEPT_NO");?>" ><?php echo $rs["receipt_no"];?></td>
+			               		<td data-label="<?php echo $tr->translate("RECIEPT_NO");?>" >
+									<?php echo $rs["receipt_no"];?>
+									<a class="attachFile" title="<?php echo $tr->translate("RECEIPT");?>" target="_blank"  href="<?php echo $url_receipt.'/id/'.$rs["id"];?>">
+											<i class="fa fa-print" aria-hidden="true"></i>
+										</a>
+									<?php 
+										if (!empty($rs['documentFile'])){
+												if (file_exists(PUBLIC_PATH."/images/document/expense/".$rs['documentFile'])){
+										?>
+										<a class="attachFile" title="<?php echo $tr->translate("VIEW_ATTACHMENT_FILE");?>" target="_blank"  href="<?php echo $url_receipt.'/id/'.$rs["id"]."?viewing=file";?>">
+											<i class="fa fa-paperclip" aria-hidden="true"></i>
+										</a>
+									<?php }
+										}else{
+									?>
+										<a class="attachFile whiteColor"  >
+											<i class="fa fa-paperclip" aria-hidden="true"></i>
+										</a>
+									<?php }?>
+								</td>
 			               		<td data-label="<?php echo $tr->translate("PAYMENT_OPTION");?>" style="font-site:9px; <?php if($rs["payment_option"]==4){echo " background:#ccc";} ?>" align="center" ><?php echo $rs["paymentoption"];?></td>
 			               		<td data-label="<?php echo $tr->translate("BY_USER");?>" ><?php echo $rs["user_name"];?></td>
 			                </tr>
 			                <?php }?>
-			                <tr style="text-align: center;font-size: 14px;">
-			                	<td colspan="3" style="border: 1px solid #fff;border-top: 1px solid #000;border-right: 1px solid #000"></td>
-			                	<td colspan="2" style=" background: #c1d0f3; font-size:14px; font-family:'Times New Roman','Khmer OS Muol Light';" ><?php echo $tr->translate("TOTAL_AMOUNT");?></td>
-			                	<td data-label="<?php echo $tr->translate("PAID_PRINCIPAL");?>" style="background: #c1d0f3;"><?php echo number_format($principal,2);?></td>
-			                	<td data-label="<?php echo $tr->translate("EXTRA_PAYMENT");?>" style="background: #c1d0f3;"><?php echo number_format($total_extra,2);?></td>
-			                	<td data-label="<?php echo $tr->translate("INTEREST");?>" style="background: #c1d0f3;"><?php echo number_format($amt_d2,2);?></td>
-			                	<td data-label="<?php echo $tr->translate("PENALIZE AMOUNT");?>" style="background: #c1d0f3;"><?php echo number_format($amt_d3+$amt_d5,2);?></td>
-			                	<td data-label="<?php echo $tr->translate("TOTAL");?>" style="background: #c1d0f3;"><?php echo number_format($total_d,2);?></td>
+			                <tr style="text-align: center;font-size: 12px; vertical-align:center;">
+			                	<td colspan="3" style="vertical-align:center; "></td>
+			                	<td colspan="2" style=" background: #c1d0f3; vertical-align:center;" ><?php echo $tr->translate("TOTAL_AMOUNT");?></td>
+			                	<td data-label="<?php echo $tr->translate("PAID_PRINCIPAL");?>" style="vertical-align:center; background: #c1d0f3;"><?php echo number_format($principal,2);?></td>
+			                	<td data-label="<?php echo $tr->translate("EXTRA_PAYMENT");?>" style="vertical-align:center; background: #c1d0f3;"><?php echo number_format($total_extra,2);?></td>
+			                	<td data-label="<?php echo $tr->translate("INTEREST");?>" style="vertical-align:center; background: #c1d0f3;"><?php echo number_format($amt_d2,2);?></td>
+			                	<td data-label="<?php echo $tr->translate("PENALIZE AMOUNT");?>" style="vertical-align:center; background: #c1d0f3;"><?php echo number_format($amt_d3+$amt_d5,2);?></td>
+			                	<td data-label="<?php echo $tr->translate("TOTAL");?>" style="vertical-align:center; background: #c1d0f3;"><?php echo number_format($total_d,2);?></td>
 			                	<td colspan="3" style="border: 1px solid #fff;border-top: 1px solid #000;border-left: 1px solid #000"></td>
 			                </tr>
 			                <?php }?>
@@ -409,7 +439,7 @@
 			               		<td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>" align="center"><?php echo $rs["land_address"]." (".$rs["street"].")";?></td>
 			               		<td data-label="<?php echo $tr->translate("CATEGORY");?>" colspan="2" valign="top"><?php echo $rs["category"];?></td>
 			               		<td data-label="<?php echo $tr->translate("NOTE");?>" colspan="2" style="white-space: normal !important;max-width:180px;text-align: left;"><?php echo $rs["description"];?></td>
-			               		<td data-label="<?php echo $tr->translate("TOTAL_INCOME");?>" align="center"><strong><?php echo number_format($rs["total_amount"],2);?></strong></td>
+			               		<td class="right bold" data-label="<?php echo $tr->translate("TOTAL_INCOME");?>" ><strong><?php echo number_format($rs["total_amount"],2);?></strong></td>
 			               		
 			               		
 								<td data-label="<?php echo $tr->translate("RECEIPT_NO");?>" align="center"><?php echo $rs["invoice"];?> <?php if($rs['status']==0){ echo ' ('.$tr->translate("VOID").')';}?></td>
@@ -488,7 +518,7 @@
 							   <td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>" align="center" ><?php echo $row['house_name'];?></td>
 							   <td data-label="<?php echo $tr->translate("CATEGORY");?>" colspan="2"><?php echo $row['category_name'];?></td>
 							   <td data-label="<?php echo $tr->translate("NOTE");?>" colspan="2" align="center" ><?php echo $row['description'];?></td>
-							   <td data-label="<?php echo $tr->translate("TOTAL_INCOME");?>" align="center"><?php echo number_format($row['total_amount'],2);?></td>
+							   <td class="right bold" data-label="<?php echo $tr->translate("TOTAL_INCOME");?>" align="center"><?php echo number_format($row['total_amount'],2);?></td>
 							   
 							   
 								<td data-label="<?php echo $tr->translate("RECEIPT_NO");?>" align="center"><?php echo $row['invoice'];?></td>
@@ -565,7 +595,7 @@
 			               		<td data-label="<?php echo $tr->translate("CATEGORY");?>" valign="top" colspan="2"><?php echo $rs["category"];?></td>
 			               		<td data-label="<?php echo $tr->translate("NOTE");?>" colspan="2" style="white-space: normal !important;max-width:180px;text-align: left;"><?php echo $rs["description"];?></td>
 			               		
-								<td data-label="<?php echo $tr->translate("TOTAL_INCOME");?>" align="right"><strong><?php echo number_format(abs($rs["total_amount"]),2);?></strong></td>
+								<td class="right bold" data-label="<?php echo $tr->translate("TOTAL_INCOME");?>" ><strong><?php echo number_format(abs($rs["total_amount"]),2);?></strong></td>
 			               		
 			               		<td data-label="<?php echo $tr->translate("RECEIPT_NO");?>" align="center"><?php echo $rs["invoice"];?> <?php if($rs['status']==0){ echo ' ('.$tr->translate("VOID").')';}?></td>
 			               		<td data-label="<?php echo $tr->translate("DATE");?>" align="center"><?php echo date("d-m-Y",strtotime($rs["date"]));?></td>
@@ -640,7 +670,7 @@
 										<?php } ?>
 										</td>
 										<td data-label="<?php echo $tr->translate("NOTE");?>"  colspan="5" align="left"><?php echo $rows['note'];?></td>
-									   <td data-label="<?php echo $tr->translate("TOTAL_PAID");?>"  align="right"><?php echo number_format($rows['total_paid'],2);?></td>
+										<td class="right bold" data-label="<?php echo $tr->translate("TOTAL_PAID");?>" ><?php echo number_format($rows['total_paid'],2);?></td>
 									    
 										<td data-label="<?php echo $tr->translate("RECEIPT_NO");?>"  align="center"><?php echo $rows['receipt_no'];?></td>
 										<td data-label="<?php echo $tr->translate("DATE");?>"  align="center"><?php echo date("d-m-Y",strtotime($rows['date_payment']));?></td>
@@ -715,7 +745,7 @@
 							  
 							   <td data-label="<?php echo $tr->translate("NOTE");?>" colspan="2" align="center" style="white-space: normal !important;max-width:120px;text-align: left;"><?php echo $rows['description'];?></td>
 							   
-							   <td data-label="<?php echo $tr->translate("TOTAL_EXPENSE");?>" align="right"><?php echo number_format($rows['total_amount'],2);?></td>
+							   <td class="right bold" data-label="<?php echo $tr->translate("TOTAL_EXPENSE");?>" ><?php echo number_format($rows['total_amount'],2);?></td>
 							   
 							   <td data-label="<?php echo $tr->translate("RECEIPT_NO");?>" align="center"><?php echo $rows['invoice'];?></td>
 							   <td data-label="<?php echo $tr->translate("DATE");?>" align="center"><?php echo date("d-m-Y",strtotime($rows['date']));?></td>
@@ -826,7 +856,7 @@
 									  </td>
 									 <td colspan="5" data-label="<?php echo $tr->translate("PROPERTY_CODE");?>" ><?php echo $rscom['land_address'].', '.$rscom['street'];?></td>
 
-									 <td data-label="<?php echo $tr->translate("COMISSION");?>" align="right"><?php echo number_format($rscom['total_amount'],2);?></td>
+									 <td class="right bold" data-label="<?php echo $tr->translate("COMISSION");?>" ><?php echo number_format($rscom['total_amount'],2);?></td>
 									 <td data-label="<?php echo $tr->translate("RECEIPT");?>" align="center"><?php echo $rscom['invoice']?></td>
 									 <td data-label="<?php echo $tr->translate("DATE");?>" ><?php echo date("d-m-Y",strtotime($rscom['create_date']));?></td>
 									 <td data-label="<?php echo $tr->translate("BY_USER");?>" align="center"><?php echo $rscom['user_name'];?></td>
@@ -903,7 +933,7 @@
 										</td>
 										<td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>" colspan="5" ><?php echo $comPayment['landCode'].', '.$comPayment['street'];?></td>
 									 
-									 <td data-label="<?php echo $tr->translate("COMISSION");?>" align="right"><?php echo number_format($comPayment['payment_amount'],2);?></td>
+									 <td class="right bold" data-label="<?php echo $tr->translate("COMISSION");?>" ><?php echo number_format($comPayment['payment_amount'],2);?></td>
 									 <td data-label="<?php echo $tr->translate("RECEIPT");?>" align="center"><?php echo $comPayment['receipt_no']?></td>
 									 <td data-label="<?php echo $tr->translate("DATE");?>" ><?php echo date("d-m-Y",strtotime($comPayment['date_payment']));?></td>
 									 <td data-label="<?php echo $tr->translate("BY_USER");?>" align="center"><?php echo $comPayment['userName'];?></td>

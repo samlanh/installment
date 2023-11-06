@@ -1502,5 +1502,31 @@ class Report_LoanController extends Zend_Controller_Action {
   		Application_Form_FrmMessage::Sucessfull("Unclosing Entry Success", "/report/loan/rpt-unclosingentry");
   	}
   }
+  
+	function rptSummaryDailyAction(){
+		$db = new Report_Model_DbTable_DbLandreport();
+		
+		if($this->getRequest()->isPost()){
+			$search = $this->getRequest()->getPost();
+		}else {
+			$search = array(
+				'branch_id' => -1,
+				'start_date'=> date('Y-m-d'),
+				'end_date'=>date('Y-m-d'),
+			);
+		}
+		$frm = new Loan_Form_FrmSearchLoan();
+		$frm = $frm->AdvanceSearch();
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frm_search = $frm;
+	
+		$row = $db->getSummaryDailyOperation($search);
+		$this->view->summaryData = $row;
+		$this->view->search = $search;
+		
+		$frmpopup = new Application_Form_FrmPopupGlobal();
+		$this->view->footerReport = $frmpopup->getFooterReport();
+		$this->view->headerReport = $frmpopup->getLetterHeadReport();	
+	}
 
 }

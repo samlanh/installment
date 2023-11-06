@@ -99,6 +99,13 @@
 			<style>
 				.hideblog{display: block !important;;border: 1px solid #fff; border-bottom: 1px solid #000;}
 				.hiddenblog{display: block !important;}
+				a.attachFile {
+					color: #008;
+					padding: 0 5px;
+				}
+				a.attachFile.whiteColor {
+					color: transparent;
+				}
 			</style>
 			<div id="divPrint">
 				<?php 
@@ -120,15 +127,18 @@
 							}
 							.hide{visibility: hidden;}
 							@media print {
-							div.divFooter {
-								position: fixed;
-								top: 0;
-								width: 100%;
-								height: 100px;
-								bottom:0px;
-								margin:0;
-							}
+								div.divFooter {
+									position: fixed;
+									top: 0;
+									width: 100%;
+									height: 100px;
+									bottom:0px;
+									margin:0;
+								}
 								.hide{visibility: visible; height: '.$classHideHeight.'}
+								.attachFile{
+									display : none;
+								}
 								
 							}
 							.center{text-align: center !important;}
@@ -212,6 +222,7 @@
 						margin:0;
 					  }
 						.hide{visibility: visible; height: <?php echo $classHideHeight;?>;}
+						
 					}
 					.center{text-align: center !important;}
 					table.content-data{
@@ -357,9 +368,9 @@
 									}
 									?>
 									
-				                <tr oncontextmenu="setrowdata(<?php echo $rs['id'];?>);return false;" class="context-menu-one <?php echo $classVoid;?> style style1" >
+				                <tr class="<?php echo $classVoid;?> style style1" >
 				               		<td data-label="<?php echo $tr->translate("N_O");?>" style="text-align: center;"><?php echo $i++; ?></td>
-				               		<td data-label="<?php echo $tr->translate("BRANCH_NAME");?>"><?php echo $rs["branchShortCode"];?></td>
+				               		<td data-label="<?php echo $tr->translate("BRANCH_NAME");?>"><?php echo $rs["branch_name"];?></td>
 				               		<td data-label="<?php echo $tr->translate("CUSTOMER_NAME");?>"><?php echo $rs["name_kh"];?></td>                 		
 				               		<td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>" ><strong ><?php echo $rs["land_address"].",".$rs["street"];?></strong></td>
 				               		<td data-label="<?php echo $tr->translate("PAYMENT_TYPE");?>"><?php echo $rs["payment_method"];?> <?php if(!empty($rs["bank"])){ echo "(". $rs["bank" ].")";}else{echo  "";} ?></td>
@@ -371,21 +382,27 @@
 				               		<td data-label="<?php echo $tr->translate("TOTAL");?>" ><?php echo number_format($rs['amount_payment'],2);?></td>
 				               		<td data-label="<?php echo $tr->translate("PAY_DATE");?>" ><?php echo date($montFomat,strtotime($rs["date_payment"]));?></td>
 				               		<td data-label="<?php echo $tr->translate("INPUT_DATE");?>" align="center" ><?php echo date($montFomat,strtotime($rs["date_pay"]));?></td>
-				               		<td data-label="<?php echo $tr->translate("RECIEPT_NO");?>" class="redText" align="center"><?php echo $rs["receipt_no"];?></td>
-				               		<td data-label="<?php echo $tr->translate("PAYMENT_OPTION");?>" style=" <?php if($rs["payment_option"]==4){echo " background:#ccc";} ?>" align="center" >
-										<a target="_blank" style="color:#000; text-decoration: none;" href="<?php echo $url_receipt.'/id/'.$rs["id"];?>">
-										<?php echo $rs["paymentoption"];?>
+				               		<td data-label="<?php echo $tr->translate("RECIEPT_NO");?>" class="redText" align="center">
+										<?php echo $rs["receipt_no"];?>
+										<a class="attachFile" title="<?php echo $tr->translate("RECEIPT");?>" target="_blank"  href="<?php echo $url_receipt.'/id/'.$rs["id"];?>">
+											<i class="fa fa-print" aria-hidden="true"></i>
 										</a>
 										<?php 
-										   $documentFile ="";
-										   if (!empty($rs['documentFile'])){
+											if (!empty($rs['documentFile'])){
 												if (file_exists(PUBLIC_PATH."/images/document/expense/".$rs['documentFile'])){
-													$documentFile = $rs['documentFile'];
-												}
-											}
-											
-										   ?>
-										<input type="hidden" dojoType="dijit.form.TextBox" name="documentFile<?php echo $rs['id'];?>" id="documentFile<?php echo $rs['id'];?>" value="<?php echo $documentFile;?>"  />
+										?>
+										<a class="attachFile" title="<?php echo $tr->translate("VIEW_ATTACHMENT_FILE");?>" target="_blank"  href="<?php echo $url_receipt.'/id/'.$rs["id"]."?viewing=file";?>">
+											<i class="fa fa-paperclip" aria-hidden="true"></i>
+										</a>
+										<?php }}else{?>
+										<a class="attachFile whiteColor"  >
+											<i class="fa fa-paperclip" aria-hidden="true"></i>
+										</a>
+										<?php }?>
+										
+									</td>
+				               		<td data-label="<?php echo $tr->translate("PAYMENT_OPTION");?>" style=" <?php if($rs["payment_option"]==4){echo " background:#ccc";} ?>" align="center" >
+										<?php echo $rs["paymentoption"];?>
 									</td>
 									<td data-label="<?php echo $tr->translate("AGENTCY");?>"><?php echo $rs["staff_name"];?></td>
 				               		<td align="center"><?php echo $rs['user_name']?></td>
@@ -560,44 +577,5 @@ function PrintPage(pages) {
 	window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint'+pages).innerHTML;
     window.frames["print_frame"].window.focus();
     window.frames["print_frame"].window.print();
-}
-
-
-var row=0;
-var url="";
-$(function(){
-	$.contextMenu({
-		selector: '.context-menu-one', 
-		callback: function(key, options) {
-			var m = "clicked: " + key;
-			if(key=="reciept"){
-				url='<?php echo $urlReciept;?>';
-				gotoAction();
-			}else if(key=="documentFile"){
-				viewAttachment();
-			}
-			
-		},
-		items: {
-			"reciept": {name: "<?php echo $tr->translate("RECEIPT");?>", icon: "fa-print", },
-			"documentFile": {name: "<?php echo $tr->translate("ATTACHMENT_FILE");?>", icon: "fa-paperclip", },
-		}
-	});
-});
-function setrowdata(index){
-	row = index;
-}
-var recordid ='';
-function gotoAction(){
-	 window.open(url+row);
-}
-
-function viewAttachment() {
-	documentFile = dijit.byId('documentFile'+row).get('value');
-	if(documentFile==""){
-		alert("<?php echo $tr->translate("THIS_RECORD_NO_ATTACHMENT_FILE");?>");
-		return false;
-	}
-	window.open("<?PHP echo $this->baseUrl().'/images/document/expense/';?>"+documentFile);
 }
 </script>

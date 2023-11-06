@@ -1958,6 +1958,9 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		   WHERE (`ln_staff`.`co_id` = `sl`.`staff_id`)
 		   LIMIT 1) AS `staff_name`
 		   
+		   ,(SELECT doc.document_name FROM `ln_expense_document` AS doc WHERE doc.exspense_id = crm.id AND doc.documentforType = 3 LIMIT 1) AS documentFile
+			,(SELECT doc.title FROM `ln_expense_document` AS doc WHERE doc.exspense_id = crm.id AND doc.documentforType = 3 LIMIT 1) AS documentTitle
+		   
 			FROM ((`ln_client_receipt_money` `crm`
 			    JOIN `ln_sale` `sl`)
 			   JOIN `ln_client` `c`)

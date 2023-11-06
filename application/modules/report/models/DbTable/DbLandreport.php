@@ -4002,4 +4002,365 @@ function updatePaymentStatus($data){
 		$sql.=" ORDER BY b.bank_name ASC ";
 		return $db->fetchAll($sql);
 	}
+	
+	
+	function getSummaryDailyOperation($data){
+		
+		$expenseFeatureList = EXPENSE_FEATURE_LIST;
+		$row = array();
+		$rsPayment = $this->getSummaryDailyPayment($data);
+		
+		if(!empty($rsPayment)){
+			$row = (object) array_merge((array) $row, (array) $rsPayment);
+			$row = (array) $row;//sort by key Value DESC
+			usort($row, function ($a, $b) {return $a['recordDate'] < $b['recordDate'];});
+		}
+		
+		$rsOtherIncome = $this->getSummaryDailyIncomeOther($data);
+		if(!empty($rsOtherIncome)){
+			$row = (object) array_merge((array) $row, (array) $rsOtherIncome);
+			$row = (array) $row;//sort by key Value DESC
+			usort($row, function ($a, $b) {return $a['recordDate'] < $b['recordDate'];});
+		}
+		
+		$data["repairHouse"] = 12;
+		$rsIncomeRepairHouse = $this->getSummaryDailyIncomeRepairHouse($data);
+		if(!empty($rsIncomeRepairHouse)){
+			$row = (object) array_merge((array) $row, (array) $rsIncomeRepairHouse);
+			$row = (array) $row;//sort by key Value DESC
+			usort($row, function ($a, $b) {return $a['recordDate'] < $b['recordDate'];});
+		}
+		
+		$data["repairHouse"] = 13;
+		$rsExpenseRepairHouse = $this->getSummaryDailyIncomeRepairHouse($data);
+		if(!empty($rsExpenseRepairHouse)){
+			$row = (object) array_merge((array) $row, (array) $rsExpenseRepairHouse);
+			$row = (array) $row;//sort by key Value DESC
+			usort($row, function ($a, $b) {return $a['recordDate'] < $b['recordDate'];});
+		}
+		
+		if($expenseFeatureList==1){
+			$rsExpensePmt = $this->getSummaryDailyExpensePayment($data);
+			if(!empty($rsExpensePmt)){
+				$row = (object) array_merge((array) $row, (array) $rsExpensePmt);
+				$row = (array) $row;//sort by key Value DESC
+				usort($row, function ($a, $b) {return $a['recordDate'] < $b['recordDate'];});
+			}
+		}else{
+			$rsExpense = $this->getSummaryDailyExpenseOther($data);
+			if(!empty($rsExpense)){
+				$row = (object) array_merge((array) $row, (array) $rsExpense);
+				$row = (array) $row;//sort by key Value DESC
+				usort($row, function ($a, $b) {return $a['recordDate'] < $b['recordDate'];});
+			}
+		}
+		
+		$rsExpenseCommision = $this->getSummaryDailyExpenseComission($data);
+		if(!empty($rsExpenseCommision)){
+			$row = (object) array_merge((array) $row, (array) $rsExpenseCommision);
+			$row = (array) $row;//sort by key Value DESC
+			usort($row, function ($a, $b) {return $a['recordDate'] < $b['recordDate'];});
+		}
+		
+		$rsExpenseCommisionPmt = $this->getSummaryDailyExpenseComissionPayment($data);
+		if(!empty($rsExpenseCommisionPmt)){
+			$row = (object) array_merge((array) $row, (array) $rsExpenseCommisionPmt);
+			$row = (array) $row;//sort by key Value DESC
+			usort($row, function ($a, $b) {return $a['recordDate'] < $b['recordDate'];});
+		}
+		
+		return $row;
+	}
+	function getSummaryDailyPayment($data){
+		$db = $this->getAdapter();
+		$sql="
+			SELECT 
+				crm.date_pay
+				,crm.date_pay AS recordDate
+				,'paymentRecord' AS recordType
+				,SUM(crm.total_principal_permonthpaid) AS totalPinciple
+				,SUM(crm.extra_payment) AS totalExtraPayment
+				,SUM(crm.total_interest_permonthpaid) AS totalInterest
+				,SUM(crm.penalize_amountpaid) AS totalPenalize
+				,SUM(crm.recieve_amount) AS totalRecieve
+				,'0' AS totalIncomeOther
+				,'0' AS totalIncomeRepairHouse
+				,'0' AS totalOtherExpense
+				,'0' AS totalExpenseRepairHouse
+				,'0' AS totalExpenseComission
+				,'0' AS totalExpenseComissionPayment
+		";
+		$sql.=" FROM `ln_client_receipt_money` AS crm  ";
+		$sql.=" WHERE 1 ";
+		
+		if(!empty($data['branch_id'])){
+			$sql.= " AND crm.`branch_id` = ".$data['branch_id'];
+		}
+		$fromDate =(empty($data['start_date']))? '1': " crm.date_pay  >= '".$data['start_date']." 00:00:00'";
+		$toDate = (empty($data['end_date']))? '1': " crm.date_pay  <= '".$data['end_date']." 23:59:59'";
+		$sql.= " AND ".$fromDate." AND ".$toDate;
+		 
+		$sql.=" GROUP BY crm.date_pay 
+				ORDER BY crm.date_pay ASC 
+			";
+		return $db->fetchAll($sql);
+	}
+	function getSummaryDailyIncomeOther($data){
+		$db = $this->getAdapter();
+		$sql="
+			SELECT 
+				inc.date
+				,inc.date AS recordDate
+				,'incomeOther' AS recordType
+				,'0' AS totalPinciple
+				,'0' AS totalExtraPayment
+				,'0' AS totalInterest
+				,'0' AS totalPenalize
+				,'0' AS totalRecieve
+				,SUM(inc.total_amount) AS totalIncomeOther
+				,'0' AS totalIncomeRepairHouse
+				,'0' AS totalOtherExpense
+				,'0' AS totalExpenseRepairHouse
+				,'0' AS totalExpenseComission
+				,'0' AS totalExpenseComissionPayment
+		";
+		$sql.=" FROM `ln_income` AS inc  ";
+		$sql.=" WHERE inc.status = 1 ";
+		
+		if(!empty($data['branch_id'])){
+			$sql.= " AND inc.`branch_id` = ".$data['branch_id'];
+		}
+		$fromDate =(empty($data['start_date']))? '1': " inc.date  >= '".$data['start_date']." 00:00:00'";
+		$toDate = (empty($data['end_date']))? '1': " inc.date  <= '".$data['end_date']." 23:59:59'";
+		$sql.= " AND ".$fromDate." AND ".$toDate;
+		
+		$sql.=" GROUP BY inc.date 
+				ORDER BY inc.date ASC 
+			";
+		return $db->fetchAll($sql);
+	}
+	function getSummaryDailyIncomeRepairHouse($data){
+		$db = $this->getAdapter();
+		
+		$repairHouseType = empty($data["repairHouse"]) ? 13 : $data["repairHouse"];
+		$recordType = 'expenseRepairHouse';
+		$expenseSum = 'SUM(inc.total_paid)';
+		$incomeSum = "'0'";
+		if($repairHouseType==12){
+			$recordType = 'incomeRepairHouse';
+			$expenseSum = "'0'";
+			$incomeSum = 'SUM(inc.total_paid)';
+		}
+		
+		$sql="
+			SELECT 
+				inc.for_date
+				,inc.for_date AS recordDate
+				,'".$recordType."' AS recordType
+				,'0' AS totalPinciple
+				,'0' AS totalExtraPayment
+				,'0' AS totalInterest
+				,'0' AS totalPenalize
+				,'0' AS totalRecieve
+				,'0' AS totalIncomeOther
+				,".$incomeSum." AS totalIncomeRepairHouse
+				,'0' AS totalOtherExpense
+				,".$expenseSum." AS totalExpenseRepairHouse
+				,'0' AS totalExpenseComission
+				,'0' AS totalExpenseComissionPayment
+		";
+		$sql.=" FROM `ln_otherincomepayment` AS inc  ";
+		$sql.=" WHERE inc.status = 1 AND inc.cate_type = $repairHouseType ";
+		
+		if(!empty($data['branch_id'])){
+			$sql.= " AND inc.`branch_id` = ".$data['branch_id'];
+		}
+		$fromDate =(empty($data['start_date']))? '1': " inc.for_date  >= '".$data['start_date']." 00:00:00'";
+		$toDate = (empty($data['end_date']))? '1': " inc.for_date  <= '".$data['end_date']." 23:59:59'";
+		$sql.= " AND ".$fromDate." AND ".$toDate;
+		
+		$sql.=" GROUP BY inc.for_date 
+				ORDER BY inc.for_date ASC 
+			";
+		return $db->fetchAll($sql);
+	}
+	function getSummaryDailyExpenseOther($data){
+		$db = $this->getAdapter();
+		$sql="
+			SELECT 
+				ex.date
+				,ex.date AS recordDate
+				,'expenseOther' AS recordType
+				,'0' AS totalPinciple
+				,'0' AS totalExtraPayment
+				,'0' AS totalInterest
+				,'0' AS totalPenalize
+				,'0' AS totalRecieve
+				,'0' AS totalIncomeOther
+				,'0' AS totalIncomeRepairHouse
+				,SUM(ex.total_amount) AS totalOtherExpense
+				,'0' AS totalExpenseRepairHouse
+				,'0' AS totalExpenseComission
+				,'0' AS totalExpenseComissionPayment
+		";
+		$sql.=" FROM `ln_expense` AS ex  ";
+		$sql.=" WHERE ex.status = 1 ";
+		
+		if(!empty($data['branch_id'])){
+			$sql.= " AND ex.`branch_id` = ".$data['branch_id'];
+		}
+		$fromDate =(empty($data['start_date']))? '1': " ex.date  >= '".$data['start_date']." 00:00:00'";
+		$toDate = (empty($data['end_date']))? '1': " ex.date  <= '".$data['end_date']." 23:59:59'";
+		$sql.= " AND ".$fromDate." AND ".$toDate;
+		
+		$sql.=" GROUP BY ex.date 
+				ORDER BY ex.date ASC 
+			";
+		return $db->fetchAll($sql);
+	}
+	
+	function getSummaryDailyExpensePayment($data){
+		$db = $this->getAdapter();
+		$sql="
+			SELECT 
+				ex.date_payment
+				,ex.date_payment AS recordDate
+				,'expensePayment' AS recordType
+				,'0' AS totalPinciple
+				,'0' AS totalExtraPayment
+				,'0' AS totalInterest
+				,'0' AS totalPenalize
+				,'0' AS totalRecieve
+				,'0' AS totalIncomeOther
+				,'0' AS totalIncomeRepairHouse
+				,SUM(ex.total_paid) AS totalOtherExpense
+				,'0' AS totalExpenseRepairHouse
+				,'0' AS totalExpenseComission
+				,'0' AS totalExpenseComissionPayment
+		";
+		$sql.=" FROM `rms_expense_payment` AS ex  ";
+		$sql.=" WHERE ex.status = 1 ";
+		
+		if(!empty($data['branch_id'])){
+			$sql.= " AND ex.`branch_id` = ".$data['branch_id'];
+		}
+		$fromDate =(empty($data['start_date']))? '1': " ex.date_payment  >= '".$data['start_date']." 00:00:00'";
+		$toDate = (empty($data['end_date']))? '1': " ex.date_payment  <= '".$data['end_date']." 23:59:59'";
+		$sql.= " AND ".$fromDate." AND ".$toDate;
+		
+		$sql.=" GROUP BY ex.date_payment 
+				ORDER BY ex.date_payment ASC 
+			";
+		return $db->fetchAll($sql);
+	}
+	function getSummaryDailyExpenseComission($data){
+		$db = $this->getAdapter();
+		$sql="
+			SELECT 
+				cm.for_date
+				,cm.for_date AS recordDate
+				,'commission' AS recordType
+				,'0' AS totalPinciple
+				,'0' AS totalExtraPayment
+				,'0' AS totalInterest
+				,'0' AS totalPenalize
+				,'0' AS totalRecieve
+				,'0' AS totalIncomeOther
+				,'0' AS totalIncomeRepairHouse
+				,'0' AS totalOtherExpense
+				,'0' AS totalExpenseRepairHouse
+				,SUM(cm.total_amount) AS totalExpenseComission
+				,'0' AS totalExpenseComissionPayment
+		";
+		$sql.=" FROM `ln_comission` AS cm  ";
+		$sql.=" WHERE cm.status = 1 ";
+		
+		if(!empty($data['branch_id'])){
+			$sql.= " AND cm.`branch_id` = ".$data['branch_id'];
+		}
+		$fromDate =(empty($data['start_date']))? '1': " cm.for_date  >= '".$data['start_date']." 00:00:00'";
+		$toDate = (empty($data['end_date']))? '1': " cm.for_date  <= '".$data['end_date']." 23:59:59'";
+		$sql.= " AND ".$fromDate." AND ".$toDate;
+		
+		$sql.=" GROUP BY cm.for_date 
+				ORDER BY cm.for_date ASC 
+			";
+		return $db->fetchAll($sql);
+	}
+	
+	function getSummaryDailyExpenseComissionPayment($data){
+		$db = $this->getAdapter();
+		$sql="
+			SELECT 
+				cmp.date_payment
+				,cmp.date_payment AS recordDate
+				,'commission' AS recordType
+				,'0' AS totalPinciple
+				,'0' AS totalExtraPayment
+				,'0' AS totalInterest
+				,'0' AS totalPenalize
+				,'0' AS totalRecieve
+				,'0' AS totalIncomeOther
+				,'0' AS totalIncomeRepairHouse
+				,'0' AS totalOtherExpense
+				,'0' AS totalExpenseRepairHouse
+				,'0' AS totalExpenseComission
+				,SUM(cmp.total_paid) AS totalExpenseComissionPayment
+		";
+		$sql.=" FROM `rms_commission_payment` AS cmp  ";
+		$sql.=" WHERE cmp.status = 1 ";
+		
+		if(!empty($data['branch_id'])){
+			$sql.= " AND cmp.`branch_id` = ".$data['branch_id'];
+		}
+		$fromDate =(empty($data['start_date']))? '1': " cmp.date_payment  >= '".$data['start_date']." 00:00:00'";
+		$toDate = (empty($data['end_date']))? '1': " cmp.date_payment  <= '".$data['end_date']." 23:59:59'";
+		$sql.= " AND ".$fromDate." AND ".$toDate;
+		
+		$sql.=" GROUP BY cmp.date_payment 
+				ORDER BY cmp.date_payment ASC 
+			";
+		return $db->fetchAll($sql);
+	}
+	
+	function getResulArrayBySpecificDate($recordDate,$arrayResultData){
+		$filteredArray = array_filter($arrayResultData, function ($obj) use ($recordDate) {
+							  return $obj["recordDate"] == $recordDate;
+							});
+		if(COUNT($filteredArray)>1){
+			$newArray = array(
+				"totalPinciple"=>0,
+				"totalExtraPayment"=>0,
+				"totalInterest"=>0,
+				"totalPenalize"=>0,
+				"totalRecieve"=>0,
+				"totalIncomeOther"=>0,
+				"totalIncomeRepairHouse"=>0,
+				"totalOtherExpense"=>0,
+				"totalExpenseRepairHouse"=>0,
+				"totalExpenseComission"=>0,
+				"totalExpenseComissionPayment"=>0,
+			);
+			foreach($filteredArray as $rs){
+				$newArray["recordDate"] 		= $rs["recordDate"];
+				$newArray["totalPinciple"] 		= $newArray["totalPinciple"] +$rs["totalPinciple"];
+				$newArray["totalExtraPayment"] 	= $newArray["totalExtraPayment"] +$rs["totalExtraPayment"];
+				$newArray["totalInterest"] 		= $newArray["totalInterest"] +$rs["totalInterest"];
+				$newArray["totalPenalize"] 		= $newArray["totalPenalize"] +$rs["totalPenalize"];
+				$newArray["totalRecieve"] 		= $newArray["totalRecieve"] +$rs["totalRecieve"];
+				$newArray["totalIncomeOther"] 	= $newArray["totalIncomeOther"] +$rs["totalIncomeOther"];
+				$newArray["totalIncomeRepairHouse"] = $newArray["totalIncomeRepairHouse"] +$rs["totalIncomeRepairHouse"];
+				$newArray["totalOtherExpense"] 			= $newArray["totalOtherExpense"] +$rs["totalOtherExpense"];
+				
+				$newArray["totalExpenseRepairHouse"] 	= $newArray["totalExpenseRepairHouse"] +$rs["totalExpenseRepairHouse"];
+				$newArray["totalExpenseComission"] 		= $newArray["totalExpenseComission"] +$rs["totalExpenseComission"];
+				$newArray["totalExpenseComissionPayment"] 	= $newArray["totalExpenseComissionPayment"] +$rs["totalExpenseComissionPayment"];
+			}
+			
+			return $newArray;
+		}else{
+			return array();
+		}
+	}
+		
  }
