@@ -9,6 +9,7 @@ public function init()
 		
 		$db = new Application_Model_DbTable_DbGlobal();
 		$request=Zend_Controller_Front::getInstance()->getRequest();
+		$dbGBStock = new Application_Model_DbTable_DbGlobalStock(); 
 		
 		$branch_id = new Zend_Dojo_Form_Element_FilteringSelect('branch_id');
 		$branch_id->setAttribs(array(
@@ -156,13 +157,26 @@ public function init()
 				'queryExpr'=>'*${0}*',
 				'onchange'=>'popupIssuer();'
 		));
-		$dbe = new Incexp_Model_DbTable_DbComission();
+		$dbe = new Incexp_Model_DbTable_DbComissionpayment();
 		$rscheque = $dbe->getAllChequeIssue();
 		$opt1=array(''=>$this->tr->translate("SELECT_CHEQUE_ISSUE"),'-1'=>$this->tr->translate("ADD_NEW"));
 		if(!empty($rscheque))foreach($rscheque AS $row){
 			$opt1[$row['id']]=$row['name'];
 		}
 		$cheque_issuer->setMultiOptions($opt1);
+		
+		$_bankId = new Zend_Dojo_Form_Element_FilteringSelect('bank_id');
+		$_bankId->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'required'=>'false',
+		));
+		$rsBank = $dbGBStock->getAllBank();
+		$optBank=array(''=>$this->tr->translate("SELECT_BANK"));
+		if(!empty($rsBank))foreach($rsBank AS $row){
+			$optBank[$row['id']]=$row['name'];
+		}
+		$_bankId->setMultiOptions($optBank);
 		
 		
 		$_id = new Zend_Form_Element_Hidden("id");
@@ -186,6 +200,7 @@ public function init()
 			$total_due->setValue($data['total_due']);
 			$total_paid->setValue($data['total_paid']);
 			$amount->setValue($data['total_paid']);
+			$_bankId->setValue($data["bank_id"]);
 		}
 		$this->addElements(array(
 		$branch_id,
@@ -194,6 +209,7 @@ public function init()
 				$payment_type,
 				$_cheque,
 				$cheque_issuer,
+				$_bankId,
 				
 				$all_balance,
 				$balance,

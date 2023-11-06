@@ -152,6 +152,13 @@ span.oldsup input[type=checkbox] {
 									   </div>
 									</div>
 									<div class="form-group">
+									   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("BANK");?> 
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement("bank_id");?>
+									   </div>
+									</div>
+									<div class="form-group">
 									   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("CHEQUE");?> 
 									   </label>
 									   <div class="col-md-7 col-sm-7 col-xs-12">
@@ -280,20 +287,27 @@ span.oldsup input[type=checkbox] {
  </div>
  <div class="dijitHidden">
 	<div data-dojo-type="dijit.Dialog" data-dojo-props="title:'<?php echo $tr->translate("CHEQUE_ISSUER")?>'"  id="frm_cheque" >
-		<form id="form_cheque"​ dojoType="dijit.form.Form" >
-			<table style="margin: 0 auto; width: 100%;" cellspacing="7">
-				<tr>
-					<td>
-						<input dojoType="dijit.form.ValidationTextBox" required="true" class="fullside" id="addchequename" name="addchequename" value="" type="text">
-					</td>
-				</tr>
-				<tr>
-					<td colspan="2" align="center">
-						<input type="button" id="save_cheque" value="Save" label="<?php echo $tr->translate('GO_SAVE');?>" dojoType="dijit.form.Button"
-							iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addNewCheque();"/>
-					</td>
-				</tr>
-			</table>
+		<form id="form_cheque" dojoType="dijit.form.Form" >
+			<div class="card-box">
+				 <div class="col-md-12 col-sm-12 col-xs-12">
+					<div class="form-group">
+					   <label class="control-label bold col-md-12 col-sm-12 col-xs-12" for="first-name"><?php echo $tr->translate("CHEQUE_ISSUER");?> 
+					   </label>
+					</div>
+					<div class="form-group">
+					   <div class="col-md-12 col-sm-12 col-xs-12">
+							<input dojoType="dijit.form.ValidationTextBox" required="true" class="fullside" id="addchequename" name="addchequename" value="" type="text">
+					   </div>
+					</div>
+				 </div>
+			 </div>
+			 <div class="card-box mt-20">
+               	<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
+					<input type="button" id="save_cheque" value="Save" label="<?php echo $tr->translate('GO_SAVE');?>" dojoType="dijit.form.Button"
+							class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-disk" onclick="addNewCheque();"/>
+					
+               	</div>
+             </div>  
 		</form>
 	</div>
 </div>
@@ -596,7 +610,7 @@ span.oldsup input[type=checkbox] {
 var chequeStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array($this->cheque_issue)));?> );
 	require(["dojo/ready"], function(ready){
 		ready(function(){
-			//enablePayment();
+			enablePayment();
 		});
 		new dijit.form.FilteringSelect({
 			name: "cheque_issuer",
@@ -611,16 +625,30 @@ var chequeStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::en
 			}
 		}, "cheque_issuer");
 	});
+
 function enablePayment(){
 		payment_method = dijit.byId('paid_by').get('value');
 		dijit.byId("cheque_no").set("readOnly",false);
-		dijit.byId("cheque_no").attr("value",'');
+		dijit.byId("cheque_no").attr("value",'<?PHP echo empty($this->row["cheque_no"]) ? "N/A" : $this->row["cheque_no"]; ?>');
 		dijit.byId("cheque_issuer").set("readOnly",false);
+		dijit.byId("cheque_issuer").set("required",true);
+		dijit.byId("cheque_issuer").attr("value",'<?PHP echo empty($this->row["cheque_issuer"]) ? "" : $this->row["cheque_issuer"]; ?>');
+		
+		dijit.byId("bank_id").set("readOnly",false);
+		dijit.byId("bank_id").set("required",true);
+		dijit.byId("bank_id").attr("value",'<?PHP echo empty($this->row["bank_id"]) ? "" : $this->row["bank_id"]; ?>');
+		
 		if(payment_method==1){
 			dijit.byId("cheque_no").attr("value",'N/A');
 			dijit.byId("cheque_no").set("readOnly",true);
 			dijit.byId('cheque_issuer').reset();
 			dijit.byId("cheque_issuer").set("readOnly",true);
+			dijit.byId("cheque_issuer").set("required",false);
+			
+			dijit.byId("bank_id").reset();
+			dijit.byId("bank_id").set("readOnly",true);
+			dijit.byId("bank_id").set("required",false);
+			
 		}
 	}
 	function popupIssuer(){

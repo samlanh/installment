@@ -385,19 +385,21 @@ function totalRemain(){
 
 function enablePayment(){
 	payment_method = dijit.byId('payment_method').get('value');
-	dijit.byId("bank_id").set("readOnly",false);
 	dijit.byId("bank_id").reset();
+	dijit.byId("bank_id").set("readOnly",false);
+	dijit.byId("bank_id").set("required",true);
 
+	dijit.byId("cheque").reset();
 	dijit.byId("cheque").set("readOnly",false);
-	dijit.byId("cheque").attr("value",'');
+	dijit.byId("cheque").set("required",true);
 	if(payment_method==1){
-
 		dijit.byId("cheque").attr("value",'N/A');
 		dijit.byId("cheque").set("readOnly",true);
-
+		dijit.byId("cheque").set("required",false);
+		
+		dijit.byId("bank_id").reset();
 		dijit.byId("bank_id").set("readOnly",true);
-		dijit.byId("bank_id").attr("value",'');
-
+		dijit.byId("bank_id").set("required",false);
 	}
 }
 var sale_client_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );

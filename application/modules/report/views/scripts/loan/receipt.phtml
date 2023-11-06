@@ -106,77 +106,122 @@
 			<!-- Panel 1-->
 			<div class="tab-pane fade in" id="panel212" role="tabpanel">
 				<style>
-					.center{text-align: center !important;}
-					table.content-data{
-						font-family: 'Times New Roman','Khmer OS Battambang';
-						border-collapse:collapse;
-						border:1px solid #000; 
-						margin-top:10px; 
-						border-collapse:collapse; 
-						line-height: 24px; 
-						font-size: 14px;
+					div#EZView0 {
+						background: #000000cc;
 					}
-					table.content-data thead tr.style {
-				
-						padding:1px 0px; 
-						white-space: nowrap;
-						height: 22px; 
-						background: #c1d0f3;
-						font-weight:600;
+					div#EZView0 img.content {
+						border-radius: 10px;
 					}
-					table.content-data tr.style {
-						white-space: nowrap;
-					}
-					table.content-data a.btn.btn-error.btn-reset {
-						margin: 0;
-						padding: 0;
-						line-height: inherit;
-						color: #043f95;
-					}
-					table.content-data td {
-						padding: 2px;
-					}
-					table.content-data thead tr.style td {padding: 5px;}
-					.titleBlog {
-						text-align: center;
-						padding: 10px;
+					.tools-container {
+						background-color: inherit !important;
 					}
 
-					span.titleList {
-						text-decoration: underline;
-						font-family: 'Times New Roman','Khmer OS Muol Light';
+					
+
+					.tools-container a img {
+						padding: 5px;
+						color: #fff;
+						opacity: 1;
+						background: #fdeee7;
+						border-radius: 100%;
+					}
+
+					spam.tools {
+						top: 10px !important;
+						left: 10px !important;
+					}
+
+					.tools-container a.close:focus, .tools-container a.close:hover {
+						opacity: 1;
+					}
+					.tools-container a.close img {
+										background: #fdeee7;
+										border-radius: 100%;
+					}
+					.center{text-align: center !important;}
+					ul.cards {
+						list-style: none;
+						margin: 0;
+						padding: 0;
+					}
+
+					.card-box-image {
+						height: 250px;
+						border-radius: 25px;
+						padding: 1px;
+						background: #fff;
+						border: solid 2px #fafafa;
+						box-shadow: 0 2px 9px 0px #505050;
+					}
+
+					.card-box-image img {
+						border-radius: 20px;
+						height: 150px;
+						width: 100%;
+					}
+
+					.fileContent {
+						margin: 0 auto;
+						height: 150px;
+						text-align: center;
+						align-items: center;
+						display: flex;
+						align-content: center;
+						flex-wrap: nowrap;
+						flex-direction: column-reverse;
+						justify-content: center;
+						background: #dbe1ff;
+						border-radius: 20px;
+					}
+
+					.fileContent i {
+						font-size: 38px;
+						text-align: center;
+						color: #d46800;
+					}
+					
+					.container.fileInfo {
+						padding: 5px 10px;
+					}
+
+					.container.fileInfo p,.container.fileInfo h4 {
+						margin: 0;
 					}
 				</style>
 				<div class="titleBlog">
 					<span class="titleList" style=" text-decoration:underline; font-family: 'Times New Roman','Khmer OS Muol Light';"> <?php echo $tr->translate("ATTACHMENT_LIST");?> </span>
 				</div>
-				<table border="1" class="content-data" width="100%" >  
-				   <thead>
-						<tr class="style"   >
-							<td align="center"><?php echo $tr->translate("NUM");?></td>
-							<td align="center"><?php echo $tr->translate("TITLE");?></td>
-							<td style="width:100px;" align="center"><?php echo $tr->translate("OTHER");?></td>
-						</tr>
-					</thead>
-				   <?php  $i=0; $n=0; if(!empty($this->document)){foreach($this->document as $key =>$row) {$i++?>
-					<tr align="left">
-					   <td align="center" width="5%" valign="top"><?php echo $i; ?>&nbsp;.</td>
-					   <td align="left" valign="top">&nbsp;<?php echo $row['title'];?></td>
-					   <td align="center" valign="top"><?php 
-					   $linkDoc ="#";
-					   if (!empty($row['document_name'])){
-							if (file_exists(PUBLIC_PATH."/images/document/expense/".$row['document_name'])){
-								$linkDoc = $this->baseUrl().'/images/document/expense/'.$row['document_name'];
-						
-					   ?>
-						<a title="<?php echo $tr->translate('VIEW_DOCUMENT');?>" href="<?php echo $linkDoc;?>" target="_blank" class="btn btn-error btn-reset" ><i class="fa fa-eye" aria-hidden="true"></i></button></a>
-						<?php 	}
-						 }?>
-					   
-					   </td>
-					</tr>
-					<?php }}?>
-				</table>
+				<ul class="cards">
+
+				<?php  $i=0; $n=0; if(!empty($this->document)){foreach($this->document as $key =>$row) {$i++?>
+				  <li class="col-md-3 col-sm-3 col-xs-12 ">
+					<div class="card-box-image ">
+						<?php 
+						   if (!empty($row['document_name'])){
+								if (file_exists(PUBLIC_PATH."/images/document/expense/".$row['document_name'])){
+									
+									$linkDoc = $this->baseUrl().'/images/document/expense/'.$row['document_name'];
+									$explodeArr = explode(".", $row['document_name']);
+									$extensionFile = end($explodeArr);
+							
+						   ?>
+						   <?php if($extensionFile == "pdf" ){?>
+								<div  class="fileContent gallery1" href="<?php echo $linkDoc;?>" alt="<?php echo $row['title'];?>">
+									<i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+								</div>
+						   <?php }else{?>
+								<img class="gallery1" src="<?php echo $linkDoc;?>"  alt="<?php echo $row['title'];?>" href="<?php echo $linkDoc;?>">
+							<?php }?>
+							<?php } }?>
+							 
+					  <div class="container fileInfo">
+						<h4><b><?php echo $row['title'];?></b></h4>
+						<p><?php echo date("d-M-Y",strtotime($row['date']));?></p>
+					  </div>
+					</div>
+				</li>
+				<?php }}?>
+				</ul>
 			</div>
 			<!-- End Panel 1-->
 		</div>
@@ -200,6 +245,7 @@ require(["dojo/ready"], function(ready){
 			}?>
 	        HideloadingBlock();
 	    }, 1000);
+		$('.gallery1').EZView();
 		 
 	 });
 });	 

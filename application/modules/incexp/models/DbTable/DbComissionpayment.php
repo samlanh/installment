@@ -70,7 +70,7 @@ class Incexp_Model_DbTable_DbComissionpayment extends Zend_Db_Table_Abstract
 	
 	function getAllChequeIssue(){
 		$db = $this->getAdapter();
-		$sql = " SELECT DISTINCT cheque_issuer as name,cheque_issuer as id FROM `rms_commission_payment` WHERE cheque_issuer!='' ORDER BY cheque_issuer ASC ";
+		$sql = " SELECT DISTINCT cheque_issuer AS `name`,cheque_issuer as id FROM `rms_commission_payment` WHERE cheque_issuer!='' ORDER BY cheque_issuer ASC ";
 		return $db->fetchAll($sql);
 	}
 	
@@ -93,6 +93,7 @@ class Incexp_Model_DbTable_DbComissionpayment extends Zend_Db_Table_Abstract
     				'payment_method'	=> $_data['payment_type'],
 					'cheque_no'      	=> $_data['cheque'],
 					'cheque_issuer'     => $_data['cheque_issuer'],
+					'bank_id'     		=> $_data['bank_id'],
     				'create_date'		=> date("Y-m-d H:i:s"),
     				'modify_date'	  	=> date("Y-m-d H:i:s"),
     				'status'			=> 1,
@@ -460,6 +461,7 @@ class Incexp_Model_DbTable_DbComissionpayment extends Zend_Db_Table_Abstract
 						'payment_method'	=> $_data['payment_type'],
 						'cheque_no'      	=> $_data['cheque'],
 						'cheque_issuer'     => $_data['cheque_issuer'],
+						'bank_id'     		=> $_data['bank_id'],
 						'modify_date'	  	=> date("Y-m-d H:i:s"),
 						'status'			=> $_data['status'],
 						'user_id'  			=>$this->getUserId(),

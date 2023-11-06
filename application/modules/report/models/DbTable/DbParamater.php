@@ -3063,18 +3063,26 @@ function getAllBranch($search=null){
 	
 	function getCommissionPaymentDetailList($search){
     	$db = $this->getAdapter();
-    	$sql="SELECT pd.*,
-				(SELECT  p.`project_name` FROM `ln_project` AS p WHERE (p.`br_id` = p.`branch_id`) LIMIT 1) AS branchName,
-				(SELECT c.`name_kh` FROM `ln_client` AS c WHERE c.`client_id`=s.`client_id` LIMIT 1) AS customerName,
-				(SELECT land_address FROM `ln_properties` WHERE ln_properties.id=s.house_id LIMIT 1) AS landCode,
-				(SELECT street FROM `ln_properties` WHERE ln_properties.id=s.house_id LIMIT 1) AS street,
-				(SELECT co_khname FROM `ln_staff` WHERE co_id=p.agency_id LIMIT 1) AS agencyNname,
-				(SELECT tel FROM `ln_staff` WHERE co_id=p.agency_id LIMIT 1) AS agencyTel,
-				(SELECT sex FROM `ln_staff` WHERE co_id=p.agency_id LIMIT 1) AS sex,
-				s.full_commission,
-				p.date_payment,
-				p.receipt_no,
-				(SELECT  CONCAT(COALESCE(last_name,''),' ',COALESCE(first_name,'')) FROM rms_users WHERE id=p.user_id LIMIT 1 ) AS userName
+    	$sql="SELECT 
+				pd.*
+				,(SELECT  p.`project_name` FROM `ln_project` AS p WHERE (p.`br_id` = p.`branch_id`) LIMIT 1) AS branchName
+				,(SELECT c.`name_kh` FROM `ln_client` AS c WHERE c.`client_id`=s.`client_id` LIMIT 1) AS customerName
+				,(SELECT land_address FROM `ln_properties` WHERE ln_properties.id=s.house_id LIMIT 1) AS landCode
+				,(SELECT street FROM `ln_properties` WHERE ln_properties.id=s.house_id LIMIT 1) AS street
+				,(SELECT co_khname FROM `ln_staff` WHERE co_id=p.agency_id LIMIT 1) AS agencyNname
+				,(SELECT tel FROM `ln_staff` WHERE co_id=p.agency_id LIMIT 1) AS agencyTel
+				,(SELECT sex FROM `ln_staff` WHERE co_id=p.agency_id LIMIT 1) AS sex
+				
+				,(SELECT v.`name_kh` FROM `ln_view` AS v WHERE v.key_code = p.payment_method AND v.type = 2 LIMIT 1) AS paymentMethod
+				,(SELECT bank_name FROM `st_bank` WHERE id =p.bank_id LIMIT 1) AS bank
+				,p.`payment_method` AS payment_method
+				,p.`bank_id` AS bankId
+				,p.`cheque_no` AS chequeNo
+				,p.`cheque_issuer` AS chequeIssuer
+				,s.full_commission
+				,p.date_payment
+				,p.receipt_no
+				,(SELECT  CONCAT(COALESCE(last_name,''),' ',COALESCE(first_name,'')) FROM rms_users WHERE id=p.user_id LIMIT 1 ) AS userName
 			 FROM `rms_commission_payment_detail` AS pd,
 					rms_commission_payment AS p,
 					ln_sale AS s
@@ -3648,7 +3656,7 @@ function getAllBranch($search=null){
     	try{
     		$sql="
     		SELECT
-				,pp.*,
+				pp.*
 				,(SELECT b.project_name FROM `ln_project` AS b  WHERE b.br_id = pp.branch_id LIMIT 1) AS branch_name
 				,pp.receipt_no
 				,(SELECT s.name FROM `ln_supplier` AS s WHERE s.id = pp.supplier_id LIMIT 1 ) AS supplier_name

@@ -125,6 +125,13 @@ tr.head-td th {
 									   </div>
 									</div>
 									<div class="form-group">
+										<label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BANK");?> :
+										</label>
+										<div class="col-md-7 col-sm-7 col-xs-12">
+												<?php echo $frm->getElement('bank_id');?>
+										</div>
+									</div>
+									<div class="form-group">
 									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CHEQUE");?> :
 									   </label>
 									   <div class="col-md-7 col-sm-7 col-xs-12">
@@ -262,7 +269,7 @@ tr.head-td th {
 
 <div class="dijitHidden">
 	<div data-dojo-type="dijit.Dialog" data-dojo-props="title:'<?php echo $tr->translate("CHEQUE_ISSUER")?>'"  id="frm_cheque" >
-		<form id="form_cheque"​ dojoType="dijit.form.Form" >
+		<form id="form_cheque" dojoType="dijit.form.Form" >
 			<div class="card-box">
 	    		<div class="col-md-12 col-sm-12 col-xs-12">
 	                <div class="form-group">
@@ -277,7 +284,7 @@ tr.head-td th {
 	         </div>
 	         <div class="card-box">
              	<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
-					<input type="button"​class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-disk"​ id="save_cheque" value="Save" label="<?php echo $tr->translate('GO_SAVE');?>" dojoType="dijit.form.Button"​ onclick="addNewCheque();"/>
+					<input type="button" class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-disk" id="save_cheque" value="Save" label="<?php echo $tr->translate('GO_SAVE');?>" dojoType="dijit.form.Button" onclick="addNewCheque();"/>
 				</div>
     		</div>
 		</form>
@@ -338,11 +345,21 @@ function enablePayment(){
 	dijit.byId("cheque").set("readOnly",false);
 	dijit.byId("cheque").attr("value",'');
 	dijit.byId("cheque_issuer").set("readOnly",false);
+	dijit.byId("cheque_issuer").set("required",true);
+		
+	dijit.byId("bank_id").set("readOnly",false);
+	dijit.byId("bank_id").set("required",true);
+	
 	if(payment_method==1){
 		dijit.byId("cheque").attr("value",'N/A');
 		dijit.byId("cheque").set("readOnly",true);
 		dijit.byId('cheque_issuer').reset();
 		dijit.byId("cheque_issuer").set("readOnly",true);
+		dijit.byId("cheque_issuer").set("required",false);
+		
+		dijit.byId("bank_id").reset();
+		dijit.byId("bank_id").set("readOnly",true);
+		dijit.byId("bank_id").set("required",false);
 	}
 }
 function printSubmit(){
@@ -429,13 +446,7 @@ dojo.ready(function(){
 		    			dijit.byId('branch_id').focus();
 		    			return false;
 		        	}
-		    	}else{
-				    if(staff_id==-1){
-				    	dijit.byId('branch_id_pop').attr('value',branch_id);
-				   		dijit.byId("popup_staff").show();
-				    }
 		    	}
-				
 				getAgencyCommission();
 		    } 
 		}, "staff_id");
@@ -565,6 +576,7 @@ function getAllStaffByBranch(staff_id=null){
 		url: url_getgroup,
 		content:{
 			'branch_id':branch_id,
+			'noaddnew':1,
 			},
 		handleAs:"json",
 		load: function(data) {

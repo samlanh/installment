@@ -199,6 +199,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   				"cheque_issuer_search"=>"",
   		);
   	}
+	$search["co_khname"]="";
   	$this->view->search=$search;
   	$db  = new Report_Model_DbTable_DbParamater();
   	$this->view->row = $db->getAllIncome($search);
@@ -206,6 +207,8 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$this->view->collectMoney = $db->getCollectPayment($search);
   	
   	$this->view->rscomisison = $db->getAllCommission($search);
+	$this->view->rsCommissinPaymentDetail = $db->getCommissionPaymentDetailList($search);
+	
 	
   	$this->view->rowExpensePayment = $db->getAllPurchasePayment($search);
 	
@@ -214,8 +217,6 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$this->view->houserepairExpense =$db->getAllIncomeOtherPayment($search,13);
 	$this->view->bankList = $db->getPayemtTotalByBankList();
 	
-	
-  	
   	$frm = new Loan_Form_FrmSearchLoan();
   	$frm = $frm->AdvanceSearch();
   	Application_Model_Decorator::removeAllDecorator($frm);

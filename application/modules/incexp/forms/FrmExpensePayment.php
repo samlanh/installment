@@ -20,6 +20,7 @@ Class Incexp_Form_FrmExpensePayment extends Zend_Dojo_Form {
 		 
 		$_dbpayment = new Incexp_Model_DbTable_DbExpensePayment();
 		$_dbgb = new Application_Model_DbTable_DbGlobal();
+		$dbGBStock = new Application_Model_DbTable_DbGlobalStock(); 
 		
 		
 //		$_arr_opt_branch = array(""=>$this->tr->translate("PLEASE_SELECT"));
@@ -68,6 +69,19 @@ Class Incexp_Form_FrmExpensePayment extends Zend_Dojo_Form {
 				'missingMessage'=>'Invalid Module!',
 				'onChange'=>'getSupplierInfo()',
 				'class'=>'fullside height-text',));
+				
+		$_bankId = new Zend_Dojo_Form_Element_FilteringSelect('bank_id');
+		$_bankId->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'required'=>'false',
+		));
+		$rsBank = $dbGBStock->getAllBank();
+		$optBank=array(''=>$this->tr->translate("SELECT_BANK"));
+		if(!empty($rsBank))foreach($rsBank AS $row){
+			$optBank[$row['id']]=$row['name'];
+		}
+		$_bankId->setMultiOptions($optBank);
 		
 		$_balance = new Zend_Dojo_Form_Element_NumberTextBox('balance');
 		$_balance->setAttribs(array(
@@ -310,6 +324,7 @@ Class Incexp_Form_FrmExpensePayment extends Zend_Dojo_Form {
 			$id->setValue($data["id"]);
 			$note->setValue($data["note"]);
 			$cheque_issuer->setValue($data["cheque_issuer"]);
+			$_bankId->setValue($data["bank_id"]);
 			
 			$_supplier_id->setAttribs(array(
 				'readonly'=>'readonly',
@@ -335,6 +350,7 @@ Class Incexp_Form_FrmExpensePayment extends Zend_Dojo_Form {
 				$_amount,
 				$note,
 				$cheque_issuer,
+				$_bankId,
 				
 				$_branch_search,
 				$start_date,
