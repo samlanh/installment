@@ -4022,6 +4022,7 @@ function getAllBranch($search=null){
  			 sC.`reason` as `cancelReason`,
  			 sC.`paid_amount` as `paidAmount`,
  			 sC.`return_back` as `amountReturnBack`,
+ 			 sC.`create_date` as `create_date`,
 			 
 	(SELECT
     	`property`.`land_size`
