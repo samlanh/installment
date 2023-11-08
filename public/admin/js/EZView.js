@@ -303,7 +303,7 @@ $.fn.EZView =  function(collectionName) {
         // Set Styles
         self.$EZView
             .css({
-                'background-color': 'rgba(0,0,0,0.5)!important',
+                'background-color': '#000000cc !important',
                 'height':           '100%',
                 'width':            '100%',
                 'z-index':          '10000',
@@ -347,7 +347,7 @@ $.fn.EZView =  function(collectionName) {
             }).end()
 
             .find('.tools-container').css({
-                'background-color': 'rgba(255,255,255,0.5)',
+                'background-color': '#000000cc',
                 'height':           '35px',
                 'width':            '100%',
                 'position':         'fixed',
@@ -380,7 +380,7 @@ $.fn.EZView =  function(collectionName) {
                 function() {
                     $(this).css({
                         'border-radius':    '100%',
-                        'background-color': 'rgba(255,255,255,0.5)',
+                        'background-color': '#aec4f7',
                         'z-index':          '100000'
                     });
                 },
