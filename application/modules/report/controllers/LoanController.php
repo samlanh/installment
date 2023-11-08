@@ -1510,9 +1510,9 @@ class Report_LoanController extends Zend_Controller_Action {
 			$search = $this->getRequest()->getPost();
 		}else {
 			$search = array(
-				'branch_id' => -1,
+				'branch_id' => "",
 				'start_date'=> date('Y-m-d'),
-				'end_date'=>date('Y-m-d'),
+				'end_date'=> date('Y-m-d'),
 			);
 		}
 		$frm = new Loan_Form_FrmSearchLoan();

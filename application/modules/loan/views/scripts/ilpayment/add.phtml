@@ -74,25 +74,22 @@
 	    			</div>
 	    		</div>
 	    	</div>
+			<?php if($settingDoc==1){ ?>
 	    	<div class="card-box">
 	    		 <ul class="nav  nav-pills nav-fill gap-2 p-1 small bg-white border rounded-5 shadow-sm pills-primary nav-tab" role="tablist">
 		            <li class="nav-item active">
 		                <a class="nav-link rounded-5" data-toggle="tab" href="#panel21" role="tab"><i class="fa fa-money ml-2"></i> <?php echo $tr->translate("PAYMENT_INFORMATION");?></a>
 		            </li>
-		            <li class="nav-item">
-		                <a class="nav-link rounded-5" data-toggle="tab" href="#panel22" role="tab">
-		                <i class="fa fa-tasks ml-2"></i> <?php echo $tr->translate("INFO_INDILOAN");?>
-		                </a>
-		            </li>
-					<?php if($settingDoc==1){ ?>
-						<li class="nav-item">
-							<a class="nav-link rounded-5" data-toggle="tab" href="#panel23" role="tab">
-								<i class="fa fa-file-text"></i> <?php echo $tr->translate("DOCUMENT");?>
-							</a>
-						</li>
-					<?php } ?>
+				
+					<li class="nav-item">
+						<a class="nav-link rounded-5" data-toggle="tab" href="#panel23" role="tab">
+							<i class="fa fa-file-text"></i> <?php echo $tr->translate("DOCUMENT");?>
+						</a>
+					</li>
+					
 		        </ul>
 		    </div>
+			<?php } ?>
 		    <div class="col-md-12">
 		        <!-- Tab panels -->
 		        <div class="tab-content ">
@@ -329,7 +326,22 @@
 												   </label>
 												   <div class="col-md-7 col-sm-7 col-xs-12">
 														<?php echo $frm->getElement('note');?>
-												<?php echo $frm->getElement('date_input');?>
+														<?php echo $frm->getElement('date_input');?>
+														<div style="display:none;">
+														   <span id="customerNameLabel"></span>
+														   <span id="customerCodeLabel"></span>
+														   <span id="saleDateLabel"></span>
+														   <span id="landCodeLabel"></span>
+														   <span id="sellingPriceLabel"></span>
+														   <span id="discountPercentLabel"></span>
+														   <span id="discountLabel"></span>
+														   <span id="soldPriceLabel"></span>
+														   <span id="scheduleOptLabel"></span>
+														   <span id="installmentPeriodLable"></span>
+														   <span id="interestRateLable"></span>
+														   <span id="agencyLable"></span>
+														   <span id="commissionLabel"></span>
+													   </div>
 												   </div>
 												</div>
 											</div>
@@ -386,142 +398,7 @@
 				        </div>
 			        </div>
 			        <!--/.Panel 1-->
-			        <!--Panel 2-->
-			        <div class="tab-pane fade in " id="panel22" role="tabpanel">
-			        	<div class="card-box">
-			        		<div class="col-md-4 col-sm-4 col-xs-12">
-								<div class="card-blogform">
-									<div class="card-body"> 
-										<div class="row"> 
-											<div class="col-md-12 col-sm-12 col-xs-12"> 
-												<div class="d-flex"> 
-													<div class="settings-main-icon ">
-														<i class="fa fa-tasks" aria-hidden="true"></i>
-													</div> 
-													<div class="col-md-10 col-sm-10 col-xs-12"> 
-														<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("SOLD_PRICE");?></p>
-													</div> 
-												</div>
-												<div class="form-group">
-												   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CUSTOMER_NAME");?> :
-												   </label>
-												   <div class="col-md-7 col-sm-7 col-xs-12">
-														<input id="client_id"><input type="hidden" name="buy_with"  dojoType="dijit.form.TextBox"  id="buy_with">
-												   </div>
-												</div>
-												<div class="form-group">
-												   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CLIENT_NUM");?> :
-												   </label>
-												   <div class="col-md-7 col-sm-7 col-xs-12">
-														<input id="client_code">
-												   </div>
-												</div>
-												<div class="form-group">
-												   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("RELEASE_DATE");?> :
-												   </label>
-												   <div class="col-md-7 col-sm-7 col-xs-12">
-														<?php echo $frm->getElement('release_date');echo $frm->getElement('old_release_date');?>
-												   </div>
-												</div>
-												<div class="form-group">
-												   <label  class="control-label  col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PROPERTY_CODE");?> :
-												   </label>
-												   <div class="col-md-7 col-sm-7 col-xs-12">
-														<?php echo $frm->getElement("land_address")?><input type="hidden" name="sale_number"  dojoType="dijit.form.TextBox"  id="sale_number">
-												   </div>
-												</div>
-												<div class="form-group">
-												   <label  class="control-label  col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("COST");?> :
-												   </label>
-												   <div class="col-md-7 col-sm-7 col-xs-12">
-														<?php echo $frm->getElement('total_amount_loan');?>
-												   </div>
-												</div>
-												<div class="form-group">
-												   <label  class="control-label  col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("Discount");?>% :
-												   </label>
-												   <div class="col-md-7 col-sm-7 col-xs-12">
-														<div class="col-md-5 col-sm-5 col-xs-12">
-															<?php echo $frm->getElement('discount_percent');?> 
-														</div>
-														<div class="col-md-1 col-sm-1 col-xs-12">
-														$
-														</div>
-														<div class="col-md-6 col-sm-6 col-xs-12">
-															<?php echo $frm->getElement('discount');?>
-														</div>
-												   </div>
-												</div>
-												<div class="form-group">
-												   <label  class="control-label  col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("SOLD_PRICE");?> :
-												   </label>
-												   <div class="col-md-7 col-sm-7 col-xs-12">
-														<?php echo $frm->getElement('sold_price');?>
-												   </div>
-												</div>
-												<div class="form-group">
-												   <label  class="control-label  col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PAYMENT_TYPE");?> :
-												   </label>
-												   <div class="col-md-7 col-sm-7 col-xs-12">
-														<?php echo $frm->getElement('schedule_opt');?>
-												   </div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-				            </div>
-				            <div class="col-md-4 col-sm-4 col-xs-12">
-								
-								<div class="card-blogform">
-									<div class="card-body"> 
-										<div class="row"> 
-											<div class="col-md-12 col-sm-12 col-xs-12"> 
-												<div class="d-flex"> 
-													<div class="settings-main-icon ">
-														<i class="glyphicon glyphicon-indent-right" aria-hidden="true"></i>
-													</div> 
-													<div class="col-md-10 col-sm-10 col-xs-12"> 
-														<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("INSTALLMENT_INFO");?></p>
-													</div> 
-												</div>
-												<div class="form-group">
-												   <label  class="control-label  col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("LOAN_PERIOD");?> :
-												   </label>
-												   <div class="col-md-7 col-sm-7 col-xs-12">
-														<?php echo $frm->getElement('loan_period');?>
-												   </div>
-												</div>
-												<div class="form-group">
-												   <label  class="control-label  col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("INTEREST_RATE");?> :
-												   </label>
-												   <div class="col-md-7 col-sm-7 col-xs-12">
-														<?php echo $frm->getElement('interest_rate');?>
-												   </div>
-												</div>
-												<div class="form-group">
-												   <label  class="control-label  col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CO");?> :
-												   </label>
-												   <div class="col-md-7 col-sm-7 col-xs-12">
-														<?php echo $frm->getElement('co_id');?>
-												   </div>
-												</div>
-												<div class="form-group">
-												   <label  class="control-label  col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("COMMISSION");?> :
-												   </label>
-												   <div class="col-md-7 col-sm-7 col-xs-12">
-														<?php echo $frm->getElement('commission');?>
-												   </div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-				                
-				            </div>
-				         </div>
-			        </div>
-			        <!--/.Panel 2-->
+			       
 					<!--Panel 3-->
 					<div class="tab-pane fade in " id="panel23" role="tabpanel">
 						<div class="card-box">
@@ -569,6 +446,17 @@
 				<input type="hidden" dojoType="dijit.form.TextBox" name="record_id" id="record_id">
 				<input type="hidden" dojoType="dijit.form.TextBox" name="last_optiontype" id="last_optiontype">
 				<input type="hidden" dojoType="dijit.form.TextBox" name="ispay_bank" id="ispay_bank">
+				
+				<input type="hidden" dojoType="dijit.form.TextBox" name="sale_number"    id="sale_number">
+				<input type="hidden" dojoType="dijit.form.TextBox" name="client_id"  id="client_id">
+				<input type="hidden" dojoType="dijit.form.TextBox" name="buy_with"  id="buy_with">
+				<input type="hidden" dojoType="dijit.form.TextBox" name="release_date"  id="release_date">
+				<input type="hidden" dojoType="dijit.form.TextBox" name="sold_price"  id="sold_price">
+				<input type="hidden" dojoType="dijit.form.TextBox" name="interest_rate"  id="interest_rate">
+				
+				<input type="hidden" dojoType="dijit.form.TextBox" name="schedule_opt"  id="schedule_opt">
+				<input type="hidden" dojoType="dijit.form.TextBox" name="co_id"  id="co_id">
+				
 				<?php  echo $frm->getElement('reciever');?>
 			</div>
 			 <div class="card-box">
@@ -584,10 +472,8 @@
 <div class="dijitHidden" style="width:24cm !important; height: 15cm ; padding: 0px; margin: 0px; padding-top: 40px;">
 	<div data-dojo-type="dijit.Dialog" style="width:24cm !important; " align="center"  data-dojo-props="title:'បោះពុម្ភ វិក័យបត្រ', onCancel:hideDialog" id="frm_client">
 		<div style="margin-bottom: 20px;">
-			<input type="button" value="បិទ" label="បិទ" id="close" dojoType="dijit.form.Button" 
-							iconClass="dijitEditorIcon dijitEditorIconCancel" onclick="hideDialog();"/>
-			<input type="button" value="បោះពុម្ព" label="បោះពុម្ព" id="print" dojoType="dijit.form.Button" 
-				iconClass="dijitEditorIcon dijitEditorIconPrint" onclick="getSavePrint();"/>
+			<input class="button-class button-danger" iconClass="glyphicon glyphicon-remove" type="button" value="បិទ" label="<?php echo $tr->translate("បិទ")?>" id="close" dojoType="dijit.form.Button" onclick="hideDialog();"/>
+			<input class="button-class button-primary" iconClass="glyphicon glyphicon-print" type="button" value="បោះពុម្ព" label="<?php echo $tr->translate("PRINT")?>" id="print" dojoType="dijit.form.Button" onclick="getSavePrint();"/>
 		</div>
 		<div id="rpt_print" style="height: 13cm ; padding: 0px; margin: 0px;font-family:'Khmer OS Battambang';">
 			<?php 
@@ -874,7 +760,10 @@ function showReciept(receipt_number){
 		collect_payment = day+'-'+month+'-'+year;
 		
 		var short_y = year.toString().substr(-2);
-		var collectpaymentdate = day +'/'+mm+'/'+short_y ;
+		var collectpaymentdate = day +'/'+mm+'/'+short_y;
+		
+		var customerNameLabel = $("#customerNameLabel").html();
+		var landCodeLabel = $("#landCodeLabel").html();
 		
 		symbal = "$ ";
 		option_pay = dijit.byId('option_pay').get('value');
@@ -943,8 +832,8 @@ function showReciept(receipt_number){
 		document.getElementById('lb_interest').innerHTML = symbal+dojo.number.format(dijit.byId('total_interest').get('value'),{places:2});
 		buy_with = dijit.byId('buy_with').get('value');
 		if(buy_with!=''){buy_with="/"+buy_with;}
-		document.getElementById('lb_customer').innerHTML = dijit.byId('client_id').attr('displayedValue')+buy_with;
-		document.getElementById('lbl_customer').innerHTML = dijit.byId('client_id').attr('displayedValue')+buy_with;
+		document.getElementById('lb_customer').innerHTML = customerNameLabel+buy_with;
+		document.getElementById('lbl_customer').innerHTML = customerNameLabel+buy_with;
 		if(receipt_number==''){
 			getReceiptNumber(1);
 		}
@@ -955,7 +844,7 @@ function showReciept(receipt_number){
 		document.getElementById('lbl_total_receive').innerHTML = symbal+dojo.number.format(dijit.byId('amount_receive').get('value'),{places:2});
 		document.getElementById('lb_penalty').innerHTML = symbal+dojo.number.format(dijit.byId('penalize_amount').get('value'),{places:2});
 		document.getElementById('lb_saleprice').innerHTML = symbal+dojo.number.format(dijit.byId('sold_price').get('value'),{places:2});
-		document.getElementById('lb_hourseno').innerHTML = dijit.byId('land_address').attr('displayedValue');
+		document.getElementById('lb_hourseno').innerHTML = landCodeLabel;
 		document.getElementById('lbl_total_paid1').innerHTML = symbal+dojo.number.format(total_paid,{places:2});
 		document.getElementById('lbl_balance').innerHTML = symbal+dojo.number.format(ending_balance,{places:2});
 		document.getElementById('lb_extrapayment').innerHTML = symbal+dojo.number.format(extra_payment,{places:2});
@@ -966,7 +855,8 @@ function showReciept(receipt_number){
 	 	document.getElementById('lbl_project').innerHTML = dijit.byId('branch_id').attr('displayedValue');
 
 	 	//for Five star Receipt
-		dojo.byId("lb_customercode").innerHTML = dijit.byId("client_code").attr('displayedValue');
+		var customerCodeLabel = $("#customerCodeLabel").html();
+		dojo.byId("lb_customercode").innerHTML = customerCodeLabel;
 		
 		a =dojo.number.format(dijit.byId("amount_receive").get('value'),{places:2}).replace(",", "");
 		money_khmer=read_money_in_english(a);
@@ -986,10 +876,11 @@ function showReciept(receipt_number){
 		money_khmer = money_khmer+" "+string+" "+read_in_english_from_10_to_99(decimalmoney_khmer)+''+read_in_english_from_0_to_9(last_number)+' '+str_cent;
 		dojo.byId('lable_chartotalreceipt').innerHTML=money_khmer+" US Dollars Only";
 		dojo.byId("lblpaid_date").innerHTML = collect_payment;
-		dojo.byId("lb_descriptionall").innerHTML = dijit.byId('land_address').attr('displayedValue')+" PMT No "+dijit.byId("paid_times").get("value")+" Date "+datepay1+" "+dijit.byId("payment_method").attr('displayedValue')+" "+dijit.byId('cheque').get('value');
+		dojo.byId("lb_descriptionall").innerHTML = landCodeLabel+" PMT No "+dijit.byId("paid_times").get("value")+" Date "+datepay1+" "+dijit.byId("payment_method").attr('displayedValue')+" "+dijit.byId('cheque').get('value');
 	
 		dojo.byId("lbl_phone").innerHTML = dijit.byId("phone").attr('displayedValue');	
 		sold_price = dijit.byId('sold_price').get('value');
+		sold_price = parseFloat(sold_price);
 		
 		a =dojo.number.format(sold_price,{places:2}).replace(",", "");
 		money_khmer=read_money_in_khmer(a);
@@ -1051,6 +942,7 @@ dojo.ready(function(){
 			searchAttr: "name",
 			class: 'fullside',
 			onChange: function() {
+				getSaleInfomation();
 				getLaonHasPayByLoanNumber();//payment history must used by channy
 				getAllLaonPayment();
 				getLastPaidDate();
@@ -1062,39 +954,6 @@ dojo.ready(function(){
 	        HideloadingBlock();
 	    }, 1000);
 		
-	var client_data = new dojo.store.Memory({
-	       data: <?php print_r(Zend_Json::encode($this->client));?>
-	});
-	new dijit.form.FilteringSelect({
-	store: dojo.data.ObjectStore({objectStore: client_data}),
-	autoComplete: true,
-	required: true,		           
-	name: "client_id",
-	id: "client_id",
-	searchAttr: "name",
-	class: 'fullside',
-	onChange: function() {
-		if(not_submit==0){
-	   }
-}
-	}, "client_id");
-	
-	var clientCode_data = new dojo.store.Memory({
-	       data: <?php print_r(Zend_Json::encode($this->clientCode));?>
-	});
-	new dijit.form.FilteringSelect({
-	store: dojo.data.ObjectStore({objectStore: clientCode_data}),
-	autoComplete: true,	            
-	required: false,		           
-	name: "client_code",
-	id: "client_code",
-	searchAttr: "name",
-	class: 'fullside',
-	onChange: function() {
-		if(not_submit==0){
-		}
-	}
-	}, "client_code");
     not_submit = 0;
 	document = dojo.byId("loan_number");
 	dojo.connect(document, "onkeyup", function(event) {
@@ -1208,13 +1067,10 @@ function payOption(){
 }
 function clearhistory(){
 	dijit.byId('client_id').attr('value',0);
-	dijit.byId('client_code').attr('value',0);
 	dijit.byId('schedule_opt').attr('value',0);
-	dijit.byId('discount').attr('value',0);
+	
 	dijit.byId('sold_price').attr('value',0);
-	dijit.byId('loan_period').attr('value',0);
 	dijit.byId('interest_rate').attr('value',0);
-	dijit.byId('loan_period').attr('value',0);
 	dijit.byId('os_amount').attr('value',0);
 	dijit.byId('total_interest').attr('value',0);
 	dijit.byId('release_date').attr('value',0);
@@ -1290,10 +1146,8 @@ function getLaonPayment(type){//tab ទី១
 							dijit.byId('buy_with').attr('value',respone[indexs].buy_with);	
 							dijit.byId('client_id').attr('value',client_id);					
 							dijit.byId('client_id').set("readOnly",true);
-							dijit.byId('client_code').attr('value',client_id);
 							dijit.byId('phone').attr('value',respone[indexs].phone);
-							dijit.byId('client_code').set("readOnly",true);
-							dijit.byId('land_address').attr('value',respone[indexs].property_address);
+							
 							dijit.byId('sale_number').attr('value',respone[indexs].sale_number);
 							dijit.byId('property_id').attr('value',respone[indexs].house_id);
 							if(respone[indexs].staff_id>0){
@@ -1301,19 +1155,15 @@ function getLaonPayment(type){//tab ទី១
 							}
 							dijit.byId('schedule_opt').attr('value',respone[indexs].payment_id);
 							dijit.byId('schedule_opt').set("readOnly",true);
-							dijit.byId('discount').attr('value',respone[indexs].discount_amount);
-							dijit.byId('discount_percent').attr('value',respone[indexs].discount_percent);
-							dijit.byId('discount').set("readOnly",true);
+							
 							dijit.byId('sold_price').attr('value',(parseFloat(respone[indexs].price_sold)-parseFloat(respone[indexs].other_fee)));
 							dijit.byId('sold_price').set("readOnly",true);
 							dijit.byId('total_pricipalpaid').attr("value",respone[indexs].total_principal_permonthpaid);
-							dijit.byId('loan_period').attr('value',respone[indexs].total_duration);
-							dijit.byId('loan_period').set("readOnly",true);
+							
 							dijit.byId('interest_rate').attr('value',respone[indexs].sale_interest_rate);
 							dijit.byId('interest_rate').set("readOnly",true);
-							dijit.byId('total_amount_loan').attr('value',respone[indexs].price_before);
-							dijit.byId('loan_period').attr('value',respone[indexs].amount_month);
-							dijit.byId('loan_period').set("readOnly",true);
+							
+							
 							dijit.byId('os_amount').attr('value',respone[indexs].principal_permonth);
 							dijit.byId('os_amount').set("readOnly",true);
 							dijit.byId('total_interest').attr('value',interest);
@@ -1392,17 +1242,16 @@ function getLaonPayment(type){//tab ទី១
 					}
 				}else{
 					var clientId = dijit.byId('client_id').get('value');
-					var clientCode = dijit.byId('client_code').get('value');
+					
 					var loanNumber = dijit.byId('loan_number').get('value');
 					if(type==1){
 						dijit.byId('client_id').attr('value','');
-						dijit.byId('client_code').attr('value','');
+						
 					}else if(type==2){
 						dijit.byId('loan_number').attr('value','');
 						dijit.byId('client_id').attr('value',clientCode);
 					}else{
 						dijit.byId('loan_number').attr('value','');
-						dijit.byId('client_code').attr('value',clientId);
 					}
 					infoMessageAlert("<?php echo $tr->translate("RECORD_NOT_EXIST");?>");
 					dijit.byId('identity').attr('value',"");
@@ -1436,7 +1285,7 @@ function calculateTotal(index){//គណនាបង់
 		var oneDay = 24*60*60*1000;
 		
 		var payOption = dijit.byId('option_pay').get('value');
-		var interest_rate = dijit.byId('interest_rate').get('value')/12;
+		var interest_rate = parseFloat(dijit.byId('interest_rate').get('value'))/12;
 		var collect_date = new Date(dijit.byId("collect_date").attr("value"));
 		var date_payment = new Date(dijit.byId("date_payment").attr("value"));
 		
@@ -1453,6 +1302,7 @@ function calculateTotal(index){//គណនាបង់
 		var penalty_type ='<?php echo $this->data["penalty_type"]?>';//ប្រភេទពិន័យ
 		
 		sold_price = dijit.byId("sold_price").get("value");
+		sold_price = parseFloat(sold_price);
 		total_pricipalpaid = dijit.byId("total_pricipalpaid").get("value");
 		total_pricipalpaid=isNaN(total_pricipalpaid)?0:total_pricipalpaid;//បើបើកវានឹងចេញខុស
 
@@ -1683,7 +1533,9 @@ function totalReturn(){
 		principal_paid = receive_amount - service_charge - penalize_amount - total_interest;
 		dijit.byId('os_amount').attr('value',parseFloat(principal_paid).toFixed(2));
 	    
-	    all_total = dijit.byId("sold_price").get("value")-(principal_paid+dijit.byId("total_pricipalpaid").get("value"));
+		var sold_price = dijit.byId("sold_price").get("value");
+		sold_price = parseFloat(sold_price);
+	    all_total = sold_price-(principal_paid+dijit.byId("total_pricipalpaid").get("value"));
 	    dijit.byId('priciple_amount').attr('value',all_total);
 	    total_amount = principal_paid+total_interest+penalize_amount;//good
 	    dijit.byId('total_interest').set("readOnly",false);
@@ -1821,6 +1673,7 @@ function getLaonHasPayByLoanNumber(){//tab3 ប្រវត្តបានបង
 					+'</thead>';
 					nums=0;
 					sold_price = dijit.byId('sold_price').get('value');
+					sold_price = parseFloat(sold_price);
 					
 					if(data_loan!=""){
 						for(k=0;k<data_loan.length;k++){
@@ -1885,7 +1738,7 @@ function getSavePrint(){
 	    url: urlSavePrint,	
 		form: dojo.byId("frm_add_group_pay"),	
 		load: function(data) {
-			//alert(data);
+			
 			dojo.byId("lb_receipt").innerHTML = data;
 			HideloadingBlock();
 			dojo.byId("innerrpt_print1").innerHTML = dojo.byId('rpt_print').innerHTML;
@@ -1896,6 +1749,36 @@ function getSavePrint(){
 			window.location.href ="<?php echo $this->baseUrl();?>/loan/ilpayment";
 		},
 		error: function(e) {
+		}
+	});
+}
+
+var urlGetSaleInfo = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getsaleinfo')); ?>';
+function getSaleInfomation(){
+	dojo.xhrPost({
+		url: urlGetSaleInfo,	
+		content:{ 
+		    'sale_id': dijit.byId('loan_number').get('value')
+		},		    
+		handleAs:"json",
+		load: function(data) {
+			dijit.byId('client_id').attr('value',data.client_id);
+			
+			document.getElementById('customerNameLabel').innerHTML = data.customerName;
+			document.getElementById('customerCodeLabel').innerHTML = data.customerCode;
+			document.getElementById('saleDateLabel').innerHTML = data.buy_date;
+			document.getElementById('landCodeLabel').innerHTML = data.propertyCodeFull;
+			document.getElementById('sellingPriceLabel').innerHTML = data.price_before;
+			document.getElementById('discountPercentLabel').innerHTML = data.discount_percent;
+			document.getElementById('discountLabel').innerHTML = data.discount_amount;
+			document.getElementById('soldPriceLabel').innerHTML = data.price_sold;
+			document.getElementById('scheduleOptLabel').innerHTML = data.paymentTypeLabel;
+			document.getElementById('installmentPeriodLable').innerHTML = data.total_duration;
+			document.getElementById('interestRateLable').innerHTML = data.interest_rate;
+			document.getElementById('agencyLable').innerHTML = data.agencyName;
+			document.getElementById('commissionLabel').innerHTML = data.comission;
+		},
+		error: function(err) {
 		}
 	});
 }

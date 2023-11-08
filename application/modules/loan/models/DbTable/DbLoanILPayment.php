@@ -616,7 +616,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     					$this->_name="ln_saleschedule";
     					$datapayment = array(
     						'branch_id'=>$data['branch_id'],
-    						'crm_id'=>$client_pay,//ទុកសម្រាប់លុប ពេលគេលុប​បង្កាន់ដៃបង់ប្រាក់
+    						'crm_id'=>$client_pay,//ទុកសម្រាប់លុប ពេលគេលុបបង្កាន់ដៃបង់ប្រាក់
     						'sale_id'=>$data['loan_number'],//good
     						'begining_balance'=> $data['outstanding_balance'],//good
     						'begining_balance_after'=> $data['outstanding_balance'],//good
@@ -785,25 +785,28 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 				$image_name="";
 				$photo="";
 				foreach ($ids as $i){
-					$name = $_FILES['attachment'.$i]['name'];
-					if (!empty($name)){
-						$ss = 	explode(".", $name);
-						Application_Model_DbTable_DbUserLog::writeMessageError($_FILES['attachment'.$i]["size"]);
-						$newDocName = "document_payment_".date("Y").date("m").date("d").time().$i.".".end($ss);
-						$newDocConvert = $dbc->resizeImase($_FILES['attachment'.$i], $part,$newDocName);
-						if(!empty($newDocConvert)){
-							$photo = $newDocConvert;
-							$arr = array(
-									'exspense_id'		=>$client_pay,
-									'document_name'		=>$photo,
-									'title'				=>$data['title_'.$i],
-									'date'   			=> date('Y-m-d H:i:s'),
-									'documentforType'   =>3,
-							);
-							$this->_name = "ln_expense_document";
-							$this->insert($arr);
+					if(!empty($_FILES['attachment'.$i])){
+						$name = $_FILES['attachment'.$i]['name'];
+						if (!empty($name)){
+							$ss = 	explode(".", $name);
+							Application_Model_DbTable_DbUserLog::writeMessageError($_FILES['attachment'.$i]["size"]);
+							$newDocName = "document_payment_".date("Y").date("m").date("d").time().$i.".".end($ss);
+							$newDocConvert = $dbc->resizeImase($_FILES['attachment'.$i], $part,$newDocName);
+							if(!empty($newDocConvert)){
+								$photo = $newDocConvert;
+								$arr = array(
+										'exspense_id'		=>$client_pay,
+										'document_name'		=>$photo,
+										'title'				=>$data['title_'.$i],
+										'date'   			=> date('Y-m-d H:i:s'),
+										'documentforType'   =>3,
+								);
+								$this->_name = "ln_expense_document";
+								$this->insert($arr);
+							}
 						}
 					}
+					
 				}
 			}
     		$db->commit();

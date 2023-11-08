@@ -947,9 +947,35 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     }
     public function getSaleInfoById($id){
     	$db=$this->getAdapter();
-    	$sql="SELECT
-    		((SELECT SUM(COALESCE(total_principal_permonthpaid+extra_payment,0)) FROM `ln_client_receipt_money` WHERE sale_id=$id AND status=1 LIMIT 1) + ((SELECT COALESCE(SUM(crd.total_amount),0) FROM `ln_credit` AS crd WHERE crd.status=1 AND crd.sale_id = $id LIMIT 1))) AS total_principal,
-    		s.* FROM `ln_sale` AS s WHERE s.id=$id AND status=1  ";
+		
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$session_lang=new Zend_Session_Namespace('lang');
+		$lang = $session_lang->lang_id;
+    	$str = 'name_en';
+    	if($lang==1){
+    		$str = 'name_kh';
+    	}
+    	$sql="
+			SELECT
+				((SELECT SUM(COALESCE(total_principal_permonthpaid+extra_payment,0)) FROM `ln_client_receipt_money` WHERE sale_id=$id AND status=1 LIMIT 1) + ((SELECT COALESCE(SUM(crd.total_amount),0) FROM `ln_credit` AS crd WHERE crd.status=1 AND crd.sale_id = $id LIMIT 1))) AS total_principal
+				,c.name_kh AS customerName
+				,c.phone AS customerPhone
+				,c.client_number AS customerCode
+				,c.sex AS sex
+				,CONCAT(COALESCE(p.land_address,''),',',COALESCE(p.street,'')) as propertyCodeFull
+				,p.land_address AS propertyCode
+				,p.street AS propertyStreet
+				,(SELECT $str FROM `ln_view` WHERE key_code =s.payment_id AND type = 25 limit 1) AS paymentTypeLabel
+				,'' AS agencyName
+				,s.* 
+			FROM 
+				`ln_sale` AS s 
+				JOIN `ln_client` AS c ON c.client_id = s.client_id
+				LEFT JOIN  `ln_properties` AS p ON `p`.`id` = `s`.`house_id`
+			WHERE 
+				 s.id=$id 
+				AND s.status=1  
+		";
     	return $db->fetchRow($sql);
     }
     
