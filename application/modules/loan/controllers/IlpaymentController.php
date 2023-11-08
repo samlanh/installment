@@ -164,9 +164,6 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 		Application_Model_Decorator::removeAllDecorator($frm_loan);
 		$this->view->frm_ilpayment = $frm_loan;
 		
-		$this->view->client = $db->getAllClient();
-		$this->view->clientCode = $db->getAllClientCode();
-		
 		$session_user=new Zend_Session_Namespace(SYSTEM_SES);
 		$this->view->user_name = $session_user->first_name .' '.$session_user->last_name;
 		$this->view->loan_number = $db_global->getSaleNumberByBranch();
