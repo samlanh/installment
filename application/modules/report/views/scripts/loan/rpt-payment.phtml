@@ -361,11 +361,19 @@
 									if($rs['total_payment']<=0){
 										$voidReason=$rs['void_reason'];
 										if(!empty($rs["void_date"])){
-										$voidDate=date($montFomat,strtotime($rs["void_date"]));
+											$void_date = new DateTime($rs["void_date"]);
+											$voidDate =  $void_date->format($montFomat);
 										}
 										$voidByUserName=$rs['voidByUserName'];
 										$classVoid="voidclass";
 									}
+									
+									$datePmt = new DateTime($rs["date_payment"]);
+			                   	 	$datePayment =  $datePmt->format($montFomat);
+									
+									$datePay = new DateTime($rs["date_pay"]);
+			                   	 	$receiveDate =  $datePay->format($montFomat);
+									
 									?>
 									
 				                <tr class="<?php echo $classVoid;?> style style1" >
@@ -380,8 +388,8 @@
 				               		<td data-label="<?php echo $tr->translate("PENALIZE AMOUNT");?>" ><?php echo number_format($rs['penalize_amountpaid'],2);?></td>
 				               		<td data-label="<?php echo $tr->translate("EXTRA_PAYMENT");?>" ><?php echo number_format($rs['extra_payment'],2);?></td>
 				               		<td data-label="<?php echo $tr->translate("TOTAL");?>" ><?php echo number_format($rs['amount_payment'],2);?></td>
-				               		<td data-label="<?php echo $tr->translate("PAY_DATE");?>" ><?php echo date($montFomat,strtotime($rs["date_payment"]));?></td>
-				               		<td data-label="<?php echo $tr->translate("INPUT_DATE");?>" align="center" ><?php echo date($montFomat,strtotime($rs["date_pay"]));?></td>
+				               		<td data-label="<?php echo $tr->translate("PAY_DATE");?>" ><?php echo $datePayment;?></td>
+				               		<td data-label="<?php echo $tr->translate("INPUT_DATE");?>" align="center" ><?php echo $receiveDate;?></td>
 				               		<td data-label="<?php echo $tr->translate("RECIEPT_NO");?>" class="redText" align="center">
 										<?php echo $rs["receipt_no"];?>
 										<a class="attachFile" title="<?php echo $tr->translate("RECEIPT");?>" target="_blank"  href="<?php echo $url_receipt.'/id/'.$rs["id"];?>">
@@ -489,6 +497,22 @@
 	$urlReciept = $this->baseUrl()."/report/loan/receipt/id/";
 ?>
 <script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
+<?php 
+$dateReport="";
+$today = new DateTime();
+$todayDate =  $today->format("Y-m-d");
+if(!empty($this->search['start_date'])){ 
+	$dateStart = new DateTime($this->search['start_date']);
+	$dateEnd = new DateTime($this->search['end_date']);
+	if( $dateStart->format("Y-m-d") == date("Y-m-d") ){ 
+		$dateReport =  $dateStart->format("d-M-Y");
+	}else{ 
+		$dateReport =$dateStart->format("d-M-Y").' '.$tr->translate('TO').' '.$dateEnd->format("d-M-Y");
+	} 
+}else{ 
+	$dateEnd = new DateTime($this->search['end_date']);
+	$dateReport =$dateEnd->format("d-M-Y"); 
+}?>
 <script>
 	dojo.require("dojo.data.ItemFileWriteStore"); 
 	var property_store  = getDataStorefromJSON('id','name',[{"id":-1,"name":"<?php echo $tr->translate("SELECT_PROPERTY");?>"}]);
@@ -504,7 +528,7 @@
 			 
 			 document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
 			 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("RPT_CLIENT_PAYMENT");?>';
-			 document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date("d-M-Y"); }else{ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date("d-M-Y",strtotime($this->search['end_date'])); }?>';
+			 document.getElementById('dateReport').innerHTML = '<?php echo $dateReport;?>';
 		});
 		new dijit.form.FilteringSelect({
 			store: property_store,

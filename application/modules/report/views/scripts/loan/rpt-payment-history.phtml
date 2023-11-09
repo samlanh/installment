@@ -18,6 +18,11 @@ $classHideHeight="110px";
 if($headerReportType==2){
 	$classHideHeight="125px";
 }
+
+$montFomat="d-m-Y";
+if(MONTH_FORMATE_DATE_RECEIPT==1){
+	$montFomat="d-M-Y";
+}
 ?>
 <script>
      dojo.require("dijit.form.DateTextBox");
@@ -61,7 +66,7 @@ if($headerReportType==2){
 					<?php echo $frm->getElement('end_date');?>
 				</div>
 				<div class="col-md-2 col-sm-2 col-xs-12">
-					<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+					<button class="button-class button-primary" iconClass="glyphicon glyphicon-search"  dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
 				</div>
 				<div class="col-md-2 col-sm-2 col-xs-12">
 				</div>
@@ -287,6 +292,12 @@ if($headerReportType==2){
 								
 								$totalExtrasa=$totalExtrasa+$rs["extra_payment"];
 								$clientExtra=$clientExtra+$rs["extra_payment"];
+								
+								$datePmt = new DateTime($rs["date_payment"]);
+								$datePayment =  $datePmt->format($montFomat);
+								
+								$datePay = new DateTime($rs["date_pay"]);
+								$receiveDate =  $datePay->format($montFomat);
 							?>
 			                <tr class="style stylehover" style="font-family: 'Times New Roman','Khmer OS Battambang';white-space: nowrap;" width="100%">
 			               		<td data-label="<?php echo $tr->translate("NUM");?>" style="text-align: center;"><?php echo $i++; ?></td>
@@ -298,10 +309,10 @@ if($headerReportType==2){
 			               		<td data-label="<?php echo $tr->translate("INTEREST");?>" align="right"><?php echo number_format($rs["total_interest_permonthpaid"],2);?></td>
 			               		<td data-label="<?php echo $tr->translate("PENALIZE AMOUNT");?>" align="right"><?php echo number_format($rs["penalize_amount"],2);?></td>
 			               		<td data-label="<?php echo $tr->translate("EXTRA_PAYMENT");?>" align="right"><?php echo number_format($rs["extra_payment"],2);?></td>
-			               		<td data-label="<?php echo $tr->translate("PAY_DATE");?>"><?php echo date('d-m-Y',strtotime($rs["date_payment"]));?></td>
+			               		<td data-label="<?php echo $tr->translate("PAY_DATE");?>"><?php echo $datePayment;?></td>
 			               		<td data-label="<?php echo $tr->translate("RECIEPT_NO");?>" class="receiptNum"><?php echo $rs["receipt_no"];?></td>
 			               		<td data-label="<?php echo $tr->translate("PAYMENTED");?>" align="right"><?php echo number_format($rs["amount_payment"],2);?></td>
-			               		<td data-label="<?php echo $tr->translate("INPUT_DATE");?>"><?php echo date("d-m-Y",strtotime($rs['date_pay']));?></td>
+			               		<td data-label="<?php echo $tr->translate("INPUT_DATE");?>"><?php echo $receiveDate;?></td>
 			               		<td data-label="<?php echo $tr->translate("PAYMENT_OPTION");?>" style="font-site:9px; <?php if($rs["payment_option"]==4){echo " background:#ccc";} ?>" align="center" ><?php echo $rs["paymentoption"]; //echo @$opt[$rs["payment_option"]];?></td>
 			               		<td data-label="<?php echo $tr->translate("BY_USER");?>"><?php echo $rs["user_name"];?></td>
 			                </tr>
@@ -538,13 +549,28 @@ input#e15 {
  } 	
 ?>
  <script>
-
+<?php 
+$dateReport="";
+$today = new DateTime();
+$todayDate =  $today->format("Y-m-d");
+if(!empty($this->search['start_date'])){ 
+	$dateStart = new DateTime($this->search['start_date']);
+	$dateEnd = new DateTime($this->search['end_date']);
+	if( $dateStart->format("Y-m-d") == date("Y-m-d") ){ 
+		$dateReport =  $dateStart->format("d-M-Y");
+	}else{ 
+		$dateReport =$dateStart->format("d-M-Y").' '.$tr->translate('TO').' '.$dateEnd->format("D d-M-Y");
+	} 
+}else{ 
+	$dateEnd = new DateTime($this->search['end_date']);
+	$dateReport =$dateEnd->format("d-M-Y"); 
+}?>
 require(["dojo/ready"], function(ready){
 	ready(function(){
 		getBranchInfo();
 		 document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
 		 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("REPORT_LOAN_PAYMENT");?>';
-		 document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date("d-M-Y"); }else{ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date("d-M-Y",strtotime($this->search['end_date'])); }?>';
+		 document.getElementById('dateReport').innerHTML = '<?php echo $dateReport;?>';
 	
 		 $("#e15").select2({tags:[<?php echo $tags;?>],placeholder: "<?php echo $tr->translate("CHOOSE_STREET");?>",allowClear: true});
 	});

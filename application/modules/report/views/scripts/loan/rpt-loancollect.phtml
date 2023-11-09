@@ -28,6 +28,11 @@
 	if($headerReportType==2){
 		$classHideHeight="125px";
 	}
+	
+$montFomat="d-m-Y";
+if(MONTH_FORMATE_DATE_RECEIPT==1){
+	$montFomat="d-M-Y";
+}
 ?>
 <style>
 .hover:hover{background: #ccc;}
@@ -215,14 +220,48 @@
 		             ?>
 	               <?php if(!empty($tran)){foreach($tran as $key =>$row){
 	               	
+						$datePayment = "";
+						if($row['last_optiontype']==1){//by date
+							if($row['ispay_bank']==0){
+								$date= new DateTime($row['date_payment']);
+								$datePayment = $date->format($montFomat);
+							}else{
+								$datePayment = $row['payment_type'];//." ".$row['ispay_bank'];
+							}
+						}else{//by last payment
+							$datePayment = $tr->translate("RECEIVED_PROPERTY");
+						}
+						$lastPayDate="";
+						if(!empty($row["last_pay_date"])){ 
+							$date= new DateTime($row['last_pay_date']);
+							$lastPayDate= $date->format($montFomat);
+						}else{ 
+							$lastPayDate= "-";
+						}
+							
 						if ($row['last_pay_date']==null or $row['last_pay_date']==""){
-							$total_day=strtotime($end_dat)-strtotime($row['date_payment']);
-							$amount_lateday=$total_day/(60*60*24)-$free_day;
-							$total_late_day=$total_day/(60*60*24);
+							$endDateValue= new DateTime($end_dat);
+							$datePmtValue= new DateTime($row['date_payment']);
+							
+							$total_day = $endDateValue->diff($datePmtValue)->format("%a");
+							$amount_lateday = $total_day-$free_day;
+							$total_late_day = $total_day;
+							//$total_day=$endDateValue->format("Y-m-d") - $datePmtValue->format("Y-m-d");
+							
+							//$amount_lateday=$total_day/(60*60*24)-$free_day;
+							//$total_late_day=$total_day/(60*60*24);
 						}else {
-							$total_day=strtotime($end_dat)-strtotime($row['date_payment']);
-							$total_late_day=$total_day/(60*60*24);
-							$amount_lateday=$total_day/(60*60*24);
+							$endDateValue= new DateTime($end_dat);
+							$datePmtValue= new DateTime($row['date_payment']);
+							
+							$total_day = $endDateValue->diff($datePmtValue)->format("%a");
+							$amount_lateday = $total_day-$free_day;
+							$total_late_day = $total_day;
+							
+							//$total_day=$endDateValue->format("Y-m-d") - $datePmtValue->format("Y-m-d");
+							
+							//$total_late_day=$total_day/(60*60*24);
+							//$amount_lateday=$total_day/(60*60*24);
 						}
 						
 						if(!empty($row['old_land_id'])){
@@ -325,20 +364,9 @@
 							
 						</td>
 	                   <td data-label="<?php echo $tr->translate("DATE_PAYMENT");?>" align="center" style="white-space: nowrap;">
-	                   		<?php 
-		                    	if($row['last_optiontype']==1){//by date
-		                    		if($row['ispay_bank']==0){
-		                    			$date= new DateTime($row['date_payment']);
-		                    			echo $date->format("d-m-Y");
-		                    		}else{
-		                    			echo $row['payment_type'];//." ".$row['ispay_bank'];
-		                    		}
-		                    	}else{//by last payment
-		                    		echo $tr->translate("RECEIVED_PROPERTY");
-		                    	}	                    		
-	                    	?>
+	                   		<?php echo $datePayment;?>
 	                 </td>
-	                 <td data-label="<?php echo $tr->translate("LAST_PAID_DATE");?>" align="center"><span ><?php if(!empty($row["last_pay_date"])){ echo date("Y-m-d",strtotime($row["last_pay_date"]));}else{ echo "-";} ?></span></td>
+	                 <td data-label="<?php echo $tr->translate("LAST_PAID_DATE");?>" align="center"><span ><?php echo $lastPayDate; ?></span></td>
 	                 <td data-label="<?php echo $tr->translate("NOTE");?>" align="center"><span style="line-height: 18px;white-space: pre-wrap !important;max-width: 200px;width: 200px;padding: 5px;display: block;font-size: 11px;overflow-wrap: break-word;text-align: left;vertical-align: top;" class="note_<?php echo $row['sale_id'];?>"><?php echo $row["expect_income_note"];?></span></td>
 	                 </tr>
 		               <?php 
@@ -390,13 +418,29 @@
 		</div>
 	</div>
 </div>
+<?php 
+$dateReport="";
+$today = new DateTime();
+$todayDate =  $today->format("Y-m-d");
+if(!empty($this->search['start_date'])){ 
+	$dateStart = new DateTime($this->search['start_date']);
+	$dateEnd = new DateTime($this->search['end_date']);
+	if( $dateStart->format("Y-m-d") == date("Y-m-d") ){ 
+		$dateReport =  $dateStart->format("d-M-Y");
+	}else{ 
+		$dateReport =$dateStart->format("d-M-Y").' '.$tr->translate('TO').' '.$dateEnd->format("D d-M-Y");
+	} 
+}else{ 
+	$dateEnd = new DateTime($this->search['end_date']);
+	$dateReport =$dateEnd->format("d-M-Y"); 
+}?>
 <script>
 dojo.require("dijit.form.Textarea");
 require(["dojo/ready"], function(ready){
 	 getBranchInfo();
 	 document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
 	 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("REPORT_LOAN_COLLECT");?>';
-	 document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date("d-M-Y"); }else{ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date("d-M-Y",strtotime($this->search['end_date'])); }?>';
+	 document.getElementById('dateReport').innerHTML = '<?php echo $dateReport;?>';
 	
 });
 
