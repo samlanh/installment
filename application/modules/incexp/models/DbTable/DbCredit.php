@@ -133,6 +133,7 @@ class Incexp_Model_DbTable_DbCredit extends Zend_Db_Table_Abstract
 		$prefix ="";// $this->getPrefixCodeByBranch($branch_id);
 		$sql = " select count(id) from ln_credit where branch_id = $branch_id";
 		$result = $db->fetchOne($sql);
+		$result = empty($result) ? 1 : $result+1;
 		$pre = 'CR:';
 		
 		$length = strlen((int)$result);

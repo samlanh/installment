@@ -146,5 +146,18 @@ class Incexp_CreditController extends Zend_Controller_Action
     	$frmpopup = new Application_Form_FrmPopupGlobal();
     	$this->view->footer = $frmpopup->getFooterReceipt();
 		$this->view->officailreceipt = $frmpopup->templateIncomeReceipt();
+    }
+
+	function getInvoiceNoAction(){
+    	
+    	if($this->getRequest()->isPost()){
+    		$data = $this->getRequest()->getPost();
+    		$db = new Incexp_Model_DbTable_DbCredit();
+    		$result = $db->getInvoiceNo($data['branch_id']);
+    		//array_unshift($result, array ( 'id' => -1, 'name' => 'Select Customer') );
+    		print_r(Zend_Json::encode($result));
+    		exit();
+    	}
+    	
     }    
 }

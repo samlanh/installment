@@ -41,12 +41,15 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
   		`s`.`price_before`    AS `price_before`,
  		CONCAT(`s`.`discount_percent`,'%') AS `discount_percent`,
         `s`.`discount_amount` AS `discount_amount`,
- 		`s`.`price_sold`     AS `price_sold`,
- 		(SELECT
-	     SUM((`cr`.`total_principal_permonthpaid` + `cr`.`extra_payment`))
+ 		`s`.`price_sold`     AS `price_sold`,   
+	   (SELECT
+	     SUM((`cr`.`total_principal_permonthpaid` + `cr`.`extra_payment`)) + ((SELECT COALESCE(SUM(crd.total_amount),0) FROM `ln_credit` AS crd WHERE crd.status=1 AND crd.sale_id = s.id LIMIT 1))
 	   FROM `ln_client_receipt_money` `cr`
 	   WHERE (`cr`.`sale_id` = `s`.`id`)  LIMIT 1) AS `totalpaid_amount`,   
-        `s`.`balance`         AS `balance`,
+	   (SELECT
+	     (`s`.`price_sold`-SUM(`cr`.`total_principal_permonthpaid` + `cr`.`extra_payment`) - ((SELECT COALESCE(SUM(crd.total_amount),0) FROM `ln_credit` AS crd WHERE crd.status=1 AND crd.sale_id = s.id LIMIT 1)) )
+	   FROM `ln_client_receipt_money` `cr`
+	   WHERE (`cr`.`sale_id` = `s`.`id`)  LIMIT 1) AS `balance`,  
         `s`.`buy_date`        AS `buy_date`,
         (SELECT  first_name FROM rms_users WHERE id=s.user_id limit 1 ) AS user_name,
          s.status,
