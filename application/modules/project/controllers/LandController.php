@@ -514,7 +514,7 @@ class Project_LandController extends Zend_Controller_Action {
 				$id = empty($data['id'])?0:$data['id'];	
 				
 				$rsChecking = $db->getCheckPropertyInSale($id);
-				if(empty(!$rsChecking)){
+				if(empty($rsChecking)){
 					print_r(Zend_Json::encode(2));
 					exit();
 				}

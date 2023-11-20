@@ -1591,5 +1591,457 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     		}
 //     		$db->commit();
     }
+    
+    public function ImportKPMorndany($data){
+    	$db = $this->getAdapter();
+    	$db->beginTransaction();
+    	try{
+    		$count = count($data);
+    		$a_time= 0;
+    		$install = 1;
+    		$first_pay = 0;
+    		$cum_interest=0;
+    		$first_payment=0;
+    		$n=0;
+    		$oldland_str='';
+    		$payment_id = array('Monthly'=>4,'Holding'=>6,'ផ្ដាច់'=>6,'ដំណាក់កាលថេរ'=>3);
+    		$genderStr = array(
+					'ប្រុស'=>1,
+    				'ស្រី'=>2
+    				);
+    		
+    		$propertyTypeStr = array(
+    				'House'=>1,
+    				'Land'=>2,
+    				'Market'=>3,
+    		);
+    		
+    		$installMentNumber=0;
+    
+    		$SaleIdGenerate =0;
+    		for($i=4; $i<=$count; $i++){
+    			$ProjectName=$data[$i]['B'];
+    			$lotNo=$data[$i]['C'];
+    			$propertyType=$data[$i]['D'];
+    			$streetNo=$data[$i]['E'];
+    			$saleBY=$data[$i]['F'];
+    			$customerName=$data[$i]['G'];
+    			$customerNameEn=$data[$i]['H'];
+    			$cardNo=$data[$i]['I'];
+    			$nationName=$data[$i]['J'];
+    			$gender=empty($genderStr[$data[$i]['K']])?0:$genderStr[$data[$i]['K']];
+    			$fullAddress=$data[$i]['L'];
+    			$district=$data[$i]['M'];
+//     			$customerName=$data[$i]['N'];
+    			$province=$data[$i]['O'];
+    			$dob=$data[$i]['P'];
+    			$tel=$data[$i]['Q'];
+    			$orgPrice=$data[$i]['R'];
+    			$discount=$data[$i]['S'];
+    			$sellingPrice=$data[$i]['T'];
+    			$saleDate=date("Y-m-d",strtotime($data[$i]['U']));
+    			$totalPaid=$data[$i]['V'];
+    			$balance=$data[$i]['W'];
+    			$lastPaidDate=date("Y-m-d",strtotime($data[$i]['X']));
+    			$agreementDate=date("Y-m-d",strtotime($data[$i]['Y']));
+    			$agreementBY=$data[$i]['Z'];
+    			$duration=$data[$i]['AA'];
+    			$installmentType=$data[$i]['AB'];
+    			$projectAddress=$data[$i]['AC'];
+    			$userId='';
+    			
+    			$param = array(
+    					'projectName'=>$ProjectName,
+    					'projectAddress'=>$projectAddress
+    					);
+    			$branch_id = $this->getProjectId($param);
+    			
+    			$param = array(
+    					'staffName'=>strtoupper($saleBY),
+    					'branchId'=>$branch_id
+    					);
+    			$staffId = $this->getStaffId($param);
+    			
+    			if(empty($lotNo)){
+    				continue;
+    			}
+    			if($oldland_str!=$data[$i]['C']){
+    				$installMentNumber=0;
+    				$sql="SELECT `client_id` FROM `ln_client` WHERE name_kh='".$customerName."'";
+    				$client_id = $db->fetchOne($sql);
+    				if(empty($client_id)){
+    					$dbg = new Application_Model_DbTable_DbGlobal();
+    					$client_code = $dbg->getNewClientIdByBranch();
+    
+    					$_arr=array(
+    							'client_number'=> $client_code,
+    							'name_kh'	  => $customerName,
+    							'sex'	      => $gender,
+    							'pro_id'      => 0,
+    							'dis_id'      => 0,
+    							'com_id'      => 0,
+    							'village_id'  => 0,
+//     							'street'	  => 0,
+//     							'house'	      => 0,
+    							'nationality' => $nationName,
+    							'phone'	      =>$tel,
+    							'create_date' => $saleDate,
+    							'status'      => 1,
+    							'client_d_type'=> 4,
+    							'user_id'	  => $userId,
+    							'p_nationality'=> $nationName,
+    							'ksex'        => 1,
+    							'adistrict'   => 0,
+    							'cprovince'   => 12,
+    							'dcommune'    => 0,
+    							'qvillage'    => 0,
+    							'dstreet'     => 0,
+    							'branch_id'   => 1,
+    							'joint_doc_type' => 4,
+    							'remark'	      =>$fullAddress,
+    					);
+    					$this->_name='ln_client';
+    					$client_id = $this->insert($_arr);
+    				}
+    
+    				$typesale =1;
+    				$propertyList = explode(",", $lotNo);
+    				if (!empty($propertyList)){
+    
+    					$countLand = count($propertyList);
+    					if ($countLand>1){
+    						$typesale =2;
+    						$oldId = "";
+    						foreach ($propertyList as $land){
+    							$sql="SELECT id FROM `ln_properties` WHERE branch_id = $branch_id AND land_address = '".$land."' AND street='".$streetNo."'";
+    							$land_id = $db->fetchOne($sql);
+    
+    							if(empty($land_id)){
+    								$_arr=array(
+    										'branch_id'	  => $branch_id,
+    										'land_code'	  => '',
+    										'land_address'=> $land,
+    										'street'	  => $streetNo,
+    										'price'	      => $orgPrice,
+    										'land_price'  => $orgPrice,
+    										'house_price' => 0,
+    										'land_size'	  => '',
+    										'width'       => '',
+    										'height'      => '',
+    										'is_lock'     => 1,
+    										'status'	  => 1,
+    										'user_id'	  => $userId,
+    										'property_type'=> empty($propertyTypeStr[$propertyType])?0:$propertyTypeStr[$propertyType],
+    										'type_tob'		=>empty($propertyTypeStr[$propertyType])?0:$propertyTypeStr[$propertyType],
+    										'south'	      => '',
+    										'north'	      => '',
+    										'west'	      => '',
+    										'east'	      => '',
+    										'create_date' =>$saleDate,
+    								);
+    								$this->_name='ln_properties';
+    								$land_id = $this->insert($_arr);
+    							}else{
+    								$arr = array('is_lock'=>1);
+    								$this->_name='ln_properties';
+    								$where="id = ".$land_id;
+    								$this->update($arr, $where);
+    							}
+    
+    							if (empty($oldId)){
+    								$oldId =$land_id;
+    							}else{
+    								$oldId =$oldId.",".$land_id;
+    							}
+    
+    						}
+    
+    						$_arr=array(
+    								'branch_id'	  => $branch_id,
+    								'land_code'	  => '',
+    								'land_address'=> $lotNo,
+    								'street'	  => $streetNo,
+    								'price'	      => $orgPrice,
+    								'land_price'  => $orgPrice,
+    								'house_price' => 0,
+    								'land_size'	  => '',
+    								'width'       => '',
+    								'height'      => '',
+    								'is_lock'     => 1,
+    								'status'	  => -2,
+    								'user_id'	  => $userId,
+    								'property_type'=> empty($propertyTypeStr[$propertyType])?0:$propertyTypeStr[$propertyType],
+    								'type_tob'		=>empty($propertyTypeStr[$propertyType])?0:$propertyTypeStr[$propertyType],
+    								'south'	      => '',
+    								'north'	      => '',
+    								'west'	      => '',
+    								'east'	      => '',
+    								'old_land_id'=> $oldId,
+    								'create_date'=>	$saleDate,
+    						);
+    						$this->_name='ln_properties';
+    						$land_id = $this->insert($_arr);
+    					}else{
+    						$sql="SELECT id FROM `ln_properties` WHERE branch_id = $branch_id AND land_address = '".$lotNo."' AND street='".$streetNo."'";
+    						$land_id = $db->fetchOne($sql);
+    
+    						if(empty($land_id)){
+    							$_arr=array(
+    									'branch_id'	  => $branch_id,
+    									'land_code'	  => '',
+    									'land_address'=> $lotNo,
+    									'street'	  => $streetNo,
+    									'price'	      => $orgPrice,
+    									'land_price'  => $orgPrice,
+    									'house_price' => 0,
+    									'land_size'	  => '',
+    									'width'       => '',
+    									'height'      => '',
+    									'is_lock'     => 1,
+    									'status'	  => 1,
+    									'user_id'	  => $userId,
+    									'property_type'=> empty($propertyTypeStr[$propertyType])?0:$propertyTypeStr[$propertyType],
+    									'type_tob'		=>empty($propertyTypeStr[$propertyType])?0:$propertyTypeStr[$propertyType],
+    									'south'	      => '',
+    									'north'	      => '',
+    									'west'	      => '',
+    									'east'	      => '',
+    									'create_date'=>$saleDate,
+    							);
+    							$this->_name='ln_properties';
+    							$land_id = $this->insert($_arr);
+    						}else{
+    							$arr = array('is_lock'=>1);
+    							$this->_name='ln_properties';
+    							$where="id = ".$land_id;
+    							$this->update($arr, $where);
+    						}
+    					}
+    				}
+    
+    				
+    				$totalInstallamount=0;
+    				if (!empty($payment_id[$installmentType])){//check
+    					if($payment_id[$installmentType]==4){//check
+    						$totalInstallamount = $balance;
+    					}
+    				}
+    
+    				$dbtable = new Application_Model_DbTable_DbGlobal();
+    				$loan_number = $dbtable->getLoanNumber();
+    				$payType=4;
+    				if(!empty($payment_id[$installmentType])){//check
+    					$payType = $payment_id[$installmentType];
+    				}
+    
+    				$arr = array(
+    						'branch_id'=>$branch_id,
+    						'house_id'=>$land_id,
+    						'receipt_no'=>'',
+    						'sale_number'=>$loan_number,
+    						'payment_id'=>$payType,
+//     						'note'=>$data[$i]['X'],//check
+    						'client_id'=>$client_id,
+    						'price_before'=>$orgPrice,
+    						'discount_amount'=>$discount,
+    						'discount_percent'=>0,
+    						'price_sold'=>$sellingPrice,
+    						'other_fee'=>0,
+    						'paid_amount'=>$totalPaid,
+    						'balance'=>$balance,
+    						'interest_rate'=>0,
+    						'total_duration'=>$duration,
+    						'payment_method'=>1,
+    						'land_price'=>0,
+    						'total_installamount'=>$totalInstallamount,
+    						'typesale'=>$typesale,
+    						'build_start'=>'',
+    						'amount_build'=>0,
+    						'is_reschedule'=>($totalPaid)>0?1:0,
+    						'staff_id'=>$staffId,
+    						'comission'=>0,
+    						'full_commission'=>0,
+    						'create_date'=>$saleDate,
+    						'startcal_date'=>$lastPaidDate,
+    						'first_payment'=>$lastPaidDate,
+    						'agreement_date'=>$agreementDate,
+    						'buy_date'=>$saleDate,
+    						'end_line'=>$lastPaidDate,
+    						'validate_date'=>$lastPaidDate,//check 
+
+    						'amount_daydelay'=>0,
+//     						'excel_note'=>$data[$i]['X'],//check
+    						'user_id'=>$userId,
+    				);
+    
+    				$this->_name='ln_sale';
+    				$sale_id = $this->insert($arr);//add group loan
+    				$a_time=1;
+    					
+    				$SaleIdGenerate = $SaleIdGenerate +1;
+    				$sale_id = $SaleIdGenerate;
+    			}
+    			 
+    			$installMentNumber = $installMentNumber+1;
+    
+    			 
+    			$is_completed =($balance<=0)?1:0;
+    			$this->_name="ln_saleschedule";
+//     			$begining = $data[$i]['C'];
+//     			$ending=$data[$i]['C']-$data[$i]['D'];
+    			 
+    			$ispay_bank=0;
+    			$n++;
+    			if($balance<=0){
+	    			$datapayment = array(
+	    					'branch_id'=>1,
+	    					'sale_id'=>$sale_id,//good
+	    					'begining_balance'=>$sellingPrice,//$data[$i]['F']+$data[$i]['C'],//good
+	    					'begining_balance_after'=>0,//$data[$i]['F']+$data[$i]['C'],//good
+	    					'principal_permonth'=>$sellingPrice,//good
+	    					'principal_permonthafter'=>0,//good
+	    					'total_interest'=>0,//$data[$i]['D'],//good
+	    					'total_interest_after'=>0,//$data[$i]['D'],//good
+	    					'total_payment'=>$sellingPrice,//$data[$i]['E'],//good
+	    					'total_payment_after'=>0,//$data[$i]['E'],//good
+	    					'ending_balance'=>0,
+	    					'amount_day'=>30,
+	    					'is_completed'=>1,
+	    					'date_payment'=>$lastPaidDate,
+	    					'received_date'=>$lastPaidDate,
+	    					//'ispay_bank'=>($data[$i]['B']=='បានប្លង់រឹង'?2:0),
+	    					'paid_date'=>$lastPaidDate,
+	    					'note'=>'',
+	    					'percent'=>0,
+	    					'percent_agree'=>0,
+	    					'is_installment'=>1,
+	    					'no_installment'=>1,//$data[$i]['A'],
+	    					'last_optiontype'=>1,
+	    					'ispay_bank'=>$ispay_bank,
+	    					//'note'=>$data[$i]['L'],
+	    
+	    			);
+	    			$saledetailid = $this->insert($datapayment);
+    			}
+    
+    			$total_principal_permonthpaid=0;
+    			if(!empty($totalPaid)){
+    				$total_principal_permonthpaid=$totalPaid;
+    				$arr_client_pay = array(
+    						'branch_id'						=>	$branch_id,
+    						'receipt_no'					=>	"OldSystem",
+    						'date_pay'					    =>	$lastPaidDate,
+    						'date_input'					=>	$lastPaidDate,
+    						'from_date'						=>	$lastPaidDate,//check more
+    						'client_id'                     =>	$client_id,
+    						'sale_id'						=>	$sale_id,
+    						'land_id'						=>	$land_id,
+    						'outstanding'                   =>	$balance,//ប្រាក់ដើមមុនបង់
+    						'total_principal_permonth'		=>	$totalPaid,//ប្រាក់ដើមត្រូវបង់
+    						'total_interest_permonth'		=>	0,
+    						'penalize_amount'				=>	0,
+    						'total_payment'					=>	$totalPaid,
+    						'service_charge'				=>	0,
+    						'principal_amount'				=>	$balance,//ប្រាក់ដើមនៅសល់បន្ទប់ពីបង់
+    						'balance'						=>	0,
+    						'recieve_amount'				=>	$totalPaid,
+    						'amount_payment'				=>	$totalPaid,
+    						'note'							=>	'',
+    						'cheque'						=>	'',
+    						'user_id'						=>	$userId,
+    						'payment_option'				=>	1,
+    						'status'						=>	1,
+    						'is_completed'					=>	1,
+    						'field3'						=>  ($first_pay==0)?1:3,
+    						'is_payoff'						=>  0,
+    						'extra_payment' 				=>  0,
+    						'payment_times'					=>  $installMentNumber,
+    						'payment_method'				=>  1,
+    						'total_principal_permonthpaid'	=>	$total_principal_permonthpaid,
+    						'total_interest_permonthpaid'	=>	0,//$data[$i]['D'],//ok ការប្រាក់បានបង
+    						'penalize_amountpaid'			=>	0,//$data[$i]['G'],// ok បានបង
+    						'service_chargepaid'			=>	0,// okបានបង
+    				);
+    
+    				$this->_name = "ln_client_receipt_money";
+    				$client_pay = $this->insert($arr_client_pay);
+    
+    				$arr = array(
+    						'crm_id'				=>	$client_pay,
+    						'land_id'			    =>	$land_id,//ok
+//     						'lfd_id'				=>	$saledetailid,//ok
+    						'date_payment'			=>	$lastPaidDate, // ថ្ងៃដែលត្រូវបង់
+    						'principal_permonth'	=>	0,
+    						'total_interest'		=>	0,
+    						'total_payment'			=>	0,
+    						'total_recieve'			=>	0,
+    						'pay_after'				=>	0,
+    						'penelize_amount'		=>	0,
+    						'service_charge'		=>	0,
+    						'penelize_new'			=>	0,
+    						'service_charge_new'	=>	0,
+    						'capital'				=>  $sellingPrice,
+    						'remain_capital'		=>	$balance, 
+    						'old_interest'			=>	0,
+//     						'old_total_payment'		=>	$data[$i]['D'],
+//     						'old_principal_permonth'=>	$data[$i]['D'],
+//     						'old_total_priciple'	=>	$data[$i]['D'],
+    						'old_penelize'			=>	0,
+    						'old_service_charge'	=>	0,
+    						'last_pay_date'			=>	$lastPaidDate,
+    						'paid_date'				=>	$lastPaidDate,
+    						'is_completed'			=>	1,
+    						'status'				=>	1
+    				);
+    				$this->_name='ln_client_receipt_money_detail';
+    				$this->insert($arr);
+    
+    			}
+    			$oldland_str=$lotNo;
+    			$install = $install+1;
+    		}
+    		$db->commit();
+    	}catch(Exception $e){
+    		$db->rollBack();
+    		echo $e->getMessage();
+    		exit();
+    	}
+    }
+    function getProjectId($data){
+    	$db = $this->getAdapter();
+    	$sql=" SELECT br_id  FROM `ln_project` WHERE 1 ";
+    	if(!empty($data['projectName'])){
+    		$sql.=" AND project_name='".$data['projectName']."'";
+    	}
+    	$projectId = $db->fetchOne($sql);
+    	if(empty($projectId)){
+    		$arr = array(
+    				'project_name'=>$data['projectName'],
+    				'br_address'=>$data['projectAddress'],
+    		);
+    		$this->_name='ln_project';
+    		$projectId =  $this->insert($arr);
+    	}
+    	return $projectId;
+    }
+    function getStaffId($data){
+    	$sql="SELECT co_id FROM `ln_staff` WHERE 1";
+    	if(!empty($data['staffName'])){
+    		$sql.=" AND co_khname='".$data['staffName']."'";
+    	}
+    	$db = $this->getAdapter();
+    	$staffId = $db->fetchOne($sql);
+    	if(empty($staffId)){
+    		$arr = array(
+    				'co_khname'=>$data['staffName'],
+    				'position_id'=>1,
+    				'branch_id'=>$data['branchId']
+    		);
+    		$this->_name='ln_staff';
+    		$staffId =  $this->insert($arr);
+    	}
+    	return $staffId;
+    }
+    
 }   
 
