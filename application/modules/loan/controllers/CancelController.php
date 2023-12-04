@@ -75,7 +75,7 @@ class Loan_CancelController extends Zend_Controller_Action {
 		$this->view->frm_loan = $frm;
 		
 		$db = new Loan_Model_DbTable_DbExpense();
-		$result = $db->getAllExpenseCategory();
+		$result = $db->getAllExpenseCategoryLoan();
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		array_unshift($result, array ( 'id' => -1,'name' =>$tr->translate("ADD_NEW")));
 		$this->view->all_category = $result;
@@ -129,7 +129,7 @@ class Loan_CancelController extends Zend_Controller_Action {
 		$this->view->frm_loan = $frm;
 	
 		$db = new Loan_Model_DbTable_DbExpense();
-		$result = $db->getAllExpenseCategory();
+		$result = $db->getAllExpenseCategoryLoan();
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		array_unshift($result, array ( 'id' => -1,'name' =>$tr->translate("ADD_NEW")));
 		$this->view->all_category = $result;

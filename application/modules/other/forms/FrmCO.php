@@ -161,12 +161,6 @@ Class Other_Form_FrmCO extends Zend_Dojo_Form {
 				2=>$this->tr->translate("NAME_ENGLISH"));
 		$_display->setMultiOptions($_display_opt);
 		
-// 		$_degree=  new Zend_Dojo_Form_Element_FilteringSelect('degree');
-// 		$_degree->setAttribs(array('dojoType'=>$this->filter,'class'=>'fullside',));
-// 		$degree_opt = $db->getAllDegree();
-// 		$_degree->setMultiOptions($degree_opt);
-// 		$_degree->setValue($request->getParam('degree'));
-		
 		$_basic_salary=  new Zend_Dojo_Form_Element_NumberTextBox('basic_salary');
 		$_basic_salary->setAttribs(array('dojoType'=>'dijit.form.NumberTextBox',
 				'class'=>'fullside',
@@ -255,7 +249,6 @@ Class Other_Form_FrmCO extends Zend_Dojo_Form {
 			$_display->setValue($_data['displayby']);
 			$_national_id->setValue($_data['national_id']);
 			$_pob->setValue($_data['pob']);
-// 			$_degree->setValue($_data['degree']);
 			$_tel->setValue($_data['tel']);
 			$_email->setValue($_data['email']);
 			$_address->setValue($_data['address']);
@@ -271,12 +264,9 @@ Class Other_Form_FrmCO extends Zend_Dojo_Form {
 			$_department->setValue($_data['department_id']);
 			$_figer_print_id->setValue($_data['figer_print_id']);
 			$_photo->setValue($_data['photo']);
-			
 			$_user_name->setValue($_data['user_name']);
 			$_user_type->setValue($_data['user_type']);
-			
 			$parent_id->setValue($_data['parent_id']);
-			
 		}
 		$this->addElements(array($_figer_print_id,$_department,$_photo,$_annual_lives,$_btn_search,$_status_search,$_title,$_id,$_co_id,$_name_kh,$_branch_id,$_national_id,$_display,$_enname,$_lname,
 				$_sex,$_tel,$_email,$_pob,$_address,$_shift,$_workingtime,$_status,$_position,$_basic_salary,$_start_work,$_end_work,$_contract,$_note,

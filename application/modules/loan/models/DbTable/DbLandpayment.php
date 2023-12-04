@@ -160,40 +160,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	return $db->fetchAll($sql);
     }
-    public function getLoanviewById($id){
-    	$sql = "SELECT
-    	lg.g_id
-    	,(SELECT branch_nameen FROM `ln_branch` WHERE br_id =lg.branch_id LIMIT 1) AS branch_name
-    	,lg.level,
-    	(SELECT name_en FROM `ln_view` WHERE status =1 and type=24 and key_code=lg.for_loantype) AS for_loantype
-    	,(SELECT co_firstname FROM `ln_staff` WHERE co_id =lg.co_id LIMIT 1) AS co_firstname
-    	,(select concat(zone_name,'-',zone_num)as dd from `ln_zone` where zone_id = lg.zone_id ) AS zone_name
-    	,(SELECT name_en FROM `ln_view` WHERE status =1 and type=14 and key_code=lg.pay_term) AS pay_term
-    	,(SELECT name_en FROM `ln_view` WHERE status =1 and type=14 and key_code=lg.collect_typeterm) AS collect_typeterm
-    	,lg.date_release
-    	,lg.total_duration
-    	,lg.first_payment
-    	,lg.time_collect
-    	,(SELECT name_en FROM `ln_view` WHERE status =1 and type=2 and key_code=lg.holiday) AS holiday
-    	,lg.date_line
-    	,lm.pay_after, lm.pay_before
-    	,(SELECT curr_nameen FROM `ln_currency` WHERE id=lm.currency_type) AS currency_type
-    	,lm.graice_period,
-    	lm.loan_number,lm.interest_rate,lm.amount_collect_principal,lm.semi,
-    	lm.client_id,lm.admin_fee,
-    	lm.pay_after,lm.pay_before,lm.other_fee
-    	,(SELECT name_kh FROM `ln_client` WHERE client_id = lm.client_id LIMIT 1) AS client_name_kh,
-    	(SELECT name_en FROM `ln_client` WHERE client_id = lm.client_id LIMIT 1) AS client_name_en,
-    	(SELECT group_code FROM `ln_client` WHERE client_id = lm.client_id LIMIT 1) AS group_code,
-    	(SELECT client_number FROM `ln_client` WHERE client_id = lm.client_id LIMIT 1) AS client_number,
-    	lm.total_capital,lm.interest_rate,lm.payment_method,
-    	lg.time_collect,
-    	lg.zone_id,
-    	(SELECT co_firstname FROM `ln_staff` WHERE co_id =lg.co_id LIMIT 1) AS co_enname,
-    	lg.status AS str ,lg.status FROM `ln_loan_group` AS lg,`ln_loan_member` AS lm
-    	WHERE lg.g_id = lm.group_id AND lm.member_id = $id LIMIT 1 ";
-    	return $this->getAdapter()->fetchRow($sql);
-    }
+    
 
     function round_up($value, $places)
     {

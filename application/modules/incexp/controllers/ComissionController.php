@@ -82,7 +82,7 @@ class Incexp_ComissionController extends Zend_Controller_Action {
 		$this->view->cheque_issue = $result;
 		
 		$db = new Loan_Model_DbTable_DbExpense();
-		$result = $db->getAllExpenseCategory();
+		$result = $db->getAllExpenseCategoryLoan();
 		
 		array_unshift($result, array ( 'id' => -1,'name' => $tr->translate("ADD_NEW")));
 		$this->view->all_category = $result;
@@ -150,7 +150,7 @@ class Incexp_ComissionController extends Zend_Controller_Action {
 		
 		
 		$db = new Loan_Model_DbTable_DbExpense();
-		$result = $db->getAllExpenseCategory();
+		$result = $db->getAllExpenseCategoryLoan();
 		array_unshift($result, array ( 'id' => -1,'name' => $tr->translate("ADD_NEW")));
 		$this->view->all_category = $result;
 		$key = new Application_Model_DbTable_DbKeycode();

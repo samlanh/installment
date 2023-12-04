@@ -54,12 +54,8 @@ Class Other_Form_FrmStaff extends Zend_Dojo_Form {
 				'class'=>'fullside',
 		));
 		
-// 		$rows=$_db->getAllCOName();
-// 		$opt_co = array(''=>$this->tr->translate("SELECT_CO_NAME"));
-// 		if(!empty($rows))foreach($rows AS $row) $opt_co[$row['co_id']]=$row['co_khname'];
 		$_co = new Zend_Dojo_Form_Element_FilteringSelect('co_khname');
 		$_co->setAttribs(array('dojoType'=>$this->filter,'class'=>'fullside',
-				//'class'=>'fullside',
 		));
 		$rowss = $_db->getAllCOName();
 		$opt_co=array(''=>$this->tr->translate("SELECT_SALE_AGENT"));
@@ -70,10 +66,6 @@ Class Other_Form_FrmStaff extends Zend_Dojo_Form {
 		$_co->setMultiOptions($opt_co);
 		$_co->setValue($request->getParam('co_khname'));
 		
-// 		$_startdate = new Zend_Dojo_Form_Element_DateTextBox('start_date');
-// 		$_startdate->setAttribs(array('dojoType'=>$this->date,'class'=>'fullside',
-// 				'placeholder'=>$this->tr->translate('START_DATE'),
-// 				'onchange'=>'CalculateDate();'));
 		
 		$_date = $request->getParam("start_date");
 		$_salary = new Zend_Dojo_Form_Element_TextBox('salary');

@@ -4093,17 +4093,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				
 				<tr style="line-height: 20px;font-size: 11px;font-family:'."'Times New Roman'".','."'Khmer OS Battambang'".'">
 					<td colspan="4" valign="top">
-						<table class="comment-footer" width="100%" border="0" >
-							<tr>
-								<td width="10%">
-									<span class="lbnote" style="">សម្គាល់ ៖</span>
-								</td>
-								<td colspan="5">
-									<p class="comment1">'.$data['comment'].'</p>
-									<span class="comment">'.$data['comment1'].'</span>
-								</td>
-							</tr>
-						</table>
+						
 					</td>
 				</tr>
 				<tr style="line-height: 15px;font-size: 12px;">

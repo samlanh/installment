@@ -1619,7 +1619,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     		$installMentNumber=0;
     
     		$SaleIdGenerate =0;
-    		for($i=4; $i<=$count; $i++){
+    		for($i=3; $i<=$count; $i++){
     			$ProjectName=$data[$i]['B'];
     			$lotNo=$data[$i]['C'];
     			$propertyType=$data[$i]['D'];
@@ -1642,24 +1642,34 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     			$saleDate=date("Y-m-d",strtotime($data[$i]['U']));
     			$totalPaid=$data[$i]['V'];
     			$balance=$data[$i]['W'];
-    			$lastPaidDate=date("Y-m-d",strtotime($data[$i]['X']));
-    			$agreementDate=date("Y-m-d",strtotime($data[$i]['Y']));
+    			$lastPaidDate=!empty($data[$i]['X'])?date("Y-m-d",strtotime($data[$i]['X'])):$saleDate;
+    			$agreementDate=!empty($data[$i]['Y'])?date("Y-m-d",strtotime($data[$i]['Y'])):$saleDate;
     			$agreementBY=$data[$i]['Z'];
     			$duration=$data[$i]['AA'];
     			$installmentType=$data[$i]['AB'];
     			$projectAddress=$data[$i]['AC'];
+    			
+    			$amtPerPaid=$data[$i]['AD'];
+    			$lastPaid=$data[$i]['AE'];
+    			
+    			$strDuration = empty($duration)?'':'រយៈពេលបង់ '.$duration;
+    			$strAmtPerPaid = empty($amtPerPaid)?'':'បង់ប្រចាំខែ'.$amtPerPaid;
+    			$strLastPaidDate = empty($lastPaidDate)?'':'LastPaidDate'.$lastPaidDate;
+    			$strLastPaid = empty($lastPaid)?'':'LastPaid'.$lastPaid;
+    			
+    			$saleNote = $strDuration.$strAmtPerPaid.$strLastPaidDate.$strLastPaid;
     			$userId='';
     			
     			$param = array(
     					'projectName'=>$ProjectName,
     					'projectAddress'=>$projectAddress
-    					);
+    				);
     			$branch_id = $this->getProjectId($param);
     			
     			$param = array(
     					'staffName'=>strtoupper($saleBY),
     					'branchId'=>$branch_id
-    					);
+    				);
     			$staffId = $this->getStaffId($param);
     			
     			if(empty($lotNo)){
@@ -1840,7 +1850,6 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     						'receipt_no'=>'',
     						'sale_number'=>$loan_number,
     						'payment_id'=>$payType,
-//     						'note'=>$data[$i]['X'],//check
     						'client_id'=>$client_id,
     						'price_before'=>$orgPrice,
     						'discount_amount'=>$discount,
@@ -1868,10 +1877,10 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     						'buy_date'=>$saleDate,
     						'end_line'=>$lastPaidDate,
     						'validate_date'=>$lastPaidDate,//check 
-
     						'amount_daydelay'=>0,
 //     						'excel_note'=>$data[$i]['X'],//check
     						'user_id'=>$userId,
+    						'note'=>$saleNote
     				);
     
     				$this->_name='ln_sale';
@@ -1933,6 +1942,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     						'date_pay'					    =>	$lastPaidDate,
     						'date_input'					=>	$lastPaidDate,
     						'from_date'						=>	$lastPaidDate,//check more
+    						'date_payment'					=>	$lastPaidDate,
     						'client_id'                     =>	$client_id,
     						'sale_id'						=>	$sale_id,
     						'land_id'						=>	$land_id,

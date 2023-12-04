@@ -70,13 +70,6 @@ class Loan_Model_DbTable_Dbtransferowner extends Zend_Db_Table_Abstract
     			$this->_name="ln_change_owner";
 	    		$transferid = $this->insert($arr);
 	    		
-// 	    		$arra = array(
-// 	    				'client_id' => $data['to_customer'],
-// 	    			);
-// 	    		$this->_name="ln_client_receipt_money";
-// 	    		$where="sale_id=".$data['loan_number'];
-// 	    		$this->update($arra, $where);
-	    		
 	    		$arra = array(
 	    				'client_id' => $data['to_customer'],
 	    				'agreement_date'=>$data['agreement_date'],

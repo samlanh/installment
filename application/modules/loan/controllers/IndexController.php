@@ -267,36 +267,8 @@ class Loan_IndexController extends Zend_Controller_Action {
 		$key = new Application_Model_DbTable_DbKeycode();
 		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
 	}
-	public function addloanAction(){
-		if($this->getRequest()->isPost()){
-			$data=$this->getRequest()->getPost();
-			$db = new Loan_Model_DbTable_DbLoan();
-			$id = $db->addNewLoanGroup($data);
-			$suc = array('sms'=>'ប្រាក់ឥណទានត្រូវបានបញ្ចូលដោយជោគជ័យ !');
-			print_r(Zend_Json::encode($suc));
-			exit();
-		}
-	}
-	public function viewAction(){
-// 		$this->_helper->layout()->disableLayout();
-		$id = $this->getRequest()->getParam('id');
-		$db_g = new Application_Model_DbTable_DbGlobal();
-		if(empty($id)){
-			Application_Form_FrmMessage::Sucessfull("RECORD_NOT_FUND","/loan/index/index",2);
-		}
-		$db = new Loan_Model_DbTable_DbLandpayment();
-		$row = $db->getLoanviewById($id);
-		$this->view->tran_rs = $row;
-	}
-	function getLoanlevelAction(){
-		if($this->getRequest()->isPost()){
-				$data = $this->getRequest()->getPost();
-				$db = new Loan_Model_DbTable_DbLoanIL();
-				$row = $db->getLoanLevelByClient($data['client_id'],$data['type']);
-				print_r(Zend_Json::encode($row));
-			    exit();
-		}
-	}
+	
+	
 	public function getLoaninfoAction(){//from repayment schedule
 		if($this->getRequest()->isPost()){
 			$data=$this->getRequest()->getPost();

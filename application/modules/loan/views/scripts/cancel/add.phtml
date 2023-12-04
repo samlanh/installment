@@ -232,8 +232,6 @@ function printSubmit(){
 	 $('#frm_add_tran').submit();
 }
 
-
-
 var sale_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
 var sale_client_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
 dojo.ready(function(){
@@ -362,27 +360,11 @@ function getLandAndClientDetail(inds){
 			dijit.byId('return_back').attr('value',paid_amount);
 		}
 	}
-	
 
 	function currencyFormat(num) {
 	    return "$ " + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
 	}
-	function returnMOnth(monthnum){
-		var month = new Array();
-		month[1] = "Jan";
-		month[2] = "Feb";
-		month[3] = "Mar";
-		month[4] = "Apr";
-		month[5] = "May";
-		month[6] = "Jun";
-		month[7] = "Jul";
-		month[8] = "Aug";
-		month[9] = "Sep";
-		month[10] = "Oct";
-		month[11] = "Nov";
-		month[12] = "Dec";
-		return month[monthnum];
-	}
+	
 	function doPrint() {
 		dojo.byId("printblog2").innerHTML = dojo.byId('divPrint').innerHTML;
 		window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML <?php if($this->data['showreceipt']>1){ ?>+ dojo.byId('divPrint1').innerHTML<?php }?>;

@@ -57,10 +57,6 @@ class Loan_CustomerpaymentController extends Zend_Controller_Action {
 		$fm = $frm->AdvanceSearch();
 		Application_Model_Decorator::removeAllDecorator($fm);
 		$this->view->frm_search = $fm;
-		
-//  		$data= array('loan_number'=>1,'type'=>1,'crm_id'=>1);
-//  		$db = new Loan_Model_DbTable_DbLoanILPayment();
-//  		$row = $db->getLoanPaymentschedulehistory($data);
   }
   function addAction()
   {
@@ -216,7 +212,6 @@ class Loan_CustomerpaymentController extends Zend_Controller_Action {
 		$this->view->loan_numbers = $db->getAllLoanNumberByBranch(1);
 	}
 	function cancelIlPayment(){
-// 		$db = new Loan_Model_DbTable_DbLoanILPayment();
 		$db = new Loan_Model_DbTable_DbGroupPayment();
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();

@@ -292,14 +292,9 @@ Class Loan_Form_FrmRepaymentSchedule extends Zend_Dojo_Form {
 		$_id = new Zend_Form_Element_Hidden('id');
 		if($data!=null){
 			$_branch_id->setValue($data['branch_id']);
-// 			$receipt->setValue($data['receipt_no']);
-// 			$discount->setValue($data['discount_amount']);
-// 			$discount_percent->setValue($data['discount_percent']);
-// 			$_loan_code->setValue($data['sale_number']);
 			$schedule_opt->setValue($data['payment_method_after']);
 			$paid->setValue($data["period_after"]);
 			$balance->setValue($data['balance_after']);
-				
 			$_period->setValue($data['period_after']);
 			$_first_payment->setValue($data['first_payment_after']);
 			$_rate->setValue($data['interest_after']);//
@@ -315,8 +310,6 @@ Class Loan_Form_FrmRepaymentSchedule extends Zend_Dojo_Form {
 		}
 		$this->addElements(array($agreementdate,$discount_percent,$cheque,$paid_before,$balance_before,$receipt,$fixedpayment,$note,$other_fee,$_branch_id,$_date_buy,
 				$_interest,$_service_charge,$schedule_opt,$_to_total_sold,$_total_sold,$_house_price,$balance,$paid,//$_loan_type,
-				// 				$_client_code,$_time_collect,$_paybefore,$staff_ids,$_pay_late,$_payterm,$_every_payamount,
-		// 				$_time,$_time_collect_pri,$_customer_code,$_repayment_method,$_pay_every,$_collect_term,
 				$staff_id,$commission,$_amount,$_rate,$_releasedate,$_status,$discount,$_period,$_instalment_date,$_to_branch_id,
 				$sold_price,$_old_payterm,$_interest_rate,$_release_date,$_first_payment,$_loan_code,$_dateline,$_id));
 		return $this;
