@@ -132,6 +132,20 @@ public function getClientCombineId($id){
   	ORDER BY no_installment ASC,date_payment ASC, collect_by ASC, status DESC ";
   	return $db->fetchAll($sql);
   }
+  
+  function checkCoutingScheduleCompetedRecord($_data){
+	  $db=$this->getAdapter();
+	  $saleId = empty($_data["saleId"]) ?  0 : $_data["saleId"];
+	  $sql="
+		SELECT 
+			COUNT(sch.`id`) AS completedRecord
+		FROM `ln_saleschedule` AS sch
+		WHERE sch.`sale_id` = $saleId 
+			AND sch.`status` = 1
+			AND sch.`is_completed` =1
+	  ";
+	  return $db->fetchOne($sql);
+  }
 	
 }
 

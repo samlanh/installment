@@ -9,6 +9,11 @@
 	$dbparmeter = new Report_Model_DbTable_DbParamater();
 	$paymentCondiction = PAYMENT_CONDICTION_SCHEDULE;
 	$waterMarkSetting = WATERMARK_SETTING;
+	
+	$dbGb = new Application_Model_DbTable_DbGlobal();
+	$userInfo = $dbGb->getUserInfo();
+	$userLevel = empty($userInfo["level"]) ? 0 : $userInfo["level"];
+	
 ?>
 <title><?php echo $tr->translate('Payment Schedule');?></title>
 <style>
@@ -247,12 +252,18 @@
 	               	</tr>
 	               	<?php continue;}
 	               	$i++; ?>
-	               	<tr align="center" style=" height: 20px;" class="style hover" >
+	               	<tr align="center" style=" height: 20px;" class="style hover <?php if($key==0 AND $userLevel=="1" AND $this->coutingCompetedRecord <=1 ){ echo "context-menu-one"; }?>" <?php if($key==0 AND $userLevel=="1" AND $this->coutingCompetedRecord <=1 ){ echo 'oncontextmenu="setrowdata('."'".$row['id']."'".','.$key.');return false;"';} ?> >
 	                    <td><?php echo sprintf("%02d", $i); //($i<10)?"0":"";echo $i;?></td>
 		                    <?php $str_day = date('D',strtotime($row['date_payment']));
 		                    	$day_as_khmer = $dayin_khmer[$str_day];
 		                    ?>
 	                    <td align="center">
+							<input type="hidden" dojoType="dijit.form.TextBox" value="<?php echo $row["id"];?>" name="scheduleId<?php echo $key;?>" id="scheduleId<?php echo $key;?>"  />
+							<input type="hidden" dojoType="dijit.form.TextBox" value="<?php echo $row["begining_balance"];?>" name="beginingBalance<?php echo $key;?>" id="beginingBalance<?php echo $key;?>"  />
+							<input type="hidden" dojoType="dijit.form.TextBox" value="<?php echo $row["principal_permonth"];?>" name="principalPermonth<?php echo $key;?>" id="principalPermonth<?php echo $key;?>"  />
+							<input type="hidden" dojoType="dijit.form.TextBox" value="<?php echo $row["total_interest"];?>" name="totalInterest<?php echo $key;?>" id="totalInterest<?php echo $key;?>"  />
+							<input type="hidden" dojoType="dijit.form.TextBox" value="<?php echo $row["total_payment"];?>" name="totalPayment<?php echo $key;?>" id="totalPayment<?php echo $key;?>"  />
+							<input type="hidden" dojoType="dijit.form.TextBox" value="<?php echo $row["ending_balance"];?>" name="endingBalance<?php echo $key;?>" id="endingBalance<?php echo $key;?>"  />
 	                    	<?php 
 		                    	if($row['last_optiontype']==1){//by date
 		                    		if($row['ispay_bank']==0){
@@ -294,6 +305,7 @@
 		                    	echo ($row['received_date']==0)?"":$receive_date;
 		                    }
 	                    	?>
+							
 	                    </td>
 	                </tr>
 	               <?php }
@@ -581,7 +593,54 @@
 	</table>
 	</div>
 </div>
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" data-dojo-props="title:'<?php echo $tr->translate('EDIT_FIRST_RECORD');?>'"  id="updateForm" style="width:350px;" >
+		<div class="card pb-10 pt-10 pl-10 pr-10">
+			<form id="updateFormInfo"  name="data" action="" dojoType="dijit.form.Form" method="post">
+				<div class="card-box">
+					<div class="form-group">
+					   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate('PRINCIPLE');?> :
+					   </label>
+					   <div class="col-md-7 col-sm-7 col-xs-12">
+							<input class="fullside" type="text" onKeyup="calculateBalance()" dojoType="dijit.form.NumberTextBox" name="beginingBalance" id="beginingBalance" placeholder="<?php echo $tr->translate("PRINCIPLE");?>" />
+							<input type="hidden" dojoType="dijit.form.TextBox" name="id" id="id"  />
+							<input type="hidden" dojoType="dijit.form.TextBox" value="<?php echo $this->saleId;?>" name="saleId" id="saleId"  />
+					   </div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate('PRINCIPAL');?> :
+					   </label>
+					   <div class="col-md-7 col-sm-7 col-xs-12">
+							<input class="fullside" type="text" onKeyup="calculateBalance()" dojoType="dijit.form.NumberTextBox" name="principalPermonth" id="principalPermonth" placeholder="<?php echo $tr->translate("PRINCIPAL");?>" />
+					   </div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate('TOTAL_INTEREST');?> :
+					   </label>
+					   <div class="col-md-7 col-sm-7 col-xs-12">
+							<input class="fullside" type="text" dojoType="dijit.form.NumberTextBox" name="totalInterest" id="totalInterest" placeholder="<?php echo $tr->translate("TOTAL_INTEREST");?>" />
+					   </div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate('OS');?> :
+					   </label>
+					   <div class="col-md-7 col-sm-7 col-xs-12">
+							<input class="fullside" readOnly type="text" dojoType="dijit.form.NumberTextBox" name="endingBalance" id="endingBalance" placeholder="<?php echo $tr->translate("OS");?>" />
+					   </div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
+							<button onclick="upDateCustomerInfo();" iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="button"><?php echo $tr->translate("SAVE");?></button>
+						</div>
+					</div>
+				</div>
+				
+			</form>
+		</div>
+	</div>
+</div>
 <script>
+require(["dijit/form/DateTextBox","dijit/form/NumberTextBox","dojo/number","dijit/Dialog"]);
 require(["dojo/ready"], function(ready){
 	 ready(function(){
 		 printSave();
@@ -592,5 +651,75 @@ require(["dojo/ready"], function(ready){
 function printSave(){
 	symbal=" $";
 	dojo.byId("life_date").innerHTML = '<?php echo preg_replace( "/\r|\n/", "", strip_tags(htmlspecialchars($LIFE_LOAN)));?>';
+}
+
+var urlUpdateInfo = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'updaterecord-schedule')); ?>';
+function upDateCustomerInfo(){
+	
+	if(dijit.byId('updateFormInfo').validate()){
+			if (confirm("<?php echo $tr->translate("Do you want to save now");?>")) {
+		    } else {
+				dijit.byId('updateFormInfo').reset();
+				dijit.byId('updateForm').hide();
+		    	 return false;
+		    }
+		loadingBlock();
+		dojo.xhrPost({
+			url: urlUpdateInfo,
+			form: dojo.byId("updateFormInfo"),
+			handleAs:"json",
+			load: function(data) {
+				
+				dijit.byId('updateFormInfo').reset();
+				dijit.byId('updateForm').hide();
+				location.reload();
+				HideloadingBlock();
+			},
+			error: function(err) {
+				alert(err);
+			}
+		});
+	}
+}
+
+var row=0;
+var indexRecord=0;
+var url="";
+$(function(){
+	$.contextMenu({
+		selector: '.context-menu-one', 
+		callback: function(key, options) {
+			var m = "clicked: " + key;
+			if(key=="stepup"){
+				dijit.byId('id').set('value',row);
+				dijit.byId('beginingBalance').set('value',dijit.byId('beginingBalance'+indexRecord).get('value'));
+				dijit.byId('principalPermonth').set('value',dijit.byId('principalPermonth'+indexRecord).get('value'));
+				dijit.byId('totalInterest').set('value',dijit.byId('totalInterest'+indexRecord).get('value'));
+				dijit.byId('endingBalance').set('value',dijit.byId('endingBalance'+indexRecord).get('value'));
+				dijit.byId('updateForm').show();
+					
+			}
+		},
+		items: {
+			"stepup": {name: "<?php echo $tr->translate("EDIT");?>", icon: "fa-file-text"},
+			
+		}
+	});
+});
+function setrowdata(index,indexRecord){
+	row = index;
+	indexRecord = indexRecord;
+}
+var recordid ='';
+function gotoAction(){
+	 window.open(url+row);
+}
+function calculateBalance(){
+	var beginingBalance = dijit.byId('beginingBalance').get('value');
+		beginingBalance=isNaN(beginingBalance)?0:beginingBalance;
+	var principalPermonth = dijit.byId('principalPermonth').get('value');
+		principalPermonth=isNaN(principalPermonth)?0:principalPermonth;
+	var endingBalance = beginingBalance - principalPermonth;
+	dijit.byId('endingBalance').set('value',endingBalance);
 }
 </script>

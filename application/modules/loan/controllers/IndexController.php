@@ -444,4 +444,22 @@ class Loan_IndexController extends Zend_Controller_Action {
 	  	$this->view->customer =  $db->getAllClient();
 	  	$this->view->userlist =  $db->getAllUser();
 	}
+	
+	function updaterecordScheduleAction(){
+		$db = new Loan_Model_DbTable_DbLandpayment();
+	 	try {
+	 		if($this->getRequest()->isPost()){
+				$data = $this->getRequest()->getPost();
+				$id = empty($data['id'])?0:$data['id'];	
+				$db->updateRecordSchedule($data);
+				print_r(Zend_Json::encode(1));
+				exit();
+			}
+	 		Application_Form_FrmMessage::Sucessfull("You no permission to delete","/loan/ilpayment",2);
+			exit();
+	 	}catch (Exception $e) {
+	 		Application_Form_FrmMessage::message("INSERT_FAIL");
+	 		echo $e->getMessage();
+	 	}
+	}
 }

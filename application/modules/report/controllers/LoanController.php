@@ -488,9 +488,14 @@ class Report_LoanController extends Zend_Controller_Action {
  	$id = empty($id)?0:$id;
  	$row = $db->getPaymentSchedule($id);
  	$this->view->tran_schedule=$row;
+ 	$this->view->saleId=$id;
  	if(empty($row) or $row==''){
  		Application_Form_FrmMessage::Sucessfull("RECORD_NOT_EXIST",'/report/loan/rpt-sold',2);
  	}
+	$arr = array(
+		"saleId"=>$id,
+	);
+	$this->view->coutingCompetedRecord =$db->checkCoutingScheduleCompetedRecord($arr);
  	$db = new Application_Model_DbTable_DbGlobal();
  	$rs = $db->getClientByMemberId($id);
  	if(empty($rs)){
@@ -498,6 +503,11 @@ class Report_LoanController extends Zend_Controller_Action {
  		exit();
  	}
  	$this->view->client =$rs;
+	
+	
+ 	
+	
+	
  	$frm = new Application_Form_FrmSearchGlobal();
  	$form = $frm->FrmSearchLoadSchedule();
  	Application_Model_Decorator::removeAllDecorator($form);
