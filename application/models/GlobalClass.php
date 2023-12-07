@@ -2,12 +2,7 @@
 
 class Application_Model_GlobalClass  extends Zend_Db_Table_Abstract
 {
-   public static function getInvoiceNo(){			
-		$sub=substr(uniqid(rand(10,1000),false),rand(0,10),5);
-		$date= new Zend_Date();
-		$head="W".$date->get('YY-MM-d/ss');
-		return $head.$sub;
-   }
+   
    public function getOptonsHtml($sql, $display, $value){
    	$db = $this->getAdapter();
    	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
@@ -17,44 +12,7 @@ class Application_Model_GlobalClass  extends Zend_Db_Table_Abstract
    	}
    	return $option;
    }
-   public function getYesNoOption(){
-   	//Select Public for report
-   	$myopt = '<option value="">---Select----</option>';
-   	$myopt .= '<option value="Yes">Yes</option>';
-   	$myopt .= '<option value="No">No</option>';
-   	return $myopt;
-   
-   }
-public function getOptonsHtmlTranslate($sql, $display, $value){
-   	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-   	$db = $this->getAdapter();
-   	$option = '<option value="">--- Select ---</option>';
-   	foreach($db->fetchAll($sql) as $r){
-   		$option .= '<option value="'.$r[$value].'">'.htmlspecialchars($tr->translate(strtoupper($r[$display])), ENT_QUOTES).'</option>';
-   	}
-   	return $option;
-   }   
-   public function getImgAttachStatus($rows,$base_url, $case=''){
-		if($rows){			
-			$imgattach='<img src="'.$base_url.'/images/icon/attachment.png"/>';
-			$imgnone='<img src="'.$base_url.'/images/icon/no-attachment.png"/>';
-			if($case !== ''){
-				$imgattach='<img src="'.$base_url.'/images/icon/attachment.png"/>';
-				$imgnone='<img src="'.$base_url.'/images/icon/no-attachment.png"/>';
-			}
-			 
-			foreach ($rows as $i =>$row){
-				if(is_dir('docs/case_note_id_'.$row['note_id'])){
-					$rows[$i]['note_id'] = $imgattach;
-				}
-				else{
-					$rows[$i]['note_id'] = $imgnone;
-				}
-			}
-			 
-		}		
-		return $rows;
-	}
+
 	/**
 	 * add element "delete" to $rows
 	 * @param array $rows
@@ -99,53 +57,12 @@ public function getOptonsHtmlTranslate($sql, $display, $value){
 	 * @return multitype:string |Ambigous <string>
 	 * @var $key = [0-23]
 	 */
-	public function getHours($key = ''){
-		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-		$am = $tr->translate('AM');
-		$pm = $tr->translate('PM');
-		$hours = array(
-				'12:00 '. $pm,
-				'01:00 '. $am,
-				'02:00 '. $am,
-				'03:00 '. $am,
-				'04:00 '. $am,
-				'05:00 '. $am,
-				'06:00 '. $am,
-				'07:00 '. $am,
-				'08:00 '. $am,
-				'09:00 '. $am,
-				'10:00 '. $am,
-				'11:00 '. $am,
-				'12:00 '. $am,
-				'01:00 '. $pm,
-				'02:00 '. $pm,
-				'03:00 '. $pm,
-				'04:00 '. $pm,
-				'05:00 '. $pm,
-				'06:00 '. $pm,
-				'07:00 '. $pm,
-				'08:00 '. $pm,
-				'09:00 '. $pm,
-				'10:00 '. $pm,
-				'11:00 '. $pm				
-				); 
-		if(empty($key)){
-			return $hours;
-		}
-		return  $hours[$key];
-	}
 	
 	/**
 	 * Generate Age for child
 	 */
 
-	public function getSelectBoxOptions($options){
-		$sl_opt = "";
-		foreach($options as $key=>$opt){
-			$sl_opt .= "<option value='".$key."'>".$opt."</option>";
-		}
-		return $sl_opt;
-	}	
+	
 	
 	/**
 	 * get phone number in format
@@ -160,21 +77,7 @@ public function getOptonsHtmlTranslate($sql, $display, $value){
 		$phone = $firt." ".$second;
 		return $phone;
 	}
-	
-	
-
-		public function getAllFacultyOption(){
-			$_db = new Application_Model_DbTable_DbGlobal();
-			$rows = $_db->getAllFecultyName();
-			array_unshift($rows, array('dept_id'=>-1,'en_name'=>"Add New"));
-			$options = '';
-			if(!empty($rows))foreach($rows as $value){
-				$options .= '<option value="'.$value['dept_id'].'" >'.htmlspecialchars($value['en_name'], ENT_QUOTES).'</option>';
-			}
-			return $options;
-		}
-		
-		public function getImgActive($rows,$base_url, $case='',$degree=null,$display=null){
+	public function getImgActive($rows,$base_url, $case='',$degree=null,$display=null){
 			if($rows){
 				$imgnone='<img src="'.$base_url.'/images/icon/cross.png"/>';
 				$imgtick='<img src="'.$base_url.'/images/icon/apply2.png"/>';
@@ -200,55 +103,9 @@ public function getOptonsHtmlTranslate($sql, $display, $value){
 			}
 			return $rows;
 		}
-		public function getSex($rows,$base_url, $case='',$type=null){
-			if($rows){
-				$m='M';
-				$f='F';
-				foreach ($rows as $i =>$row){
-					if($row['sex'] == 1){
-						$rows[$i]['sex'] = $f;
-					}
-					else{
-						$rows[$i]['sex'] = $m;
-					}
-				}
-			}
-			return $rows;
-		}
-		public function getAllClientGroupOption(){
-			$_db = new Application_Model_DbTable_DbGlobal();
-			$rows = $_db->getClientByType();
-			array_unshift($rows, array('client_id'=>-1,'name_en'=>"Add New"));
-			$options = '';
-			if(!empty($rows))foreach($rows as $value){
-				$options .= '<option value="'.$value['client_id'].'" >'.htmlspecialchars($value['name_en'], ENT_QUOTES).'</option>';
-			}
-			return $options;
-		}
-		public function getAllClientCodeOption(){
-			$_db = new Application_Model_DbTable_DbGlobal();
-			$rows = $_db->getClientByType();
-// 			array_unshift($rows, array('client_id'=>-1,'client_number'=>"Add New"));
-			$options = '';
-			if(!empty($rows))foreach($rows as $value){
-				$options .= '<option value="'.$value['client_id'].'" >'.htmlspecialchars($value['client_number'], ENT_QUOTES).'</option>';
-			}
-			return $options;
-		}
-		public function getCollecteralOption(){
-			$db = new Application_Model_DbTable_DbGlobal();
-			$rows= $db->getCollteralType();
-			$options = '';
-			if(!empty($rows))foreach($rows as $value){
-				$options .= '<option value="'.$value['id'].'" >'.htmlspecialchars($value['title_en'], ENT_QUOTES).'</option>';
-			}
-			return $options;
-		}
-		public function getCollecteralTypeOption(){
-				$options= '<option value="1" >'.htmlspecialchars('ផ្ទាល់ខ្លួន', ENT_QUOTES).'</option>';
-				$options .= '<option value="2" >'.htmlspecialchars('អ្នកធានាជំនួស', ENT_QUOTES).'</option>';
-			return $options;
-		}
+		
+	
+		
 		public function getAllExpenseIncomeType($type){
 			$_db = new Invpayment_Model_DbTable_DbCateExpense();
 			$tr = Application_Form_FrmLanguages::getCurrentlanguage();

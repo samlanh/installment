@@ -132,19 +132,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 	function getAllCustomer(){
 		return array();
 	}
-// 	public function getAccessPermission($branch_str='branch_id'){
-// 		$session_user=new Zend_Session_Namespace(SYSTEM_SES);
-// 		$branch_id = $session_user->branch_id;
-// 		$level = $session_user->level;
-// 		if($level==1 OR $level==2){
-// 			$result = "";
-// 			return '';
-// 		}
-// 		else{
-// 			$result = " AND $branch_str =".$branch_id;
-// 			return '';
-// 		}
-// 	}
+
 	public function getAccessPermission($branch_str='branch_id'){
 		$session_user=new Zend_Session_Namespace(SYSTEM_SES);
 		$branch_list = $session_user->branch_list;
@@ -354,18 +342,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    	$db = $this->getAdapter();
    	return $db->fetchAll($sql);
    }
-   public function getZoneList($option=null){
-   	$this->_name='ln_zone';
-   	$sql = " CALL `stGetAllZone`() ";
-   	$db = $this->getAdapter();
-   	$rows =  $db->fetchAll($sql);
-   	if($option!=null){
-   		if(!empty($rows))foreach($rows as $rs){
-   				$options[$rs['zone_id']]=$rs['zone_name'].' - '.$rs['zone_num'];}
-   				return $options;
-   	}
-   	return $rows;
-   }
+  
    public function getAllCOName($data=null,$parent = 0,$spacing = '', $cate_tree_array = ''){
 	   	$this->_name='ln_staff';
 	   	$sql = " SELECT co_id AS id, 
@@ -400,64 +377,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    	  FROM ln_staff WHERE STATUS=1 AND co_khname!='' AND `position_id`=1 ";
    	return $db->fetchAll($sql);
    }
-   public function getAllCurrency($id,$opt = null){
-	   	$sql = "SELECT * FROM ln_currency WHERE status = 1 ";
-	   	if($id!=null){
-	   		$sql.=" AND id = $id";
-	   	}
-	   	$rows = $this->getAdapter()->fetchAll($sql);
-	   	if($opt!=null){
-	   		$options="";
-	   		if(!empty($rows))foreach($rows AS $row){
-	   			$options[$row['id']]=($row['displayby']==1)?$row['displayby']:$row['curr_nameen'];
-	   		}
-	   		return $options;
-	   	}else{
-	   		return $rows;
-	   	}
-   	
-   }
-   
-   public function getCodecallId(){
-   	$this->_name='ln_callecteralllist';
-   	$db = $this->getAdapter();
-   	$sql=" SELECT id ,code_call FROM $this->_name ORDER BY id DESC LIMIT 1 ";
-   	$acc_no = $db->fetchOne($sql);
-   	$new_acc_no= (int)$acc_no+1;
-   	$acc_no= strlen((int)$acc_no+1);
-   	$pre = "";
-   	for($i = $acc_no;$i<5;$i++){
-   		$pre.='0';
-   	}
-   	return $pre.$new_acc_no;
-   }
-   
-   public function getNewClientId(){
-   	$this->_name='ln_client';
-   	$db = $this->getAdapter();
-   	$sql=" SELECT client_id ,client_number FROM $this->_name ORDER BY client_id DESC LIMIT 1 ";
-   	$acc_no = $db->fetchOne($sql);
-   	$new_acc_no= (int)$acc_no+1;
-   	$acc_no= strlen((int)$acc_no+1);
-   	$pre = "";
-   	for($i = $acc_no;$i<3;$i++){
-   		$pre.='0';
-   	}
-   	return $pre.$new_acc_no;
-   }
-   public function getNewInvoiceExchange(){
-   	$this->_name='ln_exchange';
-   	$db = $this->getAdapter();
-   	$sql=" SELECT id FROM $this->_name ORDER BY id DESC LIMIT 1 ";
-   	$acc_no = $db->fetchOne($sql);
-   	$new_acc_no= (int)$acc_no+1;
-   	$acc_no= strlen((int)$acc_no+1);
-   	$pre = "";
-   	for($i = $acc_no;$i<6;$i++){
-   		$pre.='0';
-   	}
-   	return $pre.$new_acc_no;
-   }
+  
    public function getLoanNumber($data=array('branch_id'=>1,'is_group'=>0)){
    	$this->_name='ln_sale';
    	$db = $this->getAdapter();
@@ -628,74 +548,6 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    	return $db->fetchAll($sql.$where);
    }
    
-   public function getAssetByType($type=null,$Asset_id=null ,$row=null){
-   	$this->_name='ln_account_name';
-   	$where='';
-   	if($type!=null){
-   		$where=' AND is_group = 1';
-   	}
-   	$sql = "SELECT id,account_code,account_name_en FROM $this->_name WHERE STATUS=1 AND parent_id=49";
-   
-   	$db = $this->getAdapter();
-   	if($row!=null){
-   		if($Asset_id!=null){
-   			$where.=" AND id  =".$Asset_id ." LIMIT 1";
-   		}
-   		return $db->fetchRow($sql.$where);
-   	}
-   	return $db->fetchAll($sql.$where);
-   }
-   
-   public function getOwnerByType($type=null,$customer_id=null ,$row=null){
-   	$this->_name='ln_callecteralllist';
-   	$where='';
-   	if($type!=null){
-   		$where=' AND is_group = 1';
-   	}
-   	$sql = "SELECT branch,receipt,code_call,
-            customer_id,(SELECT name_en FROM ln_client WHERE client_id=customer_id) AS customer_name,
-   			type_call,owner_call,callnumber,create_date,date_debt,
-   			term,amount_term,date_line,curr_type,amount_debt,note,user_id,status,is_verify,verify_by,
-   			is_fund FROM $this->_name  WHERE status=1 AND customer_id!='' ";
-   	$db = $this->getAdapter();
-   	if($row!=null){
-   		if($customer_id!=null){
-   			$where.=" AND id  =".$customer_id ." LIMIT 1";
-   		}
-   		return $db->fetchRow($sql.$where);
-   	}
-   	return $db->fetchAll($sql.$where);
-   }
-    
-   
-   public static function getCurrencyType($curr_type){
-   	$curr_option = array(
-   			1=>'រៀល',
-   			2=>'ដុល្លា'
-   			);
-   	return $curr_option[$curr_type];
-   	
-   }
-   public function getAllSituation($id = null){
-   	$_status = array(
-   			1=>$this->tr->translate("Single"),
-   			2=>$this->tr->translate("Married"),
-   			3=>$this->tr->translate("Windowed"),
-   			4=>$this->tr->translate("Mindowed")
-   	);
-   	if($id==null)return $_status;
-   	else return $_status[$id];
-   }
-   public function GetAllIDType($id = null){
-   	$_status = array(
-   			1=>$this->tr->translate("National ID"),
-   			2=>$this->tr->translate("Family Book"),
-   			3=>$this->tr->translate("Resident Book"),
-   			4=>$this->tr->translate("Other")
-   	);
-   	if($id==null)return $_status;
-   	else return $_status[$id];
-   }
   
   public function getAllBranchName($branch_id=null,$opt=null,$moreCondiction=array()){
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
@@ -729,19 +581,8 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   
   }
 
- public function returnAfterHoliday($holiday_option,$date){
-	  $rs = $this->checkHolidayExist($holiday_option,$date);
-	  if(is_array($rs)){
-	  	$d = new DateTime($rs['start_date']);
-	  	$d->modify( 'next day' );//here check for holiday_option
-	  	$date =  $d->format( 'Y-m-d' );
-	  	$this->returnAfterHoliday($holiday_option,$date);
-	  }else{
-	  	echo $date;
-	  	return $date;
-	  }
-  }
-  public function getClientByMemberId($id){
+ 
+  public function getClientByMemberIdGlobal($id){
   	$sql="SELECT 
 		  `s`.`branch_id`       AS `branch_id`,
 		  `s`.`client_id`       AS `client_id`,
@@ -807,20 +648,13 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	$db=$this->getAdapter();
   	return $db->fetchRow($sql);
   }
-  function getAllUser(){
+  function getAllUserGlobal(){
   	$db=$this->getAdapter();  	 
   	$sql="SELECT id,first_name AS by_user,first_name AS name FROM `rms_users` WHERE active=1 ORDER BY id DESC ";
   	return $db->fetchAll($sql);
   }
-  function getAllPaymentMethod($payment_id=null,$option = null){
-	  return array();
-  	
-  	
-  }
-  public function getAllStaffPosition($id=null,$option = null){
-  	return array();
-  }
-  
+ 
+ 
  
   public  function getclientdtype(){
   	$db = $this->getAdapter();
@@ -911,12 +745,6 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 	  	   	}
   	   }
   	  
-  	   //just concate
-//   	   $sql="SELECT `id`,CONCAT(`land_address`,',',street) AS name FROM `ln_properties` WHERE status!=0 AND `land_address`!='' ";//just concate
-  	   $request=Zend_Controller_Front::getInstance()->getRequest();
-//   	   if($action==null){
-//   	   	$sql.=" AND `is_lock`=0  ";
-//   	   }
   	   if($action==null){
 	  	   	if($is_show==0){
 	  	   	}else{
@@ -940,89 +768,6 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   }
   
   
-  
- public function setReportParam($arr_param,$file){
-  	$contents = file_get_contents('.'.$file);
-  	if($arr_param!=null){
-  		foreach($arr_param as $key=>$read){
-  			$contents=str_replace('@'.$key, $read, $contents);
-  		}
-  	}
-  	$info=pathinfo($file);
-  	$newfile=$info['dirname'].'/_'.$info['basename'];
-  	file_put_contents('.'.$newfile, $contents);
-  	return $newfile;
-  }
-  public function getHeadBudgetList($type,$start){
-  	$heads=$this->getDibursementInYear($type, $start);
-  	$str='<tr>';
-  	foreach($heads as $value){
-  		$str.='<td class="tdheader">'.$value.'</td>';
-  	}
-  	return $str.'</tr>';
-  }
-//   public function getContent($rows, $type){
-//   	$str='';
-//   	if($rows){
-//   		$i=0;
-//   		foreach($rows as $read){
-//   			$i++;
-//   			$str.='<tr><td class="no">'.$i.'</td>';
-//   			$temp='';
-//   			$c=0;
-//   			foreach($read as $key=>$value){
-//   				if($key!='id'){
-//   					if ($type == 'payment'){
-//   						if ($key == 'amount' || $key == 'amount_kh'){
-//   							$str.='<td align="right">'.number_format($value,2).'</td>';
-//   						}
-//   						elseif ($key == "rate"){
-//   							$str.='<td align="right">'.number_format($value).'</td>';
-//   						}
-//   						elseif ($key == "create_date"){
-//   							$str.='<td align="center">'. date( "d, M Y", strtotime($value)) .'</td>';
-//   						}
-//   						elseif ($key == "years"){
-//   							$str.='<td align="center">'. $value .'</td>';
-//   						}
-//   						else{
-//   							$str.='<td>'.$value.'</td>';
-//   						}
-//   					}
-//   					elseif(!($key=='title_english' || $key=='title_khmer')){
-//   						$str.='<td>'.$this->checkValue($value).'</td>';
-//   					}
-//   					else{
-//   						$c++;
-//   						if($c==1)$temp=$value;
-//   						elseif($c==2){
-//   							$str.='<td>'.$temp.'<br/>'.$value.'<br/></td>'; $temp='';$c=0;
-//   						}
-//   					}
-//   				}
-//   			}
-//   			$str.'</tr>';
-  
-//   		}
-//   	}
-//   	return $str;
-//   }
-//   public function checkValue($value)
-//   {
-//   	if($value=='' || $value==0) return '-';
-//   	return $value;
-  
-//   }
-  public function getSubDaysByPaymentTerm($pay_term,$amount_collect = null){
-  	if($pay_term==3){
-  		$amount_days =30;
-  	}elseif($pay_term==2){
-  		$amount_days =7;
-  	}else{
-  		$amount_days =1;
-  	}
-  	return $amount_days;//;*$amount_collect;//return all next day collect laon form customer
-  }
   public function getNextPayment($str_next,$next_payment,$amount_amount,$holiday_status=null,$first_payment=null){//code make slow
 	 $default_day = Date("d",strtotime($first_payment));
 	 $prev_month=$next_payment;
@@ -1095,29 +840,9 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	}
   	
   }
-  function checkDefaultDate($str_next,$next_payment,$amount_amount,$holiday_status=null,$first_payment=null){
-  	$default_day = Date("d",strtotime($first_payment));
-  	for($i=0;$i<$amount_amount;$i++){
-  		if($default_day>28){
-  			$next_payment = date("Y-m-d", strtotime("$next_payment $str_next"));
-  			if($str_next!='+1 month'){
-  				$default_day='d';
-  				$next_payment = date("Y-m-$default_day", strtotime("$next_payment $str_next"));
-  			}else{
-  				$next_payment = $this->checkEndOfMonth($default_day,$next_payment , $str_next);
-  			}
-  		}else{
-  			if($str_next!='+1 month'){
-  				$default_day='d';
-  			}
-  			$next_payment = date("Y-m-$default_day", strtotime("$next_payment $str_next"));
-  		}
-  	}
-  		return $next_payment;
-  }
+  
 	  
   function checkFirstHoliday($next_payment,$holiday_status){
-//   	print_r($this->checkHolidayExist($next_payment,$holiday_status));
   	if($holiday_status==3){
   		return $next_payment;//if normal day
   	}else{
@@ -1127,10 +852,6 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   		return $next_payment;
   	}
   	
-  	
-//   	$str_option = 'next day';
-//   	$d->modify($str_option);
-//   	$date_next =  $d->format( 'Y-m-d' );
   	
   }
   function checkEndOfMonth($default_day,$next_payment,$str_next){//default = 31 ,
@@ -1231,36 +952,17 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	}
   }
   public function CountDayByDate($start,$end){
-  	//$db = new Application_Model_DbTable_DbGlobal();
 	$date = $this->countDaysByDate($start,$end);
   	return $date;
   }
-  public function CurruncyTypeOption(){
-  	$db = $this->getAdapter();
-  	$rows=array(2=>"ដុល្លា",3=>"បាត",1=>"រៀល");
-  	$option='';
-  	if(!empty($rows))foreach($rows as $key=>$value){
-  		$option .= '<option value="'.$key.'" >'.htmlspecialchars($value, ENT_QUOTES).'</option>';
-  	}
-  	return $option;
-  }
+ 
   public function getSystemSetting($keycode){
   	$db = $this->getAdapter();
   	$sql = "SELECT * FROM `ln_system_setting` WHERE keycode ='".$keycode."'";
 
   	return $db->fetchRow($sql);
   }
-  static function getPaymentTermById($id=null){
-  	$arr = array(
-  			1=>"ថ្ងៃ",
-  			2=>"អាទិត្យ",
-  			3=>"ខែ");
-  	if($id!=null){
-		return $arr[$id];
-  	}
-  	return $arr;
-  	
-  }
+  
   public function getAccountBranchByOther($acc_id, $br_id ,$curr_id,$balance=null,$increase=null){
 		$sql =" SELECT * FROM ln_account_branch 
 		WHERE  account_id = $acc_id AND branch_id=$br_id AND currency_type = $curr_id LIMIT 1";
@@ -1344,9 +1046,6 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	$db = $this->getAdapter();
   	$sql = " SELECT c.`client_id` AS id  ,c.client_number AS name
   	FROM `ln_client` AS c WHERE c.`name_kh`!='' AND c.client_number !='' AND c.status=1  " ;
-//   	if($branch_id!=null){
-//   		$sql.=" AND c.`branch_id`= $branch_id ";
-//   	}
   	$sql.=" ORDER BY c.`client_id` DESC";
   	return $db->fetchAll($sql);
   }
@@ -1395,28 +1094,10 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	}
   	
   }
-  public function getLoanAllLoanNumber($diplayby=1,$opt=null){
-  	$db = $this->getAdapter();
-  	$sql = "CALL `stGetAllLoanNumber`";
-  	$result = $db->fetchAll($sql);
-  	$options=array(''=>"---Select Loan Number---");
-  	if($opt!=null){
-  		if(!empty($result))foreach($result AS $row){
-  			$options[$row['member_id']]=$row['loan_number'];
-  		}
-  		return $options;
-  	}else{
-  		return $result;
-  	}
-  }
-
-
-
 
   public function getNewClientIdByBranch($branch_id=null){// by vandy get new client no by branch
   	$this->_name='ln_client';
   	$db = $this->getAdapter();
-//   	$sql=" SELECT count(client_id)  FROM $this->_name WHERE branch_id = $branch_id LIMIT 1 ";
   	$sql=" SELECT count(client_id)  FROM $this->_name WHERE 1 LIMIT 1 ";
   	$acc_no = $db->fetchOne($sql);
   	
@@ -1546,79 +1227,29 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   		$this->update($arr, $where);
   	}
   }
-  /**from bng realestate**/
-  public function getBuylandNo(){
-  	$this->_name='ln_buy_land';
-  	$db = $this->getAdapter();
-  	$sql=" SELECT id FROM $this->_name ORDER BY id DESC LIMIT 1 ";
-  	$acc_no = $db->fetchOne($sql);
-  	$new_acc_no= (int)$acc_no+1;
-  	$acc_no= strlen((int)$acc_no+1);
-  	$pre = "";
-  	for($i = $acc_no;$i<6;$i++){
-  		$pre.='0';
-  	}
-  	return $pre.$new_acc_no;
-  }
-  public function getBuyLand($action=null, $land_id=null){
-  	$db = $this->getAdapter();
-  	$sql='SELECT bl.id,CONCAT(bl.title," - ",bl.`buy_no`) AS `name` FROM `ln_buy_land` AS bl WHERE bl.status = 1 ';
-  	$where='';
-  	$land='';
-  	if (!empty($land_id)){
-  		$land  = ' OR bl.`id`='.$land_id;
-  	}else{ $land=null;
-  	}
-  	if (!empty($action)){
-  		$where.= ' AND (bl.`is_lock`=0 '.$land.')';
-  	}
-  	$order = 'ORDER BY bl.`id` DESC';
-  	return $db->fetchAll($sql.$where.$order);
-  }
-  public function getNewClientIdTypeTwo(){
-  //	$this->_name='ln_client
-	$this->_name='ln_client_property';
-  	$db = $this->getAdapter();
-  	//$sql=" SELECT count(client_id) ,client_number FROM $this->_name where type=2 ORDER BY client_id DESC LIMIT 1 ";
-	$sql=" SELECT count(client_id) ,client_number FROM $this->_name where 1 ORDER BY client_id DESC LIMIT 1 ";
-  	$acc_no = $db->fetchOne($sql);
-  	$new_acc_no= (int)$acc_no+1;
-  	$acc_no= strlen((int)$acc_no+1);
-  	$pre = "";
-  	for($i = $acc_no;$i<6;$i++){
-  		$pre.='0';
-  	}
-  	return $pre.$new_acc_no;
-  }
-  function getAllseller(){
-  	$db = $this->getAdapter();
-  	$sql = "SELECT DISTINCT(l.`buyer_name`) as name FROM `ln_buy_land`  AS l WHERE l.`status`=1" ;
-  	$sql.=" ORDER BY l.`buyer_name`";
-  	return $db->fetchAll($sql);
-  }
-  public function getSalePropertyNo(){
-  	$this->_name='ln_sale_property';
-  	$db = $this->getAdapter();
-  	$sql=" SELECT COUNT(id) FROM $this->_name  LIMIT 1 ";
-  	$pre = "PS";
-  	$acc_no = $db->fetchOne($sql);
-  	$new_acc_no= (int)$acc_no+1;
-  	$acc_no= strlen((int)$acc_no+1);
-  	for($i = $acc_no;$i<5;$i++){
-  		$pre.='0';
-  	}
-  	return $pre.$new_acc_no;
-  }
-  function getAllClientname(){
-  	$db = $this->getAdapter();
-	 //	$this->_name='ln_client
-	$this->_name='ln_client_property';
-  	$sql = " SELECT c.`client_id` AS id,
-  	CONCAT(c.name_kh ,' , ',c.`hname_kh`) AS name , client_number
-  	FROM $this->_name AS c WHERE c.`name_kh`!='' AND c.status=1" ;
-  	$sql.=" ORDER BY id DESC";
-  	return $db->fetchAll($sql);
-  }
+ 
+//   public function getSalePropertyNo(){
+//   	$this->_name='ln_sale_property';
+//   	$db = $this->getAdapter();
+//   	$sql=" SELECT COUNT(id) FROM $this->_name  LIMIT 1 ";
+//   	$pre = "PS";
+//   	$acc_no = $db->fetchOne($sql);
+//   	$new_acc_no= (int)$acc_no+1;
+//   	$acc_no= strlen((int)$acc_no+1);
+//   	for($i = $acc_no;$i<5;$i++){
+//   		$pre.='0';
+//   	}
+//   	return $pre.$new_acc_no;
+//   }
+//   function getAllClientname(){
+//   	$db = $this->getAdapter();
+// 	$this->_name='ln_client_property';
+//   	$sql = " SELECT c.`client_id` AS id,
+//   	CONCAT(c.name_kh ,' , ',c.`hname_kh`) AS name , client_number
+//   	FROM $this->_name AS c WHERE c.`name_kh`!='' AND c.status=1" ;
+//   	$sql.=" ORDER BY id DESC";
+//   	return $db->fetchAll($sql);
+//   }
   public function getRentPropertyNo(){
   	$this->_name='ln_rent';
   	$db = $this->getAdapter();
@@ -1632,27 +1263,8 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	}
   	return $pre.$new_acc_no;
   }
-  function getSscsdssd($salsId,$id){
-  	$db = $this->getAdapter();
-  	$sql="SELECT t1.ending_balance FROM ln_saleschedule AS t1 WHERE $salsId=t1.sale_id AND t1.id< $id ORDER BY t1.id DESC LIMIT 1";
-  	return $db->fetchRow($sql);
-  }
-  function resetBegeningLoan(){
-  	$db = $this->getAdapter();
-  	$sql="SELECT s.* FROM ln_saleschedule AS s WHERE s.is_completed=1 AND s.sale_id NOT IN(SELECT sl.id FROM `ln_sale` sl,`ln_saleschedule` ss WHERE sl.id=ss.sale_id AND ss.status=0 GROUP BY sl.id) AND s.no_installment>1";
-  	$rs = $db->fetchAll($sql);
-  	foreach($rs as $r){
-  		$rse = $this->getSscsdssd($r['sale_id'], $r['id']);
-  		$this->_name="ln_saleschedule";
-  		$arr = array(
-  				'ending_balance'=>$rse['ending_balance']-$r['principal_permonth'],
-  				'begining_balance'=>$rse['ending_balance'],
-  				);
-  		$where ="id = ".$r['id'];
-
-  		$this->update($arr, $where);
-  	}
-  }
+ 
+ 
   function getAllplongissue(){
   	$db=$this->getAdapter();
   	$sql ="SELECT `s`.`id` AS `id`,
@@ -2162,36 +1774,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	 
   }
   
-  public function updateReceiptByBranch(){
-		$this->_name='ln_client_receipt_money';
-		$db = $this->getAdapter();
-   
-		//For General
-		$sql=" SELECT * FROM ln_client_receipt_money WHERE 1 AND branch_id =3 ORDER BY id ASC "; 
-		$row = $db->fetchAll($sql);
-		if(!empty($row)){
-			$lenghtReceipt=6;
-			foreach($row as $key => $rs){
-				
-				$new_acc_no= (int)$key+1;
-				$acc_no= strlen((int)$key+1);
-				$pre='№ ';
-				
-				   
-					for($i = $acc_no;$i<$lenghtReceipt;$i++){
-						$pre.='0';
-					}
-				
-				$data=array(
-						'receipt_no'	=> $pre.$new_acc_no,
-						
-				);
-				$where = "id = ".$rs["id"];
-				$this->update($data, $where);
-			}
-		}
-   }
-   
+ 
    function getAllItems($type=null,$branch=null,$schooloption=null){
   	$db = $this->getAdapter();
   	$this->_name = "rms_category";

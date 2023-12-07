@@ -50,7 +50,7 @@ Class Project_Form_FrmProject extends Zend_Dojo_Form {
 				'class'=>'fullside',
 				'readOnly'=>'readOnly',
 				'style'=>'color:red',
-				'onkeyup'=>'Calcuhundred()'
+				
 				));
 		$br_code=Group_Model_DbTable_DbProject::getBranchCode();
 		$br_id->setValue($br_code);
@@ -66,27 +66,24 @@ Class Project_Form_FrmProject extends Zend_Dojo_Form {
 		$project_manager_namekh->setAttribs(array(
 				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
-// 				'required'=>true,
-// 				'onkeyup'=>'Calfifty()'
 		));
 		$project_manager_nameen = new Zend_Dojo_Form_Element_ValidationTextBox('project_manager_nameen');
 		$project_manager_nameen->setAttribs(array(
 				'dojoType'=>'dijit.form.ValidationTextBox',
 				'class'=>'fullside',
-				'required'=>true,
+				'required'=>false,
 		));
 		$project_manager_nation_id = new Zend_Dojo_Form_Element_TextBox('project_manager_nation_id');
 		$project_manager_nation_id->setAttribs(array(
 				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
-// 				'required'=>true,
 		));
 		
 		$project_manager_nationality = new Zend_Dojo_Form_Element_ValidationTextBox('project_manager_nationality');
 		$project_manager_nationality->setAttribs(array(
 				'dojoType'=>'dijit.form.ValidationTextBox',
 				'class'=>'fullside',
-				'required'=>true,
+				
 		));
 		$project_manager_nationality->setValue("ខ្មែរ");
 		
@@ -94,7 +91,7 @@ Class Project_Form_FrmProject extends Zend_Dojo_Form {
 		$sc_project_manager_namekh->setAttribs(array(
 				'dojoType'=>'dijit.form.ValidationTextBox',
 				'class'=>'fullside',
-				'required'=>true,
+				'required'=>false,
 				// 				'onkeyup'=>'Calfifty()'
 		));
 		$sc_project_manager_nameen = new Zend_Dojo_Form_Element_ValidationTextBox('sc_project_manager_nameen');
@@ -118,14 +115,13 @@ Class Project_Form_FrmProject extends Zend_Dojo_Form {
 		$current_addres->setAttribs(array(
 				'dojoType'=>'dijit.form.Textarea',
 				'class'=>'fullside',
-// 				'readOnly'=>'readOnly',
 				'style'=>'width:100%;min-height:60px; font-size:13px; font-family:"Kh Battambang"'
 		));
 		$branch_nameen = new Zend_Dojo_Form_Element_FilteringSelect('project_type');
 		$branch_nameen->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
-				'required'=>true,
+				'required'=>false,
 				'onkeyup'=>'Caltweenty()'
 				));
 		//$propertiestype->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect','class'=>'fullside',));
@@ -152,7 +148,7 @@ Class Project_Form_FrmProject extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
 				'style'=>'color:red',
-				'onkeyup'=>'Calcuhundred()'
+				
 				));
 		$db_code=Group_Model_DbTable_DbProject::getBranchCode();
 		$branch_code->setValue($db_code);

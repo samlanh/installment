@@ -460,13 +460,7 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 		         cd.is_return=0 AND cd.client_coll_id = cc.id AND cc.client_id = ".$client_id;
 		return $db->fetchAll($sql);
 	}
-    function getViewClientByGroupId($group_id){
-    	$db = $this->getAdapter();
-    	$sql=" SELECT * FROM $this->_name WHERE client_id=
-    	(SELECT client_id FROM `ln_loan_member` WHERE group_id=".$db->quote($group_id)." LIMIT 1)";
-    	$row=$db->fetchRow($sql);
-    	return $row;
-    }
+
 	
 	public function getGroupCodeBYId($data){
 		$db = $this->getAdapter();

@@ -283,7 +283,7 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form{
 		));
 		$user->setValue($request->getParam('user_id'));
 		$opt_user = array(''=>$this->tr->translate("LASTNAME_FIRSTNAME"));
-		$all_user=$db->getAllUser();
+		$all_user=$db->getAllUserGlobal();
 		if(!empty($all_user))foreach ($all_user As $row)$opt_user[$row['id']]=$row['by_user'];
 		$user->setMultiOptions($opt_user);
 		

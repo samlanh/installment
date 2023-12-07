@@ -9,75 +9,7 @@ class Property_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
     	return $session_user->user_id;
     	 
     }
-	public function addClient($_data){
-		try{
-			if(!empty($_data['id'])){
-				$oldClient_Code = $this->getClientById($_data['id']);
-				$client_code = $oldClient_Code['client_number'];
-			}else{
-				$db = new Application_Model_DbTable_DbGlobal();
-				$client_code = $db->getNewClientIdTypeTwo();
-			}
-			$photoname = str_replace(" ", "_", $client_code) . '.jpg';
-			$upload = new Zend_File_Transfer();
-			$upload->addFilter('Rename',
-					array('target' => PUBLIC_PATH . '/images/'. $photoname, 'overwrite' => true) ,'photo');
-			$receive = $upload->receive();
-			if($receive)
-			{
-				$_data['photo'] = $photoname;
-			}
-			else{
-				$_data['photo']="";
-			}
-			if (empty($_data['photo'])){
-				$photo = $_data['old_photo'];
-			}else{
-				$photo = $_data['photo'];
-			}
-		    $_arr=array(
-				'client_number'=> $client_code,//$_data['client_no'],
-				'name_kh'	  => $_data['name_kh'],
-				'sex'	      => $_data['sex'],
-		    	'p_age'      => $_data['p_age'],
-		    	'age'      => $_data['age'],
-		    	'is_relevant_type'=> $_data['is_type_of_relevant'],
-				'photo_name'  =>$photo,
-	    		'current_address'=>$_data['current_address'],
-	    		'nation_id_issue_date'=>$_data['national_id_issue_date'],
-	    		'p_nation_issue_date'=>$_data['p_national_id_issue_date'],
-				'client_d_type'      => $_data['client_d_type'],
-				'nation_id'=>$_data['national_id'],
-		    	'nationality'=>$_data['nationality'],
-				'phone'	      => $_data['phone'],
-		    	'email'	      => $_data['email'],
-				'create_date' => date("Y-m-d"), 
-				'remark'	  => $_data['desc'],
-				'status'      => $_data['status'],
-				'user_id'	  => $this->getUserId(),
-		    	'hname_kh'      => $_data['hname_kh'],
-		    	'p_nationality'      => $_data['p_nationality'],
-		    	'ksex'      => $_data['ksex'],
-		    	'lphone'      => $_data['lphone'],
-		    	'p_age'      => $_data['p_age'],
-				'joint_doc_type'      => $_data['join_d_type'],
-		    	'rid_no'      => $_data['rid_no'],
-		    	'arid_no'      => $_data['arid_no'],
-		    	'refe_nation_id'      => $_data['reference_national_id'],
-		    	//'type'      => 2,
-		);
-		if(!empty($_data['id'])){
-			$where = 'client_id = '.$_data['id'];
-			$this->update($_arr, $where);
-			return $_data['id'];
-			 
-		}else{
-			return  $this->insert($_arr);
-		}
-		}catch(Exception $e){
-			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-		}
-	}
+	
 	public function getClientById($id){
 		$db = $this->getAdapter();
 		$sql = "SELECT * FROM $this->_name WHERE client_id = ".$db->quote($id);
@@ -175,7 +107,7 @@ class Property_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 	public function addClientByAjax($_data){
 		try{
 			$db = new Application_Model_DbTable_DbGlobal();
-			$client_code = $db->getNewClientIdTypeTwo();
+			$client_code = '';
 			$_arr=array(
 					'client_number'=> $client_code,//$_data['client_no'],
 					'name_kh'	  => $_data['name_kh'],

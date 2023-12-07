@@ -1939,6 +1939,8 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     				$arr_client_pay = array(
     						'branch_id'						=>	$branch_id,
     						'receipt_no'					=>	"OldSystem",
+    						'selling_price'					=>  $sellingPrice,
+    						'allpaid_before'				=>  $total_principal_permonthpaid,
     						'date_pay'					    =>	$lastPaidDate,
     						'date_input'					=>	$lastPaidDate,
     						'from_date'						=>	$lastPaidDate,//check more

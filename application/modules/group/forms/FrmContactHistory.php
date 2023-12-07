@@ -57,7 +57,7 @@ class Group_Form_FrmContactHistory extends Zend_Dojo_Form
     		$recordbranhc=$data['branch_id'];
     	}
     	$_arr_opt_user = array();
-    	$optionUser = $_dbgb->getAllUser($recordbranhc);
+    	$optionUser = $_dbgb->getAllUserGlobal($recordbranhc);
     	if(!empty($optionUser))foreach($optionUser AS $row) $_arr_opt_user[$row['id']]=$row['name'];
     	$_user_contact = new Zend_Dojo_Form_Element_FilteringSelect("user_contact");
     	$_user_contact->setMultiOptions($_arr_opt_user);

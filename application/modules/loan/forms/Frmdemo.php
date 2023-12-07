@@ -370,7 +370,6 @@ public function init()
 // 				'class'=>'fullside',
 // 				'onchange'=>'getInfoByLoanNumber();getLoanInfoByLoanNumber();'
 // 		));
-// 		$group_opt = $db->getLoanAllLoanNumber(1,1);
 // 		$get_laonnumber->setMultiOptions($group_opt);
 		
 		

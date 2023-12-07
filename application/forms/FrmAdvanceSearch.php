@@ -191,7 +191,7 @@ class Application_Form_FrmAdvanceSearch extends Zend_Dojo_Form
 		$position_->setValue($request->getParam("position"));
 
 		$user = new Zend_Dojo_Form_Element_FilteringSelect('user');
-		$rows = $db->getAllUser();
+		$rows = $db->getAllUserGlobal();
 		$options = array('' => $this->tr->translate("SELECT_USER"));
 		if (!empty($rows))
 			foreach ($rows as $row)

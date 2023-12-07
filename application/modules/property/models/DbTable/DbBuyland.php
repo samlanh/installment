@@ -80,7 +80,7 @@ class Property_Model_DbTable_DbBuyland extends Zend_Db_Table_Abstract
     			$sale_photo2 = $newfilename4;
     		}
     		$db = new Application_Model_DbTable_DbGlobal();
-    		$buy_no = $db->getBuylandNo();
+    		$buy_no = '';
     		$arr = array(
     				'buy_no'=>$buy_no,
     				'title'=>$data['title'],
@@ -193,7 +193,7 @@ class Property_Model_DbTable_DbBuyland extends Zend_Db_Table_Abstract
     		}else{$sale_photo2=$data['old_sale_img2'];}
     		
     		$db = new Application_Model_DbTable_DbGlobal();
-    		$buy_no = $db->getBuylandNo();
+    		$buy_no = '';
     		$arr = array(
     				'buy_no'=>$data['buy_no'],
     				'title'=>$data['title'],

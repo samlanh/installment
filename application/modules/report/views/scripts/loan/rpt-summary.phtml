@@ -1,0 +1,190 @@
+<?php 
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$dbGB = new Application_Model_DbTable_DbGlobal();
+	$logo = $this->baseUrl()."/images/logo.jpg";
+	$branch_title = $tr->translate("BRAND_TITLE");
+	if ($this->search['branch_id'] >0 ){
+		$branch = $dbGB->getAllBranchInfoByID($this->search['branch_id']);
+		if (file_exists(PUBLIC_PATH."/images/projects/".$branch["logo"])){
+			$logo = $this->baseUrl()."/images/projects/".$branch["logo"];
+		}
+		$branch_title = $branch['project_name'];
+	}
+	$result = $this->resultData;
+?>
+
+<meta charset="utf-8">
+<title><?php echo $tr->translate("REPORT_LOAN_LATE");?></title>
+<div style="min-height:26cm; margin:0 auto; padding:0.5cm 0.5cm 0cm 0.5cm">
+	<div class="card-box">
+       	<div class="col-sm-12 border-botom">
+	   		<div class="col-sm-8 pd-0">
+	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;របាយការណ៍សង្ខេប / Summary Report</h4>
+    		</div>
+    		<div class="col-sm-4 text-right">
+    		</div>
+    	</div>
+    </div>
+	<div id="divPrint">
+		<style>
+			table.summary-data{
+				color:#093f6e;
+				font-size: 12px;
+			}
+			
+			td:nth-child(2n+2) {background: #eee;font-weight: bold;}
+			table.summary-data tr td{
+				padding: 2px;
+				white-space: nowrap;
+			}
+			.plong-list{ background: #ccc;text-align: center;}
+			.font-bold{font-family: 'Times New Roman','Khmer OS Muol Light';};
+		</style>
+			<table style="font-family: 'Times New Roman','Khmer OS Battambang'; width:100%;"  >
+				<tr>
+			    	<td align="center">
+			    		<div class="divFooter">
+			        	<table width="100%" style="font-family: 'Times New Roman','Khmer OS Battambang';margin:0; padding:0;border:none;" >
+			            	<tr>
+			                	<td width="30%"><img src="<?php echo $logo;?>" style="height:85px;max-width: 100%;"></td>
+			                	<td width="40%" valign="top" align="center">
+			                		<ul>
+			                			<li style="white-space:nowrap;text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $branch_title;?></li>
+			                			<li style="text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("REPORT_LOAN_LATE");?></li>
+			                			<li style="text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>;"><?php if(!empty($this->search['start_date'])){echo date('d/m/Y',strtotime($this->search['start_date'])).'-';} echo date("d/m/Y",strtotime($this->list_end_date));?>
+			                				<label id='lbl_labelstaff'></label>
+			                			</li>
+			                		</ul>
+			                	<td width="30%"></td>
+			                </tr> 
+			            </table>
+			            </div>
+			        </td>
+			    </tr>
+			    <tr>
+			    	<td id="exportExcel" >
+			            <table border="1" class="summary-data"​  width="100%" cellspacing="0">
+				               <tr>
+				                    <td>គម្រោងសរុប Total Project</td>
+				                    <td width="150px"><?php echo $result['totalProProject'];?></td>
+				                    <td>ភ្នាក់ងារលក់សរុប Total Sale Agent</td>
+				                    <td><?php echo $result['totalAgent'];?></td>
+				                </tr>
+				               <tr>
+				                    <td>ដី/ផ្ទះសរុប Total Properties</td>
+				                    <td><?php echo $result['totalProperties'];?></td>
+				                    <td>អតិថិជនសរុប Total Customers</td>
+				                    <td width="150px"><?php echo $result['totalClient'];?></td>
+				                </tr>
+				               <tr>
+				                    <td>តម្លៃដី/ផ្ទះសរុបទឹកប្រាក់ Total Properties Price</td>
+				                    <td><?php echo number_format($result['totalpropertyPrice'],2);?></td>
+				                    <td>ចំនួនការលក់ Total Sales</td>
+				                    <td><?php echo $result['totalActiveSale'];?></td>
+				                </tr>
+				                <tr>
+				                    <td>ដី/ផ្ទះបានលក់</td>
+				                    <td><?php echo $result['propertySold'];?></td>
+				                    <td>ចំនួនកក់(ដី/ផ្ទះ)Total Booking</td>
+				                    <td><?php echo $result['totalBooking'];?></td>
+				                </tr>
+				               <tr>
+				                    <td>ដី/ផ្ទះមិនទាន់លក់ Available Property</td>
+				                    <td><?php echo $result['propertyUnSold'];?></td>
+				                    <td>ចំនួនការលក់ (ដី/ផ្ទះ) Total Sale Properties</td>
+				                    <td><?php echo $result['totalActiveHouseSale'];?></td>
+				                </tr>
+				               <tr>
+				                    <td>ដី/ផ្ទះមិនទាន់លក់ Available Property(Price)</td>
+				                    <td><?php echo number_format($result['totalpropertyPriceUnsold'],2);?></td>
+				                    <td>ចំនួនការលក់សរុប(គិតជាទឹកប្រាក់) Total Sales</td>
+				                    <td><?php echo number_format($result['totalSalePrice'],2);?></td>
+				                </tr>
+				               <tr>
+				                    <td>អតិថិជនបោះបង់ (ដី/ផ្ទះ)</td>
+				                    <td><?php echo $result['totalCancelHouse'];?></td>
+				                    <td>ទឹកប្រាក់ជំពាក់សរុប Total Balance</td>
+				                    <td><?php echo number_format($result['totalSalePrice']-$result['paidAmount'],2);?></td>
+				                </tr>
+				               <tr>
+				                    <td>(ដី/ផ្ទះ)បានបង់ដាច់ Property Payoff</td>
+				                    <td><?php echo $result['totalpayOff'];?></td>
+				                    <td>ទឹកប្រាក់បានបង់សរុប Total Cash Collection(1)</td>
+				                    <td><?php echo number_format($result['paidAmount'],2);?></td>
+				                </tr>
+				               <tr>
+				                    <td>(ដី/ផ្ទះ)មិនទាន់ដាច់ </td>
+				                    <td><?php echo $result['propertySold']-$result['totalpayOff'];?></td>
+				                    <td>ចំណូលការប្រាក់និងពិន័យ Interest and Penalty Revenue(2)</td>
+				                    <td><?php echo number_format($result['totalInterestPaid'],2);?></td>
+				                </tr>
+				               <tr>	
+				               		<td>កម្រៃជើងសារត្រូវទូទាត់</td>
+				                    <td><?php echo number_format($result['fullComission'],2);?></td>
+				                    <td>ចំណូលកក់-បោះបង់ Total Cancel Payment(3)</td>
+				                    <td><?php echo number_format($result['cancelPaidAmount'],2);?></td>
+				                   
+				                </tr>
+				               <tr>
+				                    <td>ចំណាយកម្រៃជើងសារ Total Commision Expense</td>
+				                    <td><?php echo number_format($result['totalCommision'],2);?></td>
+				                    <td>ចំណូលផ្សេងៗ Other Income(4)</td>
+				                    <td><?php echo number_format($result['totalOtherIncome'],2);?></td>
+				                </tr>
+				                <tr>
+				                    <td>ចំណាយផ្សេងៗ Other Expense</td>
+				                    <td><?php echo number_format($result['totalExpense'],2);?></td>
+				                    <td>ចំណូលក្រៅស្តង់ដារ Other Reparing Revenue(5)</td>
+				                    <td><?php echo number_format($result['totalInformalIncome'],2);?></td>
+				                </tr>
+				                <tr>
+				                    <td class="font-bold">សរុបចំណាយទាំងអស់ Total Expense</td>
+				                    <td><strong><?php echo number_format($result['totalCommision']+$result['totalExpense'],2); ?></strong></td>
+				                    <td class="font-bold">សរុបចំណូលទាំងអស់ All Total Revenue</td>
+				                    <td><strong><?php
+										$totalAllRevenue = $result['paidAmount']+$result['totalInterestPaid']+$result['cancelPaidAmount']+$result['totalOtherIncome']+$result['totalInformalIncome'];
+				                    	echo number_format($totalAllRevenue,2);
+									?></strong></td>
+				                </tr>
+				                 <tr class="plong-list font-bold">
+				                    <td colspan="4">ការបង់យឺតនិង ការរំពឹងទុក</td>
+				                </tr>
+				                <tr>
+				                    <td>អតិថិជនបង់យឺត</td>
+				                    <td><?php echo $result['totalSaleLate'];?></td>
+				                    <td>ការប្រាក់រំពឹងទុក Expected Interest Revenue</td>
+				                    <td><?php echo number_format($result['totalExpectedInterest'],0); ?></td>
+				                </tr>
+				                <tr>
+				                    <td>ប្រាក់បង់យឺត Payment Late</td>
+				                    <td><?php echo number_format($result['totalLatePayment'],0); ?></td>
+				                    <td></td>
+				                    <td></td>
+				                </tr>
+				                <tr class="plong-list font-bold">
+				                    <td colspan="4">កិច្ចការប្រគល់ប្លង់និង ផ្ទះ</td>
+				                </tr>
+				                <tr>
+				                    <td>ប្លង់កំពុងរត់ការ</td>
+				                    <td><?php ?></td>
+				                    <td>បានប្រគល់ផ្ទះ</td>
+				                    <td><?php echo number_format($result['receivedHouse'],0); ?></td>
+				                </tr>
+				                <tr>
+				                    <td>បានប្រគល់ប្លង់</td>
+				                    <td><?php echo number_format($result['receivedPlong'],0); ?></td>
+				                    <td>មិនទាន់ប្រគល់ផ្ទះ</td>
+				                    <td><?php echo $result['totalActiveHouseSale']-$result['receivedHouse'];?></td>
+				                </tr>
+				                <tr>
+				                    <td>មិនទាន់ប្រគល់ប្លង់</td>
+				                    <td><?php echo $result['totalActiveHouseSale']-$result['receivedPlong'];?></td>
+				                    <td></td>
+				                    <td><?php ?></td>
+				                </tr>
+				          </table>
+			    	</td>
+			    </tr>
+			</table>
+	</div>
+</div>

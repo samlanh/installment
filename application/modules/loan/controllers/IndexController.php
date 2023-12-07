@@ -51,8 +51,7 @@ class Loan_IndexController extends Zend_Controller_Action {
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_search = $frm;
 		$this->view->rssearch = $search;
-// 		$db = new Application_Model_DbTable_DbGlobal();
-//      $db->resetBegeningLoan();
+
   }
   function addAction()
   {
@@ -422,7 +421,7 @@ class Loan_IndexController extends Zend_Controller_Action {
 	  	}
 	  	
 	  	$db = new Application_Model_DbTable_DbGlobal();
-	  	$rs = $db->getClientByMemberId($id);
+	  	$rs = $db->getClientByMemberIdGlobal($id);
 	  	$this->view->client =$rs;
 	  	$this->view->rsinterestpolicy = $db->getInterestPolicy();
 	  	
@@ -442,6 +441,6 @@ class Loan_IndexController extends Zend_Controller_Action {
 	  	$this->view->payment_option = $db->getVewOptoinTypeByType(25,null,null,1);
 	  	$db = new Application_Model_DbTable_DbGlobal();
 	  	$this->view->customer =  $db->getAllClient();
-	  	$this->view->userlist =  $db->getAllUser();
+	  	$this->view->userlist =  $db->getAllUserGlobal();
 	}
 }

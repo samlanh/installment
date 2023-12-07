@@ -1070,6 +1070,8 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					span#lbl_usersale {
 						right: 91px;
 					}
+					
+					
 				</style>
 				<div class="five-startreceipt" style=" font-size: 16px; font-family: '."'Times New Roman'".','."'Khmer OS Battambang'".';  color: #000; width: 21cm; height: 15cm;padding: 0px;margin: 0 auto;position: relative; margin-top:-18px;" >
 				<div style="display: none;">
@@ -1499,6 +1501,12 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					    display: block;
 					    white-space: pre-line;
 					}
+					@media print{
+							@page{
+								margin:0.5cm 0.5cm 0.0cm 0.5cm;
+								page:4;size:portrait;
+							}
+						}
 				</style>
 				<table width="100%" style="backgroud:red;white-space: nowrap;font-size:16px; padding:0px;margin-top: -15px;" class="print" cellspacing="0"  cellpadding="0" >
 					<tr>
@@ -1805,6 +1813,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 						display: block;
 						line-height: 14px;
 					}
+					
 				</style>
 				<table width="100%" style="backgroud:red;white-space: nowrap;font-size:16px; padding:0px;margin-top: -15px;" class="print" cellspacing="0"  cellpadding="0" >
 					<tr>
@@ -2832,6 +2841,12 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					white-space: pre-line;
 					font-size: 11px;
 					margin-top: -5px;
+				}
+				@media print{
+					@page{
+						margin:0.5cm 0.5cm 0.0cm 0.5cm;
+						page:4;size:portrait;
+					}
 				}
 			</style>
 			<table width="100%" style="backgroud:red;white-space: nowrap;font-size:16px; padding:0px;margin-top: -15px;" class="print" cellspacing="0"  cellpadding="0" >

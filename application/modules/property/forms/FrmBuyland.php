@@ -118,15 +118,7 @@ Class Property_Form_FrmBuyland extends Zend_Dojo_Form {
 		$sale_relevent_is->setMultiOptions($rows);
 		
 	//======================End sale control================================
- 		$id_buy_no = $db->getBuylandNo();
-		$_buy_no = new Zend_Dojo_Form_Element_TextBox('buy_no');
-		$_buy_no->setAttribs(array(
-				'dojoType'=>'dijit.form.TextBox',
-				'class'=>'fullside',
-				'readonly'=>'readonly',
-				'style'=>'color:red;'
-		));
- 		$_buy_no->setValue($id_buy_no);
+ 		
 	
 		$_buy_name_kh = new Zend_Dojo_Form_Element_ValidationTextBox('buy_name_kh');
 		$_buy_name_kh->setAttribs(array(

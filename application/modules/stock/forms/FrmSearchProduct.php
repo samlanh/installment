@@ -196,7 +196,7 @@ class Stock_Form_FrmSearchProduct extends Zend_Dojo_Form
 		));
 		$user->setValue($request->getParam('user'));
 		$opt_user = array(''=>$this->tr->translate("LASTNAME_FIRSTNAME"));
-		$all_user=$_dbg->getAllUser();
+		$all_user=$_dbg->getAllUserGlobal();
 		if(!empty($all_user))foreach ($all_user As $row)$opt_user[$row['id']]=$row['by_user'];
 		$user->setMultiOptions($opt_user);
 		

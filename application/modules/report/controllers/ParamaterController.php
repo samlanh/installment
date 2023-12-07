@@ -758,8 +758,6 @@ class Report_ParamaterController extends Zend_Controller_Action {
   
   	$this->view->rscomisison = $db->getAllCommission($search);
   	 
-//   	$db  = new Report_Model_DbTable_DbLandreport();
-//   	$this->view->houserepair =$db->getAllIncomeOtherPayment($search,1);
 	$db  = new Report_Model_DbTable_DbLandreport();
   	$this->view->houserepair =$db->getAllIncomeOtherPayment($search,13);
 	

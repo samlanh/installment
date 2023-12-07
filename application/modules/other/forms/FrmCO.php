@@ -109,8 +109,7 @@ Class Other_Form_FrmCO extends Zend_Dojo_Form {
 				'required'=>'true','class'=>'fullside',));
 		
 		$db = new Application_Model_DbTable_DbGlobal();
-		$opt = $db->getAllStaffPosition(null,1);
-		$_position->setMultiOptions($opt);
+		
 		
 		
 		$_department= new Zend_Dojo_Form_Element_FilteringSelect('department_id');

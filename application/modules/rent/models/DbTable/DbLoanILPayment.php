@@ -1146,24 +1146,7 @@ function getLoanPaymentByLoanNumberEdit($data){
    	return $db->fetchAll($sql);
    }
    
-   public function getLastPayDate($data){
-   	$loanNumber = $data['loan_numbers'];
-   	$db = $this->getAdapter();
-   	//$sql = "SELECT c.`date_input` FROM `ln_rent_receipt_money` AS c WHERE c.`loan_number`='$loanNumber' ORDER BY c.`date_input` DESC LIMIT 1";
-   	$sql ="SELECT 
-			  lf.`date_payment`
-			FROM
-			  `ln_loanmember_funddetail` AS lf,
-			  `ln_rent_receipt_money` AS c,
-			  `ln_loan_member` AS lm
-			WHERE c.`loan_number` = lm.`loan_number`
-			  AND lm.`member_id` = lf.`member_id`
-			  AND c.`loan_number` = '$loanNumber' 
-			  AND lf.`is_completed`=1
-			ORDER BY lf.`id` DESC LIMIT 1";
-   	//return $sql;
-   	return $db->fetchOne($sql);
-   }
+ 
    
    public function getLastPaymentDate($data){
    	$loanNumber = $data['loan_numbers'];

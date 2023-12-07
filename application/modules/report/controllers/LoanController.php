@@ -492,7 +492,7 @@ class Report_LoanController extends Zend_Controller_Action {
  		Application_Form_FrmMessage::Sucessfull("RECORD_NOT_EXIST",'/report/loan/rpt-sold',2);
  	}
  	$db = new Application_Model_DbTable_DbGlobal();
- 	$rs = $db->getClientByMemberId($id);
+ 	$rs = $db->getClientByMemberIdGlobal($id);
  	if(empty($rs)){
  		Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND",'/report/loan/rpt-sold',2);
  		exit();
@@ -520,7 +520,7 @@ class Report_LoanController extends Zend_Controller_Action {
  		Application_Form_FrmMessage::Sucessfull("RECORD_NOT_EXIST",'/report/loan/rpt-sold',2);
  	}
  	$db = new Application_Model_DbTable_DbGlobal();
- 	$rs = $db->getClientByMemberId($id);
+ 	$rs = $db->getClientByMemberIdGlobal($id);
  	if(empty($rs)){
  		Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND",'/report/loan/rpt-sold',2);
  		exit();
@@ -549,7 +549,7 @@ class Report_LoanController extends Zend_Controller_Action {
  		Application_Form_FrmMessage::Sucessfull("RECORD_NOT_EXIST",'/report/loan/rpt-sold',2);
  	}
  	$db = new Application_Model_DbTable_DbGlobal();
- 	$rs = $db->getClientByMemberId($id);
+ 	$rs = $db->getClientByMemberIdGlobal($id);
  	if(empty($rs)){
  		Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND",'/report/loan/rpt-sold',2);
  		exit();
@@ -564,28 +564,7 @@ class Report_LoanController extends Zend_Controller_Action {
  	$key = new Application_Model_DbTable_DbKeycode();
  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
  }
- function rptCombineschedulesAction(){
- 	$db = new Report_Model_DbTable_DbRptPaymentSchedule();
- 	$id =$this->getRequest()->getParam('id');
- 	$row = $db->getScheduleCombine($id);
- 	$this->view->tran_schedule=$row;
- 	if(empty($row) or $row==''){
- 		Application_Form_FrmMessage::Sucessfull("RECORD_NOT_EXIST",'/report/loan/rpt-sold',2);
- 	}
- 	
- 	$rs = $db->getClientCombineId($id);
  
- 	$this->view->client =$rs;
- 	$db = new Application_Model_DbTable_DbGlobal();
- 	$frm = new Application_Form_FrmSearchGlobal();
- 	$form = $frm->FrmSearchLoadSchedule();
- 	Application_Model_Decorator::removeAllDecorator($form);
- 	$this->view->form_filter = $form;
- 	$day_inkhmer = $db->getDayInkhmerBystr(null);
- 	$this->view->day_inkhmer = $day_inkhmer;
- 	$key = new Application_Model_DbTable_DbKeycode();
- 	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
- }
 
  function rptIncomestatementAction(){
  	$db  = new Report_Model_DbTable_DbLandreport();
@@ -653,7 +632,6 @@ class Report_LoanController extends Zend_Controller_Action {
 		"documentforType" => 3,
 	);
 	$this->view->document=$db->getExpenseDocumentbyid($conditionArr);
-//   	$rss = $db->UpdatePaytimeBooking();
   		$frmpopup = new Application_Form_FrmPopupGlobal();
 		$this->view->footer = $frmpopup->getFooterReceipt();
 		$this->view->officailreceipt = $frmpopup->getOfficailReceipt($receiptType);
@@ -671,7 +649,7 @@ class Report_LoanController extends Zend_Controller_Action {
   		exit();
   	}
   	$db = new Application_Model_DbTable_DbGlobal();
-  	$rs = $db->getClientByMemberId($id);
+  	$rs = $db->getClientByMemberIdGlobal($id);
   	if(empty($rs)){
   		Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND",'/report/loan/rpt-sold',2);
   		exit();
@@ -699,7 +677,7 @@ class Report_LoanController extends Zend_Controller_Action {
   	
   	$steppay = $db->getVewOptoinTypeByType(29);
   	$this->view->steppay =$steppay;
-	$this->view->userlist =  $db->getAllUser();
+	$this->view->userlist =  $db->getAllUserGlobal();
   }
   function saleAuthorizeAction(){
   	$db = new Report_Model_DbTable_DbRptPaymentSchedule();
@@ -723,7 +701,7 @@ class Report_LoanController extends Zend_Controller_Action {
   		exit();
   	}
   	$db = new Application_Model_DbTable_DbGlobal();
-  	$rs = $db->getClientByMemberId($id);
+  	$rs = $db->getClientByMemberIdGlobal($id);
   	if(empty($rs)){
   		Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND",'/report/loan/rpt-soldsummary',2);
   		exit();
@@ -812,13 +790,6 @@ class Report_LoanController extends Zend_Controller_Action {
   		Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index",2);
   		exit();
   	}
-//   	$key = new Application_Model_DbTable_DbKeycode();
-//   	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
-  	
-//   	$frm = new Loan_Form_FrmSearchLoan();
-//   	$frm = $frm->AdvanceSearch();
-//   	Application_Model_Decorator::removeAllDecorator($frm);
-//   	$this->view->frm_search = $frm;
   }
   
   function rptChangeownerAction(){
@@ -1455,7 +1426,6 @@ class Report_LoanController extends Zend_Controller_Action {
 		$this->view->frm_property=$row;
 	}
 
-	
 	function rptUnclosingentryAction(){
 		$db  = new Report_Model_DbTable_DbLandreport();
 		$key = new Application_Model_DbTable_DbKeycode();
@@ -1527,6 +1497,11 @@ class Report_LoanController extends Zend_Controller_Action {
 		$frmpopup = new Application_Form_FrmPopupGlobal();
 		$this->view->footerReport = $frmpopup->getFooterReport();
 		$this->view->headerReport = $frmpopup->getLetterHeadReport();	
+	}
+	function rptSummaryAction(){
+		$data = array();
+		$db = new Report_Model_DbTable_DbSummary();
+		$this->view->resultData = $db->getAllSummaryData($data);
 	}
 
 }

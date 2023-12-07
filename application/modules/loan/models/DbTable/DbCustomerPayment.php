@@ -175,18 +175,6 @@ class Loan_Model_DbTable_DbCustomerPayment extends Zend_Db_Table_Abstract
 		return $db->fetchAll($sql);
 	}
     function getTranLoanByIdWithBranch($id){
-//     	$sql = "SELECT lg.g_id,lg.level,lg.co_id,lg.zone_id,lg.pay_term,lm.payment_method,
-//     		lm.interest_rate,lm.amount_collect_principal,
-//     		lm.client_id,lm.admin_fee,
-// 	    	(SELECT name_kh FROM `ln_client` WHERE client_id = lm.client_id LIMIT 1) AS client_name_kh,
-// 	  		(SELECT name_en FROM `ln_client` WHERE client_id = lm.client_id LIMIT 1) AS client_name_en,
-// 	  		lm.total_capital,lm.interest_rate,lm.payment_method,
-// 	    	lg.time_collect,
-// 	    	lg.zone_id,
-
-// 	    	lg.status AS str ,lg.status FROM `ln_loan_group` AS lg,`ln_loan_member` AS lm
-// 			WHERE lg.g_id = lm.group_id AND lg.g_id = $id LIMIT 1 ";
-//     	return $this->getAdapter()->fetchRow($sql);
     }
     
     function getPrefixCode($branch_id){
@@ -1334,24 +1322,7 @@ function getLoanPaymentByLoanNumberEdit($data){
    	return $db->fetchAll($sql);
    }
    
-   public function getLastPayDate($data){
-   	$loanNumber = $data['loan_numbers'];
-   	$db = $this->getAdapter();
-   	//$sql = "SELECT c.`date_input` FROM `ln_client_receipt_money` AS c WHERE c.`loan_number`='$loanNumber' ORDER BY c.`date_input` DESC LIMIT 1";
-   	$sql ="SELECT 
-			  lf.`date_payment`
-			FROM
-			  `ln_loanmember_funddetail` AS lf,
-			  `ln_client_receipt_money` AS c,
-			  `ln_loan_member` AS lm
-			WHERE c.`loan_number` = lm.`loan_number`
-			  AND lm.`member_id` = lf.`member_id`
-			  AND c.`loan_number` = '$loanNumber' 
-			  AND lf.`is_completed`=1
-			ORDER BY lf.`id` DESC LIMIT 1";
-   	//return $sql;
-   	return $db->fetchOne($sql);
-   }
+   
    
    public function getLastPaymentDate($data){
    	$loanNumber = $data['loan_numbers'];
@@ -1407,37 +1378,8 @@ function getLoanPaymentByLoanNumberEdit($data){
    function getAllLoanByCoId($data){ //quick Il Payment
 		return array();
    }
-   function getFunByGroupId($id){
-   		$db = $this->getAdapter();
-   		$sql="SELECT lf.`id` FROM `ln_loanmember_funddetail` AS lf, `ln_loan_member` AS lm WHERE lm.`member_id` = lf.`member_id` AND lm.`group_id` = $id AND lf.`is_completed`=0";
-   		return $db->fetchAll($sql);
-   }
+
   
-   public function getLoanFunByGroupId($id,$payDate){
-   	$db = $this->getAdapter();
-   	$sql = "SELECT 
-			  lf.`id`,
-			  lf.`principle_after`,
-			  lf.`total_interest_after`,
-			  lf.`total_principal`,
-			  lf.`penelize`,
-			  lf.`service_charge`,
-			  lf.`date_payment`,
-			  lf.`total_payment_after`,
-			  lm.`client_id`,
-			  lm.`loan_number`,
-			  lm.`total_capital`,
-			  lm.`group_id`,
-			  lf.`is_completed`
-			FROM
-			  `ln_loanmember_funddetail` AS lf,
-			  `ln_loan_member` AS lm 
-			WHERE lm.`member_id` = lf.`member_id` 
-			   	AND lm.`group_id` = $id 
-			   	AND lf.`date_payment` ='$payDate'";
-   	$rs_fun = $db->fetchAll($sql);
-   	return $rs_fun;
-   }   
    public function getReceiptMoneyById($id){
    	$db = $this->getAdapter();
    	$sql = "SELECT lc.id,lc.`service_charge`,lc.`penalize_amount`,lc.`payment_option`,lc.`recieve_amount`,lc.`total_interest`,lc.`total_payment` FROM `ln_client_receipt_money` AS lc WHERE lc.`id`=$id";
@@ -1449,23 +1391,10 @@ function getLoanPaymentByLoanNumberEdit($data){
    	$sql = "SELECT lc.`crm_id`,lc.`lfd_id`,lc.`land_id`,lc.`service_charge`,lc.`penelize_amount`,lc.`total_interest`,lc.`total_payment`,lc.`total_recieve`,lc.`principal_permonth`,old_penelize,old_service_charge FROM `ln_client_receipt_money_detail` AS lc WHERE lc.`crm_id`=$id";
    	return $db->fetchAll($sql);
    }
-   public function getFunDetailById($id){
-   	$db = $this->getAdapter();
-   	$sql = "SELECT lf.`is_completed` FROM `ln_loanmember_funddetail` AS lf WHERE lf.id =$id";
-   	return $db->fetchOne($sql);
-   }
+  
 	public function getAllLoanNumberByBranch($branch_id){
 		$db = $this->getAdapter();
-// 		if($type==1){
-// 			$sql="SELECT m.`loan_number` AS id,m.`loan_number` AS `name`,g.`branch_id` FROM `ln_loan_member` AS m,`ln_loan_group` AS g WHERE m.`group_id`= g.`g_id` AND g.`loan_type`=1 AND m.status=1 AND m.is_reschedule!=1 ";
-// 			return $db->fetchAll($sql);
-// 		}else{
-// 			$sql="SELECT m.`loan_number` AS id,m.`loan_number` AS `name`,g.`branch_id` FROM `ln_loan_member` AS m,`ln_loan_group` AS g WHERE m.`group_id`= g.`g_id` AND g.`loan_type`=2 AND m.status=1 AND m.is_reschedule!=1 GROUP BY m.`loan_number` ";
-// 			return $db->fetchAll($sql);
-// 		}
 
-		//$sql="select id,sale_number as name	from `ln_sale` where status=1 and is_completed=0 and branch_id=$branch_id";
-		
 		$sql= "SELECT id,
 				  CONCAT((SELECT name_kh FROM ln_client WHERE ln_client.client_id=ln_sale.`client_id` LIMIT 1),' - ',sale_number) AS name
 				FROM

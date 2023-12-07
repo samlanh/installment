@@ -39,7 +39,7 @@ Class Property_Form_FrmClient extends Zend_Dojo_Form {
 						'required' =>'true'
 		));
 		
- 		$id_client = $db->getNewClientIdTypeTwo();
+ 		$i
 		$_clientno = new Zend_Dojo_Form_Element_TextBox('client_no');
 		$_clientno->setAttribs(array(
 				'dojoType'=>'dijit.form.TextBox',
@@ -47,7 +47,7 @@ Class Property_Form_FrmClient extends Zend_Dojo_Form {
 				'readonly'=>'readonly',
 				'style'=>'color:red;'
 		));
- 		$_clientno->setValue($id_client);
+ 		
 	
 		$_nameen = new Zend_Dojo_Form_Element_ValidationTextBox('name_en');
 		$_nameen->setAttribs(array(

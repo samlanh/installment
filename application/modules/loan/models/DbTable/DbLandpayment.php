@@ -1109,7 +1109,7 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     					$next_payment = $dbtable->getNextPayment($str_next, $next_payment, 1,3,$data['first_payment']);
     				}else{
     					$next_payment = $data['first_payment'];
-    					//$next_payment = $dbtable->checkFirstHoliday($next_payment,3);//normal day
+    					
     				}
     				$amount_day = $dbtable->CountDayByDate($from_date,$next_payment);
     				$total_day = $amount_day;
@@ -1764,65 +1764,15 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
     	}
     }
-function getLoanPaymentByLoanNumber($data){
-    	$db = $this->getAdapter();
-    	$loan_number= $data['loan_number'];
-    	if($data['type']!=2){
-    		$where =($data['type']==1)?'loan_number = '.$loan_number:'client_id='.$loan_number;
-    	    $sql=" SELECT *,
-    	            (SELECT co_id FROM `ln_loan_group` WHERE g_id = 
-    	            (SELECT lm.member_id FROM `ln_loan_member` AS lm WHERE lm.member_id = member_id LIMIT 1)) AS co_id,
-    	            (SELECT lm.client_id FROM `ln_loan_member` AS lm WHERE lm.member_id = member_id LIMIT 1) AS client_id
-					,(SELECT currency_type FROM `ln_loan_member` WHERE $where LIMIT 1  ) AS curr_type
-    	     FROM `ln_loanmember_funddetail` WHERE member_id =
-		    	(SELECT  member_id FROM `ln_loan_member` WHERE $where AND status=1 LIMIT 1)
-		    	AND status = 1 ";
-    	}elseif($data['type']==2){
-    		$sql=" SELECT *,
-	    		(SELECT co_id FROM `ln_loan_group` WHERE g_id = 
-	    	    (SELECT lm.member_id FROM `ln_loan_member` AS lm WHERE lm.member_id = member_id LIMIT 1)) AS co_id,    	            	
-	    		(SELECT lm.client_id FROM `ln_loan_member` AS lm WHERE lm.member_id = member_id LIMIT 1) AS client_id
-	    		,(SELECT currency_type FROM `ln_loan_member` WHERE $where LIMIT 1  ) AS curr_type
-    		 FROM `ln_loanmember_funddetail` WHERE status = 1 AND member_id = 
-    		       (SELECT member_id FROM `ln_loan_member` WHERE client_id =
-    		       (SELECT client_id FROM `ln_client` WHERE client_number = ".$loan_number." LIMIT 1) LIMIT 1) ";
-    	}
-    	return $db->fetchAll($sql);
-    }
-function getLoanLevelByClient($client_id,$type){
-    	$db  = $this->getAdapter();
-    	if($type==1){
-    		$sql = " SELECT COUNT(member_id) FROM `ln_loan_member` WHERE STATUS =1 AND client_id = $client_id LIMIT 1 ";
-    	}else{
-    		$sql = "SELECT COUNT(m.member_id) FROM `ln_loan_member` AS m,`ln_loan_group` AS g WHERE m.status =1 AND
-    		m.group_id =g_id AND m.client_id = $client_id AND g.loan_type=2 LIMIT 1";
-    	} 
-    	$level  = $db->fetchOne($sql);
-    	return ($level+1);
-    }
+
    
-    public function getLoanInfo($id){//when repayment shedule
-    	$db=$this->getAdapter();
-    	$sql="SELECT  (SELECT lf.total_principal FROM `ln_loanmember_funddetail` AS lf WHERE lf. member_id= l.member_id AND STATUS=1 AND lf.is_completed=0 LIMIT 1)  AS total_principal
-    	,l.currency_type FROM `ln_loan_member` AS l WHERE l.client_id=$id AND status=1 AND l.is_completed=0
-    	";
-    	return $db->fetchRow($sql);
-    }
-    public function getAllMemberLoanById($member_id){//for get id fund detail for update
-    	$db = $this->getAdapter();
-    	$sql = "SELECT lm.member_id ,lm.client_id,lm.group_id ,lm.loan_number,
-    	(SELECT name_kh FROM `ln_client` WHERE client_id = lm.client_id LIMIT 1) AS client_name_kh,
-    	(SELECT name_en FROM `ln_client` WHERE client_id = lm.client_id LIMIT 1) AS client_name_en,
-    	(SELECT client_number FROM `ln_client` WHERE client_id = lm.client_id LIMIT 1) AS client_number,
-    	lm.total_capital,lm.admin_fee,lm.loan_purpose FROM `ln_loan_member` AS lm
-    	WHERE lm.status =1 AND lm.group_id = $member_id ";
-    	return $db->fetchAll($sql);
-    }
+
+   
     public function getLastPayDate($data){
     	$loanNumber = $data['loan_numbers'];
     	$db = $this->getAdapter();
     	$sql ="SELECT cd.`date_payment` FROM `ln_client_receipt_money_detail` AS cd,`ln_client_receipt_money` AS c WHERE c.`id` = cd.`crm_id` AND c.`loan_number`='$loanNumber' ORDER BY cd.`id` DESC";
-    	//return $sql;
+    	
     	return $db->fetchOne($sql);
     }
     

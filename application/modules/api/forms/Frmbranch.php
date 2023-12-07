@@ -48,7 +48,7 @@ Class Project_Form_Frmbranch extends Zend_Dojo_Form {
 				'class'=>'fullside',
 				'readOnly'=>'readOnly',
 				'style'=>'color:red',
-				'onkeyup'=>'Calcuhundred()'
+				
 				));
 		$br_code=Group_Model_DbTable_DbProject::getBranchCode();
 		$br_id->setValue($br_code);
