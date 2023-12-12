@@ -41,7 +41,6 @@ class Loan_IndexController extends Zend_Controller_Action {
 			$reschedule=array('module'=>'loan','controller'=>'repaymentschedule','action'=>'add',);
 			$payment=array('module'=>'loan','controller'=>'ilpayment','action'=>'add',);
 			$this->view->list=$list->getCheckList(10, $collumns, $rs_rows,array(),0);
-			
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -51,7 +50,6 @@ class Loan_IndexController extends Zend_Controller_Action {
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_search = $frm;
 		$this->view->rssearch = $search;
-
   }
   function addAction()
   {
@@ -442,5 +440,23 @@ class Loan_IndexController extends Zend_Controller_Action {
 	  	$db = new Application_Model_DbTable_DbGlobal();
 	  	$this->view->customer =  $db->getAllClient();
 	  	$this->view->userlist =  $db->getAllUserGlobal();
+	}
+	
+	function updaterecordScheduleAction(){
+		$db = new Loan_Model_DbTable_DbLandpayment();
+	 	try {
+	 		if($this->getRequest()->isPost()){
+				$data = $this->getRequest()->getPost();
+				$id = empty($data['id'])?0:$data['id'];	
+				$db->updateRecordSchedule($data);
+				print_r(Zend_Json::encode(1));
+				exit();
+			}
+	 		Application_Form_FrmMessage::Sucessfull("You no permission to delete","/loan/ilpayment",2);
+			exit();
+	 	}catch (Exception $e) {
+	 		Application_Form_FrmMessage::message("INSERT_FAIL");
+	 		echo $e->getMessage();
+	 	}
 	}
 }

@@ -6,7 +6,7 @@ class Report_Model_DbTable_DbSummary extends Zend_Db_Table_Abstract
       	$resultProperty = $this->getPropertySummary($data);
       	$resultSale = $this->getSaleSummary($data);
       	$resultProject = $this->getProjectData($data);
-      	$totalpayOff = $this->countPayoff($data);
+      	$resultPayoff = $this->countPayoff($data);
       	
       	
       	$resultSummary = array(
@@ -27,6 +27,18 @@ class Report_Model_DbTable_DbSummary extends Zend_Db_Table_Abstract
       				'propertySold'=>$resultProperty['propertySold'],
       				'propertyUnSold'=>$resultProperty['propertyUnSold'],
       			
+      				'0BuildPercentage'=>$resultProperty['0BuildPercentage'],
+      				'10BuildPercentage'=>$resultProperty['10BuildPercentage'],
+      				'20BuildPercentage'=>$resultProperty['20BuildPercentage'],
+      				'30BuildPercentage'=>$resultProperty['30BuildPercentage'],
+      				'40BuildPercentage'=>$resultProperty['40BuildPercentage'],
+      				'50BuildPercentage'=>$resultProperty['50BuildPercentage'],
+      				'60BuildPercentage'=>$resultProperty['60BuildPercentage'],
+      				'70BuildPercentage'=>$resultProperty['70BuildPercentage'],
+      				'80BuildPercentage'=>$resultProperty['80BuildPercentage'],
+      				'90BuildPercentage'=>$resultProperty['90BuildPercentage'],
+      				'100BuildPercentage'=>$resultProperty['100BuildPercentage'],
+      			
       				'totalClient'=>$resultSale['totalClient'],
       				'totalActiveSale'=>$resultSale['totalActiveSale'],
       				'totalActiveHouseSale'=>$resultSale['totalActiveHouseSale'],
@@ -41,7 +53,8 @@ class Report_Model_DbTable_DbSummary extends Zend_Db_Table_Abstract
       				'totalCancelHouse'=>$resultSale['totalCancelHouse'],
       				'totalLatePayment'=>$resultSale['totalLatePayment'],
       			
-      				'totalpayOff'=>$totalpayOff,
+      				'salePayoff'=>$resultPayoff['salePayoff'],
+      				'payoffAmount'=>$resultPayoff['payoffAmount'],
       			
       			);
       	return $resultSummary;
@@ -70,7 +83,19 @@ class Report_Model_DbTable_DbSummary extends Zend_Db_Table_Abstract
 				SUM(IF(`status` = '1' AND is_lock = '1',price, NULL)) AS totalpropertyPricesold,
 				COUNT(IF(`status`= '1',id, NULL)) AS totalProperties,
 				COUNT(IF(`status` = '1' AND is_lock='1',id, NULL)) AS propertySold,
-				COUNT(IF(`status` = '1' AND is_lock='0',id, NULL)) AS propertyUnSold
+				COUNT(IF(`status` = '1' AND is_lock='0',id, NULL)) AS propertyUnSold,
+				
+				COUNT(IF(`buildPercentage` = '0',id, NULL)) AS 0BuildPercentage,
+				COUNT(IF(`buildPercentage` = '10',id, NULL)) AS 10BuildPercentage,
+				COUNT(IF(`buildPercentage` = '20',id, NULL)) AS 20BuildPercentage,
+				COUNT(IF(`buildPercentage` = '30',id, NULL)) AS 30BuildPercentage,
+				COUNT(IF(`buildPercentage` = '40',id, NULL)) AS 40BuildPercentage,
+				COUNT(IF(`buildPercentage` = '50',id, NULL)) AS 50BuildPercentage,
+				COUNT(IF(`buildPercentage` = '60',id, NULL)) AS 60BuildPercentage,
+				COUNT(IF(`buildPercentage` = '70',id, NULL)) AS 70BuildPercentage,
+				COUNT(IF(`buildPercentage` = '80',id, NULL)) AS 80BuildPercentage,
+				COUNT(IF(`buildPercentage` = '90',id, NULL)) AS 90BuildPercentage,
+				COUNT(IF(`buildPercentage` = '100',id, NULL)) AS 100BuildPercentage
 
 			FROM `ln_properties` WHERE 1";
       	if(!empty($data['projectId'])){
@@ -107,8 +132,15 @@ class Report_Model_DbTable_DbSummary extends Zend_Db_Table_Abstract
       }
       function countPayoff($data){
       	$sql="SELECT 
-				s.price_sold
-			 FROM ln_sale s,ln_client_receipt_money c
+					COUNT(sale_id) AS salePayoff,
+					SUM(payoffAmount) AS payoffAmount
+				FROM  
+				(SELECT 
+					(s.id) AS sale_id,
+					s.price_sold,
+					SUM(c.total_principal_permonthpaid+extra_payment) AS payoffAmount
+				 FROM ln_sale s,
+			 		ln_client_receipt_money c
 			WHERE 
 				s.id=c.`sale_id`
 				AND s.status=1 AND s.is_cancel=0 ";
@@ -116,8 +148,8 @@ class Report_Model_DbTable_DbSummary extends Zend_Db_Table_Abstract
       		$sql.=" AND branch_id=".$data['projectId'];
       	}
       	$sql.=" GROUP BY s.id
-				HAVING s.price_sold<=SUM(c.total_principal_permonthpaid+extra_payment)";
+				HAVING s.price_sold<=SUM(c.total_principal_permonthpaid+extra_payment)) AS main_table";
       	$db = $this->getAdapter();
-      	return count($db->fetchAll($sql));
+      	return $db->fetchRow($sql);
       }
  }

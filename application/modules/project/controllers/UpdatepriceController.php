@@ -51,9 +51,6 @@ class Project_UpdatepriceController extends Zend_Controller_Action {
 		$branch_id = $this->getRequest()->getParam("branch_id");
 		$branch_id = empty($branch_id)?null:$branch_id;
 		
-		$property_type = $this->getRequest()->getParam("pro_type");
-		$property_type = empty($property_type)?null:$property_type;
-		
 		$db = new Project_Model_DbTable_Dbupdateprice();
 		if($this->getRequest()->isPost()){
 			try{
@@ -66,10 +63,13 @@ class Project_UpdatepriceController extends Zend_Controller_Action {
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
+		
+		$property_type = $this->getRequest()->getParam("pro_type");
+		$property_type = empty($property_type)?null:$property_type;
 		$row = $db->getPropertiesByStreet($id,$branch_id,$property_type);
 	    $this->view->result=$row;
 		if(empty($row)){
-			$this->_redirect("/group/updateprice");
+			$this->_redirect("/project/updateprice");
 		}
 	}
 }

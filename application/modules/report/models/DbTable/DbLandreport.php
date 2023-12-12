@@ -2977,6 +2977,7 @@ function updatePaymentStatus($data){
 				$order =" ORDER BY `s`.client_id DESC ";
 			}
 		}
+// 		echo $sql.$where.$order;exit();
 	   	return $db->fetchAll($sql.$where.$order);
    }
 //    public function getSaleSummary($search = null){//rpt-loan-released/

@@ -1608,7 +1608,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     		$genderStr = array(
 					'ប្រុស'=>1,
     				'ស្រី'=>2
-    				);
+    			);
     		
     		$propertyTypeStr = array(
     				'House'=>1,
@@ -1623,7 +1623,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     			$ProjectName=$data[$i]['B'];
     			$lotNo=$data[$i]['C'];
     			$propertyType=$data[$i]['D'];
-    			$streetNo=$data[$i]['E'];
+    			$streetNo=empty($data[$i]['E'])?0:"Str".$data[$i]['E'];
     			$saleBY=$data[$i]['F'];
     			$customerName=$data[$i]['G'];
     			$customerNameEn=$data[$i]['H'];
@@ -1651,6 +1651,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     			
     			$amtPerPaid=$data[$i]['AD'];
     			$lastPaid=$data[$i]['AE'];
+    			$buildPercentage=$data[$i]['AF'];
     			
     			$strDuration = empty($duration)?'':'រយៈពេលបង់ '.$duration;
     			$strAmtPerPaid = empty($amtPerPaid)?'':'បង់ប្រចាំខែ'.$amtPerPaid;
@@ -1679,13 +1680,19 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     				$installMentNumber=0;
     				$sql="SELECT `client_id` FROM `ln_client` WHERE name_kh='".$customerName."'";
     				$client_id = $db->fetchOne($sql);
+    				
+    				$clients = explode("-",$customerName);
+    				$client1 = !empty($clients[0])?$clients[0]:'';
+    				$client2 = !empty($clients[1])?$clients[1]:'';
+    				
     				if(empty($client_id)){
     					$dbg = new Application_Model_DbTable_DbGlobal();
     					$client_code = $dbg->getNewClientIdByBranch();
     
     					$_arr=array(
     							'client_number'=> $client_code,
-    							'name_kh'	  => $customerName,
+    							'name_kh'	  => $client1,
+    							'hname_kh'		=>$client2,
     							'sex'	      => $gender,
     							'pro_id'      => 0,
     							'dis_id'      => 0,
@@ -1734,6 +1741,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     										'street'	  => $streetNo,
     										'price'	      => $orgPrice,
     										'land_price'  => $orgPrice,
+    										'buildPercentage'=>$buildPercentage,
     										'house_price' => 0,
     										'land_size'	  => '',
     										'width'       => '',
@@ -1742,7 +1750,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     										'status'	  => 1,
     										'user_id'	  => $userId,
     										'property_type'=> empty($propertyTypeStr[$propertyType])?0:$propertyTypeStr[$propertyType],
-    										'type_tob'		=>empty($propertyTypeStr[$propertyType])?0:$propertyTypeStr[$propertyType],
+    										'type_tob'		=>$propertyType,
     										'south'	      => '',
     										'north'	      => '',
     										'west'	      => '',
@@ -1773,6 +1781,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     								'street'	  => $streetNo,
     								'price'	      => $orgPrice,
     								'land_price'  => $orgPrice,
+    								'buildPercentage'=>$buildPercentage,
     								'house_price' => 0,
     								'land_size'	  => '',
     								'width'       => '',
@@ -1781,7 +1790,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     								'status'	  => -2,
     								'user_id'	  => $userId,
     								'property_type'=> empty($propertyTypeStr[$propertyType])?0:$propertyTypeStr[$propertyType],
-    								'type_tob'		=>empty($propertyTypeStr[$propertyType])?0:$propertyTypeStr[$propertyType],
+    								'type_tob'		=>$propertyType,
     								'south'	      => '',
     								'north'	      => '',
     								'west'	      => '',
@@ -1803,6 +1812,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     									'street'	  => $streetNo,
     									'price'	      => $orgPrice,
     									'land_price'  => $orgPrice,
+    									'buildPercentage'=>$buildPercentage,
     									'house_price' => 0,
     									'land_size'	  => '',
     									'width'       => '',
@@ -1828,7 +1838,6 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     						}
     					}
     				}
-    
     				
     				$totalInstallamount=0;
     				if (!empty($payment_id[$installmentType])){//check

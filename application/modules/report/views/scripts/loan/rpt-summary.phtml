@@ -27,12 +27,13 @@
     </div>
 	<div id="divPrint">
 		<style>
+			ul.list-report li{list-style: none;}
 			table.summary-data{
 				color:#093f6e;
 				font-size: 12px;
 			}
 			
-			td:nth-child(2n+2) {background: #eee;font-weight: bold;}
+			.summary-data td:nth-child(2n+2) {background: #eee;font-weight: bold;}
 			table.summary-data tr td{
 				padding: 2px;
 				white-space: nowrap;
@@ -48,10 +49,13 @@
 			            	<tr>
 			                	<td width="30%"><img src="<?php echo $logo;?>" style="height:85px;max-width: 100%;"></td>
 			                	<td width="40%" valign="top" align="center">
-			                		<ul>
+			                		<ul class="list-report">
 			                			<li style="white-space:nowrap;text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $branch_title;?></li>
-			                			<li style="text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("REPORT_LOAN_LATE");?></li>
-			                			<li style="text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>;"><?php if(!empty($this->search['start_date'])){echo date('d/m/Y',strtotime($this->search['start_date'])).'-';} echo date("d/m/Y",strtotime($this->list_end_date));?>
+			                			<li style="text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'">របាយការណ៍សង្ខេប / Summary Report</li>
+			                			<li style="text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>;"><?php if(!empty($this->search['start_date'])){
+			                					echo date('d/m/Y',strtotime($this->search['start_date']));
+			                					echo "-".date("d/m/Y",strtotime($this->list_end_date));
+			                			}?>
 			                				<label id='lbl_labelstaff'></label>
 			                			</li>
 			                		</ul>
@@ -108,13 +112,13 @@
 				                </tr>
 				               <tr>
 				                    <td>(ដី/ផ្ទះ)បានបង់ដាច់ Property Payoff</td>
-				                    <td><?php echo $result['totalpayOff'];?></td>
+				                    <td><?php echo $result['salePayoff']." = (".number_format($result['payoffAmount'],2).")";?></td>
 				                    <td>ទឹកប្រាក់បានបង់សរុប Total Cash Collection(1)</td>
 				                    <td><?php echo number_format($result['paidAmount'],2);?></td>
 				                </tr>
 				               <tr>
 				                    <td>(ដី/ផ្ទះ)មិនទាន់ដាច់ </td>
-				                    <td><?php echo $result['propertySold']-$result['totalpayOff'];?></td>
+				                    <td><?php echo $result['propertySold']-$result['salePayoff'];?></td>
 				                    <td>ចំណូលការប្រាក់និងពិន័យ Interest and Penalty Revenue(2)</td>
 				                    <td><?php echo number_format($result['totalInterestPaid'],2);?></td>
 				                </tr>
@@ -147,7 +151,7 @@
 									?></strong></td>
 				                </tr>
 				                 <tr class="plong-list font-bold">
-				                    <td colspan="4">ការបង់យឺតនិង ការរំពឹងទុក</td>
+				                    <td colspan="4">ការបង់យឺតនិង ការរំពឹងទុក Late and Expected Revenue</td>
 				                </tr>
 				                <tr>
 				                    <td>អតិថិជនបង់យឺត</td>
@@ -161,6 +165,46 @@
 				                    <td></td>
 				                    <td></td>
 				                </tr>
+				                <tr class="plong-list font-bold">
+				                    <td colspan="4">ភាគរយការសាងសង់ផ្ទះ Percentage of Building</td>
+				                </tr>
+				                 <tr>
+				                    <td>មិនទាន់សាងសង់ / 0% Percentage</td>
+				                    <td><?php echo $result['0BuildPercentage'];?></td>
+				                    <td></td>
+				                    <td></td>
+				                </tr>
+				                <tr>
+				                    <td>សាងសង់បាន 10%</td>
+				                    <td><?php echo $result['10BuildPercentage'];?></td>
+				                    <td>សាងសង់បាន 60%</td>
+				                    <td><?php echo $result['60BuildPercentage'];?></td>
+				                </tr>
+				                <tr>
+				                    <td>សាងសង់បាន 20%</td>
+				                    <td><?php echo $result['20BuildPercentage'];?></td>
+				                    <td>សាងសង់បាន 70%</td>
+				                    <td><?php echo $result['70BuildPercentage'];?></td>
+				                </tr>
+				                <tr>
+				                    <td>សាងសង់បាន 30%</td>
+				                    <td><?php echo $result['30BuildPercentage'];?></td>
+				                    <td>សាងសង់បាន 80%</td>
+				                    <td><?php echo $result['80BuildPercentage'];?></td>
+				                </tr>
+				                <tr>
+				                    <td>សាងសង់បាន 40%</td>
+				                    <td><?php echo $result['40BuildPercentage'];?></td>
+				                    <td>សាងសង់បាន 90%</td>
+				                    <td><?php echo $result['90BuildPercentage'];?></td>
+				                </tr>
+				                <tr>
+				                    <td>សាងសង់បាន 50%</td>
+				                    <td><?php echo $result['50BuildPercentage'];?></td>
+				                    <td>សាងសង់បាន 100%</td>
+				                    <td><?php echo $result['100BuildPercentage'];?></td>
+				                </tr>
+				                
 				                <tr class="plong-list font-bold">
 				                    <td colspan="4">កិច្ចការប្រគល់ប្លង់និង ផ្ទះ</td>
 				                </tr>

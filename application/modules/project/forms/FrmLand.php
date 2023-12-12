@@ -275,15 +275,6 @@ Class Project_Form_FrmLand extends Zend_Dojo_Form {
 		
 		$status_using->setValue($request->getParam("buy_status"));
 		
-// 		$_type_of_property=  new Zend_Dojo_Form_Element_FilteringSelect('type_property_sale');
-// 		$_type_of_property->setAttribs(array('dojoType'=>$this->filter,	'class'=>'fullside',));
-// 		$_type_of = array(
-// 				'-1'=>$this->tr->translate("ALL"),
-// 				'1'=>$this->tr->translate("SOLD_OUT"),
-// 				'0'=>$this->tr->translate("NOT_YET_SALE"));
-// 		$_type_of_property->setMultiOptions($_type_of);
-// 		$_type_of_property->setValue($request->getParam("type_property_sale"));
-
 		$options= array(
 				1=>$this->tr->translate("Increase"),
 				-1=>$this->tr->translate("Decrease"));

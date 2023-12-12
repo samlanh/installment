@@ -108,7 +108,6 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     	}	
     	$order = " ORDER BY s.id DESC";
     	
-    	
     	$where.=$dbp->getAccessPermission("`s`.`branch_id`");
     	return $db->fetchAll($sql.$where.$order);
     }
@@ -2151,6 +2150,29 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 		  	}
 	    }
  	 }
+	 
+	public function updateRecordSchedule($data){
+			$db = $this->getAdapter();
+			$db->beginTransaction();
+			try{
+		
+				$arr = array(
+						'begining_balance'	=>$data['beginingBalance'],
+						'principal_permonth'	=>$data['principalPermonth'],
+						'total_interest'	=>$data['totalInterest'],
+						'ending_balance'	=>$data['endingBalance'],
+				);
+				$where=" id = ".$data['id']." AND sale_id = ".$data['saleId'];
+				$this->_name="ln_saleschedule";
+				$this->update($arr, $where);
+				$db->commit();
+				return 1;
+			}catch (Exception $e){
+				$err =$e->getMessage();
+				Application_Model_DbTable_DbUserLog::writeMessageError($err);
+				$db->rollBack();
+			}
+	}
 }
 
 

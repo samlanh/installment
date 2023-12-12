@@ -76,17 +76,6 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form{
 			'class'=>'fullside',
 		));
 		
-		$land_id = new Zend_Dojo_Form_Element_FilteringSelect('land_id');
-		$land_id->setAttribs(array(
-			'dojoType'=>'dijit.form.FilteringSelect',
-			'class'=>'fullside',
-			'autoComplete'=>'false',
-			'queryExpr'=>'*${0}*',
-		));
-		$options = $db ->getAllLandInfo(null,null,1);//show name,show group,show option
-		$land_id->setMultiOptions($options);
-		$land_id->setValue($request->getParam("land_id"));
-
 		$schedule_opt = new Zend_Dojo_Form_Element_FilteringSelect('schedule_opt');
 		$schedule_opt->setAttribs(array(
 			'dojoType'=>'dijit.form.FilteringSelect',
@@ -368,7 +357,11 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form{
 			'class'=>'fullside',
 			'OnChange'=>'payOption();'
 		));
-		$option_status = array(-1=>$this->tr->translate("PLEASE_SELECT").$this->tr->translate("PAYMENT_TYPE"),1=>$this->tr->translate("NORMAL_PAID"),3=>$this->tr->translate("PRINCIPAL_PAID"),4=>$this->tr->translate("PAYOFF_PAID"));
+		$option_status = array(
+				-1=>$this->tr->translate("PLEASE_SELECT").$this->tr->translate("PAYMENT_TYPE"),
+				1=>$this->tr->translate("NORMAL_PAID"),
+				3=>$this->tr->translate("PRINCIPAL_PAID"),
+				4=>$this->tr->translate("PAYOFF_PAID"));
 		$option_pay->setMultiOptions($option_status);
 		$option_pay->setValue($request->getParam("option_pay"));
 		
@@ -378,7 +371,10 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form{
 				'class'=>'fullside',
 				'OnChange'=>'payOption();'
 		));
-		$option_status = array(-1=>$this->tr->translate("PLEASE_SELECT").$this->tr->translate("PAYMENT_TYPE"),1=>$this->tr->translate("DEPOSIT_RECEIPT"),2=>$this->tr->translate("MONTHLY_RECEIPT"));
+		$option_status = array(
+				-1=>$this->tr->translate("PLEASE_SELECT").$this->tr->translate("PAYMENT_TYPE"),
+				1=>$this->tr->translate("DEPOSIT_RECEIPT"),
+				2=>$this->tr->translate("MONTHLY_RECEIPT"));
 		$receipt_type->setMultiOptions($option_status);
 		$receipt_type->setValue($request->getParam("receipt_type"));
 		
@@ -399,8 +395,6 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form{
 			);
 		$_queryOrdering->setMultiOptions($_ordering_opt);
 		$_queryOrdering->setValue($request->getParam("queryOrdering"));
-		
-		
 		
 		$_receiptStatus=  new Zend_Dojo_Form_Element_FilteringSelect('receiptStatus');
 		$_receiptStatus->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect',
@@ -450,7 +444,8 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form{
 			$_releasedate->setValue($data['date_release']);
 			$client_name->setValue($data['client_name']);
 		}
-		$this->addElements(array($receipt_type,$option_pay,$payment_id,$sale_status,$status_plong,$payment_process,$user,$payment_method,$_ordering,$buy_type,$payment_type,$land_id,$propertiestype,$schedule_opt,$_branch_id,$client_name,$_title,$_coid,$_releasedate,
+		$this->addElements(array($receipt_type,$option_pay,$payment_id,$sale_status,$status_plong,$payment_process,$user,$payment_method,$_ordering,$buy_type,$payment_type,
+			$propertiestype,$schedule_opt,$_branch_id,$client_name,$_title,$_coid,$_releasedate,
 			$_category,$category_id_expense,$_dateline,$_status,$_btn_search,$_supplier_id,$streetlist,$cheque_issuer_search,
 			$_agency_id,
 			
@@ -463,86 +458,4 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form{
 		return $this;
 		
 	}	
-	function JurnalSearch($data=null){
-		
-		$db = new Application_Model_DbTable_DbGlobal();
-		$request=Zend_Controller_Front::getInstance()->getRequest();
-		
-		$_currency_type = new Zend_Dojo_Form_Element_FilteringSelect('currency_type');
-		$_currency_type->setAttribs(array(
-				'dojoType'=>'dijit.form.FilteringSelect',
-				'class'=>'fullside',
-				'autoComplete'=>'false',
-				'queryExpr'=>'*${0}*',
-		));
-		$opt = $db->getVewOptoinTypeByType(15,1,3,1);
-		$opt['-1']=($this->tr->translate("SELECT_CURRENCY_TYPE"));
-		$_currency_type->setMultiOptions($opt);
-		
-		$_valuecurr=$request->getParam("currency_type");
-		if(empty($_valuecurr) AND $_valuecurr!=-1){
-			$_currency_type->setValue(-1);
-		}else{
-			$_currency_type->setValue($_valuecurr);
-		}
-		
-		
-		$_title = new Zend_Dojo_Form_Element_TextBox('adv_search');
-		$_title->setAttribs(array('dojoType'=>'dijit.form.TextBox',
-				'onkeyup'=>'this.submit()',
-				'placeholder'=>$this->tr->translate("ADVANCE_SEARCH")
-		));
-		$_title->setValue($request->getParam("adv_search"));
-		
-		
-		$_releasedate = new Zend_Dojo_Form_Element_DateTextBox('start_date');
-		$_releasedate->setAttribs(array('dojoType'=>'dijit.form.DateTextBox',
-		// 				'class'=>'fullside',
-				'onchange'=>'CalculateDate();'));
-		$_date = $request->getParam("start_date");
-		
-		if(empty($_date)){
-			$_date = date('Y-m-d');
-		}
-		$_releasedate->setValue($_date);
-		
-		
-		$_dateline = new Zend_Dojo_Form_Element_DateTextBox('end_date');
-		$_dateline->setAttribs(array('dojoType'=>'dijit.form.DateTextBox','required'=>'true',
-		// 				'class'=>'fullside',
-		));
-		$_date = $request->getParam("end_date");
-		
-		if(empty($_date)){
-			$_date = date("Y-m-d");
-		}
-		$_dateline->setValue($_date);
-		
-		
-		$_branch_id = new Zend_Dojo_Form_Element_FilteringSelect('branch_id');
-		$_branch_id->setAttribs(array(
-				'dojoType'=>'dijit.form.FilteringSelect',
-				'autoComplete'=>'false',
-				'queryExpr'=>'*${0}*',
-		));
-		
-		$rows = $db->getAllBranchName();
-		$options=array(-1=>'---Select Branch---');
-		if(!empty($rows))foreach($rows AS $row){
-			$options[$row['br_id']]=$row['branch_namekh'];
-		}
-		$_branch_id->setMultiOptions($options);
-		$_branch_id->setValue($request->getParam("branch_id"));
-		
-		
-		if($data!=null){
-			//print_r($data);
-			$_branch_id->setValue($data['member_id']);
-			$_releasedate->setValue($data['date_release']);
-			$_currency_type->setValue($data['payment_method']);
-		}
-		$this->addElements(array($_title,$_branch_id,$_currency_type,$_releasedate,$_dateline));
-		return $this;
-		
-	}
 }

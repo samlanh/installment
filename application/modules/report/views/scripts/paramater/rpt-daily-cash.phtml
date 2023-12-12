@@ -54,7 +54,7 @@
 					<?php echo $frm->getElement('branch_id');?>
 				</div>
 				<div class="col-md-2 col-sm-2 col-xs-12">
-					<?php echo $frm->getElement('land_id');?>
+					<input id="land_id"/>
 				</div>
 				<div class="col-md-2 col-sm-2 col-xs-12">
 					<?php echo $frm->getElement('streetlist');?>
@@ -1036,18 +1036,67 @@
   
 	</div>
 </div>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
 <script>
 	dojo.require("dijit.form.DateTextBox");
 	dojo.require("dojo.data.ItemFileWriteStore"); 
+	var property_store  = getDataStorefromJSON('id','name',[{"id":-1,"name":"<?php echo $tr->translate("SELECT_PROPERTY");?>"}]);
 	require(["dojo/ready"], function(ready){
+	
+			new dijit.form.FilteringSelect({
+				store: property_store,
+				required: false,
+				autoComplete: false,
+				queryExpr: "*${0}*",
+				name: "land_id",
+				id: "land_id",
+				value:-1,
+				searchAttr: "name",
+				class: 'fullside fullside50',
+				onChange: function() {
+					land_id=-1;
+			}
+				}, "land_id");
+			
 		ready(function(){
+			 getAllPropertyBranch();
 			 getBranchInfo();
 			 document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
 			 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("REPORT_DAILY_CASH");?>';
 			 document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date("d-M-Y"); }else{ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date("d-M-Y",strtotime($this->search['end_date'])); }?>';
 		});
-		
 	});
+
+	land_id = '<?php echo $this->search['land_id']?>';
+	var url_getland = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getallland')); ?>';
+	function getAllPropertyBranch(branch_id){
+		dijit.byId('land_id').reset();
+		property_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
+		dijit.byId('land_id').set('store', property_store);
+		
+		branch_id = dijit.byId('branch_id').get('value');
+		if(branch_id<=0){
+			return false;
+		}
+		
+		dojo.xhrPost({
+			url:url_getland,	
+			content:{ 
+			    'branch_id':branch_id,
+			    'action':1
+			},		    
+			handleAs:"json",
+			load: function(data) {
+				property_store  = getDataStorefromJSON('id','name', data);		
+			    dijit.byId('land_id').set('store', property_store);
+			    if(land_id>0){
+			    	dijit.byId('land_id').attr('value',land_id);
+				 }
+			},
+			error: function(err) {
+			}
+		});
+	} 
 	
 	
 	function getBranchInfo(){

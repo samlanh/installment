@@ -50,7 +50,6 @@ class Project_Model_DbTable_Dbupdateprice extends Zend_Db_Table_Abstract
     		$sql.=" AND property_type =".$property_type;
     	}
     	$sql.=" ORDER BY price DESC, cast(land_address as unsigned) ";
-//     	echo $sql;exit();
     	return $db->fetchAll($sql);
     }
     function updatePrice($data){

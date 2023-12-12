@@ -776,10 +776,19 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     		$array['next_amount_deposit'] = $data['second_depostit'];
     	}
     	$crm_id=0;
+		
+		
+		$lastPaymentRecord = array();
     	if($data['new_deposit']>0){
 	    	$this->_name='ln_client_receipt_money';
 	    	$crm_id = $this->insert($array);
-    	}
+    	}else{
+			// ចាប់យកថ្ងៃទទួល និងអ្នកទទួលតាមប្រវិត្តិបង់ប្រាក់ចុងក្រោយមុនពេលរៀបគោលការណ៍បង់ប្រាក់
+			$dbPmt = new Loan_Model_DbTable_DbLoanILPayment();
+			$sale_id = empty($data['sale_id'])?0:$data['sale_id'];
+  			$lastPaymentRecord = $dbPmt->getLastPaymentRecord($sale_id);
+			
+		}
     	$rows = $this->getSaleScheduleById($data['sale_id'],1);
 		$after_interest=0;
     	$paid_amount = $data['deposit'];
@@ -804,14 +813,26 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     			if($remain_principal==0){
     				$statuscomplete=1;
     			}
+				
+				$receivedUserId=($statuscomplete==1)?$this->getUserId():'';
+				$receivedDate=($statuscomplete==1)?$data['paid_date']:'';
+				if(!empty($lastPaymentRecord)){
+					if(!empty($lastPaymentRecord["user_id"])){
+						$receivedUserId=($statuscomplete==1)?$lastPaymentRecord["user_id"]:'';
+					}
+					if(!empty($lastPaymentRecord["date_input"])){
+						$receivedDate=($statuscomplete==1)?$lastPaymentRecord["date_input"]:'';
+					}
+				}
+		
     			$arra = array(
     					'begining_balance_after'=>$row['begining_balance_after']-($principal_paid),
     					"principal_permonthafter"=>$remain_principal,
     					'total_interest_after'=>$after_interest,
     					"total_payment_after"=>$remain_principal+$after_interest,
     					'is_completed'=>$statuscomplete,
-    					'received_userid'=>($statuscomplete==1)?$this->getUserId():'',
-    					'received_date'=>($statuscomplete==1)?$data['paid_date']:'',
+    					'received_userid'=>$receivedUserId,//($statuscomplete==1)?$this->getUserId():'',
+    					'received_date'=>$receivedDate,//($statuscomplete==1)?$data['paid_date']:'',
     			);
     			$where = " id = ".$row['id'];
     			$this->_name="ln_saleschedule";

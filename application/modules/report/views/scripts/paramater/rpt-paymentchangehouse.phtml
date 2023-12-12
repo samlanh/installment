@@ -41,7 +41,7 @@
 					<?php echo $frm->getElement('branch_id');?>
 				</div>
 				<div class="col-md-2 col-sm-2 col-xs-12">
-					<?php echo $frm->getElement('land_id');?>
+					<input id="land_id"/>
 				</div>
 				<div class="col-md-2 col-sm-2 col-xs-12">
 					<?php echo $frm->getElement('client_name');?>
@@ -278,6 +278,22 @@ dojo.require("dojo.data.ItemFileWriteStore");
 var property_store  = getDataStorefromJSON('id','name',[{"id":-1,"name":"<?php echo $tr->translate("SELECT_PROPERTY");?>"}]);
 var income_category_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode(array()));?> );
 require(["dojo/ready"], function(ready){
+	
+	new dijit.form.FilteringSelect({
+				store: property_store,
+				required: false,
+				autoComplete: false,
+				queryExpr: "*${0}*",
+				name: "land_id",
+				id: "land_id",
+				value:-1,
+				searchAttr: "name",
+				class: 'fullside fullside50',
+				onChange: function() {
+					land_id=-1;
+			}
+				}, "land_id");
+				
 	new dijit.form.FilteringSelect({
 		store: income_category_store,
 		required: false,
@@ -294,6 +310,7 @@ require(["dojo/ready"], function(ready){
 		}, "category_id");
 
 	 ready(function(){
+		  getAllPropertyBranch();
 		 getCategoryByType();
 		 var catetype = dijit.byId('type');
 		 catetype.on('change', function(evt) {
@@ -303,6 +320,37 @@ require(["dojo/ready"], function(ready){
 	 
 });
 
+land_id = '<?php echo $this->search['land_id']?>';
+	var url_getland = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getallland')); ?>';
+	function getAllPropertyBranch(branch_id){
+		dijit.byId('land_id').reset();
+		property_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
+		dijit.byId('land_id').set('store', property_store);
+		
+		branch_id = dijit.byId('branch_id').get('value');
+		if(branch_id<=0){
+			return false;
+		}
+		
+		dojo.xhrPost({
+			url:url_getland,	
+			content:{ 
+			    'branch_id':branch_id,
+			    'action':1
+			},		    
+			handleAs:"json",
+			load: function(data) {
+				property_store  = getDataStorefromJSON('id','name', data);		
+			    dijit.byId('land_id').set('store', property_store);
+			    if(land_id>0){
+			    	dijit.byId('land_id').attr('value',land_id);
+				 }
+			},
+			error: function(err) {
+			}
+		});
+	} 
+	
 oldtype = '<?php echo $this->search['type']?>';
 var url_getcatebytype = '<?php echo $this->url(array('module'=>'loan','controller'=>'incomeotherpayment','action'=>'get-categorybytype')); ?>';
 function getCategoryByType(){
