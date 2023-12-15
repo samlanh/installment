@@ -1,0 +1,492 @@
+<?php	
+	$frm = $this->frm_loan;
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$baseurl =  Zend_Controller_Front::getInstance()->getBaseUrl();
+	$this->headTitle($tr->translate('VERIFY_SALE'));
+	echo $this->headTitle();
+?>
+<style>
+.fullside50{ width:48%;}
+.hover:hover{background: #eee !important;}
+</style>
+<script src="<?php echo $baseurl;?>/js/help.js"></script>
+<script>
+	require(["dijit/form/DateTextBox","dijit/form/NumberTextBox"]);
+</script>
+<div class="card">
+	<div class="card-content collapse show">
+		<form id='frm_add_tran' action="" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+			<script type="dojo/method" event="onSubmit">			
+			if(this.validate()) {
+				branch_id = dijit.byId('branch_id').get('value');
+				if(branch_id=='' || branch_id==-1){
+					infoMessageAlert('<?php echo $tr->translate("PLEASE_SELECT_BRANCH")?>!');
+					dijit.byId('branch_id').focus();
+					return false;
+				}
+				
+				staff_id = dijit.byId('staff_id').get('value');
+				if(staff_id=='' || staff_id==-1){
+					infoMessageAlert('<?php echo $tr->translate("PLEASE_SELECT_STAFF")?>!');
+					dijit.byId('staff_id').focus();
+					return false;
+				}
+				
+				var identity = $('#identity').val();
+				if(identity==''){
+					infoMessageAlert("<?php echo $tr->translate("PLEASE_SET_SALE_COMMISSION");?>");
+					dijit.byId("loan_number").focus();
+					return false;
+				}
+
+				loadingBlock();
+				dijit.byId('savenew').set('disabled',true);
+				return true;
+			}else {
+				return false;
+			}
+			</script>
+			<div class="card-box">
+               	<div class="col-sm-12 border-botom">
+		    		<div class="col-sm-8 pd-0">
+		    			<h4 class="m-b-0"><i class="fa fa-list" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('VERIFY_SALE');?></h4>
+	    			</div>
+	    			<div class="col-sm-4 text-right">
+	    			</div>
+	    		</div>
+	    	</div>
+			<div class="card-box">
+	    		 <ul class="nav  nav-pills nav-fill gap-2 p-1 small bg-white border rounded-5 shadow-sm pills-primary nav-tab" role="tablist">
+		            <li class="nav-item active">
+		                <a class="nav-link rounded-5" data-toggle="tab" href="#panel21" role="tab"><i class="fa fa-money ml-2"></i> <?php echo $tr->translate("SALE_INFO");?></a>
+		            </li>
+				
+					<li class="nav-item">
+						<a class="nav-link rounded-5" data-toggle="tab" href="#panel23" role="tab">
+							<i class="fa fa-file-text"></i> <?php echo $tr->translate("DOCUMENT");?>
+						</a>
+					</li>
+					
+		        </ul>
+		    </div>
+			<div class="tab-content ">
+				<!--Panel 1-->
+				<div class="tab-pane fade in active" id="panel21" role="tabpanel">
+					<div class="card-box">
+						<div class="col-md-4 col-sm-4 col-xs-12">
+							<div class="card-blogform">
+								<div class="card-body"> 
+									<div class="row"> 
+										<div class="col-md-12 col-sm-12 col-xs-12"> 
+											<div class="d-flex"> 
+												<div class="settings-main-icon ">
+													<i class="glyphicon glyphicon-tasks" aria-hidden="true"></i>
+												</div> 
+												<div class="col-md-10 col-sm-10 col-xs-12"> 
+													<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("SALE_INFO");?></p>
+												</div> 
+											</div>
+											<div class="form-group">
+											   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BRANCH_NAME");?>  :
+											   </label>
+											   <div class="col-md-7 col-sm-7 col-xs-12">
+													<?php echo $frm->getElement('branch_id');?>
+											   </div>
+											</div>
+											
+											<div class="form-group">
+											   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PROPERTY_CODE");?>  :</label>
+											   <div class="col-md-7 col-sm-7 col-xs-12">
+													<input id="saleId" />
+											   </div>
+											</div>
+											<div class="form-group">
+											   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("NOTE");?> :
+											   </label>
+											   <div class="col-md-7 col-sm-7 col-xs-12">
+													<input dojoType="dijit.form.TextBox" class="fullside" id="note" name="note" type="text">
+											   </div>
+											</div>
+											<div id="saleInfomation">
+											
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-4 col-sm-4 col-xs-12">
+							 <div class="card-body"> 
+								<div class="row"> 
+									<div class="col-md-12 col-sm-12 col-xs-12"> 
+										<div class="d-flex"> 
+											<div class="settings-main-icon ">
+												<i class="glyphicon glyphicon-user" aria-hidden="true"></i>
+											</div> 
+											<div class="col-md-10 col-sm-10 col-xs-12"> 
+												<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("VERIFY_INFO");?></p>
+											</div> 
+										</div>
+										<div class="form-group">
+										   <label class="control-label  col-md-5 col-sm-5 col-xs-12" >
+												<?php echo $tr->translate("PRICE_BEFORE");?> :
+										   </label>
+										   <div class="col-md-7 col-sm-7 col-xs-12">
+												<?php echo $frm->getElement('total_sold');?>
+										   </div>
+										</div>
+										<div class="form-group">
+										   <label class="control-label  col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("Discount");?>  :
+										   </label>
+										   <div class="col-md-7 col-sm-7 col-xs-12">
+												<?php echo $frm->getElement('discount');?>
+												<?php echo $frm->getElement('discount_percent');?>
+										   </div>
+										</div>
+										
+										<div class="form-group">
+										   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("TOTAL_DISCOUNT");?>
+										   </label>
+										   <div class="col-md-7 col-sm-7 col-xs-12">
+												<?php echo $frm->getElement('total_discount');?>
+										   </div>
+										</div>
+										<div class="form-group">
+										   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("SOLD_PRICE");?>  :
+										   </label>
+										   <div class="col-md-7 col-sm-7 col-xs-12">
+												<input dojoType="dijit.form.NumberTextBox" class="fullside" onKeyup="Balance();" id="sold_price" name="sold_price"  value="0" type="text">
+										   </div>
+										</div>
+										
+										 <div class="form-group">
+										   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("totalPaid");?> :
+										   </label>
+										   <div class="col-md-7 col-sm-7 col-xs-12">
+												<input dojoType="dijit.form.NumberTextBox" class="fullside" onKeyup="Balance();" id="totalPrincipalpaid" name="totalPrincipalpaid"  value="0" type="text">
+										   </div>
+										</div>
+										 <div class="form-group">
+										   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("OUTSTANDING_AMOUNT");?> :
+										   </label>
+										   <div class="col-md-7 col-sm-7 col-xs-12">
+												<input dojoType="dijit.form.NumberTextBox" class="fullside" readOnly id="totalBalance" name="totalBalance"  value="0" type="text">
+										   </div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--/.Panel 1-->
+				<!--Panel 2-->
+				<div class="tab-pane fade in " id="panel23" role="tabpanel">
+						<div class="card-box">
+							<div class="col-md-12 col-sm-12 col-xs-12">
+								<div class="card-blogform">
+									<div class="card-body"> 
+										<div class="row"> 
+											<div class="col-md-12 col-sm-12 col-xs-12"> 
+												<div class="d-flex"> 
+													<div class="settings-main-icon ">
+														<i class="fa fa-file-text" aria-hidden="true"></i>
+													</div> 
+													<div class="col-md-10 col-sm-10 col-xs-12"> 
+														<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('DOCUMENT')?> </p>
+													</div> 
+												</div>
+										
+												<div class="form-group">
+													 <div class="col-md-10 col-sm-10 col-xs-10" >
+														<table style="white-space: nowrap;width:100%; margin-top: 8px;">
+															<tr id="fileList"></tr>
+														</table>
+													 </div>
+												 </div>
+												 <div class="form-group">
+													<button class="button-class button-primary" iconClass="glyphicon glyphicon-sort-by-attributes" onclick="addRow();" dojoType="dijit.form.Button"  type="button"><?php echo $tr->translate('Add More Doc')?></button>
+													<input type="hidden" name="identity1" id="identity1"  value="" >
+												 </div>
+											 </div>
+										</div>
+									 </div>
+								 </div>
+							</div>
+						</div>
+					</div>				
+				<!--/.Panel 2-->					
+			</div>	
+	    	
+	    	<div class="col-md-4 col-sm-4 col-xs-12">
+	    	</div>
+	    	<div class="clearfix"></div>
+			 <div class="card-box">
+             	<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
+               		<input type="reset" class="button-class button-danger" iconClass="glyphicon glyphicon-repeat" label="<?php echo $tr->translate("CLEAR")?>" dojoType="dijit.form.Button" iconClass="dijitIconClear"/>
+					<input type="submit" class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-disk"  label="<?php echo $tr->translate("SAVENEW")?>" name='savenew' id='savenew' value='savenew' dojoType="dijit.form.Button"/>
+    			</div>
+    		</div>
+		</form>
+	</div>
+</div>
+
+
+
+<script type="text/javascript">	
+dojo.require("dijit.form.Textarea");
+dojo.require("dojo.data.ItemFileWriteStore");  
+dojo.require("dojo.NodeList-manipulate");
+dojo.require("dojo.html");
+
+var saleStore  = getDataStorefromJSON('id','name', null );
+require(["dojo/ready"], function(ready){
+	 ready(function(){
+		 var branch_id = dijit.byId('branch_id');
+		 branch_id.on('change', function(evt) {
+			 getAllSaleNumber();
+		});
+
+	  });
+	  
+	  new dijit.form.FilteringSelect({
+		store: saleStore,
+		required: false,		           
+		name: "saleId",
+		id: "saleId",
+		autoComplete: false,
+		queryExpr: "*${0}*",      
+		searchAttr: "name",
+		class: 'fullside',
+		onChange: function(){
+			getInfoByLoanNumber();
+	    }
+	}, "saleId");
+
+});
+
+function filterClient(){
+}
+function setBranchID (){
+}
+var sale_number_store  = getDataStorefromJSON('id','name', <?php print_r(array())?> );
+var url_getsalenumber = "<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'get-sale-number')); ?>";
+function getAllSaleNumber(){//used
+	branchId = dijit.byId('branch_id').get('value');
+	if(branchId =="" || branchId =="-1" ){
+		alert('Please Select Branch');
+		dijit.byId('branch_id').focus();
+		return false;
+	}
+	dojo.xhrPost({
+		url:url_getsalenumber,	
+		content:{ 
+		    'branch_id':branchId,
+		},		    
+		handleAs:"json",
+		load: function(data) {
+			sale_number_store  = getDataStorefromJSON('id','name', data);
+		    dijit.byId('saleId').set('store',sale_number_store); 
+		},
+		error: function(err) {
+			
+		}
+	});
+}
+
+
+var url_submiinfo = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getloan-bymemberid')); ?>';
+function getInfoByLoanNumber(){
+	loan_id = dijit.byId('saleId').get('value');
+	dojo.xhrPost({
+	    url: url_submiinfo,	
+	    content : { 
+		    'sale_id':loan_id ,
+		},	
+		handleAs:"json",
+		load: function(data) {
+			
+			dijit.byId('total_sold').attr('value',data.price_before);
+			dijit.byId('sold_price').attr('value',data.price_sold);
+			dijit.byId('discount').attr('value',data.discount_amount);
+			dijit.byId('discount_percent').attr('value',data.discount_percent);
+			
+			
+			total_principal= data.total_principal;
+			if(isNaN(total_principal) || total_principal==null){total_principal=0;}
+				
+			var balance = data.price_sold-total_principal; 
+			dijit.byId('totalPrincipalpaid').attr('value',total_principal);
+			dijit.byId('totalBalance').attr('value',balance);
+			var str = "";
+			str+='<div class="form-group">';
+			str+='<label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold"><i class="fa fa-info-circle" aria-hidden="true"></i> <?php echo $tr->translate("NOTE");?> </label>';
+			str+='</div>';
+			str+='<div class="form-group">';
+					str+='<div class="col-md-12 col-sm-12 col-xs-12" style="min-height: 75px;background: #f3feff;border: solid 1px #000096;padding: 10px 5px;font-size: 14px;">';
+						str+='<span><?php echo $tr->translate("DATE_BUY");?>: <strong style="color: #c00;">'+data.buy_date+'</strong></span><br />';
+						str+='<span><?php echo $tr->translate("SOLD_PRICE");?>: <strong style="color: #c00;">'+data.price_sold+'</strong></span><br />';
+						str+='<span><?php echo $tr->translate("PAID");?>: <strong style="color: #c00;">'+data.total_principal+'</strong></span><br />';
+						str+='<span><?php echo $tr->translate("Balance");?>: <strong style="color: #c00;">'+balance+'</strong></span><br />';
+					str+='</div>';
+			str+='</div>';
+			$('#saleInfomation').html(str);
+			calculateDiscount();
+		},
+		error: function(err) {
+			infoMessageAlert(err);
+		}
+	});
+}
+
+function calculateDiscount(){
+	total_sold = dijit.byId('total_sold').get('value');
+	discount = dijit.byId('discount').get('value');
+	discount_percent = dijit.byId('discount_percent').get('value');
+	other_fee = 0;
+	if(isNaN(other_fee)){
+		other_fee=0;
+	}if(isNaN(discount)){
+		discount=0;
+	}
+	if(isNaN(discount_percent)){
+		discount_percent=0;
+	}
+
+	var other_discount = 0;
+	total_sold = total_sold-discount;
+	discount_percent = parseFloat(total_sold*discount_percent/100);
+	total_discount = (discount_percent+discount+other_discount).toFixed(2);
+	total_sold = (total_sold-discount_percent).toFixed(2);
+	
+
+	dijit.byId('total_discount').attr('value',total_discount);
+	dijit.byId('sold_price').attr('value',total_sold);
+	Balance();
+}
+
+function Balance(){
+	price = dijit.byId('sold_price').get('value');
+	totalPrincipalpaid =dijit.byId('totalPrincipalpaid').get('value');
+	if(isNaN(totalPrincipalpaid)){
+		totalPrincipalpaid=0;
+	}
+	var totalBalance = price - totalPrincipalpaid;
+	dijit.byId('totalBalance').attr('value',totalBalance);
+	
+}
+
+
+
+var coll = 0;
+var no = 0;
+func='';
+tmp = '';
+var temp='';
+function addRow() {
+		coll++;no++;
+		template='';
+			template+='<div id="attachment'+coll+'" class="form-group" style=" margin-bottom: 5px !important;">';
+			template+='<div class="input-group-title">';
+						template+='<input dojoType="dijit.form.TextBox" type="text" class="fullside control-rec" id="title_'+coll+'" name="title_'+coll+'" placeHolder="<?php echo $tr->translate('TITLE');?>">';
+					template+='</div>';
+				template+='<div class="input-group input-file" name="attachment'+coll+'">';
+					
+					
+	 				template+='<span class="input-group-btn">';
+	 					template+='<button class="btn btn-default btn-choose" type="button"><?php echo $tr->translate('CHOOSE_FILE');?></button>';
+	 				template+='</span>';
+					template+='<input style="display:none;" type="text" class="form-control" placeholder="<?php echo $tr->translate('CHOOSE_FILE');?>..." />';
+					template+='<span class="input-group-btn">';
+						template+='<button title="<?php echo $tr->translate('DELETE');?>" onClick="deleteRecord('+coll+');" class="btn btn-error btn-reset" type="button"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
+					template+='</span>';
+				template+='</div>';
+			template+='</div> <div class="clearfix"></div>';
+			$("#fileList").append(template);
+		if($("#identity1").val()!='') {
+			var identity = $("#identity1").val();
+			$("#identity1").val(identity+','+coll);
+		} else {$("#identity1").val(coll);}
+
+		bs_input_file();
+}
+function bs_input_file() {
+	$(".input-file").before(
+		function() {
+		if ( ! $(this).prev().hasClass('input-ghost') ) {
+			var element = $("<input  type='file' accept='.xlsx,.xls,image/*,.doc, .docx,.txt,.pdf' class='input-ghost' style='visibility:hidden; height:0'>");
+			element.attr("name",$(this).attr("name"));
+			element.change(function(){
+				
+				element.next(element).find('input').val((element.val()).split('\\').pop());
+				
+				indexRow = $(this).attr("name").replace('attachment','');
+				$("#title_"+indexRow).val( (element.val()).split('\\').pop() );
+							
+			});
+			$(this).find("button.btn-choose").click(function(){
+
+				element.click();
+			});
+			
+			$(this).find('input').css("cursor","pointer");
+			$(this).find('input').mousedown(function() {
+				
+				$(this).parents('.input-file').prev().click();
+				
+			
+				return false;
+			});
+			return element;
+		}
+	}
+	);
+}
+function deleteRecord(index){
+	var identity1 = $('#identity1').val();
+	var arrays = identity1.split(',');
+	for(var i=0;i<arrays.length;i++) {
+	if(arrays[i] == index) arrays.splice(i,1);
+	}
+	var strings = arrays.join(',');
+	$('#identity1').val(strings);
+	$("#attachment"+index).remove();
+	bs_input_file();
+}
+$(function() {
+	bs_input_file();
+});
+
+</script>
+
+<style>
+.input-group-title {
+    display: inline-block;
+    width: 60%;
+    float: left;
+}
+input-group-addon, .input-group-btn {
+    width: 0% !important;
+}
+input.fullside.control-rec {
+    border: solid 1px #6aa1dc;
+    border-radius: 2px;
+    height: 34px;
+}
+input.fullside.control-rec::placeholder {
+	font-style:italic;
+	color: #ccc;
+}
+.input-group.input-file button.btn.btn-default.btn-choose {
+    background: #0077c5;
+    color: #fff;
+}
+.input-group.input-file button.btn.btn-error.btn-reset {
+    background: #c50000;
+    color: #fff;
+}
+.input-group.input-file a.btn.btn-error.btn-reset {
+    background: #00c5bc;
+    color: #fff;
+}
+</style>
