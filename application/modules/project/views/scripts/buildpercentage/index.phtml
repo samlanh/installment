@@ -1,0 +1,181 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate("PROJECT"));
+	$formList = new Application_Form_Frmtable();
+?>	
+<?php $frm =  $this->frm_branch;?>
+<div class="card pb-10 pt-10 pl-10 pr-10">
+	<div class="card-content collapse show">
+		<div class="card-box">
+               	<div class="col-sm-12 border-botom">
+		    		<div class="col-sm-8 pd-0">
+		    			<h4 class="m-b-0"><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('PROJECT');?></h4>
+	    			</div>
+	    			<div class="col-sm-4 text-right">
+	    			</div>
+	    		</div>
+	    	</div>
+		<div class="card-box">
+			<form id="list" name="list" action="" dojoType="dijit.form.Form" method="post">
+				<div class="form-group">
+					<div class="col-md-3 col-sm-3 col-xs-12">
+						<?php echo $frm->getElement('adv_search') ?>
+					</div>
+					<div class="col-md-3 col-sm-3 col-xs-12">
+						<?php echo $frm->getElement('status_search');?>
+					</div>
+					<div class="col-md-3 col-sm-3 col-xs-12">
+						<button class="button-class button-primary" iconclass="glyphicon glyphicon-search" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+					</div>
+					<div class="col-md-3 col-sm-3 col-xs-12">
+					</div>
+				</div>
+				
+			</form>
+		</div>
+		<div class="card-box">
+		<?php //echo $this->list;?>
+			<div class="x_title">
+                    <div class="clearfix"></div>
+       		 </div>
+			<div class="x_content">
+                    <!-- start project list -->
+                    <table border="1" id="datatable-responsive" style="  border-collapse: collapse;   border-color: #ddd;"  class="display nowrap dataTable dtr-inline collapsed table-striped projects" cellspacing="0" width="100%" >
+                      <thead>
+                        <tr>
+                          <th style="width: 1%"><?php echo $tr->translate("NUM");?></th>
+                          <th style="width: 20%"><?php echo $tr->translate("PROJECT_NAME");?></th>
+                          <th><?php echo $tr->translate("Project Progress");?></th>
+                          <th><?php echo $tr->translate("TEL");?></th>
+                          <th><?php echo $tr->translate("BRANCH_ADDRESS");?></th>
+                          <th><?php echo $tr->translate("STATUS");?></th>
+                          <th style="width: 10%"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <?php foreach ($this->row as $key => $project){
+                        	$percent =0;
+                        	if ($project['totalpropertysold']>0){
+                       		 $percent = ($project['totalpropertysold'] / $project['totalproperty'])*100;
+                        	}
+                        	?>
+                        <tr class="context-menu-one" oncontextmenu="setrowdata(<?php echo $project['br_id'];?>);return false;">
+                          <td><?php echo $key+1;?></td>
+                          <td>
+                            <a href="<?php echo $this->baseUrl()."/project/index/edit/id/".$project['br_id'];?>"><?php echo $project['project_name']?> (<?php echo $project['totalproperty'];?>)</a>
+                            <br />
+                            <small><?php echo $project['br_address'];?></small>
+                          </td>
+                           <td class="project_progress">
+                            <div class="progress progress_sm">
+                              <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="<?php echo number_format($percent,2);?>"></div>
+                            </div>
+                            <small><?php echo number_format($percent,2);?>% <?php echo $tr->translate("Complete");?></small>
+                          </td>
+                           <td>
+                            <?php echo $project['branch_tel'];?>
+                          </td>
+                          <td>
+                            <?php echo $project['br_address'];?>
+                          </td>
+                          <td>
+                            <?php echo $project['status'];?>
+                          </td>
+                          <td>
+                          <a href="<?php echo $this->baseUrl()."/project/index/edit/id/".$project['br_id'];?>" class="btn btn-primary btn-xs"><i class="fa fa-folder"></i> <?php echo $tr->translate("EDIT")?> </a>
+                          <a href="<?php echo $this->baseUrl()."/project/index/copy/id/".$project['br_id'];?>" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> <?php echo $tr->translate("COPY")?> </a>
+                          <a href="<?php echo $this->baseUrl()."/project/index/view/id/".$project['br_id'];?>" class="btn btn-success btn-xs"><i class="fa fa-info"></i> <?php echo $tr->translate("PROJECT_INFO")?> </a>
+                          </td>
+                        </tr>
+                        
+                        <?php }?>
+                        
+                      </tbody>
+                    </table>
+                    <!-- end project list -->
+                  </div>
+		</div>
+	</div>
+</div>
+	<div class="row">
+              <div class="col-md-12">
+                <div class="x_panel">
+                </div>
+              </div>
+            </div>
+<style>
+		.btn-action{
+			padding: 3px 10px;
+   			    background: #3a3a5d;
+			    border: none;
+			    font-size: 10pt;
+			    float: left;
+			    color: #fff;
+			    padding-left: 15px;
+			    -webkit-border-radius: 5px;
+			    -moz-border-radius: 5px;
+			    border-radius: 5px;
+		}
+	
+	</style>
+<!-- NProgress -->
+<script src="<?php echo $this->baseUrl();?>/admin/vendors/nprogress/nprogress.js"></script>
+<!-- bootstrap-progressbar -->
+<script src="<?php echo $this->baseUrl();?>/admin/vendors/bootstrap-progressbar/bootstrap-progressbar.min.js"></script>
+<?php 
+	$urlEdit = $this->baseUrl()."/project/index/edit/id/";
+	$urlCopy = $this->baseUrl()."/project/index/copy/id/";
+	$urlView = $this->baseUrl()."/project/index/view/id/";
+	$urlMappingplan = $this->baseUrl()."/project/mappingplan/add/id/";
+
+?>
+<script type="text/javascript">
+dojo.require("dijit.form.CheckBox"); 
+dojo.require("dijit.form.NumberTextBox");
+dojo.require("dijit.form.Textarea");
+dojo.require("dijit.form.DateTextBox");
+
+	function copyRecord(url){
+		 id = dijit.byId('recordcopy').get('value');
+		 //alert(url);
+		 window.location.href = url+'/id/'+id;
+	}
+	function setValue(index){
+		var recordcopy = $('input[name=copy]:checked').val();
+		dijit.byId('recordcopy').attr('value',recordcopy);
+	}
+
+	var row=0;
+	var url="";
+	$(function(){
+		$.contextMenu({
+			selector: '.context-menu-one', 
+			callback: function(key, options) {
+				var m = "clicked: " + key;
+				if(key=="edit"){
+					url='<?php echo $urlEdit;?>';
+				}else if(key=="copy"){
+					url='<?php echo $urlCopy;?>';
+				}else if(key=="info"){
+					url='<?php echo $urlView;?>';
+				}else if(key=="mappingplan"){
+					url='<?php echo $urlMappingplan;?>';
+				}
+				gotoAction();
+			},
+			items: {
+				"edit": {name: "<?php echo $tr->translate("EDIT");?>", icon: "edit", accesskey: "e"},
+				"copy": {name: "<?php echo $tr->translate("COPY");?>", icon: "fa-copy", accesskey: "e"},
+				"info": {name: "<?php echo $tr->translate("PROJECT_INFO");?>", icon: "fa-info"},
+				"mappingplan": {name: "<?php echo $tr->translate("MAPPING_PROPERTY");?>", icon: "fa-map-o"},
+			}
+		});
+	});
+	function setrowdata(index){
+		row = index;
+	}
+	var recordid ='';
+	function gotoAction(){
+		 window.open(url+row+'?rightclick=true', '_blank');
+	}
+</script> 

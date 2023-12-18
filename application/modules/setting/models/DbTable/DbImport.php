@@ -1746,7 +1746,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     										'land_size'	  => '',
     										'width'       => '',
     										'height'      => '',
-    										'is_lock'     => 1,
+    										'is_lock'     => ($fullAddress='Cancelled')?0:1,
     										'status'	  => 1,
     										'user_id'	  => $userId,
     										'property_type'=> empty($propertyTypeStr[$propertyType])?0:$propertyTypeStr[$propertyType],
@@ -1786,7 +1786,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     								'land_size'	  => '',
     								'width'       => '',
     								'height'      => '',
-    								'is_lock'     => 1,
+    								'is_lock'     => ($fullAddress='Cancelled')?0:1,
     								'status'	  => -2,
     								'user_id'	  => $userId,
     								'property_type'=> empty($propertyTypeStr[$propertyType])?0:$propertyTypeStr[$propertyType],
@@ -1817,7 +1817,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     									'land_size'	  => '',
     									'width'       => '',
     									'height'      => '',
-    									'is_lock'     => 1,
+    									'is_lock'     => ($fullAddress='Cancelled')?0:1,
     									'status'	  => 1,
     									'user_id'	  => $userId,
     									'property_type'=> empty($propertyTypeStr[$propertyType])?0:$propertyTypeStr[$propertyType],
@@ -1889,7 +1889,8 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     						'amount_daydelay'=>0,
 //     						'excel_note'=>$data[$i]['X'],//check
     						'user_id'=>$userId,
-    						'note'=>$saleNote
+    						'note'=>$saleNote,
+    						'is_cancel'=>($fullAddress='Cancelled')?1:0,
     				);
     
     				$this->_name='ln_sale';

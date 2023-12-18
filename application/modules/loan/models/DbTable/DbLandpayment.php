@@ -22,32 +22,24 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     	$from_date =(empty($search['start_date']))? '1': " s.buy_date >= '".$search['start_date']." 00:00:00'";
     	$to_date = (empty($search['end_date']))? '1': " s.buy_date <= '".$search['end_date']." 23:59:59'";
     	$where = " AND ".$from_date." AND ".$to_date;
-    	$sql=" 
-    	SELECT `s`.`id` AS `id`,
-    	(SELECT
-		     `ln_project`.`project_name`
-		   FROM `ln_project`
-		   WHERE (`ln_project`.`br_id` = `s`.`branch_id`)
-		   LIMIT 1) AS `branch_name`,
+    	$sql="SELECT `s`.`id` AS `id`,
+	    	(SELECT
+			     `ln_project`.`project_name`
+			   FROM `ln_project`
+			   WHERE (`ln_project`.`br_id` = `s`.`branch_id`)
+			   LIMIT 1) AS `branch_name`,
+			   
 	    `c`.`name_kh`         AS `name_kh`,
 	    `c`.`phone`         AS `phone`,
-	    `p`.`land_address`    AS `land_address`,
-	    `p`.`street`          AS `street`,
+	   	`p`.`land_address`  AS land_address,
+	    `p`.`street`  AS street,
 	    (SELECT $str FROM `ln_view` WHERE key_code =s.payment_id AND type = 25 limit 1) AS paymenttype,
   		`s`.`price_before`    AS `price_before`,
   		 `s`.`discount_amount` AS `discount_amount`,
  		CONCAT(`s`.`discount_percent`,'%') AS `discount_percent`,
-       
  		`s`.`price_sold`     AS `price_sold`,
- 		(SELECT
-	     SUM((`cr`.`total_principal_permonthpaid` + `cr`.`extra_payment`)) + ((SELECT COALESCE(SUM(crd.total_amount),0) FROM `ln_credit` AS crd WHERE crd.status=1 AND crd.sale_id = s.id LIMIT 1))
-	   FROM `ln_client_receipt_money` `cr`
-	   WHERE (`cr`.`sale_id` = `s`.`id`)  LIMIT 1) AS `totalpaid_amount`,   
-	   
-	   (SELECT
-	     (`s`.`price_sold`-SUM(`cr`.`total_principal_permonthpaid` + `cr`.`extra_payment`) - ((SELECT COALESCE(SUM(crd.total_amount),0) FROM `ln_credit` AS crd WHERE crd.status=1 AND crd.sale_id = s.id LIMIT 1)) )
-	   FROM `ln_client_receipt_money` `cr`
-	   WHERE (`cr`.`sale_id` = `s`.`id`)  LIMIT 1) AS `balance_remain`,   
+ 		(SELECT (vp.totalPrincipalPaid-vp.totalCredit) FROM `v_getsaleprincipalpaid` vp WHERE vp.saleId=s.`id` LIMIT 1 ) totalpaid_amount,
+ 		(`s`.`price_sold`-(SELECT vp.totalPrincipalPaid-vp.totalCredit FROM `v_getsaleprincipalpaid` vp WHERE vp.saleId=s.`id` LIMIT 1 )) balance_remain,
         `s`.`buy_date`        AS `buy_date`,
         (SELECT  first_name FROM rms_users WHERE id=s.user_id limit 1 ) AS user_name,
          s.status,
@@ -55,11 +47,12 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 				WHEN  `s`.`is_cancel` = 0 THEN ' '
 				WHEN  `s`.`is_cancel` = 1 THEN '".$tr->translate("CANCELED")."'
 				END AS modify_date
-		FROM ((`ln_sale` `s`
-		    JOIN `ln_client` `c`)
-		   JOIN `ln_properties` `p`)
-		WHERE ((`c`.`client_id` = `s`.`client_id`)
-       AND (`p`.`id` = `s`.`house_id`)) ";
+		FROM 
+			`ln_sale` s,
+			ln_properties p,
+			 `ln_client` `c`
+			WHERE c.`client_id` = s.`client_id`
+    			 AND `p`.`id` = `s`.`house_id` ";
     	
     	$db = $this->getAdapter();
     	if(!empty($search['adv_search'])){
@@ -67,8 +60,8 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		$s_search = addslashes(trim($search['adv_search']));
       	 	$s_where[] = " s.receipt_no LIKE '%{$s_search}%'";
       	 	$s_where[] = " s.sale_number LIKE '%{$s_search}%'";
-      	 	$s_where[] = " p.land_code LIKE '%{$s_search}%'";
-      	 	$s_where[] = " p.land_address LIKE '%{$s_search}%'";
+//       	 	$s_where[] = " p.land_code LIKE '%{$s_search}%'";
+//       	 	$s_where[] = " p.land_address LIKE '%{$s_search}%'";
       	 	$s_where[] = " c.client_number LIKE '%{$s_search}%'";
       	 	$s_where[] = " c.name_en LIKE '%{$s_search}%'";
       	 	$s_where[] = " c.name_kh LIKE '%{$s_search}%'";
@@ -106,9 +99,9 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     	if(!empty($search['streetlist'])){
     		$where.= " AND p.street = '".$search['streetlist']."'";
     	}	
-    	$order = " ORDER BY s.id DESC";
     	
     	$where.=$dbp->getAccessPermission("`s`.`branch_id`");
+    	$order = " GROUP BY s.`id` ORDER BY s.id DESC";
     	return $db->fetchAll($sql.$where.$order);
     }
     function getTranLoanByIdWithBranch($id,$is_newschedule=null){//group id

@@ -1,0 +1,262 @@
+<?php	
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$baseurl =  Zend_Controller_Front::getInstance()->getBaseUrl();
+	$this->headTitle($tr->translate('BUILD_PERCENTAGE'));
+	echo $this->headTitle();
+?>
+<style>
+.fullside{ width:100%;}
+.hover:hover{background: #eee !important;}
+</style>
+
+<div class="card">
+	<div class="card-content collapse show">
+		<form id='frm_add_tran' action="" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+			<script type="dojo/method" event="onSubmit">			
+			if(this.validate()) {
+				loadingBlock();
+				dijit.byId('savenew').set('disabled',true);
+				return true;
+			}else {
+				return false;
+			}
+			</script>
+			<div class="card-box">
+               	<div class="col-sm-12 border-botom">
+		    		<div class="col-sm-8 pd-0">
+		    			<h4 class="m-b-0"><i class="fa fa-list" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('BUILD_PERCENTAGE');?></h4>
+	    			</div>
+	    			<div class="col-sm-4 text-right">
+	    			</div>
+	    		</div>
+	    	</div>
+	    	<div class="card-box">
+	    		<div class="col-md-4 col-sm-4 col-xs-12">
+					<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="fa fa-tasks" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("INFO_INDILOAN");?></p>
+										</div> 
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("BRANCH_NAME");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<select onchange="getAllPropertyBranch();" name="project_id" id="project_id" dojoType="dijit.form.FilteringSelect" class=" fullside ">
+												<option value="0"><?php echo $tr->translate('SELECT_PROJECT');?></option>
+												<?php if(!empty($this->rsBranch)){foreach($this->rsBranch as $rs){?>
+													<option value="<?php echo $rs['br_id'];?>"><?php echo $rs['project_name'];?></option>
+												<?php }}?>
+											</select>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PROPERTY_CODE");?>
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<input id="land_id" />
+											<input type="hidden" name="identity" id="identity"  value="" >
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" >
+									   	<?php echo $tr->translate("BUILD_PERCENTAGE");?>%
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+									   		<select name="percentage" id="percentage" dojoType="dijit.form.FilteringSelect" class=" fullside ">
+												<?php for($i=0;$i<=100;$i+=10){?>
+													<option value="<?php echo $i;?>"><?php echo $i;?></option>
+												<?php }?>
+											</select>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" >
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+									   		<input type="button" onclick="preAddRecord();" class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-disk" label="<?php echo $tr->translate("ADD_ROW")?>"  dojoType="dijit.form.Button" iconClass="dijitIconNewTask"/>
+									   </div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+	    		</div>
+	    		<div class="col-md-8 col-sm-8 col-xs-12">
+					<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="fa fa-tasks" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("PROPERTY_INFO");?></p>
+										</div> 
+									</div>
+									<br />
+									<div  id="showrecord"></div>
+									<div id='data_table_loan_haspay' name='data_table_loan_haspay' style="white-space: nowrap;"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+	    		</div>
+	    	</div>
+	    	<div class="col-md-4 col-sm-4 col-xs-12">
+	    	</div>
+	    	<div class="clearfix"></div>
+			 <div class="card-box">
+             	<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
+               		<input type="reset"  class="button-class button-danger" iconClass="glyphicon glyphicon-repeat" label="<?php echo $tr->translate("CLEAR")?>" dojoType="dijit.form.Button" iconClass="dijitIconClear"/>
+					<input type="submit"  class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-disk" label="<?php echo $tr->translate("SAVENEW")?>" name='savenew' id='savenew' value='savenew' dojoType="dijit.form.Button" iconClass="dijitIconNewTask"/>
+    			</div>
+    		</div>
+		</form>
+	</div>
+</div>
+<script src="<?php echo $baseurl;?>/js/help.js"></script>
+<script type="text/javascript">	
+dojo.require("dojo.data.ItemFileWriteStore"); 
+dojo.require("dojo.NodeList-manipulate");
+
+require(["dojo/ready"], function(ready){
+	ready(function(){
+		 getAllPropertyBranch();
+	});
+	new dijit.form.FilteringSelect({
+		required: false,
+		autoComplete: false,
+		queryExpr: "*${0}*",
+		name: "land_id",
+		id: "land_id",
+		searchAttr: "name",
+		class: 'fullside',
+		placeholder:'<?php echo $tr->translate("SELECT_PROPERTY");?>',
+	}, "land_id");
+});
+
+var url_getland = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getallland')); ?>';
+function getAllPropertyBranch(branch_id){
+	dijit.byId('land_id').reset();
+	property_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
+	dijit.byId('land_id').set('store', property_store);
+	
+	project_id = dijit.byId('project_id').get('value');
+	if(project_id<=0){
+		return false;
+	}
+	
+	dojo.xhrPost({
+		url:url_getland,	
+		content:{ 
+		    'branch_id':project_id,
+		    'action':1
+		},		    
+		handleAs:"json",
+		load: function(data) {
+			property_store  = getDataStorefromJSON('id','name', data);		
+		    dijit.byId('land_id').set('store', property_store);
+		},
+		error: function(err) {
+		}
+	});
+} 
+function preAddRecord(){
+	land_id=dijit.byId("land_id").get("value");
+	
+	if(land_id=='' || land_id==-1){
+		return false;
+	}
+	land_label = dijit.byId("land_id").attr("displayedValue");
+	dijit.byId('land_id').reset();
+	percentage = dijit.byId("percentage").get("value");
+	addRow(land_id,land_label,percentage);
+}
+
+col=0;
+no=0;
+title=0;
+temp='';
+
+function addRow(land_id,land_label,percentage){
+	
+	var iden = $("#identity").val();
+	var arrays = iden.split(',');
+	
+	 if(arrays!=""){
+		 for(var i=0;i< arrays.length;i++){
+			 readychoose = dijit.byId('land_id'+arrays[i]).get('value');
+			 if(readychoose==land_id){
+				 infoMessageAlert("<?php echo $tr->translate("Choosen ready")?>");
+				 return false;
+			 }
+		}
+	}
+	temp='';
+	col++;no++;
+	template='';
+	if(title!=1){    
+		tmp='<table id="table_row" class="collape responsiveTable">';
+		tmp+='<tr id="head-title" class="head-td" align="center"></tr>';
+		tmp+='</table>';
+		dojo.query("#showrecord").append(tmp);
+		
+		temp+='<th scope="col" width="47px"><?php echo $tr->translate("DEL");?></th>';
+		temp+='<th scope="col" width="2%" ><?php echo $tr->translate("NUM");?></th>';
+		temp+='<th scope="col"><?php echo $tr->translate("PROPERTY_CODE");?></th>';
+		temp+='<th scope="col" width="100px"><?php echo $tr->translate("CURRENT_PERCENTAGE");?></th>';
+		temp+='<th scope="col" width="100px"><?php echo $tr->translate("BUILD_PERCENTAGE");?></th>';
+		temp+='<th scope="col"><?php echo $tr->translate("NOTE");?></th>';
+		
+		dojo.query("#head-title").append(temp);
+		title=1;
+	}
+		
+		template+='<td data-label="<?php echo $tr->translate("DEL");?>" align="center"><span title="<?php echo $tr->translate("REMOVE_RECORD");?>" class="removeRow" onclick="deleteRecord('+col+');"><i class="glyphicon glyphicon-trash" aria-hidden="true"></i></span> </td>';
+		template+='<td data-label="<?php echo $tr->translate("NUM");?>" align="center">'+no+'</td>';
+		template+='<td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>" style="white-space: nowrap"><input class="fullside" value="'+land_id+'" type="hidden" data-dojo-type="dijit.form.TextBox" id="land_id'+col+'" name="land_id'+col+'" />'+land_label+'</td>';	
+		template+='<td data-label="<?php echo $tr->translate("CURRENT_PERCENTAGE");?>"><input readonly class="fullside" type="text"  name="current_percent'+col+'" id="current_percent'+col+'" dojoType="dijit.form.TextBox" /></td>';	
+		template+='<td data-label="<?php echo $tr->translate("BUILD_PERCENTAGE");?>"><select name="percentage'+col+'" id="percentage'+col+'" dojoType="dijit.form.FilteringSelect" class="fullside">';
+		template+='<option value="10">10%</option>';
+		template+='<option value="20">20%</option>';
+		template+='<option value="30">30%</option>';
+		template+='<option value="40">40%</option>';
+		template+='<option value="50">50%</option>';
+		template+='<option value="60">60%</option>';
+		template+='<option value="70">70%</option>';
+		template+='<option value="80">80%</option>';
+		template+='<option value="90">90%</option>';
+		template+='<option value="100">100%</option>';
+		template+='</select></td>';	
+		template+='<td data-label="<?php echo $tr->translate("NOTE");?>"><input class="fullside" type="text" name="note'+col+'" id="note'+col+'" dojoType="dijit.form.TextBox" /></td>';
+	tmp='<tr class="rowData hover"  id="row'+col+'">';
+	tmp+="</tr>";
+	dojo.query("#table_row").append(tmp);
+
+	if($("#identity").val()!="") {
+		var identity = $("#identity").val();
+		$("#identity").val(identity+','+col);
+	} else {$("#identity").val(col);}
+	dojo.html.set(dojo.byId("row"+col),template , {
+	     parseContent: true,
+	});
+}
+function deleteRecord(index) {
+	var identity = $('#identity').val();
+	var arrays = identity.split(',');
+	for(var i=0;i<arrays.length;i++) {
+	if(arrays[i] == index) arrays.splice(i,1);
+	}
+	var strings = arrays.join(',');
+	$('#identity').val(strings);
+	dojo.query("#row"+index).remove();
+}
+</script>

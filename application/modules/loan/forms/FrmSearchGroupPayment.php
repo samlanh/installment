@@ -19,6 +19,9 @@ Class Loan_Form_FrmSearchGroupPayment extends Zend_Dojo_Form {
 		$branch_id->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside',
+				'queryExpr'=>'*${0}*',
+				'autoComplete'=>'false',
+				
 		));
 		$branch_id->setMultiOptions($options);
 		$branch_id->setValue($request->getParam("branch_id"));
