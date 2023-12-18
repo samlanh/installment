@@ -59,7 +59,7 @@ class Project_Model_DbTable_DbProperyType extends Zend_Db_Table_Abstract
 	
 	function geteAllPropertyType($search=null){
 		$db = $this->getAdapter();
-		$sql='SELECT t.`id`,t.`type_nameen`,t.`note`,
+		$sql='SELECT t.`id`,t.`type_nameen`,t.serviceFee,t.serviceFeeYear,t.`note`,
 			(SELECT CONCAT(u.first_name," ",u.last_name) FROM `rms_users` AS u WHERE u.id = t.`user_id`) AS user_name ';
 		
 		$dbp = new Application_Model_DbTable_DbGlobal();

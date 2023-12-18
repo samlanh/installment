@@ -1,7 +1,6 @@
 <?php
 class Other_TermController extends Zend_Controller_Action {
 	const REDIRECT_URL='/other';
-	private $activelist = array('មិនប្រើ​ប្រាស់', 'ប្រើ​ប្រាស់');
 	protected $tr;
     public function init()
     {    	

@@ -1,7 +1,6 @@
 <?php
 class Other_NewsController extends Zend_Controller_Action {
 	const REDIRECT_URL='/other/news';
-	private $activelist = array('មិនប្រើ​ប្រាស់', 'ប្រើ​ប្រាស់');
 	protected $tr;
     public function init()
     {    	

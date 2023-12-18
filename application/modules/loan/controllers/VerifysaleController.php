@@ -65,9 +65,9 @@ class Loan_VerifysaleController extends Zend_Controller_Action {
 				$_dbmodel = new Loan_Model_DbTable_DdVerifySale();
 				$_dbmodel->addVerifySale($_data);
 				if(!empty($_data['saveclose'])){
-					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/setcommission");
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/verifysale");
 				}
-				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/setcommission/add");
+				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/verifysale/add");
 			}catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				$err =$e->getMessage();
@@ -79,57 +79,8 @@ class Loan_VerifysaleController extends Zend_Controller_Action {
 		Application_Model_Decorator::removeAllDecorator($frm_loan);
 		$this->view->frm_loan = $frm_loan;
 	}
-	
-	function editAction()
-	{
-		$id = $this->getRequest()->getParam("id");
-		$id = empty($id)?0:$id;
-		
-		$_dbmodel = new Loan_Model_DbTable_DbSetCommission();
-		if($this->getRequest()->isPost()){
-			$_data = $this->getRequest()->getPost();
-			try {
-				// Check Session Expire
-				$dbgb = new Application_Model_DbTable_DbGlobal();
-				$checkses = $dbgb->checkSessionExpire();
-				if (empty($checkses)){
-					$dbgb->reloadPageExpireSession();
-					exit();
-				}
-				
-				$_dbmodel->editSetCommissionAgency($_data);
-				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/setcommission");
-				
-			}catch (Exception $e) {
-				Application_Form_FrmMessage::message("INSERT_FAIL");
-				$err =$e->getMessage();
-				Application_Model_DbTable_DbUserLog::writeMessageError($err);
-			}
-		}
-		
-		$row = $_dbmodel->getSaleSetCommissionBySaleId($id);
-		if(empty($row)){
-			Application_Form_FrmMessage::Sucessfull("NO_RECORD","/loan/setcommission",2);
-		}
-		if($row['totoalCmminssionPaid']>=$row['full_commission']){
-			//Application_Form_FrmMessage::Sucessfull("COMMISSION_PAYMENT_READY","/loan/setcommission",2);
-		}
-		$this->view->rs = $row;
-		
-		$frm = new Loan_Form_FrmSetCommission();
-		$frm_loan=$frm->FrmAddSetCommission($row);
-		Application_Model_Decorator::removeAllDecorator($frm_loan);
-		$this->view->frm_loan = $frm_loan;
-	}
-	
-	function getsalenosetcommissionAction(){
-		if($this->getRequest()->isPost()){
-			$data = $this->getRequest()->getPost();
-			$db = new Loan_Model_DbTable_DbSetCommission();
-			$row = $db->getSaleNotSetCommission($data);
-			print_r(Zend_Json::encode($row));
-			exit();
-		}
+	function editAction(){
+		Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/verifysale/add");
 	}
 	
 }

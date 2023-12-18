@@ -65,7 +65,6 @@ class Other_CommuneController extends Zend_Controller_Action {
 		$db = new Other_Model_DbTable_DbCommune();
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
-			//print_r($_data);exit();
 			try{				
 				$db->addCommune($_data,$id);
 				Application_Form_FrmMessage::Sucessfull($this->tr->translate("EDIT_SUCCESS"),self::REDIRECT_URL.'/commune/');
@@ -105,14 +104,4 @@ class Other_CommuneController extends Zend_Controller_Action {
 			exit();
 		}
 	}
-	/*function getCommuneAction(){
-		if($this->getRequest()->isPost()){
-			$data = $this->getRequest()->getPost();
-			$data['status']=1;
-			$db_com = new Other_Model_DbTable_DbCommune();
-			$id = $db_com->addCommune($data);
-			print_r(Zend_Json::encode($id));
-			exit();
-		}
-	}*/
 }

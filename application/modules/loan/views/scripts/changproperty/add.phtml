@@ -560,7 +560,7 @@ function filterClient(){
 	getAllClientNumberByBranch(branch_id);
 	getAllSaleNumber(branch_id);
 }
-var url_getland = '<?php echo $this->url(array('module'=>'loan','controller'=>'transferproject','action'=>'getallland')); ?>';
+var url_getland = '<?php echo $this->url(array('module'=>'loan','controller'=>'transfercash','action'=>'getallland')); ?>';
 function getAllPropertyBranch(branch_id){//used
 	dojo.xhrPost({
 		url:url_getland,	
@@ -808,8 +808,9 @@ require(["dojo/ready"], function(ready){
 		store: co_store,
 		autoComplete: false,   
 		queryExpr: "*${0}*",            
-		required: false,		           
+		required: true,		           
 		name: "loan_number",
+		placeholder:"<?php echo $tr->translate('SELECT_PROPERTY');?>",
 		id: "loan_number",
 		searchAttr: "name",
 		class: 'fullside',
@@ -855,6 +856,7 @@ function getInfoByLoanNumber(){
 var sale_number_store  = getDataStorefromJSON('id','name', <?php print_r(array())?> );
 var url_getsalenumber = "<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'get-sale-number')); ?>";
 function getAllSaleNumber(branch_id){//used
+	 dijit.byId('loan_number').reset();
 	dojo.xhrPost({
 		url:url_getsalenumber,	
 		content:{ 

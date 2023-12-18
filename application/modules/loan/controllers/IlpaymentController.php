@@ -294,28 +294,6 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 			exit();
 		}	
 	}
-	public function showBarcodesAction(){
-		$this->_helper->layout()->disableLayout();
-		$id = $this->getRequest()->getParam('id');
-		if(!empty($id)){
-			$ids=explode(',', $id);
-			$this->view->pro_id = $ids;
-		}
-		else{
-		}
-	
-	}
-	public function generateBarcodeAction(){
-			$loan_code = $this->getRequest()->getParam('loan_code');
-				header('Content-type: image/png');
-				$this->_helper->layout()->disableLayout();
-				$barcodeOptions = array('text' => "$loan_code",'barHeight' => 40);
-				//'font' => 4(set size of label),//'barHeight' => 40//set height of img barcode
-				$rendererOptions = array();
-				$renderer = Zend_Barcode::factory(
-						'code128', 'image', $barcodeOptions, $rendererOptions
-				)->render();		
-		}
 	
 	function getIlloandetailAction(){
 		if($this->getRequest()->isPost()){
@@ -485,9 +463,6 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 			
 			$receipt = $db->getOnlyReceiptNumber($receipt_id);
 			echo $receipt;
-// 			$dbReport  = new Report_Model_DbTable_DbLandreport();
-// 			$row = $dbReport->getReceiptByID($receipt_id);
-// 			print_r(Zend_Json::encode($row));
 			exit();
 		}
 	}

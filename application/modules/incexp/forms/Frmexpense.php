@@ -178,7 +178,9 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
 				'class'=>'fullside'));
 		$_status_opt = array(
 				0=>$this->tr->translate("INCOME_TYPE"),
-				1=>$this->tr->translate("BEGENING_TYPE"));
+				2=>$this->tr->translate("MONTHLY_FEE"),
+				1=>$this->tr->translate("BEGENING_TYPE")
+				);
 		$_status->setMultiOptions($_status_opt);
 		
 		
@@ -258,7 +260,8 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
     	$qty->setAttribs(array(
     			'dojoType'=>'dijit.form.NumberTextBox',
     			'class'=>'fullside',
-    			'onkeyup'=>'CalculateAmount();'
+    			'onkeyup'=>'CalculateAmount();',
+    			'data-dojo-props'=>"constraints:{min:0,max:60}"
     	));
     	
     	$price=new Zend_Dojo_Form_Element_NumberTextBox('unit_price');
