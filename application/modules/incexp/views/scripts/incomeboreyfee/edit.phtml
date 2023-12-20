@@ -298,13 +298,16 @@ dojo.ready(function(){
 	getallCustomer();
 	enablePayment();
 });
+var bankIdOld = '<?php echo empty($this->row['bank_id']) ? "0" : $this->row['bank_id'];?>';
+var chequeOld = '<?php echo empty($this->row['cheque']) ? "N/A" : $this->row['cheque'];?>';
 function enablePayment(){
 	payment_method = dijit.byId('payment_type').get('value');
 	dijit.byId("bank_id").set("readOnly",false);
 	dijit.byId("bank_id").reset();
 
 	dijit.byId("cheque").set("readOnly",false);
-	dijit.byId("cheque").attr("value",'');
+	dijit.byId("cheque").attr("value",chequeOld);
+	dijit.byId("bank_id").set("value",bankIdOld);
 	if(payment_method==1){
 
 		dijit.byId("cheque").attr("value",'N/A');
