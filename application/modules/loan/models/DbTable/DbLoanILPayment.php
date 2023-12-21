@@ -1544,6 +1544,9 @@ function getLoanPaymentByLoanNumberEdit($data){
 		if($data["notInPlongStep"]!=0){
 			$sql.=" AND ln_sale.house_id NOT IN (SELECT pr.property_id FROM ln_processing_plong AS pr WHERE ln_sale.house_id = `pr`.`property_id`) ";
 		}
+		if(isset($data["is_verify"])){
+			$sql.=" AND is_verify=".$data["is_verify"];
+		}
 		return $db->fetchAll($sql);
 	}
 	public function getAllLoanNumberByBranchEdit($branch_id){

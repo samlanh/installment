@@ -1,12 +1,10 @@
 <?php
 class Loan_CustomerpaymentController extends Zend_Controller_Action {
-	private $activelist = array('មិនប្រើ​ប្រាស់', 'ប្រើ​ប្រាស់');
     public function init()
     {    	
     	header('content-type: text/html; charset=utf8');
     	defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
 	}
-	private $sex=array(1=>'M',2=>'F');
 	public function indexAction(){
 		try{
 			$db = new Loan_Model_DbTable_DbCustomerPayment();
@@ -48,10 +46,6 @@ class Loan_CustomerpaymentController extends Zend_Controller_Action {
 			echo $e->getMessage();
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}	
-// 		$frm = new Loan_Form_FrmSearchLoan();
-// 		$fm = $frm->AdvanceSearch();
-// 		Application_Model_Decorator::removeAllDecorator($fm);
-// 		$this->view->frm_search = $fm;
 
 		$frm = new Loan_Form_FrmSearchGroupPayment();
 		$fm = $frm->AdvanceSearch();
@@ -92,13 +86,6 @@ class Loan_CustomerpaymentController extends Zend_Controller_Action {
 		$frm_loan=$frm->FrmAddIlPayment();
 		Application_Model_Decorator::removeAllDecorator($frm_loan);
 		$this->view->frm_ilpayment = $frm_loan;
-		
-// 		$list = new Application_Form_Frmtable();
-// 		$collumns = array("ឈ្មោះមន្ត្រីឥណទាន","ថ្ងៃបង់ប្រាក់","ប្រាក់ត្រូវបង់","ប្រាក់ដើមត្រូវបង់","អាត្រាការប្រាក់","ប្រាក់ផាកពិន័យ","ប្រាក់បានបង់សរុប","សមតុល្យ","កំណត់សម្គាល់");
-// 		$link=array(
-// 				'module'=>'group','controller'=>'Client','action'=>'edit',
-// 		);
-// 		$this->view->list=$list->getCheckList(0, $collumns, array(),array('client_number'=>$link,'name_kh'=>$link,'name_en'=>$link));
 		
 		$db_keycode = new Application_Model_DbTable_DbKeycode();
 		$this->view->keycode = $db_keycode->getKeyCodeMiniInv();
@@ -211,40 +198,7 @@ class Loan_CustomerpaymentController extends Zend_Controller_Action {
 // 		$this->view->loan_numbers = $db_global->getLoanNumberByBranch(1);
 		$this->view->loan_numbers = $db->getAllLoanNumberByBranch(1);
 	}
-	function cancelIlPayment(){
-		$db = new Loan_Model_DbTable_DbGroupPayment();
-		if($this->getRequest()->isPost()){
-			$_data = $this->getRequest()->getPost();
-			$identity = $_data["identity"];
-			try {
-				$row = $db->cancelIlPayment($_data);
-				print_r(Zend_Json::encode($row));
-				exit();
-			}catch (Exception $e) {
-				$err =$e->getMessage();
-				Application_Model_DbTable_DbUserLog::writeMessageError($err);
-			}
-		}
-	}
-	function ilQuickPaymentAction(){
-		$db = new Loan_Model_DbTable_DbLoanILPayment();
-		if($this->getRequest()->isPost()){
-			$data = $this->getRequest()->getPost();
-			//print_r($data);
-			$db->quickPayment($data);
-			
-		}
-		$frm = new Loan_Form_FrmIlPayment();
-		$frm_loan=$frm->quickPayment();
-		Application_Model_Decorator::removeAllDecorator($frm_loan);
-		$db_keycode = new Application_Model_DbTable_DbKeycode();
-		$this->view->keycode = $db_keycode->getKeyCodeMiniInv();
-		
-		$this->view->graiceperiod = $db_keycode->getSystemSetting(9);
-		$this->view->frm_ilpayment = $frm_loan;
-		
-		$this->view->co = $db->getAllCo();
-	}
+	
 	function getAllLoanByCoIdAction(){
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
@@ -255,15 +209,7 @@ class Loan_CustomerpaymentController extends Zend_Controller_Action {
 			exit();
 		}
 	}
-	function getLoannumberAction(){
-		if($this->getRequest()->isPost()){
-			$data = $this->getRequest()->getPost();
-			$db = new Loan_Model_DbTable_DbLoanIL();
-			$row = $db->getLoanPaymentByLoanNumber($data);
-			print_r(Zend_Json::encode($row));
-			exit();
-		}
-	}
+	
 	
 	function getLastPayDateAction(){// get last payment date in loan fundetail by for caculate interest in payoff for client 
 		if($this->getRequest()->isPost()){
@@ -407,7 +353,6 @@ class Loan_CustomerpaymentController extends Zend_Controller_Action {
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
 			$db = new Loan_Model_DbTable_DbLoanILPayment();
-// 			$row = $db->getIlPaymentNumber($data["branch_id"]);
 			$db = new Application_Model_DbTable_DbGlobal();
 			$row = $db->getReceiptByBranch(array("branch_id"=>$data["branch_id"]));
 			print_r(Zend_Json::encode($row));

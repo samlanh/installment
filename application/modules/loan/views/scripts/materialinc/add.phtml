@@ -252,6 +252,9 @@ var url_customer = '<?php echo $this->url(array('module'=>'incexp','controller'=
 	function getallCustomer(){
 		getBranchinfo();
 		branch_id = dijit.byId('branch_id').get('value');
+		if(branch_id=='' || branch_id==0){
+			return 0;
+		}
 		dojo.xhrPost({
 			url:url_customer,
 			content:{
@@ -344,6 +347,7 @@ new dijit.form.FilteringSelect({
 	required: false,		           
 	name: "sale_client",
 	id: "sale_client",
+	placeholder:"<?php echo $tr->translate('SELECT_PROPERTY');?>", 
 	searchAttr: "name",
 	class: 'fullside',
 		onChange: function() {
@@ -354,6 +358,7 @@ new dijit.form.FilteringSelect({
  
 var	url_getSaleClien = '<?php echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'get-saleclie'));?>';
 function getSaleClie(){
+	dijit.byId('sale_client').reset();
 	branch_id = dijit.byId('branch_id').get('value');
 	if(branch_id==0){
 		return false;}
@@ -380,6 +385,9 @@ function getSaleClie(){
 var url_land= '<?php echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'get-info'));?>';
 function getLandAndClientDetail(){
 		sale_id = dijit.byId('sale_client').get('value');
+		if(sale_id=='' || sale_id==0){
+			return false;
+		}
 	dojo.xhrPost({
 		url:url_land,	
 		content:{ 

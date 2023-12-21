@@ -19,7 +19,10 @@ class Project_propertiestypeController extends Zend_Controller_Action {
 			}
 			$rs_rows= $db->geteAllPropertyType($search);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("PROPERTY_TYPE","NOTE","USER_NAME","STATUS");
+			$tr = $tr = Application_Form_FrmLanguages::getCurrentlanguage();
+			$strFeeMonth = $tr->translate("BOREY_FEE").$tr->translate("MONTH");
+			$strFeeYear = $tr->translate("BOREY_FEE").$tr->translate("YEAR");
+			$collumns = array("PROPERTY_TYPE",$strFeeMonth,$strFeeYear,"NOTE","USER_NAME","STATUS");
 			$link=array(
 					'module'=>'project','controller'=>'propertiestype','action'=>'edit',
 			);
@@ -49,7 +52,6 @@ class Project_propertiestypeController extends Zend_Controller_Action {
 					Application_Form_FrmMessage::Sucessfull("File Attachment to large can't upload and Save data !","/project/propertiestype",2);
 					exit();
 				}
-				
 	   			$db->addPropery($_data);
 	   				if(!empty($_data['save_new'])){
 					Application_Form_FrmMessage::Sucessfull('INSERT_SUCCESS', self::REDIRECT_URL . '/propertiestype/add');

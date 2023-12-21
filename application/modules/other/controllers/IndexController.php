@@ -1,6 +1,5 @@
 <?php
 class Other_indexController extends Zend_Controller_Action {
-	private $activelist = array('មិនប្រើ​ប្រាស់', 'ប្រើ​ប្រាស់');
     public function init()
     {    	
      /* Initialize action controller here */
@@ -9,11 +8,7 @@ class Other_indexController extends Zend_Controller_Action {
 	}
 	public function indexAction(){
 		$this->_redirect('/other/province');
-		echo 22;exit();
-	}
-	
-	public function iconAction(){
-		
+		exit();
 	}
 }
 

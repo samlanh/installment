@@ -8,32 +8,7 @@ class Report_LoanController extends Zend_Controller_Action {
 	}
   function indexAction(){
   }
-  function rptLoanDisburseCoAction(){//realease by co
-	  $db  = new Report_Model_DbTable_DbLandreport();
-	  if($this->getRequest()->isPost()){
-	  		$search = $this->getRequest()->getPost();
-	  	}
-	  	else{
-	  		$search = array(
-	  				'branch_id'=>-1,
-	  				'pay_every'=>'',
-	  			  	'member'=>'',
-	  				'co_id'=>-1,
-	  				'start_date'=> date('Y-m-d'),
-	  				'end_date'=>date('Y-m-d'));
-	  			
-	  	}
-  	$this->view->list_end_date=$search;
-  	$this->view->loanrelease_list=$db->getAllLoanCo($search);
-  	  	 
-  	$frm = new Loan_Form_FrmSearchLoan();
-  	$frm = $frm->AdvanceSearch();
-  	Application_Model_Decorator::removeAllDecorator($frm);
-  	$this->view->frm_search = $frm;
-  	
-  	$key = new Application_Model_DbTable_DbKeycode();
-  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
-  }
+  
   function rptLoancollectAction(){//list payment that collect from client
   	$dbs = new Report_Model_DbTable_DbloanCollect();
   	$frm = new Application_Form_FrmSearchGlobal();
@@ -72,16 +47,7 @@ class Report_LoanController extends Zend_Controller_Action {
   	$this->view->footerReport = $frmpopup->getFooterReport();
 	$this->view->headerReport = $frmpopup->getLetterHeadReport();
   }
-  function rptGroupmemberAction(){
-  	$db  = new Report_Model_DbTable_DbLandreport();
-  	$id = $this->getRequest()->getParam("id");
-  	$key = new Application_Model_DbTable_DbKeycode();
-  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
-  	if (!empty($id)){
-  		$this->view->loanmember_list =$db->getALLGroupDisburse($id);
-  		//print_r($db->getALLGroupDisburse($id));
-    }
-  }
+
   function rptPaymentAction(){
   	$db  = new Report_Model_DbTable_DbLandreport();	
 	if($this->getRequest()->isPost()){
@@ -454,34 +420,7 @@ class Report_LoanController extends Zend_Controller_Action {
  	$this->view->footerReport = $frmpopup->getFooterReport();
  	$this->view->headerReport = $frmpopup->getLetterHeadReport();
  }
-//  function rptDepositalertAction(){
-//  	$db  = new Report_Model_DbTable_DbLandreport();
-//  	if($this->getRequest()->isPost()){
-//  		$search = $this->getRequest()->getPost();
-//  	}
-//  	else{
-//  		$search = array(
-//  				'adv_search'=>'',
-//  				'branch_id'=>-1,
-//  				'schedule_opt'=>-1,
-//  				'property_type'=>0,
-//  				'client_name'=>'',
-//  				'buy_type'=>-1,
-//  				'start_date'=> date('Y-m-d'),
-//  				'end_date'=>date('Y-m-d'));
-//  	}
-//  	$this->view->loanrelease_list=$db->getAlertDeposit($search);
-//  	$this->view->list_end_date=$search;
-//  	$this->view->branch_id = $search['branch_id'];
- 		
-//  	$frm = new Loan_Form_FrmSearchLoan();
-//  	$frm = $frm->AdvanceSearch();
-//  	Application_Model_Decorator::removeAllDecorator($frm);
-//  	$this->view->frm_search = $frm;
- 		
-//  	$key = new Application_Model_DbTable_DbKeycode();
-//  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
-//  }
+ 
  function rptPaymentschedulesAction(){
  	$db = new Report_Model_DbTable_DbRptPaymentSchedule();
  	$id =$this->getRequest()->getParam('id');
@@ -503,11 +442,6 @@ class Report_LoanController extends Zend_Controller_Action {
  		exit();
  	}
  	$this->view->client =$rs;
-	
-	
- 	
-	
-	
  	$frm = new Application_Form_FrmSearchGlobal();
  	$form = $frm->FrmSearchLoadSchedule();
  	Application_Model_Decorator::removeAllDecorator($form);
@@ -549,32 +483,6 @@ class Report_LoanController extends Zend_Controller_Action {
  	$this->view->branchinfo = $dbp->getBranchById($rs['branch_id']);//for to get bank info
  }
 
- function rptPaymentreminderAction(){
- 	$db = new Report_Model_DbTable_DbRptPaymentSchedule();
- 	$id =$this->getRequest()->getParam('id');
- 	$id = empty($id)?0:$id;
- 	$row = $db->getPaymentSchedule($id);
- 	$this->view->tran_schedule=$row;
- 	if(empty($row) or $row==''){
- 		Application_Form_FrmMessage::Sucessfull("RECORD_NOT_EXIST",'/report/loan/rpt-sold',2);
- 	}
- 	$db = new Application_Model_DbTable_DbGlobal();
- 	$rs = $db->getClientByMemberIdGlobal($id);
- 	if(empty($rs)){
- 		Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND",'/report/loan/rpt-sold',2);
- 		exit();
- 	}
- 	$this->view->client =$rs;
- 	$frm = new Application_Form_FrmSearchGlobal();
- 	$form = $frm->FrmSearchLoadSchedule();
- 	Application_Model_Decorator::removeAllDecorator($form);
- 	$this->view->form_filter = $form;
- 	$day_inkhmer = $db->getDayInkhmerBystr(null);
- 	$this->view->day_inkhmer = $day_inkhmer;
- 	$key = new Application_Model_DbTable_DbKeycode();
- 	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
- }
- 
 
  function rptIncomestatementAction(){
  	$db  = new Report_Model_DbTable_DbLandreport();
@@ -689,44 +597,7 @@ class Report_LoanController extends Zend_Controller_Action {
   	$this->view->steppay =$steppay;
 	$this->view->userlist =  $db->getAllUserGlobal();
   }
-  function saleAuthorizeAction(){
-  	$db = new Report_Model_DbTable_DbRptPaymentSchedule();
-  	$id =$this->getRequest()->getParam('id');
-  	$id = empty($id)?0:$id;
-  	if($this->getRequest()->isPost()){
-  		$_data = $this->getRequest()->getPost();
-  		try {
-  			$_dbmodel = new Report_Model_DbTable_DbLandreport();
-  			$_dbmodel->AuthorizeSchedule($_data);
-  			Application_Form_FrmMessage::Sucessfull("Authorize Successful","/report/loan/rpt-soldsummary");
-  		}catch (Exception $e) {
-  			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-  		}
-  	}
-  	
-  	$row = $db->getPaymentScheduleById($id);
-  	$this->view->tran_schedule=$row;
-  	if(empty($row) or $row==''){
-  		Application_Form_FrmMessage::Sucessfull("RECORD_NOT_EXIST",'/report/loan/rpt-soldsummary',2);
-  		exit();
-  	}
-  	$db = new Application_Model_DbTable_DbGlobal();
-  	$rs = $db->getClientByMemberIdGlobal($id);
-  	if(empty($rs)){
-  		Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND",'/report/loan/rpt-soldsummary',2);
-  		exit();
-  	}
-  	
-  	$this->view->client =$rs;
-  	$frm = new Application_Form_FrmSearchGlobal();
-  	$form = $frm->FrmSearchLoadSchedule();
-  	
-  	$day_inkhmer = $db->getDayInkhmerBystr(null);
-  	$this->view->day_inkhmer = $day_inkhmer;
-  	$key = new Application_Model_DbTable_DbKeycode();
-  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
-  	$this->view->id=$id;
-  }
+  
   function addschedultestAction(){
   	if($this->getRequest()->isPost()){
   		$_data = $this->getRequest()->getPost();
@@ -1000,9 +871,9 @@ class Report_LoanController extends Zend_Controller_Action {
 		}catch (Exception $e){
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 		}
-// 		$_dbgb = new Application_Model_DbTable_DbGlobal();
-// 		$pevconcer = $_dbgb->getViewByType(22);
-// 		$this->view->prev_concern = $pevconcer;
+		$_dbgb = new Application_Model_DbTable_DbGlobal();
+		$pevconcer = $_dbgb->getViewById(22);
+		$this->view->prev_concern = $pevconcer;
 		
 // 		$frm = new Home_Form_FrmCrm();
 // 		$frm->FrmAddCRM(null);

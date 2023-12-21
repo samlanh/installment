@@ -98,18 +98,7 @@ class Group_CoController extends Zend_Controller_Action {
    	$this->view->frm_co = $frm_co;
    
    }
-   public function addNewcoAction(){
-   	if($this->getRequest()->isPost()){
-   		$data = $this->getRequest()->getPost();
-   		$data['status']=1;
-   		$data['co_id']='';
-   		$data['name_kh']='';
-   		$db_co = new Other_Model_DbTable_DbCreditOfficer();
-   		$id = $db_co->addCoByAjax($data);
-   		print_r(Zend_Json::encode($id));
-   		exit();
-   	}
-   }
+   
    
    function getstaffcodeAction(){
    	if($this->getRequest()->isPost()){

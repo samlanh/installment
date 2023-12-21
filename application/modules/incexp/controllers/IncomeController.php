@@ -54,7 +54,6 @@ class Incexp_IncomeController extends Zend_Controller_Action
 			$data=$this->getRequest()->getPost();	
 			$db = new Incexp_Model_DbTable_DbIncome();				
 			try {
-				
 				// Check Session Expire
 				$dbgb = new Application_Model_DbTable_DbGlobal();
 				$checkses = $dbgb->checkSessionExpire();
