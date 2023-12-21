@@ -59,6 +59,7 @@ class Incexp_Model_DbTable_DbIncomeboreyfee extends Zend_Db_Table_Abstract
 				'invoice'		=>$data['invoice'],
 				'category_id'	=>$data['income_category'],
 				'payment_id'	=>$data['payment_type'],
+				'bank_id'		=>$data['bank_id'],
 				'cheque'		=>$data['cheque'],
 				'description'	=>$data['Description'],
 				'date'			=>$data['Date'],

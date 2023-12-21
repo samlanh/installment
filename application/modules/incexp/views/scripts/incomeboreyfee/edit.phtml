@@ -278,6 +278,7 @@ dojo.ready(function(){
 		class: 'fullside',
 			onChange: function() {
 				getLandAndClientDetail();
+				getPaymentcollection();
 			}
 	}, "sale_client"); 
 	
@@ -298,9 +299,11 @@ dojo.ready(function(){
 	getallCustomer();
 	enablePayment();
 });
+var oldSale = '<?php echo empty($this->row['sale_id']) ? "0" : $this->row['sale_id'];?>';
 var bankIdOld = '<?php echo empty($this->row['bank_id']) ? "0" : $this->row['bank_id'];?>';
 var chequeOld = '<?php echo empty($this->row['cheque']) ? "N/A" : $this->row['cheque'];?>';
 function enablePayment(){
+	dijit.byId("total_amount").set("readOnly",true);
 	payment_method = dijit.byId('payment_type').get('value');
 	dijit.byId("bank_id").set("readOnly",false);
 	dijit.byId("bank_id").reset();
@@ -362,8 +365,35 @@ function getLandAndClientDetail(){
 			dijit.byId("house_id").attr("value",data.house_id);
 			dijit.byId("clientName").attr("value",data.name_kh);
 			dijit.byId("customerId").attr("value",data.client_id);
-			CalculateAmount();
 			
+			
+		},
+		error: function(err) {
+		}
+	});
+}
+var url_payment= '<?php echo $this->url(array('module'=>'incexp','controller'=>'income','action'=>'getpaymentinfo'));?>';
+function getPaymentcollection(){
+		sale_id = dijit.byId('sale_client').get('value');
+		if(sale_id==''){return false;}
+		dijit.byId('from_date').reset();
+		
+		dojo.xhrPost({
+		url:url_payment,	
+		content:{ 
+		    'incomeType':"2",
+		    'sale_id':sale_id,
+		},		    
+		handleAs:"json",
+		load: function(data) {
+			if(data){
+				if(sale_id != oldSale){
+					dijit.byId("unit_price").attr("value",data.serviceFee);
+					dijit.byId("from_date").attr("value",data.nextDate);
+					dijit.byId("income_category").attr("value",data.categoryId);
+					CalculateAmount();
+				}
+			}
 		},
 		error: function(err) {
 		}
