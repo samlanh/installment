@@ -84,44 +84,12 @@
 										<input type="hidden" id="house_id" name="house_id" dojoType="dijit.form.TextBox"/>
 									   </div>
 									</div>
-									<div class="form-group">
-									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("NOTE");?> :
-									   </label>
-									   <div class="col-md-7 col-sm-7 col-xs-12">
-											<?php echo $frm->getElement('Description');?>
-									   </div>
-									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 	             </div>
 	             <div class="col-md-4 col-sm-4 col-xs-12">
-	             		
-             		<div class="card-blogform">
-						<div class="card-body"> 
-							<div class="row"> 
-								<div class="col-md-12 col-sm-12 col-xs-12"> 
-									<div class="d-flex"> 
-										<div class="settings-main-icon ">
-											<i class="fa fa-money" aria-hidden="true"></i>
-										</div> 
-										<div class="col-md-10 col-sm-10 col-xs-12"> 
-											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('TYPE_OF_INCOME')?></p>
-										</div> 
-									</div>
-									<div class="form-group">
-									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("INCOME_TYPE");?> :
-									   </label>
-									   <div class="col-md-7 col-sm-7 col-xs-12">
-									   		<?php echo $frm->getElement('is_beginning');?>
-									   </div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-	             
 					<div class="card-blogform">
 						<div class="card-body"> 
 							<div class="row"> 
@@ -176,7 +144,6 @@
 											<?php echo $frm->getElement('cheque');?>
 									   </div>
 									</div>
-									
 								</div>
 							</div>
 						</div>
@@ -189,47 +156,27 @@
 								<div class="col-md-12 col-sm-12 col-xs-12"> 
 									<div class="d-flex"> 
 										<div class="settings-main-icon ">
-											<i class="fa fa-calendar" aria-hidden="true"></i>
+											<i class="glyphicon glyphicon-info-sign" aria-hidden="true"></i>
 										</div> 
 										<div class="col-md-10 col-sm-10 col-xs-12"> 
-											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('PAYMENT_COLLECTION_DATE')?> </p>
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('OTHER_INFO')?> </p>
 										</div> 
 									</div>
 									<div class="form-group">
-									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("QTY").$tr->translate("MONTH");?> :
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("INCOME_TYPE");?> :
 									   </label>
 									   <div class="col-md-7 col-sm-7 col-xs-12">
-											<?php echo $frm->getElement('qty');?>
+											<?php echo $frm->getElement('is_beginning');?>
 									   </div>
 									</div>
 									<div class="form-group">
-									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("AMOUNT");?> :
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("NOTE");?> :
 									   </label>
 									   <div class="col-md-7 col-sm-7 col-xs-12">
-											<?php echo $frm->getElement('unit_price');?>
+											<?php echo $frm->getElement('Description');?>
 									   </div>
 									</div>
-									<div class="form-group">
-									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("TOTAL_AMOUNT");?> :
-									   </label>
-									   <div class="col-md-7 col-sm-7 col-xs-12">
-											<?php echo $frm->getElement('amount');?>
-									   </div>
-									</div>
-									<div class="form-group">
-									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("START_DATE");?> :
-									   </label>
-									   <div class="col-md-7 col-sm-7 col-xs-12">
-											<?php echo $frm->getElement('from_date');?>
-									   </div>
-									</div>
-									<div class="form-group">
-									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("END_DATE");?> :
-									   </label>
-									   <div class="col-md-7 col-sm-7 col-xs-12">
-											<?php echo $frm->getElement('end_date');?>
-									   </div>
-									</div>
+
 								</div>
 							</div>
 						</div>
@@ -316,33 +263,6 @@ dojo.ready(function(){
 
 	
 });
-function CalculateAmount(){
-	qty = dijit.byId('qty').get('value');
-	price = dijit.byId('unit_price').get('value');
-	if(isNaN(qty)){qty = 0;}
-	if(isNaN(price)){price = 0;};
-	if(qty==0 || price==0){
-		return ;
-	}
-	totalAmount = qty*price;
-	dijit.byId('amount').attr('value',totalAmount);
-	dijit.byId('total_amount').attr('value',totalAmount);
-
-	from_date = dijit.byId('from_date').get('value');
-
-	var a = new Date(from_date);
-	mm = a.getMonth()+1+qty;
-	var dd = a.getDate()-1;
-	 if(dd<10){
-		 dd = "0"+dd;
-	}
-	if(mm<10){
-		 mm = "0"+mm;
-	}
-	var y = a.getFullYear();
-	var epx_date = y+'-'+ mm + '-'+dd ;
-	dijit.byId('end_date').attr('value',epx_date);
-}
 function enablePayment(){
 	payment_method = dijit.byId('payment_type').get('value');
 
@@ -438,7 +358,6 @@ new dijit.form.FilteringSelect({
 	class: 'fullside',
 		onChange: function() {
 			getLandAndClientDetail();
-			getPaymentcollection();
 		}
 	}, "sale_client");
 	
@@ -483,52 +402,6 @@ function getLandAndClientDetail(){
 		},
 		error: function(err) {
 			
-		}
-	});
-}
-
-var url_payment= '<?php echo $this->url(array('module'=>'incexp','controller'=>'income','action'=>'getpaymentinfo'));?>';
-function getPaymentcollection(){
-		sale_id = dijit.byId('sale_client').get('value');
-		incomeType = dijit.byId('is_beginning').get('value');
-		
-		if(sale_id=='' || incomeType=="" || incomeType!=2){
-			dijit.byId("unit_price").attr("value",'');
-			dijit.byId("qty").attr("value",'');
-			dijit.byId("amount").attr("value",'');
-
-			dijit.byId("unit_price").attr("readOnly",true);
-			dijit.byId("qty").attr("readOnly",true);
-			dijit.byId("amount").attr("readOnly",true);
-			
-			dijit.byId("from_date").reset();
-			dijit.byId("end_date").reset();
-			dijit.byId("total_amount").attr("readOnly",false);
-			return false;
-		}else{
-			dijit.byId("total_amount").attr("readOnly",true);
-			dijit.byId("unit_price").attr("readOnly",false);
-			dijit.byId("qty").attr("readOnly",false);
-			dijit.byId("amount").attr("readOnly",false);
-			}
-		dijit.byId('unit_price').attr('value','');
-		dijit.byId('from_date').reset();
-		
-		dojo.xhrPost({
-		url:url_payment,	
-		content:{ 
-		    'sale_id':sale_id,
-			'income_category':incomeType
-		},		    
-		handleAs:"json",
-		load: function(data) {
-			
-			if(data){
-				dijit.byId("unit_price").attr("value",data.serviceFee);
-				dijit.byId("from_date").attr("value",data.fromDate);
-			}
-		},
-		error: function(err) {
 		}
 	});
 }
@@ -609,13 +482,15 @@ function printSave(new_invoice_no){
 	dojo.byId("lb_customer_name").innerHTML = dijit.byId("customer").attr('displayedValue');
 
 	$('.lblpaymentdetail').css('visibility', 'hidden');
-	if(dijit.byId("amount").get('value')>0){
+	/*
+	if(dijit.byId("total_amount").get('value')!='' || dijit.byId("total_amount").get('value')>0){
 		$('.lblpaymentdetail').css('visibility', 'visible');
 		dojo.byId("lbl_qty").innerHTML = (isNaN(dijit.byId("qty").get('value')))?"N/A":dijit.byId("qty").get('value')+' Month(s)';
 		dojo.byId("lbl_price").innerHTML = '$ '+dojo.number.format(dijit.byId("unit_price").get('value'),{places:2});
 		dojo.byId("lbl_amount").innerHTML = '$ '+dojo.number.format(dijit.byId("total_amount").get('value'),{places:2});
 		dojo.byId("lbl_validate").innerHTML = dijit.byId("from_date").attr('displayedValue')+' ដល់ '+dijit.byId("end_date").attr('displayedValue');
 	}
+	*/
 	dijit.byId("print_income").show();
 }
 

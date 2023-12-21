@@ -30,12 +30,6 @@ class Incexp_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 				'user_id'		=>$this->getUserId(),
 				'create_date'	=>date('Y-m-d'),
 				'is_beginning'=>$data['is_beginning'],
-					
-				'qty'=>$data['qty'],
-				'unit_price'=>$data['unit_price'],
-				'amount'=>$data['total_amount'],
-				'from_date'=>$data['from_date'],
-				'next_date'=>$data['end_date'],
 			);
 			$this->insert($array);
 			$_db->commit();
@@ -48,27 +42,22 @@ class Incexp_Model_DbTable_DbIncome extends Zend_Db_Table_Abstract
 	 	$_db->beginTransaction();
 	 	try{
 			$arr = array(
-				'sale_id'	=>$data['sale_client'],
-				'house_id'	=>$data['house_id'],
-				'branch_id'=>$data['branch_id'],
-				'client_id'=>$data['customer'],
-				'title'=>$data['title'],
-				'total_amount'=>$data['total_amount'],
-				'invoice'=>$data['invoice'],
-				'category_id'=>$data['income_category'],
-				'payment_id'=>$data['payment_type'],
-				'cheque'=>$data['cheque'],
-				'description'=>$data['Description'],
-				'date'=>$data['Date'],
-				'status'=>$data['Stutas'],
-			    'is_beginning'=>$data['is_beginning'],
-				'user_id'=>$this->getUserId(),
-					
-				'qty'=>$data['qty'],
-				'unit_price'=>$data['unit_price'],
-				'amount'=>$data['total_amount'],
-				'from_date'=>$data['from_date'],
-				'next_date'=>$data['end_date'],
+				'sale_id'		=>$data['sale_client'],
+				'house_id'		=>$data['house_id'],
+				'branch_id'		=>$data['branch_id'],
+				'client_id'		=>$data['customer'],
+				'title'			=>$data['title'],
+				'total_amount'	=>$data['total_amount'],
+				'invoice'		=>$data['invoice'],
+				'category_id'	=>$data['income_category'],
+				'payment_id'	=>$data['payment_type'],
+				'bank_id'		=>$data['bank_id'],
+				'cheque'		=>$data['cheque'],
+				'description'	=>$data['Description'],
+				'date'			=>$data['Date'],
+				'status'		=>$data['Stutas'],
+			    'is_beginning'	=>$data['is_beginning'],
+				'user_id'		=>$this->getUserId(),
 			);
 			$where=" id =  $id " ;
 			$this->update($arr, $where);
