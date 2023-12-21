@@ -1897,9 +1897,6 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     				$this->_name='ln_sale';
     				$sale_id = $this->insert($arr);//add group loan
     				$a_time=1;
-    					
-    				$SaleIdGenerate = $SaleIdGenerate +1;
-    				$sale_id = $SaleIdGenerate;
     			}
     			 
     			$installMentNumber = $installMentNumber+1;
@@ -1914,7 +1911,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     			$n++;
     			if($balance<=0){
 	    			$datapayment = array(
-	    					'branch_id'=>1,
+	    					'branch_id'=>$branch_id,
 	    					'sale_id'=>$sale_id,//good
 	    					'begining_balance'=>$sellingPrice,//$data[$i]['F']+$data[$i]['C'],//good
 	    					'begining_balance_after'=>0,//$data[$i]['F']+$data[$i]['C'],//good
@@ -2190,7 +2187,6 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     		}
     	}
 		}catch (Exception $e){
-			echo $e->getMessage();exit();
 		}
     }
     function getProjectId($data){
