@@ -1652,13 +1652,14 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     			$amtPerPaid=$data[$i]['AD'];
     			$lastPaid=$data[$i]['AE'];
     			$buildPercentage=$data[$i]['AF'];
+    			$saleNoteStatus=$data[$i]['AG'];
     			
     			$strDuration = empty($duration)?'':'រយៈពេលបង់ '.$duration;
     			$strAmtPerPaid = empty($amtPerPaid)?'':'បង់ប្រចាំខែ'.$amtPerPaid;
     			$strLastPaidDate = empty($lastPaidDate)?'':'LastPaidDate'.$lastPaidDate;
     			$strLastPaid = empty($lastPaid)?'':'LastPaid'.$lastPaid;
     			
-    			$saleNote = $strDuration.$strAmtPerPaid.$strLastPaidDate.$strLastPaid;
+    			$saleNote = $strDuration.$strAmtPerPaid.$strLastPaidDate.$strLastPaid.$saleNoteStatus;
     			$userId='';
     			
     			$param = array(
@@ -1714,7 +1715,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     							'qvillage'    => 0,
     							'dstreet'     => 0,
     							'branch_id'   => 1,
-    							'joint_doc_type' => 4,
+    							'joint_doc_type'=> 4,
     							'remark'	      =>$fullAddress,
     					);
     					$this->_name='ln_client';
@@ -1746,7 +1747,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     										'land_size'	  => '',
     										'width'       => '',
     										'height'      => '',
-    										'is_lock'     => ($fullAddress='Cancelled')?0:1,
+    										'is_lock'     => ($fullAddress=='Cancelled')?0:1,
     										'status'	  => 1,
     										'user_id'	  => $userId,
     										'property_type'=> empty($propertyTypeStr[$propertyType])?0:$propertyTypeStr[$propertyType],
@@ -1786,7 +1787,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     								'land_size'	  => '',
     								'width'       => '',
     								'height'      => '',
-    								'is_lock'     => ($fullAddress='Cancelled')?0:1,
+    								'is_lock'     => ($fullAddress=='Cancelled')?0:1,
     								'status'	  => -2,
     								'user_id'	  => $userId,
     								'property_type'=> empty($propertyTypeStr[$propertyType])?0:$propertyTypeStr[$propertyType],
@@ -1817,7 +1818,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     									'land_size'	  => '',
     									'width'       => '',
     									'height'      => '',
-    									'is_lock'     => ($fullAddress='Cancelled')?0:1,
+    									'is_lock'     => ($fullAddress=='Cancelled')?0:1,
     									'status'	  => 1,
     									'user_id'	  => $userId,
     									'property_type'=> empty($propertyTypeStr[$propertyType])?0:$propertyTypeStr[$propertyType],
@@ -1890,7 +1891,7 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
 //     						'excel_note'=>$data[$i]['X'],//check
     						'user_id'=>$userId,
     						'note'=>$saleNote,
-    						'is_cancel'=>($fullAddress='Cancelled')?1:0,
+    						'is_cancel'=>($fullAddress=='Cancelled')?1:0,
     				);
     
     				$this->_name='ln_sale';
@@ -2029,14 +2030,28 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     		exit();
     	}
     }
+    
+    function checkClientName($clientName){
+    	$db = $this->getAdapter();
+    	$sql="SELECT c.* FROM ln_client as c WHERE 1";
+    	$sql.=" AND c.name_kh = '$clientName' LIMIT 1 ";
+    	return $db->fetchRow($sql);
+    }
+    function checkClientNameInCopy($clientName){
+    	$db = $this->getAdapter();
+    	$sql="SELECT c.* FROM ln_client_copy as c WHERE 1";
+    	$sql.=" AND c.name_kh = '$clientName' LIMIT 1 ";
+    	return $db->fetchRow($sql);
+    }
     function KPmorndanyUpdateClientName($data){
-    	
+		try{    	
     	$count = count($data);
     	
     	for($i=3; $i<=$count; $i++){
     		
     	$clientName =$data[$i]['G'];
     	$landAddress=$data[$i]['B'];
+    	$salePrice=$data[$i]['H'];
     	
 	    	$sql="SELECT 
 			    		p.land_address,
@@ -2055,41 +2070,128 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     		
     		
     		$sql="SELECT
-    		p.land_address,
-    		s.id AS saleId,
-    		c.client_id,
-    		c.`name_kh`
+	    		p.land_address,
+	    		s.id AS saleId,
+	    		c.client_id,
+	    		c.`name_kh`
     		FROM
-    		`ln_properties_copy` p,
-    		`ln_sale_copy` s,
-    		`ln_client_copy` c
+	    		`ln_properties_copy` p,
+	    		`ln_sale_copy` s,
+	    		`ln_client_copy` c
     		WHERE p.`id` = s.`house_id`
     		AND s.`client_id`=c.`client_id`
     		AND p.`land_address`='".$landAddress."' limit 1";
-    		$db = $this->getAdapter();
     		$resultCopy = $db->fetchRow($sql);
     		
     		
     		if($result){
-    			
-    			
-    			$this->_name='ln_client';
-    			$arr = array(
-    					'name_kh'=>$clientName
+    			$clientCorrecName =$data[$i]['G'];
+    			$checkClientCorrecName = $this->checkClientName($clientCorrecName);// check correct name in Client
+    			if(!empty($checkClientCorrecName)){
+    				$this->_name='ln_sale';
+    				$arr = array(
+    						'price_before'=>$salePrice,
+    						'price_sold'=>$salePrice,
+    						'discount_amount'=>0,
+    						'discount_percent'=>0,
+    						
+    						'client_id'=>$checkClientCorrecName["client_id"]
     				);
-    			
-    			$where = 'client_id='.$result['client_id'];
-    			$this->update($arr, $where);
-    			
-    			
-    			$this->_name='ln_client_copy';
-    			$arr = array(
-    					'name_kh'=>$clientName
-    			);
-    			$where = 'client_id='.$resultCopy['client_id'];
-    			$this->update($arr, $where);
+    				$where = 'id='.$result['saleId'];
+    				$this->update($arr, $where);
+    			}else{
+    				$sqlCountSale="
+    				SELECT
+    					COUNT(s.id)
+    				FROM `ln_sale` s
+    				WHERE  s.`client_id`= ".$result['client_id'];
+    				$db = $this->getAdapter();
+    				$countSaleClient = $db->fetchOne($sqlCountSale);
+    				
+    				if($countSaleClient>1){
+    					$this->_name='ln_client';
+    					$arrNewClient = array(
+    							'name_kh'=>$clientName
+    					);
+    					$newClientId = $this->insert($arrNewClient);
+    					
+    					$this->_name='ln_sale';
+    					$arr = array(
+    							'client_id'=>$newClientId,
+    							'price_before'=>$salePrice,
+    							'price_sold'=>$salePrice,
+    							'discount_amount'=>0,
+    							'discount_percent'=>0,
+    					);
+    					$where = 'id='.$result['saleId'];
+    					$this->update($arr, $where);
+    				}else{
+    					$this->_name='ln_client';
+    					$arr = array(
+    							'name_kh'=>$clientName
+    					);
+    					$where = 'client_id='.$result['client_id'];
+    					$this->update($arr, $where);
+    				}
+    			}
+    		}
+    		
+    		if($resultCopy){
+    			$clientCorrecName =$data[$i]['G'];
+    			$checkClientCorrecName = $this->checkClientNameInCopy($clientCorrecName);// check correct name in Client copy
+    			if(!empty($checkClientCorrecName)){
+    				$this->_name='ln_sale_copy';
+    				$arr = array(
+    						'client_id'=>$checkClientCorrecName["client_id"],
+    						
+    						'price_before'=>$salePrice,
+    						'price_sold'=>$salePrice,
+    						'discount_amount'=>0,
+    						'discount_percent'=>0,
+    				);
+    				$where = 'id='.$resultCopy['saleId'];
+    				$this->update($arr, $where);
+    			}else{
+    				$sqlCountSale="
+    				SELECT
+    				COUNT(s.id)
+    				FROM `ln_sale_copy` s
+    				WHERE  s.`client_id`= ".$resultCopy['client_id'];
+    				$db = $this->getAdapter();
+    				$countSaleClient = $db->fetchOne($sqlCountSale);
+    		
+    				if($countSaleClient>1){
+    					$this->_name='ln_client_copy';
+    					$arrNewClient = array(
+    							'name_kh'=>$clientName
+    					);
+    					$newClientId = $this->insert($arrNewClient);
+    						
+    					$this->_name='ln_sale_copy';
+    					$arr = array(
+    							'price_before'=>$salePrice,
+    							'price_sold'=>$salePrice,
+    							'discount_amount'=>0,
+    							'discount_percent'=>0,
+    							
+    							'client_id'=>$newClientId
+    					);
+    					$where = 'id='.$resultCopy['saleId'];
+    					$this->update($arr, $where);
+    				}else{
+    					$this->_name='ln_client_copy';
+    					$arr = array(
+    							'name_kh'=>$clientName
+    					);
+    					$where = 'client_id='.$resultCopy['client_id'];
+    					$this->update($arr, $where);
+    				}
+    			}
     		}
     	}
+		}catch (Exception $e){
+			echo $e->getMessage();exit();
+		}
     }
     function getProjectId($data){
     	$db = $this->getAdapter();

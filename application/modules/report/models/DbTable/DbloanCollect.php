@@ -244,5 +244,51 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
 		
     	return $db->fetchAll($sql.$where.$order);
     }
+	
+	function getCustomerNearlyPaymentBoreyFee(){
+    	$db=$this->getAdapter();
+    	$search['start_date'] = "";
+    	$search['end_date']= date('Y-m-d');
+    	
+    	$dbgb = new Setting_Model_DbTable_DbGeneral();
+    	$alert = $dbgb->geLabelByKeyName('payment_day_alert');
+    	$search['end_date']= date('Y-m-d');
+    	if (!empty($alert['keyValue'])){
+    		$amt_day = $alert['keyValue'];
+    		$search['end_date']= date('Y-m-d',strtotime("+$amt_day day"));
+    	}
+		
+		$sql= "
+		SELECT 
+			inc.from_date 
+			,inc.next_date AS nextDate
+			,inc.unit_price AS unitPrice
+			,(SELECT p.`project_name` FROM `ln_project` AS p WHERE p.`br_id` = inc.`branch_id` LIMIT 1) AS branchName
+			,(SELECT `c`.`phone` FROM `ln_client` `c` WHERE `c`.`client_id` = `s`.`client_id` LIMIT 1) AS `clientPhone`
+			,(SELECT `c`.`name_kh` FROM `ln_client` `c` WHERE `c`.`client_id` = `s`.`client_id` LIMIT 1) AS `clientName`
+				  
+			,`l`.`land_code`                AS `landCode`
+			,`l`.`land_address`             AS `landAddress`
+			,`l`.`street`                   AS `street`
+		FROM 
+			`ln_income` AS inc 
+			JOIN ln_sale AS s ON s.id = inc.sale_id 
+			LEFT JOIN ln_properties AS l ON `s`.`house_id` = `l`.`id`
+			
+		WHERE inc.`status` =1
+			AND inc.`incomeType` =2
+		";
+		
+    	
+    	$from_date =(empty($search['start_date']))? '1': " inc.next_date <= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " inc.next_date <= '".$search['end_date']." 23:59:59'";
+    	$sql.= " AND ".$from_date." AND ".$to_date;
+    	
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	$sql.=$dbp->getAccessPermission("inc.branch_id");
+    	
+    	$order=" ORDER BY inc.next_date DESC ,inc.sale_id ASC, inc.id ASC";
+    	return $db->fetchAll($sql.$order);
+    }
 }
 

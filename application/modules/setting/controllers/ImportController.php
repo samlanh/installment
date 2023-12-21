@@ -30,8 +30,8 @@ class Setting_importController extends Zend_Controller_Action {
 				//$db->updateItemsByImport($sheetData);
 				//$db->importHanuman($sheetData);
 // 				$db->insertPayment($sheetData);
-// 				$db->ImportKPMorndany($sheetData);
-				$db->KPmorndanyUpdateClientName($sheetData);
+				$db->ImportKPMorndany($sheetData);
+// 				$db->KPmorndanyUpdateClientName($sheetData);
 				
 				Application_Form_FrmMessage::message("Import Successfully");
 			}

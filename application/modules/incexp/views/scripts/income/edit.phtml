@@ -83,43 +83,12 @@ $frm = $this->frm_expense;
 										<input type="hidden" id="house_id" name="house_id" dojoType="dijit.form.TextBox"/>
 									   </div>
 									</div>
-									<div class="form-group">
-									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("NOTE");?> :
-									   </label>
-									   <div class="col-md-7 col-sm-7 col-xs-12">
-											<?php echo $frm->getElement('Description');?>
-									   </div>
-									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 	             </div>
 	             <div class="col-md-4 col-sm-4 col-xs-12">
-					
-					<div class="card-blogform">
-						<div class="card-body"> 
-							<div class="row"> 
-								<div class="col-md-12 col-sm-12 col-xs-12"> 
-									<div class="d-flex"> 
-										<div class="settings-main-icon ">
-											<i class="fa fa-money" aria-hidden="true"></i>
-										</div> 
-										<div class="col-md-10 col-sm-10 col-xs-12"> 
-											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('TYPE_OF_INCOME')?></p>
-										</div> 
-									</div>
-									<div class="form-group">
-									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("INCOME_TYPE");?> :
-									   </label>
-									   <div class="col-md-7 col-sm-7 col-xs-12">
-									   		<?php echo $frm->getElement('is_beginning');?>
-									   </div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
 									
 					<div class="card-blogform">
 						<div class="card-body"> 
@@ -189,45 +158,24 @@ $frm = $this->frm_expense;
 								<div class="col-md-12 col-sm-12 col-xs-12"> 
 									<div class="d-flex"> 
 										<div class="settings-main-icon ">
-											<i class="fa fa-calendar" aria-hidden="true"></i>
+											<i class="glyphicon glyphicon-info-sign" aria-hidden="true"></i>
 										</div> 
 										<div class="col-md-10 col-sm-10 col-xs-12"> 
-											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('PAYMENT_COLLECTION_DATE')?> </p>
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('OTHER_INFO')?> </p>
 										</div> 
 									</div>
 									<div class="form-group">
-									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("QTY").$tr->translate("MONTH");?> :
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("INCOME_TYPE");?> :
 									   </label>
 									   <div class="col-md-7 col-sm-7 col-xs-12">
-											<?php echo $frm->getElement('qty');?>
+											<?php echo $frm->getElement('is_beginning');?>
 									   </div>
 									</div>
 									<div class="form-group">
-									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("AMOUNT");?> :
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("NOTE");?> :
 									   </label>
 									   <div class="col-md-7 col-sm-7 col-xs-12">
-											<?php echo $frm->getElement('unit_price');?>
-									   </div>
-									</div>
-									<div class="form-group">
-									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("TOTAL_AMOUNT");?> :
-									   </label>
-									   <div class="col-md-7 col-sm-7 col-xs-12">
-											<?php echo $frm->getElement('amount');?>
-									   </div>
-									</div>
-									<div class="form-group">
-									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("START_DATE");?> :
-									   </label>
-									   <div class="col-md-7 col-sm-7 col-xs-12">
-											<?php echo $frm->getElement('from_date');?>
-									   </div>
-									</div>
-									<div class="form-group">
-									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("END_DATE");?> :
-									   </label>
-									   <div class="col-md-7 col-sm-7 col-xs-12">
-											<?php echo $frm->getElement('end_date');?>
+											<?php echo $frm->getElement('Description');?>
 									   </div>
 									</div>
 									<div class="form-group">
@@ -339,69 +287,27 @@ dojo.ready(function(){
 	
 	getParentbytype();
 	getSaleClie();
+	enablePayment();
 });
-
-
-var url_payment= '<?php echo $this->url(array('module'=>'incexp','controller'=>'income','action'=>'getpaymentinfo'));?>';
-function getPaymentcollection(){
-		sale_id = dijit.byId('sale_client').get('value');
-		incomeType = dijit.byId('is_beginning').get('value');
-		
-		if(sale_id=='' || incomeType=="" || incomeType!=2){
-			dijit.byId("unit_price").attr("value",'');
-			dijit.byId("qty").attr("value",'');
-			dijit.byId("amount").attr("value",'');
-
-			dijit.byId("unit_price").attr("readOnly",true);
-			dijit.byId("qty").attr("readOnly",true);
-			dijit.byId("amount").attr("readOnly",true);
-			
-			dijit.byId("from_date").reset();
-			dijit.byId("end_date").reset();
-			dijit.byId("total_amount").attr("readOnly",false);
-			return false;
-		}else{
-			dijit.byId("total_amount").attr("readOnly",true);
-			dijit.byId("unit_price").attr("readOnly",false);
-			dijit.byId("qty").attr("readOnly",false);
-			dijit.byId("amount").attr("readOnly",false);
-			}
-		dijit.byId('unit_price').attr('value','');
-		dijit.byId('from_date').reset();
-		
-		dojo.xhrPost({
-		url:url_payment,	
-		content:{ 
-		    'sale_id':sale_id,
-			'income_category':incomeType
-		},		    
-		handleAs:"json",
-		load: function(data) {
-			
-			if(data){
-				dijit.byId("unit_price").attr("value",data.serviceFee);
-				dijit.byId("from_date").attr("value",data.fromDate);
-			}
-		},
-		error: function(err) {
-		}
-	});
-}
-
+var bankIdOld = '<?php echo empty($this->row['bank_id']) ? "0" : $this->row['bank_id'];?>';
+var chequeOld = '<?php echo empty($this->row['cheque']) ? "N/A" : $this->row['cheque'];?>';
 function enablePayment(){
 	payment_method = dijit.byId('payment_type').get('value');
 	dijit.byId("bank_id").set("readOnly",false);
 	dijit.byId("bank_id").reset();
 
 	dijit.byId("cheque").set("readOnly",false);
-	dijit.byId("cheque").attr("value",'');
+	
+	dijit.byId("cheque").attr("value",chequeOld);
+	dijit.byId("bank_id").set("value",bankIdOld);
+	
 	if(payment_method==1){
 
 		dijit.byId("cheque").attr("value",'N/A');
 		dijit.byId("cheque").set("readOnly",true);
 
 		dijit.byId("bank_id").set("readOnly",true);
-		dijit.byId("bank_id").attr("value",'');
+		dijit.byId("bank_id").attr("value",chequeOld);
 	}
 }
 
@@ -583,13 +489,16 @@ function printSave(new_invoice_no){
 	dojo.byId("lb_customer_name").innerHTML = dijit.byId("customer").attr('displayedValue');
 
 	$('.lblpaymentdetail').css('visibility', 'hidden');
-	if(dijit.byId("amount").get('value')>0){
+
+	/*
+	if(dijit.byId("total_amount").get('value')!='' || dijit.byId("total_amount").get('value')>0){
 		$('.lblpaymentdetail').css('visibility', 'visible');
 		dojo.byId("lbl_qty").innerHTML = dijit.byId("qty").get('value')+' Month(s)';
 		dojo.byId("lbl_price").innerHTML = '$ '+dojo.number.format(dijit.byId("unit_price").get('value'),{places:2});
 		dojo.byId("lbl_amount").innerHTML = '$ '+dojo.number.format(dijit.byId("total_amount").get('value'),{places:2});
 		dojo.byId("lbl_validate").innerHTML = dijit.byId("from_date").attr('displayedValue')+' ដល់ '+dijit.byId("end_date").attr('displayedValue');
 	}
+	*/
 	
 	dijit.byId("print_income").show();
 }
