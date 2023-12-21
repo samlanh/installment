@@ -524,7 +524,6 @@ class Report_ParamaterController extends Zend_Controller_Action {
   		Application_Form_FrmMessage::Sucessfull("You no permission to verify","/report/paramater/rpt-agreement/id/".$data['sale_id'],2);
   	}catch (Exception $e) {
   		Application_Form_FrmMessage::message("INSERT_FAIL");
-  		echo $e->getMessage();
   	}
   }
   

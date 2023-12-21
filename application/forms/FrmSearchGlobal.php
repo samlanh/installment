@@ -69,82 +69,8 @@ class Application_Form_FrmSearchGlobal extends Zend_Dojo_Form
 		return $this;
 		
 	}
-	public function frmPopupCO(){
-		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-		$frmclient = new Other_Form_FrmCO();
-		$frm = $frmclient->FrmAddCO();
-		Application_Model_Decorator::removeAllDecorator($frm);
-		$str='<div class="dijitHidden">
-				<div data-dojo-type="dijit.Dialog"  id="frm_co" >
-					<form id="form_co" name="form_co" >';
-			$str.='<table style="margin: 0 auto; width: 100%;" cellspacing="7">
-					<tr>
-						<td>Name Khmer</td>
-						<td>'.$frm->getElement('namsdfse_kh').'</td>
-					</tr>
-					<tr>
-						<td>First Name</td>
-						<td>'.$frm->getElement('first_name').'</td>
-					</tr>
-					<tr>
-						<td>Last Name</td>
-						<td>'.$frm->getElement('last_name').'</td>
-					</tr>
-					<tr>
-						<td>Sex</td>
-						<td>'.$frm->getElement('co_sex').'</td>
-					</tr>
-					<tr>
-						<td>Tel</td>
-						<td>'.$frm->getElement('tel').'</td>
-					</tr>
-					<tr>
-						<td>Email</td>
-						<td>'.$frm->getElement('email').'</td>
-					</tr>
-					<tr>
-						<td>Address</td>
-						<td>'.$frm->getElement('address').'</td>
-					</tr>
-					<tr>
-						<td colspan="4" align="center">
-						<input type="button" value="Save" label="Save" dojoType="dijit.form.Button"
-						iconClass="dijitEditorIcon dijitEditorIconSave" onclick="AddNewCo();"/>
-						</td>
-					</tr>						
-		       </table>';
-		$str.='</form>	</div>
-		  </div>';
-		return $str;								
-	}
-	public function frmPopupZone(){
-		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-		$frmzone = new Other_Form_FrmZone();
-		$frm = $frmzone->FrmAddZone();
-		Application_Model_Decorator::removeAllDecorator($frm);
-		$str='<div class="dijitHidden">
-				<div data-dojo-type="dijit.Dialog"  id="frm_zone" >
-					<form id="form_zone" name="form_zone" >';
-			$str.='<table style="margin: 0 auto; width: 100%;" cellspacing="7">
-					<tr>
-						<td>Zone Name</td>
-						<td>'.$frm->getElement('zone_name').'</td>
-					</tr>
-					<tr>
-						<td>Zone Number</td>
-						<td>'.$frm->getElement('zone_number').'</td>
-					</tr>
-					<tr>
-						<td colspan="4" align="center">
-						<input type="button" value="Save" label="Save" dojoType="dijit.form.Button"
-						iconClass="dijitEditorIcon dijitEditorIconSave" onclick="addNewZone();"/>
-						</td>
-					</tr>
-				</table>';
-		$str.='</form>		</div>
-		</div>';
-		return $str;
-	}
+	
+	
 	public function frmPopupDistrict(){
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		$frm = new Other_Form_FrmDistrict();

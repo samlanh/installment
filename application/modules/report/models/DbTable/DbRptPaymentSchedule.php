@@ -46,14 +46,7 @@ class Report_Model_DbTable_DbRptPaymentSchedule extends Zend_Db_Table_Abstract
     	(SELECT SUM(principal_permonth) FROM `ln_client_receipt_money_detail` WHERE lfd_id=ln_saleschedule.id limit 1) as principal_paid
     	FROM `ln_saleschedule` WHERE sale_id= $id AND status=1 ORDER BY date_payment ASC ";
     	return $db->fetchAll($sql);
-    }
-  	if($payment_id==4){
-  		$sql.=" AND is_installment=1 ";
-  	};
-  	$sql.="
-  	GROUP BY date_payment
-  	ORDER BY no_installment ASC,date_payment ASC, collect_by ASC, status DESC ";
-  	return $db->fetchAll($sql);
+  	
   }
   
   function checkCoutingScheduleCompetedRecord($_data){

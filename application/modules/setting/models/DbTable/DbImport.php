@@ -2029,6 +2029,68 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     		exit();
     	}
     }
+    function KPmorndanyUpdateClientName($data){
+    	
+    	$count = count($data);
+    	
+    	for($i=3; $i<=$count; $i++){
+    		
+    	$clientName =$data[$i]['G'];
+    	$landAddress=$data[$i]['B'];
+    	
+	    	$sql="SELECT 
+			    		p.land_address,
+						s.id AS saleId,
+						c.client_id,
+						c.`name_kh`
+					FROM 
+						`ln_properties` p,
+						`ln_sale` s,
+						`ln_client` c
+					WHERE p.`id` = s.`house_id`
+					AND s.`client_id`=c.`client_id`
+					AND p.`land_address`='".$landAddress."' limit 1";
+    		$db = $this->getAdapter();
+    		$result = $db->fetchRow($sql);
+    		
+    		
+    		$sql="SELECT
+    		p.land_address,
+    		s.id AS saleId,
+    		c.client_id,
+    		c.`name_kh`
+    		FROM
+    		`ln_properties_copy` p,
+    		`ln_sale_copy` s,
+    		`ln_client_copy` c
+    		WHERE p.`id` = s.`house_id`
+    		AND s.`client_id`=c.`client_id`
+    		AND p.`land_address`='".$landAddress."' limit 1";
+    		$db = $this->getAdapter();
+    		$resultCopy = $db->fetchRow($sql);
+    		
+    		
+    		if($result){
+    			
+    			
+    			$this->_name='ln_client';
+    			$arr = array(
+    					'name_kh'=>$clientName
+    				);
+    			
+    			$where = 'client_id='.$result['client_id'];
+    			$this->update($arr, $where);
+    			
+    			
+    			$this->_name='ln_client_copy';
+    			$arr = array(
+    					'name_kh'=>$clientName
+    			);
+    			$where = 'client_id='.$resultCopy['client_id'];
+    			$this->update($arr, $where);
+    		}
+    	}
+    }
     function getProjectId($data){
     	$db = $this->getAdapter();
     	$sql=" SELECT br_id  FROM `ln_project` WHERE 1 ";
