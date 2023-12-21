@@ -31,6 +31,16 @@ div.expenseItem.showFeature{
 						dijit.byId('branch_id').focus();
 						return false;
 					}
+					
+					totalAmount = dijit.byId('total_amount').get('value');
+					if(isNaN(totalAmount)){
+						totalAmount = 0;
+					}
+					if(totalAmount<=0){
+						infoMessageAlert("<?PHP echo $tr->translate('PLEASE_ENTER_EXPENSE_AMOUNT'); ?>");
+						dijit.byId('total_amount').focus();
+						return false;
+					}
 			   		loadingBlock();
 			   		return true;
 				}else {
@@ -118,6 +128,13 @@ div.expenseItem.showFeature{
 													<input id="cancelSale_id" />
 											   </div>
 											</div>
+											<div class="form-group">
+											   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("NOTE");?> :
+											   </label>
+											   <div class="col-md-7 col-sm-7 col-xs-12">
+													<?php echo $frm->getElement('Description');?>
+											   </div>
+											</div>
 										</div>
 									</div>
 								</div>
@@ -135,6 +152,13 @@ div.expenseItem.showFeature{
 												<div class="col-md-10 col-sm-10 col-xs-12"> 
 													<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('AMOUNT_INFO')?> </p>
 												</div> 
+											</div>
+											<div class="form-group">
+											   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("expenseType");?> :
+											   </label>
+											   <div class="col-md-7 col-sm-7 col-xs-12">
+													<?php echo $frm->getElement('expenseType');?>
+											   </div>
 											</div>
 											<div class="form-group">
 											   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("DATE");?> :
@@ -205,31 +229,6 @@ div.expenseItem.showFeature{
 								</div>
 							</div>
 						</div>
-						<div class="col-md-4 col-sm-4 col-xs-12">	
-							<div class="card-blogform">
-								<div class="card-body"> 
-									<div class="row"> 
-										<div class="col-md-12 col-sm-12 col-xs-12"> 
-											<div class="d-flex"> 
-												<div class="settings-main-icon ">
-													<i class="glyphicon glyphicon-info-sign" aria-hidden="true"></i>
-												</div> 
-												<div class="col-md-10 col-sm-10 col-xs-12"> 
-													<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('OTHER_INFO')?> </p>
-												</div> 
-											</div>
-											<div class="form-group">
-											   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("NOTE");?> :
-											   </label>
-											   <div class="col-md-7 col-sm-7 col-xs-12">
-													<?php echo $frm->getElement('Description');?>
-											   </div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
 				   </div>
 				</div>
 				<!--End Schedule Panel 1-->
@@ -271,7 +270,7 @@ div.expenseItem.showFeature{
 				<!--End Schedule Panel 2-->
 			</div>
 	    
-			<div class="card-box expenseItem <?php if($expenseFeauture==1){ echo "showFeature";}?>">
+			<div class="card-box expenseItem ">
 				 <div class="col-md-12 col-sm-12 col-xs-12">
 					<div class="card-blogform">
 						<div class="card-body"> 
@@ -432,11 +431,6 @@ require(["dojo/ready"], function(ready){
 		enablePayment();
 		getParentbytype();
 		
-		<?php if($expenseFeauture==1){?>
-		dijit.byId("total_amount").attr("value",0);
-		dijit.byId("total_amount").set("readOnly",true);
-		<?php }?>
-		
 		var branch_id = dijit.byId('branch_id');
 		 branch_id.on('change', function(evt) {
 			getSaleCancel();
@@ -444,8 +438,26 @@ require(["dojo/ready"], function(ready){
 			getallCustomer();
 		});
 		
+		checkExpenseType();
+		var expenseType = dijit.byId('expenseType');
+		 expenseType.on('change', function(evt) {
+			checkExpenseType();
+		});
+		
 	});
 });
+function checkExpenseType(){
+	
+	dijit.byId("total_amount").attr("value",0);
+	dijit.byId("total_amount").set("readOnly",false);
+	expenseType = dijit.byId('expenseType').get('value');
+	$("div.expenseItem").removeClass("showFeature");
+	if(expenseType==2){
+		$("div.expenseItem").addClass("showFeature");
+		dijit.byId("total_amount").attr("value",0);
+		dijit.byId("total_amount").set("readOnly",true);
+	}
+}
 var	url_getSaleCancel = '<?php echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'get-salecancle'));?>';
 function getSaleCancel(){
 	branch_id = dijit.byId('branch_id').get('value');
@@ -658,6 +670,12 @@ function printSave(new_invoice_no){
 	
 	total_amount = dijit.byId('total_amount').get('value');
 	if(isNaN(total_amount)){
+		dijit.byId('total_amount').focus();
+		total_amount = 0;
+		return false;
+	}
+	if(total_amount<=0){
+		infoMessageAlert("<?PHP echo $tr->translate('PLEASE_ENTER_EXPENSE_AMOUNT'); ?>");
 		dijit.byId('total_amount').focus();
 		return false;
 	}

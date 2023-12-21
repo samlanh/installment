@@ -2034,20 +2034,28 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 
 	public function getPaymentColectionInfo($data){
 		$db = $this->getAdapter();
+		$incomeType = "1";
+		if( !empty($data['incomeType'])){
+			$incomeType = $data['incomeType'];
+		}
+		$date = new DateTime();
+		$today =  $date->format("Y-m-d");
 		$sql="SELECT 
-				(SELECT serviceFee FROM `ln_properties_type` pt WHERE pt.id=p.`property_type` LIMIT 1) AS serviceFee,
-				(SELECT i.from_date FROM `ln_income` i WHERE  i.sale_id=s.id LIMIT 1) AS fromDate
+				COALESCE((SELECT serviceFee FROM `ln_properties_type` pt WHERE pt.id=p.`property_type` LIMIT 1),'0') AS serviceFee
+				,CASE
+					WHEN  (SELECT i.next_date FROM `ln_income` i WHERE  i.sale_id=s.id AND incomeType = $incomeType LIMIT 1) IS NULL THEN '".$today."'
+					ELSE (SELECT i.next_date FROM `ln_income` i WHERE  i.sale_id=s.id AND incomeType = $incomeType LIMIT 1)
+				END AS `nextDate` 
+				,(SELECT i.category_id FROM `ln_income` i WHERE  i.sale_id=s.id AND incomeType = $incomeType LIMIT 1) AS categoryId
 				
-				FROM `ln_sale` s,
+			FROM `ln_sale` s,
 				`ln_properties` p
-				 WHERE p.`id`=s.`house_id` ";
+			 WHERE p.`id`=s.`house_id` ";
 		if( !empty($data['sale_id'])){
 			$sql.= " AND s.id = ".$data['sale_id'];
 		}
 		$sql.=" LIMIT 1";
-		if( !empty($data['incomeType'])){
-			$sql.= " AND incomeType = ".$data['incomeType'];
-		}
+		
   
 		return $db->fetchRow($sql);
 	}

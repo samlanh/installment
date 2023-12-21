@@ -87,7 +87,7 @@ class Incexp_Model_DbTable_DbExpensePayment extends Zend_Db_Table_Abstract
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
     	$supplier_id = empty($data['supplier_id'])?0:$data['supplier_id'];
     	$branch_id = $data['branch_id'];
-    	$sql="SELECT * FROM `ln_expense` AS p  WHERE  p.status=1 AND p.is_paid = 0 AND p.branch_id =$branch_id ";
+    	$sql="SELECT * FROM `ln_expense` AS p  WHERE  p.status=1 AND p.is_paid = 0 AND p.branch_id =$branch_id AND p.expenseType =2 ";
     	if(!empty($data['supplier_id'])){
 			$sql.=" AND p.supplier_id =$supplier_id ";
 		}
@@ -206,7 +206,7 @@ class Incexp_Model_DbTable_DbExpensePayment extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	$supplier_id = empty($data['supplier_id'])?0:$data['supplier_id'];
     	$branch_id = $data['branch_id'];
-    	$sql="SELECT * FROM `ln_expense` AS p  WHERE  p.status=1 AND p.is_paid = 0 AND p.branch_id =$branch_id ";
+    	$sql="SELECT * FROM `ln_expense` AS p  WHERE  p.status=1 AND p.is_paid = 0 AND p.branch_id =$branch_id AND p.expenseType =2 ";
 		if(!empty($data['supplier_id'])){
 			$sql.=" AND p.supplier_id =$supplier_id ";
 		}

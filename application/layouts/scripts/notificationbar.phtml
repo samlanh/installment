@@ -24,6 +24,7 @@
 		$rs = $db->getCustomerNearlyPayment();
 		$rsagree = $db->getCustomerNearAgreement();
 		$slPreparedSch = $db->getSalePreparedScheduleInLimitDay();
+		$altBoreyFee = $db->getCustomerNearlyPaymentBoreyFee();
 		
 		$rsplong = $vdgb->getAllplongissue();
 		$rsCusRequire = $vdgb->getAllCustomerRequireNextContact();
@@ -93,6 +94,48 @@
 					  <?php }?>
 				  </ul>
 			  </li>
+			  <?php if(!empty($altBoreyFee)){?>
+			  <li role="presentation" class="dropdown <?php echo $styleNotif;?>">
+				  <a title="<?php echo $tr->translate("CUSTOMER_BOREY_FEE");?>" href="javascript:;"  class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="true">
+					<i class="fa fa-tasks"></i>
+					<span id="countNews" class="badge bg-green"><?php if (count($altBoreyFee)>0){ echo count($altBoreyFee);}?></span>
+				  </a>
+				  <ul id="menu1" class="dropdown-menu list-unstyled " role="menu">
+					  <li class=" event title">
+						<h4><?php echo $tr->translate("CUSTOMER_BOREY_FEE");?></h4>
+					  </li>
+					   
+					  <?php foreach($altBoreyFee as $key=> $result){
+						$end_dat=date("Y-m-d");
+						$total_day=strtotime($end_dat)-strtotime($result['nextDate']);
+						$totalLateDay=$total_day/(60*60*24);
+						$total_payment = $result['unitPrice'];
+						?>
+					  <li class=" event">
+						 <a href="#">
+							<div class="pull-left profile-list char-profile">
+								<span class="profileChar">
+									<?php echo mb_substr($result['clientName'], 0, 1,'UTF8');?>
+								</span>
+							</div>
+							<div class="media-body">
+								<small><?php echo $result['branchName'];?></small><br />
+							  <span class="title" ><?php echo $result['clientName'].' '.$result['landAddress'].','.$result['street'];?></span>
+							  <p style="white-space: nowrap;"><i class="fa fa-phone"></i> <?php echo $result['clientPhone'];?></p>
+							  <p><strong>$<?php echo number_format($total_payment,2);?>. </strong> </p>
+							  <?php if($totalLateDay>0){?>
+							  <p> 
+							  <small><?php echo $tr->translate("AMOUNT_LATE")." : ".$totalLateDay."ថ្ងៃ"; ?></small>
+							  </p>
+							  <?php }?>
+							</div>
+						</a>
+					  </li>
+					  <?php }?>
+					  
+					</ul>
+			 </li>
+			 <?php }?>
 			  <li role="presentation" class="dropdown <?php echo $styleNotif;?>">
 				  <a title="<?php echo $tr->translate("CUSTOMER_PAYMENTLIST");?>" href="javascript:;"  class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="true">
 					<i class="fa fa-money"></i>
