@@ -22,43 +22,41 @@ class Loan_Model_DbTable_DdVerifySale extends Zend_Db_Table_Abstract
     	$to_date = (empty($search['end_date']))? '1': " s.verifyDate <= '".$search['end_date']." 23:59:59'";
     	$where = " AND ".$from_date." AND ".$to_date;
     	$sql=" 
-    	SELECT `s`.`id` AS `id`,
-    	(SELECT
-		     `ln_project`.`project_name`
-		   FROM `ln_project`
-		   WHERE (`ln_project`.`br_id` = `s`.`branch_id`)
-		   LIMIT 1) AS `branch_name`,
-	    `c`.`name_kh`         AS `name_kh`,
-	    `c`.`phone`         AS `phone`,
-	    `p`.`land_address`    AS `land_address`,
-	    `p`.`street`          AS `street`,
-	    (SELECT $str FROM `ln_view` WHERE key_code =s.payment_id AND type = 25 limit 1) AS paymenttype,
-  		`s`.`price_before`    AS `price_before`,
-  		 `s`.`discount_amount` AS `discount_amount`,
- 		CONCAT(`s`.`discount_percent`,'%') AS `discount_percent`,
-       
- 		`s`.`price_sold`     AS `price_sold`,
- 		(SELECT
-	     SUM((`cr`.`total_principal_permonthpaid` + `cr`.`extra_payment`)) + ((SELECT COALESCE(SUM(crd.total_amount),0) FROM `ln_credit` AS crd WHERE crd.status=1 AND crd.sale_id = s.id LIMIT 1))
-	   FROM `ln_client_receipt_money` `cr`
-	   WHERE (`cr`.`sale_id` = `s`.`id`)  LIMIT 1) AS `totalpaid_amount`,   
-	   
-	   (SELECT
-	     (`s`.`price_sold`-SUM(`cr`.`total_principal_permonthpaid` + `cr`.`extra_payment`) - ((SELECT COALESCE(SUM(crd.total_amount),0) FROM `ln_credit` AS crd WHERE crd.status=1 AND crd.sale_id = s.id LIMIT 1)) )
-	   FROM `ln_client_receipt_money` `cr`
-	   WHERE (`cr`.`sale_id` = `s`.`id`)  LIMIT 1) AS `balance_remain`,   
-        `s`.`verifyDate`        AS `verifyDate`,
-        (SELECT  first_name FROM rms_users WHERE id=s.verify_by limit 1 ) AS user_name,
-         s.status,
-         CASE    
-				WHEN  `s`.`is_cancel` = 0 THEN ' '
-				WHEN  `s`.`is_cancel` = 1 THEN '".$tr->translate("CANCELED")."'
-				END AS modify_date
-		FROM ((`ln_sale` `s`
-		    JOIN `ln_client` `c`)
-		   JOIN `ln_properties` `p`)
-		WHERE ((`c`.`client_id` = `s`.`client_id`)
-			AND (`p`.`id` = `s`.`house_id`)) 
+    	SELECT 
+			`s`.`id` AS `id`
+			,(SELECT
+				`ln_project`.`project_name`
+			FROM `ln_project`
+			WHERE (`ln_project`.`br_id` = `s`.`branch_id`)
+			LIMIT 1 ) AS `branch_name`
+			,`c`.`name_kh`         AS `name_kh`
+			,`c`.`phone`         AS `phone`
+			,`p`.`land_address`    AS `land_address`
+			,`p`.`street`          AS `street`
+			,(SELECT $str FROM `ln_view` WHERE key_code =s.payment_id AND type = 25 limit 1) AS paymenttype
+			
+			,vrf.`verifyDate` AS `verifyDate`
+			,vrf.`priceBeforeNew`
+			,vrf.`priceSoldNew`
+			,vrf.`paidAmountNew`
+			,vrf.`balanceNew`
+			
+			,(SELECT  first_name FROM rms_users WHERE id=vrf.user_id limit 1 ) AS user_name
+			
+			,vrf.`priceBefore`
+			,vrf.`priceSold`
+			,vrf.`paidAmount`
+			,vrf.`balance`
+			
+			
+			,vrf.status
+		FROM 
+			ln_verificaton_sale AS vrf 
+			JOIN `ln_sale` `s` ON s.id = vrf.saleId
+			LEFT JOIN ln_client AS c ON `c`.`client_id` = `s`.`client_id`
+			LEFT JOIN ln_properties AS p ON `p`.`id` = `s`.`house_id`
+		WHERE 
+			1 
 			AND s.is_verify = 1
 	   
 	   ";
@@ -117,6 +115,40 @@ class Loan_Model_DbTable_DdVerifySale extends Zend_Db_Table_Abstract
 	public function addVerifySale($_data){
 		try{
 			$db= $this->getAdapter();
+			
+			$saleId = empty($_data['saleId']) ? 0 : $_data['saleId'];
+			$dbSale	= new Loan_Model_DbTable_DbRepaymentSchedule();
+			$row	= $dbSale->getLoanInfoById($saleId);
+			
+			$priceSold = empty($row['price_sold']) ? 0 : $row['price_sold'];
+			$totalPrincipalpaid = empty($row['total_principal']) ? 0 : $row['total_principal'];
+			$balance = $priceSold - $totalPrincipalpaid;
+			if($balance<0){
+				$balance = 0;
+			}
+			
+			$arrVerification = array(
+					'saleId'	  		=> $saleId,
+					'buyDate'	  		=> $row['buy_date'],
+					'priceBefore'	  	=> $row['price_before'],
+					'priceSold'	  	=> $priceSold,
+					'paidAmount'	  	=> $totalPrincipalpaid,
+					'balance'	  		=> $balance,
+					
+					'priceBeforeNew'	=> $_data['sold_price'],
+					'priceSoldNew'	  	=> $_data['sold_price'],
+					'paidAmountNew'	  	=> $_data['totalPrincipalpaid'],
+					'balanceNew'	  	=> $_data['totalBalance'],
+					'note'	  			=> $_data['note'],
+					
+					'is_verify'	  		=> 1,
+					'user_id'	  		=> $this->getUserId(),
+					'verify_by'	  		=> $this->getUserId(),
+					'verifyDate'	  => date('Y-m-d'),
+				);
+			$this->_name="ln_verificaton_sale";
+			$this->insert($arrVerification);
+			
 			$arr1 = array(
 					'is_verify'	  		=> 1,
 					'price_before'	  	=> $_data['sold_price'],
@@ -124,11 +156,10 @@ class Loan_Model_DbTable_DdVerifySale extends Zend_Db_Table_Abstract
 					'discount_percent'	  	=> 0,
 					'price_sold'	  	=> $_data['sold_price'],
 					'paid_amount'	  	=> $_data['totalPrincipalpaid'],
-					'balance'	  => $_data['totalBalance'],
-					'verify_by'	  => $this->getUserId(),
-					'verifyDate'	  => date('Y-m-d'),
+					'balance'	  		=> $_data['totalBalance'],
+					'verify_by'	  		=> $this->getUserId(),
+					'verifyDate'	  	=> date('Y-m-d'),
 				);
-			$saleId = empty($_data['saleId']) ? 0 : $_data['saleId'];
 			$where="id = ".$saleId;
 			$this->_name="ln_sale";
 			$this->update($arr1, $where);
