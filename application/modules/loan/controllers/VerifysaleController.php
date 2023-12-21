@@ -32,12 +32,28 @@ class Loan_VerifysaleController extends Zend_Controller_Action {
 			$glClass = new Application_Model_GlobalClass();
 			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","TEL","PROPERTY_CODE","STREET","PAYMENT_TYPE","PRINCIPLE_PICE","DISCOUNT","DISCOUNT_PERCENT","SOLD_PRICE",
-					"PAID","BALANCE","verifyDate","verifyBy","STATUS","IS_CANCEL");
-			$link_info=array('module'=>'loan','controller'=>'index','action'=>'edit',);
-
-		
-			$payment=array('module'=>'loan','controller'=>'verifysale','action'=>'add',);
+			$collumns = array(
+			
+					"BRANCH_NAME"
+					,"CUSTOMER_NAME"
+					,"TEL"
+					,"PROPERTY_CODE"
+					,"STREET"
+					,"PAYMENT_TYPE"
+			
+					,"verifyDate"
+					,"PRINCIPLE_PICE_VERIFY","SOLD_PRICE_VERIFY","PAID_VERIFY","BALANCE_VERIFY"
+					,"verifyBy"
+			
+					,"PRINCIPLE_PICE"
+					,"SOLD_PRICE"
+					,"PAID"
+					,"BALANCE"
+					
+					
+					
+					,"STATUS"
+			);
 			$this->view->list=$list->getCheckList(10, $collumns, $rs_rows,array(),0);
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
