@@ -130,8 +130,10 @@ class Loan_Model_DbTable_DdVerifySale extends Zend_Db_Table_Abstract
 			$arrVerification = array(
 					'saleId'	  		=> $saleId,
 					'buyDate'	  		=> $row['buy_date'],
+					'house_id'	  		=> $row['house_id'],
+					'client_id'	  		=> $row['client_id'],
 					'priceBefore'	  	=> $row['price_before'],
-					'priceSold'	  	=> $priceSold,
+					'priceSold'	  		=> $priceSold,
 					'paidAmount'	  	=> $totalPrincipalpaid,
 					'balance'	  		=> $balance,
 					
