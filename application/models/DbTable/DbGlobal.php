@@ -2045,6 +2045,9 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 			$sql.= " AND s.id = ".$data['sale_id'];
 		}
 		$sql.=" LIMIT 1";
+		if( !empty($data['incomeType'])){
+			$sql.= " AND incomeType = ".$data['incomeType'];
+		}
   
 		return $db->fetchRow($sql);
 	}

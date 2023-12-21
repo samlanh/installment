@@ -1,0 +1,271 @@
+<?php 
+	$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+	
+	$request=Zend_Controller_Front::getInstance()->getRequest();
+	$action=$request->getActionName();
+	$controller=$request->getControllerName();
+	$module=$request->getModuleName();
+	$baseUrl = Application_Form_FrmMessage::getUrl("/");
+	
+	$key = new Application_Model_DbTable_DbKeycode();
+	$dataInfo=$key->getKeyCodeMiniInv(TRUE);
+	
+	$clientTitleEn="";
+	$clientTitle="";
+	$homeNavClass  ="";
+	$backButton ="";
+	$profileButton ="";
+	$defaultLogo ="";
+	
+ ?>
+
+<!DOCTYPE html>
+<html class=" ">
+    <head>
+		
+        <!-- 
+         * @Package: <?php echo $clientTitleEn; ?> mobile App
+         * @Author: <?php echo $clientTitle; ?>
+         * @Version: 1.0
+        -->
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+        <meta content="<?php echo $clientTitleEn; ?> Mobile App" name="description" />
+        <meta content="<?php echo $clientTitle; ?>" name="author" />
+		<meta name = "theme-color" content = "#0f3b6b">
+
+		<!-- App Icons -->
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="apple-mobile-web-app-title" content="<?php echo $clientTitleEn; ?> Mobile App">
+	
+		<link rel="apple-touch-icon" sizes="57x57" href="<?php echo $baseUrl."templates/phone_template/assets/images/icons/apple-icon-57x57.png"; ?>?m=<?php //echo filemtime(PUBLIC_PATH."templates/assets/images/icons/apple-icon-57x57.png"); ?>">
+		<link rel="apple-touch-icon" sizes="60x60" href="<?php echo $baseUrl."templates/phone_template/assets/images/icons/apple-icon-60x60.png"; ?>">
+		<link rel="apple-touch-icon" sizes="72x72" href="<?php echo $baseUrl."templates/phone_template/assets/images/icons/apple-icon-72x72.png"; ?>">
+		<link rel="apple-touch-icon" sizes="76x76" href="<?php echo $baseUrl."templates/phone_template/assets/images/icons/apple-icon-76x76.png"; ?>">
+		<link rel="apple-touch-icon" sizes="114x114" href="<?php echo $baseUrl."templates/phone_template/assets/images/icons/apple-icon-114x114.png "; ?>">
+		<link rel="apple-touch-icon" sizes="120x120" href="<?php echo $baseUrl."templates/phone_template/assets/images/icons/apple-icon-120x120.png "; ?>">
+		<link rel="apple-touch-icon" sizes="144x144" href="<?php echo $baseUrl."templates/phone_template/assets/images/icons/apple-icon-144x144.png "; ?>">
+		<link rel="apple-touch-icon" sizes="152x152" href="<?php echo $baseUrl."templates/phone_template/assets/images/icons/apple-icon-152x152.png "; ?>">
+		<link rel="apple-touch-icon" sizes="180x180" href="<?php echo $baseUrl."templates/phone_template/assets/images/icons/apple-icon-180x180.png "; ?>">
+		
+		<link rel="icon" type="image/png" sizes="192x192" href="<?php echo $baseUrl."templates/phone_template/"; ?>assets/images/icons/android-icon-192x192.png">
+		<link rel="icon" type="image/png" sizes="32x32" href="<?php echo $baseUrl."templates/phone_template/"; ?>assets/images/icons/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="96x96" href="<?php echo $baseUrl."templates/phone_template/"; ?>assets/images/icons/favicon-96x96.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="<?php echo $baseUrl."templates/phone_template/"; ?>assets/images/icons/favicon-16x16.png">
+		<link rel="manifest" href="<?php echo $baseUrl."templates/phone_template/"; ?>assets/images/icons/manifest.json">
+		<meta name="msapplication-TileColor" content="#ffffff">
+		<meta name="msapplication-TileImage" content="<?php echo $baseUrl."templates/phone_template/"; ?>assets/images/icons/ms-icon-144x144.png">
+		<meta name="theme-color" content="#ffffff">
+
+        <!-- CORE CSS FRAMEWORK - START -->
+        <link href="<?php echo $baseUrl."templates/phone_template/"; ?>assets/css/preloader.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+
+        <link href="<?php echo $baseUrl."templates/phone_template/"; ?>assets/css/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+        <link href="<?php echo $baseUrl."templates/phone_template/"; ?>assets/fonts/mdi/materialdesignicons.min.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+        <link href="<?php echo $baseUrl."templates/phone_template/"; ?>assets/plugins/perfect-scrollbar/perfect-scrollbar.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+
+
+        <!-- CORE CSS FRAMEWORK - END -->
+
+        <!-- OTHER SCRIPTS INCLUDED ON THIS PAGE - START --> 
+                <!-- OTHER SCRIPTS INCLUDED ON THIS PAGE - END --> 
+
+        <!-- CORE CSS TEMPLATE - START -->
+
+        
+        <link href="<?php echo $baseUrl."templates/phone_template/"; ?>assets/css/style.css" type="text/css" rel="stylesheet" media="screen,projection" id="main-style"/>
+        <!-- CORE CSS TEMPLATE - END -->
+		
+		 <!-- Makeup CSS TEMPLATE - START -->
+		<link href="<?php echo $baseUrl."templates/phone_template/"; ?>assets/css/makeup-over.css" type="text/css" rel="stylesheet" media="screen,projection" id="main-style"/>
+        <!-- Makeup CSS TEMPLATE - END -->
+		
+		
+		<!-- CORE JS FRAMEWORK - START --> 
+		<script src="<?php echo $baseUrl."templates/phone_template/"; ?>assets/js/jquery-2.2.4.min.js"></script>
+		<script src="<?php echo $baseUrl."templates/phone_template/"; ?>assets/js/materialize.js"></script>
+		<script src="<?php echo $baseUrl."templates/phone_template/"; ?>assets/plugins/perfect-scrollbar/perfect-scrollbar.min.js"></script> 
+		<!-- CORE JS FRAMEWORK - END --> 
+
+    </head>
+    <!-- END HEAD -->
+	
+	
+    <!-- BEGIN BODY -->
+
+    
+    <body class=" bgBody   html"  data-header="light" data-footer="dark"  data-header_align="center"  data-menu_type="left" data-menu="light" data-menu_icons="on" data-footer_type="left" data-site_mode="light" data-footer_menu="show" data-footer_menu_style="light" >
+		
+		<div class="preloader-background">
+			<div class="preloader-wrapper">
+				<div class="preloader-text-img-blg">
+					<img class="preloader-logo-app" src="<?php echo $defaultLogo;?>" alt=""  />
+					<?php echo $tr->translate("LOADING"); ?>
+				</div>
+				<div id="preloader">
+					
+				</div>
+			</div>
+		</div>
+		
+		<div class="desktop__section">
+			<?php //echo $this->render('desktopsection.phtml');?>
+		</div>
+		<div class="mobile__section">
+			<div class="offline-background">
+				<div class="content-offline">
+					<div class="offline-icon">
+						<i class="mdi mdi-wifi-off"></i> 
+					</div>
+					<div class="offline-msg">
+						<h3><?php echo $tr->translate("NO_CONNECTION"); ?></h3>
+						<p><?php echo $tr->translate("PLEASE_CHECK_YOUR_INTERNET_CONNECTION"); ?></p>
+					</div>
+				</div>
+			</div>
+		<!-- START navigation -->
+<nav class="bgTransparent <?php echo $homeNavClass;?> topbar navigation" role="navigation">
+    <div class="nav-wrapper container">
+		<!--
+		<a id="logo-container" href="<?php echo $this->baseUrl()."/home"?>" class=" brand-logo " >
+			<img class="logo-app" src="<?php echo $defaultLogo;?>" alt=""  />
+		</a>
+		-->
+      
+       <?php echo $backButton;?> 
+		<?php echo $profileButton;?>
+
+    <?php if($module=="home" AND $controller=="index" AND $action=="index"){ ?>  
+      <a href="#modalLanguage" class="languageSwitch waves-effect waves-circle navicon right modal-trigger show-on-large pulse">
+		<?php ?>
+		<img class="languageSwitch" src="<?php echo $imgLangeCurrent;?>" alt=""  />
+	  </a>	
+	<?php } ?> 
+	<?php if($module=="section" AND $controller!="schedule" AND $controller!="course" AND $controller!="calendar" ){ ?>  
+		<a href="#modalFilter" title="<?php echo $tr->translate("FILTER"); ?>" class="bgBtn waves-effect waves-circle navicon right modal-trigger show-on-large"><i class="mdi mdi-filter-outline"></i></a>
+	<?php } ?> 
+    </div>
+  </nav>
+	<ul id="slide-nav" class="sidenav sidemenu">
+		<li class="menu-close">
+			<i class="mdi mdi-close"></i>
+		</li>
+		<li class="user-wrap">
+			<div class="user-view row">
+				<div class="col s3 imgarea">
+					<a href="#user"><img class="circle" src="<?php echo $this->baseUrl()?>/images/user.png"></a>
+				</div>
+				<div class="col s9 infoarea">
+					<a href="#name"><span class="name"><?php echo "studenName";?></span></a>
+					<a href="#email"><span class="email"><?php echo "stuCode";?></span></a>
+					<?php if(1 >1){?>
+					<a href="#modalSwitchAcc" class="waves-effect modal-trigger btn-acc"><span class="email primary-text"><?php echo $tr->translate("SWITCH_STUDENT"); ?> <i class="mdi mdi-account-switch"></i></span></a>
+					<?php }else{?>
+					<a href="<?php echo $this->baseUrl()."/utility/profile/loginmore"; ?>" class="preloader-trigger waves-effect modal-trigger btn-acc"><span class="email primary-text"><?php echo $tr->translate("ADD_MORE_ACCOUNT"); ?> <i class="mdi mdi-account-multiple-plus"></i></span></a>
+					<?php }?>
+				</div>
+			</div>
+		</li>
+		<li class="menulinks">
+			<ul class="collapsible">
+			<!-- SIDEBAR - START -->
+
+				<!-- MAIN MENU - START -->
+				<li class="sep-wrap">
+					<div class="divider"></div>
+				</li>
+				<li class="lvl1 ">
+                    <div class=" waves-effect " >
+                        <a class="preloader-trigger" href="<?php echo $this->baseUrl()."/home"?>">
+							<i class="mdi mdi-home-outline"></i>
+							<span class="title"><?php echo $tr->translate("HOME"); ?></span>
+						</a>
+					</div>
+				</li>
+				<li class="lvl1 ">
+                    <div class=" waves-effect " >
+                        <a class="preloader-trigger" href="<?php echo $this->baseUrl()."/utility/profile"?>">
+							<i class="mdi mdi-account-circle"></i>
+							<span class="title"><?php echo $tr->translate("PROFILE"); ?></span>
+						</a>
+					</div>
+				</li>
+				<li class="lvl1 ">
+                    <div class=" waves-effect " >
+                        <a class="preloader-trigger" href="<?php echo $this->baseUrl()."/utility/grading";?>">
+							<i class="mdi mdi-book-plus"></i>
+							<span class="title"><?php echo $tr->translate("GRADING_SYSTEM"); ?></span>
+						</a>
+					</div>
+				</li>
+				<li class="lvl1 ">
+                    <div class=" waves-effect " >
+                        <a class="preloader-trigger" href="<?php echo $this->baseUrl()."/utility/attendance"?>">
+							<i class="mdi mdi-account-multiple-check"></i>
+							<span class="title"><?php echo $tr->translate("ATTENDANCE_POLICY"); ?></span>
+						</a>
+					</div>
+				</li>
+				<li class="lvl1 ">
+                    <div class=" waves-effect " >
+                        <a class="preloader-trigger" href="<?php echo $this->baseUrl()."/utility/discipline"?>">
+							<i class="mdi mdi-library-books"></i>
+							<span class="title"><?php echo $tr->translate("DISCIPLINE_POLICY"); ?></span>
+						</a>
+					</div>
+				</li>
+				
+				
+				<li class="lvl1 ">
+                    <div class=" waves-effect " >
+                         <a class="preloader-trigger" href="<?php echo $this->baseUrl()."/utility/branch";?>">
+							<i class="mdi mdi-map-marker-multiple"></i>
+							<span class="title"><?php echo $tr->translate("OUR_BRANCH"); ?></span>
+						</a>
+					</div>
+				</li>
+				<li class="lvl1 ">
+                    <div class=" waves-effect " >
+                        <a class="preloader-trigger" href="<?php echo $this->baseUrl()."/utility/aboutus";?>">
+							<i class="mdi mdi-information-outline"></i>
+							<span class="title"><?php echo $tr->translate("ABOUTS"); ?></span>
+						</a>
+					</div>
+				</li>
+				<li class="lvl1 ">
+                    <div class=" waves-effect " >
+                        <a class="preloader-trigger" href="<?php echo $this->baseUrl()."/utility/contactus";?>">
+							<i class="mdi mdi-contacts"></i>
+							<span class="title"><?php echo $tr->translate("CONTACT_US"); ?></span>
+						</a>
+					</div>
+				</li>
+				<li class="sep-wrap">
+					<div class="divider"></div>
+				</li>
+				<li class="lvl1 ">
+                    <div class=" waves-effect " >
+                        <a class="preloader-trigger" href="<?php echo $this->baseUrl()."/utility/profile/changepassword";?>">
+							<i class="mdi mdi-lock-reset"></i>
+							<span class="title"><?php echo $tr->translate("CHANGE_PASSWORD"); ?></span>
+						</a>
+					</div>
+				</li>
+				<li class="lvl1 ">
+					<div class="waves-effect ">
+						<a class="preloader-trigger" href="<?php echo $this->baseUrl()."/index/logout?value=1"?>" >
+							<i class="mdi mdi-power"></i><span class="title"><?php echo $tr->translate("LOGOUT"); ?></span>  
+						</a>
+					</div>
+				</li>
+			<!-- MAIN MENU - END -->
+		<!--  SIDEBAR - END -->
+			</li>
+		</ul>
+	</li>
+		<li class="copy-spacer"></li>
+		<li class="copy-wrap">
+			<div class="copyright">&copy; <?php echo $tr->translate("Developed By")." ".$tr->translate("CAMAPP_TECHNOLOGY"); ?></div>
+		</li>
+	</ul>

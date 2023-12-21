@@ -1,0 +1,135 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$baseUrl = $this->baseUrl();
+	
+	$request=Zend_Controller_Front::getInstance()->getRequest();
+	$action=$request->getActionName();
+	$controller=$request->getControllerName();
+	$module=$request->getModuleName();
+?>
+
+		<div class="footer-menu">
+		<ul>
+			<li>
+				<a class="preloader-trigger <?php if($module=="home" && $controller=="index" && $action=="index"){ echo "active";} ?> " href="<?php echo $this->baseUrl()."/home/index"?>" class=' <?php if($module=="home" AND $controller=="index" AND $action=="index"){ echo "active";} ?>'>          
+					<i class="mdi mdi-home-outline"></i>
+					<span><?php echo $tr->translate("HOME"); ?></span>
+				</a>        
+			</li>
+			<li>
+				<a class="preloader-trigger <?php if($module=="utility" && $controller=="news" && $action=="index"){ echo "active";} ?>" href="<?php echo $this->baseUrl()."/utility/news"?>" >          
+					<i class="mdi mdi-newspaper"></i>
+					<span><?php echo $tr->translate("NEWS"); ?></span>
+					<?php if($countingNews>0){?>
+					<span class="menuBadgeNews menuBadge new badge red "><?php echo $countingNewsLabel; ?></span>
+					<?php } ?>
+				</a>        
+			</li>
+			<li>
+				<a class="preloader-trigger <?php if($module=="utility" && $controller=="notification" && $action=="index"){ echo "active";} ?>" href="<?php echo $this->baseUrl()."/utility/notification"?>" >          
+					<i class="mdi mdi-bell"></i>
+					<span><?php echo $tr->translate("NOTIFICATION"); ?></span>
+					<?php if($countingPayment>0){?>
+					<span class="menuBadgeNotif menuBadge new badge red "><?php echo $countingNoficationLabel; ?></span>
+					<?php } ?>
+				</a>        
+			</li>
+			<li>
+				<a data-target="slide-nav" href="#" class="sidenav-trigger">          
+					<i class="mdi mdi-menu"></i>
+					<span><?php echo $tr->translate("MORE"); ?></span>
+				</a>        
+			</li>
+		</ul>
+	</div>
+</div>
+	
+		<script type="text/javascript">
+			var url_changelang = '<?php echo $this->url(array('module'=>'default','controller'=>'index','action'=>'changelange'));?> ';
+			function changeLange(lang){
+				$('.preloader-background').delay(10).fadeOut('slow');
+				jQuery.ajax({
+					url: url_changelang,
+					type: "post",
+					data:{'lange':lang},
+					success: function(data){
+						location.reload();
+					},
+					error:function(err){
+						
+					}
+				});
+			}
+			
+		 </script>
+	
+
+
+	<!-- OTHER SCRIPTS INCLUDED ON THIS PAGE - START --> 
+	<script type="text/javascript">
+         $(".modal").modal();
+    </script>
+	<!-- OTHER SCRIPTS INCLUDED ON THIS PAGE - END --> 
+		<!-- CORE TEMPLATE JS - START --> 
+		<script src="<?php echo $baseUrl."/templates/phone_template/"; ?>assets/js/init.js"></script>
+
+		<script src="<?php echo $baseUrl."/templates/phone_template/"; ?>assets/js/scripts.js"></script>
+
+		<!-- END CORE TEMPLATE JS - END --> 
+
+
+		<script type="text/javascript">
+			$(document).ready(function(){
+			<?php if($module=="default" AND $controller=="index" AND $action=="index"){ ?>
+			$(".carousel-content.carousel-slider").carousel({
+				fullWidth: true,
+				indicators: true
+			  }).css("height", 200);
+		  <?php } ?>
+		  
+		  setInterval(function(){ 
+			if(navigator.onLine==false){
+			   $('.offline-background').delay(10).fadeIn('slow');
+			  }else{
+			   $('.offline-background').delay(10).fadeOut('slow');
+			}
+		 }, 5000);
+	 
+		    
+			  
+		  });  
+			document.addEventListener("DOMContentLoaded", function(){
+				$('.preloader-background').delay(10).fadeOut('slow');
+			});
+			$( "a.preloader-trigger" ).click(function() {
+				window.history.pushState('forward', null, '');
+			  $('.preloader-background').css("display","flex");
+			});
+			$( "button.preloader-trigger" ).click(function() {
+				window.history.pushState('forward', null, '');
+			  $('.preloader-background').css("display","flex");
+			});
+			$( "a.preloader-trigger-back" ).click(function() {
+				
+			  $('.preloader-background').css("display","flex");
+			   
+			});
+			
+
+			function expanding(event) {
+			  if ($("#modal-popup").hasClass("drageTop")) {
+				  $(".modal.bottom-sheet.modal-popup-info").removeClass("drageTop");
+				   $('ul.collection.with-header.collection-popup-info').animate({'max-height': '45vi'});
+				   $('ul.collection.with-header.collection-popup-info').animate({'height': '45vi'});
+				}else{
+					$(".modal.bottom-sheet.modal-popup-info").addClass("drageTop");
+					 $('ul.collection.with-header.collection-popup-info').animate({'max-height': '100vi'});
+					 $('ul.collection.with-header.collection-popup-info').animate({'height': '100vi'});
+				}
+			}
+		</script>
+		<?php if($module=="default" AND $controller=="index" AND $action=="index"){ ?>
+		<script src="<?php echo $baseUrl."templates/phone_template/"; ?>assets/js/custom-install.js"></script>
+		<?php } ?>
+	</body>
+</html>	 
