@@ -10,28 +10,54 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 	}
 	public function getCientAndPropertyInfo($sale_id){
 		$db = $this->getAdapter();
-		$sql="SELECT s.`id`,s.`sale_number` AS `name`,
-			c.`client_number`,c.`name_en`,c.`name_kh`,
-			s.`price_before`,s.`price_sold`,
-            s.`paid_amount`,
-            ((SELECT SUM(COALESCE(total_principal_permonthpaid,0)+COALESCE(extra_payment,0)) FROM `ln_client_receipt_money` WHERE sale_id=$sale_id AND status=1 LIMIT 1) + ((SELECT COALESCE(SUM(crd.total_amount),0) FROM `ln_credit` AS crd WHERE crd.status=1 AND crd.sale_id = s.id LIMIT 1)) ) AS total_principal,
-            (SELECT COUNT(id) FROM `ln_client_receipt_money` WHERE status=1 AND is_completed=1 AND sale_id=$sale_id LIMIT 1) as installment_paid, 
-            s.`balance`,s.`discount_amount`,s.`other_fee`,s.`payment_id`,s.`graice_period`,s.`total_duration`,s.`buy_date`,s.`end_line`,
-			s.`client_id`,
-			s.`house_id`,p.`id` as property_id,p.`land_code`,p.`land_address`,
-			p.hardtitle,
-			p.`land_size`,p.`width`,p.`height`,p.`street`,p.`land_price`,p.`house_price`
-			,p.`street`,(SELECT t.type_nameen FROM `ln_properties_type` AS t WHERE t.id = p.`property_type` LIMIT 1) AS pro_type,
-			s.staff_id,
-			s.`comission`,
-			s.full_commission,
-			((SELECT COALESCE(SUM(total_amount),0) FROM `ln_comission` WHERE sale_id=s.id AND status=1 LIMIT 1) + (SELECT COALESCE(SUM(cpd.payment_amount),0) FROM `rms_commission_payment_detail` as cpd, rms_commission_payment AS cp WHERE cp.id = cpd.payment_id AND cpd.sale_id=s.id AND cp.status=1 LIMIT 1)) AS comission_paid,
-			(SELECT category_id FROM `ln_comission` WHERE sale_id=s.id AND status=1 LIMIT 1) as category_id,
-			
-			s.`create_date`,s.`note` AS sale_note
-			FROM `ln_sale` AS s ,`ln_client` AS c,`ln_properties` AS p
+		$sql="
+			SELECT 
+				s.`id`
+				,s.`sale_number` AS `name`
+				,c.`client_number`
+				,c.`name_en`
+				,c.`name_kh`
+				,s.`price_before`,s.`price_sold`
+				,s.`paid_amount`
+				,((SELECT SUM(COALESCE(total_principal_permonthpaid,0)+COALESCE(extra_payment,0)) FROM `ln_client_receipt_money` WHERE sale_id=$sale_id AND status=1 LIMIT 1) + ((SELECT COALESCE(SUM(crd.total_amount),0) FROM `ln_credit` AS crd WHERE crd.status=1 AND crd.sale_id = s.id LIMIT 1)) ) AS total_principal
+				,(SELECT COUNT(id) FROM `ln_client_receipt_money` WHERE status=1 AND is_completed=1 AND sale_id=$sale_id LIMIT 1) as installment_paid
+				,s.`balance`
+				,s.`discount_amount`
+				,s.`other_fee`
+				,s.`payment_id`
+				,s.`graice_period`
+				,s.`total_duration`
+				,s.`buy_date`
+				,s.`end_line`
+				,s.`client_id`
+				,s.`house_id`
+				,p.`id` as property_id
+				,p.`land_code`
+				,p.`land_address`
+				,p.hardtitle
+				,p.`land_size`
+				,p.`width`
+				,p.`height`
+				,p.`street`
+				,p.`land_price`
+				,p.`house_price`
+				,p.`street`
+				,(SELECT t.type_nameen FROM `ln_properties_type` AS t WHERE t.id = p.`property_type` LIMIT 1) AS pro_type
+				,COALESCE((SELECT t.serviceFee FROM `ln_properties_type` AS t WHERE t.id = p.`property_type` LIMIT 1),0) AS serviceFee
+				,s.staff_id
+				,s.`comission`
+				,s.full_commission
+				,((SELECT COALESCE(SUM(total_amount),0) FROM `ln_comission` WHERE sale_id=s.id AND status=1 LIMIT 1) + (SELECT COALESCE(SUM(cpd.payment_amount),0) FROM `rms_commission_payment_detail` as cpd, rms_commission_payment AS cp WHERE cp.id = cpd.payment_id AND cpd.sale_id=s.id AND cp.status=1 LIMIT 1)) AS comission_paid
+				,(SELECT category_id FROM `ln_comission` WHERE sale_id=s.id AND status=1 LIMIT 1) as category_id
+				
+				,s.`create_date`
+				,s.`note` AS sale_note
+			FROM 
+				`ln_sale` AS s 
+				,`ln_client` AS c
+				,`ln_properties` AS p
 			WHERE c.`client_id` = s.`client_id` AND p.`id`=s.`house_id` AND s.id =".$sale_id;
-			return $db->fetchRow($sql);
+		return $db->fetchRow($sql);
 	}
 	public function getCancelSale($search=null){
 		$db = $this->getAdapter();

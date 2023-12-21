@@ -585,7 +585,11 @@ function preview()
    docprint.focus(); 
 }
 function exportExcel(){
-	$('#exportExcel').tableExport({type:'excel',escape:'false'});
+	var currentTitle = $(document).attr('title');
+	var todayStr = "<?php echo date("d-m-Y"); ?>";
+	currentTitle = currentTitle+'-'+todayStr;
+	
+	$('#exportExcel').tableExport({type:'excel',escape:'false',fileName:currentTitle});
 }
 <?php }?>
 

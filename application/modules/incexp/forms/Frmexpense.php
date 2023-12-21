@@ -314,6 +314,7 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
 			if($request->getControllerName()=='income'){
 				$_status->setValue($data['is_beginning']);
 			}else{
+				$data['other_invoice'] = empty($data['other_invoice']) ? "" : $data['other_invoice'];
 				$_other_invoice->setValue($data['other_invoice']);
 			}
 			if (!empty($data['supplier_id'])){
@@ -438,6 +439,11 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
 		));
 	
 		$id = new Zend_Form_Element_Hidden("id");
+		$id->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+				));
+				
 		$_currency_type = new Zend_Dojo_Form_Element_FilteringSelect('category_id');
 		$_currency_type->setAttribs(array(
 				'dojoType'=>'dijit.form.FilteringSelect',
