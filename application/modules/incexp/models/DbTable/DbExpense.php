@@ -58,8 +58,9 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 				'user_id'		=> $this->getUserId(),
 				'create_date'   => date('Y-m-d'),
 				
-				'cancelSale_id'   =>$cancelSale_id,
-				'sale_id'   =>$saleId,
+				'cancelSale_id' =>$cancelSale_id,
+				'sale_id'   	=>$saleId,
+				'expenseType'	=> $data['expenseType'],
 			);
 			$this->_name="ln_expense";
 			$expense_id  = $this->insert($dataRss);
@@ -171,7 +172,9 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 				'user_id'		=> $this->getUserId(),	
 				
 				'cancelSale_id'   =>$cancelSale_id,
-				'sale_id'   =>$saleId,
+				'sale_id'   	=>$saleId,
+				
+				'expenseType'	=> $data['expenseType'],
 			);
 			$where=" id = ".$data['id'];
 			$this->_name="ln_expense";

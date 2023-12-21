@@ -278,6 +278,18 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
     			'class'=>'fullside',
     	));
 		
+		$expenseType = new Zend_Dojo_Form_Element_FilteringSelect('expenseType');
+		$expenseType ->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+			
+		));
+		$options= array(
+					1=>$this->tr->translate("DIRECT_EXPENSE"),
+					2=>$this->tr->translate("EXPENSE_INVOICE")
+				);
+		$expenseType->setMultiOptions($options);
+		
 		if($data!=null){
 			
 			$start_Date->setValue($data['category_id']);
@@ -325,11 +337,16 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
 				$cheque_issuer->setValue($data['cheque_issuer']);
 			}
 			
+			$data['expenseType'] = empty($data['expenseType']) ? "1" : $data['expenseType'];
+			$expenseType->setValue($data['expenseType']);
+			
 		}
 		$this->addElements(array($amount,$qty,$price,$start_Date,$end_Date,$_status,$payment_type,$_cheque,$invoice,$_currency_type,$title,$_Date ,$_stutas,$_Description,
 				$category_id_expense,
 				$total_amount,$convert_to_dollar,$_branch_id,$for_date,$id,$_supplier_id,$cheque_issuer,$_other_invoice,
-				$_items_id,$_bankId
+				$_items_id
+				,$_bankId
+				,$expenseType
 				
 				));
 		return $this;
