@@ -2,8 +2,6 @@
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	echo $this->headTitle($tr->translate("VERIFY_SALE"));
 	$frm = $this->frm_search;
-	$edit_sale = $tr->translate("EDIT");
-	$urlEdit = $this->baseUrl()."/loan/verifysale/edit/id/";
 ?>
 <script>
 	dojo.require("dijit.form.DateTextBox");
@@ -94,7 +92,6 @@ require(["dojo/ready"], function(ready){
 land_id = '<?php echo $this->rssearch['land_id']?>';
 var url_getland = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getallland')); ?>';
 function getAllPropertyBranch(branch_id){
-
 	dijit.byId('land_id').reset();
 	property_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
 	dijit.byId('land_id').set('store', property_store);
@@ -122,42 +119,5 @@ function getAllPropertyBranch(branch_id){
 		}
 	});
 } 
-function combineschedule(url){
-	 url_combine ='<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'rpt-combineschedules'));?>';
-	 id = $('#id_selected').val();
-	 if(id==''){alert("Please select record first!");return false;}
-	 window.open(url_combine+'/id/'+id, '_blank');
-}
-function checked_id(index){
-	$("#id_selected").val('');
-	 var searchIDs = $('input:checked').map(function(){
-	      return $(this).val();
-	    });
-	    $("#id_selected").val(searchIDs.get());
-}
 
-var row=0;
-var url="";
-$(function(){
-	$.contextMenu({
-		selector: '.context-menu-one', 
-		callback: function(key, options) {
-			var m = "clicked: " + key;
-			if(key=="edit"){
-				url='<?php echo $urlEdit;?>';
-			}
-			gotoAction();
-		},
-		items: {
-			"edit": {name: "<?php echo $edit_sale;?>", icon: "edit", accesskey: "e"},
-		}
-	});
-});
-function setrowdata(index){
-	row = index;
-}
-var recordid ='';
-function gotoAction(){
-	 window.open(url+row+'?rightclick=true', '_blank');
-}
 </script>

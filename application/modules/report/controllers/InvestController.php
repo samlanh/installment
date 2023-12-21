@@ -203,7 +203,6 @@ class Report_InvestController extends Zend_Controller_Action {
   	}else{
   		$this->_redirect("/report/paramater");
   	}
-  	//   	$rss = $db->UpdatePaytimeBooking();
   	$frmpopup = new Application_Form_FrmPopupGlobal();
   	$this->view->footer = $frmpopup->getFooterReceipt();
   	$this->view->officailreceipt = $frmpopup->getInvestmentReceipt();
@@ -227,7 +226,6 @@ class Report_InvestController extends Zend_Controller_Action {
   	}else{
   		$this->_redirect("/report/paramater");
   	}
-  	//   	$rss = $db->UpdatePaytimeBooking();
   	$frmpopup = new Application_Form_FrmPopupGlobal();
   	$this->view->footer = $frmpopup->getFooterReceipt();
   	$this->view->officailreceipt = $frmpopup->getBrokerReceipt();

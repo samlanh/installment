@@ -98,7 +98,6 @@ class Other_LoanTypeController extends Zend_Controller_Action
     				'type'=>$data['type']
     				);
     		$id = $db->addViewType($param,1);
-    		//print_r($id);
     		print_r(Zend_Json::encode($id));
     		exit();
     	}

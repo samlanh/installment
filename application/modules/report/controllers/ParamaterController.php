@@ -616,7 +616,7 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	Application_Model_Decorator::removeAllDecorator($frm);
   	$this->view->frm_search = $frm;
   	
-  	$frm = new Loan_Form_FrmPlongStep();
+  	$frm = new Issue_Form_FrmPlongStep();
   	$frm_loan=$frm->FrmPlongStep();
   	Application_Model_Decorator::removeAllDecorator($frm_loan);
   	$this->view->frm_searchplog = $frm_loan;
@@ -696,9 +696,6 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$this->view->search=$search;
   	$db  = new Report_Model_DbTable_DbParamater();
   	$this->view->row = $db->getAllIncome($search);
-  
-//   	$db  = new Report_Model_DbTable_DbLandreport();
-//   	$this->view->houserepair =$db->getAllIncomeOtherPayment($search);
 
 	$db  = new Report_Model_DbTable_DbLandreport();
   	$this->view->houserepair =$db->getAllIncomeOtherPayment($search,12);

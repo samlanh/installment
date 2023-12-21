@@ -119,8 +119,9 @@ class Loan_Model_DbTable_DdVerifySale extends Zend_Db_Table_Abstract
 			$db= $this->getAdapter();
 			$arr1 = array(
 					'is_verify'	  		=> 1,
-					'discount_amount'	=> $_data['discount'],
-					'discount_percent'	=> $_data['discount_percent'],
+					'price_before'	  	=> $_data['sold_price'],
+					'discount_amount'	  	=> 0,
+					'discount_percent'	  	=> 0,
 					'price_sold'	  	=> $_data['sold_price'],
 					'paid_amount'	  	=> $_data['totalPrincipalpaid'],
 					'balance'	  => $_data['totalBalance'],

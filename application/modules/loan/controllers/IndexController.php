@@ -302,6 +302,7 @@ class Loan_IndexController extends Zend_Controller_Action {
 			$foreditsale= empty($data['foreditsale'])?null:$data['foreditsale'];
 			
 			$row = $db->getAllLandInfo($data['branch_id'],1,$action,$propertytype,$foreditsale);
+			
 			$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 			array_unshift($row,array(
 					'id' => -1,

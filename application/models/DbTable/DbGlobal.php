@@ -2034,13 +2034,17 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 
 	public function getPaymentColectionInfo($data){
 		$db = $this->getAdapter();
-		$sql = "SELECT * FROM `ln_income` WHERE 1 ";
-		if( !empty($data['income_category'])){
-			$sql.= " AND category_id = ".$data['income_category'];
-		}
+		$sql="SELECT 
+				(SELECT serviceFee FROM `ln_properties_type` pt WHERE pt.id=p.`property_type` LIMIT 1) AS serviceFee,
+				(SELECT i.from_date FROM `ln_income` i WHERE  i.sale_id=s.id LIMIT 1) AS fromDate
+				
+				FROM `ln_sale` s,
+				`ln_properties` p
+				 WHERE p.`id`=s.`house_id` ";
 		if( !empty($data['sale_id'])){
-			$sql.= " AND sale_id = ".$data['sale_id'];
+			$sql.= " AND s.id = ".$data['sale_id'];
 		}
+		$sql.=" LIMIT 1";
 		if( !empty($data['incomeType'])){
 			$sql.= " AND incomeType = ".$data['incomeType'];
 		}

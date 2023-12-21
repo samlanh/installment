@@ -243,7 +243,6 @@ class IndexController extends Zend_Controller_Action
 	}
 	public function sessioncheckAction()
 	{
-
 		if ($this->getRequest()->isPost()) {
 			$session_user = new Zend_Session_Namespace(SYSTEM_SES);
 			$t = time();
@@ -264,21 +263,10 @@ class IndexController extends Zend_Controller_Action
 			exit();
 		}
 	}
+	
 	public function errorAction()
 	{
-	}
-	public function demoAction()
-	{
-		$this->_helper->layout()->disableLayout();
-
-		$frm = new Loan_Form_Frmdemo();
-		$frm_loan = $frm->FrmAddLoan();
-		Application_Model_Decorator::removeAllDecorator($frm_loan);
-		$this->view->frm_loan = $frm_loan;
-
-		$frmpopup = new Application_Form_FrmPopupGlobal();
-		$db = new Application_Model_DbTable_DbGlobal();
-		$this->view->client_doc_type = $db->getclientdtype();
+		
 	}
 	public static function start()
 	{
@@ -351,7 +339,7 @@ class IndexController extends Zend_Controller_Action
 		$key = new Application_Model_DbTable_DbKeycode();
 		$this->view->data = $key->getKeyCodeMiniInv(TRUE);
 
-		//     	$dbglobal = new Application_Model_DbTable_DbGlobal();
+		//$dbglobal = new Application_Model_DbTable_DbGlobal();
 //     	$exDate = $dbglobal->getExDate();
 //     	if(date('Y-m-d')<=$exDate){
 //     		$this->_redirect("/index");
@@ -395,15 +383,4 @@ class IndexController extends Zend_Controller_Action
 			exit();
 		}
 	}
-/*
-function notiftrnstkAction(){
-if($this->getRequest()->isPost()){
-$data = $this->getRequest()->getPost();
-$dbGn = new Application_Model_DbTable_DbStockSystemNotify();
-$row = $dbGn->getNotifyTransferStockHtml($data);
-print_r(Zend_Json::encode($row));
-exit();
-}
-}
-*/
 }

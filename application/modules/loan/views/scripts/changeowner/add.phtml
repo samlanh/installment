@@ -10,10 +10,7 @@ fieldset {
 }
 ul li{ list-style-type: none;}
 </style>
-<script src="<?php echo $baseurl;?>/js/help.js"></script>
-<script>
-	require(["dijit/form/DateTextBox","dijit/form/NumberTextBox","dojo/number"]);
-</script>
+
 <div class="card">
 	<div class="card-content collapse show">
 		<form id='frm_add_tran' action="" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
@@ -218,14 +215,16 @@ ul li{ list-style-type: none;}
 		</form>
 	</div>
 </div>
-<script type="text/javascript">	
+<script src="<?php echo $baseurl;?>/js/help.js"></script>
+<script>
+	require(["dijit/form/DateTextBox","dijit/form/NumberTextBox","dojo/number"]);
 function filterClient(){
 	branch_id = dijit.byId('branch_id').get('value');	
 	getAllPropertyBranch(branch_id);
 	getAllClientByBranch(branch_id);
 	getAllSaleNumber(branch_id);
 }
-var url_getland = '<?php echo $this->url(array('module'=>'loan','controller'=>'transferproject','action'=>'getallland')); ?>';
+var url_getland = '<?php echo $this->url(array('module'=>'loan','controller'=>'transfercash','action'=>'getallland')); ?>';
 function getAllPropertyBranch(branch_id){//used
 	dojo.xhrPost({
 		url:url_getland,	
@@ -355,6 +354,7 @@ require(["dojo/ready"], function(ready){
 		queryExpr: "*${0}*",           
 		required: true,		           
 		name: "loan_number",
+		placeholder:"<?php echo $tr->translate('SELECT_PROPERTY');?>", 
 		id: "loan_number",
 		searchAttr: "name",
 		class: 'fullside',
@@ -400,6 +400,7 @@ function getInfoByLoanNumber(){
 var sale_number_store  = getDataStorefromJSON('id','name', <?php print_r(array())?> );
 var url_getsalenumber = "<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'get-sale-number')); ?>";
 function getAllSaleNumber(branch_id){//used
+	dijit.byId('loan_number').reset();
 	dojo.xhrPost({
 		url:url_getsalenumber,	
 		content:{ 
