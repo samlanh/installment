@@ -1,0 +1,405 @@
+<?php 
+	$filter = $this->frm_search;
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$url = $this->url(array('module'=>'report','controller'=>'loan','action'=>'rpt-verification-detail'));
+	
+	$dbGB = new Application_Model_DbTable_DbGlobal();
+	$logo = $this->baseUrl()."/images/logo.jpg";
+	$branch_title = $tr->translate("BRAND_TITLE");
+	if ($this->search['branch_id'] >0 ){
+		$branch = $dbGB->getAllBranchInfoByID($this->search['branch_id']);
+		if (file_exists(PUBLIC_PATH."/images/projects/".$branch["logo"])){
+			$logo = $this->baseUrl()."/images/projects/".$branch["logo"];
+		}
+		//$branch_title = $branch['project_name'];
+	}
+	$is_showhouse = $this->data['showhouseinfo'];
+	$showOtherDis = OTHER_DIS_OPTION;
+	$showEditSchedule = SHOW_EDIT_SCHEDULE;
+	
+	$montFomat="d-m-Y";
+	if(MONTH_FORMATE_DATE_RECEIPT==1){
+		$montFomat="d-M-Y";
+	}
+	
+	$headerReportType = REPORT_LETER_HEAD;
+	$classHideHeight="110px";
+	if($headerReportType==2){
+		$classHideHeight="125px";
+	}
+?>
+<title><?php echo $tr->translate("RPT_VERIFICATION_SALE");?></title>
+
+
+<meta charset="utf-8">
+<script>
+dojo.require("dijit.form.DateTextBox");
+</script>
+<style>
+.hover:hover{ background:#ccc;}
+table.content-data  tr.style-head,
+table.tb-footer tr.style-head {
+   font-weight: bold !important;
+}
+</style>
+<title><?php echo $tr->translate("RPT_VERIFICATION_SALE");?></title>
+<div class="reportblog">
+	<div class="card-box">
+       	<div class="col-sm-12 border-botom">
+	   		<div class="col-sm-8 pd-0">
+	    		<h4 class="m-b-0"><i class="fa fa-file-text" aria-hidden="true"></i> <?php echo $tr->translate('RPT_VERIFICATION_SALE');?></h4>
+    		</div>
+    		<div class="col-sm-4 text-right">
+    		</div>
+    	</div>
+    </div>
+    <form method="post">
+	    <div class="card-box">
+	    	<div class="form-group"> 
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $filter->getElement('adv_search');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $filter->getElement('branch_id');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<input id="land_id" />
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $filter->getElement('property_type');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $filter->getElement('streetlist');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $filter->getElement('client_name');?>
+				</div>
+			</div>
+			<div class="form-group"> 
+				
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $filter->getElement('start_date');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $filter->getElement('end_date');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $filter->getElement('queryOrdering');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<button class="button-class button-primary" iconClass="glyphicon glyphicon-search" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+				</div>
+			</div>
+	    </div>
+    </form>
+	<div id="divPrint" style="margin: 0 auto;">
+	<style>
+
+		.hover:hover{ background: #ccc;}
+		table {font-family:'Times New Roman','Khmer OS Battambang'; }
+		table.content-data { page-break-inside:auto }
+		table.content-data tr{ page-break-inside:avoid; page-break-after:auto; }
+		#header {
+		  display: table-header-group;
+		  page-break-inside:avoid; page-break-after:auto;
+		}
+		table tr td ul li{text-align: center;list-style: none;line-height: 25px; }
+		th{padding: 5px;}
+		.hover td{padding: 1px;}
+		.hide{visibility: hidden;}
+		@media print {
+		  div.divFooter {
+		    position: fixed;
+		    top: 0;
+		  	width: 100%;
+		  	height: 100px;
+		  	bottom:0px;
+			margin:0;
+		  }
+			.hide{visibility: visible; height: <?php echo $classHideHeight;?>;}
+		}
+		.divFooter table{
+			font-family: 'Times New Roman','Khmer OS Battambang';
+			margin:0; 
+			padding:0; 
+			border:none;
+		}
+		
+		table.content-data{
+			border-collapse:collapse;
+			border:1px solid #000; 
+			font-size:13px;
+
+			width:100%;
+		}
+		table.content-data thead tr.style {
+		   line-height: 25px; font-size:12px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
+		   background: #ccd9ff;
+			text-align: center;
+		}
+
+
+		table.content-data  tr.style {
+		  
+		    white-space: nowrap;
+			line-height: 20px;
+		  
+		}
+		table.content-data tr td{
+			padding: 0 2px;
+		}
+		table.tb-footer{
+		border-collapse:collapse;
+		border:1px solid #000; 
+		font-size:13px;
+		}
+		table.tb-footer tr{
+		 line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;
+		}
+		.border_bottom {
+			border-bottom: 2px solid #000;
+		}
+		table tr td{
+			padding:0 1px;
+		}
+		/*
+		.style-head{
+			line-height: 20px;font-size: 14px !important;
+			font-family:'Times New Roman','Khmer OS Battambang';
+		}
+		table { page-break-inside:auto }
+		tr{ page-break-inside:avoid; page-break-after:auto; }
+		#header {
+		  display: table-header-group;
+		  page-break-inside:avoid; page-break-after:auto;
+		}
+		table tr td ul li{text-align: center;list-style: none;line-height: 25px;}
+		th{padding: 5px;}
+		.hover td{padding: 2px;}
+		.hide{visibility: hidden;}
+		@media print {
+			div.divFooter {
+				position: fixed;
+				top: 0;
+				width: 100%;
+				height: 100px;
+				bottom:0px;
+				margin:0;
+			}
+			.hide{visibility: visible; height: <?php echo $classHideHeight;?>;}
+		}
+		table.content-data{
+			border-collapse:collapse;
+			width:100%;
+			border:1px solid #000; 
+			font-family:'Times New Roman','Khmer OS Battambang';
+			font-size:12px;
+			white-space: nowrap;
+			margin:0 auto;
+		}
+		table.content-data tr.style-head {
+		   line-height: 25px; padding:1px 0px; white-space: nowrap;height: 22px; 
+			background: #ccd9ff;
+			text-align: center;
+		}
+		table.content-data tr.style-rowdata {
+			font-size:12px; 
+			height: 23px;
+		}
+		table.content-data td {
+			padding: 2px;
+		}
+		.border_bottom{
+			border-bottom:2px solid #000;
+		}
+		tr.style-rowdata.hover.context-menu-one.completedCss {
+			background: #00e01c0d;
+		}
+		table tr td{
+			padding:0 2px;
+		}
+		*/
+	</style>
+	<table style="font-family: 'Times New Roman','Khmer OS Battambang'; width:100%;">
+		<tr>
+	    	<td align="center">
+	        	<div class="divFooter">
+		        	<?php echo $this->headerReport;?>
+	            </div>
+	        </td>
+	    </tr>
+	    <tr>
+	    	<td id="exportExcel">
+	            <table class="content-data" border="1" cellspacing="0">
+	               <thead>
+	                 <tr class="hide" style="border:1px solid #000;">
+		                <td colspan="17" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
+		             </tr>
+	                 <tr class="style" align="center">
+					  <?php 
+					  $colspan=6;
+					  ?>
+						<td scope="col" rowspan="2"><?php echo $tr->translate("NUM");?></td>
+						<td scope="col" rowspan="2"><?php echo $tr->translate("CUSTOMER_INFO");?></td>
+						<td scope="col" colspan="<?php echo $colspan;?>"><?php echo $tr->translate("SALE_INFO");?></td>
+						<td scope="col" colspan="6"><?php echo $tr->translate("VERIFY_INFO");?></td>
+					 </tr>
+	                 <tr class="style" align="center">
+	                    <td  scope="col"><?php echo $tr->translate("PROPERTY_CODE");?></td>
+	                    <td scope="col"><?php echo $tr->translate("BUY_DATE");?></td>
+	                    <td scope="col"><?php echo $tr->translate("PRICE_BEFORE");?></td>
+	                    <td scope="col"><?php echo $tr->translate("SOLD_PRICE");?></td>
+	                    <td scope="col"><?php echo $tr->translate("PAID");?></td>
+	                    <td scope="col"><?php echo $tr->translate("BALANCE");?></td>
+						
+	                    <td scope="col"><?php echo $tr->translate("verifyDate");?></td>
+	                    <td scope="col"><?php echo $tr->translate("PRINCIPLE_PICE_VERIFY");?></td>
+	                    <td scope="col"><?php echo $tr->translate("SOLD_PRICE_VERIFY");?></td>
+	                    <td scope="col"><?php echo $tr->translate("PAID_VERIFY");?></td>
+	                    <td scope="col"><?php echo $tr->translate("BALANCE_VERIFY");?></td>
+	                    <td scope="col"><?php echo $tr->translate("BY");?></td>
+	                   
+	                   
+	               	 </tr>
+	              </thead>
+	               <?php 
+	              
+	               $key=0;
+	               if(!empty($this->loanrelease_list))foreach($this->loanrelease_list as $key =>$row){?>
+	              	<tr class="style hover context-menu-one " oncontextmenu="setrowdata(<?php echo $row['id'];?>);return false;" >
+						<td data-label="<?php echo $tr->translate("NUM");?>" align="center"><?php echo $key+1; ?></td>
+						<td data-label="<?php echo $tr->translate("CUSTOMER_INFO");?>"><span style="line-height: 14px;white-space: pre-wrap !important;max-width: 150px;width: 150px;display: block;font-size: 11px;overflow-wrap: break-word;text-align: left;vertical-align: top; padding:2px 0;" ><?php echo $row['name_kh']; if(!empty($row['phone'])){ echo "<span style='display: block; line-height: 14px;' />".$row['phone'];}?></span></span></td>
+						<td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>"><span style="line-height: 14px;white-space: pre-wrap !important;max-width: 150px;width: 150px;display: block;font-size: 11px;overflow-wrap: break-word;text-align: left;vertical-align: top; font-weight: 600; padding:2px 0;" ><?php echo $row['land_address']." ".$row['street']; ?></span></td>
+						
+						
+						<td data-label="<?php echo $tr->translate("BUY_DATE");?>" style="white-space:nowrap;"><?php echo date($montFomat,strtotime($row['buyDate'])); ?></td>
+						<td data-label="<?php echo $tr->translate("PRICE_BEFORE");?>" align="right"><span style="line-height:15px;"><?php echo number_format($row['priceBefore'],2); ?></span></td>
+						<td data-label="<?php echo $tr->translate("SOLD_PRICE");?>" align="right" style="white-space:nowrap;"><?php echo number_format($row['priceSold'],2); ?></td>	
+						<td data-label="<?php echo $tr->translate("PAID");?>" align="right" style="white-space:nowrap;"><?php echo number_format($row['paidAmount'],2); ?></td>	
+						<td data-label="<?php echo $tr->translate("BALANCE");?>" align="right" style="white-space:nowrap;"><?php echo number_format($row['balance'],2); ?></td>	
+						
+						<td data-label="<?php echo $tr->translate("verifyDate");?>" style="white-space:nowrap;"><?php echo date($montFomat,strtotime($row['verifyDate'])); ?></td>
+						<td data-label="<?php echo $tr->translate("PRICE_BEFORE");?>" align="right"><span style="line-height:15px;"><?php echo number_format($row['priceBeforeNew'],2); ?></span></td>
+						<td data-label="<?php echo $tr->translate("SOLD_PRICE");?>" align="right" style="white-space:nowrap;"><?php echo number_format($row['priceSoldNew'],2); ?></td>	
+						<td data-label="<?php echo $tr->translate("PAID");?>" align="right" style="white-space:nowrap;"><?php echo number_format($row['paidAmountNew'],2); ?></td>	
+						<td data-label="<?php echo $tr->translate("BALANCE");?>" align="right" style="white-space:nowrap;"><?php echo number_format($row['balanceNew'],2); ?></td>	
+						<td data-label="<?php echo $tr->translate("BY");?>"><?php echo $row['user_name']; ?></td>
+					</tr>
+					<?php }?>
+					
+	              </table>
+	              <br />
+	              <?php echo $this->footerReport;?>
+	    	</td>
+	    </tr>
+	</table>
+	</div>
+</div>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
+<script>
+dojo.require("dojo.data.ItemFileWriteStore"); 
+var property_store  = getDataStorefromJSON('id','name',[{"id":-1,"name":"<?php echo $tr->translate("SELECT_PROPERTY");?>"}]);
+require(["dojo/ready"], function(ready){
+	ready(function(){
+		 getAllPropertyBranch();
+		  getBranchInfo();
+		  
+		 document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
+		 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("RPT_VERIFICATION_SALE");?>';
+		 document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date("d-M-Y"); }else{ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date("d-M-Y",strtotime($this->search['end_date'])); }?>';
+	
+	});
+	new dijit.form.FilteringSelect({
+		store: property_store,
+		required: false,
+		autoComplete: false,
+		queryExpr: "*${0}*",
+		name: "land_id",
+		id: "land_id",
+		value:-1,
+		searchAttr: "name",
+		class: 'fullside fullside50',
+		onChange: function() {
+			land_id=-1;
+	}
+	}, "land_id");		 
+});
+land_id = '<?php echo $this->search['land_id']?>';
+var url_getland = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getallland')); ?>';
+function getAllPropertyBranch(branch_id){
+	branch_id = dijit.byId('branch_id').get('value');
+	if(branch_id<0){
+		return false;
+	}
+	dojo.xhrPost({
+		url:url_getland,	
+		content:{ 
+		    'branch_id':branch_id,
+		    'action':1
+		},		    
+		handleAs:"json",
+		load: function(data) {
+			property_store  = getDataStorefromJSON('id','name', data);		
+		    dijit.byId('land_id').set('store', property_store);
+		    
+		    if(land_id>0){
+		    	dijit.byId('land_id').attr('value',land_id);
+			 }
+		},
+		error: function(err) {
+		}
+	});
+} 
+
+var row=0;
+var url="";
+$(function(){
+	$.contextMenu({
+		selector: '.context-menu-one', 
+		callback: function(key, options) {
+			var m = "clicked: " + key;
+			if(key=="detail"){
+				url='<?php echo $this->baseUrl()."/report/loan/rpt-verification-detail/id/";?>';
+			}
+			gotoAction();
+		},
+		items: {
+			"detail": {name: "<?php echo $tr->translate("VERIFICATON_DETAIL");?>", icon: "fa-file-text", accesskey: "c"},
+		}
+	});
+});
+function setrowdata(index){
+	row = index;
+}
+var recordid ='';
+function gotoAction(){
+	 window.open(url+row, '_blank');
+}
+
+function getBranchInfo(){
+	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
+	branch_id = '<?php echo empty($this->search['branch_id'])?0:$this->search['branch_id'];?>';
+	if(branch_id=="" || branch_id<=0){
+		return false;
+	}
+	dojo.xhrPost({
+	    url: url_submit,	
+	    content:{ 
+		    'branch_id':branch_id
+		},	
+		load: function(data) {
+			var arr = JSON.parse(data);
+			var imagesUrl = '<img  style="height:85px; max-width: 100%;" src="'+arr.url_logo+'" />';
+			document.getElementById('projectlogo').innerHTML = imagesUrl;	
+			
+			<?php if($headerReportType==2){?>
+			document.getElementById('projectName').innerHTML = '('+arr.project_name+')';
+			<?php }else{?>
+			document.getElementById('projectName').innerHTML = arr.project_name;
+			<?php }?>
+		},
+		error: function(e) {
+		}
+	});
+}
+</script>

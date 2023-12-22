@@ -23,7 +23,7 @@ class Loan_Model_DbTable_DdVerifySale extends Zend_Db_Table_Abstract
     	$where = " AND ".$from_date." AND ".$to_date;
     	$sql=" 
     	SELECT 
-			`s`.`id` AS `id`
+			vrf.`id` AS `id`
 			,(SELECT
 				`ln_project`.`project_name`
 			FROM `ln_project`
