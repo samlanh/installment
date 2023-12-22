@@ -3290,5 +3290,173 @@ function updatePaymentStatus($data){
 			return array();
 		}
 	}
+	
+	
+	public function getVerificationSale($search,$reschedule =null){
+    	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+    	$edit_sale = $tr->translate("EDITSALEONLY");
+    	$session_lang=new Zend_Session_Namespace('lang');
+    	$lang = $session_lang->lang_id;
+    	
+    	$str = 'name_en';
+    	if($lang==1){
+    		$str = 'name_kh';
+    	}
+    	
+    	$from_date =(empty($search['start_date']))? '1': " s.verifyDate >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " s.verifyDate <= '".$search['end_date']." 23:59:59'";
+    	$where = " AND ".$from_date." AND ".$to_date;
+    	$sql=" 
+    	SELECT 
+			`s`.`id` AS `id`
+			,(SELECT
+				`ln_project`.`project_name`
+			FROM `ln_project`
+			WHERE (`ln_project`.`br_id` = `s`.`branch_id`)
+			LIMIT 1 ) AS `branch_name`
+			,`c`.`name_kh`         AS `name_kh`
+			,`c`.`phone`         AS `phone`
+			,`p`.`land_address`    AS `land_address`
+			,`p`.`street`          AS `street`
+			,(SELECT $str FROM `ln_view` WHERE key_code =s.payment_id AND type = 25 limit 1) AS paymenttype
+			
+			,vrf.*
+			,vrf.`verifyDate` AS `verifyDate`
+			,vrf.`priceBeforeNew`
+			,vrf.`priceSoldNew`
+			,vrf.`paidAmountNew`
+			,vrf.`balanceNew`
+			
+			,(SELECT  first_name FROM rms_users WHERE id=vrf.user_id limit 1 ) AS user_name
+			
+			,vrf.`priceBefore`
+			,vrf.`priceSold`
+			,vrf.`paidAmount`
+			,vrf.`balance`
+			
+			
+			,vrf.status
+		FROM 
+			ln_verificaton_sale AS vrf 
+			JOIN `ln_sale` `s` ON s.id = vrf.saleId
+			LEFT JOIN ln_client AS c ON `c`.`client_id` = `s`.`client_id`
+			LEFT JOIN ln_properties AS p ON `p`.`id` = `s`.`house_id`
+		WHERE 
+			1 
+			AND s.is_verify = 1
+	   
+	   ";
+    	
+    	$db = $this->getAdapter();
+    	if(!empty($search['adv_search'])){
+    		$s_where = array();
+    		$s_search = addslashes(trim($search['adv_search']));
+      	 	$s_where[] = " s.receipt_no LIKE '%{$s_search}%'";
+      	 	$s_where[] = " s.sale_number LIKE '%{$s_search}%'";
+      	 	$s_where[] = " p.land_code LIKE '%{$s_search}%'";
+      	 	$s_where[] = " p.land_address LIKE '%{$s_search}%'";
+      	 	$s_where[] = " c.client_number LIKE '%{$s_search}%'";
+      	 	$s_where[] = " c.name_en LIKE '%{$s_search}%'";
+      	 	$s_where[] = " c.name_kh LIKE '%{$s_search}%'";
+      	 	$s_where[] = " c.phone LIKE '%{$s_search}%'";
+      	 	$s_where[] = " s.price_sold LIKE '%{$s_search}%'";
+      	 	$s_where[] = " s.comission LIKE '%{$s_search}%'";
+      	 	$s_where[] = " s.total_duration LIKE '%{$s_search}%'";
+      	 	$where .=' AND ( '.implode(' OR ',$s_where).')';
+    	}
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	
+    	if($search['branch_id']>0){
+			$where.=" AND s.branch_id = ".$search['branch_id'];
+		}
+		if(!empty($search['streetlist']) AND $search['streetlist']>-1){
+			$where.=" AND `p`.`street` = '".$search['streetlist']."'";
+		}
+		if($search['land_id']>0){
+			$where.=" AND ( s.house_id = ".$search['land_id']." OR (SELECT p.old_land_id FROM `ln_properties` AS p WHERE p.id = s.house_id LIMIT 1) LIKE '%".$search['land_id']."%' )";
+		}
+		if($search['property_type']>0 AND $search['property_type']>0){
+			$where.=" AND p.property_type = ".$search['property_type'];
+		}
+		if($search['client_name']!='' AND $search['client_name']>0){
+			$where.=" AND `s`.`client_id` = ".$search['client_name'];
+		}
+    	$order = " ORDER BY vrf.id DESC";
+		if(!empty($search['queryOrdering'])){
+			if($search['queryOrdering']==1){
+				$order =" ORDER BY `s`.buy_date ASC ";
+			}else if($search['queryOrdering']==2){
+				$order =" ORDER BY `s`.buy_date DESC ";
+			}else if($search['queryOrdering']==3){
+				$order =" ORDER BY vrf.id ASC ";
+			}else if($search['queryOrdering']==4){
+				$order =" ORDER BY vrf.id DESC ";
+			}
+			else if($search['queryOrdering']==5){
+				$order =" ORDER BY `s`.client_id DESC ";
+			}
+		}
+    	
+    	$where.=$dbp->getAccessPermission("`s`.`branch_id`");
+    	return $db->fetchAll($sql.$where.$order);
+    }
+	
+	public function getVerificationDetail($verificationId){
+		
+    	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+    	$session_lang=new Zend_Session_Namespace('lang');
+    	$lang = $session_lang->lang_id;
+    	if($lang==1){
+    		$str = 'name_kh';
+    	}
+    	$sql=" 
+    	SELECT 
+			`s`.`id` AS saleId
+			,(SELECT
+				`ln_project`.`project_name`
+			FROM `ln_project`
+			WHERE (`ln_project`.`br_id` = `s`.`branch_id`)
+			LIMIT 1 ) AS `branch_name`
+			,`c`.`name_kh`         AS `name_kh`
+			,`c`.`phone`         AS `phone`
+			,`p`.`land_address`    AS `land_address`
+			,`p`.`street`          AS `street`
+			,(SELECT $str FROM `ln_view` WHERE key_code =s.payment_id AND type = 25 limit 1) AS paymenttype
+			,(SELECT pt.type_nameen FROM `ln_properties_type` AS pt WHERE pt.id = (SELECT p.property_type  FROM `ln_properties` AS p WHERE p.id  = s.`house_id` LIMIT 1) LIMIT 1)AS property_type
+				
+			
+			,vrf.`branch_id` AS `branch_id`
+			,vrf.`buyDate` AS `buyDate`
+			,vrf.`verifyDate` AS `verifyDate`
+			,vrf.`priceBeforeNew`
+			,vrf.`priceSoldNew`
+			,vrf.`paidAmountNew`
+			,vrf.`balanceNew`
+			
+			,(SELECT  first_name FROM rms_users WHERE id=vrf.user_id limit 1 ) AS user_name
+			
+			,vrf.`priceBefore`
+			,vrf.`priceSold`
+			,vrf.`paidAmount`
+			,vrf.`balance`
+			,vrf.status
+		FROM 
+			ln_verificaton_sale AS vrf 
+			JOIN `ln_sale` `s` ON s.id = vrf.saleId
+			LEFT JOIN ln_client AS c ON `c`.`client_id` = `s`.`client_id`
+			LEFT JOIN ln_properties AS p ON `p`.`id` = `s`.`house_id`
+		WHERE 
+			1 
+			AND s.is_verify = 1
+	   
+	   ";
+    	$sql.=" AND vrf.id= ".$verificationId;
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	$sql.=$dbp->getAccessPermission("vrf.`branch_id`");
+		$sql.= " ORDER BY vrf.id DESC";
+		$sql.= " LIMIT 1";
+		$db = $this->getAdapter();
+    	return $db->fetchRow($sql);
+    }
 		
  }

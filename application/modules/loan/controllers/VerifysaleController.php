@@ -72,23 +72,20 @@ class Loan_VerifysaleController extends Zend_Controller_Action {
 			$_data = $this->getRequest()->getPost();
 			try {
 				// Check Session Expire
-				if(!empty($_data)){
 					$dbgb = new Application_Model_DbTable_DbGlobal();
 					$checkses = $dbgb->checkSessionExpire();
 					if (empty($checkses)){
 						$dbgb->reloadPageExpireSession();
 						exit();
 					}
+					
+					if (empty($_data)){
+						Application_Form_FrmMessage::Sucessfull("File Attachment to large can't upload and Save data !","/loan/verifysale",2);
+						exit();
+					}
 					$_dbmodel = new Loan_Model_DbTable_DdVerifySale();
 					$_dbmodel->addVerifySale($_data);
-					if(!empty($_data['saveclose'])){
-						Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/verifysale");
-					}
 					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/verifysale/add");
-				}else{
-					Application_Form_FrmMessage::Sucessfull("UPLOAD_DATA_FIALED","/loan/verifysale/add");
-				}
-				
 			}catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				$err =$e->getMessage();

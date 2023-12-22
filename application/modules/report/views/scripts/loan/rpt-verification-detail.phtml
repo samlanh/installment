@@ -1,0 +1,495 @@
+<meta charset="utf-8">
+<script>
+	dojo.require("dijit.form.DateTextBox");
+</script>
+<style>
+	.hover:hover{background: #ccc;}
+	img.view{height: 70px !important;}
+</style>
+<?php 
+	$request = Zend_Controller_Front::getInstance()->getRequest();
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$row =$this->rs; 
+	$logo = $this->baseUrl()."/images/logo.jpg";
+	$branch_title = $tr->translate("BRAND_TITLE");
+	$images = $this->baseUrl().'/images/logo.png';
+	if (!empty($row['photo'])){
+		$images = $this->baseUrl().'/images/projects/'.$row['photo'];
+	}
+	$headerReportType = REPORT_LETER_HEAD;
+	$classHideHeight="110px";
+	if($headerReportType==2){
+		$classHideHeight="125px";
+	}
+	
+?>
+<title><?php echo $tr->translate("VERIFICATON_DETAIL");?></title>
+
+<div class="reportblog">
+	<div class="card-box">
+		<div class="col-sm-12 border-botom">
+			<div class="col-sm-8 pd-0">
+				<h4 class="m-b-0"><i class="fa fa-file-text" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('VERIFICATON_DETAIL');?></h4>
+			</div>
+			<div class="col-sm-4 text-right">
+			</div>
+		</div>
+	</div>
+		<?php 
+		if(!empty($this->document)){ 
+		?>
+		<div class="card-box">
+			<ul class="nav  nav-pills nav-fill gap-2 p-1 small bg-white border rounded-5 shadow-sm pills-primary nav-tab" role="tablist">
+				<li class="nav-item <?php echo empty($viewing) ? "active" : ""; ?>">
+					<a class="nav-link rounded-5" data-toggle="tab" href="#panel211" role="tab">
+						<i class="fa fa-pie-chart"></i> <?php echo $tr->translate("VERIFICATON_DETAIL");?>
+					</a>
+				</li>
+				<li class="nav-item <?php echo empty($viewing) ? "" : "active"; ?>">
+					<a class="nav-link rounded-5" data-toggle="tab" href="#panel212" role="tab">
+						<i class="fa fa-file-text"></i> <?php echo $tr->translate("ATTACHMENT_LIST");?>
+					</a>
+				</li>
+			</ul>
+		 </div>
+		<?php 
+		}
+		?>
+	<!-- Tab panels -->
+		<div class="tab-content ">
+			<!-- Panel 1-->
+			<div class="tab-pane fade in <?php echo empty($viewing) ? "active" : ""; ?>" id="panel211" role="tabpanel">
+				<div id="divPrint" style="width: 100%; padding-top: 30px;">
+					<style>
+						tr.style {
+					   line-height: 25px; font-size:12px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
+						background: #c1d0f3;
+					}
+					.style th {
+						text-align:center;
+						font-family: 'Times New Roman','Khmer OS Muol Light';
+						font-weight:normal;
+					}
+					ul.listData {
+						padding: 0;
+						margin: 0;
+						list-style: none;
+						font-family: 'Times New Roman','Khmer OS Battambang';
+						font-size:14px;
+					}
+					ul.listData span.labelTitle {
+						display: inline-block;
+						min-width: 100px;
+					}
+					ul.listData span.valueData {
+						display: inline-block;
+						min-width: 100px;
+						padding-left: 4px;
+						font-weight: 600;
+					}
+
+						ul.verifcaiton-info li.card-info {
+							float: left;
+							width: 45%;
+							border: solid 1px #ccc;
+							border-radius: 5px;
+							padding: 10px;
+						}
+
+						span.titleBlogInfo {
+							font-family: "Times New Roman",'Khmer OS Muol Light';
+							font-weight: normal;
+							display: block;
+							margin-bottom: 10px;
+						}
+
+						ul.data-info {
+							margin: 0;
+							padding: 0;
+							list-style: none;
+						}
+
+						ul.data-info li.row-info {}
+
+						li.row-info span.record-info.label-title {
+							width: 40%;
+							text-overflow: ellipsis;
+							float: left;
+							font-weight: normal;
+						}
+
+						li.row-info span.record-info {
+							text-overflow: ellipsis;
+							display: -webkit-box;
+							-webkit-line-clamp: 1;
+							-webkit-box-orient: vertical;
+							overflow: hidden;
+						}
+
+						li.row-info {
+							display: block;
+							width: 100%;
+							clear: both;
+						}
+						li.row-info span.record-info.label-value {
+							width: 49%;
+							display: inline-block;
+							color: #29709e;
+						}
+						li.row-info span.record-info.label-value.price-style {
+								color: #fb1212;
+								font-weight: bold;
+							}
+						div.tdCard {
+							border: 1px solid #bcbcbc;
+							border-radius: 10px;
+							padding: 10px;
+							margin: 5px;
+						}
+					</style>
+					<table width="100%" style="white-space: nowrap;font-size:16px;margin-top: 0px;" class="print" cellspacing="0"  cellpadding="0" >
+						<tr>
+							<td align="center" >
+								<div class="divFooter">
+									<?php echo $this->headerReport;?>
+								</div>
+							</td>
+						</tr>
+					</table>
+					<table width="100%" style="font-family:'Khmer OS Battambang';" style="margin:0; padding:23px;border:none;" >
+		            	<tr style="line-height: 20px; font-size: 16px; font-family: Khmer OS Battambang;white-space: nowrap;">
+							<td colspan="2" valign="top">
+								<ul class="listData">
+									<li>
+										<span class="labelTitle">ឈ្មោះអតិថិជន</span>
+										:<span class="valueData"><?php echo $row["name_kh"];?></span>
+									</li>
+									<li>
+										<span class="labelTitle"><?php echo $tr->translate("PHONE");?></span>
+										:<span class="valueData"><?php echo $row["phone"];?></span>
+									</li>
+								</ul>
+							</td>
+							<td colspan="2" valign="top">
+								<ul class="listData">
+									<li>
+										<span class="labelTitle">គម្រោង</span>
+										:<span class="valueData"><?php echo $row["branch_name"];?></span>
+									</li>
+									<li>
+										<span class="labelTitle"><?php echo $tr->translate("PROPERTY_TYPE");?></span>
+										:<span class="valueData"><?php echo $row["property_type"];?></span>
+									</li>
+									<li>
+										<span class="labelTitle"><?php echo $tr->translate("លេខផ្ទះ");?></span>
+										:<span class="valueData"><?php echo $row["land_address"]." ".$row['street'];?></span>
+									</li>
+								</ul>
+							</td>
+							<td colspan="3">&nbsp;</td>
+						</tr>
+						<tr>
+							<td colspan="7" id="exportExcel">
+								<table border="0" width="100%" style="font-family: 'Times New Roman','Khmer OS Battambang'; margin-top:10px; border-collapse:collapse; line-height: 18px; font-size: 14px; " >  
+								   <tr>
+										<td width="50%">
+											<div class="tdCard">
+											<span class="titleBlogInfo"><?php echo $tr->translate("SALE_INFO");?></span>
+											<ul class="data-info">
+												
+												<li class="row-info">
+													<span class="record-info label-title">
+														<?php echo $tr->translate("BUY_DATE");?>
+													</span>
+													<span class="record-info label-value">
+														<?php 
+															$date = new DateTime($row["buyDate"]);
+															$buyDate =  $date->format("d-M-Y");
+															echo $buyDate;
+														?>
+													</span>
+												</li>
+												<li class="row-info">
+													<span class="record-info label-title">
+														<?php echo $tr->translate("PRINCIPLE_PICE");?>
+													</span>
+													<span class="record-info label-value price-style">
+														$ <?php echo $row["priceBefore"];?>
+													</span>
+												</li>
+												<li class="row-info">
+													<span class="record-info label-title">
+														$ <?php echo $tr->translate("SOLD_PRICE");?>
+													</span>
+													<span class="record-info label-value price-style">
+														$ <?php echo $row["priceSold"];?>
+													</span>
+												</li>
+												<li class="row-info">
+													<span class="record-info label-title">
+														<?php echo $tr->translate("PAID");?>
+													</span>
+													<span class="record-info label-value price-style">
+														$ <?php echo $row["paidAmount"];?>
+													</span>
+												</li>
+												<li class="row-info">
+													<span class="record-info label-title ">
+														<?php echo $tr->translate("BALANCE");?>
+													</span>
+													<span class="record-info label-value price-style">
+														$ <?php echo $row["balance"];?>
+													</span>
+												</li>
+											</ul>	
+											</div>	
+										</td>
+										<td width="50%">
+											<div class="tdCard">
+											<span class="titleBlogInfo"><?php echo $tr->translate("VERIFY_INFO");?></span>
+												<ul class="data-info">
+													
+													<li class="row-info">
+														<span class="record-info label-title">
+															<?php echo $tr->translate("verifyDate");?>
+														</span>
+														<span class="record-info label-value">
+															<?php 
+																$date = new DateTime($row["verifyDate"]);
+																$verifyDate =  $date->format("d-M-Y");
+																echo $verifyDate;
+															?>
+														</span>
+													</li>
+													<li class="row-info">
+														<span class="record-info label-title">
+															<?php echo $tr->translate("PRINCIPLE_PICE_VERIFY");?>
+														</span>
+														<span class="record-info label-value price-style">
+															$ <?php echo $row["priceBeforeNew"];?>
+														</span>
+													</li>
+													<li class="row-info">
+														<span class="record-info label-title">
+															<?php echo $tr->translate("SOLD_PRICE_VERIFY");?>
+														</span>
+														<span class="record-info label-value price-style">
+															$ <?php echo $row["priceSoldNew"];?>
+														</span>
+													</li>
+													<li class="row-info">
+														<span class="record-info label-title">
+															<?php echo $tr->translate("PAID_VERIFY");?>
+														</span>
+														<span class="record-info label-value price-style">
+															$ <?php echo $row["paidAmountNew"];?>
+														</span>
+													</li>
+													<li class="row-info">
+														<span class="record-info label-title ">
+															<?php echo $tr->translate("BALANCE_VERIFY");?>
+														</span>
+														<span class="record-info label-value price-style">
+															$ <?php echo $row["balanceNew"];?>
+														</span>
+													</li>
+												</ul>
+											</div>
+										</td>
+								   </tr>
+								</table>
+							</td>
+						</tr>
+					</table>	
+					
+				</div>
+				<div id="noteContent" style="display: none;"><?php echo $row['note'];?></div>
+			</div>
+			<!-- End Panel 1-->
+			<!-- Panel 1-->
+			<div class="tab-pane fade in <?php echo empty($viewing) ? "" : "active"; ?>" id="panel212" role="tabpanel">
+				<style>
+					div#EZView0 {
+						background: #000000cc;
+					}
+					div#EZView0 img.content {
+						border-radius: 10px;
+					}
+					.tools-container a {
+						padding: 5px;
+					}
+					.tools-container a img {
+						color: #fff;
+						opacity: 1;
+						background: #e9effd;
+						border-radius: 100%;
+					}
+
+					spam.tools {
+						top: 10px !important;
+						left: 10px !important;
+					}
+					.tools-container a.close{
+						opacity: 1;
+					}
+
+					.tools-container a.close:focus, .tools-container a.close:hover {
+						opacity: 1;
+						background-color: #fdeee7 !important;
+					}
+					.tools-container a.close img {
+						background-color: #fdeee7 !important;
+						border-radius: 100%;
+					}
+					a.next , a.back {
+						padding: 5px;
+					}
+					a.next img, a.back img {
+						color: #fff;
+						opacity: 1;
+						background: #e9effd;
+						border-radius: 100%;
+					}
+					.center{text-align: center !important;}
+					ul.cards {
+						list-style: none;
+						margin: 0;
+						padding: 0;
+						margin-top: 20px;
+					}
+
+					.card-box-image {
+						height: 350px;
+						border-radius: 25px;
+						padding: 1px;
+						background: #fff;
+						border: solid 2px #fafafa;
+						box-shadow: 1px 1px 2px 0px #505050;
+					}
+
+					.card-box-image img {
+						border-radius: 20px;
+						height: 300px;
+						max-height: 300px;
+						width: 100%;
+					}
+
+					.fileContent {
+						margin: 0 auto;
+						height: 270px;
+						max-height: 270px;
+						text-align: center;
+						align-items: center;
+						display: flex;
+						align-content: center;
+						flex-wrap: nowrap;
+						flex-direction: column-reverse;
+						justify-content: center;
+						background: #afd0d7;
+						border-radius: 20px;
+					}
+
+					.fileContent i {
+						font-size: 70px;
+						text-align: center;
+						color: #6d998e;
+					}
+					
+					.container.fileInfo {
+						padding: 5px 10px;
+					}
+
+					.container.fileInfo p,.container.fileInfo h4 {
+						margin: 0;
+						overflow: hidden;
+						text-overflow: ellipsis;
+					}
+				</style>
+				<?php $i=0; $n=0; if(!empty($this->document)){ ?>
+				<ul class="cards">
+				<?php  foreach($this->document as $key =>$row) {$i++?>
+					<?php 
+					   if (!empty($row['document_name'])){
+							if (file_exists(PUBLIC_PATH."/images/document/expense/".$row['document_name'])){
+								
+								$linkDoc = $this->baseUrl().'/images/document/expense/'.$row['document_name'];
+								$explodeArr = explode(".", $row['document_name']);
+								$extensionFile = strtolower(end($explodeArr));
+						
+					   ?>
+						<li class="col-md-4 col-sm-4 col-xs-12 ">
+							<div class="card-box-image ">
+							   <?php if($extensionFile == "pdf" ){?>
+									<div  class="fileContent gallery1" href="<?php echo $linkDoc;?>" alt="<?php echo $row['title'];?>">
+										<i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+									</div>
+							   <?php }else if($extensionFile == "jpg" || $extensionFile == "png" || $extensionFile == "jpeg" ){?>
+									<img class="gallery1" src="<?php echo $linkDoc;?>"  alt="<?php echo $row['title'];?>" href="<?php echo $linkDoc;?>">
+								<?php }else if($extensionFile == "xlsx" || $extensionFile == "xls" ){?>
+									<div  class="fileContent gallery1" href="<?php echo $linkDoc;?>" alt="<?php echo $row['title'];?>">
+										<i class="fa fa-file-excel-o" aria-hidden="true"></i>
+									</div>
+								<?php } ?>
+								<div class="container fileInfo">
+									<h4><b><?php echo $row['title'];?></b></h4>
+									<p><?php echo date("d-M-Y",strtotime($row['date']));?></p>
+								</div>
+							</div>
+						</li>
+					<?php } 
+					}?>
+				<?php }?>
+				</ul>
+				<?php }?>
+			</div>
+			<!-- End Panel 1-->
+		</div>
+	</div>
+			
+	
+ </div>
+<script src="<?php echo $this->baseUrl();?>/js/pdbs_js.js"  type="text/javascript"></script>
+
+<script>
+require(["dojo/ready"], function(ready){
+	 ready(function(){
+		 loadingBlock();
+		 getBranchInfo();
+		 document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
+		 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("VERIFICATON_DETAIL");?>';
+		 document.getElementById('dateReport').innerHTML = '&nbsp;';
+		 setTimeout(function () {
+	        HideloadingBlock();
+	    }, 1000);
+		$('.gallery1').EZView();
+		 
+	 });
+});	
+
+function getBranchInfo(){
+	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
+	branch_id = '<?php echo empty($row['branch_id'])?0:$row['branch_id'];?>';
+	if(branch_id=="" || branch_id<=0){
+		return false;
+	}
+	dojo.xhrPost({
+	    url: url_submit,	
+	    content:{ 
+		    'branch_id':branch_id
+		},	
+		load: function(data) {
+			var arr = JSON.parse(data);
+			var imagesUrl = '<img  style="height:85px; max-width: 100%;" src="'+arr.url_logo+'" />';
+			document.getElementById('projectlogo').innerHTML = imagesUrl;	
+			
+			<?php if($headerReportType==2){?>
+			document.getElementById('projectName').innerHTML = '('+arr.project_name+')';
+			<?php }else{?>
+			document.getElementById('projectName').innerHTML = arr.project_name;
+			<?php }?>
+		},
+		error: function(e) {
+		}
+	});
+}
+</script>
