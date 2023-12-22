@@ -73,6 +73,9 @@ class Report_Model_DbTable_DbSummary extends Zend_Db_Table_Abstract
 			      	(SELECT COUNT(id) FROM `ln_issue_house` WHERE `status`=1) receivedHouse,
 					(SELECT COUNT(id) FROM `ln_receiveplong` WHERE `status`=1) receivedPlong
       		FROM `ln_project` WHERE `status`=1 ";
+     	if(!empty($data['projectId'])){
+      		$sql.=" AND br_id=".$data['projectId'];
+      	}
       	return $db->fetchRow($sql);
       }
       
@@ -145,7 +148,7 @@ class Report_Model_DbTable_DbSummary extends Zend_Db_Table_Abstract
 				s.id=c.`sale_id`
 				AND s.status=1 AND s.is_cancel=0 ";
       	if(!empty($data['projectId'])){
-      		$sql.=" AND branch_id=".$data['projectId'];
+      		$sql.=" AND s.branch_id=".$data['projectId'];
       	}
       	$sql.=" GROUP BY s.id
 				HAVING s.price_sold<=SUM(c.total_principal_permonthpaid+extra_payment)) AS main_table";

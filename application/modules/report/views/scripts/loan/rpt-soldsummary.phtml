@@ -27,6 +27,9 @@
 	if($headerReportType==2){
 		$classHideHeight="125px";
 	}
+	$startDate = (empty($this->search['start_date']))? "1":" date_pay<=".$this->search["start_date"];
+	$endDate = (empty($this->search['end_date']))? "1":" date_pay<=".$this->search['end_date'];
+	$condition="'".$startDate." AND ".$endDate."'";
 ?>
 <meta charset="utf-8">
 <script>
@@ -303,7 +306,7 @@ table.tb-footer tr.style-head {
 	               $disc_percent=0;
 	               $total_interest = 0;
 	               $total_panelty = 0;
-	               $db  = new Report_Model_DbTable_DbParamater();
+	               $db  = new Report_Model_DbTable_DbLandreport();
 	               $key=0;
 	              
 	               if(!empty($this->loanrelease_list))foreach($this->loanrelease_list as $key =>$row){?>
@@ -313,16 +316,7 @@ table.tb-footer tr.style-head {
 		               if(!empty($row['old_land_id'])){
 			               	$idse = explode(",", $row['old_land_id']);
 			               	$countland = count($idse);
-			               	/*//for check land not update lock
-							if (!empty($idse)) foreach ($idse as $pro_id){
-			               		if (empty($notupdateLock)){
-			               			$notupdateLock = $db->checkLandSaleNotUpdateLock($pro_id);
-			               		}else{
-			               			$notupdateLock = $notupdateLock.",".$db->checkLandSaleNotUpdateLock($pro_id);
-			               		}
-			               		
-			               	}
-							*/
+			               
 			               	$amount_property = $amount_property+$countland;
 			               	if($row['payment_id']==1){//កក់
 			               		$property_deposit=$property_deposit+$countland;
@@ -346,7 +340,6 @@ table.tb-footer tr.style-head {
 		               			$property_install=$property_install+1;
 		               		}
 		               		$countland = 1;
-		               		//$notupdateLock = $db->checkLandSaleNotUpdateLock($row['house_id']);
 		               }
 		               
 		               $price_before = $price_before+$row['price_before'];
@@ -356,38 +349,37 @@ table.tb-footer tr.style-head {
 		               $disc_percent = $disc_percent+($row['price_before']-$row['price_sold']-$row['discount_amount']-$row['other_discount']);
 		               $sold_price=$sold_price+$row['price_sold'];
 		               
-// 		               $paid_price=$paid_price+$row['paid_amount'];
-// 		               $balace_price=$balace_price+($row['price_sold']-$row['paid_amount']);
+		               $resultCollect = $db->getAmountReceiveByLoanNumber($row['id'],$condition);
+		               $principalPaid = !empty($resultCollect['totalPricipalPaid'])?$resultCollect['totalPricipalPaid']:0;
+		               $totalInterestPaid = !empty($resultCollect['totalInterestPaid'])?$resultCollect['totalInterestPaid']:0;
+		               $penalizePaid = !empty($resultCollect['penalizePaid'])?$resultCollect['penalizePaid']:0;
 
-		               $paid_price=$paid_price+$row['paid_amount']+$row['totalAmountCreadit'];
-		               $balace_price=$balace_price+($row['price_sold']-($row['paid_amount']+$row['totalAmountCreadit']) );
+		               $paid_price=$paid_price+$principalPaid+$row['totalAmountCreadit'];
+		               $balace_price=$balace_price+($row['price_sold']-($principalPaid+$row['totalAmountCreadit']) );
 		               
-		               $total_interest = $total_interest+$row['total_interest_permonthpaid'];
-		               $total_panelty = $total_panelty+$row['penalize_amountpaid'];
+		               $total_interest = $total_interest+$totalInterestPaid;
+		               $total_panelty = $total_panelty+$penalizePaid;
 		               
 		               
-		               if(empty($row['paid_amount'])){
-		               		$row['paid_amount']=0;
+		               if(empty($principalPaid)){
+		               		$principalPaid=0;
 		               }
-		               $paidAmount = $row['paid_amount']+$row['totalAmountCreadit'];
+		               $paidAmount = $principalPaid+$row['totalAmountCreadit'];
 					   $classComplete="";
 		               if($row['payment_id']==1){//កក់
 		               	 $payment_1=$payment_1+1;
-// 		               	 if($row['price_sold']<=$row['paid_amount']){
 		               	 if($row['price_sold']<=$paidAmount){
 		               	 	$payment_0_completed=$payment_0_completed+1;
 							$classComplete="completedCss";
 		               	 }
 		               }elseif($row['payment_id']==2 OR $row['payment_id']==6){//ផ្តាច់ និងដំណាក់កាលមិនថេរ
 		               	 	$payment_2=$payment_2+1;
-// 		               	 if($row['price_sold']<=$row['paid_amount']){
 		               	 if($row['price_sold']<=$paidAmount){
 		               	 	$payment_2_completed=$payment_2_completed+1;
 							$classComplete="completedCss";
 		               	 }
 		               }elseif($row['payment_id']==5){//ផ្តាច់ និងដំណាក់កាលមិនថេរ
 			               	$payment_5=$payment_5+1;
-// 			               	if($row['price_sold']<=$row['paid_amount']){
 			               	if($row['price_sold']<=$paidAmount){
 			               		$payment_5_completed =$payment_5_completed+1;
 								$classComplete="completedCss";
@@ -395,7 +387,6 @@ table.tb-footer tr.style-head {
 		               }
 		               elseif($row['payment_id']==3 OR $row['payment_id']==4 || $row['payment_id']==7){//រំលស់ និងបង់ដំណាក់កាល់ថេរ
 		               	 $payment_3=$payment_3+1;
-// 		               	 if($row['price_sold']<=$row['paid_amount']){
 		               	 if($row['price_sold']<=$paidAmount){
 		               	 	$payment_3_completed=$payment_3_completed+1;
 							$classComplete="completedCss";
@@ -416,29 +407,23 @@ table.tb-footer tr.style-head {
 						<td data-label="<?php echo $tr->translate("BUY_DATE");?>" style="white-space:nowrap;"><?php echo date($montFomat,strtotime($row['buy_date'])); ?></td>
 						<td data-label="<?php echo $tr->translate("END_DATE");?>" style="white-space:nowrap;" ><?php $date= new DateTime($row['end_line']); echo $date->format($montFomat); ?></td>
 						
-						
 						<td data-label="<?php echo $tr->translate("PRICE_BEFORE");?>" align="right"><span style="line-height:15px;"><?php echo number_format($row['price_before'],2); ?></span></td>
 						<td data-label="<?php echo $tr->translate("DISCOUNT");?>" align="right" style="white-space:nowrap;"><?php 
 						$other_discount = empty($row['other_discount'])?0:$row['other_discount'];		
 						echo number_format($row['discount_amount']+$other_discount,2); ?></td>	
 						<td data-label="<?php echo $tr->translate("DISCOUNT_PERCENT");?>" align="center" style="white-space:nowrap;"><?php echo number_format($row['discount_percent'],2); ?></td>
 						
-						
 						<td data-label="<?php echo $tr->translate("SOLD_PRICE");?>" align="right" style="white-space:nowrap;"><?php echo number_format($row['price_sold'],2); ?></td>	
 						<td data-label="<?php echo $tr->translate("TYPE");?>"><?php echo $row['paymenttype']; ?></td>
-						<td data-label="<?php echo $tr->translate("PAID_PRINCIPAL");?>" align="right" style="white-space:nowrap; text-align: right;"><?php echo number_format($paidAmount,2);//echo number_format($row['paid_amount'],2);?></td>
-						<td data-label="<?php echo $tr->translate("REMAIN");?>" align="right" style="white-space:nowrap;"><?php echo number_format($row['price_sold']-$paidAmount,2); //echo number_format($row['price_sold']-$row['paid_amount'],2); ?></td>
-						<td data-label="<?php echo $tr->translate("TOTAL_INTEREST");?>" align="right"><?php echo number_format($row['total_interest_permonthpaid'],2);?></td>
-						<td data-label="<?php echo $tr->translate("TOTAL_PENELIZE");?>" align="right"><?php echo number_format($row['penalize_amountpaid'],2);?></td>
+						<td data-label="<?php echo $tr->translate("PAID_PRINCIPAL");?>" align="right" style="white-space:nowrap; text-align: right;"><?php echo number_format($paidAmount,2);?></td>
+						<td data-label="<?php echo $tr->translate("REMAIN");?>" align="right" style="white-space:nowrap;"><?php echo number_format($row['price_sold']-$paidAmount,2);  ?></td>
+						<td data-label="<?php echo $tr->translate("TOTAL_INTEREST");?>" align="right"><?php echo number_format($totalInterestPaid,2);?></td>
+						<td data-label="<?php echo $tr->translate("TOTAL_PENELIZE");?>" align="right"><?php echo number_format($penalizePaid,2);?></td>
 						
 						<td data-label="<?php echo $tr->translate("AGENTCY");?>"><?php echo $row['agency_name']; ?></td>
 						<td data-label="<?php echo $tr->translate("STATUS");?>"><?php  if($row['is_cancel']==1){ echo "បោះបង់";} ?></td>
 						<!-- <td align="center" title='<?php echo ($row['verify_by']>0 ? 'Authorized':'Unauthorized');?>'><img  src="<?php echo $this->baseUrl().'/images/icon/'.($row['verify_by']>0 ? 'apply2.png':'none.png'); ?>" /></td>
 						 -->
-						<?php 
-// 							$percent = $db->getFirstDepositBySaleID($row['id'],$row['payment_id']);
-// 							$percent =$percent['percent'];
-						?>
 					</tr>
 					<?php }?>
 					<tr class="style" style=" text-align: center; background:#87acff;">

@@ -2074,31 +2074,76 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 	//    // Load the stamp and the photo to apply the watermark to
 		if (end($temp) == 'jpg') {
 		  $im = imagecreatefromjpeg($uploadimage);
+			if ($image['size']>(1000000*5)){
+			  // Save the image to file and free memory quality 70%
+			  imagejpeg($im, $uploadimage, 10);
+			}else if($image['size']>(1200000)){
+				imagejpeg($im, $uploadimage, 15); //quality 50%
+			}else if($image['size']>(1000000)){
+			  imagejpeg($im, $uploadimage, 20); //quality 50%
+			}else if($image['size']>512000){
+			  // Save the image to file and free memory quality 80%
+			  imagejpeg($im, $uploadimage, 60);
+			}else if($image['size']>=102400){
+				// Save the image to file and free memory quality 90%
+				imagejpeg($im, $uploadimage, 70);
+			}
 		} else if (end($temp) == 'jpeg') {
 		  $im = imagecreatefromjpeg($uploadimage);
+			if ($image['size']>(1000000*5)){
+			  // Save the image to file and free memory quality 70%
+			  imagejpeg($im, $uploadimage, 10);
+			}else if($image['size']>(1200000)){
+				imagejpeg($im, $uploadimage, 15); //quality 50%
+			}else if($image['size']>(1000000)){
+			  imagejpeg($im, $uploadimage, 20); //quality 50%
+			}else if($image['size']>512000){
+			  // Save the image to file and free memory quality 80%
+			  imagejpeg($im, $uploadimage, 60);
+			}else if($image['size']>=102400){
+				// Save the image to file and free memory quality 90%
+				imagejpeg($im, $uploadimage, 70);
+			}
 		} else if (end($temp) == 'png') {
 		  $im = imagecreatefrompng($uploadimage);
+			if ($image['size']>(1000000*5)){
+			  // Save the image to file and free memory quality 70%
+			  imagejpeg($im, $uploadimage, 10);
+			}else if($image['size']>(1200000)){
+				imagejpeg($im, $uploadimage, 15); //quality 50%
+			}else if($image['size']>(1000000)){
+			  imagejpeg($im, $uploadimage, 20); //quality 50%
+			}else if($image['size']>512000){
+			  // Save the image to file and free memory quality 80%
+			  imagejpeg($im, $uploadimage, 60);
+			}else if($image['size']>=102400){
+				// Save the image to file and free memory quality 90%
+				imagejpeg($im, $uploadimage, 70);
+			}
 		} else if (end($temp) == 'gif') {
 		  $im = imagecreatefromgif($uploadimage);
+		  if ($image['size']>(1000000*5)){
+			  // Save the image to file and free memory quality 70%
+			  imagejpeg($im, $uploadimage, 10);
+			}else if($image['size']>(1200000)){
+				imagejpeg($im, $uploadimage, 15); //quality 50%
+			}else if($image['size']>(1000000)){
+			  imagejpeg($im, $uploadimage, 20); //quality 50%
+			}else if($image['size']>512000){
+			  // Save the image to file and free memory quality 80%
+			  imagejpeg($im, $uploadimage, 60);
+			}else if($image['size']>=102400){
+				// Save the image to file and free memory quality 90%
+				imagejpeg($im, $uploadimage, 70);
+			}
 		}
 		
 		
-		if ($image['size']>(1000000*5)){
-		  // Save the image to file and free memory quality 70%
-		  imagejpeg($im, $uploadimage, 10);
-		}else if($image['size']>(1200000)){
-			imagejpeg($im, $uploadimage, 15); //quality 50%
-		}else if($image['size']>(1000000)){
-		  imagejpeg($im, $uploadimage, 20); //quality 50%
-		}else if($image['size']>512000){
-		  // Save the image to file and free memory quality 80%
-		  imagejpeg($im, $uploadimage, 60);
-		}else if($image['size']>=102400){
-			// Save the image to file and free memory quality 90%
-			imagejpeg($im, $uploadimage, 70);
-		}
+		
 	  //  imagedestroy($uploadimage);
 		return $new_name;
   }
+  
+  
 }
 ?>

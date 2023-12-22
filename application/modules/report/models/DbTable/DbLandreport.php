@@ -191,17 +191,20 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
 	
 	}
 
-      
+ function getAmountReceiveByLoanNumber($saleId,$condition){
+ 	$sql="CALL st_getSumPricipalPaid($saleId,$condition) ";
+ 	return $this->getAdapter()->fetchRow($sql);
+ }     
 public function getAllOutstadingLoan($search=null){
       	$db = $this->getAdapter();
       	$where="";
       	$to_date = (empty($search['end_date']))? '1': " date_release <= '".$search['end_date']." 23:59:59'";
       	$where.= "  AND ".$to_date;
       	$sql="SELECT *,
-			(SELECT SUM(s.total_interest_after) FROM `ln_saleschedule` AS s 
-				WHERE s.total_interest_after> 0 AND  s.is_completed=0 AND s.sale_id = v_loanoutstanding.id LIMIT 1 ) as balance_interest,
-				(SELECT p.old_land_id FROM `ln_properties` AS p WHERE p.id = v_loanoutstanding.house_id LIMIT 1) AS old_land_id
-      	FROM v_loanoutstanding WHERE 1 ";//IF BAD LOAN STILL GET IT
+      		(SELECT (totalPrincipalPaid+totalCredit) FROM `v_getsaleprincipalpaid` vpaid WHERE vpaid.saleId=vs.id LIMIT 1) totalPricipalPaid,
+			(SELECT vs.totalInterestBalance FROM  `v_getsuminterestbalance` vs WHERE vs.saleId =vs.id LIMIT 1) AS balance_interest,
+			(SELECT p.old_land_id FROM `ln_properties` AS p WHERE p.id = vs.house_id LIMIT 1) AS old_land_id
+      	FROM v_loanoutstanding vs WHERE 1 ";//IF BAD LOAN STILL GET IT
       	
       	$dbp = new Application_Model_DbTable_DbGlobal();
       	$sql.=$dbp->getAccessPermission("branch_id");
@@ -229,22 +232,6 @@ public function getAllOutstadingLoan($search=null){
       	}
       	return $db->fetchAll($sql.$where);
 }
-      function getAmountReceiveByLoanNumber($land_id,$client_id){
-      	 $db = $this->getAdapter();
-      	 $sql="
-      	     SELECT 
-				SUM(`crm`.`total_principal_permonthpaid`+crm.extra_payment+ ((SELECT COALESCE(SUM(crd.total_amount),0) FROM `ln_credit` AS crd WHERE crd.status=1 AND crd.sale_id = crm.`sale_id` LIMIT 1)))
-				 FROM  `ln_client_receipt_money` AS crm
-      	 	WHERE crm.`sale_id`='".$land_id."' AND crm.status=1 LIMIT 1 ";
-      	 $row =  $db->fetchOne($sql);
-      	 if(!empty($row)){
-      	 	$alltotal =  $db->fetchOne($sql);
-      	 }else{
-      	 	$alltotal=0;
-      	 }
-      	 //echo $alltotal;
-      	 return $alltotal;
-      }
       
       public function getALLLoanlate($search = null){
       	$db = $this->getAdapter();
@@ -2061,22 +2048,46 @@ function updatePaymentStatus($data){
    	$to_dateCredit = (empty($search['end_date']))? '1': " date <= '".$search['end_date']." 23:59:59'";
    	
    	$dbp = new Application_Model_DbTable_DbGlobal();
-   	$statement = $dbp->soldreportSqlStatement();
-   	$sql= $statement['sql'];
-   	$sql.="
-   
-   	,(SELECT SUM(rm.total_principal_permonthpaid+rm.extra_payment) FROM `ln_client_receipt_money` as rm WHERE rm.status=1 AND sale_id=s.id  AND $from_datePayment AND $to_datePayment LIMIT 1) AS paid_amount,
-   	(SELECT SUM(rm.total_interest_permonthpaid) FROM `ln_client_receipt_money` AS rm WHERE rm.status=1  AND sale_id = s.id AND $from_datePayment AND $to_datePayment LIMIT 1) AS total_interest_permonthpaid,
-   	(SELECT SUM(rm.penalize_amountpaid) FROM `ln_client_receipt_money` AS rm WHERE rm.status=1 AND sale_id = s.id AND $from_datePayment AND $to_datePayment LIMIT 1) AS penalize_amountpaid,
-   	
-   	(SELECT SUM(total_amount) FROM `ln_credit` WHERE status=1 AND $from_dateCredit AND $to_dateCredit  AND sale_id = s.id LIMIT 1) AS totalAmountCreadit,
-   	
-   	(SELECT COUNT(id) FROM `ln_saleschedule` WHERE sale_id=s.id AND status=1 ) AS times,
-   	(SELECT first_name FROM `rms_users` WHERE id=s.user_id LIMIT 1) AS user_name,
-   	(SELECT $str FROM `ln_view` WHERE key_code =s.payment_id AND type = 25 limit 1) AS paymenttype,
-   	(SELECT p.old_land_id FROM `ln_properties` AS p WHERE p.id = s.house_id LIMIT 1) AS old_land_id,
-   	(SELECT sta.co_khname FROM ln_staff AS sta WHERE sta.co_id=`s`.`staff_id` LIMIT 1 ) AS agency_name
-   	
+   	$statement = $dbp->soldreportSqlStatement();//this script make slow because have sum 
+//    	,(SELECT SUM(rm.total_principal_permonthpaid+rm.extra_payment) FROM `ln_client_receipt_money` as rm WHERE rm.status=1 AND sale_id=s.id  AND $from_datePayment AND $to_datePayment LIMIT 1) AS paid_amount,
+//    	(SELECT SUM(rm.total_interest_permonthpaid) FROM `ln_client_receipt_money` AS rm WHERE rm.status=1  AND sale_id = s.id AND $from_datePayment AND $to_datePayment LIMIT 1) AS total_interest_permonthpaid,
+//    	(SELECT SUM(rm.penalize_amountpaid) FROM `ln_client_receipt_money` AS rm WHERE rm.status=1 AND sale_id = s.id AND $from_datePayment AND $to_datePayment LIMIT 1) AS penalize_amountpaid,
+//    	(SELECT SUM(total_amount) FROM `ln_credit` WHERE status=1 AND $from_dateCredit AND $to_dateCredit  AND sale_id = s.id LIMIT 1) AS totalAmountCreadit
+   	$sql= "
+   	SELECT
+		  `s`.`id`               AS `id`,
+		  (SELECT
+		     `ln_project`.`project_name`
+		   FROM `ln_project`
+		   WHERE (`ln_project`.`br_id` = `s`.`branch_id`)
+		   LIMIT 1) AS `branch_name`,
+		  `s`.`branch_id`        AS `branch_id`,
+		  `s`.`house_id`         AS `house_id`,
+		  `s`.`price_before`     AS `price_before`,
+		  `s`.`price_sold`       AS `price_sold`,
+		  `s`.`discount_amount`  AS `discount_amount`,
+		  `s`.`discount_percent` AS `discount_percent`,
+		  `s`.`other_discount` AS `other_discount`,
+		  s.verify_by,
+		  `s`.`buy_date`         AS `buy_date`,
+		  `s`.`end_line`         AS `end_line`,
+		  `s`.`interest_rate`    AS `interest_rate`,
+		  `s`.`total_duration`   AS `total_duration`,
+		  `s`.`payment_id`       AS `payment_id`,
+		  `s`.`is_cancel`        AS `is_cancel`,
+		  `s`.`user_id`          AS `user_id`,
+		  `p`.`land_code`        AS `land_code`,
+		  `p`.`land_address`     AS `land_address`,
+		  `p`.`land_size`        AS `land_size`,
+		  `p`.`street`           AS `street`,
+		  `c`.`name_kh`          AS `name_kh`,
+		  `c`.`name_en`          AS `name_en`,
+		  `c`.`phone`            AS `phone`, 
+		   	'0' AS totalAmountCreadit,
+		   	(SELECT $str FROM `ln_view` WHERE key_code =s.payment_id AND type = 25 limit 1) AS paymenttype,
+		   	(SELECT p.old_land_id FROM `ln_properties` AS p WHERE p.id = s.house_id LIMIT 1) AS old_land_id,
+		   	(SELECT sta.co_khname FROM ln_staff AS sta WHERE sta.co_id=`s`.`staff_id` LIMIT 1 ) AS agency_name
+		   	
    	";
    	$where = $statement['where'];
 	$where.=" AND s.is_cancel=0 ";
@@ -3290,5 +3301,173 @@ function updatePaymentStatus($data){
 			return array();
 		}
 	}
+	
+	
+	public function getVerificationSale($search,$reschedule =null){
+    	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+    	$edit_sale = $tr->translate("EDITSALEONLY");
+    	$session_lang=new Zend_Session_Namespace('lang');
+    	$lang = $session_lang->lang_id;
+    	
+    	$str = 'name_en';
+    	if($lang==1){
+    		$str = 'name_kh';
+    	}
+    	
+    	$from_date =(empty($search['start_date']))? '1': " s.verifyDate >= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " s.verifyDate <= '".$search['end_date']." 23:59:59'";
+    	$where = " AND ".$from_date." AND ".$to_date;
+    	$sql=" 
+    	SELECT 
+			`s`.`id` AS `id`
+			,(SELECT
+				`ln_project`.`project_name`
+			FROM `ln_project`
+			WHERE (`ln_project`.`br_id` = `s`.`branch_id`)
+			LIMIT 1 ) AS `branch_name`
+			,`c`.`name_kh`         AS `name_kh`
+			,`c`.`phone`         AS `phone`
+			,`p`.`land_address`    AS `land_address`
+			,`p`.`street`          AS `street`
+			,(SELECT $str FROM `ln_view` WHERE key_code =s.payment_id AND type = 25 limit 1) AS paymenttype
+			
+			,vrf.*
+			,vrf.`verifyDate` AS `verifyDate`
+			,vrf.`priceBeforeNew`
+			,vrf.`priceSoldNew`
+			,vrf.`paidAmountNew`
+			,vrf.`balanceNew`
+			
+			,(SELECT  first_name FROM rms_users WHERE id=vrf.user_id limit 1 ) AS user_name
+			
+			,vrf.`priceBefore`
+			,vrf.`priceSold`
+			,vrf.`paidAmount`
+			,vrf.`balance`
+			
+			
+			,vrf.status
+		FROM 
+			ln_verificaton_sale AS vrf 
+			JOIN `ln_sale` `s` ON s.id = vrf.saleId
+			LEFT JOIN ln_client AS c ON `c`.`client_id` = `s`.`client_id`
+			LEFT JOIN ln_properties AS p ON `p`.`id` = `s`.`house_id`
+		WHERE 
+			1 
+			AND s.is_verify = 1
+	   
+	   ";
+    	
+    	$db = $this->getAdapter();
+    	if(!empty($search['adv_search'])){
+    		$s_where = array();
+    		$s_search = addslashes(trim($search['adv_search']));
+      	 	$s_where[] = " s.receipt_no LIKE '%{$s_search}%'";
+      	 	$s_where[] = " s.sale_number LIKE '%{$s_search}%'";
+      	 	$s_where[] = " p.land_code LIKE '%{$s_search}%'";
+      	 	$s_where[] = " p.land_address LIKE '%{$s_search}%'";
+      	 	$s_where[] = " c.client_number LIKE '%{$s_search}%'";
+      	 	$s_where[] = " c.name_en LIKE '%{$s_search}%'";
+      	 	$s_where[] = " c.name_kh LIKE '%{$s_search}%'";
+      	 	$s_where[] = " c.phone LIKE '%{$s_search}%'";
+      	 	$s_where[] = " s.price_sold LIKE '%{$s_search}%'";
+      	 	$s_where[] = " s.comission LIKE '%{$s_search}%'";
+      	 	$s_where[] = " s.total_duration LIKE '%{$s_search}%'";
+      	 	$where .=' AND ( '.implode(' OR ',$s_where).')';
+    	}
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	
+    	if($search['branch_id']>0){
+			$where.=" AND s.branch_id = ".$search['branch_id'];
+		}
+		if(!empty($search['streetlist']) AND $search['streetlist']>-1){
+			$where.=" AND `p`.`street` = '".$search['streetlist']."'";
+		}
+		if($search['land_id']>0){
+			$where.=" AND ( s.house_id = ".$search['land_id']." OR (SELECT p.old_land_id FROM `ln_properties` AS p WHERE p.id = s.house_id LIMIT 1) LIKE '%".$search['land_id']."%' )";
+		}
+		if($search['property_type']>0 AND $search['property_type']>0){
+			$where.=" AND p.property_type = ".$search['property_type'];
+		}
+		if($search['client_name']!='' AND $search['client_name']>0){
+			$where.=" AND `s`.`client_id` = ".$search['client_name'];
+		}
+    	$order = " ORDER BY vrf.id DESC";
+		if(!empty($search['queryOrdering'])){
+			if($search['queryOrdering']==1){
+				$order =" ORDER BY `s`.buy_date ASC ";
+			}else if($search['queryOrdering']==2){
+				$order =" ORDER BY `s`.buy_date DESC ";
+			}else if($search['queryOrdering']==3){
+				$order =" ORDER BY vrf.id ASC ";
+			}else if($search['queryOrdering']==4){
+				$order =" ORDER BY vrf.id DESC ";
+			}
+			else if($search['queryOrdering']==5){
+				$order =" ORDER BY `s`.client_id DESC ";
+			}
+		}
+    	
+    	$where.=$dbp->getAccessPermission("`s`.`branch_id`");
+    	return $db->fetchAll($sql.$where.$order);
+    }
+	
+	public function getVerificationDetail($verificationId){
+		
+    	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+    	$session_lang=new Zend_Session_Namespace('lang');
+    	$lang = $session_lang->lang_id;
+    	if($lang==1){
+    		$str = 'name_kh';
+    	}
+    	$sql=" 
+    	SELECT 
+			`s`.`id` AS saleId
+			,(SELECT
+				`ln_project`.`project_name`
+			FROM `ln_project`
+			WHERE (`ln_project`.`br_id` = `s`.`branch_id`)
+			LIMIT 1 ) AS `branch_name`
+			,`c`.`name_kh`         AS `name_kh`
+			,`c`.`phone`         AS `phone`
+			,`p`.`land_address`    AS `land_address`
+			,`p`.`street`          AS `street`
+			,(SELECT $str FROM `ln_view` WHERE key_code =s.payment_id AND type = 25 limit 1) AS paymenttype
+			,(SELECT pt.type_nameen FROM `ln_properties_type` AS pt WHERE pt.id = (SELECT p.property_type  FROM `ln_properties` AS p WHERE p.id  = s.`house_id` LIMIT 1) LIMIT 1)AS property_type
+				
+			
+			,vrf.`branch_id` AS `branch_id`
+			,vrf.`buyDate` AS `buyDate`
+			,vrf.`verifyDate` AS `verifyDate`
+			,vrf.`priceBeforeNew`
+			,vrf.`priceSoldNew`
+			,vrf.`paidAmountNew`
+			,vrf.`balanceNew`
+			
+			,(SELECT  first_name FROM rms_users WHERE id=vrf.user_id limit 1 ) AS user_name
+			
+			,vrf.`priceBefore`
+			,vrf.`priceSold`
+			,vrf.`paidAmount`
+			,vrf.`balance`
+			,vrf.status
+		FROM 
+			ln_verificaton_sale AS vrf 
+			JOIN `ln_sale` `s` ON s.id = vrf.saleId
+			LEFT JOIN ln_client AS c ON `c`.`client_id` = `s`.`client_id`
+			LEFT JOIN ln_properties AS p ON `p`.`id` = `s`.`house_id`
+		WHERE 
+			1 
+			AND s.is_verify = 1
+	   
+	   ";
+    	$sql.=" AND vrf.id= ".$verificationId;
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	$sql.=$dbp->getAccessPermission("vrf.`branch_id`");
+		$sql.= " ORDER BY vrf.id DESC";
+		$sql.= " LIMIT 1";
+		$db = $this->getAdapter();
+    	return $db->fetchRow($sql);
+    }
 		
  }
