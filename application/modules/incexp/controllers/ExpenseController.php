@@ -140,21 +140,14 @@ class Incexp_ExpenseController extends Zend_Controller_Action
 		if(empty($row)){
 			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND",self::REDIRECT_URL,2);
 			exit();
-		}else if ($row['is_paid']==1){
-			Application_Form_FrmMessage::Sucessfull("This Expense Already Payment",self::REDIRECT_URL,2);
+		}else if ($row['expenseType']==2){
+			Application_Form_FrmMessage::Sucessfull("Unable edit Expense From Expense Payment",self::REDIRECT_URL,2);
 			exit();
 		}
 		
-		$haspay = $db->checkHaspayment($id);
-		if (!empty($haspay)){
-			Application_Form_FrmMessage::Sucessfull("This Expense has paid on some payment ready",self::REDIRECT_URL,2);
-			exit();
-		}
 		
 		$this->view->row = $row;
 		$this->view->document=$db->getExpenseDocumentbyid($id);
-
-		$this->view->row_pur_detai=$db->getExpenseDetail($id);	
 		
     	$pructis=new Incexp_Form_Frmexpense();
     	$frm = $pructis->FrmAddExpense($row);

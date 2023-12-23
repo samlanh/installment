@@ -60,7 +60,6 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 				
 				'cancelSale_id' =>$cancelSale_id,
 				'sale_id'   	=>$saleId,
-				'expenseType'	=> $data['expenseType'],
 			);
 			$this->_name="ln_expense";
 			$expense_id  = $this->insert($dataRss);
@@ -99,22 +98,7 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 					}
 				}
 			}
-			if (!empty($data['identity'])){
-				$ids = explode(',', $data['identity']);
-				foreach ($ids as $i){
-					$this->_name='ln_expense_detail';
-						$_arr = array(
-								'expense_id'=>$expense_id,
-								'pro_id'=>$data['product_name_'.$i],
-								'qty'	=>$data['qty_'.$i],
-								'cost'	=>$data['cost_'.$i],
-								'date'	=>date("Y-m-d"),
-								'amount'=>$data['amount_'.$i],
-								'note'	=>$data['note_'.$i],
-						);
-						$this->insert($_arr);
-				}
-			}				
+							
 			$_db->commit();
 		}catch(Exception $e){
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -155,26 +139,24 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 			}
 			
 			$arr = array(
-				'branch_id'		=> $data['branch_id'],
-				'title'			=> $data['title'],
-				'total_amount'	=> $data['total_amount'],
+				'branch_id'			=> $data['branch_id'],
+				'title'				=> $data['title'],
+				'total_amount'		=> $data['total_amount'],
 				'total_amount_after'	=> $data['total_amount'],//new 2021-6-02
-				'payment_id'	=> $data['payment_type'],
-				'bank_id'		=> $data['bank_id'],
-				'cheque'		=> $data['cheque'],
-				'cheque_issuer'	=> $data['cheque_issuer'],
-				'other_invoice'	=> $data['other_invoice'],
-				'category_id'	=> $data['income_category'],
-				'description'	=> $data['Description'],
-				'date'			=> $data['Date'],
-				'status'		=> $data['Stutas'],
-				'supplier_id'	=> $data['supplier_id'],
-				'user_id'		=> $this->getUserId(),	
+				'payment_id'		=> $data['payment_type'],
+				'bank_id'			=> $data['bank_id'],
+				'cheque'			=> $data['cheque'],
+				'cheque_issuer'		=> $data['cheque_issuer'],
+				'other_invoice'		=> $data['other_invoice'],
+				'category_id'		=> $data['income_category'],
+				'description'		=> $data['Description'],
+				'date'				=> $data['Date'],
+				'status'			=> $data['Stutas'],
+				'supplier_id'		=> $data['supplier_id'],
+				'user_id'			=> $this->getUserId(),	
 				
-				'cancelSale_id'   =>$cancelSale_id,
-				'sale_id'   	=>$saleId,
-				
-				'expenseType'	=> $data['expenseType'],
+				'cancelSale_id'   	=>$cancelSale_id,
+				'sale_id'   		=>$saleId,
 			);
 			$where=" id = ".$data['id'];
 			$this->_name="ln_expense";
@@ -277,65 +259,6 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 					}
 				}
 			}
-			
-			
-			$ids = explode(',', $data['identity']);
-			$detailid="";
-			if (!empty($ids)){
-				foreach ($ids as $i){
-					$data['detailidItem'.$i] = empty($data['detailidItem'.$i])?"":$data['detailidItem'.$i];
-					if (empty($detailid)){
-						$detailid = $data['detailidItem'.$i];
-					}else{
-						if (!empty($data['detailidItem'.$i])){
-							$detailid = $detailid.",".$data['detailidItem'.$i];
-						}
-					}
-				}
-			}
-			$whereDetail=" expense_id =".$data['id'];
-			if(!empty($detailid)){
-				$whereDetail.=" AND id NOT IN ($detailid)";
-			}
-			$this->_name='ln_expense_detail';
-			$this->delete($whereDetail);
-			
-			if (!empty($data['identity'])){
-				$ids = explode(',', $data['identity']);
-				if (!empty($ids)){
-					foreach ($ids as $i){
-						if (!empty($data['detailidItem'.$i])){
-							$_arr = array(
-									'expense_id'	=>$data['id'],
-									'pro_id'		=>$data['product_name_'.$i],
-									'qty'			=>$data['qty_'.$i],
-									'cost'			=>$data['cost_'.$i],
-									'date'			=>date("Y-m-d"),
-									'amount'		=>$data['amount_'.$i],
-									'note'			=>$data['note_'.$i],
-							);
-							$wheresee=" id = ".$data['detailidItem'.$i];
-							$this->_name='ln_expense_detail';
-							$this->update($_arr, $wheresee);
-
-						}else{
-							$_arr = array(
-									'expense_id'	=>$data['id'],
-									'pro_id'		=>$data['product_name_'.$i],
-									'qty'			=>$data['qty_'.$i],
-									'cost'			=>$data['cost_'.$i],
-									'date'			=>date("Y-m-d"),
-									'amount'		=>$data['amount_'.$i],
-									'note'			=>$data['note_'.$i],
-							);
-							$this->_name='ln_expense_detail';
-							$this->insert($_arr);
-						}
-					}
-				}
-			}
-			
-			
 			$_db->commit();
 		}catch(Exception $e){
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -359,14 +282,22 @@ class Incexp_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 		$to_date = (empty($search['end_date']))? '1': " date <= '".$search['end_date']." 23:59:59'";
 		$where = " WHERE ".$from_date." AND ".$to_date;
 		
-		$sql=" SELECT id,
-				(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS branch_name,
-				(SELECT sup.name FROM `ln_supplier` AS sup WHERE sup.id = supplier_id LIMIT 1) AS supplier,
-				title,invoice,
-				(SELECT name_kh FROM `ln_view` WHERE type=2 and key_code=payment_id limit 1) AS payment_type,
-				(SELECT name_kh FROM `ln_view` WHERE type=13 and key_code=category_id limit 1) AS category_name,
-				total_amount,description,date,cheque_issuer,
-				(SELECT  first_name FROM rms_users WHERE id=user_id limit 1 ) AS user_name  ";
+		$sql=" SELECT 
+				id
+				,(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =branch_id LIMIT 1) AS branch_name
+				,(SELECT sup.name FROM `ln_supplier` AS sup WHERE sup.id = supplier_id LIMIT 1) AS supplier
+				,title
+				,CASE 
+					WHEN ln_expense.expensePaymentId > 0 THEN CONCAT(ln_expense.invoice,' (',(SELECT expp.receipt_no FROM `rms_expense_payment` AS expp WHERE ln_expense.expensePaymentId=expp.id LIMIT 1 ),')')
+					ELSE ln_expense.invoice
+				END AS expenseNo
+				,(SELECT name_kh FROM `ln_view` WHERE type=2 and key_code=payment_id limit 1) AS payment_type
+				,(SELECT name_kh FROM `ln_view` WHERE type=13 and key_code=category_id limit 1) AS category_name
+				,total_amount
+				,description
+				,date
+				,cheque_issuer
+				,(SELECT  first_name FROM rms_users WHERE id=user_id limit 1 ) AS user_name  ";
 		
 		$sql.=$dbp->caseStatusShowImage("status");
 		$sql.=" FROM ln_expense ";

@@ -38,7 +38,7 @@ class Incexp_Model_DbTable_DbExpensePayment extends Zend_Db_Table_Abstract
     			SELECT
 					pp.id,
 					(SELECT b.project_name FROM `ln_project` AS b  WHERE b.br_id = pp.branch_id LIMIT 1) AS branch_name,
-					pp.receipt_no,
+					CONCAT(pp.receipt_no, ' ', COALESCE((SELECT CONCAT('(',exp.invoice,')') FROM ln_expense AS exp WHERE exp.expensePaymentId = pp.id limit 1 ),'') ),
 					(SELECT s.name FROM `ln_supplier` AS s WHERE s.id = pp.supplier_id LIMIT 1 ) AS supplier_name,
 					pp.balance,
 					pp.total_paid,pp.total_due,
@@ -87,7 +87,12 @@ class Incexp_Model_DbTable_DbExpensePayment extends Zend_Db_Table_Abstract
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
     	$supplier_id = empty($data['supplier_id'])?0:$data['supplier_id'];
     	$branch_id = $data['branch_id'];
-    	$sql="SELECT * FROM `ln_expense` AS p  WHERE  p.status=1 AND p.is_paid = 0 AND p.branch_id =$branch_id AND p.expenseType =2 ";
+    	$sql="SELECT 
+				* 
+			FROM 
+				`ln_invexpense` AS p  
+			WHERE  p.status=1 AND p.is_paid = 0 AND p.branch_id =$branch_id 
+		";
     	if(!empty($data['supplier_id'])){
 			$sql.=" AND p.supplier_id =$supplier_id ";
 		}
@@ -101,7 +106,6 @@ class Incexp_Model_DbTable_DbExpensePayment extends Zend_Db_Table_Abstract
 			$s_where = array();
 			$s_search = trim(addslashes($data['bypuchase_no']));
 			$s_where[] = " p.title LIKE '%{$s_search}%'";
-			$s_where[] = " p.invoice LIKE '%{$s_search}%'";
 			$s_where[] = " p.other_invoice LIKE '%{$s_search}%'";
 			$sql .=' AND ('.implode(' OR ',$s_where).')';
 				
@@ -136,8 +140,8 @@ class Incexp_Model_DbTable_DbExpensePayment extends Zend_Db_Table_Abstract
 	    				<label id="titleExpense'.$no.'">'.$row['title'].'</label>
     				</td>
     			<td data-label="'.$tr->translate("RECEIPT_NO").'" >
-					<label id="invoicelabel'.$no.'">'.$row['other_invoice'].' ('.$row['invoice'].')</label>
-					<input type="hidden" dojoType="dijit.form.TextBox" name="invoice_hidden'.$no.'" id="invoice_hidden'.$no.'" value="'.$row['invoice'].'" >
+					<label id="invoicelabel'.$no.'">'.$row['other_invoice'].'</label>
+					<input type="hidden" dojoType="dijit.form.TextBox" name="invoice_hidden'.$no.'" id="invoice_hidden'.$no.'" value="'.$row['other_invoice'].'" >
     			</td>
     			<td data-label="'.$tr->translate("ORIG").'" >&nbsp;
 					<label id="origtotallabel'.$no.'">'.number_format($row['total_amount'],2).'</label>
@@ -169,19 +173,20 @@ class Incexp_Model_DbTable_DbExpensePayment extends Zend_Db_Table_Abstract
     function getPurchasePaymentDetail($payment_id){
     	$db = $this->getAdapter();
     	$sql="SELECT pd.*,
-			(SELECT p.invoice FROM `ln_expense` AS p WHERE p.id = pd.purchase_id LIMIT 1) AS supplier_no
+			(SELECT p.other_invoice FROM `ln_invexpense` AS p WHERE p.id = pd.purchase_id LIMIT 1) AS supplier_no
 			 FROM `rms_expense_payment_detail` AS pd WHERE pd.payment_id =$payment_id ";
     	return $db->fetchAll($sql);
     }
     function getPaymentReceiptDetailByPaymentIdAndPurchaseId($payment_id,$purchase_id){
     	$db = $this->getAdapter();
-    	$sql="SELECT pd.*,
-    	(SELECT p.title FROM `ln_expense` AS p WHERE p.id = pd.purchase_id LIMIT 1) AS title,
-    	(SELECT p.invoice FROM `ln_expense` AS p WHERE p.id = pd.purchase_id LIMIT 1) AS supplier_no,
-		(SELECT p.other_invoice FROM `ln_expense` AS p WHERE p.id = pd.purchase_id LIMIT 1) AS other_invoice,
-    	(SELECT p.total_amount_after FROM `ln_expense` AS p WHERE p.id = pd.purchase_id LIMIT 1) AS total_amount_after,
-    	(SELECT p.total_amount FROM `ln_expense` AS p WHERE p.id = pd.purchase_id LIMIT 1) AS total_amount,
-    	(SELECT p.date FROM `ln_expense` AS p WHERE p.id = pd.purchase_id LIMIT 1) AS date
+    	$sql="SELECT 
+			pd.*,
+			(SELECT p.title FROM `ln_invexpense` AS p WHERE p.id = pd.purchase_id LIMIT 1) AS title,
+			(SELECT p.other_invoice FROM `ln_invexpense` AS p WHERE p.id = pd.purchase_id LIMIT 1) AS supplier_no,
+			(SELECT p.other_invoice FROM `ln_invexpense` AS p WHERE p.id = pd.purchase_id LIMIT 1) AS other_invoice,
+			(SELECT p.total_amount_after FROM `ln_invexpense` AS p WHERE p.id = pd.purchase_id LIMIT 1) AS total_amount_after,
+			(SELECT p.total_amount FROM `ln_invexpense` AS p WHERE p.id = pd.purchase_id LIMIT 1) AS total_amount,
+			(SELECT p.date FROM `ln_invexpense` AS p WHERE p.id = pd.purchase_id LIMIT 1) AS date
     	FROM `rms_expense_payment_detail` AS pd WHERE pd.payment_id =$payment_id AND pd.purchase_id =$purchase_id LIMIT 1 ";
     	return $db->fetchRow($sql);
     }
@@ -206,7 +211,10 @@ class Incexp_Model_DbTable_DbExpensePayment extends Zend_Db_Table_Abstract
     	$db = $this->getAdapter();
     	$supplier_id = empty($data['supplier_id'])?0:$data['supplier_id'];
     	$branch_id = $data['branch_id'];
-    	$sql="SELECT * FROM `ln_expense` AS p  WHERE  p.status=1 AND p.is_paid = 0 AND p.branch_id =$branch_id AND p.expenseType =2 ";
+    	$sql="SELECT 
+				* 
+			FROM `ln_invexpense` AS p  
+			WHERE  p.status=1 AND p.is_paid = 0 AND p.branch_id =$branch_id ";
 		if(!empty($data['supplier_id'])){
 			$sql.=" AND p.supplier_id =$supplier_id ";
 		}
@@ -218,7 +226,6 @@ class Incexp_Model_DbTable_DbExpensePayment extends Zend_Db_Table_Abstract
 			$s_where = array();
 			$s_search = trim(addslashes($data['bypuchase_no']));
 			$s_where[] = " p.title LIKE '%{$s_search}%'";
-			$s_where[] = " p.invoice LIKE '%{$s_search}%'";
 			$s_where[] = " p.other_invoice LIKE '%{$s_search}%'";
 			$sql .=' AND ('.implode(' OR ',$s_where).')';
     	}
@@ -271,8 +278,8 @@ class Incexp_Model_DbTable_DbExpensePayment extends Zend_Db_Table_Abstract
 							<label id="titleExpense'.$no.'">'.$rowpaymentdetail['title'].'</label>
 						</td>
 	    				<td data-label="'.$tr->translate("RECEIPT_NO").'" >
-		    				<label id="invoicelabel'.$no.'">'.$rowpaymentdetail['other_invoice'].' ('.$rowpaymentdetail['supplier_no'].')</label>
-		    				<input type="hidden" dojoType="dijit.form.TextBox" name="invoice_hidden'.$no.'" id="invoice_hidden'.$no.'" value="'.$rowpaymentdetail['supplier_no'].'" >
+		    				<label id="invoicelabel'.$no.'">'.$rowpaymentdetail['other_invoice'].'</label>
+		    				<input type="hidden" dojoType="dijit.form.TextBox" name="invoice_hidden'.$no.'" id="invoice_hidden'.$no.'" value="'.$rowpaymentdetail['other_invoice'].'" >
 	    				</td>
 	    				<td data-label="'.$tr->translate("ORIG").'" >&nbsp;
 	    					<label id="origtotallabel'.$no.'">'.number_format($rowpaymentdetail['total_amount'],2).'</label>
@@ -308,8 +315,8 @@ class Incexp_Model_DbTable_DbExpensePayment extends Zend_Db_Table_Abstract
 								<label id="titleExpense'.$no.'">'.$row['title'].'</label>
 							</td>
 						<td data-label="'.$tr->translate("RECEIPT_NO").'" >
-							<label id="invoicelabel'.$no.'">'.$row['other_invoice'].' ('.$row['invoice'].')</label>
-							<input type="hidden" dojoType="dijit.form.TextBox" name="invoice_hidden'.$no.'" id="invoice_hidden'.$no.'" value="'.$row['invoice'].'" >
+							<label id="invoicelabel'.$no.'">'.$row['other_invoice'].'</label>
+							<input type="hidden" dojoType="dijit.form.TextBox" name="invoice_hidden'.$no.'" id="invoice_hidden'.$no.'" value="'.$row['other_invoice'].'" >
 						</td>
 						<td data-label="'.$tr->translate("ORIG").'" >&nbsp;
 							<label id="origtotallabel'.$no.'">'.number_format($row['total_amount'],2).'</label>
@@ -340,45 +347,85 @@ class Incexp_Model_DbTable_DbExpensePayment extends Zend_Db_Table_Abstract
     }
     function getCurrentBalanceBySupplier($data){
     	$db = $this->getAdapter();
-    	$sql = "SELECT SUM(inv.`total_amount_after`) AS all_balance FROM `ln_expense` AS inv WHERE inv.`status`=1 AND inv.`is_paid`=0 AND inv.`supplier_id`=".$data['supplier_id']." AND inv.branch_id =".$data['branch_id'];
+    	$sql = "SELECT SUM(inv.`total_amount_after`) AS all_balance FROM `ln_invexpense` AS inv WHERE inv.`status`=1 AND inv.`is_paid`=0 AND inv.`supplier_id`=".$data['supplier_id']." AND inv.branch_id =".$data['branch_id'];
     	return $db->fetchOne($sql);
     }
     
-    
+    function insertOrEditExpense($data){
+		$dbExp = new Incexp_Model_DbTable_DbExpense();
+		$invoice = $dbExp->getInvoiceNo($data['branch_id']);
+		$dataRss = array(
+				'branch_id'				=> $data['branch_id'],
+				'title'					=> "",
+				'total_amount'			=> $data['total_paid'],
+				
+				'cheque'				=> $data['cheque_no'],
+				'cheque_issuer'			=> $data['cheque_issuer'],
+				
+	            'payment_id'			=> $data['paid_by'],
+				'bank_id'				=> $data['bank_id'],
+				'category_id'			=> $data['income_category'],
+				'description'			=> $data['note'],
+				'date'					=> $data['date_payment'],
+				'status'				=> 1,
+				'supplier_id'			=> $data['supplier_id'],
+				'user_id'				=> $this->getUserId(),
+				'expenseType'			=> 2,
+				'expensePaymentId'		=> $data['expensePaymentId'],
+			);
+		if(!empty($data['editExpense'])){
+			if(!empty($data['expensePaymentId'])){
+				$where=" expensePaymentId = ".$data['expensePaymentId'];
+				$this->_name="ln_expense";
+				$this->update($dataRss, $where);
+			}
+		}else{
+			$this->_name="ln_expense";
+			$dataRss['invoice'] = $invoice;
+			$dataRss['other_invoice'] = $data['receiptNo'];
+			$dataRss['create_date'] = date('Y-m-d');
+			$expenseId  = $this->insert($dataRss);
+			return $expenseId;
+		}
+		
+	}
     public function addPaymentReceipt($_data){
     	try{
     		$receipt_no = $this->getPuchasePaymentCode();
-			
     		$_arr=array(
-    				'branch_id'	  => $_data['branch_id'],
-    				'receipt_no'	  => $receipt_no,
-    				'supplier_id'	      => $_data['supplier_id'],
-    				'balance'      => $_data['balance'],
-    				'total_paid'=> $_data['total_paid'],
-    				'total_discount'	  => $_data['total_discount'],
-    				'total_due'      => $_data['total_due'],
+    				'branch_id'	  		=> $_data['branch_id'],
+    				'receipt_no'	  	=> $receipt_no,
+					'category_id'		=> $_data['income_category'],
+    				'supplier_id'	    => $_data['supplier_id'],
+    				'balance'      		=> $_data['balance'],
+    				'total_paid'		=> $_data['total_paid'],
+    				'total_discount'	=> $_data['total_discount'],
+    				'total_due'      	=> $_data['total_due'],
     				'date_payment'      => $_data['date_payment'],
-    				'paid_by'      => $_data['paid_by'],
-					'cheque_no'      => $_data['cheque_no'],
-					'cheque_issuer'      => $_data['cheque_issuer'],
-					'bank_id'      => $_data['bank_id'],
-    				'create_date'=> date("Y-m-d H:i:s"),
-    				'modify_date'	  => date("Y-m-d H:i:s"),
-    				'status'=> 1,
-    				'user_id'  =>$this->getUserId(),
-    				'note'=>$_data['note'],
+    				'paid_by'     		=> $_data['paid_by'],
+					'cheque_no'      	=> $_data['cheque_no'],
+					'cheque_issuer'     => $_data['cheque_issuer'],
+					'bank_id'     		=> $_data['bank_id'],
+    				'create_date'		=> date("Y-m-d H:i:s"),
+    				'modify_date'	  	=> date("Y-m-d H:i:s"),
+    				'status'			=> 1,
+    				'user_id'  			=>$this->getUserId(),
+    				'note'				=>$_data['note'],
     		);			
 			
     		$this->_name ='rms_expense_payment';
-    		$payment_id =  $this->insert($_arr);			
+    		$payment_id =  $this->insert($_arr);	
+			$_data['expensePaymentId'] = $payment_id;
+			$_data['receiptNo'] = $receipt_no;
+			
+			$this->insertOrEditExpense($_data);
+			
     		$ids = explode(',', $_data['identity']);
     		$dueafter=0;
-			
     		foreach ($ids as $i){
     			$is_payment =0;
 				
     			$purchase = $this->getPruchaseById($_data['purchase_id'.$i],$_data['branch_id']);
-				
     			$paid = (float)$_data['payment_amount'.$i]+(float)$_data['discount_amount'.$i];
     			
     			if (!empty($purchase)){
@@ -395,7 +442,7 @@ class Incexp_Model_DbTable_DbExpensePayment extends Zend_Db_Table_Abstract
     						'total_amount_after'=>$dueafter,
     				);
     				$where="id=".$_data['purchase_id'.$i]." AND branch_id =".$_data['branch_id'];
-    				$this->_name="ln_expense";
+    				$this->_name="ln_invexpense";
     				$this->update($array, $where);
     			}
     			
@@ -419,33 +466,35 @@ class Incexp_Model_DbTable_DbExpensePayment extends Zend_Db_Table_Abstract
     
     public function updatePaymentReceipt($_data){
     	try{
-//     		$receipt_no = $this->getPuchasePaymentCode();
     		$_arr=array(
-    				'branch_id'	  => $_data['branch_id'],
-//     				'receipt_no'	  => $receipt_no,
-    				'supplier_id'	      => $_data['supplier_id'],
-    				'balance'      => $_data['balance'],
-    				'total_paid'=> $_data['total_paid'],
-    				'total_discount'	  => $_data['total_discount'],
-    				'total_due'      => $_data['total_due'],
+    				'branch_id'	  		=> $_data['branch_id'],
+    				'supplier_id'	    => $_data['supplier_id'],
+					'category_id'		=> $_data['income_category'],
+    				'balance'      		=> $_data['balance'],
+    				'total_paid'		=> $_data['total_paid'],
+    				'total_discount'	=> $_data['total_discount'],
+    				'total_due'      	=> $_data['total_due'],
     				'date_payment'      => $_data['date_payment'],
-    				'paid_by'      => $_data['paid_by'],
-					'cheque_no'      => $_data['cheque_no'],
-					'cheque_issuer'      => $_data['cheque_issuer'],
-					'bank_id'      => $_data['bank_id'],
-//     				'create_date'=> date("Y-m-d H:i:s"),
-    				'modify_date'	  => date("Y-m-d H:i:s"),
-    				'status'=> 1,
-    				'user_id'  =>$this->getUserId(),
-    				'note'=>$_data['note'],
+    				'paid_by'      		=> $_data['paid_by'],
+					'cheque_no'      	=> $_data['cheque_no'],
+					'cheque_issuer'     => $_data['cheque_issuer'],
+					'bank_id'      		=> $_data['bank_id'],
+    				'modify_date'	  	=> date("Y-m-d H:i:s"),
+    				'status'			=> 1,
+    				'user_id'  			=>$this->getUserId(),
+    				'note'				=>$_data['note'],
     		);
     		$this->_name ='rms_expense_payment';
     		$payment_id = $_data['id'];
     		$where = " id = ".$payment_id;
     		$this->update($_arr, $where);
+			
+			$_data['expensePaymentId'] = $payment_id;
+			$_data['editExpense'] = 1;
+			$this->insertOrEditExpense($_data);
     		
     		$row = $this->getPurchasePaymentDetail($payment_id);
-    		if (!empty($row)) foreach ($row as $pay_detail){
+    		if (!empty($row)) foreach ($row as $key => $pay_detail){
     			$rowpaymentdetail = $this->getPaymentReceiptDetailByPaymentIdAndPurchaseId($payment_id, $pay_detail['purchase_id']);
     			
     			if (!empty($rowpaymentdetail)){
@@ -454,12 +503,12 @@ class Incexp_Model_DbTable_DbExpensePayment extends Zend_Db_Table_Abstract
     				$duevalu=$rowpaymentdetail['payment_amount'];
     				$paymenttailbysale = $this->getSumPaymentReceiptDetailByPurchaseId($pay_detail['purchase_id'], $pay_detail['id']);// get other pay amount on this Purchase id on other payment receipt number
     				$dueafters = $purchase['total_amount_after']+$duevalu;
-//     				echo $dueafters;exit();
+					
     				if (!empty($paymenttailbysale['tolalpayamount'])){
     					$duevalu = ($rowpaymentdetail['total_amount']-$paymenttailbysale['tolalpayamount']);
     					$dueafters =$duevalu;
+						
     				}
-    				
     				if ($dueafters>0){
     					$is_payments=0;
     				}else{
@@ -520,7 +569,7 @@ class Incexp_Model_DbTable_DbExpensePayment extends Zend_Db_Table_Abstract
     						'total_amount_after'=>$dueafter,
     				);
     				$where="id=".$_data['purchase_id'.$i]." AND branch_id =".$_data['branch_id'];
-    				$this->_name="ln_expense";
+    				$this->_name="ln_invexpense";
     				$this->update($array, $where);
     			}
     			 
@@ -556,6 +605,15 @@ class Incexp_Model_DbTable_DbExpensePayment extends Zend_Db_Table_Abstract
     	}
     }
     function voidPaymentReceipt($id,$branch_id){
+		
+		$_arr=array(
+    			'status'	      => 0,
+    			'user_id'  =>$this->getUserId(),
+    	);
+    	$this->_name ='ln_expense';
+    	$where = ' expensePaymentId = '.$id;
+    	$this->update($_arr, $where);
+		
     	$_arr=array(
     			'status'	      => 0,
     			'user_id'  =>$this->getUserId(),
@@ -608,17 +666,18 @@ class Incexp_Model_DbTable_DbExpensePayment extends Zend_Db_Table_Abstract
     			'total_amount_after'=>$data['amount_due_after'],
     	);
     	$where="id=".$data['purchase_id']." AND branch_id =".$data['branch_id'];
-    	$this->_name="ln_expense";
+    	$this->_name="ln_invexpense";
     	$this->update($array, $where);
     }
     function getPruchaseById($id,$branch_id){
     	$db=$this->getAdapter();
-    	$sql="SELECT sp.*,
-		(SELECT s.name FROM ln_supplier AS s WHERE s.id=sp.supplier_id LIMIT 1)as sup_name,
-		(SELECT s.supplier_code FROM ln_supplier AS s WHERE s.id=sp.supplier_id LIMIT 1) as purchase_no,
-		(SELECT s.email FROM ln_supplier AS s WHERE s.id=sp.supplier_id LIMIT 1)as email,
-		(SELECT s.address FROM ln_supplier AS s WHERE s.id=sp.supplier_id LIMIT 1)as address
-		 FROM ln_expense AS sp
+    	$sql="SELECT 
+			sp.*,
+			(SELECT s.name FROM ln_supplier AS s WHERE s.id=sp.supplier_id LIMIT 1)as sup_name,
+			(SELECT s.supplier_code FROM ln_supplier AS s WHERE s.id=sp.supplier_id LIMIT 1) as purchase_no,
+			(SELECT s.email FROM ln_supplier AS s WHERE s.id=sp.supplier_id LIMIT 1)as email,
+			(SELECT s.address FROM ln_supplier AS s WHERE s.id=sp.supplier_id LIMIT 1)as address
+		 FROM ln_invexpense AS sp
     	WHERE  sp.status=1 AND sp.id=$id AND sp.branch_id =$branch_id";
     	return $db->fetchRow($sql);
     }

@@ -76,6 +76,11 @@ class Incexp_ExpensepaymentController extends Zend_Controller_Action {
 		array_unshift($chequeIssue, array('id'=>'-1', 'name'=>$this->tr->translate("ADD_NEW")) );
 		$this->view->cheque_issue  =  $chequeIssue;
 		
+    	$dbExp = new Incexp_Model_DbTable_DbExpense();
+    	$result = $dbExp->getAllExpenseCategory();
+    	array_unshift($result, array ( 'id' => -1,'name' => $this->tr->translate("ADD_NEW")));
+    	$this->view->allCategory = $result;
+		
 		$frm = new Incexp_Form_FrmExpensePayment();
 		$frm->FrmAddPurchasePayment(null);
 		Application_Model_Decorator::removeAllDecorator($frm);
@@ -117,6 +122,11 @@ class Incexp_ExpensepaymentController extends Zend_Controller_Action {
 		$chequeIssue  = $db->getAllChequeIssue();
 		array_unshift($chequeIssue, array('id'=>'-1', 'name'=>$this->tr->translate("ADD_NEW")) );
 		$this->view->cheque_issue  =  $chequeIssue;
+		
+		$dbExp = new Incexp_Model_DbTable_DbExpense();
+    	$result = $dbExp->getAllExpenseCategory();
+    	array_unshift($result, array ( 'id' => -1,'name' => $this->tr->translate("ADD_NEW")));
+    	$this->view->allCategory = $result;
 		
 		$frm = new Incexp_Form_FrmExpensePayment();
 		$frm->FrmAddPurchasePayment($row);

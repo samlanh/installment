@@ -70,7 +70,7 @@ span.oldsup input[type=checkbox] {
 			}
 			</script>
 			<div class="card-box">
-	        	<div class="col-md-6 col-sm-6 col-xs-12">
+	        	<div class="col-md-4 col-sm-4 col-xs-12">
 					<div class="card-blogform">
 						<div class="card-body"> 
 							<div class="row"> 
@@ -117,7 +117,7 @@ span.oldsup input[type=checkbox] {
 						</div>
 					</div>
 	            </div>
-	            <div class="col-md-6 col-sm-6 col-xs-12">
+	            <div class="col-md-4 col-sm-4 col-xs-12">
 					<div class="card-blogform">
 						<div class="card-body"> 
 							<div class="row"> 
@@ -143,6 +143,38 @@ span.oldsup input[type=checkbox] {
 									   <div class="col-md-7 col-sm-7 col-xs-12">
 											<?php echo $frm->getElement("date_payment");?>
 									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("CATEGORY");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<input id="income_category" />
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("AMOUNT");?> 
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php echo $frm->getElement("amount");?>
+									   </div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+	            </div>
+				<div class="col-md-4 col-sm-4 col-xs-12">
+					<div class="card-blogform">
+						<div class="card-body"> 
+							<div class="row"> 
+								<div class="col-md-12 col-sm-12 col-xs-12"> 
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="fa fa-money" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("PAYMENT_INFO");?></p>
+										</div> 
 									</div>
 									<div class="form-group">
 									   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("PAYMENT_TYPE");?> 
@@ -172,13 +204,7 @@ span.oldsup input[type=checkbox] {
 											<?php echo $frm->getElement("cheque_issuer");?>
 									   </div>
 									</div>
-									<div class="form-group">
-									   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" for="first-name"><?php echo $tr->translate("AMOUNT");?> 
-									   </label>
-									   <div class="col-md-7 col-sm-7 col-xs-12">
-											<?php echo $frm->getElement("amount");?>
-									   </div>
-									</div>
+									
 								</div>
 							</div>
 						</div>
@@ -311,11 +337,110 @@ span.oldsup input[type=checkbox] {
 		</form>
 	</div>
 </div>
+
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" style="width:30%;" id="popup_category" data-dojo-props="title:'<?php echo $tr->translate("ADD_CATEGORY")?>'" >
+		<form style="width:100%;" id='frm_category' dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
+			<div class="card-box">
+	    		<div class="col-md-12 col-sm-12 col-xs-12">
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PARENT");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<input id="parent_id" />
+	                   </div>
+	                </div>
+	                <div class="form-group">
+	                   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("EXPENSE_TITLE");?> :
+	                   </label>
+	                   <div class="col-md-7 col-sm-7 col-xs-12">
+	                    	<input dojoType="dijit.form.ValidationTextBox" required="true"  class="fullside" id="cate_name" name="cate_name" value="" type="text">
+	                   </div>
+	                </div>
+	         	</div>
+	         </div>
+	         <div class="card-box">
+             	<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
+					<input type="button" class="button-class button-danger" iconClass="glyphicon glyphicon-remove"  value="ចាកចេញ" label="<?php echo $tr->translate("CANCEL");?>" id="close" name="close" dojoType="dijit.form.Button"  onclick="hideDialog1();"/>
+					<input type="button" class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-disk" value="save" label="<?php echo $tr->translate("GO_SAVE");?>" id="save" name="save" dojoType="dijit.form.Button"  onclick="addCategory();"/>
+    			</div>
+    		</div>
+		</form>
+	</div>
+</div>
 <script type="text/javascript">
 	dojo.require("dojo.data.ItemFileWriteStore");  
 	dojo.require("dojo.NodeList-manipulate");
+	
+	var parent_id_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
+	var income_category_store  = getDataStorefromJSON('id','name',<?php print_r(Zend_Json::encode($this->allCategory));?> );
+	new dijit.form.FilteringSelect({
+		store: income_category_store,
+		autoComplete: false,
+		queryExpr: "*${0}*",             
+		id: "income_category",
+		name: "income_category",  
+		class: 'fullside',  
+		placeHolder:"<?php echo $tr->translate('SELECT_CATEGORY');?>", 
+		onChange: function() {          
+			fa_job = dijit.byId('income_category').get('value');
+			if(fa_job==-1){
+			 dijit.byId("popup_category").show();
+			}
+		} 
+	}, "income_category");
+
+	function hideDialog1(){
+		dijit.byId('popup_category').hide();
+	}
+	var url_getland = '<?php echo $this->url(array('module'=>'incexp','controller'=>'income','action'=>'getparentbyid')); ?>';
+	function getParentbytype(){
+		account_type = 13
+		dijit.byId('parent_id').reset();
+		dojo.xhrPost({
+			url:url_getland,	
+			content:{ 
+				'type':account_type
+			},		    
+			handleAs:"json",
+			load: function(data) {
+				acc_store  = getDataStorefromJSON('id','name', data);		
+				dijit.byId('parent_id').set('store', acc_store);
+			},
+			error: function(err) {
+			}
+		});
+	}
+	var url_add_category = '<?php echo $this->url(array("module"=>"incexp","controller"=>"expense","action"=>"add-category")); ?>';
+	function addCategory(){
+		if(dijit.byId('frm_category').validate()){
+			dijit.byId('save').set('disabled',true);
+			dojo.xhrPost({
+				url:url_add_category,
+				form: dojo.byId("frm_category"),
+				handleAs:"json",
+				load: function(data) {
+					//var Itemmake = { 
+						//id: data,
+					   // name: dijit.byId('cate_name').get('value')
+				   // };
+					//addDataToSelectbox(dijit.byId('income_category'), income_category_store, Itemmake, data);
+
+					resetStoreCategory(data);
+					dijit.byId('frm_category').reset();
+					dijit.byId("popup_category").hide();
+					dijit.byId('save').set('disabled',false);
+				},
+				error: function(err) {
+				}
+			});
+		}
+	}
+
 	dojo.ready(function(){
 		getSupplierInfo(1);
+		getParentbytype();
+		dijit.byId('income_category').attr('value',<?php echo $this->row['category_id'];?>);
 	});
 	var keyindex=1;
 	var url_getSupplier = '<?php echo $this->url(array('module'=>'incexp','controller'=>'expensepayment','action'=>'getallpuchasebysupplieredit')); ?>';
@@ -624,6 +749,18 @@ var chequeStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::en
 				popupIssuer();
 			}
 		}, "cheque_issuer");
+		new dijit.form.FilteringSelect({
+			store: parent_id_store,
+			autoComplete: false,
+			queryExpr: "*${0}*",
+			required: false,		           
+			name: "parent_id",
+			id: "parent_id",
+			searchAttr: "name",
+			class: 'fullside',
+			onChange: function() {
+			}
+		}, "parent_id");
 	});
 
 function enablePayment(){
