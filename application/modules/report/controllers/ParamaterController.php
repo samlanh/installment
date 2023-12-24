@@ -406,8 +406,6 @@ class Report_ParamaterController extends Zend_Controller_Action {
   	$this->view->withdraw_capital = $db->getExpenseCategory($search,1);
   	$this->view->expense_comission = $db->getAllComissionExpense($search);
 	$this->view->totalComissionPay = $db->getTotalComissionPayment($search);
-	
-	$this->view->totalExpensePayment = $db->totalExpensePayment($search);
   	
   	$this->view->saleicome = $db->geIncomeFromSale($search,null);  	
   	

@@ -420,7 +420,12 @@ function getAllBranch($search=null){
 					,(SELECT name_kh FROM `ln_view` WHERE type=2 and key_code=payment_id limit 1) AS payment_type
 					,payment_id
 					,title
-					,invoice
+					
+					,CASE 
+						WHEN ln_expense.expensePaymentId > 0 THEN CONCAT(ln_expense.invoice,' (',(SELECT expp.receipt_no FROM `rms_expense_payment` AS expp WHERE ln_expense.expensePaymentId=expp.id LIMIT 1 ),')')
+						ELSE ln_expense.invoice
+					END AS invoice
+					
 					,is_closed
 					,cheque_issuer
 					,other_invoice
@@ -3658,7 +3663,8 @@ function getAllBranch($search=null){
     		SELECT
 				pp.*
 				,(SELECT b.project_name FROM `ln_project` AS b  WHERE b.br_id = pp.branch_id LIMIT 1) AS branch_name
-				,pp.receipt_no
+			
+				,CONCAT(pp.receipt_no, ' ', COALESCE((SELECT CONCAT('(',exp.invoice,')') FROM ln_expense AS exp WHERE exp.expensePaymentId = pp.id limit 1 ),'') ) AS receipt_no
 				,(SELECT s.name FROM `ln_supplier` AS s WHERE s.id = pp.supplier_id LIMIT 1 ) AS supplier_name
 				,pp.balance
 				,pp.total_paid,pp.total_due
@@ -3744,25 +3750,6 @@ function getAllBranch($search=null){
     	$sql.=$dbp->getAccessPermission('pp.branch_id');
     	return $db->fetchRow($sql);
     }
-	
-	function totalExpensePayment($search=null){
-		$db = $this->getAdapter();
-		$sql="SELECT SUM(p.`total_paid`) AS totalAmount
-			FROM `rms_expense_payment` AS p 
-			WHERE p.`status` =1 ";
-			
-    	$from_date =(empty($search['start_date']))? '1': " p.`date_payment` >= '".$search['start_date']." 00:00:00'";
-    	$to_date = (empty($search['end_date']))? '1': " p.`date_payment` <= '".$search['end_date']." 23:59:59'";
-    	$sql.= " AND ".$from_date." AND ".$to_date;
-    	if($search['branch_id']>0){
-    		$sql.=" AND p.branch_id=".$search['branch_id'];
-    	}
-		
-		$dbp = new Application_Model_DbTable_DbGlobal();
-		$sql.=$dbp->getAccessPermission("p.branch_id");
-		
-		return $db->fetchOne($sql);
-	}
 	
 	function getExpenseDetail($id){
     	$db=$this->getAdapter();

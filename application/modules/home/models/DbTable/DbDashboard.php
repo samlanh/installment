@@ -490,17 +490,6 @@ class Home_Model_DbTable_DbDashboard extends Zend_Db_Table_Abstract
 		return $db->fetchOne($sql);
 	}
 	
-	function TotalExpensePayment(){
-		$db = $this->getAdapter();
-		$sql="SELECT SUM(p.`total_paid`) AS totalAmount
-			FROM `rms_expense_payment` AS p 
-			WHERE p.`status` =1 ";
-		$dbp = new Application_Model_DbTable_DbGlobal();
-		$sql.=$dbp->getAccessPermission("p.branch_id");
-		
-		return $db->fetchOne($sql);
-	}
-	
 	function getCommissionPaymentPaidByAgent(){
 	
 // 		$dbglobal = new Application_Model_DbTable_DbGlobal();

@@ -633,80 +633,8 @@
 			                ?>
 					   		<?php }
 				           }?>
-				           
-				   <?php if($expenseFeatureList==1){?>
-							<?php 
-				           if (!empty($this->rowExpensePayment)){?>
-								<tr>
-									<td colspan="14" align="center" style="border-top:2px solid #000; ">
-										<h2 style="font-size:14px;font-family:'Times New Roman','Khmer OS Muol Light';padding: 0;margin: 0;">
-											<span><?php echo $tr->translate("OTHER_EXPENSE");?></span>
-										 </h2>
-									</td>
-								</tr>
-								<tr class="style style-head" align="center">
-									<td scope="col"><?php echo $tr->translate('NUM');?></td>
-									<td  scope="col"><?php echo $tr->translate('BRANCH_NAME');?></td>
-									<td  scope="col" colspan="2"><?php echo $tr->translate('SUPPLIER_NAME');?></td>
-									<td  scope="col"><?php echo $tr->translate('PAYMENT_TYPE');?></td>
-									<td  scope="col" colspan="5"><?php echo $tr->translate('NOTE');?></td>
-									<td  scope="col"><?php echo $tr->translate('TOTAL_PAID');?></td>
-									
-									<td  scope="col"><?php echo $tr->translate('RECEIPT_NO');?></td>
-									<td  scope="col"><?php echo $tr->translate('DATE');?></td>
-									<td  scope="col"><?php echo $tr->translate('BY_USER');?></td>
-								</tr>
-								 <?php $branch_id=''; $i=0; 
-									foreach($this->rowExpensePayment as $key =>$rows){ $i++;
-									?>
-									<tr class="style hover"  align="left">
-									   <td data-label="<?php echo $tr->translate("NUM");?>"  align="center"><?php echo $i; ?></td>
-									   <td data-label="<?php echo $tr->translate("BRANCH_NAME");?>" ><?php echo $rows['branch_name'];?></td>
-									   <td data-label="<?php echo $tr->translate("SUPPLIER_NAME");?>"  colspan="2" align="left"><?php echo $rows['supplier_name'];?></td>
-									   <td data-label="<?php echo $tr->translate("PAYMENT_TYPE");?>"  align="center">
-										<?php echo $rows['paid_by'];?>
-										<?php if(!empty($rows["bank"])){  echo "(". $rows["bank" ].")";} ?>
-										<?php if($rows["paid_by_id"] !="1"){  ?>
-											<small class="recordInfo"><?php echo $rows['cheque_no']; echo empty($rows['cheque_issuer']) ? "" : " ".$rows['cheque_issuer'];?></small>
-										<?php } ?>
-										</td>
-										<td data-label="<?php echo $tr->translate("NOTE");?>"  colspan="5" align="left"><?php echo $rows['note'];?></td>
-										<td class="right bold" data-label="<?php echo $tr->translate("TOTAL_PAID");?>" ><?php echo number_format($rows['total_paid'],2);?></td>
-									    
-										<td data-label="<?php echo $tr->translate("RECEIPT_NO");?>"  align="center"><?php echo $rows['receipt_no'];?></td>
-										<td data-label="<?php echo $tr->translate("DATE");?>"  align="center"><?php echo date("d-m-Y",strtotime($rows['date_payment']));?></td>
-										<td data-label="<?php echo $tr->translate("BY_USER");?>"  align="center"><?php echo $rows['user_name'];?></td>
-									 </tr>
-									 <?php 
-											$total_expese = $total_expese +$rows['total_paid'];
-											if($rows['paid_by_id']==1){
-												$total_cash = $total_cash - $rows["total_paid"];
-											}else{
-												$foundKey="-1";
-												if(!empty($rows["bankId"])){
-													$foundKey = array_search($rows["bankId"], array_column($arrayBank, 'id'));
-												}
-												$recordTotal =$rows["total_paid"];
-												if($rows['paid_by_id']==2){
-													$total_bank = $total_bank - $recordTotal;
-													if($foundKey > -1 ){
-														$totalBankRecieve = $arrayBank[$foundKey]['totalBankRecieve'];
-														$arrayBank[$foundKey]['totalBankRecieve'] = $totalBankRecieve  - $recordTotal;
-													}
-												}else{
-													$total_cheque = $total_cheque - $recordTotal;
-													if($foundKey > -1 ){
-														$totalCheckRecieve = $arrayBank[$foundKey]['totalCheckRecieve'];
-														$arrayBank[$foundKey]['totalCheckRecieve'] = $totalCheckRecieve  - $recordTotal;
-													}
-												}
-											}
-										?>
-							   <?php }?>
-						   <?php }?>
-				   <?php }else{?>
-						<?php 
-				           if (!empty($this->rowExpense)){?>
+						   
+						   <?php if (!empty($this->rowExpense)){?>
 				            <tr>
 				            	<td colspan="14" align="center" style="border-top:2px solid #000; ">
 				            		<h2 style="font-size:14px;font-family:'Times New Roman','Khmer OS Muol Light';padding: 0;margin: 0;">
@@ -778,7 +706,6 @@
 									}
 								?>
 							<?php }}?>
-				   <?php }?>
 				           
 				            
 						<?php 

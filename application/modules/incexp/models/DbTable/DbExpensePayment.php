@@ -38,7 +38,7 @@ class Incexp_Model_DbTable_DbExpensePayment extends Zend_Db_Table_Abstract
     			SELECT
 					pp.id,
 					(SELECT b.project_name FROM `ln_project` AS b  WHERE b.br_id = pp.branch_id LIMIT 1) AS branch_name,
-					CONCAT(pp.receipt_no, ' ', COALESCE((SELECT CONCAT('(',exp.invoice,')') FROM ln_expense AS exp WHERE exp.expensePaymentId = pp.id limit 1 ),'') ),
+					CONCAT(pp.receipt_no, ' ', COALESCE((SELECT CONCAT('(',exp.invoice,')') FROM ln_expense AS exp WHERE exp.expensePaymentId = pp.id limit 1 ),'') ) AS receiptNo,
 					(SELECT s.name FROM `ln_supplier` AS s WHERE s.id = pp.supplier_id LIMIT 1 ) AS supplier_name,
 					pp.balance,
 					pp.total_paid,pp.total_due,
