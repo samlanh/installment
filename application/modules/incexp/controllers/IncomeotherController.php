@@ -2,8 +2,6 @@
 
 class Incexp_IncomeOtherController extends Zend_Controller_Action
 {
-	//const REDIRECT_URL = '/incexp/expense';
-	
     public function init()
     {
     	header('content-type: text/html; charset=utf8');
