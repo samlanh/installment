@@ -126,10 +126,21 @@ class RsvAcl_Model_DbTable_DbUserType extends Zend_Db_Table_Abstract
 	}
 	public function getAlluserType(){
 		$db = $this->getAdapter();
-		$sql = "SELECT u.user_type_id,u.user_type,
-		(SELECT u1.user_type FROM `rms_acl_user_type` u1 WHERE u1.user_type_id = u.parent_id LIMIT 1)
-		 parent_id, status FROM `rms_acl_user_type` u ";
+		
+		$base_url = Zend_Controller_Front::getInstance()->getBaseUrl();
+		$imgnone='<img src="'.$base_url.'/images/icon/cross.png"/>';
+		$imgtick='<img src="'.$base_url.'/images/icon/apply2.png"/>';
+		
+		$sql = "SELECT 
+				u.user_type_id,
+				u.user_type,
+				(SELECT u1.user_type FROM `rms_acl_user_type` u1 WHERE u1.user_type_id = u.parent_id LIMIT 1)
+		 		parent_id, 
+			CASE    
+				WHEN `status` = 1 THEN '".$imgtick."'
+				WHEN `status` = 0 THEN '".$imgnone."'
+			END AS status
+		 FROM `rms_acl_user_type` u ";
 		return $db->fetchAll($sql);
 	}
 }
-

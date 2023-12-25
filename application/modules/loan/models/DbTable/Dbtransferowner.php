@@ -9,6 +9,10 @@ class Loan_Model_DbTable_Dbtransferowner extends Zend_Db_Table_Abstract
     }
    function getAllTranferOwner($search){
 	  
+	   	$base_url = Zend_Controller_Front::getInstance()->getBaseUrl();
+	   	$imgnone='<img src="'.$base_url.'/images/icon/cross.png"/>';
+	   	$imgtick='<img src="'.$base_url.'/images/icon/apply2.png"/>';
+   	
 	   	$sql="SELECT w.id,
 	   		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id=w.branch_id LIMIT 1) AS from_branch,
 			c.name_kh,
@@ -17,10 +21,16 @@ class Loan_Model_DbTable_Dbtransferowner extends Zend_Db_Table_Abstract
 			w.paid_before,
 			w.balance,
 			(SELECT cc.name_kh FROM `ln_client` AS cc WHERE cc.client_id=w.to_customer LIMIT 1) AS to_branch,
-			w.note,w.change_date,w.status
+			w.note,w.change_date,
+			
+			 CASE    
+				WHEN  `w`.`status` = 1 THEN '".$imgtick."'
+				WHEN  `w`.`status` = 0 THEN '".$imgnone."'
+				END AS status
+				
 			FROM 
-			`ln_change_owner` AS w,
-	   		`ln_client` c 
+				`ln_change_owner` AS w,
+		   		`ln_client` c 
 	   		WHERE c.client_id=w.from_customer ";
 	   	
 	   	$from_date =(empty($search['start_date']))? '1': " w.change_date >= '".$search['start_date']." 00:00:00'";

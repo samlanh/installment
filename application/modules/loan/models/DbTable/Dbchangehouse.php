@@ -13,18 +13,29 @@ class Loan_Model_DbTable_Dbchangehouse extends Zend_Db_Table_Abstract
    	$from_date =(empty($search['start_date']))? '1': " s.change_date >= '".$search['start_date']." 00:00:00'";
    	$to_date = (empty($search['end_date']))? '1': " s.change_date <= '".$search['end_date']." 23:59:59'";
    	$where = " AND ".$from_date." AND ".$to_date;
+   	
+   	$base_url = Zend_Controller_Front::getInstance()->getBaseUrl();
+   	$imgnone='<img src="'.$base_url.'/images/icon/cross.png"/>';
+   	$imgtick='<img src="'.$base_url.'/images/icon/apply2.png"/>';
+   	
    	$sql="SELECT cp.id,
    		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id=cp.from_branchid LIMIT 1) AS from_branch,
-	c.name_kh,
-	(SELECT CONCAT(land_address,',',street) FROM `ln_properties` WHERE ln_properties.id=cp.from_houseid LIMIT 1) from_property,
-	cp.soldprice_before,cp.paid_before,cp.balance_before,
-	(SELECT project_name FROM `ln_project` WHERE ln_project.br_id=cp.to_branchid LIMIT 1) AS to_branch,
-	(SELECT CONCAT(land_address,',',street) FROM `ln_properties` WHERE ln_properties.id=cp.to_houseid LIMIT 1) to_propertype,
-	cp.house_priceafter,cp.discount_percentafter,cp.discount_amountafter,cp.sold_priceafter,cp.balance_after,
-	cp.change_date,
-	(SELECT  first_name FROM rms_users WHERE id=cp.user_id limit 1 ) AS user_name,
-	cp.status
-	FROM `ln_change_house` AS cp,`ln_client` c WHERE c.client_id=cp.client_id ";
+		c.name_kh,
+		(SELECT CONCAT(land_address,',',street) FROM `ln_properties` WHERE ln_properties.id=cp.from_houseid LIMIT 1) from_property,
+		cp.soldprice_before,cp.paid_before,cp.balance_before,
+		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id=cp.to_branchid LIMIT 1) AS to_branch,
+		(SELECT CONCAT(land_address,',',street) FROM `ln_properties` WHERE ln_properties.id=cp.to_houseid LIMIT 1) to_propertype,
+		cp.house_priceafter,cp.discount_percentafter,cp.discount_amountafter,cp.sold_priceafter,cp.balance_after,
+		cp.change_date,
+		(SELECT  first_name FROM rms_users WHERE id=cp.user_id limit 1 ) AS user_name,
+		 CASE    
+				WHEN  `cp`.`status` = 1 THEN '".$imgtick."'
+				WHEN  `cp`.`status` = 0 THEN '".$imgnone."'
+				END AS status
+	
+	FROM `ln_change_house` AS cp,
+   		`ln_client` c 
+   	WHERE c.client_id=cp.client_id ";
    	
    	$from_date =(empty($search['start_date']))? '1': " cp.change_date >= '".$search['start_date']." 00:00:00'";
    	$to_date = (empty($search['end_date']))? '1': " cp.change_date <= '".$search['end_date']." 23:59:59'";

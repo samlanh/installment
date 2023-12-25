@@ -23,8 +23,6 @@ class Loan_NewscheduleController extends Zend_Controller_Action {
 			}
 			$db = new Loan_Model_DbTable_DbNewSchedule();
 			$rs_rows= $db->getAllReschedule($search,1);
-			$glClass = new Application_Model_GlobalClass();
-			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
 			$collumns = array("BRANCH_NAME","SALE_NO","CUSTOMER_NAME","PROPERTY_CODE","PAMENT_METHOD","BALANCE","PAMENT_METHOD","BALANCE","DATE_BUY",
 				"STATUS");

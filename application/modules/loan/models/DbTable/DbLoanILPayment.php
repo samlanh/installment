@@ -15,6 +15,11 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
     	$delete=$tr->translate('DELETE');
     	$db = $this->getAdapter();
+    	
+    	$base_url = Zend_Controller_Front::getInstance()->getBaseUrl();
+    	$imgnone='<img src="'.$base_url.'/images/icon/cross.png"/>';
+    	$imgtick='<img src="'.$base_url.'/images/icon/apply2.png"/>';
+    	
     	$sql = "SELECT lcrm.`id`,
     				(SELECT project_name FROM `ln_project` WHERE br_id=lcrm.branch_id LIMIT 1) AS branch_name,
 					(SELECT c.`name_kh` FROM `ln_client` AS c WHERE c.`client_id`=lcrm.`client_id` limit 1) AS team_group ,
@@ -31,7 +36,10 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 					lcrm.`date_input`,
 					(SELECT name_kh FROM `ln_view` WHERE type=7 AND key_code=lcrm.`payment_option`) AS payment_method,
 					(SELECT  first_name FROM rms_users WHERE id=lcrm.user_id limit 1 ) AS user_name,
-					lcrm.status
+					CASE    
+						WHEN  `lcrm`.`status` = 1 THEN '".$imgtick."'
+						WHEN  `lcrm`.`status` = 0 THEN '".$imgnone."'
+					END AS status
 				FROM `ln_client_receipt_money` AS lcrm WHERE 1 ";
     	$where ='';
     	$from_date =(empty($search['start_date']))? '1': " lcrm.date_input >= '".$search['start_date']." 00:00:00'";

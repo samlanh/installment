@@ -32,8 +32,6 @@ class Group_CustomerController extends Zend_Controller_Action {
 						);
 			}
 			$rs_rows= $dbc->getAllInfo($search);
-			$glClass = new Application_Model_GlobalClass();
-			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
 			$collumns = array("CUSTOMER_NAME","PHONE","KNOW_BY","DATE","FROM_PRICE","TO_PRICE","REQUIREDMENT","TYPE","DESCRIPTION","STATUS_REQ","BY_USER","STATUS");
 			$link=array(

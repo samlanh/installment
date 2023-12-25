@@ -21,6 +21,11 @@ class Loan_Model_DbTable_DdVerifySale extends Zend_Db_Table_Abstract
     	$from_date =(empty($search['start_date']))? '1': " s.verifyDate >= '".$search['start_date']." 00:00:00'";
     	$to_date = (empty($search['end_date']))? '1': " s.verifyDate <= '".$search['end_date']." 23:59:59'";
     	$where = " AND ".$from_date." AND ".$to_date;
+    	
+    	$base_url = Zend_Controller_Front::getInstance()->getBaseUrl();
+    	$imgnone='<img src="'.$base_url.'/images/icon/cross.png"/>';
+    	$imgtick='<img src="'.$base_url.'/images/icon/apply2.png"/>';
+    	
     	$sql=" 
     	SELECT 
 			vrf.`id` AS `id`
@@ -34,22 +39,20 @@ class Loan_Model_DbTable_DdVerifySale extends Zend_Db_Table_Abstract
 			,`p`.`land_address`    AS `land_address`
 			,`p`.`street`          AS `street`
 			,(SELECT $str FROM `ln_view` WHERE key_code =s.payment_id AND type = 25 limit 1) AS paymenttype
-			
 			,vrf.`verifyDate` AS `verifyDate`
 			,vrf.`priceBeforeNew`
 			,vrf.`priceSoldNew`
 			,vrf.`paidAmountNew`
 			,vrf.`balanceNew`
-			
 			,(SELECT  first_name FROM rms_users WHERE id=vrf.user_id limit 1 ) AS user_name
-			
 			,vrf.`priceBefore`
 			,vrf.`priceSold`
 			,vrf.`paidAmount`
 			,vrf.`balance`
-			
-			
-			,vrf.status
+			,CASE    
+				WHEN  `vrf`.`status` = 1 THEN '".$imgtick."'
+				WHEN  `vrf`.`status` = 0 THEN '".$imgnone."'
+				END AS status
 		FROM 
 			ln_verificaton_sale AS vrf 
 			JOIN `ln_sale` `s` ON s.id = vrf.saleId

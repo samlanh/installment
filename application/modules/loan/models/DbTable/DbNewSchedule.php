@@ -11,6 +11,11 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     	$from_date =(empty($search['start_date']))? '1': " s.date >= '".$search['start_date']." 00:00:00'";
     	$to_date = (empty($search['end_date']))? '1': " s.date <= '".$search['end_date']." 23:59:59'";
     	$where = " AND ".$from_date." AND ".$to_date;
+    	
+    	$base_url = Zend_Controller_Front::getInstance()->getBaseUrl();
+    	$imgnone='<img src="'.$base_url.'/images/icon/cross.png"/>';
+    	$imgtick='<img src="'.$base_url.'/images/icon/apply2.png"/>';
+    	
     	$sql="SELECT `s`.`id` AS `id`,
     	(SELECT `ln_project`.`project_name` FROM `ln_project` WHERE (`ln_project`.`br_id` = `s`.`branch_id`) LIMIT 1) AS `branch_name`,
     	(SELECT sale_number FROM `ln_sale` WHERE ln_sale.id=s.sale_id LIMIT 1) AS sale_number,
@@ -22,7 +27,10 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
   		`balance_after`,
   		`date`,
         `s`.`date`        AS `date`,
-         s.status
+        CASE    
+				WHEN  `s`.`status` = 1 THEN '".$imgtick."'
+				WHEN  `s`.`status` = 0 THEN '".$imgnone."'
+		END AS status
 		FROM ((`ln_reschedule` `s`
 		    JOIN `ln_client` `c`)
 		   JOIN `ln_properties` `p`)

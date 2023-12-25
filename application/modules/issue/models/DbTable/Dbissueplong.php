@@ -10,6 +10,13 @@ class Issue_Model_DbTable_Dbissueplong extends Zend_Db_Table_Abstract
    	$from_date =(empty($search['start_date']))? '1': " sp.issue_date >= '".$search['start_date']." 00:00:00'";
    	$to_date = (empty($search['end_date']))? '1': " sp.issue_date <= '".$search['end_date']." 23:59:59'";
    	$where = " AND ".$from_date." AND ".$to_date;
+   	
+   	
+   	$base_url = Zend_Controller_Front::getInstance()->getBaseUrl();
+   	$imgnone='<img src="'.$base_url.'/images/icon/cross.png"/>';
+   	$imgtick='<img src="'.$base_url.'/images/icon/apply2.png"/>';
+   	
+   	
    	$sql="SELECT `sp`.`id` AS `id`,
 	      CASE    
 		WHEN  (SELECT rec.sale_id FROM `ln_receiveplong` AS rec WHERE rec.status=1 AND rec.sale_id = sp.sale_id ORDER BY rec.id DESC LIMIT 1 ) IS NOT NULL  THEN 'បានប្រគល់'
@@ -28,7 +35,11 @@ class Issue_Model_DbTable_Dbissueplong extends Zend_Db_Table_Abstract
 	    (s.price_sold - (SELECT SUM(cr.total_principal_permonthpaid+cr.extra_payment) FROM `ln_client_receipt_money` AS cr WHERE cr.sale_id = sp.sale_id LIMIT 1) ) AS balance,
 	     sp.issue_date,
 	     sp.note,
-         s.status
+          CASE    
+				WHEN  `s`.`status` = 1 THEN '".$imgtick."'
+				WHEN  `s`.`status` = 0 THEN '".$imgnone."'
+				END AS status
+				
 		FROM (`ln_sale` `s`,
 			ln_issueplong AS sp,
 		     `ln_client` `c`

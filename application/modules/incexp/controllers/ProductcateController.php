@@ -1,6 +1,5 @@
 <?php
 class Incexp_ProductcateController extends Zend_Controller_Action {
-	private $activelist = array('មិនប្រើ​ប្រាស់', 'ប្រើ​ប្រាស់');
 	const REDIRECT_URL = '/incexp/productcate';
     public function init()
     {    	
@@ -19,14 +18,10 @@ class Incexp_ProductcateController extends Zend_Controller_Action {
     	else{
     		$search = array(
     				'advance_search' => "",
-//     				'type_search'=>"",
     				'status_search' => -1
     		);
     	}
         $rs_rows = $db_dept->getAllItemsOption($search);
-        $glClass = new Application_Model_GlobalClass();
-        $rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
-        
     	$list = new Application_Form_Frmtable();
     	$collumns = array("TITLE","BY_USER","STATUS");
     	$link=array(

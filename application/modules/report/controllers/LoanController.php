@@ -1382,10 +1382,25 @@ class Report_LoanController extends Zend_Controller_Action {
 	function rptSummaryAction(){
 		$data = array();
 		$db = new Report_Model_DbTable_DbSummary();
-		$data = array(
-				'projectId'=>1
+		
+		if($this->getRequest()->isPost()){
+			$search = $this->getRequest()->getPost();
+		}else {
+			$search = array(
+					'projectId' => "",
+			);
+		}
+		
+		
+		$this->view->resultData = $db->getAllSummaryData($search);
+		$this->view->rsFilter = $search;
+		
+		$dbg = new Application_Model_DbTable_DbGlobal();
+		
+		$filter= array(
+				'showAll'=>1
 				);
-		$this->view->resultData = $db->getAllSummaryData($data);
+		$this->view->rsBranch = $dbg->getAllBranchName(null,null,$filter);
 	}
 	
 	function rptVerificationSaleAction(){

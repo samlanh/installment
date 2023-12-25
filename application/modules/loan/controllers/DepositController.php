@@ -23,12 +23,10 @@ class Loan_DepositController extends Zend_Controller_Action {
 						'land_id'=>-1,
 						'start_date'=> date('Y-m-d'),
 						'end_date'=>date('Y-m-d'),
-						 );
+				);
 			}
 			$db = new Loan_Model_DbTable_DbLanddeposit();
 			$rs_rows= $db->getAlldepositLoan($search);
-			$glClass = new Application_Model_GlobalClass();
-			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
 			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","TEL","PROPERTY_CODE","STREET","PAYMENT_TYPE","PRINCIPLE_PICE","DISCOUNT_PERCENT","DISCOUNT","SOLD_PRICE","PAID","BALANCE","DATE_BUY",
 				"BY_USER","STATUS","IS_CANCEL");

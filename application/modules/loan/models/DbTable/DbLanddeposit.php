@@ -25,7 +25,12 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
     	
     	$from_date =(empty($search['start_date']))? '1': " s.buy_date >= '".$search['start_date']." 00:00:00'";
     	$to_date = (empty($search['end_date']))? '1': " s.buy_date <= '".$search['end_date']." 23:59:59'";
-    	$where = " AND ".$from_date." AND ".$to_date;
+    	$where = " AND ".$from_date." AND ".$to_date; 
+    	
+    	$base_url = Zend_Controller_Front::getInstance()->getBaseUrl();
+    	$imgnone='<img src="'.$base_url.'/images/icon/cross.png"/>';
+    	$imgtick='<img src="'.$base_url.'/images/icon/apply2.png"/>';
+    	
     	$sql=" 
     	SELECT `s`.`id` AS `id`,
     	(SELECT
@@ -33,26 +38,30 @@ class Loan_Model_DbTable_DbLanddeposit extends Zend_Db_Table_Abstract
 		   FROM `ln_project`
 		   WHERE (`ln_project`.`br_id` = `s`.`branch_id`)
 		   LIMIT 1) AS `branch_name`,
-	    `c`.`name_kh`         AS `name_kh`,
-	    `c`.`phone`         AS `phone`,
-	    `p`.`land_address`    AS `land_address`,
-	    `p`.`street`          AS `street`,
-	    (SELECT $str FROM `ln_view` WHERE key_code =s.payment_id AND type = 25 limit 1) AS paymenttype,
-  		`s`.`price_before`    AS `price_before`,
- 		CONCAT(`s`.`discount_percent`,'%') AS `discount_percent`,
-        `s`.`discount_amount` AS `discount_amount`,
- 		`s`.`price_sold`     AS `price_sold`,   
-	   (SELECT
-	     SUM((`cr`.`total_principal_permonthpaid` + `cr`.`extra_payment`)) + ((SELECT COALESCE(SUM(crd.total_amount),0) FROM `ln_credit` AS crd WHERE crd.status=1 AND crd.sale_id = s.id LIMIT 1))
-	   FROM `ln_client_receipt_money` `cr`
-	   WHERE (`cr`.`sale_id` = `s`.`id`)  LIMIT 1) AS `totalpaid_amount`,   
-	   (SELECT
-	     (`s`.`price_sold`-SUM(`cr`.`total_principal_permonthpaid` + `cr`.`extra_payment`) - ((SELECT COALESCE(SUM(crd.total_amount),0) FROM `ln_credit` AS crd WHERE crd.status=1 AND crd.sale_id = s.id LIMIT 1)) )
-	   FROM `ln_client_receipt_money` `cr`
-	   WHERE (`cr`.`sale_id` = `s`.`id`)  LIMIT 1) AS `balance`,  
-        `s`.`buy_date`        AS `buy_date`,
-        (SELECT  first_name FROM rms_users WHERE id=s.user_id limit 1 ) AS user_name,
-         s.status,
+		    `c`.`name_kh`         AS `name_kh`,
+		    `c`.`phone`         AS `phone`,
+		    `p`.`land_address`    AS `land_address`,
+		    `p`.`street`          AS `street`,
+		    (SELECT $str FROM `ln_view` WHERE key_code =s.payment_id AND type = 25 limit 1) AS paymenttype,
+	  		`s`.`price_before`    AS `price_before`,
+	 		CONCAT(`s`.`discount_percent`,'%') AS `discount_percent`,
+	        `s`.`discount_amount` AS `discount_amount`,
+	 		`s`.`price_sold`     AS `price_sold`,   
+		   (SELECT
+		     SUM((`cr`.`total_principal_permonthpaid` + `cr`.`extra_payment`)) + ((SELECT COALESCE(SUM(crd.total_amount),0) FROM `ln_credit` AS crd WHERE crd.status=1 AND crd.sale_id = s.id LIMIT 1))
+		   FROM `ln_client_receipt_money` `cr`
+		   WHERE (`cr`.`sale_id` = `s`.`id`)  LIMIT 1) AS `totalpaid_amount`,   
+		   (SELECT
+		     (`s`.`price_sold`-SUM(`cr`.`total_principal_permonthpaid` + `cr`.`extra_payment`) - ((SELECT COALESCE(SUM(crd.total_amount),0) FROM `ln_credit` AS crd WHERE crd.status=1 AND crd.sale_id = s.id LIMIT 1)) )
+		   FROM `ln_client_receipt_money` `cr`
+		   WHERE (`cr`.`sale_id` = `s`.`id`)  LIMIT 1) AS `balance`,  
+	        `s`.`buy_date`        AS `buy_date`,
+	        (SELECT  first_name FROM rms_users WHERE id=s.user_id limit 1 ) AS user_name,
+          CASE    
+				WHEN  `s`.`status` = 1 THEN '".$imgtick."'
+				WHEN  `s`.`status` = 0 THEN '".$imgnone."'
+				END AS status,
+         
          CASE    
 				WHEN  `s`.`is_cancel` = 0 THEN ' '
 				WHEN  `s`.`is_cancel` = 1 THEN '".$tr->translate("CANCELED")."'

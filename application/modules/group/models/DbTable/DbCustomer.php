@@ -54,13 +54,24 @@ class Group_Model_DbTable_DbCustomer extends Zend_Db_Table_Abstract
 		$db = $this->getAdapter();
 		$from_date =(empty($search['start_date']))? '1': " date >= '".$search['start_date']." 00:00:00'";
 		$to_date = (empty($search['end_date']))? '1': " date <= '".$search['end_date']." 23:59:59'";
-		$where = " WHERE ".$from_date." AND ".$to_date;		
+		$where = " WHERE ".$from_date." AND ".$to_date;	
+
+		
+		$base_url = Zend_Controller_Front::getInstance()->getBaseUrl();
+		$imgnone='<img src="'.$base_url.'/images/icon/cross.png"/>';
+		$imgtick='<img src="'.$base_url.'/images/icon/apply2.png"/>';
+		
 		$sql = "SELECT id,name, phone,
 		(SELECT title FROM `rms_know_by` WHERE rms_know_by.id=know_by LIMIT 1) as know_by,
 		 `date`,from_price,to_price,requirement,type,description,	
 		statusreq,			
 		    (SELECT  first_name FROM rms_users WHERE id = user_id limit 1 ) AS user_name,
-			status FROM $this->_name ";
+ 				CASE    
+					WHEN  `status` = 1 THEN '".$imgtick."'
+					WHEN  `status` = 0 THEN '".$imgnone."'
+				END AS status
+		
+		FROM $this->_name ";
 		if(!empty($search['adv_search'])){
 			$s_where = array();
 			$s_search = addslashes(trim($search['adv_search']));

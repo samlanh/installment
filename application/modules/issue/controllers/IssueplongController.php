@@ -20,13 +20,11 @@ class Issue_IssueplongController extends Zend_Controller_Action {
 						'status' => -1,
 						'status_plong'=>-1,
 						'start_date'=> date('Y-m-d'),
-						'end_date'=>date('Y-m-d'),
+						'end_date'=>date('Y-m-d')
 						 );
 			}
 			$db = new Issue_Model_DbTable_Dbissueplong();
 			$rs_rows= $db->getAllissueplong($search,1);
-			$glClass = new Application_Model_GlobalClass();
-			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
 			$collumns = array("PROCESS","BRANCH_NAME","CUSTOMER_NAME","PHONE","PROPERTY_CODE","SOLD_PRICE","BALANCE","DATE","NOTE","STATUS");
 			$link_info=array('module'=>'issue','controller'=>'issueplong','action'=>'edit',);

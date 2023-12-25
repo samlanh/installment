@@ -29,8 +29,6 @@ class Incexp_ProductController extends Zend_Controller_Action {
 	    	}
 	    	$type=3; //Product
 	    	$rs_rows= $db->getAllProduct($search,$type);
-	    	$glClass = new Application_Model_GlobalClass();
-	    	$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 	    	$list = new Application_Form_Frmtable();
 	    	$collumns = array("CODE","PRODUCT_NAME","PRODUCT_CATEGORY","PRICE","MODIFY_DATE","BY_USER","STATUS");
 	    	$link=array(

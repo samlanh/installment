@@ -55,12 +55,21 @@
 		$db = $this->getAdapter();
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 		
+		$base_url = Zend_Controller_Front::getInstance()->getBaseUrl();
+		$imgnone='<img src="'.$base_url.'/images/icon/cross.png"/>';
+		$imgtick='<img src="'.$base_url.'/images/icon/apply2.png"/>';
+		
 		$sql = " SELECT ide.id,ide.code,ide.title,
 			(SELECT it.title FROM `rms_category` AS it WHERE it.id = ide.items_id LIMIT 1) AS category,
 			ide.price,			
 			ide.modify_date,
 			(SELECT CONCAT(first_name) FROM rms_users WHERE ide.user_id=id LIMIT 1 ) AS user_name,
-			ide.status FROM `rms_product` AS ide WHERE 1 
+			 CASE    
+				WHEN  `ide`.`status` = 1 THEN '".$imgtick."'
+				WHEN  `ide`.`status` = 0 THEN '".$imgnone."'
+				END AS status
+				
+			 FROM `rms_product` AS ide WHERE 1 
 			";
 		$orderby = " ORDER BY ide.items_id ASC,ide.ordering ASC, ide.id DESC ";
 		$where = ' ';

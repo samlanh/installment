@@ -12,7 +12,6 @@
 	}
 	$result = $this->resultData;
 ?>
-
 <meta charset="utf-8">
 <title><?php echo $tr->translate("REPORT_LOAN_LATE");?></title>
 <div style="min-height:26cm; margin:0 auto; padding:0.5cm 0.5cm 0cm 0.5cm">
@@ -25,6 +24,24 @@
     		</div>
     	</div>
     </div>
+     <form method="post">
+	    <div class="card-box">
+			<div class="form-group"> 
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<select name="projectId" id="projectId" dojoType="dijit.form.FilteringSelect" class="fullside" autoComplete="false" queryExpr="*${0}*">
+					   <option value="0" label="ជ្រើសរើសគម្រោង">ជ្រើសរើសគម្រោង</option>
+					   <?php if(!empty($this->rsBranch))foreach($this->rsBranch as $rs){?>
+					   	<option value="<?php echo $rs['br_id'];?>" <?php echo ($rs['br_id']==$this->rsFilter['projectId'])?"selected":"";?>><?php echo $rs['project_name'];?></option>
+					   <?php }?>
+					 </select>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<button class="button-class button-primary" iconClass="glyphicon glyphicon-search" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+				</div>
+			</div>
+	    </div>
+    </form>
+    
 	<div id="divPrint">
 		<style>
 			ul.list-report li{list-style: none;}
@@ -52,11 +69,11 @@
 			                		<ul class="list-report">
 			                			<li style="white-space:nowrap;text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $branch_title;?></li>
 			                			<li style="text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Times New Roman','Khmer OS Muol Light'">របាយការណ៍សង្ខេប / Summary Report</li>
-			                			<li style="text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>;"><?php if(!empty($this->search['start_date'])){
-			                					echo date('d/m/Y',strtotime($this->search['start_date']));
-			                					echo "-".date("d/m/Y",strtotime($this->list_end_date));
-			                			}?>
-			                				<label id='lbl_labelstaff'></label>
+			                			<li style="text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>;">
+			                				<label id='projectLabel'></label>
+			                			</li>
+			                			<li style="text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>;">
+			                				<?php echo date('d-m-Y');?>
 			                			</li>
 			                		</ul>
 			                	<td width="30%"></td>
@@ -77,13 +94,13 @@
 				               <tr>
 				                    <td>ដី/ផ្ទះសរុប Total Properties</td>
 				                    <td><?php echo $result['totalProperties'];?></td>
-				                    <td>អតិថិជនសរុប Total Customers</td>
+				                    <td>អតិថិជនសរុប Total Customers(Exclude Cancel Customers)</td>
 				                    <td width="150px"><?php echo $result['totalClient'];?></td>
 				                </tr>
 				               <tr>
 				                    <td>តម្លៃដី/ផ្ទះសរុបទឹកប្រាក់ Total Properties Price</td>
 				                    <td><?php echo number_format($result['totalpropertyPrice'],2);?></td>
-				                    <td>ចំនួនការលក់ Total Sales</td>
+				                    <td>ចំនួនការលក់ Total Active Sales(Exclude Cancel Customers)</td>
 				                    <td><?php echo $result['totalActiveSale'];?></td>
 				                </tr>
 				                <tr>
@@ -232,3 +249,12 @@
 			</table>
 	</div>
 </div>
+<script>
+require(["dojo/ready"], function(ready){
+	ready(function(){
+		proectLabel = dijit.byId("projectId").attr('displayedValue');
+		dojo.byId('projectLabel').innerHTML =proectLabel;
+	 });
+});
+
+</script>

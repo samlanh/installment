@@ -29,8 +29,6 @@ class Loan_VerifysaleController extends Zend_Controller_Action {
 			}
 			$db = new Loan_Model_DbTable_DdVerifySale();
 			$rs_rows= $db->getAllIndividuleLoan($search);
-			$glClass = new Application_Model_GlobalClass();
-			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
 			$collumns = array(
 			
@@ -40,18 +38,13 @@ class Loan_VerifysaleController extends Zend_Controller_Action {
 					,"PROPERTY_CODE"
 					,"STREET"
 					,"PAYMENT_TYPE"
-			
 					,"verifyDate"
 					,"PRINCIPLE_PICE_VERIFY","SOLD_PRICE_VERIFY","PAID_VERIFY","BALANCE_VERIFY"
 					,"verifyBy"
-			
 					,"PRINCIPLE_PICE"
 					,"SOLD_PRICE"
 					,"PAID"
 					,"BALANCE"
-					
-					
-					
 					,"STATUS"
 			);
 			$this->view->list=$list->getCheckList(10, $collumns, $rs_rows,array(),0);

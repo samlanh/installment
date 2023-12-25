@@ -162,7 +162,7 @@ div#t_amountmoneytype tr.regurlar {
 	                   </label>
 	                   <div class="col-md-7 col-sm-7 col-xs-12">
 	                    	<?php //echo $frm->getElement('sold_price');?>
-	                    	<input type="text" class="fullside" name="sold_price" id="sold_price" dojoType="dijit.form.NumberTextBox" value="50000" >
+	                    	<input type="text" class="fullside" name="sold_price" id="sold_price" dojoType="dijit.form.NumberTextBox" value="" >
 	                   </div>
 	                </div>
 	                <div class="form-group">
@@ -260,19 +260,53 @@ div#t_amountmoneytype tr.regurlar {
 						 <div class="card-box">
 			             	<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
 								<input class="button-class button-primary" iconClass="glyphicon glyphicon-equalizer" type="button" onclick="addPreviewLoan();" label="<?php echo $tr->translate("Preview");?>" name='savenew' value='<?php echo $tr->translate("Preview");?>' dojoType="dijit.form.Button" />
+			    				<input class="btn btn-warning" iconClass="glyphicon glyphicon-equalizer" type="button" value="គណនា ប្រាក់បានបង់" value="គណនា ប្រាក់បានបង់" onclick="calculatePaid();"/>
 			    				<input class="button-class button-primary" iconClass="glyphicon glyphicon-print" type="button" value="<?php echo $tr->translate('PRINT');?>" label="<?php echo $tr->translate('PRINT');?>" dojoType="dijit.form.Button" onclick="doPrintSchedule();"/>
 			    			</div>
 			    		</div>
 			    		<div class="form-group blog-left-title">
-	                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold m-0" ><i class="fa fa-calendar" aria-hidden="true"></i> <?php echo $tr->translate("SCHEDULE_INSTALLMENT");?> 
-	                   </label>
+		                   <label class="control-label col-md-12 col-sm-12 col-xs-12 title-blog bold m-0" ><i class="fa fa-calendar" aria-hidden="true"></i>គណនា ប្រាក់បានបង់ និងជំពាក់ 
+		                   </label>
 	                </div>
+	                <div class="form-group">
+	                	<label class="control-label col-md-5 col-sm-5 col-xs-12" >
+	                		 រយៈពេលបានបង់
+	                	</label>
+	                	<div class="col-md-7 col-sm-7 col-xs-12">
+	                 		<input dojoType="dijit.form.NumberTextBox" class="fullside" id="total_durationPaid" name="total_durationPaid" value="" type="text">
+	                	</div>
+	                 </div>
+	                 <div class="form-group">
+	                	<label class="control-label col-md-5 col-sm-5 col-xs-12" >
+	                		 ប្រាក់ដើមបានបង់
+	                	</label>
+	                	<div class="col-md-7 col-sm-7 col-xs-12">
+	                 		<input readonly dojoType="dijit.form.NumberTextBox" class="fullside" id="principalPaid" name="principalPaid" value="" type="text">
+	                	</div>
+	                 </div>
+	                 <div class="form-group">
+	                	<label class="control-label col-md-5 col-sm-5 col-xs-12" >
+	                		ការប្រាក់បានបង់
+	                	</label>
+	                	<div class="col-md-7 col-sm-7 col-xs-12">
+	                 		<input readonly dojoType="dijit.form.NumberTextBox" class="fullside" id="interestPaid" name="interestPaid" value="" type="text">
+	                	</div>
+	                 </div>
+	                 <div class="form-group">
+	                	<label class="control-label col-md-5 col-sm-5 col-xs-12" >
+	                		<strong>ប្រាក់ដើមនៅជំពាក់</strong>
+	                	</label>
+	                	<div class="col-md-7 col-sm-7 col-xs-12">
+	                 		<input readonly dojoType="dijit.form.NumberTextBox" class="fullside" id="balancePricipal" name="balancePricipal" value="" type="text">
+	                	</div>
+	                 </div>
 	                <div class="form-group">
 	                	 <div class="col-md-12 col-sm-12 col-xs-12 blog-left-content">
 	                	 	<div  id="showrecord"></div>
 							<input type="button" class="button-class button-primary" iconClass="glyphicon glyphicon-sort-by-attributes" label="<?php echo $tr->translate('ADD_INSTALLMENT');?>" dojoType="dijit.form.Button" onclick="addRow();" />
 	                	 </div>
 	                </div>
+	                
 	             </div>
 	             <div class="col-md-8 col-sm-8 col-xs-12">
 	             	<div class="form-group">
@@ -460,7 +494,26 @@ div#t_amountmoneytype tr.regurlar {
 <script type="text/javascript">	
 dojo.require("dojo.data.ItemFileWriteStore");  
 dojo.require("dijit.form.Textarea");
-
+function calculatePaid(){
+	var durationPaid = dijit.byId('total_durationPaid').get('value');
+ 	if(durationPaid==''){
+ 		dijit.byId('total_durationPaid').focus();
+ 	 }
+	var totalPricipalPaid = 0;
+	var totalInterestPaid = 0;
+	if(durationPaid>0){
+			for(var n = 0; n < durationPaid; n++) {
+				totalPricipalPaid = totalPricipalPaid+parseFloat($('#principal_permonth_'+n).val());
+				totalInterestPaid = totalInterestPaid+parseFloat($('#total_interest_'+n).val());
+			}
+			dijit.byId('principalPaid').attr('value',totalPricipalPaid);
+			dijit.byId('interestPaid').attr('value',totalInterestPaid);
+			Balance = parseFloat(dijit.byId('sold_price').get('value'))-parseFloat(totalPricipalPaid);
+			dijit.byId('balancePricipal').attr('value',Balance);
+			
+	}
+		
+}
 function doPrintSchedule() {
 	
 	dojo.byId('lblAmount').innerHTML="$ "+dojo.number.format(dijit.byId('sold_price').get('value'),2);
@@ -589,7 +642,7 @@ function checkScheduleOption(){
 			if(dijit.byId("old_paymentmethod").get("value")==1){amount_principal = dijit.byId("sold_price").get('value');}
 			if(isNaN(amount_principal)){amount_principal=0;}if(isNaN(debt_amount)){debt_amount=0;}
 			total_collect = amount_principal/debt_amount;
-			total_collect = total_collect.toFixed(0);
+			total_collect = total_collect.toFixed(2);
 			if(debt_amount!=0){
 				dijit.byId('fixed_payment').attr("value",total_collect);
 			}
@@ -659,7 +712,8 @@ function calCulateFixedPeriod(){
 		if(isNaN(amount_payment)){amount_payment=0;
 		}
 	}	
-	amount_payment = Math.round(amount_payment);
+	amount_payment = amount_payment.toFixed(2)
+	//amount_payment = Math.round(amount_payment,0);
 	dijit.byId('fixed_payment').attr('value',amount_payment);
 	dijit.byId('for_installamount').attr('value',amount_principal);
 }
@@ -1517,8 +1571,8 @@ function addPreviewLoan(){
 						  d = new Date(data[i].date_name);
 						  temp+='<td >'+getDayName(d.getDay())+'-'+data[i].date_payments+'</td>';
 						  temp+='<td align="center">'+dojo.number.format(data[i].begining_balance,2)+'</td>';
-						  temp+='<td align="center">'+dojo.number.format(data[i].principal_permonth,2)+'</td>';
-						  temp+='<td align="center">'+dojo.number.format(data[i].total_interest,2)+'</td>';
+						  temp+='<td align="center">'+dojo.number.format(data[i].principal_permonth,2)+'<input data-dojo-type="dijit.form.NumberTextBox" type="hidden" id="principal_permonth_'+i+'" value="'+data[i].principal_permonth+'"></td>';
+						  temp+='<td align="center">'+dojo.number.format(data[i].total_interest,2)+'<input data-dojo-type="dijit.form.NumberTextBox" type="hidden" id="total_interest_'+i+'" value="'+data[i].total_interest+'"></td>';
 						  temp+='<td align="center"><b>'+dojo.number.format(data[i].total_payment_after,2)+'<b></td>';
 						  temp+='<td align="center"><b>'+dojo.number.format((data[i].ending_balance),2)+'<b></td></td>';
 						 }

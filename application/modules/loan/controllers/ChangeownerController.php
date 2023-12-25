@@ -22,8 +22,6 @@ class Loan_ChangeownerController extends Zend_Controller_Action {
 			}
 			$db = new Loan_Model_DbTable_Dbtransferowner();
 			$rs_rows= $db->getAllTranferOwner($search,1);
-			$glClass = new Application_Model_GlobalClass();
-			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
 			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","PROPERTY_CODE","PRICE","PAID_BEFORE","BALANCE","TO_CUSTOMER","NOTE","CHANGE_DATE","STATUS");
 			

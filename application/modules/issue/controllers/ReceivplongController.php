@@ -24,8 +24,6 @@ class Issue_ReceivplongController extends Zend_Controller_Action {
 			}
 			$this->view->rssearch = $search;
 			$rs_rows= $db->getCustomerReceivedPlong($search);//call frome model
-			$glClass = new Application_Model_GlobalClass();
-			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
 			
 			$tr = Application_Form_FrmLanguages::getCurrentlanguage();

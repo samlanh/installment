@@ -108,7 +108,12 @@ class Report_Model_DbTable_DbSummary extends Zend_Db_Table_Abstract
       	return $db->fetchRow($sql);
       }
       function getSaleSummary($data){
+      	
       	$currentDate = date('Y-m-d');
+      	$strBranchId = "";
+      	if(!empty($data['projectId'])){
+      		$strBranchId=" AND branch_id=".$data['projectId'];
+      	}
       	$sql="SELECT 
 				COUNT(DISTINCT(IF(`status`= '1' AND is_cancel='0' ,client_id, NULL))) AS totalClient,
 				COUNT(IF(`status`= '1' AND is_cancel='0' ,id, NULL)) AS totalActiveSale,
@@ -119,12 +124,11 @@ class Report_Model_DbTable_DbSummary extends Zend_Db_Table_Abstract
 				(SELECT SUM(total_interest_after) FROM `ln_saleschedule` ss WHERE ss.status=1 AND ss.is_completed=0 AND ss.total_interest_after>0) AS totalExpectedInterest,
 				
 				(SELECT COUNT(DISTINCT(ss.sale_id)) FROM `ln_saleschedule` ss WHERE ss.status=1 AND ss.is_completed=0 AND ss.total_interest_after>0 LIMIT 1) AS totalSaleLate,
-				(SELECT SUM(total_payment_after) FROM `ln_saleschedule` ss WHERE ss.status=1 AND ss.is_completed=0 AND ss.total_payment_after>0 AND date_payment<='$currentDate') AS totalLatePayment,
+				(SELECT SUM(total_payment_after) FROM `ln_saleschedule` ss WHERE ss.status=1 AND ss.is_completed=0 AND ss.total_payment_after>0 AND date_payment<='$currentDate' ) AS totalLatePayment,
 				
-				
-				(SELECT SUM(total_principal_permonthpaid+extra_payment) FROM `ln_client_receipt_money` WHERE s.status=1 AND s.is_cancel=0) AS paidAmount,
-				(SELECT SUM(total_principal_permonthpaid+extra_payment) FROM `ln_client_receipt_money` WHERE s.status=1 AND s.is_cancel=1) AS cancelPaidAmount,
-				(SELECT SUM(total_interest_permonthpaid+penalize_amountpaid) FROM `ln_client_receipt_money` WHERE s.status=1 AND s.is_cancel=1 LIMIT 1) AS totalInterestPaid,
+				(SELECT SUM(total_principal_permonthpaid+extra_payment) FROM `ln_client_receipt_money` crm WHERE s.status=1 AND s.is_cancel=0 $strBranchId LIMIT 1) AS paidAmount,
+				(SELECT SUM(total_principal_permonthpaid+extra_payment) FROM `ln_client_receipt_money` crm WHERE s.status=1 AND s.is_cancel=1 $strBranchId LIMIT 1) AS cancelPaidAmount,
+				(SELECT SUM(total_interest_permonthpaid+penalize_amountpaid) FROM `ln_client_receipt_money` WHERE s.status=1 AND s.is_cancel=1 $strBranchId LIMIT 1) AS totalInterestPaid,
 				COUNT(IF(`status`= '1' AND is_cancel='1' ,house_id, NULL)) AS totalCancelHouse
 			FROM `ln_sale` s WHERE  `status`= 1 ";
       	if(!empty($data['projectId'])){

@@ -29,8 +29,6 @@ class Loan_IndexController extends Zend_Controller_Action {
 			}
 			$db = new Loan_Model_DbTable_DbLandpayment();
 			$rs_rows= $db->getAllIndividuleLoan($search);
-			$glClass = new Application_Model_GlobalClass();
-			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
 			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","TEL","PROPERTY_CODE","STREET","PAYMENT_TYPE","PRINCIPLE_PICE","DISCOUNT","DISCOUNT_PERCENT","SOLD_PRICE",
 					"PAID","BALANCE","DATE_BUY","BY_USER","STATUS","IS_CANCEL");

@@ -398,7 +398,7 @@ class Api_Model_DbTable_Dbapi extends Zend_Db_Table_Abstract
 	      			FORMAT(price_sold,2) AS price_sold,
 					FORMAT((SELECT SUM(total_principal_permonthpaid+extra_payment) FROM `ln_client_receipt_money` WHERE status=1 AND sale_id=v_loanoutstanding.id),2) AS paid_amount,
 					FORMAT((price_sold-(SELECT SUM(total_principal_permonthpaid+extra_payment) FROM `ln_client_receipt_money` WHERE status=1 AND sale_id=v_loanoutstanding.id)),2) AS balance_amount
-	      	FROM v_loanoutstanding WHERE 1 ";//IF BAD LOAN STILL GET IT
+	      	FROM v_loanoutstanding WHERE 1 ";
 	      	
 	      	if($search['branch_id']>0){
 	      		$where.=" AND branch_id = ".$search['branch_id'];

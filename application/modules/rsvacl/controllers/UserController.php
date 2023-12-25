@@ -49,8 +49,7 @@ class RsvAcl_UserController extends Zend_Controller_Action
         }
         $list = new Application_Form_Frmtable();
         if(!empty($_rs)){
-        	//$glClass = new Application_Model_GlobalClass();
-        	//$rs_rows = $glClass->getImgActive($_rs, BASE_URL, true);
+        	
         	$rs_rows = $_rs;
         }
         else{

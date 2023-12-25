@@ -22,9 +22,14 @@ class Loan_Model_DbTable_DbSetCommission extends Zend_Db_Table_Abstract
     	$from_date =(empty($search['start_date']))? '1': " s.date_setcommission >= '".$search['start_date']." 00:00:00'";
     	$to_date = (empty($search['end_date']))? '1': " s.date_setcommission <= '".$search['end_date']." 23:59:59'";
     	$where = " AND ".$from_date." AND ".$to_date;
+    	
+    	$base_url = Zend_Controller_Front::getInstance()->getBaseUrl();
+    	$imgnone='<img src="'.$base_url.'/images/icon/cross.png"/>';
+    	$imgtick='<img src="'.$base_url.'/images/icon/apply2.png"/>';
+    	
     	$sql=" 
     	SELECT `s`.`id` AS `id`,
-    	(SELECT
+    		(SELECT
 		     `ln_project`.`project_name`
 		   FROM `ln_project`
 		   WHERE (`ln_project`.`br_id` = `s`.`branch_id`)
@@ -47,7 +52,10 @@ class Loan_Model_DbTable_DbSetCommission extends Zend_Db_Table_Abstract
 	   WHERE (`cr`.`sale_id` = `s`.`id`)  LIMIT 1) AS `balance_remain`,   
         `s`.`date_setcommission`        AS `date_setcommission`,
         (SELECT  first_name FROM rms_users WHERE id=s.user_id limit 1 ) AS user_name,
-         s.status,
+         CASE    
+				WHEN  `s`.`status` = 1 THEN '".$imgtick."'
+				WHEN  `s`.`status` = 0 THEN '".$imgnone."'
+				END AS status,
          CASE    
 				WHEN  `s`.`is_cancel` = 0 THEN ' '
 				WHEN  `s`.`is_cancel` = 1 THEN '".$tr->translate("CANCELED")."'

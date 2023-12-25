@@ -204,7 +204,7 @@ public function getAllOutstadingLoan($search=null){
       		(SELECT (totalPrincipalPaid+totalCredit) FROM `v_getsaleprincipalpaid` vpaid WHERE vpaid.saleId=vs.id LIMIT 1) totalPricipalPaid,
 			(SELECT vs.totalInterestBalance FROM  `v_getsuminterestbalance` vs WHERE vs.saleId =vs.id LIMIT 1) AS balance_interest,
 			(SELECT p.old_land_id FROM `ln_properties` AS p WHERE p.id = vs.house_id LIMIT 1) AS old_land_id
-      	FROM v_loanoutstanding vs WHERE 1 ";//IF BAD LOAN STILL GET IT
+      	FROM v_loanoutstanding vs WHERE 1 ";
       	
       	$dbp = new Application_Model_DbTable_DbGlobal();
       	$sql.=$dbp->getAccessPermission("branch_id");

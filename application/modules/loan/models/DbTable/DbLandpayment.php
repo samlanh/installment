@@ -19,6 +19,10 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		$str = 'name_kh';
     	}
     	
+    	$base_url = Zend_Controller_Front::getInstance()->getBaseUrl();
+    	$imgnone='<img src="'.$base_url.'/images/icon/cross.png"/>';
+    	$imgtick='<img src="'.$base_url.'/images/icon/apply2.png"/>';
+    	
     	$from_date =(empty($search['start_date']))? '1': " s.buy_date >= '".$search['start_date']." 00:00:00'";
     	$to_date = (empty($search['end_date']))? '1': " s.buy_date <= '".$search['end_date']." 23:59:59'";
     	$where = " AND ".$from_date." AND ".$to_date;
@@ -42,7 +46,12 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
  		(`s`.`price_sold`-(SELECT vp.totalPrincipalPaid-vp.totalCredit FROM `v_getsaleprincipalpaid` vp WHERE vp.saleId=s.`id` LIMIT 1 )) balance_remain,
         `s`.`buy_date`        AS `buy_date`,
         (SELECT  first_name FROM rms_users WHERE id=s.user_id limit 1 ) AS user_name,
-         s.status,
+        
+          CASE    
+				WHEN  `s`.`status` = 1 THEN '".$imgtick."'
+				WHEN  `s`.`status` = 0 THEN '".$imgnone."'
+				END AS status,
+				
          CASE    
 				WHEN  `s`.`is_cancel` = 0 THEN ' '
 				WHEN  `s`.`is_cancel` = 1 THEN '".$tr->translate("CANCELED")."'
@@ -60,8 +69,8 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
     		$s_search = addslashes(trim($search['adv_search']));
       	 	$s_where[] = " s.receipt_no LIKE '%{$s_search}%'";
       	 	$s_where[] = " s.sale_number LIKE '%{$s_search}%'";
-//       	 	$s_where[] = " p.land_code LIKE '%{$s_search}%'";
-//       	 	$s_where[] = " p.land_address LIKE '%{$s_search}%'";
+      	 	$s_where[] = " p.land_code LIKE '%{$s_search}%'";
+      	 	$s_where[] = " p.land_address LIKE '%{$s_search}%'";
       	 	$s_where[] = " c.client_number LIKE '%{$s_search}%'";
       	 	$s_where[] = " c.name_en LIKE '%{$s_search}%'";
       	 	$s_where[] = " c.name_kh LIKE '%{$s_search}%'";

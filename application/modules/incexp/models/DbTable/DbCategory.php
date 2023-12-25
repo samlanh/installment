@@ -28,9 +28,19 @@
 	}
 	function getAllItemsOption($search = ''){
 		$db = $this->getAdapter();
+		
+		$base_url = Zend_Controller_Front::getInstance()->getBaseUrl();
+		$imgnone='<img src="'.$base_url.'/images/icon/cross.png"/>';
+		$imgtick='<img src="'.$base_url.'/images/icon/apply2.png"/>';
+		
 		$sql = " SELECT d.id,d.title,
 		(SELECT CONCAT(first_name) FROM rms_users WHERE d.user_id=id LIMIT 1 ) AS user_name,
-		d.status FROM `rms_category` AS d WHERE 1 ";
+		 CASE    
+				WHEN  `d`.`status` = 1 THEN '".$imgtick."'
+				WHEN  `d`.`status` = 0 THEN '".$imgnone."'
+		 END AS status
+
+		FROM `rms_category` AS d WHERE 1 ";
 		$orderby = " ORDER BY d.id DESC ";
 		$where = ' ';
 		if(!empty($search['advance_search'])){

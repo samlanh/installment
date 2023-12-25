@@ -168,6 +168,10 @@ dojo.require("dijit.form.DateTextBox");
 						   $i=0;
 			               if(!empty($this->outstandloan))foreach($this->outstandloan as $key =>$row){?>
 		               <?php 
+		                   $total_receive =$row['totalPricipalPaid'];
+			               if ($total_receive>=$row['price_sold']){
+			               	continue;
+			               }
 			               if(!empty($row['old_land_id'])){
 				               	$idse = explode(",", $row['old_land_id']);
 				               	$countland = count($idse);
@@ -177,23 +181,21 @@ dojo.require("dijit.form.DateTextBox");
 			               		$countland = 1;
 			               }
 		               
-		               		$total_receive =$row['totalPricipalPaid'];
+		               		
 		               		
 		               		$link="#";
 		               		if($row['payment_id']==2 OR $row['payment_id']==3 OR $row['payment_id']==4 OR $row['payment_id']==6){
 		               			$link = $url_client."/id/".$row['id'];
 		               		}
-		               		if ($total_receive>=$row['price_sold']){
-		               			continue;
-		               		}
+		               		
 							
 							$amt_d = $amt_d+$row['price_sold'];
 		               		$amn_d = $amn_d+$total_receive;
 		               		$result_d=number_format(($amn_d/$amt_d)*100,2).' %';
-							$i = $i+1;
+							$i++;
 		               ?>
 							<tr align="center" class="hover">
-								<td data-label="<?php echo $tr->translate("NUM");?>"><?php echo $i+1; ?></td>
+								<td data-label="<?php echo $tr->translate("NUM");?>"><?php echo $i; ?></td>
 								<td data-label="<?php echo $tr->translate("CUSTOMER_NAME");?>" align="left" style="font-size:11px; line-height: 13px; white-space: nowrap;"><a target="_blank" style="color:#000; text-decoration: none;" href="<?php echo $link;?>"><?php echo $row['client_kh']; ?></a></td>
 								<td data-label="<?php echo $tr->translate("TEL");?>" align="left" ><?php echo $row['phone']; ?></td>
 								<td data-label="<?php echo $tr->translate("AMOUNT_PROPERTY");?>" align="center"><?php echo $countland; ?></td>

@@ -5,7 +5,6 @@ class Loan_ChangpropertyController extends Zend_Controller_Action {
     	header('content-type: text/html; charset=utf8');
     	defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
 	}
-	private $sex=array(1=>'M',2=>'F');
 	public function indexAction(){
 		try{
 		    if($this->getRequest()->isPost()){
@@ -23,8 +22,6 @@ class Loan_ChangpropertyController extends Zend_Controller_Action {
 			}
 			$db = new Loan_Model_DbTable_Dbchangehouse();
 			$rs_rows= $db->getAllChangeHouse($search,1);
-			$glClass = new Application_Model_GlobalClass();
-			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			$list = new Application_Form_Frmtable();
 			$collumns = array("BRANCH_NAME","CUSTOMER_NAME","PROPERTY_CODE","SOLD_PRICE","PAID","BALANCE",
 					"BRANCH_NAME","PROPERTY_CODE","SOLD_PRICE","DISCOUNT_PERCENT","Discount","SOLD_PRICE","BALANCE",

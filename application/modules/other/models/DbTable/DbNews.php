@@ -16,12 +16,20 @@ class Other_Model_DbTable_DbNews extends Zend_Db_Table_Abstract
     public function getAllArticle($search){
     	$db=$this->getAdapter();
     	$lang = $this->getCurrentLang();
+    	
+    	$base_url = Zend_Controller_Front::getInstance()->getBaseUrl();
+    	$imgnone='<img src="'.$base_url.'/images/icon/cross.png"/>';
+    	$imgtick='<img src="'.$base_url.'/images/icon/apply2.png"/>';
+    	
     	$sql="SELECT
-    	act.`id`,
-    	(SELECT ad.title FROM `ln_news_detail` AS ad WHERE ad.news_id = act.`id` AND ad.lang=$lang LIMIT 1) AS title,
-    	act.`publish_date`,
-    	act.`status`,
-    	(SELECT u.first_name FROM `rms_users` AS u WHERE u.id = act.`user_id` LIMIT 1) AS user_name
+	    	act.`id`,
+	    	(SELECT ad.title FROM `ln_news_detail` AS ad WHERE ad.news_id = act.`id` AND ad.lang=$lang LIMIT 1) AS title,
+	    	act.`publish_date`,
+	    	CASE    
+				WHEN  `act`.`status` = 1 THEN '".$imgtick."'
+				WHEN  `act`.`status` = 0 THEN '".$imgnone."'
+				END AS status,
+	    	(SELECT u.first_name FROM `rms_users` AS u WHERE u.id = act.`user_id` LIMIT 1) AS user_name
     	FROM `ln_news` AS act
     	WHERE act.`status`>-1";
     	$where='';

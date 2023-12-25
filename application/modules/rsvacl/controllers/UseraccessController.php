@@ -17,11 +17,7 @@ class RsvAcl_UserAccessController extends Zend_Controller_Action
     		$db = new RsvAcl_Model_DbTable_DbUserType();
     		$result = $db->getAlluserType();
     		$list = new Application_Form_Frmtable();
-    		if(!empty($result)){
-    			$glClass = new Application_Model_GlobalClass();
-    			$result = $glClass->getImgActive($result, BASE_URL, true);
-    		}
-    		else{
+    		if(empty($result)){
     			$result = Application_Model_DbTable_DbGlobal::getResultWarning();
     		}
     		$collumns = array("USER_TYPE","PARENT","STATUS");
