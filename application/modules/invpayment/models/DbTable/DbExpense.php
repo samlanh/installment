@@ -211,7 +211,7 @@ class Invpayment_Model_DbTable_DbExpense extends Zend_Db_Table_Abstract
 		$order = " order by id desc ";
 		return $db->fetchAll($sql . $where . $order);
 	}
-	function getAllExpenseReport($search = null)
+	function getAllExpenseForStock($search = null)
 	{
 		$db = $this->getAdapter();
 		$session_user = new Zend_Session_Namespace(SYSTEM_SES);

@@ -199,31 +199,6 @@ class Report_LoanController extends Zend_Controller_Action {
   	$frmpopup = new Application_Form_FrmPopupGlobal();
   	$this->view->footerReport = $frmpopup->getFooterReport();
   }
-  function receiptOtherincomeAction(){
-  	$id =$this->getRequest()->getParam('id');
-  	$id = empty($id)?0:$id;
-  	$repair =$this->getRequest()->getParam('repair');
-  	$db  = new Report_Model_DbTable_DbParamater();
-  	
-  	if (!empty($repair)){
-  		$row =$db->getOtherIncomePaymentById($id);
-  	}else{
-  		$row =$db->getIncomeById($id);
-  	}
-  	$this->view->rs = $row;
-  	if(empty($row)){
-  		Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND",'/report/paramater/rpt-income',2);
-  		exit();
-  	}
-//   	$db = new Application_Model_DbTable_DbGlobal();
-//   	$this->view->classified_loan = $db->ClassifiedLoan();
-  	$key = new Application_Model_DbTable_DbKeycode();
-  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
-  	
-  	$frmpopup = new Application_Form_FrmPopupGlobal();
-  	$this->view->footer = $frmpopup->getFooterReceipt();
-  	$this->view->officailreceipt = $frmpopup->templateIncomeReceipt();
-  }
   function rptLoanOutstandingAction(){//loand out standing with /collection
 	    $db  = new Report_Model_DbTable_DbLandreport();
 	  	if($this->getRequest()->isPost()){
@@ -244,8 +219,6 @@ class Report_LoanController extends Zend_Controller_Action {
 	  
 	  	$frm = new Loan_Form_FrmSearchLoan();
 	  	$frms = $frm->AdvanceSearch();
-// 	  	$key = new Application_Model_DbTable_DbKeycode();
-// 	  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
 	  	Application_Model_Decorator::removeAllDecorator($frms);
 	  	$this->view->frm_search = $frms;
 	  	
@@ -358,33 +331,7 @@ class Report_LoanController extends Zend_Controller_Action {
  	$this->view->footerReport = $frmpopup->getFooterReport();
 	$this->view->headerReport = $frmpopup->getLetterHeadReport();
  }
- function rptLoanClientcoAction()
- {
- 	$db  = new Report_Model_DbTable_DbLandreport();
- 	if($this->getRequest()->isPost()){
- 		$search = $this->getRequest()->getPost();
- 	}
- 	else{
- 		$search = array(
- 				'branch_id'=>-1,
- 				'pay_every'=>'',
- 				'member'=>'',
- 				'co_id'=>-1,
- 				'start_date'=> date('Y-m-d'),
- 				'end_date'=>date('Y-m-d'));
- 	
- 	}
- 	$this->view->list_end_date=$search;
- 	$this->view->loanrelease_list=$db->getClientLoanCo($search);
- 	 
- 	$frm = new Loan_Form_FrmSearchLoan();
- 	$frm = $frm->AdvanceSearch();
- 	Application_Model_Decorator::removeAllDecorator($frm);
- 	$this->view->frm_search = $frm;
- 	 
- 	$key = new Application_Model_DbTable_DbKeycode();
- 	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
- }
+ 
  function rptSoldAction(){//release all loan
  	$db  = new Report_Model_DbTable_DbLandreport();
  	if($this->getRequest()->isPost()){
@@ -454,7 +401,7 @@ class Report_LoanController extends Zend_Controller_Action {
  	$dbp = new Project_Model_DbTable_DbProject();
  	$this->view->branchinfo = $dbp->getBranchById($rs['branch_id']);//for to get bank info
  }
- function rptPaymentschedulesclientAction(){
+ function rptPaymentschedulesclientAction(){//for bokor
  	$db = new Report_Model_DbTable_DbRptPaymentSchedule();
  	$id =$this->getRequest()->getParam('id');
  	$id = empty($id)?0:$id;
@@ -484,37 +431,7 @@ class Report_LoanController extends Zend_Controller_Action {
  }
 
 
- function rptIncomestatementAction(){
- 	$db  = new Report_Model_DbTable_DbLandreport();
- 		
- 	$key = new Application_Model_DbTable_DbKeycode();
- 	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
- 	if($this->getRequest()->isPost()){
- 		$search = $this->getRequest()->getPost();
- 	}else{
- 		$search = array(
- 				'adv_search' => '',
- 				'start_date'=> date('Y-m-d'),
- 				'end_date'=>date('Y-m-d'),
- 				'branch_id'		=>	-1,
- 				'land_id'=>-1,
- 				'status'=>"",
- 				"currency_type"=>-1,
- 		);
  
- 	}
- 
- 	$this->view->LoanFee_list =$db->getAllLoan($search);
-  	$this->view->LoanCollectionco_list =$db->getALLLoanPayment($search);
- 	
- 	$db = new Accounting_Model_DbTable_DbExpense();
- 
- 	$this->view->list_end_date=$search;
- 	$frm = new Loan_Form_FrmSearchGroupPayment();
- 	$fm = $frm->AdvanceSearch();
- 	Application_Model_Decorator::removeAllDecorator($fm);
- 	$this->view->frm_search = $fm;
- }
   function receiptAction(){
 	 $key = new Application_Model_DbTable_DbKeycode();
 	 $this->view->data=$key->getKeyCodeMiniInv(TRUE);
@@ -544,7 +461,7 @@ class Report_LoanController extends Zend_Controller_Action {
   	}
   	$this->view->dateLimit = $dateLimit;
 	
-	$db  = new Report_Model_DbTable_DbParamater();
+	$db  = new Report_Model_DbTable_DbIncomeexpense();
 	$conditionArr = array(
 		"id" => $id,
 		"documentforType" => 3,
@@ -556,7 +473,7 @@ class Report_LoanController extends Zend_Controller_Action {
   }
   
 
-  function rptUpdatestatusAction(){
+  function rptUpdatestatusAction(){// keep to use for internal developer
   	$db = new Report_Model_DbTable_DbRptPaymentSchedule();
   	$id =$this->getRequest()->getParam('id');
   	$id = empty($id)?0:$id;
@@ -607,31 +524,7 @@ class Report_LoanController extends Zend_Controller_Action {
   		exit();
   	}
   }
-  function rptReceiveplongAction(){
-  	if($this->getRequest()->isPost()){
-  		$search=$this->getRequest()->getPost();
-  	}else{
-  		$search = array(
-			    'adv_search'=>'',
-				'branch_id' => -1,
-				'land_id'=> -1,
-				'client_name'=> -1,
-  				'plong_type'=>'', 				
-				'from_date_search'=> date('Y-m-d'),
-				'to_date_search'=>date('Y-m-d'));
-  	}
-  	$this->view->search = $search;
-  	$db  = new Report_Model_DbTable_DbParamater();
-  	$this->view->row = $db->getCustomerReceivedPlong($search);
-  	
-  	$fm = new Loan_Form_FrmCancel();
-  	$frm = $fm->FrmAddFrmCancel();
-  	Application_Model_Decorator::removeAllDecorator($frm);
-  	$this->view->frm_cancel = $frm;
-  	$frmpopup = new Application_Form_FrmPopupGlobal();
-  	$this->view->footerReport = $frmpopup->getFooterReport();
-	$this->view->headerReport = $frmpopup->getLetterHeadReport();
-  }
+  
   function bugAction(){
   		$db = new Report_Model_DbTable_Dbbug();
   		if($this->getRequest()->isPost()){
@@ -734,59 +627,7 @@ class Report_LoanController extends Zend_Controller_Action {
   	$this->view->footerReport = $frmpopup->getFooterReport();
 	$this->view->headerReport = $frmpopup->getLetterHeadReport();
   }
-  public function rptExpenseBycateAction(){
-  	try{
-  		if($this->getRequest()->isPost()){
-  			$search=$this->getRequest()->getPost();
-  		}else{
-  			$search=array(
-  					'txtsearch' =>'',
-  					'branch_id'	=>0,
-  					'user'	=>'',
-  					'start_date'=>date('Y-m-d'),
-  					'end_date'=>date('Y-m-d'),
-  					'cheque_issuer_search'=>""
-  			);
-  		}
-  		$this->view->search = $search;
-  		$db  = new Report_Model_DbTable_DbParamater();
-  		$this->view->row = $db->getAllExpensebyCate($search);
-  		
-  		$this->view->expense_changehouse = $db->getIncomeRepairhouse($search,13);
-  		
-  		
-  		$key = new Application_Model_DbTable_DbKeycode();
-  		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
-  		if($this->getRequest()->isPost()){
-  			$search = $this->getRequest()->getPost();
-  		}else{
-  			$search = array(
-  					'land_id'=>0,
-  					'start_date'  => date('Y-m-d'),
-  					'end_date'    => date('Y-m-d'),
-  					'txtsearch' => '',
-  					'branch_id'=>-1,
-  					'co_khname'=>-1,
-  					'search_status'=>-1,
-  					);
-  		}
-  		
-//   		$this->view->rscomisison = $db->getAllCommission($search);
-  		$this->view->expense_comission = $db->getAllComissionExpense($search);
-  		
-  		$frmpopup = new Application_Form_FrmPopupGlobal();
-  		$this->view->footerReport = $frmpopup->getFooterReport();
-		$this->view->headerReport = $frmpopup->getLetterHeadReport();
-  		
-  	}catch(Exception $e){
-  		Application_Form_FrmMessage::message("APPLICATION_ERROR");
-  		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-  	}
-  	$frm = new Loan_Form_FrmSearchLoan();
-  	$frm = $frm->AdvanceSearch();
-  	Application_Model_Decorator::removeAllDecorator($frm);
-  	$this->view->frm_search = $frm;
-  }
+  
   function rptValidateagreementAction(){//release all loan
   	$db  = new Report_Model_DbTable_DbLandreport();
   	if($this->getRequest()->isPost()){
@@ -946,12 +787,7 @@ class Report_LoanController extends Zend_Controller_Action {
 // 		Application_Model_Decorator::removeAllDecorator($frm);
 // 		$this->view->frm_crm = $frm;
 	}
-	function rptPrintplongAction(){
-		$id = $this->getRequest()->getParam('id');
-		$_dbmodel = new Loan_Model_DbTable_DdReceived();
-		$row  = $_dbmodel->getRecivePlongInfo($id);
-		$this->view->row = $row;
-	}
+	
 	function rptSoldsummaryAction(){//release all loan
 		$db  = new Report_Model_DbTable_DbLandreport();
 		if($this->getRequest()->isPost()){
@@ -991,33 +827,7 @@ class Report_LoanController extends Zend_Controller_Action {
 		$this->view->headerReport = $frmpopup->getLetterHeadReport();
 	}
 	
-	function rptOtherincomedetailAction(){
-		$db  = new Report_Model_DbTable_DbLandreport();
-			if($this->getRequest()->isPost()){
-    			$search=$this->getRequest()->getPost();
-    		}
-    		else{
-    			$search = array(
-    					"adv_search"=>'',
-    					"branch_id"=>-1,
-    					"category_id"=>'',
-    					'start_date'=> date('Y-m-d'),
-    					'end_date'=>date('Y-m-d'),
-    					'client_name'=>-1,
-    					'payment_process'=>-1,
-    			);
-    		}
-		$this->view->loantotalcollect_list =$db->getAllIncomeOtherDetail($search,1);
-		$this->view->search=$search;
-		
-		$frm = new Loan_Form_FrmSearchLoan();
-    	$frm = $frm->AdvanceSearch();
-    	Application_Model_Decorator::removeAllDecorator($frm);
-    	$this->view->frm_search = $frm;
 	
-		$key = new Application_Model_DbTable_DbKeycode();
-		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
-	}
 	function rptMonthremainAction(){//release all loan
 		$db  = new Report_Model_DbTable_DbLandreport();
 		if($this->getRequest()->isPost()){
@@ -1049,25 +859,6 @@ class Report_LoanController extends Zend_Controller_Action {
 		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
 	}
 	
-	function receiptExpenseAction(){
-		$id =$this->getRequest()->getParam('id');
-		$id = empty($id)?0:$id;
-		
-		$db  = new Report_Model_DbTable_DbParamater();
-		$row =$db->getExpensebyid($id);
-		
-		$this->view->rs = $row;
-		if(empty($row)){
-			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND",'/report/paramater/rpt-expense',2);
-			exit();
-		}
-		$key = new Application_Model_DbTable_DbKeycode();
-		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
-		 
-		$frmpopup = new Application_Form_FrmPopupGlobal();
-		$this->view->footer = $frmpopup->getFooterReceipt();
-		$this->view->officailreceipt = $frmpopup->templateExpenseReceipt();
-	}
 	function issueAgreementAction(){
 		$db  = new Report_Model_DbTable_DbParamater();
 		$id = $this->getRequest()->getParam("id");
@@ -1081,35 +872,7 @@ class Report_LoanController extends Zend_Controller_Action {
 		$db_keycode = new Application_Model_DbTable_DbKeycode();
 		$this->view->keyValue = $db_keycode->getKeyCodeMiniInv();
 	}
-	function rptReceivehouseAction(){
-		if($this->getRequest()->isPost()){
-			$search=$this->getRequest()->getPost();
-		}else{
-			$search = array(
-				'txt_search'=>'',
-				'branch_id' => -1,
-				'streetlist'=>'',
-				'status' => -1,
-				'land_id'=>-1,
-				'client_name'=>'',
-				'payment_id'=>0,
-					'give_status'=>0,
-				'start_date'=> date('Y-m-d'),
-				'end_date'=>date('Y-m-d'));
-		}
-		$this->view->search = $search;
-		$db  = new Report_Model_DbTable_DbParamater();
-		$this->view->row = $db->getAllIssueHouse($search);
-		
-		$frm_search = new Loan_Form_FrmSearchLoan();
-		$frm = $frm_search->AdvanceSearch();
-		Application_Model_Decorator::removeAllDecorator($frm);
-		$this->view->frm_search = $frm;
-		
-		$frmpopup = new Application_Form_FrmPopupGlobal();
-		$this->view->footerReport = $frmpopup->getFooterReport();
-		$this->view->headerReport = $frmpopup->getLetterHeadReport();
-	}
+	
 	function rptTransferCashAction(){//release all loan
 		$db  = new Report_Model_DbTable_DbLandreport();
 		if($this->getRequest()->isPost()){
@@ -1189,19 +952,6 @@ class Report_LoanController extends Zend_Controller_Action {
 		}
 	}
 	
-	function credithistoryAction(){
-		$db  = new Report_Model_DbTable_DbLandreport();
-		$id = $this->getRequest()->getParam('id');
-		$id = empty($id)?0:$id;
-		$rs=$db->getCreditBySaleid($id);
-		$this->view->loantotalcollect_list =$rs;
-		if(empty($rs)){
-			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index",2);
-			exit();
-		}
-	}
-	
-	
 	function rptMaterialinludeAction(){
 		$db  = new Report_Model_DbTable_DbLandreport();	
 		$key = new Application_Model_DbTable_DbKeycode();
@@ -1252,31 +1002,7 @@ class Report_LoanController extends Zend_Controller_Action {
 		$this->view->headerReport = $frmpopup->getLetterHeadReport();
     }
 
-	function expenseDetailAction(){
-		$id =$this->getRequest()->getParam('id');
-		$id = empty($id)?0:$id;
-		
-		$db  = new Report_Model_DbTable_DbParamater();
-		$row =$db->getExpensebyid($id);
-		
-		$this->view->rs = $row;
-		
-		if(empty($row)){
-			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND",'/report/paramater/rpt-expense',2);
-			exit();
-		}
-		$search = array(
-				'id'=>$id
-		);
-		$this->view->document=$db->getExpenseDocumentbyid($search);
-		
-		$key = new Application_Model_DbTable_DbKeycode();
-		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
-		 
-		$frmpopup = new Application_Form_FrmPopupGlobal();
-		$this->view->footer = $frmpopup->getFooterReceipt();
-		$this->view->officailreceipt = $frmpopup->templateExpenseReceipt();
-	}
+	
 	function rptIncomeGraphicAction(){
 		$this->_redirect("/home/index/rpt-income-graphic");
 		exit();
@@ -1353,8 +1079,7 @@ class Report_LoanController extends Zend_Controller_Action {
   		Application_Form_FrmMessage::Sucessfull("Unclosing Entry Success", "/report/loan/rpt-unclosingentry");
   	}
   }
-  
-	function rptSummaryDailyAction(){
+   function rptSummaryDailyAction(){
 		$db = new Report_Model_DbTable_DbLandreport();
 		
 		if($this->getRequest()->isPost()){
@@ -1460,7 +1185,7 @@ class Report_LoanController extends Zend_Controller_Action {
   	}
   	
   	$saleId = empty($rs["saleId"]) ? 0 : $rs["saleId"];
-	$db  = new Report_Model_DbTable_DbParamater();
+	$db  = new Report_Model_DbTable_DbIncomeexpense();
 	$conditionArr = array(
 		"id" => $saleId,
 		"documentforType" => 4,

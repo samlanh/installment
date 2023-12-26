@@ -55,60 +55,7 @@ class Loan_Model_DbTable_DdReceived extends Zend_Db_Table_Abstract
 		$where.=" ORDER BY c.`id` DESC ";
 		return $db->fetchAll($sql.$where);
 	}
-	function getAllIssueHouse($search = null){
-		$db = $this->getAdapter();
-		$dbp = new Application_Model_DbTable_DbGlobal();
-		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-		 
-		$from_date =(empty($search['start_date']))? '1': " rs.issue_date >= '".$search['start_date']." 00:00:00'";
-		$to_date = (empty($search['end_date']))? '1': " rs.issue_date <= '".$search['end_date']." 23:59:59'";
-		$where = " AND ".$from_date." AND ".$to_date;
-		$sql = "SELECT rs.id,
-		(SELECT ln_project.project_name FROM `ln_project` WHERE ln_project.br_id = rs.branch_id LIMIT 1) AS branch_name,
-		(SELECT name_kh FROM ln_client AS c WHERE `c`.`client_id` = `s`.`client_id` LIMIT 1) customer_name,
-		(SELECT phone FROM ln_client AS c WHERE `c`.`client_id` = `s`.`client_id` LIMIT 1) AS tel,
-		p.land_address ,
-		p.street  AS street,
-		CASE
-		WHEN  `rs`.`payment_id` = 1 THEN '".$tr->translate("IS_PAYOFF")."'
-		WHEN  `rs`.`payment_id` = 2 THEN '".$tr->translate("PAY_INSTALLMENT")."'
-		END AS payment_id,
-		rs.electric_start,rs.water_start,rs.issue_date,
-		(SELECT  first_name FROM rms_users WHERE rms_users.id=rs.user_id LIMIT 1) AS user_name,
-		rs.note
-		FROM
-		ln_sale AS s,
-		`ln_properties` `p`,
-		ln_issue_house AS rs
-		WHERE s.id = rs.sale_id AND p.id = s.house_id AND rs.status=1 ";
-		 
-		if(!empty($search['adv_search'])){
-			$s_where = array();
-			$s_search = addslashes(trim($search['adv_search']));
-			$s_where[] = " p.land_address LIKE '%{$s_search}%'";
-			$s_where[] = " p.street LIKE '%{$s_search}%'";
-			$where .=' AND ('.implode(' OR ',$s_where).')';
-		}
-		if(!empty($search['streetlist'])){
-			$where.= " AND street ='".$search['streetlist']."'";
-		}
-		if(!empty($search['land_id']) AND $search['land_id']>-1){
-			$where.= " AND (s.house_id = ".$search['land_id']." OR p.old_land_id LIKE '%".$search['land_id']."%')";
-		}
-		if($search['branch_id']>0){
-			$where.= " AND rs.branch_id = ".$search['branch_id'];
-		}
-		if($search['payment_id']>0){
-			$where.= " AND rs.payment_id = ".$search['payment_id'];
-		}
-		if(!empty($search['client_name'])){
-			$where.= " AND `s`.`client_id` = ".$search['client_name'];
-		}
-		
-		$where.=$dbp->getAccessPermission("rs.branch_id");
-		$order=" ORDER BY s.id DESC ";
-		return $db->fetchAll($sql.$where.$order);
-	}
+	
 	public function addReceivedplong($data){
 		try{
 			$db= $this->getAdapter();
@@ -216,36 +163,7 @@ class Loan_Model_DbTable_DdReceived extends Zend_Db_Table_Abstract
 		$sql="SELECT DISTINCT rp.`layout_type` AS `name`,rp.`layout_type` AS `id`  FROM `ln_receiveplong` AS rp WHERE rp.`status`=1 AND rp.`layout_type` !='' ORDER BY rp.layout_type ASC";
 		return $db->fetchAll($sql);
 	}
-	function getRecivePlongInfo($id){
-		$db = $this->getAdapter();
-		$sql="SELECT 
-		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =c.`branch_id` LIMIT 1) AS branch_name,
-		(SELECT logo FROM `ln_project` WHERE ln_project.br_id =c.`branch_id` LIMIT 1) AS project_logo,
-		cl.name_kh AS client_namekh,
-		cl.name_en AS client_nameen,
-		(SELECT v.name_kh FROM `ln_view` AS v WHERE v.key_code = cl.`sex` AND v.`type`=11 LIMIT 1 ) AS sexKh,
-		(SELECT v.name_kh FROM `ln_view` AS v WHERE v.key_code = cl.`client_d_type` AND v.`type`=23 LIMIT 1 ) AS client_d_typekh,
-		cl.`nation_id`,
-		cl.`house`,
-		cl.`street`,
-		(SELECT p.province_kh_name FROM `ln_province` AS p WHERE p.province_id = cl.`pro_id` LIMIT 1) AS province_kh_name,
-		(SELECT d.district_namekh FROM `ln_district` AS d WHERE d.dis_id = cl.`dis_id` LIMIT 1) AS district_namekh,
-		(SELECT com.commune_namekh FROM `ln_commune` AS com WHERE com.com_id = cl.`com_id` LIMIT 1) AS commune_namekh,
-		(SELECT vil.village_namekh FROM `ln_village` AS vil WHERE vil.vill_id = cl.`village_id` LIMIT 1) AS village_namekh,
-		(SELECT CONCAT(pro.land_address,'-',pro.street) FROM `ln_properties` AS pro WHERE pro.id = s.`house_id` LIMIT 1) AS propertyinfo,
-		(SELECT pro.hardtitle FROM `ln_properties` AS pro WHERE pro.id = s.`house_id` LIMIT 1) AS hardtitle,
-		(SELECT  CONCAT(last_name,' ',first_name) FROM rms_users WHERE rms_users.id=c.user_id LIMIT 1) AS userNameInput,
-		 cl.arid_no AS witnesses,
-		c.*
-		 FROM `ln_receiveplong` AS c,
-			`ln_sale` AS s,
-			`ln_client` AS cl
-		  WHERE 
-			  s.`id` = c.`sale_id`
-			  AND cl.`client_id` = s.`client_id`
-			  AND c.`id`=$id LIMIT 1";
-		return $db->fetchRow($sql);
-	}
+	
 	
 	function getSaleInfo($id){
 		$db = $this->getAdapter();

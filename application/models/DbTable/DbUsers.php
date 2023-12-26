@@ -445,7 +445,6 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 		$sql.=" AND ua.user_type_id='".$user_typeid."' ";
 		}
 		$sql.=" AND aa.menuForSystem= ".$systemType;
-		//
 		$order =" GROUP BY  aa.module ,aa.controller,aa.action
 		ORDER BY aa.module ,aa.rank ASC ";
 		$rows = $db->fetchAll($sql.$order);

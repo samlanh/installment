@@ -179,33 +179,6 @@ class Issue_Model_DbTable_DbReceived extends Zend_Db_Table_Abstract
 		$sql="SELECT DISTINCT rp.`layout_type` AS `name`,rp.`layout_type` AS `id`  FROM `ln_receiveplong` AS rp WHERE rp.`status`=1 AND rp.`layout_type` !='' ORDER BY rp.layout_type ASC";
 		return $db->fetchAll($sql);
 	}
-	function getRecivePlongInfo($id){
-		$db = $this->getAdapter();
-		$sql="SELECT 
-		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =c.`branch_id` LIMIT 1) AS branch_name,
-		cl.name_kh AS client_namekh,
-		cl.name_en AS client_nameen,
-		(SELECT v.name_kh FROM `ln_view` AS v WHERE v.key_code = cl.`sex` AND v.`type`=11 LIMIT 1 ) AS sexKh,
-		(SELECT v.name_kh FROM `ln_view` AS v WHERE v.key_code = cl.`client_d_type` AND v.`type`=23 LIMIT 1 ) AS client_d_typekh,
-		cl.`nation_id`,
-		cl.`house`,
-		cl.`street`,
-		(SELECT p.province_kh_name FROM `ln_province` AS p WHERE p.province_id = cl.`pro_id` LIMIT 1) AS province_kh_name,
-		(SELECT d.district_namekh FROM `ln_district` AS d WHERE d.dis_id = cl.`dis_id` LIMIT 1) AS district_namekh,
-		(SELECT com.commune_namekh FROM `ln_commune` AS com WHERE com.com_id = cl.`com_id` LIMIT 1) AS commune_namekh,
-		(SELECT vil.village_namekh FROM `ln_village` AS vil WHERE vil.vill_id = cl.`village_id` LIMIT 1) AS village_namekh,
-		(SELECT CONCAT(pro.land_address,'-',pro.street) FROM `ln_properties` AS pro WHERE pro.id = s.`house_id` LIMIT 1) AS propertyinfo,
-		(SELECT pro.hardtitle FROM `ln_properties` AS pro WHERE pro.id = s.`house_id` LIMIT 1) AS hardtitle,
-		c.*
-		 FROM `ln_receiveplong` AS c,
-			`ln_sale` AS s,
-			`ln_client` AS cl
-		  WHERE 
-			  s.`id` = c.`sale_id`
-			  AND cl.`client_id` = s.`client_id`
-			  AND c.`id`=$id LIMIT 1";
-		return $db->fetchRow($sql);
-	}
 	
 	function getSaleInfo($id){
 		$db = $this->getAdapter();

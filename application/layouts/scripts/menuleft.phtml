@@ -116,24 +116,24 @@
 		                		<?php if (!empty($arr_param_menu[$rs])){?>
 			                    <ul class="nav child_menu" <?php if ($rs==$module ){ echo 'style="display: block;"';}?>>
 			                       <?php  foreach ($arr_param_menu[$rs] as $key => $sub){
+			                       	
 			                       	if($key=='paramater'){
 			                       		continue;
 			                       	}
 			                       	$urlsub = $this->url(array('module'=>$rs,'controller'=>$key,'action'=>'index'), null, true);
+			                       	$Stringmenu =($key=='plongandhouse')?'ISSUE_PROPERTY_PLONG':$key;
 			                       	?>
-			                      <li <?php if ($rs==$module AND $key==$controller){ echo 'class="current-page"';}?>><a href="<?php echo $urlsub;?>"><?php echo $tr->translate(strtoupper($key));?></a></li>
+			                      <li <?php if ($rs==$module AND $key==$controller){ echo 'class="current-page"';}?>><a href="<?php echo $urlsub;?>"><?php echo $tr->translate(strtoupper($Stringmenu));?></a></li>
 			                       <?php }?>
 			                    </ul>
 			                    <?php }?>
 		                    <?php }else{?>
 									<?php if (!empty($arr_param_menu[$rs])){?>
-										 <?php  foreach ($arr_param_menu[$rs] as $key => $sub){
-												$urlsub = $this->url(array('module'=>$rs,'controller'=>$key,'action'=>'index'), null, true);
-											?>
+										<?php  foreach ($arr_param_menu[$rs] as $key => $sub){
+											$urlsub = $this->url(array('module'=>$rs,'controller'=>$key,'action'=>'index'), null, true);
+										?>
 										<a href="<?php echo $urlsub;?>">
 										<?php echo $array_icon[$rs];?> <?php echo $title;?> 
-									
-										
 										</a>
 										<?php }?>
 									<?php }else{?>
@@ -141,7 +141,6 @@
 										<?php echo $array_icon[$rs];?> <?php echo $title;?> 
 									</a>
 									<?php }?>
-                			
                 		<?php }
                 			}else{?>
                 			<?php if (count($arr_param_menu[$rs])>1){?>

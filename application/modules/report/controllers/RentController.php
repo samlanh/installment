@@ -271,9 +271,7 @@ class Report_RentController extends Zend_Controller_Action {
   	$this->view->refund = $db->getAllRefund($search);
   	$db  = new Report_Model_DbTable_DbParamater();
   	$this->view->row = $db->getAllIncome($search);
-  	$this->view->rowExpense = $db->getAllExpense($search);
-  	
-  	 
+  	$this->view->rowExpense = $db->getAllExpenseReport($search);
   	 
   	$frm = new Loan_Form_FrmSearchLoan();
   	$frm = $frm->AdvanceSearch();

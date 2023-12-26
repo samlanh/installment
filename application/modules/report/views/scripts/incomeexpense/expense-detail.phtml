@@ -1,0 +1,214 @@
+<?php 
+$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$rs = $this->rsexpense;
+	
+	$images = $this->baseUrl().'/images/logo.png';
+	if (!empty($rs['photo'])){
+		$images = $this->baseUrl().'/images/projects/'.$rs['photo'];
+	}
+	
+	$montFomat="d-m-Y";
+	if(MONTH_FORMATE_DATE_RECEIPT==1){
+		$montFomat="d-M-Y";
+	}
+	$format = new Application_Model_DbTable_DbGlobal();
+?>
+<title><?php echo $tr->translate("PAYMENT_VOUCHER​_DOCUMENT");?></title>
+<div class="reportblog">
+	<div class="card-box">
+		<div class="col-sm-12 border-botom">
+			<div class="col-sm-8 pd-0">
+				<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('PAYMENT_VOUCHER​_DOCUMENT');?></h4>
+			</div>
+			<div class="col-sm-4 text-right">
+			</div>
+		</div>
+	</div>
+	<div id="divPrint" style="width: 100%; padding-top: 30px;">
+		<style>
+			tr.style {
+				   line-height: 25px; font-size:12px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
+					background: #c1d0f3;
+				}
+				.style th {
+					text-align:center;
+					font-family: 'Times New Roman','Khmer OS Muol Light';
+					font-weight:normal;
+				}
+			ul.listData {
+				padding: 0;
+				margin: 0;
+				list-style: none;
+				font-family: 'Times New Roman','Khmer OS Battambang';
+				font-size:14px;
+			}
+			ul.listData span.labelTitle {
+				display: inline-block;
+				min-width: 100px;
+			}
+			ul.listData span.valueData {
+				display: inline-block;
+				min-width: 100px;
+				padding-left: 4px;
+				font-weight: 600;
+			}
+			tr td#exportExcel a.btn.btn-error.btn-reset {
+				margin: 0;
+				padding: 0;
+				color: #000;
+			}
+			</style>
+		<div id="divPrint1" style="width: 100%; height: 12.5cm ; padding: 0px; margin: 0px;">
+			<table width="100%" style="font-family:'Khmer OS Battambang';" style="margin:0; padding:23px;border:none;" >
+				<tr>
+					<td width="25%">
+						<span id="projectlogo"></span>
+					</td>					
+					<td width="50%" style="font:18px 'Times New Roman','Khmer OS Muol Light';" valign="top" align="center">
+						<span style=" text-decoration:underline; font-family: 'Times New Roman','Khmer OS Muol Light';"> បញ្ជីចំណាយលម្អិត </span>
+						<div style="line-height:10px;"><span style="font-size: 18px;font-weight:bold">PAYMENT VOUCHER​ DETAIL</span></div>
+					</td>
+					<td width="25%">
+					</td>
+				</tr>
+			</table>
+			<table width="100%" style="font-family:'Khmer OS Battambang';" style="margin:0; padding:23px;border:none;" >
+					<tr style="line-height: 20px; font-size: 16px; font-family: Khmer OS Battambang;white-space: nowrap;">
+					<td colspan="2" valign="top">
+						<ul class="listData">
+							<li>
+								<span class="labelTitle">គម្រោង</span>
+								:<span class="valueData"><?php echo $this->rs['branch_name'];?></span>
+							</li>
+							<li>
+								<span class="labelTitle"><?php echo $tr->translate("SUPPLIER");?></span>
+								:<span class="valueData"><?php echo $this->rs['supplier_name'];?></span>
+							</li>
+							<li>
+								<span class="labelTitle"><?php echo $tr->translate("PHONE");?></span>
+								:<span class="valueData"><?php echo $this->rs['supplierPhone'];?></span>
+							</li>
+							
+						</ul>
+					</td>
+					<td colspan="2" valign="top">
+						<ul class="listData">
+							<li>
+								<span class="labelTitle"><?php echo $tr->translate("INVOICE");?></span>
+								:<span class="valueData"><?php echo $this->rs['invoice'];?></span>
+							</li>
+							<li>
+								<span class="labelTitle"><?php echo $tr->translate("ថ្ងៃចំណាយ");?></span>
+								:<span class="valueData"><?php echo date($montFomat,strtotime($this->rs['date']));?></span>
+							</li>
+							<li>
+								<span class="labelTitle"><?php echo $tr->translate("ប្រភេទចំណាយ");?></span>
+								:<span class="valueData"><?php echo $this->rs['category_name'];?></span>
+							</li>
+							<li>
+								<span class="labelTitle"><?php echo $tr->translate("PAYMENT_TYPE");?></span>
+								:<span class="valueData"><?php echo $this->rs['payment_method']; if($this->rs['cheque']!="N/A"){ echo " ".$this->rs['cheque']; }?></span>
+							</li>
+							<li>
+								<span class="labelTitle"><?php echo $tr->translate("ចំណាយសរុប");?></span>
+								:<span class="valueData"><?php echo "$ ".number_format($this->rs['total_amount'],2);?></span>
+							</li>
+						</ul>
+					</td>
+					<td colspan="3">&nbsp;</td>
+				</tr>
+				<tr style="line-height: 25px; font-family: Khmer OS Battambang;">
+					<td valign="top" colspan="7"></td>
+				</tr>
+				<tr style=" font-family: Khmer OS Battambang;">
+					<td valign="top" colspan="7">
+					<span style=" text-decoration:underline; font-family: 'Times New Roman','Khmer OS Muol Light';"> <?php echo $tr->translate("បញ្ជីឯកសារ");?> </span>
+					</td>
+				</tr>
+				<tr>
+				<td colspan="7" id="exportExcel">
+					<table border="1" width="100%" style="font-family: 'Times New Roman','Khmer OS Battambang'; margin-top:10px; border-collapse:collapse; line-height: 24px; font-size: 14px; " >  
+					   <thead>
+							<tr class="style"   >
+								<th align="center"><?php echo $tr->translate("NUM");?></th>
+								<th align="center"><?php echo $tr->translate("TITLE");?></th>
+								<th style="width:100px;" align="center"><?php echo $tr->translate("OTHER");?></th>
+							</tr>
+						</thead>
+					   <?php  $i=0; $n=0; if(!empty($this->document)){foreach($this->document as $key =>$row) {$i++?>
+						<tr style="font-size: 14px; line-height:26px; " align="left">
+						   <td align="center" width="5%" valign="top"><?php echo $i; ?>&nbsp;.</td>
+						   <td align="left" valign="top">&nbsp;<?php echo $row['title'];?></td>
+						   
+						   
+						   <td align="center" valign="top"><?php 
+						   $linkDoc ="#";
+						   if (!empty($row['document_name'])){
+								if (file_exists(PUBLIC_PATH."/images/document/expense/".$row['document_name'])){
+									$linkDoc = $this->baseUrl().'/images/document/expense/'.$row['document_name'];
+							
+						   ?>
+							<a title="<?php echo $tr->translate('VIEW_DOCUMENT');?>" href="<?php echo $linkDoc;?>" target="_blank" class="btn btn-error btn-reset" ><i class="fa fa-eye" aria-hidden="true"></i></button></a>
+							<?php 	}
+							 }?>
+						   
+						   </td>
+						</tr>
+						<?php }}?>
+					</table>
+				</td>
+				</tr>
+				<tr class="head" style="font-weight: initial;font-family:'Khmer OS Muol Light';" >
+				   <td colspan="7" align="center" >
+				   <br />
+						<label style=" margin-left: 55%; font-size:14px; line-height: 16px; font-weight: initial; font-family: 'Times New Roman','Khmer OS Battambang';">រាជធានីភ្នំពេញ ថ្ងៃទី <?php echo $format->getNumberInkhmer(date('d',strtotime($this->rs['date'])));?> ខែ <?php echo $format->getNumberInkhmer(date('m',strtotime($this->rs['date'])));?> ឆ្នាំ <?php echo $format->getNumberInkhmer(date('Y',strtotime($this->rs['date'])));?> </label><br>
+						<label style=" margin-left: 55%; font-size:14px; line-height: 16px; font-weight: initial; font-family:'Khmer OS Muol Light';">ហត្ថលេខា</label><br>
+						<label>&nbsp;</label><br>
+						<label>&nbsp;</label><br>
+						<label>&nbsp;</label><br>
+						<label style=" margin-left: 55%; font-size:16px; line-height: 16px; font-weight: initial; font-family:'Khmer OS Muol Light';"><?php //echo $this->rs['client_name'];?></label>
+				   </td>
+				</tr>
+				
+		  </table>
+	</div>
+
+	</div>
+	<div style="clear: both;"></div>
+	<div id="noteContent" style="display: none;"><?php echo $this->rs['description'];?></div>
+</div>
+<script>
+require(["dojo/ready"], function(ready){
+	 ready(function(){
+		 getBranchInfo();
+		 printSave();
+		 
+	 });
+});	 
+function getBranchInfo(){
+	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
+	branch_id = '<?php echo empty($this->rs['branch_id'])?0:$this->rs['branch_id'];?>';
+	if(branch_id==""){
+		return false;
+	}
+	dojo.xhrPost({
+	    url: url_submit,	
+	    content:{ 
+		    'branch_id':branch_id
+		},	
+		load: function(data) {
+			var arr = JSON.parse(data);
+			var imagesUrl = '<img class="view" style="height:80px; max-width: 100%;" src="<?php echo $this->baseUrl()."/images/projects/"?>'+arr.logo+'" />';
+			document.getElementById('projectlogo').innerHTML = imagesUrl;
+
+			
+		},
+		error: function(e) {
+		}
+	});
+}
+function printSave(){
+	symbal=" $";
+	
+}
+</script>

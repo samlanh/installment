@@ -152,10 +152,10 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form{
 		$_branch_id = new Zend_Dojo_Form_Element_FilteringSelect('branch_id');
 		$_branch_id->setAttribs(array(
 			'dojoType'=>'dijit.form.FilteringSelect',
-			'class'=>'fullside',
 			'autoComplete'=>'false',
 			'queryExpr'=>'*${0}*',
-			'onchange'=>'getAllPropertyBranch();'
+			'onchange'=>'getAllPropertyBranch();',
+			'class'=>'fullside',
 		));
 		
 		$options = $db->getAllBranchName(null,1);

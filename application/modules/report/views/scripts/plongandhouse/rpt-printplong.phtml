@@ -1,0 +1,229 @@
+<?php 
+$tr=Application_Form_FrmLanguages::getCurrentlanguage();
+$row = $this->row;
+
+$imagelogo = $this->baseUrl()."/images/logo.jpg";
+if (!empty($this->row['project_logo'])){
+	if (file_exists(PUBLIC_PATH."/images/projects/".$this->row['project_logo'])){
+		$imagelogo = $this->baseUrl()."/images/projects/".$this->row['project_logo'];
+	}
+}
+
+?>
+<title>ប័ណ្ណប្រគល់ប្លង់កម្មសិទ្ធ</title>
+<div class="card pb-10 pt-10 pl-10 pr-10">
+	<div class="card-content collapse show">
+		<div class="card-box">
+			<div style="background: #fff;width: 27cm;margin: 0 auto;min-height: 27cm; padding: 0.5cm;">
+				<div id="divPrint">
+					<style>
+						body {
+						    position: relative;
+						}
+						td span {
+							line-height: 22px;
+						}
+						.border {
+						        border: none;
+						    display: block;
+						    width: 100%;
+						    height: 1px;
+						    margin-bottom: 10px;
+						}
+						span.border-bottom-head {
+						    display: inline-block;
+						    border-bottom: dotted 1px #000;
+						    width: 55%;
+						}
+						span.labelBorderBottom {
+						    border-bottom: dashed 1px #000;
+						    min-width: 25px;
+						    display: inline-block;
+							line-height: 25px;
+							text-align: center;
+							
+						}
+			  		 </style>
+			  		 <?php for ($i=0; $i<2; $i++){?>
+					<table width="100%" style="font-size:12px; font-family:'Times New Roman','Khmer OS Battambang'; position: relative;"> 
+					<tr class="head">
+						<td colspan="2" valign="top" style="top: 40px;  position: absolute;">
+							<img alt="" src="<?php echo $imagelogo; ?>" style="max-width:100%; height: 70px; margin-top: 10px; margin-right: 10px;">
+					   </td>
+					</tr>
+					<tr class="head">
+					   <td colspan="3" align="center">
+					   		<h2 style="font-size:16px;     line-height: 14px; font-weight: initial; font-family:'Khmer OS Muol Light';" >ព្រះរាជាណាចក្រកម្ពុជា</h2>
+					   		<h2 style="font-size:14px; margin-right: 7px; line-height: 14px; font-weight: initial; font-family:'Khmer OS Muol Light';">ជាតិ សាសនា ព្រះមហាក្សត្រ</h2>
+					   		<img alt="" src="<?php echo $this->baseUrl()."/images/sign.png"?>" style=" width: 120px; margin-right: 24px;">
+					   </td>
+					</tr>
+						<tr class="head">
+						   <td colspan="3" align="center">
+						   		<br />
+						   		<h2 style="font-size:14px; line-height: 20px;     margin: 0; font-weight: initial; font-family:'Khmer OS Muol Light';"><span >ប័ណ្ណប្រគល់ប្លង់កម្មសិទ្ធ</span></h2>
+						   		<span style="margin-top:10px;font-family:'Khmer OS Muol Light'; text-align:center; min-width: 100%; display: inline-block;">សូមបញ្ជាក់ថា</span>
+						   </td>
+						</tr>
+						<tr>
+             				<td colspan="3">
+             					<br />
+             					<table style="width:100%;  font-size:14px; color:inherit; white-space: nowrap;">
+									<tr>
+										<td>បានប្រគល់</td>
+										<td width="20%" align="left"><span class="labelBorderBottom" style="min-width:100%;"><span class="labelValue" id="LBclientName"><?php echo $row['layout_type']?>   </span></span></td>
+										<td>សម្រាប់គម្រោង</td>
+										<td width="20%" align="left" ><span class="labelBorderBottom" style="min-width:100%;"><span class="labelValue" id="LBclientProjectname"><?php echo $row['branch_name']?></span></span></td>
+										<td><?php echo $tr->translate("PROPERTY_CODE")?></td>
+										<td width="20%" align="left" ><span class="labelBorderBottom" style="min-width:100%;"><span class="labelValue" id="LBclientPropertycode"><?php echo $row['propertyinfo'];?></span></span></td>
+										<td><?php echo $tr->translate("HEAD_TITLE_NO")?></td>
+										<td width="20%" align="left" ><span class="labelBorderBottom" style="min-width:100%;"><span class="labelValue" id="LBHeadtitle">&nbsp;<?php echo $row['hardtitle'];?></span></span></td>
+									</tr>
+								</table>
+             					<table style="width:100%;  font-size:14px; color:inherit; white-space: nowrap;">
+									<tr>
+										<td>ជូនអតិថិជន ឈ្មោះ</td>
+										<td width="60%" align="left"><span class="labelBorderBottom" style="min-width:100%;"><span class="labelValue" id="LBclientName"><?php echo $row['client_namekh']?></span></span></td>
+										<td>&nbsp;ភេទ&nbsp;</td>
+										<td width="10%">​<span class="labelBorderBottom" style="min-width: 100%;"><span class="labelValue" id="LBclientGender"><?php echo $row['sexKh']?>&nbsp;</span></span></td>
+										<td>&nbsp;កាន់<?php echo $row['client_d_typekh']?>&nbsp;</td>
+										<td width="15%">
+										​<span class="labelBorderBottom" style="min-width: 100%;"><span class="labelValue" id="LBclientAge">&nbsp;<?php echo $row['nation_id']?>&nbsp;</span></span>
+										</td>
+									</tr>
+								</table>
+								<table style="width:100%;  font-size:14px; color:inherit; white-space: nowrap;">
+									<tr>
+										<td>មានទីលំនៅ ផ្ទះលេខ </td>
+										<td width="10%" align="left"><span class="labelBorderBottom" style="min-width:100%;"><span class="labelValue" id="lbl_house">&nbsp;<?php echo $row['house']?></span></span></td>
+										<td>&nbsp;ផ្លូវ&nbsp;</td>
+										<td width="10%">​<span class="labelBorderBottom" style="min-width: 100%;"><span class="labelValue" id="lblstreet"><?php echo $row['street']?>&nbsp;</span></span></td>
+										<td>&nbsp;ភូមិ&nbsp;</td>
+										<td width="15%">
+										​<span class="labelBorderBottom" style="min-width: 100%;"><span class="labelValue" id="lblvillage">&nbsp;<?php echo $row['village_namekh']?>&nbsp;</span></span>
+										</td>
+										<td>&nbsp;ឃុំ-សង្កាត់&nbsp;</td>
+										<td width="15%">
+										​<span class="labelBorderBottom" style="min-width: 100%;"><span class="labelValue" id="lblcommune">&nbsp;<?php echo $row['commune_namekh']?>&nbsp;</span></span>
+										</td>
+										<td>&nbsp;ស្រុក-ខណ្ឌ &nbsp;</td>
+										<td width="15%">
+										​<span class="labelBorderBottom" style="min-width: 100%;"><span class="labelValue" id="lbldistrict">&nbsp;<?php echo $row['district_namekh']?>&nbsp;</span></span>
+										</td>
+										
+									</tr>
+								</table>
+								<table style="width:100%;  font-size:14px; color:inherit; white-space: nowrap;">
+									<tr>
+										<td>&nbsp;ខេត្ត-ក្រុង &nbsp;</td>
+										<td width="15%">
+										​<span class="labelBorderBottom" style="min-width: 100%;"><span class="labelValue" id="lblprovince">&nbsp;<?php echo $row['province_kh_name']?>&nbsp;</span> </span>
+										</td>
+										<td>ពិតប្រាកដមែន ។</td>
+										<td width="80%"></td>
+									</tr>
+									<tr>
+										<td>&nbsp;សម្គាល់ &nbsp;</td>
+										<td colspan="3" align="left"><span class="labelBorderBottom" style="min-width:100%;text-align: left;"><span class="labelValue" id="LBclientName">&nbsp;​ <?php echo $row['note']?></span></span></td>
+									</tr>
+								</table>
+             				</td>
+             			</tr>
+						<tr>
+							<td colspan="3" align="left">
+							<strong>*បញ្ជាក់ៈ </strong>  រាល់ការបាត់បង់ ឬខូចខាតក្នុងប្រការណាមួយ   ខ្ញុំបាទ/នាងខ្ញុំជាអ្នកទទួលខុសត្រូវទាំងស្រុង។
+							</td>
+						</tr>
+						<tr>
+							<td colspan="3" align="center">
+								
+								<table  style=" text-align: center; width:100%;">
+									<tr style="font-size: 12px;">
+										<td style="width:50%;  text-align:center; font-size: 14px; font-family:'Khmer OS Muol Light';font-weight:200;white-space: nowrap;"><td>&nbsp;</td>
+										<td style=" width:50%;  text-align:center; font-size: 14px; font-weight:200;">ធ្វើនៅថ្ងៃទី<span class="labelBorderBottom" style="min-width: 25%;">&nbsp;</span>ខែ<span class="labelBorderBottom" style="min-width: 25%;">&nbsp;</span>ឆ្នាំ <span class="labelBorderBottom" style="min-width: 15%;">&nbsp;</span></td>
+								   </tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="3" align="center" valign="top"> 
+								<table  style=" text-align: center; width:100%;">
+									<tr style="font-size: 12px;">
+										<td style="width:25%;  text-align:center; font-size: 14px; font-family:'Khmer OS Muol Light';font-weight:200;white-space: nowrap;">&nbsp;ស្នាមមេដៃអ្នកទទួល&nbsp;</td>
+										<td>&nbsp;</td>
+										<td style=" width:25%;  text-align:center; font-size: 14px; font-family:'Khmer OS Muol Light'; font-weight:200;">សាក្សី</td>
+										<td>&nbsp;</td>
+										<td style=" width:25%;  text-align:center; font-size: 14px; font-family:'Khmer OS Muol Light'; font-weight:200;">ស្នាមមេដៃអ្នកប្រគល់</td>
+								   </tr>
+								   <tr>
+								   		<td style="height: 35px;">&nbsp;</td>
+								   </tr>
+								   <tr style="font-size: 12px;">
+										<td style="width:25%;  text-align:center; border-bottom:solid 1px #000; font-size: 14px; font-family:'Times New Roman','Khmer OS Battambang';font-weight:200;white-space: nowrap;">&nbsp;<span id="clientNameFooter"><?php echo $row['client_namekh']?></span><?php //echo $row['client_namekh']?>&nbsp;</td>
+										<td>&nbsp;</td>
+										<td style=" width:25%;  text-align:center;  border-bottom:solid 1px #000; font-size: 14px; font-family:'Times New Roman','Khmer OS Battambang'; font-weight:200;"><span id="witnessesNameFooter"><?php echo $row['witnesses']?></span></td>
+										<td>&nbsp;</td>
+										<td style=" width:25%;  text-align:center;  border-bottom:solid 1px #000; font-size: 14px; font-family:'Times New Roman','Khmer OS Battambang'; font-weight:200;">&nbsp;<?php echo $row['userNameInput']?>&nbsp;</td>
+								   </tr>
+								</table>
+								<br />
+								<br />
+							</td>
+						</tr>
+						<?php if($i==0){?>
+						<tr>
+							<td colspan="3" style="border-top:2px dashed #000;" >
+								<br />
+							</td>
+						</tr>
+						<?php }?>
+		  		 	</table>
+		  		 	<?php }?>
+		   		</div>
+			 </div>	
+		</div>
+	</div>
+</div>
+<div class="ptss-frame  js-ptss-frame "><!-- is-opened -->
+	<div class="ptss__toggle-btn  js-ptss-toggle-btn ">
+		<i class="fa fa-print"></i>
+	</div>
+	<div class="ptss__header"><?php echo $tr->translate("PRINT");?></div>
+	<div class="ptss__settings">
+		<div class="ptss__single-setting" id="ptss__layout">
+			<div class="ptss__setting-control">
+				<div class="ptss__layout-wrapper">
+					<a class="qButton" title="<?php echo $tr->translate("Preview");?>" href="#" onclick="preview();"><i class="fa fa-search" aria-hidden="true"></i></a>
+					<a class="qButton print" href="#" title="<?php echo $tr->translate("PRINT");?>" onclick="doPrint();" ><i class="fa fa-print" aria-hidden="true"></i></a>
+					<a class="qButton excel" href="#"  title="<?php echo $tr->translate("Export");?>"  onclick="exportExcel();"><i class="fa fa-file-excel-o" aria-hidden="true"></i></a>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+function preview()
+{ 
+  var disp_setting="toolbar=no,status=no,resizable=no,location=no,directories=yes,menubar=no,"; 
+      disp_setting+="scrollbars=no,width=1100, height=700, left=100, top=25"; 
+  var content_vlue = document.getElementById("divPrint").innerHTML; 
+  
+  var docprint=window.open("","",disp_setting); 
+   docprint.document.open(); 
+   docprint.document.write('<html><head>'); 
+   docprint.document.write('</head><div style=" font-size:16px !important; margin:0px; font-family:Verdana;"><style>table th {font-size:14px !important;} table td{font-size:12px !important;}</style><center>');          
+   docprint.document.write(content_vlue);          
+   docprint.document.write('</center></div></html>'); 
+   docprint.document.close(); 
+   docprint.focus(); 
+}
+
+function doPrint() {
+	window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML;
+    window.frames["print_frame"].window.focus();
+    window.frames["print_frame"].window.print();
+    hideDialog();
+}
+
+</script>

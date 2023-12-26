@@ -583,7 +583,7 @@ class Report_StockmgController extends Zend_Controller_Action
 			//	$search['closingStatus']=-1;
 			$this->view->search = $search;
 			$db = new Invpayment_Model_DbTable_DbExpense();
-			$rs_rows = $db->getAllExpenseReport($search);
+			$rs_rows = $db->getAllExpenseForStock($search);
 			$this->view->row = $rs_rows;
 			$this->view->search = $search;
 
