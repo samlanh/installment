@@ -424,7 +424,7 @@ class Report_IncomeexpenseController extends Zend_Controller_Action {
   		$data = $this->getRequest()->getPost();
   		$db = new Report_Model_DbTable_DbIncomeexpense();
   		$db->submitClosingEngryIncome($data);
-  		Application_Form_FrmMessage::Sucessfull("Closing Entry Success", "/report/incomeexpense/rpt-closingincome");
+  		Application_Form_FrmMessage::Sucessfull("Closing Entry Success", "/report/incomeexpense/rpt-closingincome",1);
   	}
   }
   function submitentryexpenseAction(){
@@ -533,34 +533,7 @@ class Report_IncomeexpenseController extends Zend_Controller_Action {
   	Application_Model_Decorator::removeAllDecorator($frm);
   	$this->view->frm_search = $frm;
   }
-  function rptIncomestatementAction(){
-  	$db  = new Report_Model_DbTable_DbLandreport();
-  		
-  	$key = new Application_Model_DbTable_DbKeycode();
-  	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
-  	if($this->getRequest()->isPost()){
-  		$search = $this->getRequest()->getPost();
-  	}else{
-  		$search = array(
-  				'adv_search' => '',
-  				'start_date'=> date('Y-m-d'),
-  				'end_date'=>date('Y-m-d'),
-  				'branch_id'		=>	-1,
-  				'land_id'=>-1,
-  				'status'=>"",
-  		);
   
-  	}
-  
-  	$this->view->LoanFee_list =$db->getAllLoan($search);
-  	$this->view->LoanCollectionco_list =$db->getALLLoanPayment($search);
-  
-  	$this->view->list_end_date=$search;
-  	$frm = new Loan_Form_FrmSearchGroupPayment();
-  	$fm = $frm->AdvanceSearch();
-  	Application_Model_Decorator::removeAllDecorator($fm);
-  	$this->view->frm_search = $fm;
-  }
   function receiptOtherincomeAction(){
   	$id =$this->getRequest()->getParam('id');
   	$id = empty($id)?0:$id;

@@ -158,18 +158,14 @@
 								   <td data-label="<?php echo $tr->translate("NUM");?>"  align="center"><?php echo $i; ?></td>
 								   <td data-label="<?php echo $tr->translate("BRANCH_NAME");?>"  align="center" style="white-space: nowrap;"><?php echo $row['branch_name'];?></td>
 								   <td data-label="<?php echo $tr->translate("INCOME_TITLE");?>"  align="center" style="min-width: 120px;max-width: 150px;">
-								   		
-								   		<a target="_blank" style="color:#000;text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome','id'=>$row['id']));?>">
-								   		<?php echo $row['title'];?>
+								   		<a target="_blank" style="color:#000;text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'incomeexpense','action'=>'receipt-otherincome','id'=>$row['id']));?>">
+								   			<?php echo $row['title'];?>
 								   		</a>
-								   		
 								   </td>
 								   <td data-label="<?php echo $tr->translate("RECEIPT_NO");?>"  align="center">
-								   		
-									   	<a target="_blank" style="color:#000;text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome','id'=>$row['id']));?>">
-									   	<?php echo $row['invoice'];?>
+									   	<a target="_blank" style="color:#000;text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'incomeexpense','action'=>'receipt-otherincome','id'=>$row['id']));?>">
+									   		<?php echo $row['invoice'];?>
 									   	</a>
-									   	
 								   </td>
 								   <td data-label="<?php echo $tr->translate("CLIENT_NAME");?>"  align="center" style="white-space: nowrap;"><?php echo $row['client_name'];?></td>
 								   <td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>"  align="center" style="white-space: nowrap;"><?php echo $row['house_name'];?></td>
@@ -197,9 +193,9 @@
 							   		<tr oncontextmenu="setrowdata('<?php echo $rs['id'];?>',1);return false;" class=" context-menu-one stylehover <?php //if($index%2==1){echo"even";}?>" style=" <?php if ($rs['status']==0){ echo "background: #f7c6c6;";}?>  font-family: 'Times New Roman','Khmer OS Battambang';white-space: nowrap;" width="100%">
 					               		<td data-label="<?php echo $tr->translate("NUM");?>"  style="text-align: center;"><?php echo $i; ?></td>
 					               		<td data-label="<?php echo $tr->translate("BRANCH_NAME");?>"  align="center"><?php echo $rs["branch_name"];?></td>
-					               		<td data-label="<?php echo $tr->translate("INCOME_TITLE");?>"  align="center"><a target="_blank" style="color:#000;text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome','id'=>$rs['id']));?>?repair=1"><?php echo $rs["title_income"];?></a></td> 
-					               		<td data-label="<?php echo $tr->translate("RECEIPT_NO");?>"  align="center"><a target="_blank" style="<?php if ($rs['status']==0){ echo "color:red;";}else{ echo "color:#000;";}?>text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome','id'=>$rs['id']));?>?repair=1"><?php echo $rs["invoice"];  if ($rs['status']==0){ echo " ".$tr->translate("មោឃៈ");}?></a></td>
-					               		<td data-label="<?php echo $tr->translate("CLIENT_NAME");?>"  align="center"><a target="_blank" style="color:#000;text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome','id'=>$rs['id']));?>?repair=1"><?php echo $rs["name_kh"];?></a></td> 
+					               		<td data-label="<?php echo $tr->translate("INCOME_TITLE");?>"  align="center"><a target="_blank" style="color:#000;text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'incomeexpense','action'=>'receipt-otherincome','id'=>$rs['id']));?>?repair=1"><?php echo $rs["title_income"];?></a></td> 
+					               		<td data-label="<?php echo $tr->translate("RECEIPT_NO");?>"  align="center"><a target="_blank" style="<?php if ($rs['status']==0){ echo "color:red;";}else{ echo "color:#000;";}?>text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'incomeexpense','action'=>'receipt-otherincome','id'=>$rs['id']));?>?repair=1"><?php echo $rs["invoice"];  if ($rs['status']==0){ echo " ".$tr->translate("មោឃៈ");}?></a></td>
+					               		<td data-label="<?php echo $tr->translate("CLIENT_NAME");?>"  align="center"><a target="_blank" style="color:#000;text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'incomeexpense','action'=>'receipt-otherincome','id'=>$rs['id']));?>?repair=1"><?php echo $rs["name_kh"];?></a></td> 
 					               		<td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>"  align="center"><?php echo $rs["land_address"]." (".$rs["street"].")";?></td>
 					               		<td data-label="<?php echo $tr->translate("CATEGORY");?>"  valign="top"><?php echo $rs["category"];?></td>
 					               		<td data-label="<?php echo $tr->translate("TOTAL_INCOME");?>"  align="center"><strong><?php  if ($rs['status']==0){ echo "-";}else{ echo number_format($rs["total_amount"],2);}?></strong></td>
@@ -235,7 +231,7 @@
 	</div>
 </div>
 <script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
-<?php $urlprint = $this->baseUrl()."/report/loan/receipt-otherincome/id/";?>
+<?php $urlprint = $this->baseUrl()."/report/incomeexpense/receipt-otherincome/id/";?>
  <script>
  dojo.require("dojo.data.ItemFileWriteStore"); 
  var property_store  = getDataStorefromJSON('id','name',[{"id":-1,"name":"<?php echo $tr->translate("SELECT_PROPERTY");?>"}]);

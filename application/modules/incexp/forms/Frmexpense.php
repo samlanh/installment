@@ -370,8 +370,6 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'class'=>'fullside'
 		));
-// 		$options= array(1=>$this->tr->translate("CASH"),2=>$this->tr->translate("CHEQUE"));
-// 		$payment_type->setMultiOptions($options);
 		
 		$options = $dbgb->getVewOptoinTypeByType(2,1,3,1);
 		$payment_type->setMultiOptions($options);
@@ -390,6 +388,8 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'required' =>'true',
 				'class'=>'fullside',
+				'autoComplete'=>"false" ,
+				'queryExpr'=>'*${0}*',
 				'onchange'=>'getInvoiceNo("");getallCustomer();'
 		));
 	

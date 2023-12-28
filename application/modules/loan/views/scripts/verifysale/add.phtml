@@ -31,7 +31,11 @@
 					dijit.byId('saleId').focus();
 					return false;
 				}
-
+				identity1 =  $("#identity1").val();
+				if(identity1==''){
+					infoMessageAlert('<?php echo $tr->translate("please add file attach")?>!');
+					return false;
+				}
 				loadingBlock();
 				dijit.byId('savenew').set('disabled',true);
 				return true;
@@ -53,13 +57,11 @@
 		            <li class="nav-item active">
 		                <a class="nav-link rounded-5" data-toggle="tab" href="#panel21" role="tab"><i class="fa fa-money ml-2"></i> <?php echo $tr->translate("SALE_INFO");?></a>
 		            </li>
-				
 					<li class="nav-item">
 						<a class="nav-link rounded-5" data-toggle="tab" href="#panel23" role="tab">
 							<i class="fa fa-file-text"></i> <?php echo $tr->translate("DOCUMENT");?>
 						</a>
 					</li>
-					
 		        </ul>
 		    </div>
 			<div class="tab-content ">
@@ -86,7 +88,6 @@
 													<?php echo $frm->getElement('branch_id');?>
 											   </div>
 											</div>
-											
 											<div class="form-group">
 											   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PROPERTY_CODE");?></label>
 											   <div class="col-md-7 col-sm-7 col-xs-12">
@@ -100,9 +101,7 @@
 													<input dojoType="dijit.form.TextBox" class="fullside" id="note" name="note" type="text">
 											   </div>
 											</div>
-											<div id="saleInfomation">
-											
-											</div>
+											<div id="saleInfomation"></div>
 										</div>
 									</div>
 								</div>
@@ -136,7 +135,6 @@
 												<?php echo $frm->getElement('discount_percent');?>
 										   </div>
 										</div>
-										
 										<div class="form-group">
 										   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("TOTAL_DISCOUNT");?>
 										   </label>
@@ -151,7 +149,6 @@
 												<input dojoType="dijit.form.NumberTextBox" class="fullside" onKeyup="Balance();" id="sold_price" name="sold_price"  value="0" type="text">
 										   </div>
 										</div>
-										
 										 <div class="form-group">
 										   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("TOTAL_PAID");?> :
 										   </label>
@@ -189,7 +186,6 @@
 														<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('DOCUMENT')?> </p>
 													</div> 
 												</div>
-										
 												<div class="form-group">
 													 <div class="col-md-10 col-sm-10 col-xs-10" >
 														<table style="white-space: nowrap;width:100%; margin-top: 8px;">
@@ -210,7 +206,6 @@
 					</div>				
 				<!--/.Panel 2-->					
 			</div>	
-	    	
 	    	<div class="col-md-4 col-sm-4 col-xs-12">
 	    	</div>
 	    	<div class="clearfix"></div>
@@ -236,10 +231,9 @@ var saleStore  = getDataStorefromJSON('id','name', null );
 require(["dojo/ready"], function(ready){
 	 ready(function(){
 		 var branch_id = dijit.byId('branch_id');
-		 branch_id.on('change', function(evt) {
+		 branch_id.on('change', function(evt){
 			 getAllSaleNumber();
 		});
-
 	  });
 	  
 	  new dijit.form.FilteringSelect({
@@ -283,7 +277,6 @@ function getAllSaleNumber(){//used
 		    dijit.byId('saleId').set('store',sale_number_store); 
 		},
 		error: function(err) {
-			
 		}
 	});
 }
@@ -304,7 +297,6 @@ function getInfoByLoanNumber(){
 			dijit.byId('sold_price').attr('value',data.price_sold);
 			dijit.byId('discount').attr('value',data.discount_amount);
 			dijit.byId('discount_percent').attr('value',data.discount_percent);
-			
 			
 			total_principal= data.total_principal;
 			if(isNaN(total_principal) || total_principal==null){total_principal=0;}
@@ -353,7 +345,6 @@ function calculateDiscount(){
 	total_discount = (discount_percent+discount+other_discount).toFixed(2);
 	total_sold = (total_sold-discount_percent).toFixed(2);
 	
-
 	dijit.byId('total_discount').attr('value',total_discount);
 	dijit.byId('sold_price').attr('value',total_sold);
 	Balance();
@@ -367,10 +358,7 @@ function Balance(){
 	}
 	var totalBalance = price - totalPrincipalpaid;
 	dijit.byId('totalBalance').attr('value',totalBalance);
-	
 }
-
-
 
 var coll = 0;
 var no = 0;
@@ -406,15 +394,14 @@ function addRow() {
 }
 function bs_input_file() {
 	$(".input-file").before(
-		function() {
+		function(){
 		if ( ! $(this).prev().hasClass('input-ghost') ) {
 			var element = $("<input  type='file' accept='.xlsx,.xls,image/*,.doc, .docx,.txt,.pdf' class='input-ghost' style='visibility:hidden; height:0'>");
 			element.attr("name",$(this).attr("name"));
 			element.change(function(){
+			element.next(element).find('input').val((element.val()).split('\\').pop());
 				
-				element.next(element).find('input').val((element.val()).split('\\').pop());
-				
-				indexRow = $(this).attr("name").replace('attachment','');
+			indexRow = $(this).attr("name").replace('attachment','');
 				$("#title_"+indexRow).val( (element.val()).split('\\').pop() );
 							
 			});
@@ -426,9 +413,7 @@ function bs_input_file() {
 			$(this).find('input').css("cursor","pointer");
 			$(this).find('input').mousedown(function() {
 				
-				$(this).parents('.input-file').prev().click();
-				
-			
+			$(this).parents('.input-file').prev().click();			
 				return false;
 			});
 			return element;

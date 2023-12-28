@@ -60,6 +60,8 @@ Class Incexp_Form_FrmOtherIncomePayment extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.FilteringSelect',
 				'required' =>'true',
 				'class'=>'fullside',
+				'autoComplete'=>"false" ,
+				'queryExpr'=>'*${0}*',
 				'onchange'=>'getallCustomer();getBranchinfo();'
 		));
 	

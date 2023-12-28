@@ -1,7 +1,7 @@
 <?php
 class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
 {
-	public function getAllLoan($search = null){//rpt-loan-released/
+	public function getAllLoanReport($search = null){//rpt-loan-released/
 		$db = $this->getAdapter();
 		$session_lang=new Zend_Session_Namespace('lang');
 		$lang = $session_lang->lang_id;

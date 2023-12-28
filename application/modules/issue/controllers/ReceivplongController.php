@@ -35,7 +35,7 @@ class Issue_ReceivplongController extends Zend_Controller_Action {
 					'module'=>'issue','controller'=>'receivplong','action'=>'edit',
 			);
 			$link1=array(
-					'module'=>'report','controller'=>'loan','action'=>'rpt-printplong',
+					'module'=>'report','controller'=>'plongandhouse','action'=>'rpt-printplong',
 			);
 			$this->view->list=$list->getCheckList(0,$collumns,$rs_rows,array('branch_name'=>$link,'client_name'=>$link,$plogtitle=>$link1));
 		}catch (Exception $e){
