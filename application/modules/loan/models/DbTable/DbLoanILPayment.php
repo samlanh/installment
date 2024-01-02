@@ -434,7 +434,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 		    			if($data['option_pay']!=3){//ព្រោះបញ្ចូលជា Extra payment hz
 		    				$arr_money_detail = array(
     							'crm_id'				=>	$client_pay,
-    							'land_id'			    =>	$data['property_id'],//ok
+    							'land_id'			    =>	$propertyId,//$data['property_id'],//ok
     							'lfd_id'				=>	$row["id"],//ok
     							'date_payment'			=>	$row["date_payment"], // ថ្ងៃដែលត្រូវបង់
     							'principal_permonth'	=>	0,
@@ -566,7 +566,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 											'cheque'	     => '',
 											'cheque_issuer'  => '',
 											'other_invoice'  => '',
-											'property_id'    => $data['property_id'],
+											'property_id'    => $propertyId,//$data['property_id'],
 											'income_category'=> 16,
 											'staff_id'		 => $data['co_id'],
 											'payment_type'   => 1,
@@ -655,7 +655,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     				foreach ($rs as $index => $row){	//ដក Begining after ដើម្បីអោយបង្កាន់ដៃបង់លើកក្រោយចេញត្រូវនឹងប្រាក់ដែលធ្លាប់បានបង់
     					$arr = array(
     							'crm_id'				=>	$client_pay,
-    							'land_id'			    =>	$data['property_id'],//ok
+    							'land_id'			    =>	$propertyId,//$data['property_id'],//ok
     							'lfd_id'				=>	$row["id"],//ok
     							'date_payment'			=>	$row["date_payment"], // ថ្ងៃដែលត្រូវបង់
     							'principal_permonth'	=>	0,
