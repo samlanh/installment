@@ -101,7 +101,7 @@ class Project_LandController extends Zend_Controller_Action {
 		$this->view->frmPopupPropertyType = $dbpop->frmPopupPropertyType();
 		
 		$db = new Application_Model_DbTable_DbGlobal();
-		$branch_opt = $db->getAllBranchByUser();
+		$branch_opt = $db->getAllBranchName();
 		$this->view->branch_opt = $branch_opt;
 		
 		$rs_street = $db->getAllStreetForOpt();
@@ -153,7 +153,7 @@ class Project_LandController extends Zend_Controller_Action {
 		$this->view->frmPopupPropertyType = $dbpop->frmPopupPropertyType();
 	
 		$db = new Application_Model_DbTable_DbGlobal();
-		$branch_opt = $db->getAllBranchByUser();
+		$branch_opt = $db->getAllBranchName();
 		$this->view->branch_opt = $branch_opt;
 	
 		$rs_street = $db->getAllStreetForOpt();

@@ -552,8 +552,12 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   public function getAllBranchName($branch_id=null,$opt=null,$moreCondiction=array()){
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
   	$db = $this->getAdapter();
-  	$sql= " SELECT br_id,project_name,
-  	project_type,br_address,branch_code,branch_tel,displayby
+  	$sql= " SELECT 
+	br_id
+	,br_id as id
+	,project_name AS name
+	,project_name
+	,project_type,br_address,branch_code,branch_tel,displayby
   	FROM `ln_project` WHERE project_name !='' AND status=1 ";
 	$moreCondiction['showAll'] = empty($moreCondiction['showAll'])?null:$moreCondiction['showAll'];
 	

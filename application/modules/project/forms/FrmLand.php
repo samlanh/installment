@@ -206,10 +206,23 @@ Class Project_Form_FrmLand extends Zend_Dojo_Form {
 				'autoComplete'=>'false',
 				'queryExpr'=>'*${0}*',
 		));
-		$options_branch = $db->getAllBranchName(null,1);
-
+		//$options_branch = $db->getAllBranchName(null,1);
+		$rows = $db->getAllBranchName();
+		$options_branch = array('-1' => $this->tr->translate("SELECT_BRANCH"));
+		if (!empty($rows)) foreach ($rows as $row) {
+			$options_branch[$row['br_id']] = $row['project_name'];
+		}
+			
 		$branch_id->setMultiOptions($options_branch);
 		$branch_id->setValue($request->getParam("branch_id"));
+		if (count($rows) == 1) {
+			$branch_id->setAttribs(array('readonly' => 'readonly'));
+			if (!empty($rows))
+				foreach ($rows as $row) {
+					$branch_id->setValue($row['br_id']);
+				}
+		}
+		
 		
 		$floor = new Zend_Dojo_Form_Element_TextBox('floor');
 		$floor->setAttribs(array('dojoType'=>'dijit.form.TextBox','class'=>'fullside',));
