@@ -2157,11 +2157,13 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 			$db = $this->getAdapter();
 			$db->beginTransaction();
 			try{
-		
+				$data['principalPermonth'] = empty($data['principalPermonth'])? 0 : $data['principalPermonth'];
+				$data['totalInterest'] = empty($data['totalInterest'])? 0 : $data['totalInterest'];
 				$arr = array(
 						'begining_balance'	=>$data['beginingBalance'],
 						'principal_permonth'	=>$data['principalPermonth'],
 						'total_interest'	=>$data['totalInterest'],
+						'total_payment'		=>$data['principalPermonth']+$data['totalInterest'],
 						'ending_balance'	=>$data['endingBalance'],
 				);
 				$where=" id = ".$data['id']." AND sale_id = ".$data['saleId'];
