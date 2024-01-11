@@ -150,6 +150,9 @@
 						$date = new DateTime($rs["date_pay"]);
 						$receiveDate =  $date->format("d-M-Y");
 						
+						$datePmt = new DateTime($rs["date_payment"]);
+						$datePayment =  $datePmt->format("d-M-Y");
+						
                ?>
                 <tr oncontextmenu="setrowdata(<?php echo $rs['id'];?>);return false;" class="style style1 context-menu-one" style="font-family: 'Khmer OS Content'; white-space:nowrap; ">
                		<td style="text-align: center;"><?php echo $i++; ?></td>
@@ -164,7 +167,7 @@
                		<td align="center" style="font:bolder 11px Arial;"><?php echo number_format($rs['penalize_amountpaid'],2);?></td>
                		<td align="center" style="font:bolder 11px Arial;"><?php echo number_format($rs['extra_payment'],2);?></td>
                		<td style="font:bolder 11px Arial;"><?php echo number_format($rs['amount_payment'],2);?></td>
-               		<td style="white-space:nowrap; border-right:3px double black; "><?php echo date("d-M-Y",strtotime($rs["date_payment"]));?></td>
+               		<td style="white-space:nowrap; border-right:3px double black; "><?php echo $datePayment;?></td>
                		<td style="white-space:nowrap; "><?php echo $receiveDate;?></td>
                		<td><?php echo $rs["receipt_no"];?></td>
                		<td style="white-space: nowrap;font-site:9px; <?php if($rs["payment_option"]==4){echo " background:#ccc";} ?>" align="center" ><?php echo $rs["paymentoption"];?></td>
