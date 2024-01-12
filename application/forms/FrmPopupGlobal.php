@@ -2413,6 +2413,10 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 						page:4;size:portrait;
 					}
 				}
+				span#lb_customercode{
+					display:block;
+					line-height:14px;
+				}
 			</style>
 			<table width="100%" style="backgroud:red;white-space: nowrap;font-size:16px; padding:0px;margin-top: -15px;" class="print" cellspacing="0"  cellpadding="0" >
 				<tr>
@@ -2449,7 +2453,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					<td><strong><label id="lbl_paidtimes" class="value"></label></strong></td>
 				</tr>
 				<tr >
-					<td>ឈ្មោះ​អតិថិជន </td>
+					<td>ឈ្មោះអតិថិជន </td>
 					<td><strong><label id="lb_customer" class="value"></label></strong></td>
 					<td>&nbsp;&nbsp; ការប្រាក់</td>
 					<td><strong><label id="lb_interest" class="value">0.00</label></strong></td>
