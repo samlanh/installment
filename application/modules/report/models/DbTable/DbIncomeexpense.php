@@ -1363,4 +1363,79 @@ class Report_Model_DbTable_DbIncomeexpense extends Zend_Db_Table_Abstract
 	}
 	
 	
+	function getCustomerNearlyPaymentBoreyFee($search){
+    	$db=$this->getAdapter();
+    	
+    	
+		$sql= "
+		SELECT 
+			inc.* 
+			,inc.from_date 
+			,inc.next_date AS nextDate
+			,inc.unit_price AS unitPrice
+			,(SELECT p.`project_name` FROM `ln_project` AS p WHERE p.`br_id` = inc.`branch_id` LIMIT 1) AS branchName
+			,(SELECT `c`.`phone` FROM `ln_client` `c` WHERE `c`.`client_id` = `s`.`client_id` LIMIT 1) AS `clientPhone`
+			,(SELECT `c`.`name_kh` FROM `ln_client` `c` WHERE `c`.`client_id` = `s`.`client_id` LIMIT 1) AS `clientName`
+				  
+			,`l`.`land_code`                AS `landCode`
+			,`l`.`land_address`             AS `landAddress`
+			,`l`.`street`                   AS `street`
+		FROM 
+			`ln_income` AS inc 
+			JOIN ln_sale AS s ON s.id = inc.sale_id 
+			LEFT JOIN ln_properties AS l ON `s`.`house_id` = `l`.`id`
+			
+		WHERE inc.`status` =1
+			AND inc.`incomeType` =2
+		";
+		
+    	
+    	$from_date =(empty($search['start_date']))? '1': " inc.next_date <= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " inc.next_date <= '".$search['end_date']." 23:59:59'";
+    	$sql.= " AND ".$from_date." AND ".$to_date;
+    	
+    	$dbp = new Application_Model_DbTable_DbGlobal();
+    	$sql.=$dbp->getAccessPermission("inc.branch_id");
+    	
+    	$order=" ORDER BY inc.next_date DESC ,inc.sale_id ASC, inc.id ASC";
+		if(!empty($search['queryOrdering'])){
+			if($search['queryOrdering']==1){
+				$order =" ORDER BY inc.branch_id DESC, inc.date ASC ";
+			}else if($search['queryOrdering']==2){
+				$order =" ORDER BY inc.branch_id DESC, inc.date DESC ";
+			}else if($search['queryOrdering']==3){
+				$order =" ORDER BY inc.branch_id DESC, inc.id ASC ";
+			}else if($search['queryOrdering']==4){
+				$order =" ORDER BY inc.branch_id DESC, inc.id DESC ";
+			}
+		}
+		if(empty($search)){
+			return $db->fetchAll($sql.$order);
+		}
+		if(!empty($search['adv_search'])){
+			$s_where = array();
+			$s_search = trim(addslashes($search['adv_search']));
+			$s_where[] = " inc.total_amount LIKE '%{$s_search}%'";
+			$s_where[] = " `l`.`land_code`      LIKE '%{$s_search}%'";
+			$s_where[] = " `l`.`land_address`  LIKE '%{$s_search}%'";
+			$s_where[] = " `l`.`street`         LIKE '%{$s_search}%'";
+			$s_where[] = " (SELECT `c`.`name_kh` FROM `ln_client` `c` WHERE `c`.`client_id` = `s`.`client_id` LIMIT 1)         LIKE '%{$s_search}%'";
+			$sql .=' AND  ('.implode(' OR ',$s_where).')';
+		}
+		if($search['client_name']>0){
+			$sql.= " AND inc.client_id = ".$search['client_name'];
+		}
+		if(!empty($search['user_id']) AND $search['user_id']>0){
+			$sql.= " AND inc.user_id = ".$search['user_id'];
+		}
+		if($search['land_id']>0){
+			$sql.= " AND inc.house_id = ".$search['land_id'];
+		}
+		if($search['branch_id']>0){
+			$sql.= " AND inc.branch_id = ".$search['branch_id'];
+		}
+		
+    	return $db->fetchAll($sql.$order);
+    }
+	
  }

@@ -757,4 +757,48 @@ class Report_IncomeexpenseController extends Zend_Controller_Action {
   	$frmpopup = new Application_Form_FrmPopupGlobal();
   	$this->view->footerReport = $frmpopup->getFooterReport();
   }
+  
+  
+  function rptBoreyIncomeLateAction(){
+  	if($this->getRequest()->isPost()){
+  		$search=$this->getRequest()->getPost();
+  	}
+  	else{
+		
+		$dbgb = new Setting_Model_DbTable_DbGeneral();
+    	$alert = $dbgb->geLabelByKeyName('payment_day_alert');
+    	$todayDate= date('Y-m-d');
+    	if (!empty($alert['keyValue'])){
+    		$amt_day = $alert['keyValue'];
+    		$todayDate= date('Y-m-d',strtotime("+$amt_day day"));
+    	}
+  		$search = array(
+  				"adv_search"=>'',
+  				"branch_id"=>-1,
+  				"status"=>-1,
+  				"category_id"=>-1,
+  				"ordering"=>1,
+  				'land_id'=>-1,
+  				'user_id'=>-1,
+  				'client_name'=>'',
+  				'end_date'=>$todayDate,
+  		);
+  	}
+  	$this->view->search=$search;
+  	$db  = new Report_Model_DbTable_DbIncomeexpense();
+  	$this->view->row = $db->getCustomerNearlyPaymentBoreyFee($search);
+  
+  	$db  = new Report_Model_DbTable_DbLandreport();
+  	$this->view->houserepair =$db->getAllIncomeOtherPayment($search,12);
+  	 
+  	$frm = new Loan_Form_FrmSearchLoan();
+  	$frm = $frm->AdvanceSearch();
+  	Application_Model_Decorator::removeAllDecorator($frm);
+  	$this->view->frm_search = $frm;
+  	$this->view->rssearch = $search;
+  	 
+  	$frmpopup = new Application_Form_FrmPopupGlobal();
+  	$this->view->footerReport = $frmpopup->getFooterReport();
+  	$this->view->headerReport = $frmpopup->getLetterHeadReport();
+  }
 }
