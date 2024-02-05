@@ -1848,7 +1848,11 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     				}
     
     				$dbtable = new Application_Model_DbTable_DbGlobal();
-    				$loan_number = $dbtable->getLoanNumber();
+					$arrBras = array(
+						"branch_id" =>$branch_id,
+						"is_group" =>0,
+					);
+    				$loan_number = $dbtable->getLoanNumber($arrBras);
     				$payType=4;
     				if(!empty($payment_id[$installmentType])){//check
     					$payType = $payment_id[$installmentType];
