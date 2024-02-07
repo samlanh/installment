@@ -8,6 +8,15 @@ class Group_Model_DbTable_DbCustomer extends Zend_Db_Table_Abstract
     	$session_user=new Zend_Session_Namespace(SYSTEM_SES);
     	return $session_user->user_id;
     }
+	
+	function getSalebyId($sale_id){
+    	$db= $this->getAdapter();
+    	$sql="SELECT s.*,
+				(SELECT COUNT(id) FROM `ln_saleschedule` WHERE sale_id=$sale_id AND status=1 AND is_completed=0 LIMIT 1) as intallment
+    		  FROM ln_sale AS s WHERE s.id = $sale_id LIMIT 1 "; 
+    	return $db->fetchRow($sql);
+    }
+	
 	public function add($_data){
 		try{
 		    $_arr=array(		    
@@ -23,8 +32,21 @@ class Group_Model_DbTable_DbCustomer extends Zend_Db_Table_Abstract
 		    	'statusreq'   => $_data['statusreq'],
 				'status'	  => 1,//$_data['status'],
 				'user_id'	  => $this->getUserId(),
+				
+				'branchId'   => $_data['branchId'],
+				'saleId'     => $_data['saleId'],
 		);
-	
+		$isConnectedSale = 0;
+		if(!empty($_data['saleId'])){
+			$rsSale = $this->getSalebyId($_data['saleId']);
+			if(!empty($rsSale)){
+				$_arr["clientId"] = $rsSale["house_id"];
+				$_arr["propertyId"] = $rsSale["client_id"];
+				$isConnectedSale = 1;
+			}
+		}
+		
+		$_arr["isConnectedSale"] = $isConnectedSale;
 		$this->_name;   
 		if(!empty($_data['id'])){
 			$where = 'id = '.$_data['id'];
@@ -43,7 +65,20 @@ class Group_Model_DbTable_DbCustomer extends Zend_Db_Table_Abstract
 
 	public function getById($id){
 		$db = $this->getAdapter();
-		$sql = "SELECT *,(SELECT kn.title FROM rms_know_by as kn WHERE kn.id = know_by LIMIT 1) as know_bytitle FROM $this->_name WHERE id = ".$db->quote($id);
+		$sql = "SELECT 
+			crt.*
+			,(SELECT kn.title FROM rms_know_by as kn WHERE kn.id = crt.know_by LIMIT 1) AS know_bytitle 
+			,(SELECT pro.project_name FROM ln_project AS pro WHERE pro.br_id = crt.branchId LIMIT 1 ) AS projectName
+			,(SELECT s.sale_number FROM ln_sale AS s WHERE s.id = crt.saleId LIMIT 1 ) AS saleNumber
+			,(SELECT crm.date_payment FROM ln_client_receipt_money AS crm WHERE crm.sale_id = crt.saleId AND crm.total_payment > 0 ORDER BY crm.id DESC LIMIT 1 ) AS lastPaidDate
+			
+			,(SELECT c.client_number FROM ln_client AS c WHERE c.client_id = crt.clientId LIMIT 1 ) AS clientCode
+			,(SELECT c.name_kh FROM ln_client AS c WHERE c.client_id = crt.clientId LIMIT 1 ) AS clientName
+			,(SELECT c.phone FROM ln_client AS c WHERE c.client_id = crt.clientId LIMIT 1 ) AS clientPhone
+			
+			,(SELECT p.land_address FROM ln_properties AS p WHERE p.id = crt.propertyId LIMIT 1 ) AS landAddress
+			,(SELECT p.street FROM ln_properties AS p WHERE p.id = crt.propertyId LIMIT 1 ) AS landStreet
+			FROM $this->_name AS crt WHERE crt.id = ".$db->quote($id);
 		$sql.=" LIMIT 1 ";
 		$row=$db->fetchRow($sql);
 		return $row;
@@ -61,50 +96,75 @@ class Group_Model_DbTable_DbCustomer extends Zend_Db_Table_Abstract
 		$imgnone='<img src="'.$base_url.'/images/icon/cross.png"/>';
 		$imgtick='<img src="'.$base_url.'/images/icon/apply2.png"/>';
 		
-		$sql = "SELECT id,name, phone,
-		(SELECT title FROM `rms_know_by` WHERE rms_know_by.id=know_by LIMIT 1) as know_by,
-		 `date`,from_price,to_price,requirement,type,description,	
-		statusreq,			
-		    (SELECT  first_name FROM rms_users WHERE id = user_id limit 1 ) AS user_name,
- 				CASE    
-					WHEN  `status` = 1 THEN '".$imgtick."'
-					WHEN  `status` = 0 THEN '".$imgnone."'
-				END AS status
+		$sql = "SELECT 
+		crt.id
+		,crt.name
+		,crt.phone
+		,(SELECT title FROM `rms_know_by` WHERE rms_know_by.id=crt.know_by LIMIT 1) as know_by
+		 ,crt.`date`
+		 ,crt.from_price
+		 ,crt.to_price
+		 ,crt.requirement
+		 ,crt.type
+		 ,crt.description
 		
-		FROM $this->_name ";
+		 ";
+		
+		$sql.="
+		, CASE
+			WHEN  crt.isConnectedSale = 1 THEN 
+				(SELECT CONCAT(p.land_address,' ',p.street) FROM ln_properties AS p WHERE p.id = crt.propertyId LIMIT 1 )
+			ELSE ''
+		END AS connectedSale ";
+		
+		$sql.="
+		,crt.statusreq
+		,(SELECT  first_name FROM rms_users WHERE id = crt.user_id limit 1 ) AS user_name
+		,CASE    
+			WHEN  crt.`status` = 1 THEN '".$imgtick."'
+			WHEN  crt.`status` = 0 THEN '".$imgnone."'
+		END AS status
+		";
+		
+		
+		
+		$sql.=" FROM $this->_name AS crt ";
+		
 		if(!empty($search['adv_search'])){
 			$s_where = array();
 			$s_search = addslashes(trim($search['adv_search']));
-			$s_where[] = " name LIKE '%{$s_search}%'";
-			$s_where[] = " phone LIKE '%{$s_search}%'";
-			$s_where[] = " requirement LIKE '%{$s_search}%'";
-			$s_where[] = " type LIKE '%{$s_search}%'";
-			$s_where[] = " from_price LIKE '%{$s_search}%'";
-			$s_where[] = " to_price LIKE '%{$s_search}%'";
+			$s_where[] = " crt.name LIKE '%{$s_search}%'";
+			$s_where[] = " crt.phone LIKE '%{$s_search}%'";
+			$s_where[] = " crt.requirement LIKE '%{$s_search}%'";
+			$s_where[] = " crt.type LIKE '%{$s_search}%'";
+			$s_where[] = " crt.from_price LIKE '%{$s_search}%'";
+			$s_where[] = " crt.to_price LIKE '%{$s_search}%'";
+			$s_where[] = " (SELECT p.land_address FROM ln_properties AS p WHERE p.id = crt.propertyId LIMIT 1 ) LIKE '%{$s_search}%'";
+			$s_where[] = " (SELECT p.street FROM ln_properties AS p WHERE p.id = crt.propertyId LIMIT 1 ) LIKE '%{$s_search}%'";
 			
 			$where .=' AND ('.implode(' OR ',$s_where).')';
 		}
 		if($search['status']>-1){
-			$where.= " AND status = ".$search['status'];
+			$where.= " AND crt.status = ".$search['status'];
 		}
 		if(!empty($search['statusreq'])){
-			$where.= " AND statusreq = '".$search['statusreq']."'";
+			$where.= " AND crt.statusreq = '".$search['statusreq']."'";
 		}
 		if($search['know_by']>0){
-			$where.= " AND know_by = ".$search['know_by'];
+			$where.= " AND crt.know_by = ".$search['know_by'];
 		}	
 		$userid = $this->getUserId();
 		$db_user=new Application_Model_DbTable_DbUsers();
 		$user_info = $db_user->getUserInfo($userid);
 		if (!empty($user_info['staff_id'])){
-			$where.= " AND user_id = ".$userid;
+			$where.= " AND crt.user_id = ".$userid;
 		}
 		$dbgb = new Application_Model_DbTable_DbGlobal();
 		$userinfo = $dbgb->getUserInfo();
 		if($userinfo['level']!=1){
-			$where.= " AND user_id = ".$userinfo['user_id'];
+			$where.= " AND crt.user_id = ".$userinfo['user_id'];
 		}
-		$order=" ORDER BY id DESC ";
+		$order=" ORDER BY crt.id DESC ";
 		return $db->fetchAll($sql.$where.$order);	
 	}
 	function  getAllstatusreqForOpt(){
@@ -133,7 +193,8 @@ class Group_Model_DbTable_DbCustomer extends Zend_Db_Table_Abstract
 	public function addContactHistory($_data){
 		$_db= $this->getAdapter();
 		try{
-	
+			
+			$_data['saleId'] = empty($_data['saleId']) ? 0 : $_data['saleId'];
 			$_arr=array(
 					'customer_id'	  => $_data['id'],
 					'contact_date' => $_data['contact_date'],
@@ -143,7 +204,9 @@ class Group_Model_DbTable_DbCustomer extends Zend_Db_Table_Abstract
 					'user_contact'=> $_data['user_contact'],
 					'create_date' => date("Y-m-d H:i:s"),
 					'modify_date' => date("Y-m-d H:i:s"),
-					'user_id'	  => $this->getUserId()
+					'user_id'	  => $this->getUserId(),
+					
+					'saleId'=> $_data['saleId'],
 			);
 			$this->_name = "ln_history_contact";
 			$id = $this->insert($_arr);

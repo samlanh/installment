@@ -225,15 +225,29 @@
 							$total_late_day=0;
 						}
 						?>
-					  <li class=" event">
+						
+						 <li class=" event">
+						 <a href="#">
+							<div class="pull-left profile-list char-profile">
+								<span class="profileChar">
+									<?php echo mb_substr($result['name'], 0, 1,'UTF8');?>
+								</span>
+							</div>
 							<div class="media-body">
 								
-							  <span class="title" ><?php echo $result['name'];?> </span>
-							  <p><strong><i class="fa fa-phone"></i> <?php echo $result['phone'];?> </strong>  </p>
+							  <span class="title" ><?php echo $result['name'];?></span>
+							  <p style="white-space: nowrap;"><i class="fa fa-phone"></i> <?php echo $result['phone'];?></p>
+							  <?php if($result["isConnectedSale"]==1){?>
+							  <small><i class="fa fa-map-marker" aria-hidden="true"></i> <?php echo $result['projectName'];?></small><br />
+							  <p style="white-space: nowrap;"><i class="fa fa-map-o"></i> <?php echo $result['landAddress'];?></p>
+							  
+							  <?php }else{ ?>
+							  
 							  <p><strong>$<?php echo $result['from_price'];?>. </strong> <?php echo $tr->translate("TO");?> <strong>$<?php echo $result['to_price'];?></strong>  </p>
+							  <?php } ?>
 							  <p><strong></strong> <i class="fa fa-calendar"></i> <?php echo date("d/m/Y",strtotime($result['next_contact'])); echo '('.$total_late_day."ថ្ងៃ )";?></p>
-							  </p>
 							</div>
+						</a>
 					  </li>
 					  <?php }?>
 					   <?php }?>

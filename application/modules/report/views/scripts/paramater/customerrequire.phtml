@@ -48,7 +48,7 @@
 					<?php echo $frm->getElement("user");?>
 				</div>
 				<div class="col-md-3 col-sm-3 col-xs-12">
-					<button iconclass="dijitIconSearch" dojoType="dijit.form.Button"  type="submit" name="btn_search" ><?php echo $tr->translate("SEARCH");?></button>
+					<button class="button-class button-primary" iconclass="glyphicon glyphicon-search" dojoType="dijit.form.Button"  type="submit" name="btn_search" ><?php echo $tr->translate("SEARCH");?></button>
 				</div>
 				<div class="col-md-3 col-sm-3 col-xs-12">
 				</div>
@@ -109,10 +109,18 @@
 				    	 <tr class="hide" style="border:1px solid #000;">
 			                <td colspan="16" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
 			             </tr>
+						 <tr class="style" align="center" >
+							<td scope="col" rowspan="2"><?php echo $tr->translate("NUM");?></td>
+							<td scope="col" colspan="2"><?php echo $tr->translate("CUSTOMER_INFO");?></td>
+							<td scope="col" colspan="8"><?php echo $tr->translate("CUSTOMER_REQUIREMENT");?></td>
+							<td scope="col" colspan="2"><?php echo $tr->translate("SALE_INFO");?></td>
+							<td scope="col" rowspan="2"><?php echo $tr->translate("USER_NAME");?></td>
+						 </tr>
 				    	<tr class="style" align="center" >
-				        		<td scope="col"><?php echo $tr->translate("NUM");?></td>
+				        		
 					            <td scope="col"><?php echo $tr->translate("CUSTOMER_NAME");?></td>
 					            <td scope="col"><?php echo $tr->translate("PHONE");?></td>
+								
 					            <td scope="col"><?php echo $tr->translate("KNOW_BY");?></td>
 					            <td scope="col"><?php echo $tr->translate("FROM_PRICE");?></td>
 					            <td scope="col"><?php echo $tr->translate("TO_PRICE");?></td>
@@ -121,7 +129,9 @@
 					            <td scope="col"><?php echo $tr->translate("DESCRIPTION");?></td>
 					            <td scope="col"><?php echo $tr->translate("DATE");?></td>
 					            <td scope="col"><?php echo $tr->translate("STATUS_REQ");?></td>
-					            <td scope="col"><?php echo $tr->translate("USER_NAME");?></td>
+								
+					            <td scope="col"><?php echo $tr->translate("PROPERTY_CODE");?></td>
+					            <td scope="col"><?php echo $tr->translate("BUY_DATE");?></td>
 				         </tr>
 				         </thead>
 				       <?php  
@@ -139,6 +149,9 @@
 							 <td data-label="<?php echo $tr->translate("DESCRIPTION");?>" style="white-space: pre-line;">&nbsp;<?php echo $row['description'];?>&nbsp;</td>
 							 <td data-label="<?php echo $tr->translate("DATE");?>" style="white-space: nowrap;">&nbsp;<?php echo date("d M Y",strtotime($row['date']));?>&nbsp;</td>
 							 <td data-label="<?php echo $tr->translate("STATUS_REQ");?>" style="white-space: nowrap;">&nbsp;<?php echo $row['statusreq'];?>&nbsp;</td>
+							 <td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>" style="white-space: nowrap;">&nbsp;<?php echo $row['landAddress']." ".$row['landStreet'];?>&nbsp;</td>
+							 <td data-label="<?php echo $tr->translate("BUY_DATE");?>" align="center">&nbsp;<?php echo empty($row['buyDate']) ? "-" : date("d-M-Y",strtotime($row['buyDate']));?>&nbsp;</td>
+							 
 							 <td data-label="<?php echo $tr->translate("USER_NAME");?>" style="white-space: nowrap;">&nbsp;<?php echo $row['user_name'];?>&nbsp;</td>
 							</tr>
 						<?php }?>

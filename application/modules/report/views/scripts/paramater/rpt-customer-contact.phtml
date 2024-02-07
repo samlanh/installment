@@ -82,10 +82,10 @@
 					<table id="exportExcel" class="content-data" width="100%" border="1" bordercolor="black">  
 				    	<thead>
 				    	 <tr class="hide" style="border:1px solid #000;">
-			                <td colspan="5" style="border:1px solid #fff;"></td>
+			                <td colspan="7" style="border:1px solid #fff;"></td>
 			             </tr>
 						 <tr >
-			                <td colspan="5" style="border:1px solid #fff; border-bottom:1px solid #000;">
+			                <td colspan="7" style="border:1px solid #fff; border-bottom:1px solid #000;">
 								<ul  class="listData" style="list-style: none;">
 									<li>
 										<span class="bold" style=" display: inline-block; min-width: 100px;"><?php echo $tr->translate("NAME");?></span> <span style=" display: inline-block; min-width: 100px;"> : <?php echo $this->row['name'];?></span> 
@@ -98,21 +98,31 @@
 								
 							</td>
 			             </tr>
+						 <tr class="style" align="center" >
+							<td scope="col" rowspan="2"><?php echo $tr->translate("NUM");?></td>
+							<td scope="col" colspan="4"><?php echo $tr->translate("CONTACT_INFO");?></td>
+							<td scope="col" colspan="2"><?php echo $tr->translate("SALE_INFO");?></td>
+						 </tr>
 				    	<tr class="style" align="center" >
-				        		<td><?php echo $tr->translate("NUM");?></td>
+				        		
 					            <td ><?php echo $tr->translate("CONTACT_DATE");?></td>
 					            <td style="width: 150px;"><?php echo $tr->translate("FEEDBACK");?></td>
 					            <td ><?php echo $tr->translate("NEXT_DATE_CONTACT");?></td>
 					            <td ><?php echo $tr->translate("CONTACT_BY");?></td>
+								
+								<td scope="col"><?php echo $tr->translate("PROPERTY_CODE");?></td>
+					            <td scope="col"><?php echo $tr->translate("BUY_DATE");?></td>
 				         </tr>
 				         </thead>
 				       <?php foreach ($this->allContact as $key => $record){?>
 						   <tr style="font-size: 12px; font-family: 'Times New Roman','Khmer OS Battambang'" align="left" class="hover">
-								<td align="center">&nbsp;<?php echo $key+1;?>&nbsp;</td>
-								<td align="center">&nbsp;<?php echo date("d/m/Y",strtotime($record['contact_date']))?>&nbsp;</td>
-								<td align="left">&nbsp;<?php echo $record['feedback'];?>&nbsp;</td>
-								<td align="center">&nbsp;<?php echo date("d/m/Y",strtotime($record['next_contact']))?>&nbsp;</td>
-								<td align="center">&nbsp;<?php echo $record['user_contact_name'];?>&nbsp;</td>
+								<td align="center"><?php echo $key+1;?></td>
+								<td align="center"><?php echo date("d/m/Y",strtotime($record['contact_date']))?></td>
+								<td align="left"><?php echo $record['feedback'];?></td>
+								<td align="center"><?php echo date("d/m/Y",strtotime($record['next_contact']))?></td>
+								<td align="center"><?php echo $record['user_contact_name'];?></td>
+								<td align="center"><?php echo empty($record['landAddress']) ? "-" : $record['landAddress']." ".$record['landStreet'];?></td>
+								<td align="center"><?php echo empty($record['buyDate']) ? "-" : date("d-M-Y",strtotime($record['buyDate']));?></td>
 							</tr>
 						<?php }?>
 				    </table>

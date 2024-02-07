@@ -33,7 +33,7 @@ class Group_CustomerController extends Zend_Controller_Action {
 			}
 			$rs_rows= $dbc->getAllInfo($search);
 			$list = new Application_Form_Frmtable();
-			$collumns = array("CUSTOMER_NAME","PHONE","KNOW_BY","DATE","FROM_PRICE","TO_PRICE","REQUIREDMENT","TYPE","DESCRIPTION","STATUS_REQ","BY_USER","STATUS");
+			$collumns = array("CUSTOMER_NAME","PHONE","KNOW_BY","DATE","FROM_PRICE","TO_PRICE","REQUIREDMENT","TYPE","DESCRIPTION","SALE_INFO","STATUS_REQ","BY_USER","STATUS");
 			$link=array(
 					'module'=>'group','controller'=>'customer','action'=>'edit',
 			);
@@ -145,9 +145,8 @@ class Group_CustomerController extends Zend_Controller_Action {
 					$dbgb->reloadPageExpireSession();
 					exit();
 				}
-					
 				$row = $db->addContactHistory($_data);
-				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/group/customer");
+				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/group/customer/index",2);
 				exit();
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");

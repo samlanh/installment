@@ -7,6 +7,21 @@ Class Group_Form_FrmCustomer extends Zend_Dojo_Form {
 	}
 	public function FrmAddCustomer($data=null){		
 		
+		
+		$db = new Application_Model_DbTable_DbGlobal();
+		
+		$_branchId = new Zend_Dojo_Form_Element_FilteringSelect('branchId');
+		$_branchId->setAttribs(array(
+			'dojoType'=>'dijit.form.FilteringSelect',
+			'required' =>'true',
+			'class'=>'fullside',
+			'autoComplete'=>'false',
+			'queryExpr'=>'*${0}*',
+			'onchange'=>'filterByBranch();'
+		));
+		$options = $db->getAllBranchName(null,1);
+		$_branchId->setMultiOptions($options);
+		
 		$_name = new Zend_Dojo_Form_Element_TextBox('name');
 		$_name->setAttribs(array(
 				'dojoType'=>'dijit.form.ValidationTextBox',
@@ -103,7 +118,21 @@ Class Group_Form_FrmCustomer extends Zend_Dojo_Form {
 			$statusreq->setValue($data['statusreq']);
 			$know_by->setValue($data['know_by']);
 		}
-		$this->addElements(array($know_by,$_name,$_phone,$_date,$_from_price,$_to_price,$_requirement,$_type,$_description,$statusreq));
+		$this->addElements(
+			array(
+				$know_by
+				,$_name
+				,$_phone
+				,$_date
+				,$_from_price
+				,$_to_price
+				,$_requirement
+				,$_type
+				,$_description
+				,$statusreq
+				,$_branchId
+			)
+		);
 		return $this;
 		
 	}	

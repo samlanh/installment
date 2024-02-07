@@ -13,12 +13,12 @@
 	dojo.require("dijit.form.DateTextBox");
 </script>
 <meta charset="utf-8">
-<title><?php echo $tr->translate("CONTACT_HISTORY");?></title>
+<title><?php echo $tr->translate("REPORT_DAILY_CONTACT");?></title>
 <div style="min-height:26cm; margin:0 auto; padding:0.5cm 0.5cm 0cm 0.5cm">		
 	<div class="card-box">
        	<div class="col-sm-12 border-botom">
 	   		<div class="col-sm-8 pd-0">
-	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('CONTACT_HISTORY');?></h4>
+	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('REPORT_DAILY_CONTACT');?></h4>
     		</div>
     		<div class="col-sm-4 text-right">
     		</div>
@@ -87,6 +87,9 @@
 							line-height: 22px;
 							width: 100%;
 						}
+						table.content-data td {
+							padding: 0 2px;
+						}
 						table.content-data thead tr.style {
 						   line-height: 25px; font-size:13px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
 							background: #c1d0f3;
@@ -100,50 +103,68 @@
 						table.tb-footer tr{
 						 line-height: 14px;  padding:2px 0px; height: 25px;
 						}
+						
+						span.noteValue{
+							line-height: 18px;
+							white-space: pre-wrap !important;
+							max-width: 200px;
+							width: 200px;
+							padding: 5px;
+							display: block;
+							font-size: 11px;
+							overflow-wrap: break-word;
+							text-align: left;
+							vertical-align: top;
+						}
 					</style>
 					<div class="divFooter">
 			        	<?php echo $this->headerReport;?>
 			         </div>
 					<table id="exportExcel" class="content-data" width="100%" border="1" bordercolor="black">  
 				    	<thead>
-				    	 <tr class="hide" style="border:1px solid #000;">
-			                <td colspan="16" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
-			             </tr>
-						 <tr class="style" align="center" >
-							<td rowspan="2"><?php echo $tr->translate("NUM");?></td>
-							<td colspan="3"><?php echo $tr->translate("CUSTOMER_INFO");?></td>
-							<td colspan="5"><?php echo $tr->translate("CONTACT_HISTORY");?></td>
-						 </tr>
-				    	<tr class="style" align="center" >
-				        		
-					            <td ><?php echo $tr->translate("CUSTOMER_NAME");?></td>
-					            <td ><?php echo $tr->translate("PHONE");?></td>
-					            <td ><?php echo $tr->translate("KNOW_BY");?></td>
+							 <tr class="hide" style="border:1px solid #000;">
+								<td colspan="16" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
+							 </tr>
+							 <tr class="style" align="center" >
+								<td scope="col" rowspan="2"><?php echo $tr->translate("NUM");?></td>
+								<td scope="col" colspan="3"><?php echo $tr->translate("CUSTOMER_INFO");?></td>
+								<td scope="col" colspan="5"><?php echo $tr->translate("CONTACT_HISTORY");?></td>
+								<td scope="col" colspan="2"><?php echo $tr->translate("SALE_INFO");?></td>
+							 </tr>
+							<tr class="style" align="center" >
+								<td scope="col"><?php echo $tr->translate("CUSTOMER_NAME");?></td>
+								<td scope="col"><?php echo $tr->translate("PHONE");?></td>
+								<td scope="col"><?php echo $tr->translate("KNOW_BY");?></td>
 								
+								<td scope="col" ><?php echo $tr->translate("CONTACT_DATE");?></td>
+								<td scope="col" ><?php echo $tr->translate("PROCCESS");?></td>
+								<td scope="col" style="width: 150px;"><?php echo $tr->translate("FEEDBACK");?></td>
+								<td scope="col" ><?php echo $tr->translate("NEXT_DATE_CONTACT");?></td>
+								<td scope="col" ><?php echo $tr->translate("CONTACT_BY");?></td>
 								
-					            <td ><?php echo $tr->translate("CONTACT_DATE");?></td>
-					            <td ><?php echo $tr->translate("PROCCESS");?></td>
-								<td style="width: 150px;"><?php echo $tr->translate("FEEDBACK");?></td>
-					            <td ><?php echo $tr->translate("NEXT_DATE_CONTACT");?></td>
-					            <td ><?php echo $tr->translate("CONTACT_BY");?></td>
-				         </tr>
+								<td scope="col"><?php echo $tr->translate("PROPERTY_CODE");?></td>
+								<td scope="col"><?php echo $tr->translate("BUY_DATE");?></td>
+							 </tr>
 				         </thead>
 				       <?php  
 				       	   if(!empty($this->row))foreach($this->row as $key =>$row){
 						  ?>
 						   <tr style="font-size: 12px; font-family: 'Times New Roman','Khmer OS Battambang'" align="left" class="hover">
-						     <td align="center">&nbsp;<?php echo $key+1; ?>&nbsp;</td>
-						     <td align="center">&nbsp;<?php echo $row['name']?>&nbsp;</td>
-							 <td>&nbsp;<?php echo $row['phone'];?>&nbsp;</td>
-							 <td>&nbsp;<?php echo $row['know_by'];?>&nbsp;</td>
+								<td align="center"><?php echo $key+1; ?></td>
+								<td align="center"><?php echo $row['name']?></td>
+								<td><?php echo $row['phone'];?></td>
+								<td><?php echo $row['know_by'];?></td>
 							 
 							 
-							 <td align="center" style="white-space: nowrap;">&nbsp;<?php echo date("d-M-Y",strtotime($row['contact_date']));?>&nbsp;</td>
+								<td align="center" style="white-space: nowrap;"><?php echo date("d-M-Y",strtotime($row['contact_date']));?></td>
+								
+								<td style="white-space: nowrap;"><?php echo $row['proccess'];?></td>
+								<td style="white-space: nowrap;"><span class="noteValue"><?php echo $row['feedback'];?></span></td>
+								<td align="center" style="white-space: nowrap;"><?php echo date("d-M-Y",strtotime($row['next_contact']));?></td>
+								<td style="white-space: nowrap;"><?php echo $row['user_contact_name'];?></td>
 							 
-							 <td style="white-space: nowrap;">&nbsp;<?php echo $row['proccess'];?>&nbsp;</td>
-							 <td style="white-space: nowrap;">&nbsp;<?php echo $row['feedback'];?>&nbsp;</td>
-							 <td align="center" style="white-space: nowrap;">&nbsp;<?php echo date("d-M-Y",strtotime($row['next_contact']));?>&nbsp;</td>
-							 <td style="white-space: nowrap;">&nbsp;<?php echo $row['user_contact_name'];?>&nbsp;</td>
+								<td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>" align="center" style="white-space: nowrap;"><?php echo empty($row['landAddress']) ? "-" : $row['landAddress']." ".$row['landStreet'];?></td>
+								<td data-label="<?php echo $tr->translate("BUY_DATE");?>" align="center"><?php echo empty($row['buyDate']) ? "-" : date("d-M-Y",strtotime($row['buyDate']));?></td>
 							</tr>
 						<?php }?>
 				    </table>
@@ -160,7 +181,7 @@ require(["dojo/ready"], function(ready){
 	ready(function(){
 		 getBranchInfo();
 		 document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
-		 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("CONTACT_HISTORY");?>';
+		 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("REPORT_DAILY_CONTACT");?>';
 		 document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date("d-M-Y"); }else{ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date("d-M-Y",strtotime($this->search['end_date'])); }?>';
 	});
 	

@@ -654,7 +654,15 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   }
   function getAllUserGlobal(){
   	$db=$this->getAdapter();  	 
-  	$sql="SELECT id,first_name AS by_user,first_name AS name FROM `rms_users` WHERE active=1 ORDER BY id DESC ";
+  	$sql="SELECT 
+		id
+		,CONCAT(COALESCE(first_name,''),' ',COALESCE(last_name,'')) AS by_user
+		,CONCAT(COALESCE(first_name,''),' ',COALESCE(last_name,'')) AS name 
+	FROM 
+		`rms_users` 
+	WHERE active=1 
+		AND user_name !='system'
+	ORDER BY id DESC ";
   	return $db->fetchAll($sql);
   }
  
@@ -1813,12 +1821,29 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		$day = 1;
 		$end_date = date('Y-m-d',strtotime(" +$day day"));
 		
-		$sql="SELECT c.*,
-				(SELECT CONCAT(last_name,' ',first_name) FROM rms_users WHERE c.user_contact=id LIMIT 1 ) AS user_contact_name,
-				name, phone,
-				(SELECT title FROM `rms_know_by` WHERE rms_know_by.id=know_by LIMIT 1) as know_by,
-				 from_price,to_price,requirement,type,description,	
-				statusreq
+		$sql="SELECT 
+				c.*
+				,(SELECT CONCAT(last_name,' ',first_name) FROM rms_users WHERE c.user_contact=id LIMIT 1 ) AS user_contact_name
+				,ct.name
+				,ct.phone
+				,(SELECT title FROM `rms_know_by` WHERE rms_know_by.id=know_by LIMIT 1) as know_by
+				,ct.from_price
+				,ct.to_price
+				,ct.requirement
+				,ct.type
+				,ct.description
+				,ct.statusreq
+				,ct.isConnectedSale
+				,(SELECT pro.project_name FROM ln_project AS pro WHERE pro.br_id = ct.branchId LIMIT 1 ) AS projectName
+				,(SELECT s.sale_number FROM ln_sale AS s WHERE s.id = ct.saleId LIMIT 1 ) AS saleNumber
+				,(SELECT crm.date_payment FROM ln_client_receipt_money AS crm WHERE crm.sale_id = ct.saleId AND crm.total_payment > 0 ORDER BY crm.id DESC LIMIT 1 ) AS lastPaidDate
+				
+				,(SELECT c.client_number FROM ln_client AS c WHERE c.client_id = ct.clientId LIMIT 1 ) AS clientCode
+				,(SELECT c.name_kh FROM ln_client AS c WHERE c.client_id = ct.clientId LIMIT 1 ) AS clientName
+				,(SELECT c.phone FROM ln_client AS c WHERE c.client_id = ct.clientId LIMIT 1 ) AS clientPhone
+				
+				,(SELECT p.land_address FROM ln_properties AS p WHERE p.id = ct.propertyId LIMIT 1 ) AS landAddress
+				,(SELECT p.street FROM ln_properties AS p WHERE p.id = ct.propertyId LIMIT 1 ) AS landStreet
 			
 		";
 		$sql.=", CASE

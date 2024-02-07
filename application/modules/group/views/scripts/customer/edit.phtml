@@ -39,19 +39,12 @@
 								<div class="col-md-12 col-sm-12 col-xs-12"> 
 									<div class="d-flex"> 
 										<div class="settings-main-icon ">
-											<i class="glyphicon glyphicon-list-alt" aria-hidden="true"></i>
+											<i class="glyphicon glyphicon-user" aria-hidden="true"></i>
 										</div> 
 										<div class="col-md-10 col-sm-10 col-xs-12"> 
-											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('CUSTOMER_REQUIREMENT')?> </p>
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('CUSTOMER_INFO')?> </p>
 											
 										</div> 
-									</div>
-									<div class="form-group">
-									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("DATE");?>
-									   </label>
-									   <div class="col-md-7 col-sm-7 col-xs-12">
-											<?php  echo $frm->getElement('date');?>
-									   </div>
 									</div>
 									<div class="form-group">
 									   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" ><strong><?php echo $tr->translate("CUSTOMER_NAME");?>*</strong>  :
@@ -67,6 +60,48 @@
 											<?php  echo $frm->getElement('phone');?>
 									   </div>
 									</div>
+									
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="glyphicon glyphicon-tasks" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('SALE_INFO')?> </p>
+											
+										</div> 
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PROJECT_NAME");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm->getElement('branchId');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PROPERTY_CODE");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<input id="saleId" />
+									   </div>
+									</div>
+									
+									<div class="d-flex"> 
+										<div class="settings-main-icon ">
+											<i class="glyphicon glyphicon-list-alt" aria-hidden="true"></i>
+										</div> 
+										<div class="col-md-10 col-sm-10 col-xs-12"> 
+											<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate('CUSTOMER_REQUIREMENT')?> </p>
+											
+										</div> 
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("DATE");?>
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm->getElement('date');?>
+									   </div>
+									</div>
+									
 									<div class="form-group">
 									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("KNOW_BY");?> :
 									   </label>
@@ -213,6 +248,28 @@ table.history-record tbody tr td {
 	</div>
 </div>
 <script type="text/javascript">
+
+require(["dojo/ready"], function(ready){
+	new dijit.form.FilteringSelect({
+			autoComplete: false,
+			queryExpr: "*${0}*",		           
+			name: "saleId",
+			placeHolder:'<?php echo $tr->translate('PROPERTY_CODE');?>',
+			id: "saleId",
+			searchAttr: "name",
+			class: 'fullside',
+			required:false,
+			onChange: function() {
+				saleId = dijit.byId('saleId').get('value');
+				if(saleId==-1){
+				}else{
+					getSaleInfomation();
+				}
+		}
+	}, "saleId");
+	
+});
+
 function showstatusreq(){
 	statusreq = dijit.byId('statusreq').get('value');
 	if(statusreq==''){
@@ -239,4 +296,49 @@ function addNewstatusreq(){
 	}
 }
 
+function filterByBranch(){
+	getAllPropertyBranch();
+}
+var urlGetSaleNumber = "<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'get-sale-number')); ?>";
+function getAllPropertyBranch(){
+	dijit.byId('saleId').reset();
+	saleStore  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode(array()));?> );
+	dijit.byId('saleId').set('store', saleStore);
+	
+	branchId = dijit.byId('branchId').get('value');
+	if(branchId== 0 || branchId==-1){
+		return false;
+	}
+	dojo.xhrPost({
+		url: urlGetSaleNumber,	
+		content:{ 
+		    'branch_id':branchId,
+		},		    
+		handleAs:"json",
+		load: function(data) {
+			saleStore  = getDataStorefromJSON('id','name', data);		
+		    dijit.byId('saleId').set('store', saleStore);
+			<?php if(!empty($this->row["saleId"])){?>
+			dijit.byId('saleId').set('value', '<?php echo $this->row["saleId"]; ?>');
+			<?php } ?>
+		},
+		error: function(err) {
+		}
+	});
+} 
+var urlGetSaleInfo = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getsaleinfo')); ?>';
+function getSaleInfomation(){
+	dojo.xhrPost({
+		url: urlGetSaleInfo,	
+		content:{ 
+		    'sale_id': dijit.byId('saleId').get('value')
+		},		    
+		handleAs:"json",
+		load: function(data) {
+			dijit.byId('phone').attr('value',data.customerPhone);
+		},
+		error: function(err) {
+		}
+	});
+}
 </script>

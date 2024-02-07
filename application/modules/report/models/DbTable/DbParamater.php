@@ -911,33 +911,49 @@ class Report_Model_DbTable_DbParamater extends Zend_Db_Table_Abstract
     	}
     	function getCustomerRequirement($search=null){
     		$db = $this->getAdapter();
-    		$sql="SELECT c.*,
-	    			(SELECT title FROM `rms_know_by` WHERE rms_know_by.id=c.know_by LIMIT 1) as know_by,			
-					(SELECT  first_name FROM rms_users WHERE id = c.user_id LIMIT 1 ) AS user_name,
-				STATUS FROM in_customer AS c WHERE c.`status`=1 ";
+    		$sql="
+				SELECT 
+					ct.*
+	    			,(SELECT title FROM `rms_know_by` WHERE rms_know_by.id=ct.know_by LIMIT 1) as know_by			
+					,(SELECT  first_name FROM rms_users WHERE id = ct.user_id LIMIT 1 ) AS user_name
+					,status 
+					
+					,(SELECT pro.project_name FROM ln_project AS pro WHERE pro.br_id = ct.branchId LIMIT 1 ) AS projectName
+					,(SELECT s.sale_number FROM ln_sale AS s WHERE s.id = ct.saleId LIMIT 1 ) AS saleNumber
+					,(SELECT s.buy_date FROM ln_sale AS s WHERE s.id = ct.saleId LIMIT 1 ) AS buyDate
+					,(SELECT crm.date_payment FROM ln_client_receipt_money AS crm WHERE crm.sale_id = ct.saleId AND crm.total_payment > 0 ORDER BY crm.id DESC LIMIT 1 ) AS lastPaidDate
+					
+					,(SELECT c.client_number FROM ln_client AS c WHERE c.client_id = ct.clientId LIMIT 1 ) AS clientCode
+					,(SELECT c.name_kh FROM ln_client AS c WHERE c.client_id = ct.clientId LIMIT 1 ) AS clientName
+					,(SELECT c.phone FROM ln_client AS c WHERE c.client_id = ct.clientId LIMIT 1 ) AS clientPhone
+					
+					,(SELECT p.land_address FROM ln_properties AS p WHERE p.id = ct.propertyId LIMIT 1 ) AS landAddress
+					,(SELECT p.street FROM ln_properties AS p WHERE p.id = ct.propertyId LIMIT 1 ) AS landStreet
+			FROM in_customer AS ct 
+			WHERE ct.`status`=1 ";
     		$where ="";
-    		$from_date =(empty($search['start_date']))? '1': " c.`date` >= '".$search['start_date']." 00:00:00'";
-    		$to_date = (empty($search['end_date']))? '1': " c.`date` <= '".$search['end_date']." 23:59:59'";
+    		$from_date =(empty($search['start_date']))? '1': " ct.`date` >= '".$search['start_date']." 00:00:00'";
+    		$to_date = (empty($search['end_date']))? '1': " ct.`date` <= '".$search['end_date']." 23:59:59'";
     		$where.= " AND ".$from_date." AND ".$to_date;
     		if(!empty($search['adv_search'])){
     			$s_where = array();
     			$s_search = addslashes(trim($search['adv_search']));
-    			$s_where[] =" c.`name` LIKE '%{$s_search}%'";
-    			$s_where[]=" c.`phone` LIKE '%{$s_search}%'";
-    			$s_where[]=" c.`from_price` LIKE '%{$s_search}%'";
-    			$s_where[]=" c.`to_price` LIKE '%{$s_search}%'";
-    			$s_where[]=" c.`type` LIKE '%{$s_search}%'";
-    			$s_where[]=" (SELECT  first_name FROM rms_users WHERE id = c.user_id LIMIT 1 ) LIKE '%{$s_search}%'";
+    			$s_where[] =" ct.`name` LIKE '%{$s_search}%'";
+    			$s_where[]=" ct.`phone` LIKE '%{$s_search}%'";
+    			$s_where[]=" ct.`from_price` LIKE '%{$s_search}%'";
+    			$s_where[]=" ct.`to_price` LIKE '%{$s_search}%'";
+    			$s_where[]=" ct.`type` LIKE '%{$s_search}%'";
+    			$s_where[]=" (SELECT  first_name FROM rms_users WHERE id = ct.user_id LIMIT 1 ) LIKE '%{$s_search}%'";
     			$where .=' AND ( '.implode(' OR ',$s_where).')';
     		}
     		if(!empty($search['user'])){
-    			$where.= " AND c.user_id = ".$search['user'];
+    			$where.= " AND ct.user_id = ".$search['user'];
     		}
     		if(!empty($search['statusreq'])){
-    			$where.= " AND statusreq = '".$search['statusreq']."'";
+    			$where.= " AND ct.statusreq = '".$search['statusreq']."'";
     		}
     		if($search['know_by']>0){
-    			$where.= " AND know_by = ".$search['know_by'];
+    			$where.= " AND ct.know_by = ".$search['know_by'];
     		}
     		
     		$session_user=new Zend_Session_Namespace(SYSTEM_SES);
@@ -946,15 +962,15 @@ class Report_Model_DbTable_DbParamater extends Zend_Db_Table_Abstract
     		$db_user=new Application_Model_DbTable_DbUsers();
     		$user_info = $db_user->getUserInfo($userid);
     		if (!empty($user_info['staff_id'])){
-    			$where.= " AND user_id = ".$userid;
+    			$where.= " AND ct.user_id = ".$userid;
     		}
     		
     		$dbgb = new Application_Model_DbTable_DbGlobal();
     		$userinfo = $dbgb->getUserInfo();
     		if($userinfo['level']!=1 AND $userinfo['level']!=2){
-    			$where.= " AND user_id = ".$userinfo['user_id'];
+    			$where.= " AND ct.user_id = ".$userinfo['user_id'];
     		}
-    		$where.=" ORDER BY c.id DESC ";
+    		$where.=" ORDER BY ct.id DESC ";
     		return $db->fetchAll($sql.$where);
     	}
     	
@@ -1079,20 +1095,47 @@ class Report_Model_DbTable_DbParamater extends Zend_Db_Table_Abstract
 	}
 	public function AllHistoryContact($crm_id){
 		$db = $this->getAdapter();
-		$sql="SELECT c.*,
-		(SELECT CONCAT(last_name,' ',first_name) FROM rms_users WHERE c.user_contact=id LIMIT 1 ) AS user_contact_name
-		FROM `ln_history_contact` AS c WHERE customer_id = $crm_id ORDER BY c.id DESC";
+		$sql="
+		SELECT 
+			hc.*
+			,(SELECT CONCAT(last_name,' ',first_name) FROM rms_users WHERE hc.user_contact=id LIMIT 1 ) AS user_contact_name
+			,s.sale_number AS saleNumber
+			,s.buy_date AS buyDate
+			,(SELECT p.land_address FROM ln_properties AS p WHERE p.id = s.house_id LIMIT 1 ) AS landAddress
+			,(SELECT p.street FROM ln_properties AS p WHERE p.id = s.house_id LIMIT 1 ) AS landStreet
+		FROM 
+			`ln_history_contact` AS hc 
+			LEFT JOIN ln_sale AS s ON s.id = hc.saleId
+		WHERE customer_id = $crm_id 
+		ORDER BY hc.id DESC";
 		return $db->fetchAll($sql);
 	}
 	public function AllHistoryContactList($search){
 		$db = $this->getAdapter();
 		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
-		$sql="SELECT c.*,
-				(SELECT CONCAT(last_name,' ',first_name) FROM rms_users WHERE c.user_contact=id LIMIT 1 ) AS user_contact_name,
-				name, phone,
-				(SELECT title FROM `rms_know_by` WHERE rms_know_by.id=know_by LIMIT 1) as know_by,
-				 from_price,to_price,requirement,type,description,	
-				statusreq
+		$sql="SELECT 
+				c.*
+				,(SELECT CONCAT(last_name,' ',first_name) FROM rms_users WHERE c.user_contact=id LIMIT 1 ) AS user_contact_name
+				,name, phone
+				,(SELECT title FROM `rms_know_by` WHERE rms_know_by.id=know_by LIMIT 1) as know_by
+				, from_price
+				,to_price
+				,requirement
+				,type
+				,description	
+				,statusreq
+				
+				,(SELECT pro.project_name FROM ln_project AS pro WHERE pro.br_id = ct.branchId LIMIT 1 ) AS projectName
+				,(SELECT s.sale_number FROM ln_sale AS s WHERE s.id = ct.saleId LIMIT 1 ) AS saleNumber
+				,(SELECT s.buy_date FROM ln_sale AS s WHERE s.id = ct.saleId LIMIT 1 ) AS buyDate
+				,(SELECT crm.date_payment FROM ln_client_receipt_money AS crm WHERE crm.sale_id = ct.saleId AND crm.total_payment > 0 ORDER BY crm.id DESC LIMIT 1 ) AS lastPaidDate
+				
+				,(SELECT c.client_number FROM ln_client AS c WHERE c.client_id = ct.clientId LIMIT 1 ) AS clientCode
+				,(SELECT c.name_kh FROM ln_client AS c WHERE c.client_id = ct.clientId LIMIT 1 ) AS clientName
+				,(SELECT c.phone FROM ln_client AS c WHERE c.client_id = ct.clientId LIMIT 1 ) AS clientPhone
+				
+				,(SELECT p.land_address FROM ln_properties AS p WHERE p.id = ct.propertyId LIMIT 1 ) AS landAddress
+				,(SELECT p.street FROM ln_properties AS p WHERE p.id = ct.propertyId LIMIT 1 ) AS landStreet
 			
 		";
 		$sql.=", CASE
@@ -1441,43 +1484,50 @@ class Report_Model_DbTable_DbParamater extends Zend_Db_Table_Abstract
     }
 	
 	function getUserActivity($search=null){
-    		$db = $this->getAdapter();
-    		$sql="SELECT 
-					u.*
-				 FROM 
-					`rns_user_activity` AS u
-				WHERE 1 ";
-    		$where ="";
-    		
-    		$dbp = new Application_Model_DbTable_DbGlobal();
-    		$where.=$dbp->getAccessPermission("s.`branch_id`");
-    		
-    		$from_date =(empty($search['start_date']))? '1': " u.`date_time` >= '".$search['start_date']." 00:00:00'";
-    		$to_date = (empty($search['end_date']))? '1': " u.`date_time` <= '".$search['end_date']." 23:59:59'";
-    		$where.= " AND ".$from_date." AND ".$to_date;
-    		
-    		//if($search['branch_id']>0){
-    		//	$where.= " AND u.`branch_id` = ".$search['branch_id'];
-    		//}
-    		
-    		if(!empty($search['adv_search'])){
-    			$s_where = array();
-				$s_search = str_replace(' ', '', addslashes(trim($search['adv_search'])));
-    			$s_where[] =" REPLACE(u.`description`,' ','') LIKE '%{$s_search}%'";
-    			$where .=' AND ( '.implode(' OR ',$s_where).')';
-    		}
-			if(!empty($search['keyword'])){
-    			$s_where = array();
-				$s_search = str_replace(' ', '', addslashes(trim($search['keyword'])));
-    			$s_where[] =" REPLACE(u.`description`,' ','') LIKE '%{$s_search}%'";
-    			$where .=' AND ( '.implode(' OR ',$s_where).')';
-    		}
-    		if($search['user_id']>0){
-    			$where.= " AND u.`user_id` = ".$search['user_id'];
-    		}
-    		$groupby =" GROUP BY u.`id` DESC";
-    		return $db->fetchAll($sql.$where.$groupby);
-    	}
+		$db = $this->getAdapter();
+		$sql="
+		
+		SELECT 
+			uac.* 
+			,CONCAT(COALESCE(u.first_name,''),' ',COALESCE(u.last_name,'')) AS userName
+		FROM 
+			`rns_user_activity` AS uac,
+			`rms_users` AS u
+		WHERE u.`id` = uac.`user_id`
+			AND u.`user_name` !='system'
+		
+		";
+		$where ="";
+		
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$where.=$dbp->getAccessPermission("s.`branch_id`");
+		
+		$from_date =(empty($search['start_date']))? '1': " uac.`date_time` >= '".$search['start_date']." 00:00:00'";
+		$to_date = (empty($search['end_date']))? '1': " uac.`date_time` <= '".$search['end_date']." 23:59:59'";
+		$where.= " AND ".$from_date." AND ".$to_date;
+		if(!empty($search['adv_search'])){
+			$s_where = array();
+			$s_search = str_replace(' ', '', addslashes(trim($search['adv_search'])));
+			$s_where[] =" REPLACE(uac.`description`,' ','') LIKE '%{$s_search}%'";
+			$s_where[] =" REPLACE(uac.`user_name`,' ','') LIKE '%{$s_search}%'";
+			$s_where[]=" REPLACE(u.`user_name`,' ','') LIKE '%{$s_search}%'";
+			$s_where[]=" REPLACE(u.`first_name`,' ','') LIKE '%{$s_search}%'";
+			$s_where[]=" REPLACE(u.`last_name`,' ','') LIKE '%{$s_search}%'";
+		
+			$where .=' AND ( '.implode(' OR ',$s_where).')';
+		}
+		if(!empty($search['keyword'])){
+			$s_where = array();
+			$s_search = str_replace(' ', '', addslashes(trim($search['keyword'])));
+			$s_where[] =" REPLACE(uac.`description`,' ','') LIKE '%{$s_search}%'";
+			$where .=' AND ( '.implode(' OR ',$s_where).')';
+		}
+		if($search['user_id']>0){
+			$where.= " AND uac.`user_id` = ".$search['user_id'];
+		}
+		$groupby =" GROUP BY uac.`id` DESC";
+		return $db->fetchAll($sql.$where.$groupby);
+	}
 	
 	function getPurchasePaymentDetail($payment_id){
     	$db = $this->getAdapter();

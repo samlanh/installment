@@ -340,34 +340,34 @@ class Report_ParamaterController extends Zend_Controller_Action {
 	  $this->view->footerReport = $frmpopup->getFooterReport();
   }
   
-function rptContactListAction(){
+	function rptContactListAction(){
   
-	if($this->getRequest()->isPost()){
-		$formdata=$this->getRequest()->getPost();
-		$search = $formdata;
-	}else{
-		$search = array(
-			'adv_search' => '',
-			'status' => -1,		
-			'proccessSearch'=>-1,
-			'know_by'=>-1,			
-			'start_date'=> date('Y-m-d'),
-			'end_date'=>date('Y-m-d')								
-			);
-	}
-	$db  = new Report_Model_DbTable_DbParamater();
-	$row = $db->AllHistoryContactList($search);
-	$this->view->row = $row;
-  
-	$frm = new Application_Form_FrmAdvanceSearch();
-	$frm = $frm->AdvanceSearch();
-	Application_Model_Decorator::removeAllDecorator($frm);
-	$this->view->frm_search = $frm;
-	$this->view->search=$search;
-	
-	$frmpopup = new Application_Form_FrmPopupGlobal();
-	$this->view->footerReport = $frmpopup->getFooterReport();
-	$this->view->headerReport = $frmpopup->getLetterHeadReport();
+		if($this->getRequest()->isPost()){
+			$formdata=$this->getRequest()->getPost();
+			$search = $formdata;
+		}else{
+			$search = array(
+				'adv_search' => '',
+				'status' => -1,		
+				'proccessSearch'=>-1,
+				'know_by'=>-1,			
+				'start_date'=> date('Y-m-d'),
+				'end_date'=>date('Y-m-d')								
+				);
+		}
+		$db  = new Report_Model_DbTable_DbParamater();
+		$row = $db->AllHistoryContactList($search);
+		$this->view->row = $row;
+	  
+		$frm = new Application_Form_FrmAdvanceSearch();
+		$frm = $frm->AdvanceSearch();
+		Application_Model_Decorator::removeAllDecorator($frm);
+		$this->view->frm_search = $frm;
+		$this->view->search=$search;
+		
+		$frmpopup = new Application_Form_FrmPopupGlobal();
+		$this->view->footerReport = $frmpopup->getFooterReport();
+		$this->view->headerReport = $frmpopup->getLetterHeadReport();
   }
   
   function rptPropertyAction(){ 
@@ -495,4 +495,6 @@ function rptContactListAction(){
 		$frmpopup = new Application_Form_FrmPopupGlobal();
   		$this->view->footerReport = $frmpopup->getFooterReport();
 	}
+	
+	
 }

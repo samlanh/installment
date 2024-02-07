@@ -71,6 +71,7 @@ table.history-record tbody tr td {
 										<div class="col-md-9 col-sm-9 col-xs-12">
 											<?php echo $frm_items->getElement("contact_date");?>
 											<?php echo $frm_items->getElement("id");?>
+											<input dojoType="dijit.form.TextBox"  id="saleId" name="saleId" value="<?php echo $this->row['saleId'];?>" type="hidden">
 										</div>
 									 </div>
 									<div class="form-group">
@@ -128,6 +129,14 @@ table.history-record tbody tr td {
 											<span > :  <?php echo $this->row['requirement'];?></span></li>
 											<li><span style=" display: inline-block; min-width: 100px;"><?php echo $tr->translate("Amount Contacted");?></span> <span class="bold" > : <?php echo count($this->history);?></span></li>
 										</ul>
+										<?php if(!empty($this->row['isConnectedSale'])){?>
+										<ul style="list-style: none;">
+											<li><span class="bold" style=" display: inline-block; min-width: 100px;"><?php echo $tr->translate("SALE_INFO");?></span> </li>
+											<li><span style=" display: inline-block; min-width: 100px;"><?php echo $tr->translate("BRANCH_NAME");?></span> <span > : <?php echo $this->row['projectName'];?> </span></li>
+											<li><span style=" display: inline-block; min-width: 100px;"><?php echo $tr->translate("LAND_CODE");?></span> <span > : <?php echo $this->row['landAddress']." ".$this->row['landStreet'];?> </span></li>
+											<li><span style=" display: inline-block; min-width: 100px;"><?php echo $tr->translate("LAST_PAID_DATE");?></span> <span > : <span style="font-weight: bold;"><?php echo date("d-M-Y",strtotime($this->row['lastPaidDate']));?></span></span></li>
+										</ul>
+										<?php } ?>
 									</div>
 								</div>
 							</div>
