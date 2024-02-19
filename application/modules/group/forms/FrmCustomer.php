@@ -117,6 +117,7 @@ Class Group_Form_FrmCustomer extends Zend_Dojo_Form {
 			$_description->setValue($data['description']);
 			$statusreq->setValue($data['statusreq']);
 			$know_by->setValue($data['know_by']);
+			$_branchId->setValue($data['branchId']);
 		}
 		$this->addElements(
 			array(
