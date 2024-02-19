@@ -1371,7 +1371,7 @@ class Report_Model_DbTable_DbIncomeexpense extends Zend_Db_Table_Abstract
 		SELECT 
 			inc.* 
 			,inc.from_date 
-			,inc.next_date AS nextDate
+			,COALESCE((SELECT inc1.next_date FROM `ln_income` AS inc1 WHERE s.id = inc1.sale_id ORDER BY inc1.next_date DESC LIMIT 1 ),inc.next_date) AS nextDate
 			,inc.unit_price AS unitPrice
 			,(SELECT p.`project_name` FROM `ln_project` AS p WHERE p.`br_id` = inc.`branch_id` LIMIT 1) AS branchName
 			,(SELECT `c`.`phone` FROM `ln_client` `c` WHERE `c`.`client_id` = `s`.`client_id` LIMIT 1) AS `clientPhone`
@@ -1390,8 +1390,8 @@ class Report_Model_DbTable_DbIncomeexpense extends Zend_Db_Table_Abstract
 		";
 		
     	
-    	$from_date =(empty($search['start_date']))? '1': " inc.next_date <= '".$search['start_date']." 00:00:00'";
-    	$to_date = (empty($search['end_date']))? '1': " inc.next_date <= '".$search['end_date']." 23:59:59'";
+    	$from_date =(empty($search['start_date']))? '1': " COALESCE((SELECT inc1.next_date FROM `ln_income` AS inc1 WHERE s.id = inc1.sale_id ORDER BY inc1.next_date DESC LIMIT 1 ),inc.next_date) <= '".$search['start_date']." 00:00:00'";
+    	$to_date = (empty($search['end_date']))? '1': " COALESCE((SELECT inc1.next_date FROM `ln_income` AS inc1 WHERE s.id = inc1.sale_id ORDER BY inc1.next_date DESC LIMIT 1 ),inc.next_date) <= '".$search['end_date']." 23:59:59'";
     	$sql.= " AND ".$from_date." AND ".$to_date;
     	
     	$dbp = new Application_Model_DbTable_DbGlobal();

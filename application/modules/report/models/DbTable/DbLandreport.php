@@ -464,10 +464,12 @@ public function getAllOutstadingLoan($search=null){
       		$s_where = array();
       		$s_search = addslashes(trim($search['adv_search']));
       		$s_where[] = " `sl`.`sale_number`  LIKE '%{$s_search}%'";
-      		$s_where[] = " `l`.`land_code`  LIKE '%{$s_search}%'";
-      		$s_where[] = " `l`.`land_address`  LIKE '%{$s_search}%'";
+      		$s_where[] = " (SELECT `l`.`land_code` FROM `ln_properties` `l` WHERE `l`.`id` = `sl`.`house_id` LIMIT 1 )  LIKE '%{$s_search}%'";
+      		$s_where[] = " (SELECT `l`.`land_address` FROM `ln_properties` `l` WHERE `l`.`id` = `sl`.`house_id` LIMIT 1 )  LIKE '%{$s_search}%'";
+      		
       		$s_where[] = " `c`.`client_number` LIKE '%{$s_search}%'";
       		$s_where[] = " `c`.`name_en`  LIKE '%{$s_search}%'";
+      		$s_where[] = " `c`.`name_kh`  LIKE '%{$s_search}%'";
       		$s_where[] = " `crm`.`total_principal_permonthpaid` LIKE '%{$s_search}%'";
       		$s_where[] = " `crm`.`total_interest_permonth`  LIKE '%{$s_search}%'";
             $s_where[] = " (SELECT
