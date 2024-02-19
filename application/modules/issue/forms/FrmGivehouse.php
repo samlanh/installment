@@ -14,7 +14,10 @@ Class Issue_Form_FrmGivehouse extends Zend_Dojo_Form {
 			'dojoType'=>'dijit.form.FilteringSelect',
 			'class'=>'fullside',
 			'required' =>'true',
-			'onchange'=>'getSaleClie();'
+			'onchange'=>'getSaleClie();',
+			'autoComplete'=>'false',
+			'queryExpr'=> '*${0}*',
+			
 		));
 		$rows_branch = $db->getAllBranchName();
 		if(!empty($rows_branch))foreach($rows_branch AS $row){

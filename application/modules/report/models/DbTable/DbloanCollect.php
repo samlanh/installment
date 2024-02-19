@@ -76,14 +76,12 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
 		$sql.="";
     	$where = $statement['where'];
     	$where.="  AND `pd`.`is_completed` = 0 AND pd.last_optiontype=1 ";
-		
-    	
+		   	
     	$from_date =(empty($search['start_date']))? '1': " pd.date_payment <= '".$search['start_date']." 00:00:00'";
     	$to_date = (empty($search['end_date']))? '1': " pd.date_payment <= '".$search['end_date']." 23:59:59'";
     	$where.= " AND ".$from_date." AND ".$to_date;
     	$where.= " AND pd.ispay_bank=0";
     	
-    	$dbp = new Application_Model_DbTable_DbGlobal();
     	$where.=$dbp->getAccessPermission("s.branch_id");
     	
     	$order=" GROUP BY pd.sale_id ORDER BY pd.date_payment DESC ,pd.sale_id ASC, pd.id ASC";

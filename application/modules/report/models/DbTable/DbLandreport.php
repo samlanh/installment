@@ -140,18 +140,18 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
 		$sql.="
 			,
 			(SELECT COUNT(id) FROM `ln_saleschedule` WHERE sale_id=s.id LIMIT 1 ) AS times,
-      	(SELECT first_name FROM `rms_users` WHERE id=s.user_id LIMIT 1) AS user_name,
-      	(SELECT $str FROM `ln_view` WHERE key_code =s.payment_id AND type = 25 limit 1) AS paymenttype,
-      	(SELECT p.old_land_id FROM `ln_properties` AS p WHERE p.id = s.house_id LIMIT 1) AS old_land_id
+			(SELECT first_name FROM `rms_users` WHERE id=s.user_id LIMIT 1) AS user_name,
+			(SELECT $str FROM `ln_view` WHERE key_code =s.payment_id AND type = 25 limit 1) AS paymenttype,
+			(SELECT p.old_land_id FROM `ln_properties` AS p WHERE p.id = s.house_id LIMIT 1) AS old_land_id
 		";
-		$where = $statement['where'];
-		$where.=" AND s.payment_id=1 AND s.is_cancel=0 ";
-		$where.=$dbp->getAccessPermission("s.`branch_id`");
-		$to_date = (empty($search['end_date']))? '1': " s.end_line <= '".$search['end_date']." 23:59:59'";
-		$where.= " AND ".$to_date;
+			$where = $statement['where'];
+			$where.=" AND s.payment_id=1 AND s.is_cancel=0 ";
+			$where.=$dbp->getAccessPermission("s.`branch_id`");
+			$to_date = (empty($search['end_date']))? '1': " s.end_line <= '".$search['end_date']." 23:59:59'";
+			$where.= " AND ".$to_date;
 		
 		if(!empty($search['adv_search'])){
-		$s_where = array();
+		    $s_where = array();
 			$s_search = addslashes(trim($search['adv_search']));
 			$s_where[] = " s.receipt_no LIKE '%{$s_search}%'";
 			$s_where[] = " `p`.`land_code`  LIKE '%{$s_search}%'";
@@ -160,10 +160,10 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
 			$s_where[] = " `c`.`name_en`  LIKE '%{$s_search}%'";
 			$s_where[] = " `c`.`name_kh`  LIKE '%{$s_search}%'";
 			$s_where[] = " (SELECT
-			`ln_staff`.`co_khname`
-			FROM `ln_staff`
-			WHERE (`ln_staff`.`co_id` = `s`.`staff_id`)
-			LIMIT 1) LIKE '%{$s_search}%'";
+				`ln_staff`.`co_khname`
+				FROM `ln_staff`
+				WHERE (`ln_staff`.`co_id` = `s`.`staff_id`)
+				LIMIT 1) LIKE '%{$s_search}%'";
 			$s_where[] = " `s`.`price_sold` LIKE '%{$s_search}%'";
 			$s_where[] = " `s`.`comission` LIKE '%{$s_search}%'";
 			$s_where[] = " `s`.`total_duration` LIKE '%{$s_search}%'";
@@ -180,7 +180,7 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
 			$where.=" AND ( s.house_id = ".$search['land_id']." OR (SELECT p.old_land_id FROM `ln_properties` AS p WHERE p.id = s.house_id LIMIT 1) LIKE '%".$search['land_id']."%' )";
 		}
 		if($search['property_type']>0 AND $search['property_type']>0){
-				$where.=" AND p.property_type = ".$search['property_type'];
+			$where.=" AND p.property_type = ".$search['property_type'];
 		}
 		if($search['client_name']!='' AND $search['client_name']>0){
 			$where.=" AND `s`.`client_id` = ".$search['client_name'];
@@ -188,7 +188,6 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
 		$order = " ORDER BY s.id ASC,s.payment_id DESC ";
 	
 		return $db->fetchAll($sql.$where.$order);
-	
 	}
 
  function getAmountReceiveByLoanNumber($saleId,$condition){
