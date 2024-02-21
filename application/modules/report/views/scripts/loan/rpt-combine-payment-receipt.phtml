@@ -122,7 +122,12 @@
 				<td class="<?php echo $borderBt." ".$borderTop;?>" align="center">&nbsp;</td>
 				<td class="<?php echo $borderBt." ".$borderTop;?>" align="center">&nbsp;</td>
 			</tr>
+			
 			<?php } ?>
+			<tr>
+				<td colspan="3" align="center"><strong>$ <?php echo number_format($this->rs['totalPayment'],2); ?> <span id="amountAsKhChar"></span></strong></td>
+				<td >&nbsp;</td>
+			</tr>
 			</table>
 		</div>
 	</div>
@@ -194,7 +199,18 @@ function printSave(){
 	$( '#lb_noted' ).text( htmlString );
 	
 
-
+	aTotalPayment ='<?php echo ($this->rs['totalPayment']) ?>';
+	moneyKhmerTotalPayment=read_money_in_khmer(aTotalPayment);
+	
+	decimalMoneyKhmerTotalPayment='<?php echo substr(number_format($this->rs['totalPayment'],2),-2);?>';
+	
+	strCentTotalPayment = 'សេន';
+	if(decimalMoneyKhmerTotalPayment>0){stringTotalPayment='និង';}else{stringTotalPayment="";strCentTotalPayment='';}
+	lastNumberTotalPayment='<?php echo substr(number_format($this->rs['totalPayment'],2),-2);?>';
+	
+	if(lastNumberTotalPayment<=0){lastNumberTotalPayment='';}
+	moneyKhmerTotalPayment = moneyKhmerTotalPayment+" "+stringTotalPayment+" "+read_in_khmer_from_10_to_99(decimalMoneyKhmerTotalPayment)+''+read_in_khmer_from_0_to_9(lastNumberTotalPayment)+''+strCentTotalPayment;
+	dojo.byId('amountAsKhChar').innerHTML='('+moneyKhmerTotalPayment+" ដុល្លារអាមេរិក)";
 	
 }
 </script>

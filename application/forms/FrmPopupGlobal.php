@@ -3832,8 +3832,8 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 							<span class="dataInfo" >
 							- អតិថិជនឈ្មោះ <span id="lb_customer" class="valueData"></span>
 							ភេទ <span id="customerGender" class="customerGender"></span> 
-							'.$tr->translate("PROPERTY_CODE").' <span id="lb_hourseno" class="valueDataRow"></span> 
-							គម្រោង <span id="lbl_project" class="valueDataRow"></span>
+							
+							គម្រោង <strong id="lbl_project" class="valueDataRow"></strong>
 							</span>
 							<span class="dataInfo" >
 							-'.$tr->translate("PHONE").' <span id="lbl_phone" class="value"></span>
@@ -3861,7 +3861,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 						</td>
 					</tr>
 					<tr>
-						<td colspan="3" valign="top" height="70px">
+						<td colspan="3" valign="top" height="50px">
 							
 						</td>
 					</tr>
@@ -3899,44 +3899,11 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				</table>
 				<div style="display: none;">
 					
-					<span id="lb_descriptionall"></span>
 					
-					<label id="lbl_pricelabel" class="value" ></label>
-					
-					<span id="lb_amount"></span>
-					<span id="lbl_paidtimes"></span>
-					<span id="lb_interest"></span>
-					<span id="lb_penalty"></span>
-					<span id="lb_extrapayment"></span>
-					<span id="lbl_totalpayment"></span>
-					<span id="lb_buydate1"></span>
-					<span id=lbl_paid_date1></span>
 					
 					'.$footer.'
 					
-					<span id="lbl_priceSoldBefore"></span>
-					<span id="lbl_discountAmount"></span>
-					<span id="lbl_discountPercent"></span>
-					<span id="lb_forCompletedAmount"></span>
-					<span id="lb_completedDate"></span>
-					<span id="lbl_discountOther"></span>
 					
-					<span id="lb_agreement_date"></span>
-					<span id="lb_pre_schedule_opt"></span>
-					<span id="lbl_pre_percent_payment"></span>
-					<span id="lbl_pre_amount_month"></span>
-					<span id="lbl_pre_percent_installment"></span>
-					<span id="lbl_pre_amount_year"></span>
-					<span id="lbl_pre_fix_payment"></span>
-					<span id="lable_chartotalreceipt_in_kh" ></span>
-					
-					<span id="lb_customercode"></span>
-					<span id="lbl_total_receive" class="valueDataRow"></span>
-					<span id="lable_chartotalreceipt" class="valueDataRow"></span>
-					<span id="lb_noted" class="valueDataRow"></span>
-					<span id="lbl_paymenttype" class="valueDataRow"></span>
-					<span id="lbl_cheque" class="valueDataRow"></span>
-					<input type="hidden" dojoType="dijit.form.TextBox" value="0" name="is_showinstallment" id="is_showinstallment" />
 				</div>
 			';
 			
