@@ -3471,5 +3471,80 @@ function updatePaymentStatus($data){
 		$db = $this->getAdapter();
     	return $db->fetchRow($sql);
     }
+	
+	
+	public function getPaymentCombineInfoById($id){
+		
+    	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+    	$db = $this->getAdapter();
+		$dbp = new Application_Model_DbTable_DbGlobal();
+    	$sql = "
+			SELECT 
+				cmb.*
+				,(SELECT project_name FROM `ln_project` WHERE br_id=cmb.`branchId` LIMIT 1) AS projectName
+				,(SELECT br_address FROM `ln_project` WHERE br_id=cmb.`branchId` LIMIT 1) AS projectLocation
+				,c.`name_kh` AS clientName
+				,c.`hname_kh` AS withClientName
+				,c.`phone` AS clientPhone
+				,c.`client_number`  AS clientNumber
+				,(SELECT v.`name_kh` FROM `ln_view` AS v WHERE ((v.`key_code` = c.`sex`) AND (v.`type` = 11))LIMIT 1) AS `sexTitle`
+					
+				,(SELECT CONCAT(crm.`receipt_no`,' ".$tr->translate("COMBINE")."') FROM `ln_client_receipt_money` AS crm WHERE crm.combineId = cmb.id ORDER BY crm.id ASC LIMIT 1) AS recieptNo
+				,cmb.`datePayment`
+				,cmb.`totalPrinciple`
+				,cmb.`totalInterest`
+				,cmb.`totalPayment`
+				,(SELECT v.name_kh FROM `ln_view` AS v WHERE v.type=2 AND v.key_code=cmb.`paymentMethod` LIMIT 1) AS paymentMethodTitle
+				,(SELECT  u.first_name FROM rms_users AS u WHERE u.id=cmb.`userId` LIMIT 1 ) AS userName
+			";
+		$sql.="
+			FROM 
+				`ln_client_receipt_money_combine` AS cmb 
+				LEFT JOIN `ln_client` AS c ON c.`client_id` = cmb.`clientId`
+			WHERE 1
+		";
+    	
+    	$sql.=" AND cmb.`id`= ".$id;
+    	$sql.=$dbp->getAccessPermission("cmb.`branchId`");
+		$sql.=" LIMIT 1 ";
+    	return $db->fetchRow($sql);
+    }
+	
+	public function getReceiptInCombinePayment($combieId){
+		$db = $this->getAdapter();
+		if($combieId>0){
+			$sql="
+				SELECT 
+					crm.*
+					,(SELECT project_name FROM `ln_project` WHERE br_id=crm.branch_id LIMIT 1) AS projectName
+					,(SELECT v.`name_kh` FROM `ln_view` AS v WHERE ((v.`key_code` = `crm`.`payment_method`) AND (v.`type` = 2))LIMIT 1) AS `paymentMethod`
+					,c.`name_kh` AS clientName
+					,c.`sex`
+					,(SELECT v.`name_kh` FROM `ln_view` AS v WHERE ((v.`key_code` = c.`sex`) AND (v.`type` = 11))LIMIT 1) AS `sexTitle`
+					
+					,c.`phone`
+					,c.`client_number`  AS clientNumber
+					
+					,p.land_address AS landAddress
+					,p.street
+					,p.land_code AS landCode
+					,(SELECT pt.type_nameen FROM `ln_properties_type` AS pt WHERE pt.id = p.property_type LIMIT 1)AS propertyType
+					,(SELECT CONCAT(last_name,' ',first_name) FROM `rms_users` WHERE rms_users.id=crm.`user_id` LIMIT 1) AS byUser
+				
+					
+				FROM 
+					`ln_client_receipt_money` AS crm
+					JOIN `ln_sale` AS s ON s.id = crm.`sale_id`
+					LEFT JOIN `ln_properties` AS p ON p.id = s.house_id 
+					LEFT JOIN ln_client AS c ON c.client_id = crm.client_id
+				WHERE  crm.`combineId` = $combieId 
+				";
+			$sql.=" ORDER BY crm.`id` ASC ";
+			return $db->fetchAll($sql);
+		}else{
+			return null;
+		}
+		
+	}
 		
  }

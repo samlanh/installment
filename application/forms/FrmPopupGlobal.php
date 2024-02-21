@@ -2179,153 +2179,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				
 			</div>
 			';
-		}elseif ($reciept_type==6){ // KP 
-			$str='
-				<style>
-					.dataInfo {
-						display:block; 
-						text-align:left; 
-						font-size:14px; 
-						line-height:18px; 
-						font-family:'."'Times New Roman'".','."'Khmer OS Battambang'".';
-					}
-				</style>
-				<table  width="100%" style="font-family:'."'Times New Roman'".','."'Khmer OS Battambang'".'; padding:0; margin:0; border:0px;" >
-					<tr>
-						<td width="30%" valign="top">
-							<div id="projectlogo" class="logoBlog">
-								<img style="height:80px; max-width: 100%;" src="'.$baseurl.'/images/bppt_logo.png">
-							</div>
-						</td>
-						<td width="40%" align="center">
-							<span style="text-align:center; font-size:20px; line-height:28px; font-family:'."'Khmer OS Muol Light'".';">ព្រះរាជាណាចក្រកម្ពុជា</span>
-							<span style="text-align:center; font-size:16px; line-height:28px; width: 100%; display: block;font-family:'."'Khmer OS Muol Light'".';">ជាតិ សាសនា ព្រះមហាក្សត្រ</span>
-							<span style="text-align:center; line-height:28px; width: 100%; display: block;  "><img src="'.$baseurl.'/images/agreementsign.jpg" height="25px"></span>
-							
-							<span style="text-decoration: underline; text-align:center; font-size:20px; line-height:28px; font-family:'."'Khmer OS Muol Light'".';">កិច្ចសន្យាបន្ថែមប្រាក់</span>
-							<br />
-							<span style="text-align:center; font-size:20px; line-height:28px; font-family:'."'Times New Roman'".'; ">Recive Payment From Customer</span>
-						   
-						</td>
-						<td width="30%" valign="top" align="center">
-							<div style="height:80px; max-width: 100%;"></div>
-							<span id="lb_receipt" class="receipt-class"></span>
-							<br />
-							Date: <span id="lblpaid_date" class="valueData"></span>
-						</td>
-					</tr>
-					<tr>
-						<td colspan="3" valign="top">
-							<span class="dataInfo" >
-							- អតិថិជនឈ្មោះ <span id="lb_customer" class="valueData"></span>
-							ភេទ <span id="lb_hourseno" class="customerGender"></span> 
-							'.$tr->translate("PROPERTY_CODE").' <span id="lb_hourseno" class="valueDataRow"></span> 
-							គម្រោង <span id="lbl_project" class="valueDataRow"></span>
-							</span>
-							<span class="dataInfo" >
-							-'.$tr->translate("PHONE").' <span id="lbl_phone" class="value"></span>
-							</span>
-							<span class="dataInfo" >
-							-'.$tr->translate("LOCATION").' <span id="projecatLocation" class="value"></span>
-							</span>
-							<span class="dataInfo" >
-							-តម្លៃសរុប <span id="lb_saleprice"></span>
-							</span>
-							
-						</td>
-					</tr>
-					<tr>
-						<td colspan="3" valign="top" id="tableContentInfo" height="500px">
-							
-						</td>
-					</tr>
-					<tr>
-						<td colspan="3" valign="top">
-							<span class="dataInfo" >
-								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;សរុបបង់បាន <span id="lbl_total_paid1"></span> នៅខ្វះ <span id="lbl_balance"></span> <span id="paymentOptintionDesc"></span> 
-							</span>
-							
-						</td>
-					</tr>
-					<tr>
-						<td colspan="3" valign="top" height="100px">
-							
-						</td>
-					</tr>
-					<tr>
-						<td colspan="3" valign="top" >
-							<table class="signature-table" width="100%" border="0">
-								<tr style="font-family: '."'Khmer OS Muol Light'".';">
-									<td width="30%">&nbsp;
-									អ្នកទទួល
-									</td>
-									<td align="center" width="40%">
-									
-									</td>
-									<td align="center" width="30%">
-									អ្នកប្រគល់
-									</td>
-								</tr>
-								<tr height="85px">
-									<td colspan="3">&nbsp;
-									</td>
-								</tr>
-								<tr>
-									<td width="30%"><span id="lbl_usersale" >'.$last_name." ".$username.$usertype.'</span></td>
-									<td align="center" width="40%">
-									
-									</td>
-									<td align="center" width="30%">
-									<span id="lbl_customer" ></span>
-									</td>
-								</tr>
-							</table>
-						</td>
-					</tr>
-					
-				</table>
-				<div style="display: none;">
-					
-					<span id="lb_descriptionall"></span>
-					
-					<label id="lbl_pricelabel" class="value" ></label>
-					
-					<span id="lb_amount"></span>
-					<span id="lbl_paidtimes"></span>
-					<span id="lb_interest"></span>
-					<span id="lb_penalty"></span>
-					<span id="lb_extrapayment"></span>
-					<span id="lbl_totalpayment"></span>
-					<span id="lb_buydate1"></span>
-					<span id=lbl_paid_date1></span>
-					
-					'.$footer.'
-					
-					<span id="lbl_priceSoldBefore"></span>
-					<span id="lbl_discountAmount"></span>
-					<span id="lbl_discountPercent"></span>
-					<span id="lb_forCompletedAmount"></span>
-					<span id="lb_completedDate"></span>
-					<span id="lbl_discountOther"></span>
-					
-					<span id="lb_agreement_date"></span>
-					<span id="lb_pre_schedule_opt"></span>
-					<span id="lbl_pre_percent_payment"></span>
-					<span id="lbl_pre_amount_month"></span>
-					<span id="lbl_pre_percent_installment"></span>
-					<span id="lbl_pre_amount_year"></span>
-					<span id="lbl_pre_fix_payment"></span>
-					<span id="lable_chartotalreceipt_in_kh" ></span>
-					
-					<span id="lb_customercode"></span>
-					<span id="lbl_total_receive" class="valueDataRow"></span>
-					<span id="lable_chartotalreceipt" class="valueDataRow"></span>
-					<span id="lb_noted" class="valueDataRow"></span>
-					<span id="lbl_paymenttype" class="valueDataRow"></span>
-					<span id="lbl_cheque" class="valueDataRow"></span>
-					<input type="hidden" dojoType="dijit.form.TextBox" value="0" name="is_showinstallment" id="is_showinstallment" />
-				</div>
-			';
+		
 		}else{
 			$str='
 			<div >
@@ -3883,5 +3737,209 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				<ul>
 		';
 		return $string;
+	}
+	
+	function getCombinePaymentOfficialReciept($filterOption=array()){//general
+	
+		
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$key = new Application_Model_DbTable_DbKeycode();
+		$data=$key->getKeyCodeMiniInv(TRUE);
+		
+		$footer = $this->getFooterReceipt();
+		
+		$baseurl=Zend_Controller_Front::getInstance()->getBaseUrl();
+		
+		$session_user=new Zend_Session_Namespace(SYSTEM_SES);
+		$last_name=$session_user->last_name;
+		$username = $session_user->first_name;
+		$user_id = $session_user->user_id;
+		$usertype="";
+		
+		$reciept_type=RECEIPT_TYPE;
+		
+		
+		$str='
+				<style>
+					.dataInfo {
+						display:block; 
+						text-align:left; 
+						font-size:14px; 
+						line-height:18px; 
+						font-family:'."'Times New Roman'".','."'Khmer OS Battambang'".';
+					}
+					table.content-data{
+						border-collapse:collapse;
+						border:1px solid #000; 
+						font-size:14px;
+						font-family:'."'Times New Roman'".','."'Khmer OS Battambang'".';
+					}
+					table.content-data thead tr.style {
+						line-height: 25px;
+						font-size: 14px !important;
+						padding: 1px 0px;
+						white-space: nowrap;
+						height: 22px;
+						background: #c1d0f3;
+						font-weight: bold;
+						text-align: center;
+					}
+					table.content-data tr.style {
+						white-space: nowrap;
+					}
+					table.content-data tr td{
+						padding:4px 2px;
+					}
+					table.content-data tr.odd {
+						background: #eee;
+					}
+					td.colNote{
+						width:120px;
+					}
+					td.noBorderBt {
+						border-bottom: none;
+					}
+					td.noBorderTop {
+						border-top: none;
+					}
+				</style>
+				<table  width="100%" style="font-family:'."'Times New Roman'".','."'Khmer OS Battambang'".'; padding:0; margin:0; border:0px;" >
+					<tr>
+						<td width="30%" valign="top">
+							<div id="projectlogo" class="logoBlog">
+								<img style="height:80px; max-width: 100%;" src="'.$baseurl.'/images/bppt_logo.png">
+							</div>
+						</td>
+						<td width="40%" align="center">
+							<span style="text-align:center; font-size:20px; line-height:28px; font-family:'."'Khmer OS Muol Light'".';">ព្រះរាជាណាចក្រកម្ពុជា</span>
+							<span style="text-align:center; font-size:16px; line-height:28px; width: 100%; display: block;font-family:'."'Khmer OS Muol Light'".';">ជាតិ សាសនា ព្រះមហាក្សត្រ</span>
+							<span style="text-align:center; line-height:28px; width: 100%; display: block;  "><img src="'.$baseurl.'/images/agreementsign.jpg" height="25px"></span>
+							
+							<span style="text-decoration: underline; text-align:center; font-size:20px; line-height:28px; font-family:'."'Khmer OS Muol Light'".';">កិច្ចសន្យាបន្ថែមប្រាក់</span>
+							<br />
+							<span style="text-align:center; font-size:20px; line-height:28px; font-family:'."'Times New Roman'".'; ">Recive Payment From Customer</span>
+						   
+						</td>
+						<td width="30%" valign="top" align="center">
+							<div style="height:80px; max-width: 100%;"></div>
+							<span id="lb_receipt" class="receipt-class"></span>
+							<br />
+							Date: <span id="lblpaid_date" class="valueData"></span>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="3" valign="top">
+							<span class="dataInfo" >
+							- អតិថិជនឈ្មោះ <span id="lb_customer" class="valueData"></span>
+							ភេទ <span id="customerGender" class="customerGender"></span> 
+							'.$tr->translate("PROPERTY_CODE").' <span id="lb_hourseno" class="valueDataRow"></span> 
+							គម្រោង <span id="lbl_project" class="valueDataRow"></span>
+							</span>
+							<span class="dataInfo" >
+							-'.$tr->translate("PHONE").' <span id="lbl_phone" class="value"></span>
+							</span>
+							<span class="dataInfo" >
+							-'.$tr->translate("LOCATION").' <span id="projecatLocation" class="value"></span>
+							</span>
+							<span class="dataInfo" >
+							-តម្លៃសរុប <span id="lb_saleprice"></span>
+							</span>
+							
+						</td>
+					</tr>
+					<tr>
+						<td colspan="3" valign="top" id="tableContentInfo" >
+							
+						</td>
+					</tr>
+					<tr>
+						<td colspan="3" valign="top">
+							<span class="dataInfo" >
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;សរុបបង់បាន <span id="lbl_total_paid1"></span> នៅខ្វះ <span id="lbl_balance"></span> <span id="paymentOptintionDesc"></span> 
+							</span>
+							
+						</td>
+					</tr>
+					<tr>
+						<td colspan="3" valign="top" height="70px">
+							
+						</td>
+					</tr>
+					<tr>
+						<td colspan="3" valign="top" >
+							<table class="signature-table" width="100%" border="0">
+								<tr style="font-family: '."'Khmer OS Muol Light'".';">
+									<td width="30%">&nbsp;
+									អ្នកទទួល
+									</td>
+									<td align="center" width="40%">
+									
+									</td>
+									<td align="center" width="30%">
+									អ្នកប្រគល់
+									</td>
+								</tr>
+								<tr height="85px">
+									<td colspan="3">&nbsp;
+									</td>
+								</tr>
+								<tr>
+									<td width="30%"><span id="lbl_usersale" >'.$last_name." ".$username.$usertype.'</span></td>
+									<td align="center" width="40%">
+									
+									</td>
+									<td align="center" width="30%">
+									<span id="lbl_customer" ></span>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					
+				</table>
+				<div style="display: none;">
+					
+					<span id="lb_descriptionall"></span>
+					
+					<label id="lbl_pricelabel" class="value" ></label>
+					
+					<span id="lb_amount"></span>
+					<span id="lbl_paidtimes"></span>
+					<span id="lb_interest"></span>
+					<span id="lb_penalty"></span>
+					<span id="lb_extrapayment"></span>
+					<span id="lbl_totalpayment"></span>
+					<span id="lb_buydate1"></span>
+					<span id=lbl_paid_date1></span>
+					
+					'.$footer.'
+					
+					<span id="lbl_priceSoldBefore"></span>
+					<span id="lbl_discountAmount"></span>
+					<span id="lbl_discountPercent"></span>
+					<span id="lb_forCompletedAmount"></span>
+					<span id="lb_completedDate"></span>
+					<span id="lbl_discountOther"></span>
+					
+					<span id="lb_agreement_date"></span>
+					<span id="lb_pre_schedule_opt"></span>
+					<span id="lbl_pre_percent_payment"></span>
+					<span id="lbl_pre_amount_month"></span>
+					<span id="lbl_pre_percent_installment"></span>
+					<span id="lbl_pre_amount_year"></span>
+					<span id="lbl_pre_fix_payment"></span>
+					<span id="lable_chartotalreceipt_in_kh" ></span>
+					
+					<span id="lb_customercode"></span>
+					<span id="lbl_total_receive" class="valueDataRow"></span>
+					<span id="lable_chartotalreceipt" class="valueDataRow"></span>
+					<span id="lb_noted" class="valueDataRow"></span>
+					<span id="lbl_paymenttype" class="valueDataRow"></span>
+					<span id="lbl_cheque" class="valueDataRow"></span>
+					<input type="hidden" dojoType="dijit.form.TextBox" value="0" name="is_showinstallment" id="is_showinstallment" />
+				</div>
+			';
+			
+		return $str;
 	}
 }

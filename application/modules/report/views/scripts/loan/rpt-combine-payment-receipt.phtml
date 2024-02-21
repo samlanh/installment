@@ -1,0 +1,199 @@
+<script>
+	dojo.require("dijit.form.DateTextBox");
+</script>
+<style>
+	.hover:hover{background: #ccc;}
+	img.view{height: 70px !important;}
+</style>
+<?php 
+	$request = Zend_Controller_Front::getInstance()->getRequest();
+	$viewing = $request->getParam("viewing");
+  	$viewing = empty($viewing)?"":$viewing;
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate("RECEIPT"));
+	
+	$dbuser = new Application_Model_DbTable_DbUsers();
+	$usertype="";
+	$receipt_type = null;
+	
+	$montFomat="d-m-Y";
+	if(MONTH_FORMATE_DATE_RECEIPT==1){
+		$montFomat="d-M-Y";
+	}
+	
+	$datePay = new DateTime($this->rs['datePayment']);
+	
+	
+	$receiveDate =  $datePay->format($montFomat);
+	$receiveDateSlash =  $datePay->format("d/m/y");
+
+	
+	
+	
+	$paymentMethod = $this->rs['paymentMethod'];
+	
+	
+?>
+<div class="reportblog">
+	<div class="card-box">
+		<div class="col-sm-12 border-botom">
+			<div class="col-sm-8 pd-0">
+				<h4 class="m-b-0"><i class="fa fa-file-text" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('RECEIPT');?></h4>
+			</div>
+			<div class="col-sm-4 text-right">
+			</div>
+		</div>
+	</div>
+		
+		<div id="divPrint" style="width: 100%; padding-top: 30px;">
+			<div id="divPrint1" style="width: 100%; height: 13cm ; padding: 0px; margin: 0px;">
+				<?php 
+				echo $this->officailreceipt;
+				?>
+			</div>
+			
+			<style>
+				
+				<?php if ($this->rs['pre_schedule_opt']==4){?>
+				tr.schedule_step{
+					display: none;
+				}
+				<?php }else{?>
+				tr.schedule_installment{
+					display: none;
+				}
+				<?php }?>
+			</style>
+			
+		</div>
+		<div id="noteContent" style="display: none;"><?php echo $this->rs['note'];?></div>
+		<div id="descriptionDetail" style="display: none;">ហើយការទូរទាត់ប្រាក់នឹងធ្វើការទូរទាត់ជាបន្តបន្ទាប់ ទៅតាមគោលការណ៍បង់ប្រាក់ក្នុង <strong>ឧបសម្ព័ន្ធទី១</strong> ជាសាច់ប្រាក់ ឬ តាមធនាគារ។</div>
+		<div id="rowPayment" style="display: none;">
+			<table class="content-data" width="100%" border="1">
+				<thead>
+					<tr class="style" align="center" >
+	                    <td ><?php echo $tr->translate("NUM");?></td>
+	                    <td ><?php echo $tr->translate("PROPERTY_CODE");?></td>  	
+	                    <td ><?php echo $tr->translate("TOTAL_PAYMENTED");?></td>    
+	                    <td class="colNote"><?php echo $tr->translate("OTHER");?></td>
+	                </tr>
+				</thead>
+			<?php
+			$maxRow = 20;
+			$amtRowData = count($this->paymentRow);
+			if(!empty($this->paymentRow)){?>
+				<?php foreach($this->paymentRow AS $key => $row){ 
+					$borderTop="noBorderTop";
+					$borderBt="noBorderBt";
+					if(($key+1)==$maxRow){
+						$borderBt="";
+					}
+					if(($key+1)==1){
+						$borderTop="";
+					}
+					$mod = ($key+1) %2;
+					$classBg="";
+					if($mod==0){
+						$classBg="odd";
+					}
+				?>
+					<tr class="<?php echo $classBg;?>" >
+						<td class="<?php echo $borderBt." ".$borderTop;?>"  align="center"><?php echo $key+1;?></td>
+						<td class="<?php echo $borderBt." ".$borderTop;?>" ><?php echo $row["landAddress"]." ".$row["street"];?></td>
+						<td class="<?php echo $borderBt." ".$borderTop;?>"  align="right"><?php echo "$ ".number_format($row["recieve_amount"],2);?></td>
+						<td class="<?php echo $borderBt." ".$borderTop;?>" ></td>
+					</tr>
+				<?php } ?>
+			<?php } ?>
+			
+			<?php for ($x = $amtRowData; $x <= $maxRow; $x++) {	
+					$borderTop="noBorderTop";
+					$borderBt="noBorderBt";
+					if($x==$maxRow){
+						$borderBt="";
+					}
+					if($x==1){
+						$borderTop="";
+					}
+			?>
+			<tr>
+				<td class="<?php echo $borderBt." ".$borderTop;?>" align="center">&nbsp;</td>
+				<td class="<?php echo $borderBt." ".$borderTop;?>" align="center">&nbsp;</td>
+				<td class="<?php echo $borderBt." ".$borderTop;?>" align="center">&nbsp;</td>
+				<td class="<?php echo $borderBt." ".$borderTop;?>" align="center">&nbsp;</td>
+			</tr>
+			<?php } ?>
+			</table>
+		</div>
+	</div>
+			
+	
+ </div>
+<script src="<?php echo $this->baseUrl();?>/js/pdbs_js.js"  type="text/javascript"></script>
+<script>
+require(["dojo/ready"], function(ready){
+	 ready(function(){
+		 loadingBlock();
+		 getBranchInfo();
+		 printSave();
+		 setTimeout(function () {
+			 
+	        HideloadingBlock();
+	    }, 1000);
+		
+		 
+	 });
+});	 
+function getBranchInfo(){
+	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
+	branch_id = '<?php echo empty($this->rs['branchId'])?0:$this->rs['branchId'];?>';
+	if(branch_id==""){
+		return false;
+	}
+	dojo.xhrPost({
+	    url: url_submit,	
+	    content:{ 
+		    'branch_id':branch_id
+		},	
+		load: function(data) {
+			var arr = JSON.parse(data);
+			var imagesUrl = '<img class="view" style="height:80px; max-width: 100%;" src="<?php echo $this->baseUrl()."/images/projects/"?>'+arr.logo+'" />';
+			document.getElementById('projectlogo').innerHTML = imagesUrl;
+
+			document.getElementById('ft_branch_title_lb').innerHTML = arr.footer_title;
+			document.getElementById('ft_website_lb').innerHTML = arr.office_website;
+			document.getElementById('ft_email_client_lb').innerHTML = arr.office_email;
+			document.getElementById('ft_address_lb').innerHTML = arr.office_address;
+			document.getElementById('ft_phone_lb').innerHTML = arr.office_tel;
+		},
+		error: function(e) {
+		}
+	});
+}
+function printSave(){
+	symbal=" $";
+	dojo.byId("lb_receipt").innerHTML = '<?php if ($this->rs['totalPayment']==0){ echo '<span style="color:red">VOID </span>'; }?><?php echo $this->rs['recieptNo'];?>';
+	dojo.byId("lbl_project").innerHTML = '<?php echo $this->rs['projectName'];?>';
+	
+	dojo.byId("lb_customer").innerHTML = '<?php echo $this->rs['clientName']; echo !empty($this->rs['withClientName'])?" /".$this->rs['withClientName']:"";?>';
+	dojo.byId("customerGender").innerHTML = '<?php echo $this->rs['sexTitle'];?>';
+	dojo.byId("lbl_phone").innerHTML = '<?php echo $this->rs['clientPhone'];?>';
+	dojo.byId("projecatLocation").innerHTML = '<?php echo $this->rs['projectLocation'];?>';
+	
+	dojo.byId("lbl_total_paid1").innerHTML ='<?php echo "$ ".number_format($this->rs['totalAllPaid'],2);?>';
+	dojo.byId("lbl_balance").innerHTML ='<?php echo  "$ ".number_format($this->rs['totalBalance'],2);?>';
+	var descriptionDetail = $( '#descriptionDetail' ).html();
+	$( '#paymentOptintionDesc' ).html( descriptionDetail );
+	
+	
+	var rowPayment = $( '#rowPayment' ).html();
+	$( '#tableContentInfo' ).html( rowPayment );
+	
+	var htmlString = $( '#noteContent' ).html();
+	$( '#lb_noted' ).text( htmlString );
+	
+
+
+	
+}
+</script>
