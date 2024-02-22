@@ -34,7 +34,7 @@
 	
 	
 ?>
-<div class="reportblog">
+<div style="background: #ffff;min-height: 26cm;height: auto;overflow: initial;padding: 15px;" >
 	<div class="card-box">
 		<div class="col-sm-12 border-botom">
 			<div class="col-sm-8 pd-0">
@@ -125,7 +125,17 @@
 			
 			<?php } ?>
 			<tr>
-				<td colspan="3" align="center"><strong>$ <?php echo number_format($this->rs['totalPayment'],2); ?> <span id="amountAsKhChar"></span></strong></td>
+				<td colspan="3" align="center">
+					<strong>$ <?php echo number_format($this->rs['totalPayment'],2); ?> <span id="amountAsKhChar"></span></strong>
+					<p>
+						<?php echo $tr->translate("PAYMENT_METHOD")." : <strong>".$this->rs['paymentMethodTitle']."</strong>"; ?>
+						<?php
+						if(!empty($this->rs['bankName'])){
+							echo "(".$this->rs['bankName']."-".$this->rs['cheque'].")"; 
+						}
+						?>
+					</p>
+				</td>
 				<td >&nbsp;</td>
 			</tr>
 			</table>

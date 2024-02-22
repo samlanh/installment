@@ -3802,6 +3802,11 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					td.noBorderTop {
 						border-top: none;
 					}
+					p {
+						margin: 0;
+						line-height: inherit;
+						font-size: inherit;
+					}
 				</style>
 				<table  width="100%" style="font-family:'."'Times New Roman'".','."'Khmer OS Battambang'".'; padding:0; margin:0; border:0px;" >
 					<tr>
@@ -3860,11 +3865,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 							
 						</td>
 					</tr>
-					<tr>
-						<td colspan="3" valign="top" height="50px">
-							
-						</td>
-					</tr>
+					
 					<tr>
 						<td colspan="3" valign="top" >
 							<table class="signature-table" width="100%" border="0">

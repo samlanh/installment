@@ -3495,6 +3495,7 @@ function updatePaymentStatus($data){
 				,cmb.`totalInterest`
 				,cmb.`totalPayment`
 				,(SELECT v.name_kh FROM `ln_view` AS v WHERE v.type=2 AND v.key_code=cmb.`paymentMethod` LIMIT 1) AS paymentMethodTitle
+				,(SELECT  ba.bank_name FROM st_bank AS ba WHERE ba.id=cmb.`bankId` LIMIT 1 ) AS bankName
 				,(SELECT  u.first_name FROM rms_users AS u WHERE u.id=cmb.`userId` LIMIT 1 ) AS userName
 			";
 		$sql.="
