@@ -66,7 +66,7 @@ class Loan_PaymentcombineController extends Zend_Controller_Action {
 			$_data = $this->getRequest()->getPost();
 			try{
 				if (empty($_data)){
-					Application_Form_FrmMessage::Sucessfull("File Attachment to large can't upload and Save data !","/loan/ilpayment",2);
+					Application_Form_FrmMessage::Sucessfull("File Attachment to large can't upload and Save data !","/loan/paymentcombine",2);
 					exit();
 				}
 				
@@ -91,6 +91,47 @@ class Loan_PaymentcombineController extends Zend_Controller_Action {
 		$frmpopup = new Application_Form_FrmPopupGlobal();
 		$this->view->footer = $frmpopup->getFooterReceipt();
 		$this->view->officailreceipt = $frmpopup->getOfficailReceipt();
+	}
+	
+	function editAction(){
+		$id = $this->getRequest()->getParam('id');
+		$id = empty($id)?"0":$id;
+		$db = new Loan_Model_DbTable_DbPaymentCombine();
+		$paymentIl = $db->getCombinePaymentInfoById($id);
+		if(empty($paymentIl)){
+			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/paymentcombine",2);
+			exit();
+		}
+		$db_global = new Application_Model_DbTable_DbGlobal();
+		if($this->getRequest()->isPost()){
+			// Check Session Expire
+			$checkses = $db_global->checkSessionExpire();
+			if (empty($checkses)){
+				$db_global->reloadPageExpireSession();
+				exit();
+			}
+			$_data = $this->getRequest()->getPost();
+			try{
+				if (empty($_data)){
+					Application_Form_FrmMessage::Sucessfull("File Attachment to large can't upload and Save data !","/loan/paymentcombine",2);
+					exit();
+				}
+				$receipt = $db->editPaymentCombine($_data);
+				
+				Application_Form_FrmMessage::Sucessfull("EDIT_SUCCESS","/loan/paymentcombine/");
+			}catch (Exception $e) {
+				Application_Form_FrmMessage::message("EDIT_FAIL");
+				$err =$e->getMessage();
+				Application_Model_DbTable_DbUserLog::writeMessageError($err);
+			}
+		}
+		$this->view->row = $paymentIl;
+		$this->view->rowDetail = $db->getReceiptInCombinePaymentRS($id);
+		
+		$frm = new Loan_Form_FrmMultiSalePaymemt();
+		$frm_loan=$frm->FrmMultiSalePaymemt($paymentIl);
+		Application_Model_Decorator::removeAllDecorator($frm_loan);
+		$this->view->frm = $frm_loan;
 	}
 
 

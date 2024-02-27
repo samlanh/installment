@@ -206,6 +206,45 @@ class Loan_Model_DbTable_DbPaymentCombine extends Zend_Db_Table_Abstract
     	}
     }
 	
+	public function editPaymentCombine($data){
+    	$db = $this->getAdapter();
+    	$userId = $this->getUserId();
+    	try{
+			$crmCombineId =$data['id'];
+			$arr_client_pay = array(
+    			'datePayment'			=>	$data['datePayment'],
+    			'paymentMethod'			=>	$data["paymentMethod"],
+    			'bankId'				=>	$data["bankId"],
+    			'cheque'				=>	$data["cheque"],
+    			'note' 					=>  $data["note"],
+    			'userId' 				=>  $userId,
+				'modifyDate'	  	=> date("Y-m-d H:i:s"),
+    		);
+    		
+			$this->_name = "ln_client_receipt_money_combine";
+			$where = 'id = '.$crmCombineId;
+			$this->update($arr_client_pay, $where);
+			
+			$rsReciept = $this->getReceiptInCombinePaymentRS($crmCombineId);
+			if($crmCombineId>0){
+				$this->_name = "ln_client_receipt_money";
+				$arrReciept = array(
+					'date_pay'				=>	$data['datePayment'],
+					'date_input'			=>	$data['datePayment'],
+					'payment_method'		=>	$data["paymentMethod"],
+					'bank_id'				=>	$data["bankId"],
+					'cheque'				=>	$data["cheque"],
+					'user_id' 				=>  $userId,
+				);
+				$whereReciept = 'combineId = '.$crmCombineId;
+				$this->update($arrReciept, $whereReciept);
+			}
+			
+    	}catch (Exception $e){
+    		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+    	}
+    }
+	
 	public function getClientSaleForPayment($_data){
     	$db=$this->getAdapter();
 		$_data['clientId'] = empty($_data['clientId']) ? 0 : $_data['clientId'];
@@ -417,5 +456,59 @@ class Loan_Model_DbTable_DbPaymentCombine extends Zend_Db_Table_Abstract
 			}
 		}
 	 }
+	 
+	function getCombinePaymentInfoById($id){
+		$db = $this->getAdapter();
+		$sql="SELECT 
+				  cmb.*
+				FROM
+				  `ln_client_receipt_money_combine` AS cmb 
+				WHERE cmb.id = $id
+				 ";
+		
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$sql.=$dbp->getAccessPermission("cmb.branchId");
+		$sql.=" LIMIT 1 ";
+		return $db->fetchRow($sql);
+	}
+	
+	
+	public function getReceiptInCombinePaymentRS($combieId){
+		$db = $this->getAdapter();
+		if($combieId>0){
+			$sql="
+				SELECT 
+					crm.*
+					,(SELECT project_name FROM `ln_project` WHERE br_id=crm.branch_id LIMIT 1) AS projectName
+					,(SELECT v.`name_kh` FROM `ln_view` AS v WHERE ((v.`key_code` = `crm`.`payment_method`) AND (v.`type` = 2))LIMIT 1) AS `paymentMethod`
+					,c.`name_kh` AS clientName
+					,c.`sex`
+					,(SELECT v.`name_kh` FROM `ln_view` AS v WHERE ((v.`key_code` = c.`sex`) AND (v.`type` = 11))LIMIT 1) AS `sexTitle`
+					
+					,c.`phone`
+					,c.`client_number`  AS clientNumber
+					,s.`price_sold`  AS priceSold
+					
+					,p.land_address AS landAddress
+					,p.street
+					,p.land_code AS landCode
+					,(SELECT pt.type_nameen FROM `ln_properties_type` AS pt WHERE pt.id = p.property_type LIMIT 1)AS propertyType
+					,(SELECT CONCAT(last_name,' ',first_name) FROM `rms_users` WHERE rms_users.id=crm.`user_id` LIMIT 1) AS byUser
+				
+					
+				FROM 
+					`ln_client_receipt_money` AS crm
+					JOIN `ln_sale` AS s ON s.id = crm.`sale_id`
+					LEFT JOIN `ln_properties` AS p ON p.id = s.house_id 
+					LEFT JOIN ln_client AS c ON c.client_id = crm.client_id
+				WHERE  crm.`combineId` = $combieId 
+				";
+			$sql.=" ORDER BY crm.`id` ASC ";
+			return $db->fetchAll($sql);
+		}else{
+			return null;
+		}
+		
+	}
 }
 

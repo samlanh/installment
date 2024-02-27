@@ -2954,14 +2954,14 @@ function updatePaymentStatus($data){
 		if(!empty($rsPayment)){
 			$row = (object) array_merge((array) $row, (array) $rsPayment);
 			$row = (array) $row;//sort by key Value DESC
-			usort($row, function ($a, $b) {return $a['recordDate'] < $b['recordDate'];});
+			usort($row, function ($a, $b) {return $a['recordDate'] > $b['recordDate'];});
 		}
 		
 		$rsOtherIncome = $this->getSummaryDailyIncomeOther($data);
 		if(!empty($rsOtherIncome)){
 			$row = (object) array_merge((array) $row, (array) $rsOtherIncome);
 			$row = (array) $row;//sort by key Value DESC
-			usort($row, function ($a, $b) {return $a['recordDate'] < $b['recordDate'];});
+			usort($row, function ($a, $b) {return $a['recordDate'] > $b['recordDate'];});
 		}
 		
 		$data["repairHouse"] = 12;
@@ -2969,7 +2969,7 @@ function updatePaymentStatus($data){
 		if(!empty($rsIncomeRepairHouse)){
 			$row = (object) array_merge((array) $row, (array) $rsIncomeRepairHouse);
 			$row = (array) $row;//sort by key Value DESC
-			usort($row, function ($a, $b) {return $a['recordDate'] < $b['recordDate'];});
+			usort($row, function ($a, $b) {return $a['recordDate'] > $b['recordDate'];});
 		}
 		
 		$data["repairHouse"] = 13;
@@ -2977,7 +2977,7 @@ function updatePaymentStatus($data){
 		if(!empty($rsExpenseRepairHouse)){
 			$row = (object) array_merge((array) $row, (array) $rsExpenseRepairHouse);
 			$row = (array) $row;//sort by key Value DESC
-			usort($row, function ($a, $b) {return $a['recordDate'] < $b['recordDate'];});
+			usort($row, function ($a, $b) {return $a['recordDate'] > $b['recordDate'];});
 		}
 		
 		if($expenseFeatureList==1){
@@ -2985,14 +2985,14 @@ function updatePaymentStatus($data){
 			if(!empty($rsExpensePmt)){
 				$row = (object) array_merge((array) $row, (array) $rsExpensePmt);
 				$row = (array) $row;//sort by key Value DESC
-				usort($row, function ($a, $b) {return $a['recordDate'] < $b['recordDate'];});
+				usort($row, function ($a, $b) {return $a['recordDate'] > $b['recordDate'];});
 			}
 		}else{
 			$rsExpense = $this->getSummaryDailyExpenseOther($data);
 			if(!empty($rsExpense)){
 				$row = (object) array_merge((array) $row, (array) $rsExpense);
 				$row = (array) $row;//sort by key Value DESC
-				usort($row, function ($a, $b) {return $a['recordDate'] < $b['recordDate'];});
+				usort($row, function ($a, $b) {return $a['recordDate'] > $b['recordDate'];});
 			}
 		}
 		
@@ -3000,14 +3000,14 @@ function updatePaymentStatus($data){
 		if(!empty($rsExpenseCommision)){
 			$row = (object) array_merge((array) $row, (array) $rsExpenseCommision);
 			$row = (array) $row;//sort by key Value DESC
-			usort($row, function ($a, $b) {return $a['recordDate'] < $b['recordDate'];});
+			usort($row, function ($a, $b) {return $a['recordDate'] > $b['recordDate'];});
 		}
 		
 		$rsExpenseCommisionPmt = $this->getSummaryDailyExpenseComissionPayment($data);
 		if(!empty($rsExpenseCommisionPmt)){
 			$row = (object) array_merge((array) $row, (array) $rsExpenseCommisionPmt);
 			$row = (array) $row;//sort by key Value DESC
-			usort($row, function ($a, $b) {return $a['recordDate'] < $b['recordDate'];});
+			usort($row, function ($a, $b) {return $a['recordDate'] > $b['recordDate'];});
 		}
 		
 		return $row;
@@ -3032,7 +3032,7 @@ function updatePaymentStatus($data){
 				,'0' AS totalExpenseComissionPayment
 		";
 		$sql.=" FROM `ln_client_receipt_money` AS crm  ";
-		$sql.=" WHERE 1 ";
+		$sql.=" WHERE crm.recieve_amount >0 ";
 		
 		if(!empty($data['branch_id'])){
 			$sql.= " AND crm.`branch_id` = ".$data['branch_id'];
@@ -3546,6 +3546,205 @@ function updatePaymentStatus($data){
 			return null;
 		}
 		
+	}
+	
+	function getSummaryIncomeDailyByPaymentMethod($_data){
+		$cusRs = $this->getTotalCustomerPaymentByPaymentMethod($_data);
+		$totalCustomerPayment = empty($cusRs["totalRecieve"]) ? 0 : $cusRs["totalRecieve"];
+		
+		$other = $this->getTotalOtherIncomeByPaymentMethod($_data);
+		$totalOther = empty($other["totalRecieve"]) ? 0 : $other["totalRecieve"];
+		
+		$repairHouse = $this->getTotalRepairHouseIncomeByPaymentMethod($_data);
+		$totalRepairHouse = empty($repairHouse["totalRecieve"]) ? 0 : $repairHouse["totalRecieve"];
+		
+		$total=0;
+		$total=$totalCustomerPayment+$totalOther+$totalRepairHouse;
+		return $total;
+	}
+	
+	function getTotalCustomerPaymentByPaymentMethod($_data){
+		$db = $this->getAdapter();
+		$recordDate = empty($_data['recordDate']) ? date("Y-m-d") : $_data['recordDate'];
+		$paymentMethod = empty($_data['paymentMethod']) ? 1 : $_data['paymentMethod'];
+		
+		$sql="
+			SELECT 
+				COALESCE(SUM(crm.recieve_amount),0) AS totalRecieve
+			FROM `ln_client_receipt_money` AS crm 
+			WHERE 1 
+			AND crm.date_pay ='".$recordDate."'
+		";
+		if($paymentMethod==1){
+			$sql.=" AND crm.`payment_method` = 1 ";
+		}else{
+			$bankId = empty($_data['bankId']) ? 0 : $_data['bankId'];
+			$sql.=" AND crm.`payment_method` != 1 ";
+			$sql.=" AND crm.`bank_id` = $bankId ";
+		}
+		if(!empty($_data['branchId'])){
+			$sql.=" AND crm.`branch_id` = ".$_data['branchId'];
+		}
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$sql.=$dbp->getAccessPermission("crm.`branch_id`");
+		return $db->fetchRow($sql);
+	}
+	function getTotalOtherIncomeByPaymentMethod($_data){
+		$db = $this->getAdapter();
+		$recordDate = empty($_data['recordDate']) ? date("Y-m-d") : $_data['recordDate'];
+		$paymentMethod = empty($_data['paymentMethod']) ? 1 : $_data['paymentMethod'];
+		
+		$sql="
+			SELECT 
+				COALESCE(SUM(crm.total_amount),0) AS totalRecieve
+			FROM `ln_income` AS crm 
+			WHERE crm.status=1 
+			AND crm.date ='".$recordDate."'
+		";
+		if($paymentMethod==1){
+			$sql.=" AND crm.`payment_id` = 1 ";
+		}else{
+			$bankId = empty($_data['bankId']) ? 0 : $_data['bankId'];
+			$sql.=" AND crm.`payment_id` != 1 ";
+			$sql.=" AND crm.`bank_id` = $bankId ";
+		}
+		if(!empty($_data['branchId'])){
+			$sql.=" AND crm.`branch_id` = ".$_data['branchId'];
+		}
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$sql.=$dbp->getAccessPermission("crm.`branch_id`");
+		return $db->fetchRow($sql);
+	}
+	function getTotalRepairHouseIncomeByPaymentMethod($_data){
+		$db = $this->getAdapter();
+		$recordDate = empty($_data['recordDate']) ? date("Y-m-d") : $_data['recordDate'];
+		$paymentMethod = empty($_data['paymentMethod']) ? 1 : $_data['paymentMethod'];
+		$cateType = empty($_data['cate_type']) ? 12 : $_data['cate_type'];
+		
+		$sql="
+			SELECT 
+				COALESCE(SUM(crm.total_paid),0) AS totalRecieve
+			FROM `ln_otherincomepayment` AS crm 
+			WHERE crm.status=1 
+				AND crm.cate_type =$cateType
+				AND crm.for_date ='".$recordDate."'
+		";
+		if($paymentMethod==1){
+			$sql.=" AND crm.`payment_method` = 1 ";
+		}else{
+			$bankId = empty($_data['bankId']) ? 0 : $_data['bankId'];
+			$sql.=" AND crm.`payment_method` != 1 ";
+			$sql.=" AND crm.`bank_id` = $bankId ";
+		}
+		if(!empty($_data['branchId'])){
+			$sql.=" AND crm.`branch_id` = ".$_data['branchId'];
+		}
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$sql.=$dbp->getAccessPermission("crm.`branch_id`");
+		return $db->fetchRow($sql);
+	}
+	
+	function getSummaryExpenseDailyByPaymentMethod($_data){
+		
+		
+		$other = $this->getTotalOtherExpenseByPaymentMethod($_data);
+		$totalOther = empty($other["totalExpense"]) ? 0 : $other["totalExpense"];
+		
+		$_data["cate_type"] = 13;
+		$repairHouse = $this->getTotalRepairHouseIncomeByPaymentMethod($_data);
+		$totalRepairHouse = empty($repairHouse["totalRecieve"]) ? 0 : $repairHouse["totalRecieve"];
+		
+		$commission = $this->getTotalCommissionExpenseByPaymentMethod($_data);
+		$totalCommission = empty($commission["totalExpense"]) ? 0 : $commission["totalExpense"];
+		
+		
+		$commissionPayment = $this->getTotalCommissionPaymentExpenseByPaymentMethod($_data);
+		$totalCommissionPayment = empty($commissionPayment["totalExpense"]) ? 0 : $commissionPayment["totalExpense"];
+		
+		$total=0;
+		$total=$totalOther+$totalRepairHouse+$totalCommissionPayment+$totalCommission;
+		return $total;
+	}
+	
+	function getTotalOtherExpenseByPaymentMethod($_data){
+		$db = $this->getAdapter();
+		$recordDate = empty($_data['recordDate']) ? date("Y-m-d") : $_data['recordDate'];
+		$paymentMethod = empty($_data['paymentMethod']) ? 1 : $_data['paymentMethod'];
+		
+		$sql="
+			SELECT 
+				COALESCE(SUM(crm.total_amount),0) AS totalExpense
+			FROM `ln_expense` AS crm 
+			WHERE crm.status=1 
+			AND crm.date ='".$recordDate."'
+		";
+		if($paymentMethod==1){
+			$sql.=" AND crm.`payment_id` = 1 ";
+		}else{
+			$bankId = empty($_data['bankId']) ? 0 : $_data['bankId'];
+			$sql.=" AND crm.`payment_id` != 1 ";
+			$sql.=" AND crm.`bank_id` = $bankId ";
+		}
+		if(!empty($_data['branchId'])){
+			$sql.=" AND crm.`branch_id` = ".$_data['branchId'];
+		}
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$sql.=$dbp->getAccessPermission("crm.`branch_id`");
+		return $db->fetchRow($sql);
+	}
+	
+	function getTotalCommissionExpenseByPaymentMethod($_data){
+		$db = $this->getAdapter();
+		$recordDate = empty($_data['recordDate']) ? date("Y-m-d") : $_data['recordDate'];
+		$paymentMethod = empty($_data['paymentMethod']) ? 1 : $_data['paymentMethod'];
+		
+		$sql="
+			SELECT 
+				COALESCE(SUM(crm.total_amount),0) AS totalExpense
+			FROM `ln_comission` AS crm 
+			WHERE crm.status=1 
+			AND crm.for_date ='".$recordDate."'
+		";
+		if($paymentMethod==1){
+			$sql.=" AND crm.`payment_id` = 1 ";
+		}else{
+			$bankId = empty($_data['bankId']) ? 0 : $_data['bankId'];
+			$sql.=" AND crm.`payment_id` != 1 ";
+			$sql.=" AND crm.`bank_id` = $bankId ";
+		}
+		if(!empty($_data['branchId'])){
+			$sql.=" AND crm.`branch_id` = ".$_data['branchId'];
+		}
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$sql.=$dbp->getAccessPermission("crm.`branch_id`");
+		return $db->fetchRow($sql);
+	}
+	
+	function getTotalCommissionPaymentExpenseByPaymentMethod($_data){
+		$db = $this->getAdapter();
+		$recordDate = empty($_data['recordDate']) ? date("Y-m-d") : $_data['recordDate'];
+		$paymentMethod = empty($_data['paymentMethod']) ? 1 : $_data['paymentMethod'];
+		
+		$sql="
+			SELECT 
+				COALESCE(SUM(crm.total_paid),0) AS totalExpense
+			FROM `rms_commission_payment` AS crm 
+			WHERE crm.status=1 
+			AND crm.date_payment ='".$recordDate."'
+		";
+		if($paymentMethod==1){
+			$sql.=" AND crm.`payment_method` = 1 ";
+		}else{
+			$bankId = empty($_data['bankId']) ? 0 : $_data['bankId'];
+			$sql.=" AND crm.`payment_method` != 1 ";
+			$sql.=" AND crm.`bank_id` = $bankId ";
+		}
+		if(!empty($_data['branchId'])){
+			$sql.=" AND crm.`branch_id` = ".$_data['branchId'];
+		}
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$sql.=$dbp->getAccessPermission("crm.`branch_id`");
+		return $db->fetchRow($sql);
 	}
 		
  }

@@ -122,6 +122,14 @@ Class Loan_Form_FrmMultiSalePaymemt extends Zend_Dojo_Form {
 			'missingMessage'=>$this->tr->translate("Forget Enter Data")
 		));
 		
+		$_id = new Zend_Form_Element_Hidden('id');
+		$_id->setAttribs(array(
+			'dojoType'=>'dijit.form.TextBox',
+			'class'=>'fullside',
+			'placeholder'=>$this->tr->translate("ACCOUNT_AND_CHEQUE_NO"),
+			'style'=>'color:red;font-weight: 600;'
+		));
+		
 		if($data!=null){
 			$_branchId->setValue($data['branchId']);
 			
@@ -137,11 +145,12 @@ Class Loan_Form_FrmMultiSalePaymemt extends Zend_Dojo_Form {
 			$_paymentMethod->setValue($data['paymentMethod']);
 			$_bankId->setValue($data['bankId']);
 			$_cheque->setValue($data['cheque']);
+			$_id->setValue($data['id']);
 		}
 		$this->addElements(
 				array(
-				
-				$_branchId
+				$_id
+				,$_branchId
 				,$_datePayment
 				
 				,$_totalInterest

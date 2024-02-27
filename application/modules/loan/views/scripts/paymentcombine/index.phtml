@@ -4,7 +4,7 @@
 	$frm = $this->frm_search;
 	
 	$urlReciept = $this->baseUrl()."/report/loan/rpt-combine-payment-receipt/id/";
-	$urlDelete = $this->baseUrl()."/loan/ilpayment/delete/id/";
+	$urlEdit = $this->baseUrl()."/loan/paymentcombine/edit/id/";
 	
 	
 	
@@ -181,6 +181,9 @@ $(function(){
 			if(key=="stepup"){
 				dijit.byId('id').set('value',row);
 				dijit.byId('updateForm').show();
+			}else if(key=="edit"){
+				url='<?php echo $urlEdit;?>';
+					gotoAction();
 			}else if(key=="reciept"){
 					url='<?php echo $urlReciept;?>';
 					gotoAction();
@@ -189,6 +192,13 @@ $(function(){
 		},
 		items: {
 			"reciept": {name: "<?php echo $tr->translate("RECEIPT");?>", icon: "fa-print", accesskey: "c o p y"},
+			"edit": {
+					name: "<?php echo $tr->translate("EDIT");?>"
+					, icon: "fa-edit", accesskey: "c o p y"
+					,disabled: function() {
+							return disabled;
+						}
+				},
 			
 			<?php 
 			$dbacc = new Application_Model_DbTable_DbUsers();

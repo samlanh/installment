@@ -1100,6 +1100,10 @@ class Report_LoanController extends Zend_Controller_Action {
 		$this->view->summaryData = $row;
 		$this->view->search = $search;
 		
+		$dbGBStock = new Application_Model_DbTable_DbGlobalStock();
+		$rsBank = $dbGBStock->getAllBank();
+		$this->view->bankList = $rsBank;
+		
 		$frmpopup = new Application_Form_FrmPopupGlobal();
 		$this->view->footerReport = $frmpopup->getFooterReport();
 		$this->view->headerReport = $frmpopup->getLetterHeadReport();	
