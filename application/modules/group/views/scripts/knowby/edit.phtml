@@ -1,0 +1,143 @@
+<?php
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate('EDIT_KNOW_BY'));
+	
+	$serviceFee = SEVICEFEE_INPROPERTY_TYPE;
+	$classFee = "";
+	if($serviceFee==0){
+		$classFee = "hideClass";
+	}
+	$property = $this->frm_property_type;
+?>
+<div class="card">
+	<div class="card-content collapse show">
+		<div class="card-box">
+               	<div class="col-sm-12 border-botom">
+		    		<div class="col-sm-8 pd-0">
+		    			<h4 class="m-b-0"><i class="glyphicon glyphicon-indent-left" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('EDIT_KNOW_BY');?></h4>
+    			</div>
+    			<div class="col-sm-4 text-right">
+    			</div>
+    		</div>
+    	</div>
+		<form  id='add_techer' action="" dojoType="dijit.form.Form" method="post" enctype="multipart/form-data">
+			<script type="dojo/method" event="onSubmit">			
+				if(this.validate()) {
+					loadingBlock();
+					return true;
+				} else {
+					return false;
+				}
+			</script>
+    	<div class="card-box">
+			<div class="col-md-6 col-sm-6 col-xs-12">
+				<div class="card-blogform">
+					<div class="card-body"> 
+						<div class="row"> 
+							<div class="col-md-12 col-sm-12 col-xs-12"> 
+								<div class="d-flex"> 
+									<div class="settings-main-icon ">
+										<i class="fa fa-info" aria-hidden="true"></i>
+									</div> 
+									<div class="col-md-10 col-sm-10 col-xs-12"> 
+										<p class="tx-20 font-weight-semibold d-flex "><?php echo $tr->translate("KNOW_BY");?></p>
+									</div> 
+								</div> 
+								<div class="form-group">
+								   <label class="control-label bold col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("TITLE");?><span>*</span>   :
+								   </label>
+								   <div class="col-md-7 col-sm-7 col-xs-12">
+										<?php  echo $property->getElement('title');?>
+										<?php  echo $property->getElement('id');?>
+								   </div>
+								</div>
+								
+								<div class="form-group">
+									<label class="control-label custom-switch float-end "> 
+										<a href="javascript:void(0);" class="switchButton status"><?php echo $tr->translate("STATUS");?></a> 
+										<input type="checkbox" id="status" name="status" class="custom-switch-input"  <?php if(!empty($this->row['status'])){ echo "checked";} ?> > 
+										<span class="custom-switch-indicator custom-radius switch-status"></span> 
+									</label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+			   
+			</div>
+			<div class="col-md-3 col-sm-3 col-xs-12">
+				
+			</div>
+		</div>
+		<div class="clearfix"></div>
+		<div class="card-box">
+			<div class="col-md-12 col-sm-12 col-xs-12 border-top mt-20 ptb-10 text-center">
+				<input type="hidden" name="exchangefrom" value="2" />
+				<input type="submit" class="button-class button-primary" iconClass="glyphicon glyphicon-floppy-disk" value="save_close" id="save_close" name="save_close" label="<?php echo $tr->translate("SAVECLOSE");?>" dojoType="dijit.form.Button"  />
+			</div>
+		</div>
+		</form>			
+	</div>
+</div>
+<style>
+.image-box {
+    text-align: center;
+}
+.image-box img {
+    width: 100%;
+    height: 150px;
+    border: solid 1px #eee;
+}
+.button_browse {
+    /*margin-top: 10px; */
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    width: 100%;
+    height: 45px;
+    cursor: pointer;
+    background: #fbf9f9;
+    border: 1px solid #e8e8e8;
+}
+.button_browse span {
+    font-weight: 600;
+    cursor: pointer;
+}
+input.btn_borwse_image {
+    position: absolute;
+    width: 100%;
+    height: 45px;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    opacity: 0;
+    cursor: pointer;
+}
+.account-image {
+    border: solid 1px #eee;
+    width: 100%;
+}
+.hideClass{
+   display:none !important;
+  
+}
+</style>
+<script>
+	dojo.require("dijit.form.Textarea");
+	dojo.require("dijit.form.NumberTextbox");
+	
+	function readURL(input) {
+		if (input.files && input.files[0]) {
+			var reader = new FileReader();
+			
+			reader.onload = function (e) {
+				$('#logo_wiew').attr('src', e.target.result);
+			}
+			reader.readAsDataURL(input.files[0]);
+		}
+	}
+	$("#logo").change(function(){
+		readURL(this);
+	});
+</script>

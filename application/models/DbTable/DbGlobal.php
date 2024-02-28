@@ -1313,7 +1313,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   }
   function getAllKnowBy($option=1,$_add_new=null){
   	$db = $this->getAdapter();
-  	$sql="SELECT id,title,title as name FROM `rms_know_by` WHERE `status`=1 AND `title`!='' ";
+  	$sql="SELECT id,title,title as name FROM `rms_know_by` WHERE `status`=1 AND `title`!='' ORDER BY title ASC ";
   	$result=$db->fetchAll($sql);
   	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
   	if($option!=null){

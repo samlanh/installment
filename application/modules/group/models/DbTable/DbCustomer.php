@@ -218,6 +218,22 @@ class Group_Model_DbTable_DbCustomer extends Zend_Db_Table_Abstract
 			echo $e->getMessage();
 		}
 	}
+	function checkDuplicatePhone($_data){
+		$phone = empty($_data['phone']) ? "0" : $_data['phone'];
+		$db = $this->getAdapter();
+		$sql = "SELECT c.id FROM `in_customer` AS c WHERE 1 AND c.phone='".$phone."' ";
+		
+		if(!empty($_data['customerId'])){
+			$sql.=" AND c.id !=".$_data['customerId'];
+		}
+		$sql.=" LIMIT 1 ";
+		$rows =  $db->fetchRow($sql);
+		if(!empty($rows)){
+			return true;
+		}
+		return false;
+	}
+	
 	public function addKnowBy($_data){
 		$db = $this->getAdapter();
 		$db->beginTransaction();
