@@ -1139,10 +1139,14 @@ class Report_Model_DbTable_DbParamater extends Zend_Db_Table_Abstract
 			
 		";
 		$sql.=", CASE
-		WHEN  c.proccess = 0 THEN '".$tr->translate("DROPPED")."'
-		WHEN c.proccess = 1 THEN '".$tr->translate("PROCCESSING")."'
-		WHEN c.proccess = 2 THEN '".$tr->translate("WAITING_RESPONSE")."'
-		WHEN c.proccess = 3 THEN '".$tr->translate("COMPLETED_CONTACT")."'
+		WHEN  c.proccess = 0 THEN 'បោះបង់ការទំនាក់ទំនង'
+		WHEN c.proccess = 1 THEN 'កំពុងដំណើរការណ៍'
+		WHEN c.proccess = 2 THEN 'បន្តការទំនាក់ទំនង'
+		WHEN c.proccess = 3 THEN 'រង់ចាំណាត់ជួប'
+		WHEN c.proccess = 4 THEN 'បានណាត់ជួប'
+		WHEN c.proccess = 5 THEN 'បិទការលក់'
+		WHEN c.proccess = 6 THEN 'ការកក់ប្រាក់'
+		WHEN c.proccess = 7 THEN 'ចុះកុងត្រា'
 		
 		END AS proccess ";
 		$sql.=" FROM `ln_history_contact` AS c,

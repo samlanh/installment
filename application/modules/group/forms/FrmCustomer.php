@@ -107,7 +107,15 @@ Class Group_Form_FrmCustomer extends Zend_Dojo_Form {
 		
 		));
 		$rows = $dbcusre->getAllstatusreqForOpt();
-		$options = array(''=>$this->tr->translate("CHOOSE_STATUS_REQ"),'-1'=>$this->tr->translate("ADD_NEW"));
+		$options = array(
+			''=>$this->tr->translate("CHOOSE_STATUS_REQ")
+			,'-1'=>$this->tr->translate("ADD_NEW")
+			,'បន្តទំនាក់ទំនង'=>"បន្តទំនាក់ទំនង"
+			,'រង់ចាំការណាត់ជួប'=>"រង់ចាំការណាត់ជួប"
+			,'បោះបង់ការទំនាក់ទំនង'=>"បោះបង់ការទំនាក់ទំនង"
+			,'ជាន់ភ្ញៀវ'=>"ជាន់ភ្ញៀវ"
+			,'ស្នើរសុំជំនួយ'=>"ស្នើរសុំជំនួយ"
+			);
 		if(!empty($rows))foreach($rows AS $row){
 			$options[$row['name']]=$row['name'];//($row['displayby']==1)?$row['name_kh']:$row['name_en'];
 		}
