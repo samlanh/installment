@@ -382,6 +382,7 @@ function addRow(){
 		temp+='<th scope="col" width="100px;"><?php echo $tr->translate("SOLD_PRICE");?></th>';
 		temp+='<th scope="col" id="lbl_titlemetion" width="100px"><?php echo $tr->translate("PAID");?></th>';
 		temp+='<th scope="col" id="lbl_titlemetion" width="100px"><?php echo $tr->translate("BALANCE");?></th>';
+		temp+='<th scope="col" width="100px"><?php echo $tr->translate("COMISSION_PERCENT");?></th>';
 		temp+='<th scope="col" width="100px"><?php echo $tr->translate("COMISSION_EXPECTED");?></th>';
 		
 		dojo.query("#head-title").append(temp);
@@ -396,7 +397,8 @@ function addRow(){
 		template+='<td data-label="<?php echo $tr->translate("SOLD_PRICE");?>" ><input readonly class="fullside" type="text"  name="price_sold'+col+'" id="price_sold'+col+'" dojoType="dijit.form.TextBox" /></td>';	
 		template+='<td data-label="<?php echo $tr->translate("PAID");?>" ><input readonly class="fullside" type="text"  name="paid'+col+'" id="paid'+col+'" dojoType="dijit.form.TextBox" /></td>';			
 		template+='<td data-label="<?php echo $tr->translate("BALANCE");?>"><input readonly class="fullside" type="text"  name="balance'+col+'" id="balance'+col+'" dojoType="dijit.form.TextBox" /></td>';
-		template+='<td data-label="<?php echo $tr->translate("COMISSION_EXPECTED");?>"><input required class="fullside" type="text" data-dojo-props="constraints:{min:0.01},rangeMessage:'+"'<?php echo $tr->translate("MINIMUM_VALUE_IS_ONE");?>'"+'" name="commission_amount'+col+'" id="commission_amount'+col+'" dojoType="dijit.form.NumberTextBox" /><input class="fullside" value="" type="hidden" data-dojo-type="dijit.form.TextBox" id="house_id'+col+'" name="house_id'+col+'" /></td>';
+		template+='<td data-label="<?php echo $tr->translate("COMISSION_PERCENT");?>"><input onKeyup="calutateCommission('+col+',1);" required class="fullside" value="0" type="text" data-dojo-props="constraints:{min:0,max:100},rangeMessage:'+"'<?php echo $tr->translate("INVALID_PERCENT");?>'"+'" name="percentAmount'+col+'" id="percentAmount'+col+'" dojoType="dijit.form.NumberTextBox" /></td>';
+		template+='<td data-label="<?php echo $tr->translate("COMISSION_EXPECTED");?>"><input onKeyup="calutateCommission('+col+',2);" required class="fullside" type="text" data-dojo-props="constraints:{min:0.01},rangeMessage:'+"'<?php echo $tr->translate("MINIMUM_VALUE_IS_ONE");?>'"+'" name="commission_amount'+col+'" id="commission_amount'+col+'" dojoType="dijit.form.NumberTextBox" /><input class="fullside" value="" type="hidden" data-dojo-type="dijit.form.TextBox" id="house_id'+col+'" name="house_id'+col+'" /></td>';
 	tmp='<tr class="rowData"  id="row'+col+'">';
 	tmp+="</tr>";
 	dojo.query("#table_row").append(tmp);
@@ -409,6 +411,28 @@ function addRow(){
 	     parseContent: true,
 	});
 	getInfoByLoanNumber(col);
+}
+function  calutateCommission(index,type){
+	var priceSold = dijit.byId('price_sold'+index).get('value');
+	priceSold=isNaN(priceSold)?0:parseFloat(priceSold);
+	
+	if(type==1){
+		var percent = dijit.byId('percentAmount'+index).get('value');
+		percent=isNaN(percent)?0:parseFloat(percent);
+		var totalCommission = 0
+		if(percent>0){
+			 totalCommission = (priceSold*percent)/100;
+		}
+		dijit.byId('commission_amount'+index).attr('value',totalCommission.toFixed(2));
+	}else{
+		var commissionAmount = dijit.byId('commission_amount'+index).get('value');
+		commissionAmount=isNaN(commissionAmount)?0:parseFloat(commissionAmount);
+		var percent = 0
+		if(commissionAmount>0){
+			 percent = (commissionAmount*100)/priceSold;
+		}
+		dijit.byId('percentAmount'+index).attr('value',percent.toFixed(2));
+	}
 }
 function deleteRecord(index) {
 	var identity = $('#identity').val();
