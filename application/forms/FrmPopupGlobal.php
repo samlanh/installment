@@ -3761,25 +3761,32 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 		
 		$str='
 				<style>
+					*, :after, :before {
+							box-sizing: unset;
+						}
 					.dataInfo {
 						display:block; 
 						text-align:left; 
-						font-size:14px; 
-						line-height:18px; 
+						font-size:12px; 
+						line-height:16px; 
 						font-family:'."'Times New Roman'".','."'Khmer OS Battambang'".';
+					}
+					td span {
+						line-height: 16px;
+						font-size: 12px;
 					}
 					table.content-data{
 						border-collapse:collapse;
 						border:1px solid #000; 
-						font-size:14px;
+						font-size:12px; 
 						font-family:'."'Times New Roman'".','."'Khmer OS Battambang'".';
 					}
 					table.content-data thead tr.style {
-						line-height: 25px;
-						font-size: 14px !important;
+						line-height: 20px;
+						font-size: 12px !important;
 						padding: 1px 0px;
 						white-space: nowrap;
-						height: 22px;
+						height: 20px;
 						background: #c1d0f3;
 						font-weight: bold;
 						text-align: center;
@@ -3788,7 +3795,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 						white-space: nowrap;
 					}
 					table.content-data tr td{
-						padding:2px  2px;
+						padding:1px  2px;
 					}
 					table.content-data tr.odd {
 						background: #eee;
@@ -3810,11 +3817,15 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					table.content-bank{
 						border-collapse:collapse;
 						border-top:0px solid #000; 
-						font-size:14px;
+						font-size:12px;
 						font-family:'."'Times New Roman'".','."'Khmer OS Battambang'".';
 						width:80%;
 						text-align: center;
 						margin: 0 auto;
+					}
+					span#lblpaid_date, span#lb_receipt {
+						color: red;
+						font-weight: bold;
 					}
 					td#bankPaymentInfo {
 						border-top: solid 1px #000;
@@ -3851,26 +3862,26 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 							</div>
 						</td>
 						<td width="40%" align="center">
-							<span style="text-align:center; font-size:20px; line-height:28px; font-family:'."'Khmer OS Muol Light'".';">ព្រះរាជាណាចក្រកម្ពុជា</span>
-							<span style="text-align:center; font-size:16px; line-height:28px; width: 100%; display: block;font-family:'."'Khmer OS Muol Light'".';">ជាតិ សាសនា ព្រះមហាក្សត្រ</span>
-							<span style="text-align:center; line-height:28px; width: 100%; display: block;  "><img src="'.$baseurl.'/images/agreementsign.jpg" height="25px"></span>
+							<span style="text-align:center; font-size:18px; line-height:26px; font-family:'."'Khmer OS Muol Light'".';">ព្រះរាជាណាចក្រកម្ពុជា</span>
+							<span style="text-align:center; font-size:14px; line-height:26px; width: 100%; display: block;font-family:'."'Khmer OS Muol Light'".';">ជាតិ សាសនា ព្រះមហាក្សត្រ</span>
+							<span style="text-align:center; line-height:26px; width: 100%; display: block;  "><img src="'.$baseurl.'/images/agreementsign.jpg" height="18px"></span>
 							
-							<span style="text-decoration: underline; text-align:center; font-size:20px; line-height:28px; font-family:'."'Khmer OS Muol Light'".';">កិច្ចសន្យាបន្ថែមប្រាក់</span>
+							<span style="text-decoration: underline; text-align:center; font-size:16px; line-height:24px; font-family:'."'Khmer OS Muol Light'".';">កិច្ចសន្យាបន្ថែមប្រាក់</span>
 							<br />
-							<span style="text-align:center; font-size:20px; line-height:28px; font-family:'."'Times New Roman'".'; ">Recive Payment From Customer</span>
+							<span style="text-align:center; white-space:nowrap; font-size:18px; line-height:24px; font-family:'."'Times New Roman'".'; ">Recive Payment From Customer</span>
 						   
 						</td>
 						<td width="30%" valign="top" align="center">
 							<div style="height:80px; max-width: 100%;"></div>
 							<span id="lb_receipt" class="receipt-class"></span>
 							<br />
-							Date: <span id="lblpaid_date" class="valueData"></span>
+							<span id="lblpaid_date" class="valueData"></span>
 						</td>
 					</tr>
 					<tr>
 						<td colspan="3" valign="top">
 							<span class="dataInfo" >
-							- អតិថិជនឈ្មោះ <span id="lb_customer" class="valueData"></span>
+							-អតិថិជនឈ្មោះ <span id="lb_customer" class="valueData"></span>
 							ភេទ <span id="customerGender" class="customerGender"></span> 
 							
 							គម្រោង <strong id="lbl_project" class="valueDataRow"></strong>
@@ -3895,7 +3906,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					<tr>
 						<td colspan="3" valign="top">
 							<span class="dataInfo" >
-								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;សរុបបង់បាន <span id="lbl_total_paid1"></span> នៅខ្វះ <span id="lbl_balance"></span> <span id="paymentOptintionDesc"></span> 
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;សរុបបង់បាន <strong id="lbl_total_paid1"></strong> នៅខ្វះ <strong id="lbl_balance"></strong> <span id="paymentOptintionDesc"></span> 
 							</span>
 							
 						</td>

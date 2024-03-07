@@ -14,20 +14,54 @@
 	if($userTypeId>2){
 		$styleNotif="hiddentNotif";
 	}
-	
+	$db_user=new Application_Model_DbTable_DbUsers();
 	$vdgb = new Application_Model_DbTable_DbGlobal();
 	$alllang =  $vdgb->getLaguage();
 	$currentlang = $vdgb->currentlang();
 	if($systemType==1){
 		$systemSwitchTo = $tr->translate("Stock System");
 		$db = new Report_Model_DbTable_DbloanCollect();
-		$rs = $db->getCustomerNearlyPayment();
-		$rsagree = $db->getCustomerNearAgreement();
-		$slPreparedSch = $db->getSalePreparedScheduleInLimitDay();
-		$altBoreyFee = $db->getCustomerNearlyPaymentBoreyFee();
 		
-		$rsplong = $vdgb->getAllplongissue();
-		$rsCusRequire = $vdgb->getAllCustomerRequireNextContact();
+		$rs = array();
+		$classActionPayment="hiddentNotif";
+		$actionPaymentCheck = $db_user->getAccessUrl("loan","ilpayment",'add');
+		if(!empty($actionPaymentCheck)){
+			$rs = $db->getCustomerNearlyPayment();
+			$classActionPayment="";
+		}
+		$rsagree = array();
+		$classActionNearAgreement="hiddentNotif";
+		$actionNearAgreementCheck = $db_user->getAccessUrl("loan","index",'index');
+		if(!empty($actionNearAgreementCheck)){
+			$rsagree = $db->getCustomerNearAgreement();
+			$classActionNearAgreement="";
+		}
+		
+		$altBoreyFee = array();
+		$classActionBoreyFeeCheck="hiddentNotif";
+		$actionBoreyFeeCheck = $db_user->getAccessUrl("incexp","incomeboreyfee",'add');
+		if(!empty($actionBoreyFeeCheck)){
+			$altBoreyFee = $db->getCustomerNearlyPaymentBoreyFee();
+			$classActionBoreyFeeCheck="";
+		}
+		
+		$rsplong = array();
+		$classActionPlongissueCheck="hiddentNotif";
+		$actionPlongissueCheck = $db_user->getAccessUrl("issue","receivplong",'add');
+		if(!empty($actionPlongissueCheck)){
+			$rsplong = $vdgb->getAllplongissue();
+			$classActionPlongissueCheck="";
+		}
+		
+		$userCusRequireCheck = $db_user->getAccessUrl("group","customer",'contact');
+		$classCusRequire="hiddentNotif";
+		$rsCusRequire = array();
+		if(!empty($userCusRequireCheck)){
+			$rsCusRequire = $vdgb->getAllCustomerRequireNextContact();
+			$classCusRequire="";
+		}
+		
+		//$slPreparedSch = $db->getSalePreparedScheduleInLimitDay();
 	
 	}else{
 		$systemSwitchTo = $tr->translate("Installment System");
@@ -46,7 +80,7 @@
 		*/
 	}
 	
-	$db_user=new Application_Model_DbTable_DbUsers();
+	
 	$user_info = $db_user->getUserInfo($user_id);
 	$rsTestSaleAct = $db_user->getAccessUrl('other','testsale','index');
 	if(!empty($rsTestSaleAct)){
@@ -58,7 +92,7 @@
 	?>
 	<?php if($systemType==1){?>
 			   <?php if (empty($user_info['staff_id'])){?>
-				<li role="presentation" class="dropdown <?php echo $styleNotif;?>">
+				<li role="presentation" class="dropdown <?php echo $classActionNearAgreement;?>">
 				  <a title="<?php echo $tr->translate("MAKE_AGREEMENTLIST");?>" href="javascript:;"  class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="true">
 					<i class="fa fa-newspaper-o"></i>
 					<span id="countNews" class="badge bg-green"><?php if (count($rsagree)>0){ echo count($rsagree);}?></span>
@@ -95,7 +129,7 @@
 				  </ul>
 			  </li>
 			  <?php if(!empty($altBoreyFee)){?>
-			  <li role="presentation" class="dropdown <?php echo $styleNotif;?>">
+			  <li role="presentation" class="dropdown <?php echo $actionBoreyFeeCheck;?>">
 				  <a title="<?php echo $tr->translate("CUSTOMER_BOREY_FEE");?>" href="javascript:;"  class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="true">
 					<i class="fa fa-tasks"></i>
 					<span id="countNews" class="badge bg-green"><?php if (count($altBoreyFee)>0){ echo count($altBoreyFee);}?></span>
@@ -136,7 +170,7 @@
 					</ul>
 			 </li>
 			 <?php }?>
-			  <li role="presentation" class="dropdown <?php echo $styleNotif;?>">
+			  <li role="presentation" class="dropdown <?php echo $classActionPayment;?>">
 				  <a title="<?php echo $tr->translate("CUSTOMER_PAYMENTLIST");?>" href="javascript:;"  class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="true">
 					<i class="fa fa-money"></i>
 					<span id="countNews" class="badge bg-green"><?php if (count($rs)>0){ echo count($rs);}?></span>
@@ -172,7 +206,7 @@
 					  <?php }?>
 					</ul>
 			 </li>
-			 <li role="presentation" class="dropdown <?php echo $styleNotif;?>">
+			 <li role="presentation" class="dropdown <?php echo $classActionPlongissueCheck;?>">
 				  <a title="<?php echo $tr->translate("ISSUE_PLONGNOTYET_RECEIPT");?>" href="javascript:;"  class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="true">
 					<i class="fa fa-newspaper-o"></i>
 					<span id="countNews" class="badge bg-green"><?php if (count($rsplong)>0){ echo count($rsplong);}?></span>
@@ -254,46 +288,6 @@
 				  </ul>
 			  </li>
 			  
-			  <!--
-			  <li role="presentation" class="dropdown">
-				  <a title="<?php echo $tr->translate("SCHEDULE_PREPARED_NOTIF");?>" href="javascript:;"  class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="true">
-					<i class="fa  fa-globe"></i>
-					<span id="countNews" class="badge bg-green"><?php if (count($slPreparedSch)>0){ echo count($slPreparedSch);}?></span>
-				  </a>
-				  <ul id="menu1" class="dropdown-menu list-unstyled " role="menu">
-					 <li class=" event title">
-						<h4><?php echo $tr->translate("SCHEDULE_PREPARED_NOTIF");?></h4>
-					  </li>
-					   <?php if(!empty($slPreparedSch)){?>
-					<?php foreach($slPreparedSch as $key=> $result){
-						$end_dat=date("Y-m-d");
-						$total_day=strtotime($end_dat)-strtotime($result['reschedule_date']);
-						$total_late_day=$total_day/(60*60*24);
-						?>
-					  <li class=" event">
-						 <a href="#">
-							<div class="pull-left profile-list ">
-							  <img src="<?php echo $this->baseUrl()."/images/no-profile.png";?>" />
-							</div>
-							<div class="media-body">
-								<small><?php echo $result['branch_name'];?></small><br />
-							  <span class="title" ><?php echo $result['clientNamekh'];?> (<?php echo $result['land_address'].' '.$result['street'];?>)</span>
-							  
-							  <p><strong><i class="fa fa-phone"></i> <?php echo $result['clientPhone'];?> </strong>  </p>
-							  <p><strong></strong> <i class="fa fa-calendar"></i> <?php echo date("d/m/Y",strtotime($result['reschedule_date'])); echo '('.$total_late_day."ថ្ងៃ )";?></p>
-							  </p>
-							 
-							</div>
-							<span class="agentTitle" ><i class="fa fa-user" aria-hidden="true"></i>&nbsp;&nbsp;<?php echo $result['staffName'];?> </span><br/>
-							<i class="fa fa-phone"></i>&nbsp;&nbsp;<span><?php echo $result['staffPhone'];?></span>
-						</a>
-						 
-					  </li>
-					  <?php }?>
-					   <?php }?>
-				  </ul>
-			  </li>
-			  -->
 			  
 			  <?php }?>
 			  <li class="">
