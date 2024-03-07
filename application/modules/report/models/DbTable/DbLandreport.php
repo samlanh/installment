@@ -3496,7 +3496,16 @@ function updatePaymentStatus($data){
 				,cmb.`totalPayment`
 				,(SELECT v.name_kh FROM `ln_view` AS v WHERE v.type=2 AND v.key_code=cmb.`paymentMethod` LIMIT 1) AS paymentMethodTitle
 				,(SELECT  ba.bank_name FROM st_bank AS ba WHERE ba.id=cmb.`bankId` LIMIT 1 ) AS bankName
-				,(SELECT  u.first_name FROM rms_users AS u WHERE u.id=cmb.`userId` LIMIT 1 ) AS userName
+				,(SELECT  CONCAT(COALESCE(u.first_name,''),' ',COALESCE(u.last_name,'')) FROM rms_users AS u WHERE u.id=cmb.`userId` LIMIT 1 ) AS userName
+				,COALESCE(
+					(SELECT 
+					SUM(s.`price_sold`) AS totalPrice
+					FROM `ln_sale` AS s 
+					WHERE s.id IN(SELECT 
+						DISTINCT crm.`sale_id` 
+					FROM `ln_client_receipt_money` AS crm 
+					WHERE crm.`combineId`=cmb.id))
+					,0) AS totalPrice 
 			";
 		$sql.="
 			FROM 

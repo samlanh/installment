@@ -174,7 +174,45 @@ function getBranchInfo(){
 			var arr = JSON.parse(data);
 			var imagesUrl = '<img class="view" style="height:80px; max-width: 100%;" src="<?php echo $this->baseUrl()."/images/projects/"?>'+arr.logo+'" />';
 			document.getElementById('projectlogo').innerHTML = imagesUrl;
-
+			
+			var strBankInfo='';
+			var strBankColInfo='';
+			var bankList=0;
+			if(arr.bank_account1!=""){
+				strBankColInfo+='<td align="center"><span class="blockLine"><span class="signBank">&#10070;</span> <strong class="bankName">'+arr.bank_account1+'</strong></span>';
+				strBankColInfo+='<span class="blockLine">Account Name: <strong class="classBlue">'+arr.bank_account_name1+'</strong></span>';
+				strBankColInfo+='<span class="blockLine">Account Number: <strong class="classBlue">'+arr.bank_account1number+'</strong></span>';
+				strBankColInfo+='</td>';
+				bankList = bankList+1;
+			}
+			
+			if(arr.bank_account2!=""){
+				strBankColInfo+='<td align="center"><span class="blockLine"><span class="signBank">&#10070;</span> <strong class="bankName">'+arr.bank_account2+'</strong></span>';
+				strBankColInfo+='<span class="blockLine">Account Name: <strong class="classBlue">'+arr.bank_account_name2+'</strong></span>';
+				strBankColInfo+='<span class="blockLine">Account Number: <strong class="classBlue">'+arr.bank_account2number+'</strong></span>';
+				strBankColInfo+='</td>';
+				bankList = bankList+1;
+			}
+			
+			if(arr.bank_account3!=""){
+				strBankColInfo+='<td align="center"><span class="blockLine"><span class="signBank">&#10070;</span> <strong class="bankName">'+arr.bank_account3+'</strong></span>';
+				strBankColInfo+='<span class="blockLine">Account Name: <strong class="classBlue">'+arr.bank_account_name3+'</strong></span>';
+				strBankColInfo+='<span class="blockLine">Account Number: <strong class="classBlue">'+arr.bank_account3number+'</strong></span>';
+				strBankColInfo+='</td>';
+				bankList = bankList+1;
+			}
+			
+			strBankInfo+='<table class="content-bank"  border="0">';
+			strBankInfo+='<tr>';
+				strBankInfo+='<th colspan="'+bankList+'" align="center">គណនីធនាគារសម្រាប់ទូទាត់ / <strong>Bank Account For Payment</strong></th>';
+			strBankInfo+='</tr>';
+			strBankInfo+='<tr>';
+			strBankInfo+=strBankColInfo;
+			
+			strBankInfo+='</tr>';
+			strBankInfo+='</table>';
+			
+			dojo.byId("bankPaymentInfo").innerHTML =strBankInfo;
 			document.getElementById('ft_branch_title_lb').innerHTML = arr.footer_title;
 			document.getElementById('ft_website_lb').innerHTML = arr.office_website;
 			document.getElementById('ft_email_client_lb').innerHTML = arr.office_email;
@@ -191,13 +229,16 @@ function printSave(){
 	dojo.byId("lbl_project").innerHTML = '<?php echo $this->rs['projectName'];?>';
 	
 	dojo.byId("lb_customer").innerHTML = '<?php echo $this->rs['clientName']; echo !empty($this->rs['withClientName'])?" /".$this->rs['withClientName']:"";?>';
+	dojo.byId("lbl_customer").innerHTML = '<?php echo $this->rs['clientName']; echo !empty($this->rs['withClientName'])?" /".$this->rs['withClientName']:"";?>';
 	dojo.byId("customerGender").innerHTML = '<?php echo $this->rs['sexTitle'];?>';
 	dojo.byId("lbl_phone").innerHTML = '<?php echo $this->rs['clientPhone'];?>';
 	dojo.byId("projecatLocation").innerHTML = '<?php echo $this->rs['projectLocation'];?>';
+	dojo.byId("lbl_usersale").innerHTML = '<?php echo $this->rs['userName'];?>';
 	
 	dojo.byId("lblpaid_date").innerHTML ='<?php echo $receiveDate;?>';
 	dojo.byId("lbl_total_paid1").innerHTML ='<?php echo "$ ".number_format($this->rs['totalAllPaid'],2);?>';
 	dojo.byId("lbl_balance").innerHTML ='<?php echo  "$ ".number_format($this->rs['totalBalance'],2);?>';
+	dojo.byId("lb_saleprice").innerHTML ='<?php echo  "$ ".number_format($this->rs['totalPrice'],2);?>';
 	var descriptionDetail = $( '#descriptionDetail' ).html();
 	$( '#paymentOptintionDesc' ).html( descriptionDetail );
 	

@@ -3788,7 +3788,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 						white-space: nowrap;
 					}
 					table.content-data tr td{
-						padding:4px 2px;
+						padding:2px  2px;
 					}
 					table.content-data tr.odd {
 						background: #eee;
@@ -3806,6 +3806,41 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 						margin: 0;
 						line-height: inherit;
 						font-size: inherit;
+					}
+					table.content-bank{
+						border-collapse:collapse;
+						border-top:0px solid #000; 
+						font-size:14px;
+						font-family:'."'Times New Roman'".','."'Khmer OS Battambang'".';
+						width:80%;
+						text-align: center;
+						margin: 0 auto;
+					}
+					td#bankPaymentInfo {
+						border-top: solid 1px #000;
+						padding-top: 10px;
+						text-align: center;    margin: 0 auto;
+					}
+					table.content-bank th{
+						font-family:'."'Times New Roman'".','."'Khmer OS Muol Light'".';
+						font-weight:normal;
+						text-align:center !important;
+						padding-top: 10px;
+					}
+					table.content-bank td{
+						padding-left:10px;
+					}
+					span.blockLine {
+						display: block;
+						line-height: 16px;
+						text-align: left;
+					}
+					strong.classBlue {
+						color: #3F51B5;
+					}
+					span.signBank {
+						font-size: 16px;
+						line-height: 16px;
 					}
 				</style>
 				<table  width="100%" style="font-family:'."'Times New Roman'".','."'Khmer OS Battambang'".'; padding:0; margin:0; border:0px;" >
@@ -3880,7 +3915,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 									អ្នកប្រគល់
 									</td>
 								</tr>
-								<tr height="85px">
+								<tr height="55px">
 									<td colspan="3">&nbsp;
 									</td>
 								</tr>
@@ -3894,6 +3929,11 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 									</td>
 								</tr>
 							</table>
+							<br />
+						</td>
+					</tr>
+					<tr>
+						<td colspan="3" valign="top" id="bankPaymentInfo">
 						</td>
 					</tr>
 					
