@@ -1397,18 +1397,21 @@ class Report_Model_DbTable_DbIncomeexpense extends Zend_Db_Table_Abstract
     	$dbp = new Application_Model_DbTable_DbGlobal();
     	$sql.=$dbp->getAccessPermission("inc.branch_id");
     	
-    	$order=" ORDER BY inc.next_date DESC ,inc.sale_id ASC, inc.id ASC";
+		$order=" GROUP BY s.id ";
+    	$orderBy=" ORDER BY inc.next_date DESC ,inc.sale_id ASC, inc.id ASC";
 		if(!empty($search['queryOrdering'])){
 			if($search['queryOrdering']==1){
-				$order =" ORDER BY inc.branch_id DESC, inc.date ASC ";
+				$orderBy =" ORDER BY inc.branch_id DESC, inc.date ASC ";
 			}else if($search['queryOrdering']==2){
-				$order =" ORDER BY inc.branch_id DESC, inc.date DESC ";
+				$orderBy =" ORDER BY inc.branch_id DESC, inc.date DESC ";
 			}else if($search['queryOrdering']==3){
-				$order =" ORDER BY inc.branch_id DESC, inc.id ASC ";
+				$orderBy =" ORDER BY inc.branch_id DESC, inc.id ASC ";
 			}else if($search['queryOrdering']==4){
-				$order =" ORDER BY inc.branch_id DESC, inc.id DESC ";
+				$orderBy =" ORDER BY inc.branch_id DESC, inc.id DESC ";
 			}
 		}
+		$order.=$orderBy;
+		
 		if(empty($search)){
 			return $db->fetchAll($sql.$order);
 		}
