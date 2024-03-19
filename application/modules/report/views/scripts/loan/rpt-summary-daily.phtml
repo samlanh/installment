@@ -356,6 +356,26 @@
 				</tr>
 			</table>
 		</div>
+		<button class="btn button-class btn-primary" data-toggle="popover" title="<?php echo $tr->translate("COPIED");?>" data-content="<?php echo $tr->translate("DATA_SUCCESSFUL_COPIED");?>" class="button-class button-primary"   onclick="myFunction()"><i class="fa fa-clipboard" aria-hidden="true"></i> <?php echo $tr->translate("COPY");?></button>
+		
+		<?php 
+		$content="";
+		$expenseInfo="";
+		$incomeInfo="";
+		if(!empty($bankList)) foreach($bankList as $key => $row){
+			$row["totalBankExpense"] = empty($row["totalBankExpense"]) ? 0 : $row["totalBankExpense"];
+			$row["totalBankIncome"] = empty($row["totalBankIncome"]) ? 0 : $row["totalBankIncome"];
+			$expenseInfo.="⛔️".$row["name"]." : $ ".number_format($row["totalBankExpense"],2)."\n";
+			$incomeInfo.="💰".$row["name"]." : $ ".number_format($row["totalBankIncome"],2)."\n";
+		} 
+		$content.="📢Daily Received Report\n<span id='footerDate'></span>\n";
+		$content.=$incomeInfo;
+		$content.="💰".$tr->translate("CASH")." : $ ".number_format($gTotalCashIncome,2)."\n";
+		$content.="✅".$tr->translate("TOTAL")." : $ ".number_format($gTotalRecieve,2)."\n";
+		$content.=$expenseInfo;
+		$content.="⛔️".$tr->translate("CASH")." : $ ".number_format($gTotalCashExpense,2)."\n";
+		?>
+		<div id="contentInfo" style="white-space: pre-line;"><?php echo $content;?></div>
 	</div>
 </div>
 <script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
@@ -364,13 +384,26 @@ dojo.require("dojo.data.ItemFileWriteStore");
 
 require(["dojo/ready"], function(ready){
 	ready(function(){
+		
 		  getBranchInfo();
 		 document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
 		 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("RPT_SUMMARY_DIALY");?>';
 		 document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date("d-M-Y"); }else{ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date("d-M-Y",strtotime($this->search['end_date'])); }?>';
+		 document.getElementById('footerDate').innerHTML = 'Date : <?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date("d-M-Y"); }elseif(date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d",strtotime($this->search['end_date']))){echo date("d-M-Y",strtotime($this->search['start_date']));}else{ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date("d-M-Y",strtotime($this->search['end_date'])); }?>';
+		$('[data-toggle="popover"]').popover();
 	});
 });
-
+function myFunction() {
+	var textToCopy = $('#contentInfo').text();
+        var tempTextarea = $('<textarea>');
+        $('body').append(tempTextarea);
+        tempTextarea.val(textToCopy).select();
+        document.execCommand('copy');
+        tempTextarea.remove();
+		setTimeout(function() {
+			$('[data-toggle="popover"]').popover('hide');
+		}, 1000);
+}
 function getBranchInfo(){
 	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
 	branch_id = '<?php echo empty($this->search['branch_id'])?0:$this->search['branch_id'];?>';
