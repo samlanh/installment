@@ -365,7 +365,7 @@
 		if(!empty($bankList)) foreach($bankList as $key => $row){
 			$row["totalBankExpense"] = empty($row["totalBankExpense"]) ? 0 : $row["totalBankExpense"];
 			$row["totalBankIncome"] = empty($row["totalBankIncome"]) ? 0 : $row["totalBankIncome"];
-			$expenseInfo.="⛔️".$row["name"]." : $ ".number_format($row["totalBankExpense"],2)."\n";
+			$expenseInfo.="⛔️".$row["name"]." ".$tr->translate("Expense")." : $ ".number_format($row["totalBankExpense"],2)."\n";
 			$incomeInfo.="💰".$row["name"]." : $ ".number_format($row["totalBankIncome"],2)."\n";
 		} 
 		$content.="📢Daily Received Report\n<span id='footerDate'></span>\n";
@@ -373,7 +373,7 @@
 		$content.="💰".$tr->translate("CASH")." : $ ".number_format($gTotalCashIncome,2)."\n";
 		$content.="✅".$tr->translate("TOTAL")." : $ ".number_format($gTotalRecieve,2)."\n";
 		$content.=$expenseInfo;
-		$content.="⛔️".$tr->translate("CASH")." : $ ".number_format($gTotalCashExpense,2)."\n";
+		$content.="⛔️".$tr->translate("CASH")." ".$tr->translate("Expense")." : $ ".number_format($gTotalCashExpense,2)."\n";
 		?>
 		<div id="contentInfo" style="white-space: pre-line;"><?php echo $content;?></div>
 	</div>
