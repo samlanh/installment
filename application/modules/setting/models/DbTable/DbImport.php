@@ -2228,6 +2228,380 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     	}
     	return $staffId;
     }
+	
+	public function ImportUpdateKPTCombineSale($data){
+    	$db = $this->getAdapter();
+    	$db->beginTransaction();
+    	try{
+    		$count = count($data);
+    		$a_time= 0;
+    		$install = 1;
+    		$first_pay = 0;
+    		$cum_interest=0;
+    		$first_payment=0;
+    		$n=0;
+    		$oldland_str='';
+    		$payment_id = array('Monthly'=>4,'Holding'=>6,'ផ្ដាច់'=>6,'ដំណាក់កាលថេរ'=>3);
+    		$genderStr = array(
+					'ប្រុស'=>1,
+    				'ស្រី'=>2
+    			);
+				
+    		$keyCombine=0;
+    		$saleListId="";
+    $userId=23;
+    		$SaleIdGenerate =0;
+    		for($i=1; $i<=$count; $i++){
+				
+    			if($keyCombine!=$data[$i]['M'] && $i>1){
+					$saleInfo = $this->getSaleInfo($saleListId);
+					$houserIdList = $saleInfo['houserIdList'];
+					if(!empty($houserIdList)){
+						$propertyInfo = $this->getPropertyInfo($houserIdList);
+						$_arrLand=array(
+								'branch_id'	  => $propertyInfo['branch_id'],
+								'land_code'	  => '',
+								'land_address'=> $propertyInfo["combineAddress"],
+								'street'	  => $propertyInfo["street"],
+								'price'	      => $saleInfo["combinePriceBefore"],
+								'land_price'  => $saleInfo["combinePriceBefore"],
+								'house_price'  => $propertyInfo["combineHousePrice"],
+								'land_size'	  => '',
+								'width'       => '',
+								'height'      => '',
+								"is_lock"		=>1,
+								"status"		=>-2,
+								'user_id'	  => $userId,
+								'property_type'=> $propertyInfo["property_type"],
+								'type_tob'		=>$propertyInfo["type_tob"],
+								'south'	      => '',
+								'north'	      => '',
+								'west'	      => '',
+								'east'	      => '',
+								'old_land_id'=>$saleInfo['houserIdList'],
+								'create_date'=>$saleInfo['buy_date'],
+						);
+						$this->_name='ln_properties';
+						$land_id = $this->insert($_arrLand);
+						
+						$arr = array(
+							'branch_id'			=>$saleInfo['branch_id'],
+							'receipt_no'		=>$saleInfo['receipt_no'],
+							'house_id'			=>$land_id,
+							'sale_number'		=>$saleInfo['sale_number'],
+							'client_id'			=>$saleInfo['client_id'],
+							
+							'discount_amount'		=>0,
+							'discount_percent'		=>0,
+							'other_fee'			=>$saleInfo["other_fee"],
+							'price_before'		=>$saleInfo["combinePriceBefore"],
+							'price_sold'		=>$saleInfo["combinePriceSold"],
+							'land_price'		=>$saleInfo["combinePriceBefore"],
+							'paid_amount'		=>$saleInfo["totalPaid"],
+							'balance'			=>$saleInfo["combinePriceSold"]-$saleInfo["totalPaid"],
+							
+							'graice_period'		=>$saleInfo['graice_period'],
+							'amount_collect'	=>$saleInfo['amount_collect'],
+							'startcal_date'		=>$saleInfo['startcal_date'],
+							'first_payment'		=>$saleInfo['first_payment'],
+							'end_line'			=>$saleInfo['end_line'],
+							'validate_date'		=>$saleInfo['validate_date'],
+							'create_date'		=>$saleInfo['create_date'],
+							'interest_rate'		=>$saleInfo['interest_rate'],
+							'total_duration'	=>$saleInfo['total_duration'],
+							'payment_method'	=>$saleInfo['payment_method'],
+							'payment_type'		=>$saleInfo['payment_type'],
+							'payment_number'	=>$saleInfo['payment_number'],
+							'payment_id'		=>$saleInfo['payment_id'],
+							'install_type'		=>$saleInfo['install_type'],
+							'staff_id'			=>$saleInfo['staff_id'],
+							'buy_date'			=>$saleInfo['buy_date'],
+							'agreement_date'	=>$saleInfo['agreement_date'],
+							'typesale'			=>2,
+							'for_installamount'	=>$saleInfo['for_installamount'],
+							
+						);
+						 $this->_name='ln_sale';
+						 $newSaleId = $this->insert($arr);
+						
+						$this->_name='ln_client_receipt_money';
+    					$arrCRM = array(
+    							'sale_id'=>$newSaleId
+    					);
+    					$whereCRM = 'sale_id IN('.$saleListId.')';
+    					$this->update($arrCRM, $whereCRM);
+						
+						$this->_name='ln_sale';
+    					$arrOldSale = array(
+    							'is_cancel'=>1,
+    							'status'=>0,
+    					);
+    					$whereOldSale = ' id  IN('.$saleListId.')';
+    					$this->update($arrOldSale, $whereOldSale);
+						
+						
+						$saleSchdeule = $this->getScheduleSaleCombine($saleListId);
+						if(!empty($saleSchdeule)) foreach($saleSchdeule as $schedule){
+							$arrSch = array(
+    							'sale_id'					=>$newSaleId,
+    							'branch_id'					=>$schedule["branch_id"],
+    							'no_installment'			=>$schedule["no_installment"],
+    							'begining_balance'			=>$schedule["beginingBalance"],
+    							'begining_balance_after'	=>$schedule["beginingBalanceAfter"],
+    							'ending_balance'			=>$schedule["endingBalance"],
+    							'total_interest'			=>$schedule["totalInterest"],
+    							'total_interest_after'		=>$schedule["totalInterestAfter"],
+    							'principal_permonth'		=>$schedule["principalPermonth"],
+    							'principal_permonthafter'	=>$schedule["principalPermonthAfter"],
+    							'total_payment'				=>$schedule["totalPayment"],
+    							'total_payment_after'		=>$schedule["totalPaymentAfter"],
+    							'cum_interest'				=>$schedule["cumInterest"],
+    							'amount_day'				=>$schedule["amount_day"],
+    							'is_completed'				=>$schedule["is_completed"],
+    							'paid_date'					=>$schedule["paid_date"],
+    							'date_payment'				=>$schedule["date_payment"],
+    							'collect_by'				=>$schedule["collect_by"],
+    							'payment_option'			=>$schedule["payment_option"],
+    							'status'					=>$schedule["status"],
+    							'is_rescheule'				=>$schedule["is_rescheule"],
+    							'note'						=>$schedule["note"],
+    							'is_installment'			=>$schedule["is_installment"],
+    							'last_optiontype'			=>$schedule["last_optiontype"],
+    							'ispay_bank'				=>$schedule["ispay_bank"],
+    							'received_userid'			=>$schedule["received_userid"],
+    							'received_date'				=>$schedule["received_date"],
+    							'commission'				=>$schedule["commission"],
+    							'interest_rate'				=>$schedule["interest_rate"],
+							);
+							$this->_name='ln_saleschedule';
+							$this->insert($arrSch);
+						}
+						
+						$whereDeleteSch = 'sale_id IN('.$saleListId.')';
+						$this->_name="ln_saleschedule";
+						$this->delete($whereDeleteSch);
+						
+						$whereSaS = 'sale_id IN('.$saleListId.')';
+						$this->_name="ln_reschedule";
+						$this->delete($whereSaS);
+						
+						$whereSa = 'id IN('.$saleListId.')';
+						$this->_name="ln_sale";
+						$this->delete($whereSa);
+					}
+					$saleListId="";
+				}
+    			$keyCombine = $data[$i]['M'];
+				$saleListId = empty($saleListId) ? $data[$i]['J'] : $saleListId.",".$data[$i]['J'];
+    		}
+			
+			if($saleListId!=""){
+				$saleInfo = $this->getSaleInfo($saleListId);
+					$houserIdList = $saleInfo['houserIdList'];
+					if(!empty($houserIdList)){
+						$propertyInfo = $this->getPropertyInfo($houserIdList);
+						$_arrLand=array(
+								'branch_id'	  => $propertyInfo['branch_id'],
+								'land_code'	  => '',
+								'land_address'=> $propertyInfo["combineAddress"],
+								'street'	  => $propertyInfo["street"],
+								'price'	      => $saleInfo["combinePriceBefore"],
+								'land_price'  => $saleInfo["combinePriceBefore"],
+								'house_price'  => $propertyInfo["combineHousePrice"],
+								'land_size'	  => '',
+								'width'       => '',
+								'height'      => '',
+								"is_lock"		=>1,
+								"status"		=>-2,
+								'user_id'	  => $userId,
+								'property_type'=> $propertyInfo["property_type"],
+								'type_tob'		=>$propertyInfo["type_tob"],
+								'south'	      => '',
+								'north'	      => '',
+								'west'	      => '',
+								'east'	      => '',
+								'old_land_id'=>$saleInfo['houserIdList'],
+								'create_date'=>$saleInfo['buy_date'],
+						);
+						$this->_name='ln_properties';
+						$land_id = $this->insert($_arrLand);
+						
+						$arr = array(
+							'branch_id'			=>$saleInfo['branch_id'],
+							'receipt_no'		=>$saleInfo['receipt_no'],
+							'house_id'			=>$land_id,
+							'sale_number'		=>$saleInfo['sale_number'],
+							'client_id'			=>$saleInfo['client_id'],
+							
+							'discount_amount'		=>0,
+							'discount_percent'		=>0,
+							'price_before'		=>$saleInfo["combinePriceBefore"],
+							'price_sold'		=>$saleInfo["combinePriceSold"],
+							'land_price'		=>$saleInfo["combinePriceBefore"],
+							'paid_amount'		=>$saleInfo["totalPaid"],
+							'balance'			=>$saleInfo["combinePriceSold"]-$saleInfo["totalPaid"],
+							
+							'graice_period'		=>$saleInfo['graice_period'],
+							'amount_collect'	=>$saleInfo['amount_collect'],
+							'startcal_date'		=>$saleInfo['startcal_date'],
+							'first_payment'		=>$saleInfo['first_payment'],
+							'end_line'			=>$saleInfo['end_line'],
+							'validate_date'		=>$saleInfo['validate_date'],
+							'create_date'		=>$saleInfo['create_date'],
+							'interest_rate'		=>$saleInfo['interest_rate'],
+							'total_duration'	=>$saleInfo['total_duration'],
+							'payment_method'	=>$saleInfo['payment_method'],
+							'payment_type'		=>$saleInfo['payment_type'],
+							'payment_number'	=>$saleInfo['payment_number'],
+							'payment_id'		=>$saleInfo['payment_id'],
+							'install_type'		=>$saleInfo['install_type'],
+							'staff_id'			=>$saleInfo['staff_id'],
+							'buy_date'			=>$saleInfo['buy_date'],
+							'agreement_date'	=>$saleInfo['agreement_date'],
+							'typesale'			=>2,
+							'for_installamount'	=>$saleInfo['for_installamount'],
+							
+						);
+						 $this->_name='ln_sale';
+						 $newSaleId = $this->insert($arr);
+						
+						$this->_name='ln_client_receipt_money';
+    					$arrCRM = array(
+    							'sale_id'=>$newSaleId
+    					);
+    					$whereCRM = 'sale_id IN('.$saleListId.')';
+    					$this->update($arrCRM, $whereCRM);
+						
+						$this->_name='ln_sale';
+    					$arrOldSale = array(
+    							'is_cancel'=>1,
+    							'status'=>0,
+    					);
+    					$whereOldSale = ' id  IN('.$saleListId.')';
+    					$this->update($arrOldSale, $whereOldSale);
+						
+						
+						$saleSchdeule = $this->getScheduleSaleCombine($saleListId);
+						if(!empty($saleSchdeule)) foreach($saleSchdeule as $schedule){
+							$arrSch = array(
+    							'sale_id'					=>$newSaleId,
+    							'branch_id'					=>$schedule["branch_id"],
+    							'no_installment'			=>$schedule["no_installment"],
+    							'begining_balance'			=>$schedule["beginingBalance"],
+    							'begining_balance_after'	=>$schedule["beginingBalanceAfter"],
+    							'ending_balance'			=>$schedule["endingBalance"],
+    							'total_interest'			=>$schedule["totalInterest"],
+    							'total_interest_after'		=>$schedule["totalInterestAfter"],
+    							'principal_permonth'		=>$schedule["principalPermonth"],
+    							'principal_permonthafter'	=>$schedule["principalPermonthAfter"],
+    							'total_payment'				=>$schedule["totalPayment"],
+    							'total_payment_after'		=>$schedule["totalPaymentAfter"],
+    							'cum_interest'				=>$schedule["cumInterest"],
+    							'amount_day'				=>$schedule["amount_day"],
+    							'is_completed'				=>$schedule["is_completed"],
+    							'paid_date'					=>$schedule["paid_date"],
+    							'date_payment'				=>$schedule["date_payment"],
+    							'collect_by'				=>$schedule["collect_by"],
+    							'payment_option'			=>$schedule["payment_option"],
+    							'status'					=>$schedule["status"],
+    							'is_rescheule'				=>$schedule["is_rescheule"],
+    							'note'						=>$schedule["note"],
+    							'is_installment'			=>$schedule["is_installment"],
+    							'last_optiontype'			=>$schedule["last_optiontype"],
+    							'ispay_bank'				=>$schedule["ispay_bank"],
+    							'received_userid'			=>$schedule["received_userid"],
+    							'received_date'				=>$schedule["received_date"],
+    							'commission'				=>$schedule["commission"],
+    							'interest_rate'				=>$schedule["interest_rate"],
+							);
+							$this->_name='ln_saleschedule';
+							$this->insert($arrSch);
+						}
+						
+						$whereDeleteSch = 'sale_id IN('.$saleListId.')';
+						$this->_name="ln_saleschedule";
+						$this->delete($whereDeleteSch);
+						
+						$whereSaS = 'sale_id IN('.$saleListId.')';
+						$this->_name="ln_reschedule";
+						$this->delete($whereSaS);
+						
+						$whereSa = 'id IN('.$saleListId.')';
+						$this->_name="ln_sale";
+						$this->delete($whereSa);
+						
+						
+					}
+			}
+			
+			
+    		$db->commit();
+    	}catch(Exception $e){
+    		$db->rollBack();
+    		echo $e->getMessage();
+    		exit();
+    	}
+    }
+	
+	function getSaleInfo($saleListId){
+		$sql="
+			SELECT 
+				s.*
+				,GROUP_CONCAT(s.`house_id`) AS houserIdList
+				,SUM(s.`price_before`) AS combinePriceBefore
+				,SUM(s.`price_sold`) AS combinePriceSold
+				,(SELECT SUM(crm.`total_principal_permonthpaid`) FROM `ln_client_receipt_money` AS crm WHERE crm.`sale_id` IN ($saleListId)) AS totalPaid
+			FROM `ln_sale` AS s 
+			WHERE 1
+		";
+		$sql.=" AND s.id IN($saleListId) ";
+		$db = $this->getAdapter();
+    	$rs = $db->fetchRow($sql);
+		return $rs;
+	}
+	function getPropertyInfo($houserIdList){
+		$sql="
+			SELECT 
+				SUM(p.`land_price`) AS combineLandPrice
+				,SUM(p.`house_price`) AS combineHousePrice
+				,SUM(p.`price`) AS combinePrice
+				,p.*
+				,GROUP_CONCAT(p.`land_address`) AS combineAddress
+			FROM `ln_properties` AS p 
+			WHERE 1
+		";
+		$sql.=" AND p.id IN($houserIdList) ";
+		$db = $this->getAdapter();
+    	$rs = $db->fetchRow($sql);
+		return $rs;
+	}
+	function getScheduleSaleCombine($saleListId){
+		$sql="
+			SELECT 
+				sch.`date_payment`
+				,SUM(sch.`begining_balance`) AS beginingBalance
+				,SUM(sch.`begining_balance_after`) AS beginingBalanceAfter
+				,SUM(sch.`ending_balance`) AS endingBalance
+
+				,SUM(sch.`total_interest`) AS totalInterest
+				,SUM(sch.`total_interest_after`) AS totalInterestAfter
+				,SUM(sch.`principal_permonth`) AS principalPermonth
+				,SUM(sch.`principal_permonthafter`) AS principalPermonthAfter
+				,SUM(sch.`total_payment`) AS totalPayment
+				,SUM(sch.`total_payment_after`) AS totalPaymentAfter
+				,SUM(sch.`cum_interest`) AS cumInterest
+				,sch.*
+			FROM `ln_saleschedule` AS sch 
+			WHERE 1
+		";
+		$sql.=" AND sch.`sale_id` IN($saleListId) ";
+		$sql.=" GROUP BY sch.`date_payment`
+				ORDER BY sch.`date_payment` ASC,sch.`no_installment` ASC 
+			";
+		$db = $this->getAdapter();
+    	$rs = $db->fetchAll($sql);
+		return $rs;
+	}
     
 }   
 

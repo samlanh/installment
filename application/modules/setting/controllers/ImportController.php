@@ -32,7 +32,7 @@ class Setting_importController extends Zend_Controller_Action {
 // 				$db->insertPayment($sheetData);
 				$db->ImportKPMorndany($sheetData);
 // 				$db->KPmorndanyUpdateClientName($sheetData);
-				
+				//$db->ImportUpdateKPTCombineSale($sheetData);
 				Application_Form_FrmMessage::message("Import Successfully");
 			}
 		}catch (Exception $e){
