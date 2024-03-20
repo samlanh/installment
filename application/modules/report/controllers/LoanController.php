@@ -1095,10 +1095,11 @@ class Report_LoanController extends Zend_Controller_Action {
 		$frm = $frm->AdvanceSearch();
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_search = $frm;
-	
-		$row = $db->getSummaryDailyOperation($search);
-		$this->view->summaryData = $row;
 		$this->view->search = $search;
+		
+		$search["recordDate"] = $search["end_date"];
+		$yesterdayCash = $db->getYesterdayCash($search);
+		$this->view->yesterdayCash = $yesterdayCash;
 		
 		$dbGBStock = new Application_Model_DbTable_DbGlobalStock();
 		$rsBank = $dbGBStock->getAllBank();

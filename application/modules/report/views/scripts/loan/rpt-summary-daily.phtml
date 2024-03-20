@@ -35,6 +35,11 @@
 		$classStyleFeature="";
 	}
 	
+	$datePmt = new DateTime($this->search["end_date"]);
+	$firstDay = $datePmt->format("Y-m-01");
+	$amountDayOfMonth=cal_days_in_month(CAL_GREGORIAN,$datePmt->format("m"),$datePmt->format("Y"));
+
+	
 ?>
 <title><?php echo $tr->translate("RPT_SUMMARY_DIALY");?></title>
 <script>
@@ -56,9 +61,6 @@
 				<div class="form-group"> 
 					<div class="col-md-2 col-sm-2 col-xs-12">
 						<?php echo $frm->getElement('branch_id');?>
-					</div>
-					<div class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frm->getElement('start_date');?>
 					</div>
 					<div class="col-md-2 col-sm-2 col-xs-12">
 						<?php echo $frm->getElement('end_date');?>
@@ -222,24 +224,16 @@
 								
 								$gTotalCashIncome=0;
 								$gTotalCashExpense=0;
-								if(!empty($arrayResultData)) {
 							?>
-								<?php foreach ($arrayResultData as $index => $rs){ 
-									if($dateValue!=$rs["recordDate"]){
-										$comparing = $dbReport->getResulArrayBySpecificDate($rs["recordDate"],$arrayResultData);
-										$filter = $comparing;
-										if(count($comparing) == 0){
-											$filter = $rs;
-										}
-										$totalRecieve  = $filter["totalRecieve"]+$filter["totalIncomeOther"]+$filter["totalIncomeRepairHouse"];
-										$gTotalRecieve = $gTotalRecieve+$totalRecieve;
-										
-										$totalExpense  = $filter["totalOtherExpense"]+$filter["totalExpenseRepairHouse"]+$filter["totalExpenseComission"]+$filter["totalExpenseComissionPayment"];
-										$gTotalExpense = $gTotalExpense+$totalExpense;
-										
+								<?php for ($x = 0; $x < $amountDayOfMonth; $x++) {
+									
+									$date = new DateTime($firstDay);
+									$date->modify("+$x day");
+									$nextDate = $date->format("Y-m-d");
+			
 										$arrFilter = array(
 											"branchId" => $this->search["branch_id"],
-											"recordDate" => $rs["recordDate"],
+											"recordDate" => $nextDate,
 											"paymentMethod" => 1
 										);
 										$totalCash = $dbReport->getSummaryIncomeDailyByPaymentMethod($arrFilter);
@@ -248,6 +242,7 @@
 										$gTotalCashIncome = $gTotalCashIncome+$totalCash;
 										$gTotalCashExpense = $gTotalCashExpense+$totalCashExpense;
 										
+										$totalRecieve=$totalCash;
 										$columnIncome="";
 										$columnExpense="";
 										if(!empty($bankList)) foreach($bankList as $key => $row){ 
@@ -256,6 +251,7 @@
 											$totalBank = $dbReport->getSummaryIncomeDailyByPaymentMethod($arrFilter);
 											$totalBankExpense = $dbReport->getSummaryExpenseDailyByPaymentMethod($arrFilter);
 											
+											$totalRecieve= $totalRecieve+$totalBank;
 											$bankList[$key]["totalBankIncome"] = empty($bankList[$key]["totalBankIncome"]) ? 0 : $bankList[$key]["totalBankIncome"];
 											$bankList[$key]["totalBankIncome"] = $bankList[$key]["totalBankIncome"] + $totalBank;
 											
@@ -263,32 +259,33 @@
 											$bankList[$key]["totalBankExpense"] = $bankList[$key]["totalBankExpense"] + $totalBankExpense;
 											
 											$columnIncome.='
-											<td class="moneyAlign income" data-label="'.$row["name"].'">
+											<td class="moneyAlign income bold" data-label="'.$row["name"].'">
 												'.number_format($totalBank,2).'
 											</td>
 											';
 											$columnExpense.='
-											<td class="moneyAlign expense" data-label="'.$row["name"].'">
+											<td class="moneyAlign expense  bold" data-label="'.$row["name"].'">
 												'.number_format($totalBankExpense,2).'
 											</td>
 											';
 										}
 										$columnIncome.='
-											<td class="moneyAlign " data-label="'.$tr->translate("CASH").'">
+											<td class="moneyAlign income bold" data-label="'.$tr->translate("CASH").'">
 												'.number_format($totalCash,2).'
 											</td>
 										';
 										$columnExpense.='
-											<td class="moneyAlign expense" data-label="'.$tr->translate("CASH").'">
+											<td class="moneyAlign expense bold" data-label="'.$tr->translate("CASH").'">
 												'.number_format($totalCashExpense,2).'
 											</td>
 										';
+									$gTotalRecieve = $gTotalRecieve+$totalRecieve;
 										
 								?>
 								<tr class="style style1" >
 									<td data-label="<?php echo $tr->translate("N_O");?>" style="text-align: center;"><?php echo $i++; ?></td>
-									<td data-label="<?php echo $tr->translate("DATE");?>" class="center bold" ><?php echo date($montFomat,strtotime($rs["recordDate"]));?></td>
-									<td class="moneyAlign income" data-label="<?php echo $tr->translate("TOTAL");?>"  ><?php echo number_format($totalRecieve,2);?></td>
+									<td data-label="<?php echo $tr->translate("DATE");?>" class="center " ><?php echo date($montFomat,strtotime($nextDate));?></td>
+									<td class="moneyAlign income bold" data-label="<?php echo $tr->translate("TOTAL");?>"  ><?php echo number_format($totalRecieve,2);?></td>
 									<?php 
 										echo $columnIncome;
 									?>
@@ -299,8 +296,8 @@
 									
 									
 								</tr>                     
-								<?php }
-									$dateValue = $rs["recordDate"]; 
+								<?php 
+								$totalRecieve=0;
 								 } ?>
 								 
 								 <?PHP 
@@ -314,7 +311,7 @@
 									
 								 ?>
 								 <tr class="style " style="font-weight: 600; background: #c1d0f3;" >
-									<td class="bold centerText" colspan="2" ><?php echo $tr->translate("TOTAL");?></td>
+									<td class="centerText" colspan="2" ><?php echo $tr->translate("TOTAL");?></td>
 									<td class="moneyAlign bold"><?php echo number_format($gTotalRecieve,2);?></td>
 									<?php 
 									$columnTotalIncome="";
@@ -346,8 +343,6 @@
 									?>
 									
 								 </tr>
-								 
-							<?php } ?>
 						</table>
 						
 						<br />
@@ -359,21 +354,44 @@
 		<button class="btn button-class btn-primary" data-toggle="popover" title="<?php echo $tr->translate("COPIED");?>" data-content="<?php echo $tr->translate("DATA_SUCCESSFUL_COPIED");?>" class="button-class button-primary"   onclick="myFunction()"><i class="fa fa-clipboard" aria-hidden="true"></i> <?php echo $tr->translate("COPY");?></button>
 		
 		<?php 
+		$yesterdayCash = $this->yesterdayCash;
+		
 		$content="";
 		$expenseInfo="";
 		$incomeInfo="";
+		
+		$arrFilter = array(
+			"branchId" => $this->search["branch_id"],
+			"recordDate" => $this->search["end_date"],
+			"paymentMethod" => 1
+		);
+		$totalCashIncomeToday = $dbReport->getSummaryIncomeDailyByPaymentMethod($arrFilter);
+		$totalCashExpenseToday = $dbReport->getSummaryExpenseDailyByPaymentMethod($arrFilter);
+		
+		$cashInHand = ($yesterdayCash+$totalCashIncomeToday)-$totalCashExpenseToday;
+		
+		$totalIncomeToday = $totalCashIncomeToday;
 		if(!empty($bankList)) foreach($bankList as $key => $row){
-			$row["totalBankExpense"] = empty($row["totalBankExpense"]) ? 0 : $row["totalBankExpense"];
-			$row["totalBankIncome"] = empty($row["totalBankIncome"]) ? 0 : $row["totalBankIncome"];
-			$expenseInfo.="⛔️".$row["name"]." ".$tr->translate("Expense")." : $ ".number_format($row["totalBankExpense"],2)."\n";
-			$incomeInfo.="💰".$row["name"]." : $ ".number_format($row["totalBankIncome"],2)."\n";
+			
+			$arrFilter["paymentMethod"] = 2;
+			$arrFilter["bankId"] = $row["id"];
+			$totalBank = $dbReport->getSummaryIncomeDailyByPaymentMethod($arrFilter);
+			$totalBankExpense = $dbReport->getSummaryExpenseDailyByPaymentMethod($arrFilter);
+			
+			$totalIncomeToday=$totalIncomeToday+$totalBank;
+				
+			$expenseInfo.="⛔️".$row["name"]." ".$tr->translate("Expense")." : $ ".number_format($totalBankExpense,2)."\n";
+			$incomeInfo.="💰".$row["name"]." : $ ".number_format($totalBank,2)."\n";
 		} 
+		
 		$content.="📢Daily Received Report\n<span id='footerDate'></span>\n";
 		$content.=$incomeInfo;
-		$content.="💰".$tr->translate("CASH")." : $ ".number_format($gTotalCashIncome,2)."\n";
-		$content.="✅".$tr->translate("TOTAL")." : $ ".number_format($gTotalRecieve,2)."\n";
+		$content.="💰".$tr->translate("CASH")." : $ ".number_format($totalCashIncomeToday,2)."\n";
+		$content.="✅".$tr->translate("TOTAL")." : $ ".number_format($totalIncomeToday,2)."\n";
+		$content.="💰".$tr->translate("yesterdayCash")." : $ ".number_format($yesterdayCash,2)."\n";
 		$content.=$expenseInfo;
-		$content.="⛔️".$tr->translate("CASH")." ".$tr->translate("Expense")." : $ ".number_format($gTotalCashExpense,2)."\n";
+		$content.="⛔️".$tr->translate("CASH")." ".$tr->translate("Expense")." : $ ".number_format($totalCashExpenseToday,2)."\n";
+		$content.="💰".$tr->translate("cashInHand")." : $ ".number_format($cashInHand,2)."\n";
 		?>
 		<div id="contentInfo" style="white-space: pre-line;"><?php echo $content;?></div>
 	</div>
@@ -388,7 +406,7 @@ require(["dojo/ready"], function(ready){
 		  getBranchInfo();
 		 document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
 		 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("RPT_SUMMARY_DIALY");?>';
-		 document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date("d-M-Y"); }else{ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date("d-M-Y",strtotime($this->search['end_date'])); }?>';
+		 document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date("M-Y"); }else{ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date("M-Y",strtotime($this->search['end_date'])); }?>';
 		 document.getElementById('footerDate').innerHTML = 'Date : <?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date("d-M-Y"); }elseif(date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d",strtotime($this->search['end_date']))){echo date("d-M-Y",strtotime($this->search['start_date']));}else{ echo date("d-M-Y",strtotime($this->search['start_date'])).' - ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date("d-M-Y",strtotime($this->search['end_date'])); }?>';
 		$('[data-toggle="popover"]').popover();
 	});
