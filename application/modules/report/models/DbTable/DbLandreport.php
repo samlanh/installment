@@ -3412,7 +3412,7 @@ function updatePaymentStatus($data){
 			WHERE crm.status=1 
 			AND crm.`payment_method` = 1 
 			AND crm.`date_input` <'".$recordDate."'
-			AND crm.`date_input` >'".$firstDay."'
+			AND crm.`date_input` >='".$firstDay."'
 		";
 		if(!empty($_data['branchId'])){
 			$sqlPmt.=" AND crm.`branch_id` = ".$_data['branchId'];
@@ -3461,7 +3461,7 @@ function updatePaymentStatus($data){
 			WHERE crm.status=1 
 		";
 		$sql.=" AND crm.`payment_id` = 1 ";
-		$sql.=" AND crm.`date` <'".$recordDate."' AND crm.`date` >'".$firstDay."' ";
+		$sql.=" AND crm.`date` <'".$recordDate."' AND crm.`date` >='".$firstDay."' ";
 		if(!empty($_data['branchId'])){
 			$sql.=" AND crm.`branch_id` = ".$_data['branchId'];
 		}
@@ -3483,7 +3483,7 @@ function updatePaymentStatus($data){
 				AND crm.cate_type =$cateType
 		";
 		$sql.=" AND crm.`payment_method` = 1 ";
-		$sql.=" AND crm.for_date <'".$recordDate."' AND crm.`for_date` >'".$firstDay."' ";
+		$sql.=" AND crm.for_date <'".$recordDate."' AND crm.`for_date` >='".$firstDay."' ";
 		if(!empty($_data['branchId'])){
 			$sql.=" AND crm.`branch_id` = ".$_data['branchId'];
 		}
@@ -3506,7 +3506,7 @@ function updatePaymentStatus($data){
 			WHERE crm.status=1 
 		";
 		$sql.=" AND crm.`payment_id` = 1 ";
-		$sql.=" AND crm.date <'".$recordDate."' AND crm.date >'".$firstDay."' ";
+		$sql.=" AND crm.date <'".$recordDate."' AND crm.date >='".$firstDay."' ";
 		if(!empty($_data['branchId'])){
 			$sql.=" AND crm.`branch_id` = ".$_data['branchId'];
 		}
@@ -3528,7 +3528,7 @@ function updatePaymentStatus($data){
 			WHERE crm.status=1 
 		";
 		$sql.=" AND crm.`payment_id` = 1 ";
-		$sql.=" AND crm.for_date <'".$recordDate."' AND crm.for_date >'".$firstDay."' ";
+		$sql.=" AND crm.for_date <'".$recordDate."' AND crm.for_date >='".$firstDay."' ";
 		if(!empty($_data['branchId'])){
 			$sql.=" AND crm.`branch_id` = ".$_data['branchId'];
 		}
@@ -3550,7 +3550,7 @@ function updatePaymentStatus($data){
 			WHERE crm.status=1 
 		";
 		$sql.=" AND crm.`payment_method` = 1 ";
-		$sql.=" AND crm.date_payment <'".$recordDate."' AND crm.date_payment >'".$firstDay."' ";
+		$sql.=" AND crm.date_payment <'".$recordDate."' AND crm.date_payment >='".$firstDay."' ";
 		if(!empty($_data['branchId'])){
 			$sql.=" AND crm.`branch_id` = ".$_data['branchId'];
 		}
