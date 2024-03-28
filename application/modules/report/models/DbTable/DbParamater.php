@@ -1175,6 +1175,16 @@ class Report_Model_DbTable_DbParamater extends Zend_Db_Table_Abstract
 		if(!empty($search['user'])){
 			$where.= " AND c.user_contact = ".$search['user'];
 		}
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$userInfo = $dbp->getUserInfo();
+		if(!empty($userInfo)){
+			$level = empty($userInfo["level"]) ? 0 : $userInfo["level"];
+			$userId = empty($userInfo["user_id"]) ? 0 : $userInfo["user_id"];
+			if($level!=1){
+    			$where.= " AND c.user_contact = ".$userId;
+    		}
+		}
+		
 		$order=" ORDER BY c.contact_date DESC,c.id DESC ";
 		return $db->fetchAll($sql.$where.$order);
 	}
