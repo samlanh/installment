@@ -52,7 +52,7 @@ class Group_TransferController extends Zend_Controller_Action {
 				}
 				
 				$id= $db->add($data);
-				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/group/customer/add");
+				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/group/transfer");
 
 			}catch (Exception $e){
 				Application_Form_FrmMessage::message("Application Error");
