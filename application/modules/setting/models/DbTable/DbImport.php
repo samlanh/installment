@@ -2602,6 +2602,131 @@ class Setting_Model_DbTable_DbImport extends Zend_Db_Table_Abstract
     	$rs = $db->fetchAll($sql);
 		return $rs;
 	}
+	
+	public function ImportUpdatePropertyInfoKP($data){
+    	$db = $this->getAdapter();
+    	$db->beginTransaction();
+    	try{
+    		$count = count($data);
+    		$a_time= 0;
+    		$install = 1;
+    		$first_pay = 0;
+    		$cum_interest=0;
+    		$first_payment=0;
+    		$n=0;
+    		$oldland_str='';
+    		$payment_id = array('Monthly'=>4,'Holding'=>6,'ផ្ដាច់'=>6,'ដំណាក់កាលថេរ'=>3);
+    		$genderStr = array(
+					'ប្រុស'=>1,
+    				'ស្រី'=>2
+    			);
+				
+    		$keyCombine=0;
+    		$saleListId="";
+			$userId=23;
+    		$SaleIdGenerate =0;
+			$branch_id="4";
+			
+			$propertyTypeStr = array(
+    				'House'=>1,
+    				'Land'=>2,
+    				'Market'=>3,
+    		);
+    		for($i=1; $i<=$count; $i++){
+				$land = $data[$i]['A'];
+				$streetNo = $data[$i]['B'];
+				$propertyType = $data[$i]['C'];
+				
+    			$sql="SELECT id FROM `ln_properties` WHERE branch_id = $branch_id AND land_address = '".$land."' LIMIT 1 ";
+				$land_id = $db->fetchOne($sql);
+
+				$orgPrice = empty($data[$i]['D']) ? 0 : $data[$i]['D'];
+				if($orgPrice=="N/A"){
+					$orgPrice = 0;
+				}
+				$width = empty($data[$i]['F']) ? 0 : $data[$i]['F'];
+				if($width=="N/A"){
+					$width = 0;
+				}
+				$height = empty($data[$i]['E']) ? 0 : $data[$i]['E'];
+				if($height=="N/A"){
+					$height = 0;
+				}
+				$size = empty($data[$i]['G']) ? 0 : $data[$i]['G'];
+				if($size=="N/A"){
+					$size = 0;
+				}
+				$south = empty($data[$i]['H']) ? "" : $data[$i]['H'];
+				if($south=="N/A"){
+					$south = "";
+				}
+				$north = empty($data[$i]['N']) ? "" : $data[$i]['N'];
+				if($north=="N/A"){
+					$north = "";
+				}
+				$west = empty($data[$i]['J']) ? "" : $data[$i]['J'];
+				if($west=="N/A"){
+					$west = "";
+				}
+				$east = empty($data[$i]['E']) ? "" : $data[$i]['E'];
+				if($east=="N/A"){
+					$east = "";
+				}
+				if(empty($land_id)){
+					$_arr=array(
+							'branch_id'	  => $branch_id,
+							'land_code'	  => '',
+							'land_address'=> $land,
+							'street'	  => $streetNo,
+							'price'	      => $orgPrice,
+							'land_price'  => $orgPrice,
+							'house_price' => 0,
+							'land_size'	  => $size,
+							'width'       => $width,
+							'height'      => $height,
+							'is_lock'     => 0,
+							'status'	  => 1,
+							'user_id'	  => $userId,
+							'property_type'=> empty($propertyTypeStr[$propertyType])?0:$propertyTypeStr[$propertyType],
+							'type_tob'		=>$propertyType,
+							'south'	      => $south,
+							'north'	      => $north,
+							'west'	      => $west,
+							'east'	      => $east,
+							'create_date' =>date("Y-m-d H:i:s"),
+					);
+					$this->_name='ln_properties';
+					$land_id = $this->insert($_arr);
+				}else{
+					$_arr=array(
+							
+							'street'	  => $streetNo,
+							'price'	      => $orgPrice,
+							'land_price'  => $orgPrice,
+							'house_price' => 0,
+							'land_size'	  => $size,
+							'width'       => $width,
+							'height'      => $height,
+							'user_id'	  => $userId,
+							'south'	      => $south,
+							'north'	      => $north,
+							'west'	      => $west,
+							'east'	      => $east,
+					);
+					$this->_name='ln_properties';
+					$where="id = ".$land_id." AND status=1 ";
+					$this->update($_arr, $where);
+				}
+    		}
+			
+			
+    		$db->commit();
+    	}catch(Exception $e){
+    		$db->rollBack();
+    		echo $e->getMessage();
+    		exit();
+    	}
+    }
     
 }   
 
