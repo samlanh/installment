@@ -1053,13 +1053,17 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					}
 					table.comment-footer tr td p.comment1{
 						font-size: 11px;
-						margin:-5px 0px -5px 0px !important;
+						//margin:-5px 0px -5px 0px !important;
 						padding:0 !important;
+						line-height: 16px;
+						margin: 0 !important;
 					}
 					table.comment-footer tr td span.comment{
 						white-space: pre-line;
 						font-size: 11px;
-						margin-top: -5px;
+						//margin-top: -5px;
+						margin-top: 0px;
+						line-height: 16px;
 					}
 					tr.schedule_installment td label,
 					tr.schedule_step td label {
@@ -2253,18 +2257,22 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				}
 				table.comment-footer tr td p.comment1{
 					font-size: 11px;
-					margin:-5px 0px -5px 0px !important;
+					//margin:-5px 0px -5px 0px !important;
 					padding:0 !important;
+					line-height: 16px;
+					margin: 0 !important;
 				}
 				table.comment-footer tr td span.comment{
 					white-space: pre-line;
 					font-size: 11px;
-					margin-top: -5px;
+					//margin-top: -5px;
+					margin-top: 0px;
+					line-height: 16px;
 				}
-				@media print{
-					@page{
-						margin:0.5cm 0.5cm 0.0cm 0.5cm;
-						page:4;size:portrait;
+			@media print{
+				@page{
+					margin:0.5cm 0.5cm 0.0cm 0.5cm;
+					page:4;size:portrait;
 					}
 				}
 				span#lb_customercode{
