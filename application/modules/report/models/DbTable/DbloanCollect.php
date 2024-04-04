@@ -52,6 +52,7 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
     		$s_where[] = " l.land_code LIKE '%{$s_search}%'";
     		$s_where[] = " l.land_address LIKE '%{$s_search}%'";
     		$s_where[] = " l.street LIKE '%{$s_search}%'";
+    		$s_where[] = " s.expect_income_note LIKE '%{$s_search}%'";
     		$where .=' AND ( '.implode(' OR ',$s_where).')';
     	}
     	$order=" GROUP BY pd.sale_id,pd.ispay_bank ORDER BY  pd.date_payment ASC ";
