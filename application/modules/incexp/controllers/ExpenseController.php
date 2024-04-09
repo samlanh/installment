@@ -140,6 +140,9 @@ class Incexp_ExpenseController extends Zend_Controller_Action
 		if(empty($row)){
 			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND",self::REDIRECT_URL,2);
 			exit();
+		}else if ($row['is_closed']==1){
+			Application_Form_FrmMessage::Sucessfull("Unable edit closed record",self::REDIRECT_URL,2);
+			exit();
 		}else if ($row['expenseType']==2){
 			Application_Form_FrmMessage::Sucessfull("Unable edit Expense From Expense Payment",self::REDIRECT_URL,2);
 			exit();

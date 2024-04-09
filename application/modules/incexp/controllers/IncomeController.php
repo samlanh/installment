@@ -121,6 +121,9 @@ class Incexp_IncomeController extends Zend_Controller_Action
 		if(empty($row)){
 			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/incexp/income",2);
 			exit();
+		}else if ($row['is_closed']==1){
+			Application_Form_FrmMessage::Sucessfull("Unable edit closed record","/incexp/income",2);
+			exit();
 		}
 // 		$row['payment_id']=0;
 		$this->view->row = $row;

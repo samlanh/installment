@@ -26,7 +26,7 @@ dojo.require("dijit.form.DateTextBox");
 	<div class="card-box">
        	<div class="col-sm-12 border-botom">
 	   		<div class="col-sm-8 pd-0">
-	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i> <?php echo $tr->translate('REPORT_EXPECT_INCOME');?></h4>
+	    		<h4 class="m-b-0"><i class="fa fa-file-text" aria-hidden="true"></i> <?php echo $tr->translate('REPORT_EXPECT_INCOME');?></h4>
     		</div>
     		<div class="col-sm-4 text-right">
     		</div>
@@ -75,7 +75,7 @@ dojo.require("dijit.form.DateTextBox");
 	            	<?php echo $frm->getElement('end_date');?>
 	            </div>
 	            <div class="col-md-2 col-sm-2 col-xs-12">
-	            	<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+	            	<button class="button-class button-primary" iconClass="glyphicon glyphicon-search" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
 	            </div>
 	        </div>
 	    </div>
@@ -83,10 +83,7 @@ dojo.require("dijit.form.DateTextBox");
 	<div style="min-height:28cm; margin:0 auto;">
 		<div id="divPrint">
 			<style type="text/css">
-				.style{
-					line-height: 20px;font-size: 12px !important;
-					font-family: 'Times New Roman','Khmer OS Battambang';
-				}
+				
 				table tr td ul li{text-align: center;list-style: none;line-height: 25px;}
 				th{padding: 5px;}
 				
@@ -112,10 +109,10 @@ dojo.require("dijit.form.DateTextBox");
 				table.content-data{
 					border-collapse:collapse;
 					border:1px solid #000; 
-					font-size:13px;
+					font-size:12px;
 					font-family: 'Times New Roman','Khmer OS Battambang';
 					white-space: nowrap;
-					line-height: 22px;
+					line-height: 16px;
 					width: 100%;
 				}
 				table.content-data thead tr.style {
@@ -197,10 +194,15 @@ dojo.require("dijit.form.DateTextBox");
 								 	$paid++;
 								 }
 			               ?>
-			                <tr oncontextmenu="setrowdata(<?php echo $rs['sale_id'];?>);return false;" class="style hover context-menu-one" style="font-size: 12px; font-family: 'Times New Roman','Khmer OS Battambang';<?php if($total_paid>0){echo 'background:#f8414140;';}?>">
+			                <tr oncontextmenu="setrowdata(<?php echo $rs['sale_id'];?>);return false;" class="style hover context-menu-one" style="<?php if($total_paid>0){echo 'background:#f8414140;';}?>">
 			               		<td data-label="<?php echo $tr->translate("NUM");?>" style="font-size: 12px; text-align: center;"><?php echo $key+1; ?></td>
 			               		<td data-label="<?php echo $tr->translate("BRANCH_NAME");?>"><?php echo $rs["branch_name"];?></td>
-			               		<td data-label="<?php echo $tr->translate("CUSTOMER_NAME");?>"><span style="line-height: 18px;white-space: pre-wrap !important;max-width: 150px;width: 150px;display: block;font-size: 11px;overflow-wrap: break-word;text-align: left;vertical-align: top;" ><?php echo $rs["name_kh"]; if(!empty($rs["phone"])){ echo "<br />".$rs["phone"]; }?></span></td>
+			               		<td data-label="<?php echo $tr->translate("CUSTOMER_NAME");?>">
+									<?php echo $rs['name_kh'];?>
+									<?php 
+										if(!empty($rs['phone'])){ echo "<span style='display: block; line-height: 12px; font-size:80%;' />".$rs['phone'];}
+									?>
+								</td>
 			               		<td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>"><span style="max-width: 330px; display: block; white-space: pre-line; line-height: 16px; overflow-wrap: break-word;padding: 0 1px;" ><?php echo $rs["land_address"].','.$rs["street"];?></span></td>
 			               		<td  data-label="<?php echo $tr->translate("DAY_PAYMENT");?>"align="center">
 			               		

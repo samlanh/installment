@@ -95,7 +95,7 @@
 						border:1px solid #000; 
 						font-size:11px;
 					}
-					table.content-data  tr.style {
+					table.content-data thead tr.style {
 						line-height: 25px; font-size:10px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
 						background: #c1d0f3;
 						font-weight:600;
@@ -152,17 +152,8 @@
 	        	<table id="exportExcel"  width="100%" style="font-family:'Times New Roman','Khmer OS Battambang';margin:0; padding:0;border:none;" >
 		            <tr>
 	            	   <td colspan="3">
-	            		<table class="content-data"  border="1" width="100%"  >  
-					    	<thead>
-					    		<tr class="hide" style="border:1px solid #000;">
-						             <td colspan="12" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
-						        </tr>
-						        <?php 
+					   <?php 
 								$countRow = count($this->row);
-								if($expenseFeatureList==1){
-								$countRow = count($this->rowExpensePayment);
-								}
-								
 								$countCommission = count($this->rscomisison);
 								$countRowCommissionPayment = count($this->rowCommissionPayment);
 								$countHouserepair = count($this->houserepair);
@@ -171,248 +162,243 @@
 								$k=0;
 								$branch_id=''; $i=0; $total=0; 
 							?>
+	            		<table class="content-data"  border="1" width="100%"  > 
+								<thead>
 								<tr>
-									<td colspan="13" style="  border-top: solid 1px #fff;  border-left: solid 1px #fff;  border-right: solid 1px #fff;">
+									<td colspan="15" style="  border-top: solid 1px #fff;  border-left: solid 1px #fff;  border-right: solid 1px #fff;">
 										<input type="checkBox" onclick="checkAll('<?php echo $count;?>');" name="checkall" id="checkall" />
 										<input type="hidden" name="id_selected" id="id_selected" dojoType="dijit.form.TextBox" />
+										<?php echo $tr->translate("ALL");?>
 									</td>
 								</tr>
-								
-							
-							<?php if($expenseFeatureList==1){?>
-							<?php 
-				           if (!empty($this->rowExpensePayment)){?>
-								<tr class="style" align="center" >
-									<td>&nbsp;<?php echo $tr->translate('NUM');?>&nbsp;</td>
-									<td>&nbsp;<?php echo $tr->translate('BRANCH_NAME');?>&nbsp;</td>
-									<td >&nbsp;<?php echo $tr->translate('SUPPLIER_NAME');?>&nbsp;</td>
-									<td>&nbsp;<?php echo $tr->translate('PAYMENT_TYPE');?>&nbsp;</td>
-									<td>&nbsp;<?php echo $tr->translate('CHEQUE_ISSUER');?>&nbsp;</td>
-									<td>&nbsp;<?php echo $tr->translate('NUMBER');?>&nbsp;</td>
-									<td>&nbsp;<?php echo $tr->translate('TOTAL_PAID');?>&nbsp;</td>
-									<td colspan="2">&nbsp;<?php echo $tr->translate('NOTE');?>&nbsp;</td>
-									<td>&nbsp;<?php echo $tr->translate('RECEIPT_NO');?>&nbsp;</td>
-									<td>&nbsp;<?php echo $tr->translate('DATE');?>&nbsp;</td>
-									<td>&nbsp;<?php echo $tr->translate('BY_USER');?>&nbsp;</td>
-									<td><?php echo $tr->translate("STATUS");?></td>
-								 </tr>
-								 <?php $branch_id=''; $i=0; 
-									foreach($this->rowExpensePayment as $key =>$rows){ $i++; $k++;
-									?>
-									<tr align="left" class="stylehover">
-										<td align="center"><input style="height: 15px;margin-top: 5px;" type="checkBox" onClick="checked_id(<?php echo $k;?>)" name="check_box<?php echo $k;?>" id="check_box<?php echo $k;?>" />
-										<input type="hidden" id="id_<?php echo $k;?>" name="id_<?php echo $k;?>" value="<?php echo $rows['id'];?>" dojoType="dijit.form.TextBox" />
-										<input type="hidden" id="type_record<?php echo $k;?>" name="type_record<?php echo $k;?>" value="5" dojoType="dijit.form.TextBox" /><!-- 1= Other Expense payment -->
-									
-									
-									   <?php echo $i; ?>&nbsp;</td>
-										<td align="center">&nbsp;<?php echo $rows['branch_name'];?>&nbsp;</td>
-										<td align="left">&nbsp;<?php echo $rows['supplier_name'];?>&nbsp;</td>
-										<td align="center">&nbsp;<?php echo $rows['paid_by'];?>&nbsp;</td>
-										<td align="left">&nbsp;<?php echo $rows['cheque_issuer'];?>&nbsp;</td>
-										<td align="center">&nbsp;<?php echo $rows['cheque_no'];?>&nbsp;</td>
-										<td align="center">&nbsp;<?php echo number_format($rows['total_paid'],2);?>&nbsp;</td>
-										<td colspan="2" align="left">&nbsp;<?php echo $rows['note'];?>&nbsp;</td>
-										<td align="center">&nbsp;<?php echo $rows['receipt_no'];?>&nbsp;</td>
-										<td align="center">&nbsp;<?php echo date("d-m-Y",strtotime($rows['date_payment']));?>&nbsp;</td>
-										<td align="center">&nbsp;<?php echo $rows['user_name'];?>&nbsp;</td>
-										<td class="">&nbsp;<?php echo($rows['is_closed']==0)?"Unclose":"Closed";?>&nbsp;</td>
-									</tr>
-									 <?php 
-											$total = $total +$rows['total_paid'];
-										?>
-							   <?php }?>
-						   <?php }?>
-				   <?php }else{?>
-							<?php if(!empty($this->row)){?>
-						    	<tr bgcolor="#c1d0f3" class="style" align="center"  >
-									<td>&nbsp;<?php echo $tr->translate("NUM");?>&nbsp;</td>
-								    <td>&nbsp;<?php echo $tr->translate("BRANCH_NAME");?>&nbsp;</td>
-								    <td>&nbsp;<?php echo $tr->translate("SUPPLIER");?>&nbsp;</td>
-								    <td>&nbsp;<?php echo $tr->translate("EXPENSE_TITLE");?>&nbsp;</td>
-								    <td>&nbsp;<?php echo $tr->translate("RECIEPT_NO");?>&nbsp;</td>
-								    <td>&nbsp;<?php echo $tr->translate("CATEGORY");?>&nbsp;</td>
-								    <td>&nbsp;<?php echo $tr->translate("TOTAL_EXPENSE");?>&nbsp;</td>
-								    <td>&nbsp;<?php echo $tr->translate("PAYMENT_TYPE");?>&nbsp;</td>
-								    <td>&nbsp;<?php echo $tr->translate("CHEQUE_NUMBER");?>&nbsp;</td>
-								    <td>&nbsp;<?php echo $tr->translate("NOTE");?>&nbsp;</td>
-								    <td>&nbsp;<?php echo $tr->translate("DATE");?>&nbsp;</td>
-								    <td>&nbsp;<?php echo $tr->translate("BY_USER");?>&nbsp;</td>
-								    <td><?php echo $tr->translate("STATUS");?></td>
+									<tr class="hide" style="border:1px solid #000;">
+									 <td colspan="14" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
+								</tr>
+								<tr  class="style" align="center"  >
+									<td scope="col"><?php echo $tr->translate("NUM");?></td>
+									<td scope="col"><?php echo $tr->translate("BRANCH_NAME");?></td>
+									<td scope="col"><?php echo $tr->translate("SUPPLIER");?></td>
+									<td scope="col"><?php echo $tr->translate("EXPENSE_TITLE");?></td>
+									<td scope="col"><?php echo $tr->translate("RECIEPT_NO");?></td>
+									<td scope="col"><?php echo $tr->translate("CATEGORY");?></td>
+									<td scope="col"><?php echo $tr->translate("INVOICE");?></td>
+									<td scope="col"><?php echo $tr->translate("TOTAL_EXPENSE");?></td>
+									<td scope="col"><?php echo $tr->translate("PAYMENT_TYPE");?></td>
+									<td scope="col"><?php echo $tr->translate("NUMBER");?></td>
+									<td scope="col"><?php echo $tr->translate("CHEQUE_ISSUER");?></td>
+									<td scope="col"><?php echo $tr->translate("NOTE");?></td>
+									<td scope="col"><?php echo $tr->translate("DATE");?></td>
+									<td scope="col"><?php echo $tr->translate("BY_USER");?></td>
+									<td scope="col"><?php echo $tr->translate("STATUS");?></td>
 								</tr>
 							</thead>
-					       <?php  foreach($this->row as $key =>$row){ $i++; $k++;?>
-							<tr align="left" class="stylehover">
-							   <td align="center">&nbsp;
-							   		<input style="height: 15px;margin-top: 5px;" type="checkBox" onClick="checked_id(<?php echo $k;?>)" name="check_box<?php echo $k;?>" id="check_box<?php echo $k;?>" />
+						        
+								
+								
+							<?php $branch_id=''; 
+							$i=0; 
+							$k=0; 
+							$total=0; if(!empty($this->row)){foreach($this->row as $key =>$row){ $i++; $k++;?>
+							<tr class=" style hover context-menu-one" oncontextmenu="setrowdata('<?php echo $row['id'];?>');return false;" align="left">
+							   <td data-label="<?php echo $tr->translate("NUM");?>" align="center">
+									<input style="height: 15px;margin-top: 5px;" type="checkBox" onClick="checked_id(<?php echo $k;?>)" name="check_box<?php echo $k;?>" id="check_box<?php echo $k;?>" />
 									<input type="hidden" id="id_<?php echo $k;?>" name="id_<?php echo $k;?>" value="<?php echo $row['id'];?>" dojoType="dijit.form.TextBox" />
-									<input type="hidden" id="type_record<?php echo $k;?>" name="type_record<?php echo $k;?>" value="1" dojoType="dijit.form.TextBox" /><!-- 1= Other Expense -->
-												
-							   <?php echo $i; ?></td>
-							   <td align="center"  style="white-space:nowrap"><?php echo $row['branch_name'];?></td>
-							   <td  style="white-space:nowrap">&nbsp;<?php echo $row['supplier_name'];?>&nbsp;</td>
-							   <td style="line-height: 18px;white-space: normal !important; max-width: 150px;width: 150px;padding: 2px;overflow-wrap: break-word;"><?php echo $row['title'];?></td>
-							   <td align="center">&nbsp;<?php echo $row['invoice'];?></td>
-							   <td style="line-height: 18px;white-space: normal !important; max-width: 150px;width: 150px;padding: 2px;overflow-wrap: break-word;"><?php echo $row['category_name'];?></td>
-							   <td align="center">&nbsp;<?php echo number_format($row['total_amount'],2);?></td>
-							   <td align="center">&nbsp;<?php echo $row['payment_type'];?></td>
-							   <td align="center">&nbsp;<?php echo $row['cheque'];?></td>
-							   <td align="center" style="line-height: 18px;white-space: normal !important; max-width: 200px;width: 200px;padding: 2px;overflow-wrap: break-word;"><?php echo $row['description'];?></td>
-							   <td align="center" style="white-space: nowrap;">&nbsp;<?php echo date("d-M-Y",strtotime($row['date']));?></td>
-							   <td align="center">&nbsp;<?php echo $row['user_name'];?></td>
-							   <td class="">&nbsp;<?php echo($row['is_closed']==0)?"Unclose":"Closed";?>&nbsp;</td>
+									<input type="hidden" id="type_record<?php echo $k;?>" name="type_record<?php echo $k;?>" value="1" dojoType="dijit.form.TextBox" />
+									<!-- 1= Other Expense -->
+							   <?php echo $i; ?>
+							   </td>
+							   <td data-label="<?php echo $tr->translate("BRANCH_NAME");?>" align="center" ><?php echo $row['branch_name'];?></td>
+							   <td data-label="<?php echo $tr->translate("SUPPLIER");?>"  ><?php echo $row['supplier_name'];?></td>
+							   <td data-label="<?php echo $tr->translate("EXPENSE_TITLE");?>" ><?php echo $row['title'];?></td>
+							   <td data-label="<?php echo $tr->translate("RECIEPT_NO");?>" align="center"><?php echo $row['invoice'];?></td>
+							   <td data-label="<?php echo $tr->translate("CATEGORY");?>" ><?php echo $row['category_name'];?></td>
+							   <td data-label="<?php echo $tr->translate("INVOICE");?>" align="center"><?php echo $row['other_invoice'];?></td>
+							   <td data-label="<?php echo $tr->translate("TOTAL_EXPENSE");?>" align="right"><?php echo number_format($row['total_amount'],2);?></td>
+							   <td data-label="<?php echo $tr->translate("PAYMENT_TYPE");?>" align="center"><?php echo $row['payment_type'];?></td>
+							   <td data-label="<?php echo $tr->translate("NUMBER");?>" align="center"><?php echo $row['cheque'];?></td>
+							   <td data-label="<?php echo $tr->translate("CHEQUE_ISSUER");?>" align="center"><?php echo $row['cheque_issuer'];?></td>
+							   <td data-label="<?php echo $tr->translate("NOTE");?>" align="center" ><?php echo $row['description'];?></td>
+							   <td data-label="<?php echo $tr->translate("DATE");?>" align="center" ><?php echo date("d-m-Y",strtotime($row['date']));?></td>
+							   <td data-label="<?php echo $tr->translate("BY_USER");?>" align="center"><?php echo $row['user_name'];?></td>
+							   <td data-label="<?php echo $tr->translate("STATUS");?>" class=""><?php echo($row['is_closed']==0)?"Unclose":"Closed";?></td>
 							</tr>
 								<?php $total = $total +$row['total_amount'];?>
-							<?php }?>
-							<?php }?>
-				   <?php }?>
-				   
-							<?php if(!empty($this->rscomisison)){?>
-							<tr  style="font-size: 12px; line-height:20px;">
-							   <td align="center" colspan="13">
+							<?php }
+							}?>
+							 <?php if(!empty($this->rscomisison)){?>
+							 <tr  style="font-size: 12px; line-height:20px;">
+							   <td align="center" colspan="14">
 								<span style="font-weight:normal;font-size:12px; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("COMMISSION");?></span>
 							   </td>
 							 </tr>
-							 <tr class="style" align="center" >
-					        	<td><?php echo $tr->translate("NUM");?></td>
-						        <td><?php echo $tr->translate("BRANCH_NAME");?></td>
-						        <td colspan="2"><?php echo $tr->translate("STAFF_NAME");?></td>
-								<td><?php echo $tr->translate("SEX");?></td>
-						        <td colspan="2"><?php echo $tr->translate("TEL");?></td>
-						        <td colspan="2"><?php echo $tr->translate("PROPERTY_CODE");?></td>
-						        <td><?php echo $tr->translate("COMISSION");?></td>
-						        <td><?php echo $tr->translate("DATE");?></td>
-						        <td><?php echo $tr->translate("BY_USER");?></td>
-						        <td><?php echo $tr->translate("STATUS");?></td>
-				         	</tr>
-							<?php  
-								$key=0; 
-								$record = $key;
-								foreach($this->rscomisison as $key => $rscom){ $k++;?>
-								<?php 
-									$total = $total +$rscom['total_amount'];
-								?>
-								 <tr align="left" class="stylehover">
-									 <td align="center">&nbsp;
+								<thead>
+								<tr class="style" align="center" >
+									<td scope="col"><?php echo $tr->translate("NUM");?></td>
+									<td scope="col"><?php echo $tr->translate("BRANCH_NAME");?></td>
+									<td scope="col" colspan="2"><?php echo $tr->translate("STAFF_NAME");?></td>
+									<td scope="col"><?php echo $tr->translate("RECIEPT_NO");?></td>
+									<td scope="col" colspan="2"><?php echo $tr->translate("Customers");?></td>
+									
+									<td scope="col"><?php echo $tr->translate("COMISSION");?></td>
+									<td scope="col"><?php echo $tr->translate("PAYMENT_TYPE");?></td>
+									<td scope="col"><?php echo $tr->translate("NUMBER");?></td>
+									<td scope="col"><?php echo $tr->translate("CHEQUE_ISSUER");?></td>
+									
+									
+									<td scope="col" colspan="2"><?php echo $tr->translate("DATE");?></td>
+									<td scope="col"><?php echo $tr->translate("BY_USER");?></td>
+									<td scope="col"><?php echo $tr->translate("STATUS");?></td>
+								</tr>
+								</thead>
+								<?php  
+									$key=0; 
+									$record = $key;
+									foreach($this->rscomisison as $key => $rscom){ $k++;?>
+									<?php 
+										$total = $total +$rscom['total_amount'];
+									?>
+									 <tr align="left" class="style hover">
+										 <td  data-label="<?php echo $tr->translate("NUM");?>" align="center">
 											<input style="height: 15px;margin-top: 5px;" type="checkBox" onClick="checked_id(<?php echo $k;?>)" name="check_box<?php echo $k;?>" id="check_box<?php echo $k;?>" />
 											<input type="hidden" id="id_<?php echo $k;?>" name="id_<?php echo $k;?>" value="<?php echo $rscom['id'];?>" dojoType="dijit.form.TextBox" />
 											<input type="hidden" id="type_record<?php echo $k;?>" name="type_record<?php echo $k;?>" value="2" dojoType="dijit.form.TextBox" /><!-- 1= Commssion -->
 									 
-									 <?php echo $key+1+$record; ?>&nbsp;</td>
-									 <td align="center">&nbsp;<?php echo $rscom['project_name']?>&nbsp;</td>
-									 <td colspan="2">&nbsp;<?php echo $rscom['staff_name'];?>&nbsp;</td>
-									 <td align="center">&nbsp;<?php if($rscom['sex']==1){ echo "ប្រុស";}else{ echo 'ស្រី';}?>&nbsp;</td>
-									 <td colspan="2" align="center">&nbsp;<?php echo $rscom['tel'];?>&nbsp;</td>
-									 <td colspan="2" style="white-space: nowrap;">&nbsp;<?php echo $rscom['land_address'].', '.$rscom['street'];?>&nbsp;</td>
-									 <td align="right">&nbsp;<?php echo '$ '.number_format($rscom['total_amount'],2);?>&nbsp;</td>
-									 <td style="white-space: nowrap;">&nbsp;<?php echo date("d-M-Y",strtotime($rscom['create_date']));?>&nbsp;</td>
-									 <td align="center">&nbsp;<?php echo $rscom['user_name'];?></td>
-									 <td class="">&nbsp;<?php echo($rscom['is_closed']==0)?"Unclose":"Closed";?>&nbsp;</td>
-								</tr>
-								<?php } ?>
+										 <?php echo $key+1+$record; ?>
+										 
+										 </td>
+										 <td data-label="<?php echo $tr->translate("BRANCH_NAME");?>" align="center"><?php echo $rscom['project_name']?></td>
+										 <td data-label="<?php echo $tr->translate("STAFF_NAME");?>" colspan="2" ><?php echo $rscom['staff_name'];?> <?php if($rscom['sex']==1){ echo "(ប្រុស)";}else{ echo '(ស្រី)';} echo empty($rscom['tel'])?"":" ".$rscom['tel'];?> </td>
+										 <td data-label="<?php echo $tr->translate("RECIEPT_NO");?>" align="center"><?php echo $rscom['invoice'];?></td>
+										 <td data-label="<?php echo $tr->translate("Customers");?>" colspan="2"><?php echo $rscom['client_name']; echo " ".$rscom['land_address'].', '.$rscom['street'];?></td>
+										 
+										 <td data-label="<?php echo $tr->translate("COMISSION");?>" align="right"><?php echo number_format($rscom['total_amount'],2);?></td>
+										 <td data-label="<?php echo $tr->translate("PAYMENT_TYPE");?>" align="center"><?php echo $rscom['payment_type'];?></td>
+										 <td data-label="<?php echo $tr->translate("NUMBER");?>" align="center"><?php echo $rscom['cheque'];?></td>
+										 <td data-label="<?php echo $tr->translate("CHEQUE_ISSUER");?>" align="center"><?php echo $rscom['cheque_issuer'];?></td>
+							   
+										 
+										 <td data-label="<?php echo $tr->translate("DATE");?>" align="center" colspan="2" style="white-space: nowrap;"><?php echo date("d-m-Y",strtotime($rscom['create_date']));?></td>
+										 <td data-label="<?php echo $tr->translate("BY_USER");?>" align="center"><?php echo $rscom['user_name'];?></td>
+										<td class=""><?php echo($rscom['is_closed']==0)?"Unclose":"Closed";?></td>
+									</tr>
+									<?php }
+									?>
 							 <?php }?>
 							 <?php if(!empty($this->rowCommissionPayment)){?>
 								 <tr  style="font-size: 12px; line-height:20px;">
-								   <td align="center" colspan="13">
+								   <td align="center" colspan="14">
 									<span style="font-weight:normal;font-size:12px; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("COMMISSION_PAYMENT");?></span>
 								   </td>
 								 </tr>
+								 <thead>
 								 <tr class="style" align="center" >
-									<td><?php echo $tr->translate("NUM");?></td>
-									<td><?php echo $tr->translate("BRANCH_NAME");?></td>
-									<td colspan="2" ><?php echo $tr->translate("STAFF_NAME");?></td>
-									<td>&nbsp;<?php echo $tr->translate("RECIEPT_NO");?>&nbsp;</td>
-									<td ><?php echo $tr->translate("CATEGORY");?></td>
+									<td scope="col"><?php echo $tr->translate("NUM");?></td>
+									<td scope="col"><?php echo $tr->translate("BRANCH_NAME");?></td>
+									<td scope="col" colspan="2"><?php echo $tr->translate("STAFF_NAME");?></td>
+									<td scope="col"><?php echo $tr->translate("RECIEPT_NO");?></td>
+									<td scope="col" colspan="2"><?php echo $tr->translate("CATEGORY");?></td>
 									
-									<td ><?php echo $tr->translate("COMISSION");?></td>
-									<td>&nbsp;<?php echo $tr->translate("PAYMENT_TYPE");?>&nbsp;</td>
-									<td>&nbsp;<?php echo $tr->translate("NUMBER");?>&nbsp;</td>
-									<td>&nbsp;<?php echo $tr->translate("CHEQUE_ISSUER");?>&nbsp;</td>
+									<td scope="col" ><?php echo $tr->translate("COMISSION");?></td>
+									<td scope="col"><?php echo $tr->translate("PAYMENT_TYPE");?></td>
+									<td scope="col"><?php echo $tr->translate("NUMBER");?></td>
+									<td scope="col"><?php echo $tr->translate("CHEQUE_ISSUER");?></td>
 									
 									
-									<td ><?php echo $tr->translate("DATE");?></td>
-									<td><?php echo $tr->translate("BY_USER");?></td>
-									<td><?php echo $tr->translate("STATUS");?></td>
+									<td scope="col" colspan="2"><?php echo $tr->translate("DATE");?></td>
+									<td scope="col"><?php echo $tr->translate("BY_USER");?></td>
+									<td scope="col"><?php echo $tr->translate("STATUS");?></td>
 								</tr>
-								<?php $c=0; foreach ($this->rowCommissionPayment AS $rs){ $c++; $k++; $total = $total +$rs['total_paid']; ?>
-									<tr align="left" class="stylehover">
-										 <td align="center">&nbsp;<?php echo $c; ?>
+								 </thead>
+								 <?php $c=0; foreach ($this->rowCommissionPayment AS $rs){ $c++;$k++; $total = $total +$rs['total_paid']; ?>
+									<tr  align="left" class="style hover">
+										 <td data-label="<?php echo $tr->translate("NUM");?>" align="center">
 											<input style="height: 15px;margin-top: 5px;" type="checkBox" onClick="checked_id(<?php echo $k;?>)" name="check_box<?php echo $k;?>" id="check_box<?php echo $k;?>" />
 											<input type="hidden" id="id_<?php echo $k;?>" name="id_<?php echo $k;?>" value="<?php echo $rs['id'];?>" dojoType="dijit.form.TextBox" />
 											<input type="hidden" id="type_record<?php echo $k;?>" name="type_record<?php echo $k;?>" value="3" dojoType="dijit.form.TextBox" />
 									
-										 </td>
-										 <td align="center">&nbsp;<?php echo $rs['branch_name']?>&nbsp;</td>
-										 <td colspan="2">&nbsp;<?php echo $rs['staff_name'];?> <?php //if($rs['sex']==1){ echo "(ប្រុស)";}else{ echo '(ស្រី)';} echo empty($rs['tel'])?"":" ".$rs['tel'];?> &nbsp;</td>
-										 <td align="center">&nbsp;<?php echo $rs['receipt_no'];?>&nbsp;</td>
-										 <td >&nbsp;<?php echo $rs['category_name'];?>&nbsp;</td>
+										 <?php echo $c; ?>
 										 
-										 <td align="right">&nbsp;<?php echo number_format($rs['total_paid'],2);?>&nbsp;</td>
-										 <td align="center">&nbsp;<?php echo $rs['payment_type'];?></td>
-										 <td align="center">&nbsp;<?php echo $rs['cheque_no'];?></td>
-										 <td align="center">&nbsp;<?php echo $rs['cheque_issuer'];?></td>
+										 </td>
+										 <td data-label="<?php echo $tr->translate("BRANCH_NAME");?>" align="center"><?php echo $rs['branch_name']?></td>
+										 <td data-label="<?php echo $tr->translate("STAFF_NAME");?>" colspan="2" ><?php echo $rs['staff_name'];?> <?php if($rs['sex']==1){ echo "(ប្រុស)";}else{ echo '(ស្រី)';} echo empty($rs['tel'])?"":" ".$rs['tel'];?> </td>
+										 <td data-label="<?php echo $tr->translate("RECIEPT_NO");?>" align="center"><?php echo $rs['receipt_no'];?></td>
+										 <td data-label="<?php echo $tr->translate("CATEGORY");?>" colspan="2"><?php echo $rs['category_name'];?></td>
+										 
+										 <td data-label="<?php echo $tr->translate("COMISSION");?>" align="right"><?php echo number_format($rs['total_paid'],2);?></td>
+										 <td data-label="<?php echo $tr->translate("PAYMENT_TYPE");?>" align="center"><?php echo $rs['payment_type'];?></td>
+										 <td data-label="<?php echo $tr->translate("NUMBER");?>" align="center"><?php echo $rs['cheque_no'];?></td>
+										 <td data-label="<?php echo $tr->translate("CHEQUE_ISSUER");?>" align="center"><?php echo $rs['cheque_issuer'];?></td>
 							   
 										 
-										 <td align="center" style="white-space: nowrap;">&nbsp;<?php echo date("d-m-Y",strtotime($rs['date_payment']));?>&nbsp;</td>
-										 <td align="center">&nbsp;<?php echo $rs['user_name'];?></td>
-										 <td class="">&nbsp;<?php echo($rs['is_closed']==0)?"Unclose":"Closed";?>&nbsp;</td>
+										 <td data-label="<?php echo $tr->translate("DATE");?>" align="center" colspan="2" ><?php echo date("d-m-Y",strtotime($rs['date_payment']));?></td>
+										 <td data-label="<?php echo $tr->translate("BY_USER");?>" align="center"><?php echo $rs['user_name'];?></td>
+										<td data-label="<?php echo $tr->translate("STATUS");?>" class=""><?php echo($rs['is_closed']==0)?"Unclose":"Closed";?></td>
 									</tr>
 								 <?php }?>
-						 
-							<?php }?>
+							 <?php }?>
 							 <?php 
-									if (!empty($this->houserepair)){
-								?>
-								<tr  style="font-size: 12px; line-height:20px;">
-								   <td align="center" colspan="13">
-									<span style="font-weight:normal;font-size:12px; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("ចំណាយពីការកែផ្ទះ");?></span>
+								if (!empty($this->houserepair)){
+								?> 
+								 <tr  style="font-size: 12px; line-height:20px;">
+								   <td align="center" colspan="14">
+										<span style="font-weight:normal;font-size:12px; font-family:'Times New Roman','Khmer OS Muol Light'"><?php echo $tr->translate("ចំណាយពីការកែផ្ទះ");?></span>
 								   </td>
 								 </tr>
-								 <tr class="style" align="center"  >
-									<td><?php echo $tr->translate("NUM");?></td>
-									<td><?php echo $tr->translate("BRANCH_NAME");?></td>
-									<td ><?php echo $tr->translate("EXPENSE_TITLE");?></td>
-									<td><?php echo $tr->translate("RECEIPT_NO");?></td>
-									<td><?php echo $tr->translate("CLIENT_NAME");?></td>
-									<td><?php echo $tr->translate("PROPERTY_CODE");?></td>
-									<td><?php echo $tr->translate("CATEGORY");?></td>
-									<td><?php echo $tr->translate("TOTAL");?></td>
-									<td><?php echo $tr->translate("CHEQUE");?></td>
-									<td><?php echo $tr->translate("NOTE");?></td>
-									<td><?php echo $tr->translate("DATE");?></td>
-									<td><?php echo $tr->translate("BY_USER");?></td>
-									<td><?php echo $tr->translate("STATUS");?></td>
-								</tr>
-								 <?php foreach ($this->houserepair as $index => $rs){ $k++;?>
+								<thead>
+									<tr class="style" align="center"  >
+										<td><?php echo $tr->translate("NUM");?></td>
+										<td><?php echo $tr->translate("BRANCH_NAME");?></td>
+										
+										<td colspan="2"><?php echo $tr->translate("EXPENSE_TITLE");?></td>
+										<td><?php echo $tr->translate("RECEIPT_NO");?></td>
 								
-								<tr class=" stylehover <?php //if($index%2==1){echo"even";}?>" style=" <?php if ($rs['status']==0){ echo "background: #f7c6c6;";}?>  font-family: 'Times New Roman','Khmer OS Battambang';white-space: nowrap;" width="100%">
-									<td style="text-align: center;">&nbsp;<?php echo $index+1; ?>&nbsp;
-									
-											<input style="height: 15px;margin-top: 5px;" type="checkBox" onClick="checked_id(<?php echo $k;?>)" name="check_box<?php echo $k;?>" id="check_box<?php echo $k;?>" />
+										<td ><?php echo $tr->translate("CATEGORY");?></td>
+										<td><?php echo $tr->translate("Customers");?></td>
+										
+										<td><?php echo $tr->translate("TOTAL");?></td>
+										<td><?php echo $tr->translate("PAYMENT_TYPE");?></td>
+										<td><?php echo $tr->translate("CHEQUE");?></td>
+										<td colspan="2"><?php echo $tr->translate("NOTE");?></td>
+										<td><?php echo $tr->translate("DATE");?></td>
+										<td><?php echo $tr->translate("BY_USER");?></td>
+										<td><?php echo $tr->translate("STATUS");?></td>
+									</tr>
+								</thead>
+								<?php foreach ($this->houserepair as $index => $rs){ $k++;?>
+									<tr class="style hover" style="<?php if ($rs['status']==0){ echo "background: #f7c6c6;";}?>  " >
+										<td data-label="<?php echo $tr->translate("NUM");?>" style="text-align: center;">
+										<input style="height: 15px;margin-top: 5px;" type="checkBox" onClick="checked_id(<?php echo $k;?>)" name="check_box<?php echo $k;?>" id="check_box<?php echo $k;?>" />
 											<input type="hidden" id="id_<?php echo $k;?>" name="id_<?php echo $k;?>" value="<?php echo $rs['id'];?>" dojoType="dijit.form.TextBox" />
 											<input type="hidden" id="type_record<?php echo $k;?>" name="type_record<?php echo $k;?>" value="4" dojoType="dijit.form.TextBox" />
-											
-									</td>
-									<td align="center">&nbsp;<?php echo $rs["branch_name"];?>&nbsp;</td>
-									<td align="center">&nbsp;<a target="_blank" style="color:#000;text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome','id'=>$rs['id']));?>?repair=1"><?php echo $rs["title_income"];?></a>&nbsp;</td> 
-									<td align="center">&nbsp;<a target="_blank" style="<?php if ($rs['status']==0){ echo "color:red;";}else{ echo "color:#000;";}?>text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome','id'=>$rs['id']));?>?repair=1"><?php echo $rs["invoice"];  if ($rs['status']==0){ echo " ".$tr->translate("មោឃៈ");}?></a>&nbsp;</td>
-									<td align="center">&nbsp;<a target="_blank" style="color:#000;text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome','id'=>$rs['id']));?>?repair=1"><?php echo $rs["name_kh"];?></a>&nbsp;</td> 
-									<td align="center">&nbsp;<?php echo $rs["land_address"]." (".$rs["street"].")";?>&nbsp;</td>
-									<td valign="top">&nbsp;<?php echo $rs["category"];?>&nbsp;</td>
-									<td align="center">&nbsp;<strong><?php  if ($rs['status']==0){ echo "-";}else{ echo number_format(abs($rs["total_amount"]),2);}?></strong>&nbsp;</td>
-									<td>&nbsp;<?php echo $rs["cheque"];?>&nbsp;</td>
-									<td>&nbsp;<?php echo $rs["description"];?>&nbsp;</td>
-									<td align="center">&nbsp;<?php echo date("d-M-Y",strtotime($rs["date"]));?>&nbsp;</td>
-									<td align="center">&nbsp;<?php echo $rs["user_name"];?>&nbsp;</td>
-									<td class="">&nbsp;<?php echo($rs['is_close']==0)?"Unclose":"Closed";?>&nbsp;</td>
-								</tr>
-								 <?php 
-								if ($rs['status']!=0){
-									$total = $total + abs($rs['total_amount']);
-								}
-							   ?>
-								<?php }?>
-							<?php }?>
+										<?php echo $index+1; ?>
+										</td>
+										<td data-label="<?php echo $tr->translate("BRANCH_NAME");?>" align="center"><?php echo $rs["branch_name"];?></td>
+										
+										<td data-label="<?php echo $tr->translate("EXPENSE_TITLE");?>" colspan="2" align="center"><a target="_blank" style="color:#000;text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome','id'=>$rs['id']));?>?repair=1"><?php echo $rs["title_income"];?></a></td> 
+										<td data-label="<?php echo $tr->translate("RECEIPT_NO");?>" align="center"><a target="_blank" style="<?php if ($rs['status']==0){ echo "color:red;";}else{ echo "color:#000;";}?>text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome','id'=>$rs['id']));?>?repair=1"><?php echo $rs["invoice"];  if ($rs['status']==0){ echo " ".$tr->translate("មោឃៈ");}?></a></td>
+										<td data-label="<?php echo $tr->translate("CATEGORY");?>" valign="top" ><?php echo $rs["category"];?></td>
+										
+										<td data-label="<?php echo $tr->translate("Customers");?>"><a target="_blank" style="color:#000;text-decoration: none;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'receipt-otherincome','id'=>$rs['id']));?>?repair=1"><?php echo $rs["name_kh"]; echo " ".$rs["land_address"]." (".$rs["street"].")";?></a></td>
+										
+										<td data-label="<?php echo $tr->translate("TOTAL");?>" align="right"><strong><?php  if ($rs['status']==0){ echo "-";}else{ echo number_format(abs($rs["total_amount"]),2);}?></strong></td>
+										<td data-label="<?php echo $tr->translate("PAYMENT_TYPE");?>"><?php echo $rs["payment_method"];?></td>
+										<td data-label="<?php echo $tr->translate("CHEQUE");?>" align="center"><?php echo $rs["cheque"];?></td>
+										<td data-label="<?php echo $tr->translate("NOTE");?>" colspan="2"><?php echo $rs["description"];?></td>
+										<td data-label="<?php echo $tr->translate("DATE");?>" align="center"><?php echo date("d-m-Y",strtotime($rs["date"]));?></td>
+										<td data-label="<?php echo $tr->translate("BY_USER");?>" align="center"><?php echo $rs["user_name"];?></td>
+										<td data-label="<?php echo $tr->translate("STATUS");?>" class=""><?php echo($rs['is_close']==0)?"Unclose":"Closed";?></td>
+									</tr>
+									 <?php 
+									if ($rs['status']!=0){
+										$total = $total + abs($rs['total_amount']);
+									}
+								   ?>
+									<?php }?>
+							  <?php }?>
+					    		
+								
+							
+							
 							<tr class="style style1" style="font-weight: 600; background: #c1d0f3;">
 								<td colspan="7" align="right"><?php echo $tr->translate('TOTAL_EXPENSE');?></td>
 								<td colspan="2"  align="right">$ <?php echo number_format($total,2);?></td>
