@@ -696,7 +696,13 @@ class Incexp_Model_DbTable_DbExpensePayment extends Zend_Db_Table_Abstract
 		return $db->fetchAll($sql);
 	}
     
-    
+    function getexpenseByExpensePaymentId($id){
+		$db = $this->getAdapter();
+		$sql=" SELECT * FROM ln_expense WHERE expensePaymentId=$id ";
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$sql.=$dbp->getAccessPermission("branch_id");
+		return $db->fetchRow($sql);
+	}
     
 }
 

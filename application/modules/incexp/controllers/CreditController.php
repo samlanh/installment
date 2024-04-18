@@ -125,6 +125,9 @@ class Incexp_CreditController extends Zend_Controller_Action
 		if(empty($row)){
 			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/incexp/credit",2);
 			exit();
+		}else if ($row['is_closed']==1){
+			Application_Form_FrmMessage::Sucessfull("Unable edit closed record","/incexp/credit",2);
+			exit();
 		}
 		$row['other_invoice']='';
 		$this->view->row = $row;

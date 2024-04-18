@@ -32,7 +32,16 @@ class Group_Form_FrmContactHistory extends Zend_Dojo_Form
     			'required'=>'true',
     			'style'=>'font-family: inherit; width:99%;  min-height:100px !important;'));
     	
-    	$_arr = array(0=>$this->tr->translate("DROPPED"),1=>$this->tr->translate("PROCCESSING"),2=>$this->tr->translate("WAITING_RESPONSE"),3=>$this->tr->translate("COMPLETED_CONTACT"));
+    	$_arr = array(
+				0=>"បោះបង់ការទំនាក់ទំនង"
+				,1=>"កំពុងដំណើរការណ៍ "
+				,2=>"បន្តការទំនាក់ទំនង"
+				,3=>"រង់ចាំណាត់ជួប"
+				,4=>"បានណាត់ជួប"
+				,5=>"បិទការលក់ "
+				,6=>"ការកក់ប្រាក់"
+				,7=>"ចុះកុងត្រា"
+		);
     	$_proccess = new Zend_Dojo_Form_Element_FilteringSelect("proccess");
     	$_proccess->setMultiOptions($_arr);
     	$_proccess->setAttribs(array(

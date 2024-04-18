@@ -2,6 +2,15 @@
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$frm = $this->frm_search;
 	
+	$dbGb = new Setting_Model_DbTable_DbGeneral();
+	$settingRow = $dbGb->geLabelByKeyName('crmConnectWithSale');
+	$crmConnectWithSale = empty($settingRow["keyValue"]) ? 0 : $settingRow["keyValue"];
+	
+	$featureClass="disabledClass";
+	if($crmConnectWithSale==1){
+		$featureClass="";
+	}
+	
 	$branch_title = $tr->translate("BRAND_TITLE");
 	$headerReportType = REPORT_LETER_HEAD;
 	$classHideHeight="110px";
@@ -116,6 +125,9 @@
 							text-align: left;
 							vertical-align: top;
 						}
+						.disabledClass{
+							display:none !important;
+						}
 					</style>
 					<div class="divFooter">
 			        	<?php echo $this->headerReport;?>
@@ -129,7 +141,7 @@
 								<td scope="col" rowspan="2"><?php echo $tr->translate("NUM");?></td>
 								<td scope="col" colspan="3"><?php echo $tr->translate("CUSTOMER_INFO");?></td>
 								<td scope="col" colspan="5"><?php echo $tr->translate("CONTACT_HISTORY");?></td>
-								<td scope="col" colspan="2"><?php echo $tr->translate("SALE_INFO");?></td>
+								<td scope="col" colspan="2" class="<?php  echo $featureClass;?>"><?php echo $tr->translate("SALE_INFO");?></td>
 							 </tr>
 							<tr class="style" align="center" >
 								<td scope="col"><?php echo $tr->translate("CUSTOMER_NAME");?></td>
@@ -142,8 +154,8 @@
 								<td scope="col" ><?php echo $tr->translate("NEXT_DATE_CONTACT");?></td>
 								<td scope="col" ><?php echo $tr->translate("CONTACT_BY");?></td>
 								
-								<td scope="col"><?php echo $tr->translate("PROPERTY_CODE");?></td>
-								<td scope="col"><?php echo $tr->translate("BUY_DATE");?></td>
+								<td scope="col" class="<?php  echo $featureClass;?>"><?php echo $tr->translate("PROPERTY_CODE");?></td>
+								<td scope="col" class="<?php  echo $featureClass;?>"><?php echo $tr->translate("BUY_DATE");?></td>
 							 </tr>
 				         </thead>
 				       <?php  
@@ -163,8 +175,8 @@
 								<td align="center" style="white-space: nowrap;"><?php echo date("d-M-Y",strtotime($row['next_contact']));?></td>
 								<td style="white-space: nowrap;"><?php echo $row['user_contact_name'];?></td>
 							 
-								<td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>" align="center" style="white-space: nowrap;"><?php echo empty($row['landAddress']) ? "-" : $row['landAddress']." ".$row['landStreet'];?></td>
-								<td data-label="<?php echo $tr->translate("BUY_DATE");?>" align="center"><?php echo empty($row['buyDate']) ? "-" : date("d-M-Y",strtotime($row['buyDate']));?></td>
+								<td class="<?php  echo $featureClass;?>" data-label="<?php echo $tr->translate("PROPERTY_CODE");?>" align="center" style="white-space: nowrap;"><?php echo empty($row['landAddress']) ? "-" : $row['landAddress']." ".$row['landStreet'];?></td>
+								<td class="<?php  echo $featureClass;?>" data-label="<?php echo $tr->translate("BUY_DATE");?>" align="center"><?php echo empty($row['buyDate']) ? "-" : date("d-M-Y",strtotime($row['buyDate']));?></td>
 							</tr>
 						<?php }?>
 				    </table>

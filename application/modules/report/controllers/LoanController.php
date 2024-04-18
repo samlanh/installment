@@ -148,6 +148,7 @@ class Report_LoanController extends Zend_Controller_Action {
   	$this->view->search = $search;
   	$this->view->loantotalcollect_list =$rs=$db->getALLLoanPayment($search);
   	$this->view->list_end_date = $search;
+	$this->view->bankList = $db->getPayemtTotalByBankList();
   
   	$frm = new Loan_Form_FrmSearchLoan();
   	$frm = $frm->AdvanceSearch();
@@ -1095,10 +1096,15 @@ class Report_LoanController extends Zend_Controller_Action {
 		$frm = $frm->AdvanceSearch();
 		Application_Model_Decorator::removeAllDecorator($frm);
 		$this->view->frm_search = $frm;
-	
-		$row = $db->getSummaryDailyOperation($search);
-		$this->view->summaryData = $row;
 		$this->view->search = $search;
+		
+		$search["recordDate"] = $search["end_date"];
+		$yesterdayCash = $db->getYesterdayCash($search);
+		$this->view->yesterdayCash = $yesterdayCash;
+		
+		$dbGBStock = new Application_Model_DbTable_DbGlobalStock();
+		$rsBank = $dbGBStock->getAllBank();
+		$this->view->bankList = $rsBank;
 		
 		$frmpopup = new Application_Form_FrmPopupGlobal();
 		$this->view->footerReport = $frmpopup->getFooterReport();
@@ -1194,6 +1200,30 @@ class Report_LoanController extends Zend_Controller_Action {
 	
 	$frmpopup = new Application_Form_FrmPopupGlobal();
 	$this->view->headerReport = $frmpopup->getLetterHeadReport();
+  }
+  
+  function rptCombinePaymentReceiptAction(){
+	 $key = new Application_Model_DbTable_DbKeycode();
+	 $this->view->data=$key->getKeyCodeMiniInv(TRUE);
+	 $db  = new Report_Model_DbTable_DbLandreport();
+	 $id = $this->getRequest()->getParam('id');
+	
+  	
+	if(!empty($id)){
+		 $receipt = $db->getPaymentCombineInfoById($id);
+		 if(empty($receipt) or $receipt==''){
+		 	Application_Form_FrmMessage::Sucessfull("NO_RECORD",'/report/loan/rpt-payment',2);
+		 }
+		$this->view->rs = $receipt;
+		$this->view->paymentRow = $db->getReceiptInCombinePayment($id);
+			
+	}else{
+  		$this->_redirect("/report/loan");
+  	}
+	
+	$frmpopup = new Application_Form_FrmPopupGlobal();
+	$this->view->footer = $frmpopup->getFooterReceipt();
+	$this->view->officailreceipt = $frmpopup->getCombinePaymentOfficialReciept();
   }
 
 }

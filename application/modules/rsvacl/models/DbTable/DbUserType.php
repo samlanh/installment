@@ -141,6 +141,14 @@ class RsvAcl_Model_DbTable_DbUserType extends Zend_Db_Table_Abstract
 				WHEN `status` = 0 THEN '".$imgnone."'
 			END AS status
 		 FROM `rms_acl_user_type` u ";
+		 $sql.=" WHERE 1 ";
+		 
+		$dbGb=new Application_Model_DbTable_DbGlobal();
+		$userInfo = $dbGb->getUserInfo();
+		$level = empty($userInfo['level']) ? 0 : $userInfo['level'];
+		if($level!=1){ // Not Admin
+			$sql.= " AND u.`user_type_id` IN (SELECT COALESCE(ut.`user_type_id`,0) FROM `rms_acl_user_type` AS ut WHERE 1 AND ut.`parent_id` = $level ) ";
+		}
 		return $db->fetchAll($sql);
 	}
 }

@@ -119,6 +119,9 @@ class Incexp_IncomeOtherpaymentController extends Zend_Controller_Action
 		if(empty($row)){
 			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/incexp/incomeotherpayment",2);
 			exit();
+		}else if ($row['is_close']==1){
+			Application_Form_FrmMessage::Sucessfull("Unable edit closed record","/incexp/incomeotherpayment",2);
+			exit();
 		}
     	$pructis=new Incexp_Form_FrmOtherIncomePayment();
     	$frm = $pructis->FrmAddIncomeother($row);

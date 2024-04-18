@@ -99,7 +99,6 @@ class Group_CustomerController extends Zend_Controller_Action {
 				}
 				
 				$data = $this->getRequest()->getPost();
-				$data['id']=$id;
 				$db->add($data);
 				Application_Form_FrmMessage::Sucessfull('EDIT_SUCCESS',"/group/customer");
 			}catch (Exception $e){
@@ -172,6 +171,16 @@ class Group_CustomerController extends Zend_Controller_Action {
 	   		$data = $this->getRequest()->getPost();
 	   		$db_co = new Group_Model_DbTable_DbCustomer();
 	   		$id = $db_co->addKnowBy($data);
+	   		print_r(Zend_Json::encode($id));
+	   		exit();
+	   	}
+   }
+   
+   public function checkphoneAction(){
+	   	if($this->getRequest()->isPost()){
+	   		$data = $this->getRequest()->getPost();
+	   		$db_co = new Group_Model_DbTable_DbCustomer();
+	   		$id = $db_co->checkDuplicatePhone($data);
 	   		print_r(Zend_Json::encode($id));
 	   		exit();
 	   	}

@@ -49,7 +49,7 @@ table.tb-footer tr.style-head {
 	<div class="card-box">
        	<div class="col-sm-12 border-botom">
 	   		<div class="col-sm-8 pd-0">
-	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i> <?php echo $tr->translate('RPT_SOLDSUMMARY');?></h4>
+	    		<h4 class="m-b-0"><i class="fa fa-file-text" aria-hidden="true"></i> <?php echo $tr->translate('RPT_SOLDSUMMARY');?></h4>
     		</div>
     		<div class="col-sm-4 text-right">
     		</div>
@@ -143,31 +143,35 @@ table.tb-footer tr.style-head {
 		}
 		table.content-data{
 			border-collapse:collapse;
-			border:1px solid #000; 
-			font-size:13px;
-
+			font-size:12px;
 			width:100%;
 		}
 		table.content-data thead tr.style {
-		   line-height: 25px; font-size:12px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
+		   
+		   padding:1px 0px; 
+		   height: 22px; 
 		   background: #ccd9ff;
-			text-align: center;
+		}
+		table.content-data thead tr.style td{
+			line-height: 25px; 
+		   font-size:12px !important; 
+		   font-weight:bold;
+		   text-align: center;
+		   white-space: nowrap;
 		}
 
 		table.content-data  tr.style {
-		  
 		    white-space: nowrap;
 			line-height: 20px;
-		  
 		}
 		
 		table.tb-footer{
-		border-collapse:collapse;
-		border:1px solid #000; 
-		font-size:13px;
+			border-collapse:collapse;
+			border:1px solid #000; 
+			font-size:12px;
 		}
 		table.tb-footer tr{
-		 line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;
+			line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;
 		}
 		.border_bottom {
 			border-bottom: 2px solid #000;
@@ -175,63 +179,13 @@ table.tb-footer tr.style-head {
 		table tr td{
 			padding:0 1px;
 		}
-		/*
-		.style-head{
-			line-height: 20px;font-size: 14px !important;
-			font-family:'Times New Roman','Khmer OS Battambang';
-		}
-		table { page-break-inside:auto }
-		tr{ page-break-inside:avoid; page-break-after:auto; }
-		#header {
-		  display: table-header-group;
-		  page-break-inside:avoid; page-break-after:auto;
-		}
-		table tr td ul li{text-align: center;list-style: none;line-height: 25px;}
-		th{padding: 5px;}
-		.hover td{padding: 2px;}
-		.hide{visibility: hidden;}
-		@media print {
-			div.divFooter {
-				position: fixed;
-				top: 0;
-				width: 100%;
-				height: 100px;
-				bottom:0px;
-				margin:0;
-			}
-			.hide{visibility: visible; height: <?php echo $classHideHeight;?>;}
-		}
-		table.content-data{
-			border-collapse:collapse;
-			width:100%;
-			border:1px solid #000; 
-			font-family:'Times New Roman','Khmer OS Battambang';
-			font-size:12px;
-			white-space: nowrap;
-			margin:0 auto;
-		}
-		table.content-data tr.style-head {
-		   line-height: 25px; padding:1px 0px; white-space: nowrap;height: 22px; 
-			background: #ccd9ff;
-			text-align: center;
-		}
-		table.content-data tr.style-rowdata {
-			font-size:12px; 
-			height: 23px;
-		}
-		table.content-data td {
-			padding: 2px;
-		}
-		.border_bottom{
-			border-bottom:2px solid #000;
+		tr.style-rowdata.hover.context-menu-one.odd {
+			background: #ededed;
 		}
 		tr.style-rowdata.hover.context-menu-one.completedCss {
 			background: #00e01c0d;
 		}
-		table tr td{
-			padding:0 2px;
-		}
-		*/
+		
 	</style>
 	<table style="font-family: 'Times New Roman','Khmer OS Battambang'; width:100%;">
 		<tr>
@@ -243,7 +197,7 @@ table.tb-footer tr.style-head {
 	    </tr>
 	    <tr>
 	    	<td id="exportExcel">
-	            <table class="content-data" border="1" cellspacing="0">
+	            <table class="content-data" border="1" cellspacing="0" style="border:1px solid #000; ">
 	               <thead>
 	                 <tr class="hide" style="border:1px solid #000;">
 		                <td colspan="17" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
@@ -264,7 +218,7 @@ table.tb-footer tr.style-head {
 	                 <tr class="style" align="center">
 	                    <td  scope="col"><?php echo $tr->translate("PROPERTY_CODE");?></td>
 	                    <?php if($is_showhouse==0){?>
-	                    	<td><?php echo $tr->translate("AMOUNT_PROPERTY");?></td>
+	                    	<td><?php echo $tr->translate("AMOUNTS");?></td>
 	                    <?php }?>
 						
 	                    <td scope="col"><?php echo $tr->translate("BUY_DATE");?></td>
@@ -393,17 +347,22 @@ table.tb-footer tr.style-head {
 		               	 	$payment_3_completed=$payment_3_completed+1;
 							$classComplete="completedCss";
 		               	 }
-		               }         
+		               }   
+
+						$classRow = "";
+						if(($key%2)==1){
+							$classRow = "odd";
+						}
 		             ?>
 	             <?php 
 	              	$payment_id = $row['payment_id'];
 	              	?>
-	              	<tr class="style hover context-menu-one <?php echo $classComplete; ?>" oncontextmenu="setrowdata(<?php echo $row['id'];?>);return false;" >
+	              	<tr class="style-rowdata hover context-menu-one <?php echo $classRow." ".$classComplete; ?>" oncontextmenu="setrowdata(<?php echo $row['id'];?>);return false;" >
 						<td data-label="<?php echo $tr->translate("NUM");?>" align="center"><?php echo $key+1; ?></td>
-						<td data-label="<?php echo $tr->translate("CUSTOMER_INFO");?>"><span style="line-height: 14px;white-space: pre-wrap !important;max-width: 150px;width: 150px;display: block;font-size: 11px;overflow-wrap: break-word;text-align: left;vertical-align: top; padding:2px 0;" ><?php echo $row['name_kh']; if(!empty($row['phone'])){ echo "<span style='display: block; line-height: 14px;' />".$row['phone'];}?></span></span></td>
+						<td data-label="<?php echo $tr->translate("CUSTOMER_INFO");?>"><span style="line-height: 14px;white-space: pre-wrap !important;max-width: 150px;width: 150px;display: block;font-size: 11px;overflow-wrap: break-word;text-align: left;vertical-align: top; padding:2px 0;" ><?php echo $row['name_kh']; if(!empty($row['phone'])){ echo "<span style='display: block; line-height: 12px; font-size:80%;' />".$row['phone'];}?></span></span></td>
 						<td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>"><span style="line-height: 14px;white-space: pre-wrap !important;max-width: 150px;width: 150px;display: block;font-size: 11px;overflow-wrap: break-word;text-align: left;vertical-align: top; font-weight: 600; padding:2px 0;" ><?php echo $row['land_address']." ".$row['street']; ?></span></td>
 						<?php if($is_showhouse==0){?>
-						 <td data-label="<?php echo $tr->translate("AMOUNT_PROPERTY");?>" align="center"><?php echo $countland." ".$notupdateLock; ?></td>
+						 <td data-label="<?php echo $tr->translate("AMOUNTS");?>" align="center"><?php echo sprintf('%02d', $countland)." ".$notupdateLock; ?></td>
 						<?php }?>
 						
 						<td data-label="<?php echo $tr->translate("BUY_DATE");?>" style="white-space:nowrap;"><?php echo date($montFomat,strtotime($row['buy_date'])); ?></td>
@@ -416,13 +375,13 @@ table.tb-footer tr.style-head {
 						<td data-label="<?php echo $tr->translate("DISCOUNT_PERCENT");?>" align="center" style="white-space:nowrap;"><?php echo number_format($row['discount_percent'],2); ?></td>
 						
 						<td data-label="<?php echo $tr->translate("SOLD_PRICE");?>" align="right" style="white-space:nowrap;"><?php echo number_format($row['price_sold'],2); ?></td>	
-						<td data-label="<?php echo $tr->translate("TYPE");?>"><?php echo $row['paymenttype']; ?></td>
+						<td data-label="<?php echo $tr->translate("TYPE");?>" style="white-space:nowrap; font-size:80%;"><?php echo $row['paymenttype']; ?></td>
 						<td data-label="<?php echo $tr->translate("PAID_PRINCIPAL");?>" align="right" style="white-space:nowrap; text-align: right;"><?php echo number_format($paidAmount,2);?></td>
 						<td data-label="<?php echo $tr->translate("REMAIN");?>" align="right" style="white-space:nowrap;"><?php echo number_format($row['price_sold']-$paidAmount,2);  ?></td>
 						<td data-label="<?php echo $tr->translate("TOTAL_INTEREST");?>" align="right"><?php echo number_format($totalInterestPaid,2);?></td>
 						<td data-label="<?php echo $tr->translate("TOTAL_PENELIZE");?>" align="right"><?php echo number_format($penalizePaid,2);?></td>
 						
-						<td data-label="<?php echo $tr->translate("AGENTCY");?>"><?php echo $row['agency_name']; ?></td>
+						<td data-label="<?php echo $tr->translate("AGENTCY");?>" style="white-space:nowrap; font-size:80%;"><?php echo $row['agency_name']; ?></td>
 						<td data-label="<?php echo $tr->translate("STATUS");?>"><?php  if($row['is_cancel']==1){ echo "បោះបង់";} ?></td>
 						<!-- <td align="center" title='<?php echo ($row['verify_by']>0 ? 'Authorized':'Unauthorized');?>'><img  src="<?php echo $this->baseUrl().'/images/icon/'.($row['verify_by']>0 ? 'apply2.png':'none.png'); ?>" /></td>
 						 -->

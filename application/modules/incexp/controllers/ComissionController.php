@@ -136,6 +136,9 @@ class Incexp_ComissionController extends Zend_Controller_Action {
 	    if(empty($row)){
 	    	Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/incexp/comission",2);
 	    	exit();
+		}else if ($row['is_closed']==1){
+			Application_Form_FrmMessage::Sucessfull("Unable edit closed record","/incexp/comission",2);
+			exit();
 	    }
 	    $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	    

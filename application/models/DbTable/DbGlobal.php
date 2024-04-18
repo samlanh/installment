@@ -1313,7 +1313,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   }
   function getAllKnowBy($option=1,$_add_new=null){
   	$db = $this->getAdapter();
-  	$sql="SELECT id,title,title as name FROM `rms_know_by` WHERE `status`=1 AND `title`!='' ";
+  	$sql="SELECT id,title,title as name FROM `rms_know_by` WHERE `status`=1 AND `title`!='' ORDER BY title ASC ";
   	$result=$db->fetchAll($sql);
   	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
   	if($option!=null){
@@ -1847,14 +1847,18 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 			
 		";
 		$sql.=", CASE
-		WHEN  c.proccess = 0 THEN '".$tr->translate("DROPPED")."'
-		WHEN c.proccess = 1 THEN '".$tr->translate("PROCCESSING")."'
-		WHEN c.proccess = 2 THEN '".$tr->translate("WAITING_RESPONSE")."'
-		WHEN c.proccess = 3 THEN '".$tr->translate("COMPLETED_CONTACT")."'
+		WHEN  c.proccess = 0 THEN 'បោះបង់ការទំនាក់ទំនង'
+		WHEN c.proccess = 1 THEN 'កំពុងដំណើរការណ៍'
+		WHEN c.proccess = 2 THEN 'បន្តការទំនាក់ទំនង'
+		WHEN c.proccess = 3 THEN 'រង់ចាំណាត់ជួប'
+		WHEN c.proccess = 4 THEN 'បានណាត់ជួប'
+		WHEN c.proccess = 5 THEN 'បិទការលក់'
+		WHEN c.proccess = 6 THEN 'ការកក់ប្រាក់'
+		WHEN c.proccess = 7 THEN 'ចុះកុងត្រា'
 		
 		END AS proccess ";
 		$sql.=" FROM `ln_history_contact` AS c,
-				in_customer AS ct WHERE c.proccess IN (1,2) ";
+				in_customer AS ct WHERE c.proccess IN (1,7) "; //c.proccess IN (1,2)
 		
 		
 		$to_date = (empty($end_date))? '1': " c.next_contact <= '".$end_date." 23:59:59'";
@@ -2072,8 +2076,8 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		$sql="SELECT 
 				COALESCE((SELECT serviceFee FROM `ln_properties_type` pt WHERE pt.id=p.`property_type` LIMIT 1),'0') AS serviceFee
 				,CASE
-					WHEN  (SELECT i.next_date FROM `ln_income` i WHERE  i.sale_id=s.id AND incomeType = $incomeType LIMIT 1) IS NULL THEN '".$today."'
-					ELSE (SELECT i.next_date FROM `ln_income` i WHERE  i.sale_id=s.id AND incomeType = $incomeType LIMIT 1)
+					WHEN  (SELECT i.next_date FROM `ln_income` i WHERE  i.sale_id=s.id AND incomeType = $incomeType ORDER BY i.next_date DESC LIMIT 1) IS NULL THEN '".$today."'
+					ELSE (SELECT i.next_date FROM `ln_income` i WHERE  i.sale_id=s.id AND incomeType = $incomeType ORDER BY i.next_date DESC LIMIT 1)
 				END AS `nextDate` 
 				,(SELECT i.category_id FROM `ln_income` i WHERE  i.sale_id=s.id AND incomeType = $incomeType LIMIT 1) AS categoryId
 				
