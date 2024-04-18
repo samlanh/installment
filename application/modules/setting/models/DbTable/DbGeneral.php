@@ -265,6 +265,17 @@ class Setting_Model_DbTable_DbGeneral extends Zend_Db_Table_Abstract
 				$this->update($arr, $where);
 			}
 			
+			$rows = $this->geLabelByKeyName('crmConnectWithSale');
+			$crmConnectWithSale = empty($data['crmConnectWithSale'])?0:1;
+			if (empty($rows)){
+				$arr = array('keyValue'=>$crmConnectWithSale,'keyName'=>"crmConnectWithSale",'note'=>"សម្រាប់ តម្រូវការអតិថិជន អាចភ្ជាប់ព័ត៌មានទំនាក់ទំនងជាមួយការលក់",'user_id'=>$dbg->getUserId());
+				$this->insert($arr);
+			}else{
+				$arr = array('keyValue'=>$crmConnectWithSale,);
+				$where=" keyName= 'crmConnectWithSale'";
+				$this->update($arr, $where);
+			}
+			
 			$valid_formats = array("jpg", "png", "gif", "bmp","jpeg","ico");
 			$part= PUBLIC_PATH.'/images/photo/logo/';
 			if (!file_exists($part)) {

@@ -17,6 +17,9 @@
 	}else if (DISABLE_PAYMENT_DATE==4){
 		$constraintsDate="min:'$cdate',max:'$cdate',";
 	}
+	
+	$dbGBStock = new Application_Model_DbTable_DbGlobalStock();
+	$rsBank = $dbGBStock->getAllBank();
 ?>
 <meta charset="utf-8">
 <script>
@@ -182,19 +185,29 @@ if(balance<0){
 				    <td><input dojoType="dijit.form.Textarea"  class="fullside" id="note" name="note" value="<?php echo $this->rs['note'];?>" type="text"/></td>
 					<td>&nbsp;&nbsp;បង់ជា</td>
 					<td colspan="3">
-						<select name="payment_method" id="payment_method" class="fullside" dojoType="dijit.form.FilteringSelect" >
-						<option value="1" <?php if($this->rs['payment_methodid']==1){ echo"selected";}?>><?php echo $tr->translate("CASH");?></option>
-				    	<option value="3" <?php if($this->rs['payment_methodid']==3){ echo"selected";}?>><?php echo $tr->translate("CHEQUE");?></option>
-				    	<option value="2" <?php if($this->rs['payment_methodid']==2){ echo"selected";}?>><?php echo $tr->translate("PAYWITH_BANK");?></option>
-				    </select>
+						<select onChange="enablePayment();" name="payment_method" id="payment_method" class="fullside" dojoType="dijit.form.FilteringSelect" >
+							<option value="1" <?php if($this->rs['payment_methodid']==1){ echo"selected";}?>><?php echo $tr->translate("CASH");?></option>
+							<option value="3" <?php if($this->rs['payment_methodid']==3){ echo"selected";}?>><?php echo $tr->translate("CHEQUE");?></option>
+							<option value="2" <?php if($this->rs['payment_methodid']==2){ echo"selected";}?>><?php echo $tr->translate("PAYWITH_BANK");?></option>
+						</select>
 					</td>	
 				</tr>
 				<tr>
 					<td >ប្រភេទបង់</td>
 				    <td ><select name="pay_type" id="pay_type" class="fullside" dojoType="dijit.form.FilteringSelect" ><option value="3" <?php if($this->rs['field3']==3){ echo"selected";}?>>បង់ធម្មតា</option>
 				    <option value="1" <?php if($this->rs['field2']==1){ echo"selected";}?>>ដាក់ប្រាក់កក់</option></select></td>
+					<td ><?php echo $tr->translate("BANK");?></td>
+					<td >
+						<select name="bank_id" id="bank_id" class="fullside" dojoType="dijit.form.FilteringSelect" required="false" >
+							<option value="" ><?php echo $tr->translate("SELECT_BANK");?></option>
+							
+							<?php if(!empty($rsBank)) foreach($rsBank as $bank){?>
+							<option value="<?php echo $bank["id"];?>" <?php if($this->rs['bank_id']==$bank["id"]){ echo"selected";}?>><?php echo $bank["name"];?></option>
+							<?php } ?>
+						</select>
+					</td>
 					<td >&nbsp;&nbsp;លេខ</td>
-					<td colspan="3"><input dojoType="dijit.form.TextBox" class="fullside" id="cheque" name="cheque" value="<?php echo $this->rs['cheque'];?>" type="text"></td>
+					<td ><input dojoType="dijit.form.TextBox" class="fullside" id="cheque" name="cheque" value="<?php echo $this->rs['cheque'];?>" type="text"></td>
 				
 				</tr>
 				<tr>
@@ -211,6 +224,10 @@ if(balance<0){
 	</div>
 	</form>
 <script>
+dojo.ready(function(){	
+	enablePayment();	
+	
+});
 function calculateTotal(){
 	principal  = dijit.byId("total_principal_permonth").get("value");
 	if(isNaN(principal)){principal=0}
@@ -231,5 +248,21 @@ function calculateBalance(){
 	if(isNaN(all_paid)){all_paid=0}
 	 dijit.byId("balance").attr("value",price_sold-all_paid);
 }
-	                   			
+var oldCheqe = "<?php echo empty($this->rs['cheque'])? "N/A" : $this->rs['cheque'];?>";
+function enablePayment(){
+	payment_method = dijit.byId('payment_method').get('value');
+
+	dijit.byId("bank_id").set("readOnly",false);
+	dijit.byId("bank_id").reset();
+
+	dijit.byId("cheque").set("readOnly",false);
+	dijit.byId("cheque").attr("value",oldCheqe);
+	if(payment_method==1){
+		dijit.byId("cheque").attr("value",'N/A');
+		dijit.byId("cheque").set("readOnly",true);
+
+		dijit.byId("bank_id").set("readOnly",true);
+		dijit.byId("bank_id").attr("value",'');
+	}
+}                   			
 </script>

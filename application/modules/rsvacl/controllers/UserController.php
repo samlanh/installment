@@ -4,7 +4,7 @@ class RsvAcl_UserController extends Zend_Controller_Action
 {
 	const REDIRECT_URL = '/rsvacl';
 	const MAX_USER = 150;
-	private $activelist = array('មិនប្រើ​ប្រាស់', 'ប្រើ​ប្រាស់');
+	private $activelist = array('មិនប្រើប្រាស់', 'ប្រើប្រាស់');
 	private $user_typelist = array();
 	
     public function init()
@@ -14,11 +14,18 @@ class RsvAcl_UserController extends Zend_Controller_Action
     	defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
     	
     	$db=new Application_Model_DbTable_DbGlobal();
-    	$sql = "SELECT u.user_type_id as id,u.user_type as name FROM `rms_acl_user_type` u where u.`status`=1";
-    	$this->user_typelist = $db->getGlobalDb($sql);
-// 		foreach ($results as $key => $r){
-// 			$this->user_typelist[$r['user_type_id']] = $r['user_type'];    
-// 		}		
+		$userInfo = $db->getUserInfo();
+		$level = empty($userInfo['level']) ? 0 : $userInfo['level'];
+    	$sql = "
+				SELECT 
+					u.user_type_id as id
+					,u.user_type as name 
+				FROM `rms_acl_user_type` u 
+				WHERE u.`status`=1";
+		if($level!=1){ // Not Admin
+			$sql.= " AND u.`user_type_id` IN (SELECT COALESCE(ut.`user_type_id`,0) FROM `rms_acl_user_type` AS ut WHERE 1 AND (ut.`parent_id` = $level OR ut.`user_type_id`=$level) ) ";
+		}
+    	$this->user_typelist = $db->getGlobalDb($sql);	
     }
 
     public function indexAction()
@@ -108,7 +115,7 @@ class RsvAcl_UserController extends Zend_Controller_Action
 			$db_user=new Application_Model_DbTable_DbUsers();
 			 
 			if ($db_user->getMaxUser() > self::MAX_USER) {
-				Application_Form_FrmMessage::Sucessfull('អ្នក​ប្រើ​ប្រាស់​របស់​អ្នក​បាន​ត្រឹម​តែ '.self::MAX_USER.' នាក់ ទេ!', self::REDIRECT_URL,2);
+				Application_Form_FrmMessage::Sucessfull('អ្នកប្រើប្រាស់របស់អ្នកបានត្រឹមតែ '.self::MAX_USER.' នាក់ ទេ!', self::REDIRECT_URL,2);
 			}
 			$this->view->user_typelist =$this->user_typelist;
 			if($this->getRequest()->isPost()){
@@ -125,14 +132,18 @@ class RsvAcl_UserController extends Zend_Controller_Action
 				}
 			}
 			$db  = new Application_Model_DbTable_DbGlobal();
-// 			$this->view->rs_branch = $db->getAllBranch();
 			$user_type = $this->user_typelist;
 			$this->view->user_typelist =$user_type;
-				
-			array_unshift($user_type, array('id'=>-1,'name'=>'Add New'));
+			
+			$userInfo = $db->getUserInfo();
+			$level = empty($userInfo['level']) ? 0 : $userInfo['level'];
+			if($level!=1){ // Not Admin
+			}else{
+				array_unshift($user_type, array('id'=>-1,'name'=>'Add New'));
+			}
 			$this->view->user_type = $user_type;
 			
-			$db = new Application_Model_DbTable_DbGlobal();
+			
 			$this->view->rs = $db->getAllBranchName();
 	}
 	public function editAction()
@@ -159,12 +170,17 @@ class RsvAcl_UserController extends Zend_Controller_Action
 					Application_Form_FrmMessage::Sucessfull("UPDATE_FAIL", self::REDIRECT_URL,2);
 				}
 			}
-			$db  = new Application_Model_DbTable_DbGlobal();
+		$db  = new Application_Model_DbTable_DbGlobal();
 		$user_type = $this->user_typelist;
 		$this->view->user_typelist =$user_type;
-		array_unshift($user_type, array('id'=>-1,'name'=>'Add New'));
-		$this->view->user_type = $user_type;
-		$db = new Application_Model_DbTable_DbGlobal();
+		
+		$userInfo = $db->getUserInfo();
+		$level = empty($userInfo['level']) ? 0 : $userInfo['level'];
+		if($level!=1){ // Not Admin
+		}else{
+			array_unshift($user_type, array('id'=>-1,'name'=>'Add New'));
+		}
+		$this->view->user_type = $user_type;;
 		$this->view->rs = $db->getAllBranchName();
     }
     

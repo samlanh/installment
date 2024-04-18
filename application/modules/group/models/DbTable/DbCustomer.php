@@ -55,7 +55,42 @@ class Group_Model_DbTable_DbCustomer extends Zend_Db_Table_Abstract
 			 
 		}else{
 			$_arr['create_date']=date('Y-m-d');
-			return  $this->insert($_arr);
+			$customerId = $this->insert($_arr);
+			
+			
+			$newCreateDate = new DateTime($_data['date']);
+			$newCreateDate->modify('+10 day');
+			$nextContact = $newCreateDate->format('Y-m-d');
+			
+			$proccess=1;
+			if($_data['statusreq']=="បោះបង់ការទំនាក់ទំនង"){
+				$proccess=0;
+				$nextContact = $_data['date'];
+			}
+			$feedBack="ព័ត៌មានដំបូង";
+			$feedBack=empty($_data['requirement']) ? $feedBack : $feedBack." ".$_data['requirement'];
+			$feedBack=empty($_data['from_price']) ? $feedBack : $feedBack." តម្លៃចាប់ពី".$_data['from_price'];
+			$feedBack=empty($_data['to_price']) ? $feedBack : $feedBack." ដល់".$_data['to_price'];
+			if(!empty($_data['saleId'])){
+				$feedBack="";
+			}
+			
+			
+			$_arr=array(
+					'customer_id'	=> $customerId,
+					'contact_date' 	=> $_data['date'],
+					'feedback'		=> $feedBack,
+					'proccess'		=> $proccess,
+					'next_contact'  => $nextContact,
+					'user_contact'  => $this->getUserId(),
+					'create_date'   => date("Y-m-d H:i:s"),
+					'modify_date'   => date("Y-m-d H:i:s"),
+					'user_id'	    => $this->getUserId(),
+					'saleId'		=> $_data['saleId'],
+			);
+			$this->_name = "ln_history_contact";
+			$id = $this->insert($_arr);
+			return $customerId;
 		}
 
 		}catch(Exception $e){
@@ -169,7 +204,23 @@ class Group_Model_DbTable_DbCustomer extends Zend_Db_Table_Abstract
 	}
 	function  getAllstatusreqForOpt(){
 		$db = $this->getAdapter();
-		$sql = 'SELECT DISTINCT statusreq as name,statusreq as id FROM `in_customer` WHERE statusreq!="" ORDER BY statusreq ASC ';
+		$sql = 'SELECT 
+					DISTINCT statusreq as name
+					,statusreq as id 
+				FROM `in_customer` 
+				WHERE 
+					statusreq!="" 
+					 ';
+		$sql.=" AND statusreq !='' ";
+		$s_where = array();
+		$s_where[] = " statusreq != 'បន្តទំនាក់ទំនង'";
+		$s_where[] = " statusreq != 'រង់ចាំការណាត់ជួប'";
+		$s_where[] = " statusreq != 'បោះបង់ការទំនាក់ទំនង'";
+		$s_where[] = " statusreq != 'ជាន់ភ្ញៀវ'";
+		$s_where[] = " statusreq != 'ស្នើរសុំជំនួយ'";
+		$sql.=' AND ('.implode(' AND ',$s_where).')';
+			
+		$sql.=" ORDER BY statusreq ASC ";
 		$rows =  $db->fetchAll($sql);
 		return $rows;
 	}
@@ -218,6 +269,22 @@ class Group_Model_DbTable_DbCustomer extends Zend_Db_Table_Abstract
 			echo $e->getMessage();
 		}
 	}
+	function checkDuplicatePhone($_data){
+		$phone = empty($_data['phone']) ? "0" : $_data['phone'];
+		$db = $this->getAdapter();
+		$sql = "SELECT c.id FROM `in_customer` AS c WHERE 1 AND c.phone='".$phone."' ";
+		
+		if(!empty($_data['customerId'])){
+			$sql.=" AND c.id !=".$_data['customerId'];
+		}
+		$sql.=" LIMIT 1 ";
+		$rows =  $db->fetchRow($sql);
+		if(!empty($rows)){
+			return true;
+		}
+		return false;
+	}
+	
 	public function addKnowBy($_data){
 		$db = $this->getAdapter();
 		$db->beginTransaction();

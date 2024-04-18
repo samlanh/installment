@@ -943,7 +943,7 @@ function filterVillage(){
 		});
 }
 url_getdistrict = '<?php echo $this->url(array('module'=>'other','controller'=>'district','action'=>'get-district'));?>';
-function dfilterDistrict(){
+function dfilterDistrict(value=null){
 	cpro_id = dijit.byId('cprovince').get('value');
 	if(cpro_id==0){
 		return false;}
@@ -956,16 +956,26 @@ function dfilterDistrict(){
 			load: function(data) {	
 				adistrict_store  = getDataStorefromJSON('id','name', data);		
 			    dijit.byId('adistrict').set('store', adistrict_store);
-			    if(cpro_id=='<?php echo $this->row['cprovince'];?>'){
-			    	dijit.byId('adistrict').attr('value','<?php echo $this->row['adistrict'];?>');
-			    }
+			    
+				if(value!=null){
+					setTimeout(function () {
+						dijit.byId('adistrict').set('value', value);
+						 commune_id = dijit.byId('commune').get('value');
+						 dfilterCommune(commune_id);
+					}, 100);
+		    	 
+				}else{
+					if(cpro_id=='<?php echo $this->row['cprovince'];?>'){
+						dijit.byId('adistrict').attr('value','<?php echo $this->row['adistrict'];?>');
+					}
+				}
 			},
 			error: function(err) {
 			}
 		});	
 }
 url_getcommune = '<?php echo $this->url(array('module'=>'other','controller'=>'commune','action'=>'get-commune'));?>';
-function dfilterCommune(){
+function dfilterCommune(value=null){
 	adistict_id = dijit.byId('adistrict').get('value');
 	if(adistict_id==0){
 		return false;}
@@ -978,15 +988,22 @@ function dfilterCommune(){
 			load: function(data) {	
 				dcommune_store  = getDataStorefromJSON('id','name', data);		
 			    dijit.byId('dcommune').set('store', dcommune_store);
-			    dcommune = dijit.byId('dcommune').get('value');
-			    	dijit.byId('dcommune').attr('value','<?php echo $this->row['dcommune'];?>');
+				if(value!=null){
+					 setTimeout(function () {
+						dijit.byId('dcommune').set('value', value);
+						village = dijit.byId('village').get('value');
+						dfilterVillage(village);
+					}, 100);
+			    }else{
+					dijit.byId('dcommune').attr('value','<?php echo $this->row['dcommune'];?>');
+				}
 			},
 			error: function(err) {
 			}
 		});
 }
 url_getvillage = '<?php echo $this->url(array('module'=>'other','controller'=>'village','action'=>'get-allvillage'));?>';
-function dfilterVillage(){
+function dfilterVillage(value=null){
 	dcommune_id = dijit.byId('dcommune').get('value');
 	if(dcommune_id==0){
 		return false;}
@@ -999,9 +1016,17 @@ function dfilterVillage(){
 			load: function(data){	
 				qvillage_store  = getDataStorefromJSON('id','name', data);		
 			    dijit.byId('qvillage').set('store', qvillage_store);
-			    if(dcommune_id=='<?php echo $this->row['dcommune'];?>'){
-			    	dijit.byId('qvillage').attr('value','<?php echo $this->row['qvillage'];?>');
+			   if(value!=null){
+			    	
+					 setTimeout(function () {
+						 dijit.byId('qvillage').set('value', value);
+					}, 100);
+			    }else{
+					if(dcommune_id=='<?php echo $this->row['dcommune'];?>'){
+						dijit.byId('qvillage').attr('value','<?php echo $this->row['qvillage'];?>');
+					}
 			   }
+			   
 			},
 			error: function(err) {
 			}

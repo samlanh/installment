@@ -1,0 +1,94 @@
+<?php 
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate("TRANSFER_CRM"));
+	$frm = $this->frm_search;
+	
+	$formList = new Application_Form_Frmtable();
+	$urlContact = $this->baseUrl()."/group/customer/contact/id/";
+	$urlEdit = $this->baseUrl()."/group/customer/edit/id/";
+	$urlContachHistory = $this->baseUrl()."/report/paramater/rpt-customer-contact/id/";
+?>
+<div class="card pb-10 pt-10 pl-10 pr-10">
+	<div class="card-content collapse show">
+		<div class="card-box">
+               	<div class="col-sm-12 border-botom">
+		    		<div class="col-sm-8 pd-0">
+		    			<h4 class="m-b-0"><i class="fa fa-exchange" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('TRANSFER_CRM');?></h4>
+    			</div>
+    			<div class="col-sm-4 text-right">
+    			</div>
+    		</div>
+    	</div>
+		<div class="card-box">
+			<form id="list" name="list" action="" dojoType="dijit.form.Form" method="post">
+				<div class="form-group">
+					<div class="col-md-3 col-sm-3 col-xs-12">
+						<?php echo $frm->getElement("adv_search");?>
+					</div>
+					<div class="col-md-3 col-sm-3 col-xs-12">
+						<?php echo $frm->getElement('start_date');?>
+					</div>
+					<div class="col-md-3 col-sm-3 col-xs-12">
+						<?php echo $frm->getElement('end_date');?>
+					</div>
+					<div class="col-md-3 col-sm-3 col-xs-12">
+						<button class="button-class button-primary" iconclass="glyphicon glyphicon-search" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="card-box">
+			<?php echo $this->list;?> 
+		</div>
+	</div>
+</div>
+<style>
+		.btn-action{
+			padding: 3px 10px;
+   			    background: #3a3a5d;
+			    border: none;
+			    font-size: 10pt;
+			    float: left;
+			    color: #fff;
+			    padding-left: 15px;
+			    -webkit-border-radius: 5px;
+			    -moz-border-radius: 5px;
+			    border-radius: 5px;
+		}
+	</style>
+<script type="text/javascript">
+	dojo.require("dijit.form.DateTextBox");
+	var row=0;
+	var url="";
+	$(function(){
+		$.contextMenu({
+			selector: '.context-menu-one', 
+			callback: function(key, options) {
+			
+				var m = "clicked: " + key;
+				if(key=="contact"){
+					url='<?php echo $urlContact;?>';
+				
+				}else if(key=="edit"){
+					url='<?php echo $urlEdit;?>';
+				}else if(key=="contacthistory"){
+					url='<?php echo $urlContachHistory;?>';
+				}
+				gotoAction();
+			},
+			items: {
+				"contact": {name: "<?php echo $tr->translate("CREATE_CONTACT_HISTORY");?>", icon: "fa-phone"},
+				"contacthistory": {name: "<?php echo $tr->translate("CONTACT_HISTORY_DETAIL");?>", icon: "fa-list-alt"},
+				"edit": {name: "<?php echo $tr->translate("EDIT");?>", icon: "fa-magic"},
+			}
+		});
+	});
+	function setrowdata(index){
+		row = index;
+	}
+
+	var recordid ='';
+	function gotoAction(){
+		 window.open(url+row);
+	}
+</script> 

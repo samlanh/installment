@@ -40,20 +40,24 @@ class Project_Model_DbTable_DbProperyType extends Zend_Db_Table_Abstract
 			}
 			
 	    	$this->_name='ln_properties_type';
+			$id=0;
 	    	if(!empty($data['id'])){
 				$status = empty($data['status'])?0:1;
 	    		$where = 'id = '.$data['id'];
 	    		$arr['status']=$status;
-	    		return  $this->update($arr, $where);
+	    		$this->update($arr, $where);
+				$id = $data['id'];
 	    	}else{
 	    		$arr['status']=1;
-	    		return  $this->insert($arr);
+	    		$id = $this->insert($arr);
 	    	}
 	    	$db->commit();
+			return $id;
     	}catch(exception $e){
-    		$db->rollBack();
+    		
     		Application_Form_FrmMessage::message("Application Error");
     		Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$db->rollBack();
     	}
 	}
 	

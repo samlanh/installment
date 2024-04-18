@@ -27,7 +27,6 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 			
 			$rs_rows= $db->getAllIndividuleLoan($search);
 			$glClass = new Application_Model_GlobalClass();
-			$rs_rows = $glClass->getImgActive($rs_rows, BASE_URL, true);
 			
 			$result = array();
 			$list = new Application_Form_Frmtable();
@@ -39,7 +38,8 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 			$linkprint=array('module'=>'report','controller'=>'loan','action'=>'receipt',);
 			$link_delete=array('module'=>'loan','controller'=>'ilpayment','action'=>'delete',);
 			
-			$this->view->list=$list->getCheckList(10, $collumns, $rs_rows,array());
+			
+			$this->view->list=$list->getCheckList(10, $collumns, $rs_rows,array(),0);
 		}catch(Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
@@ -523,4 +523,60 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 	 		echo $e->getMessage();
 	 	}
   }
+  
+  function getPaymentPropertyAction(){
+		if($this->getRequest()->isPost()){
+			$data = $this->getRequest()->getPost();
+			$db = new Loan_Model_DbTable_DbLoanILPayment();
+			$id = empty($data['id']) ? 0 : $data['id'];
+			$row = $db->getIlPaymentByID($id);
+			if(!empty($row)){
+				
+				$sale_id = empty($row['sale_id'])?0:$row['sale_id'];
+				$lastPaymentRecord = $db->getLastPaymentRecord($sale_id);
+				$lastPayId = empty($lastPaymentRecord['id'])?0:$lastPaymentRecord['id'];
+				
+				if($row["is_closed"]==1){
+					$arr= array(
+						"edit" => false
+						,"void" => false
+					);
+					print_r(Zend_Json::encode($arr));
+					exit();
+				}else if($row['combineId']>0){
+					$arr= array(
+						"edit" => false
+						,"void" => false
+					);
+					print_r(Zend_Json::encode($arr));
+					exit();
+				}else if($row['total_payment_parent']<=0){
+					$arr= array(
+						"edit" => false
+						,"void" => false
+					);
+					print_r(Zend_Json::encode($arr));
+					exit();
+				}else if ($lastPayId!=$id){
+					$arr= array(
+						"edit" => false
+						,"void" => false
+					);
+					print_r(Zend_Json::encode($arr));
+					exit();
+				}else{
+					$arr= array(
+						"edit" => true
+						,"void" => true
+					);
+					print_r(Zend_Json::encode($arr));
+					exit();
+				}
+			}else{
+				print_r(Zend_Json::encode(false));
+				exit();
+			}
+			
+		}
+	}
 }

@@ -97,7 +97,11 @@
 									<div class="form-group">
 									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("COMISSION_EXPECTED");?> :
 									   </label>
-									   <div class="col-md-7 col-sm-7 col-xs-12">
+									   <div class="col-md-3 col-sm-3 col-xs-12">
+											<input type="hidden" class="fullside" value="<?php echo $this->rs['price_sold'];?>" name="price_sold" id="price_sold" dojoType="dijit.form.TextBox" />
+											<input onKeyup="calutateCommission(1);" required class="fullside" value="0" type="text" data-dojo-props="constraints:{min:0,max:100},rangeMessage:'<?php echo $tr->translate("INVALID_PERCENT");?>'" name="percentAmount" id="percentAmount" dojoType="dijit.form.NumberTextBox" />
+										</div>
+										<div class="col-md-4 col-sm-4 col-xs-12">
 											<?php echo $frm->getElement('full_commission')?>
 									   </div>
 									</div>
@@ -228,8 +232,9 @@ require(["dojo/ready"], function(ready){
 		var full_commission = dijit.byId('full_commission');
 		 full_commission.on('change', function(evt) {
 			 checkFullCommissionPay();
+			 calutateCommission(2);
 		});
-
+		calutateCommission(2);
 	  });
 	
 	 new dijit.form.FilteringSelect({
@@ -313,6 +318,9 @@ function getAllStaffByBranch(staff_id=null){
 			if(staff_id!=null){
 				dijit.byId('staff_id').set('value',staff_id);
 			}
+			<?php  if(!empty($this->rs['staff_id'])){ ?>
+			dijit.byId('staff_id').set('value','<?php echo $this->rs['staff_id']; ?>');
+			<?php  } ?>
 			getAllStaffByBranchPop();   
 		},
 		error: function(err) {
@@ -351,5 +359,28 @@ function checkFullCommissionPay(){
 		dijit.byId('full_commission').set('value',totoalCmminssionPaid);
 	}
 		
+}
+
+function  calutateCommission(type){
+	var priceSold = dijit.byId('price_sold').get('value');
+	priceSold=isNaN(priceSold)?0:parseFloat(priceSold);
+	
+	if(type==1){
+		var percent = dijit.byId('percentAmount').get('value');
+		percent=isNaN(percent)?0:parseFloat(percent);
+		var totalCommission = 0
+		if(percent>0){
+			 totalCommission = (priceSold*percent)/100;
+		}
+		dijit.byId('full_commission').attr('value',totalCommission.toFixed(2));
+	}else{
+		var commissionAmount = dijit.byId('full_commission').get('value');
+		commissionAmount=isNaN(commissionAmount)?0:parseFloat(commissionAmount);
+		var percent = 0
+		if(commissionAmount>0){
+			 percent = (commissionAmount*100)/priceSold;
+		}
+		dijit.byId('percentAmount').attr('value',percent.toFixed(2));
+	}
 }
 </script>	

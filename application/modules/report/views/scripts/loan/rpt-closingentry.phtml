@@ -19,6 +19,7 @@
 	if($headerReportType==2){
 		$classHideHeight="125px";
 	}
+	$arrayBank = $this->bankList;
 ?>
 <title><?php echo $tr->translate("បិទបញ្ជីប្រចាំថ្ងៃ");?></title>
 <script>
@@ -80,7 +81,7 @@
 						-->
 					</div>
 					<div class="col-md-2 col-sm-2 col-xs-12">
-						<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+						<button class="button-class button-primary" iconClass="glyphicon glyphicon-search" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
 					</div>
 					<div class="col-md-2 col-sm-2 col-xs-12">
 					</div>
@@ -144,6 +145,12 @@
 							}
 							table tr td{
 								padding:0 2px;
+							}
+							table.summaryTotal {
+								font-family: "Times New Roman","Khmer OS Battambang";
+								border-collapse: collapse;
+								font-size: 11px;
+								border-top: solid 1px #637fc0;
 							}
 						</style>
 				 
@@ -211,10 +218,27 @@
 												$total_d=$amt_d1+$amt_d2+$amt_d3+$amt_d5;
 												if($rs['payment_methodid']==1){
 													$total_cash = $total_cash + $rs['total_principal_permonthpaid']+$rs['total_interest_permonthpaid']+$rs['penalize_amountpaid']+$rs['extra_payment'];
-												}elseif($rs['payment_methodid']==2){
-													$total_bank = $total_bank  + $rs['total_principal_permonthpaid']+$rs['total_interest_permonthpaid']+$rs['penalize_amountpaid']+$rs['extra_payment'];
 												}else{
-													$total_cheque = $total_cheque + $rs['total_principal_permonthpaid']+$rs['total_interest_permonthpaid']+$rs['penalize_amountpaid']+$rs['extra_payment'];
+													$foundKey="-1";
+													if(!empty($rs["bankId"])){
+														$foundKey = array_search($rs["bankId"], array_column($arrayBank, 'id'));
+													}
+													
+													if($rs['payment_methodid']==2){
+														$recordTotal = $rs['total_principal_permonthpaid']+$rs['total_interest_permonthpaid']+$rs['penalize_amountpaid']+$rs['extra_payment'];
+														if($foundKey > -1 ){
+															$totalBankRecieve = $arrayBank[$foundKey]['totalBankRecieve'];
+															$arrayBank[$foundKey]['totalBankRecieve'] = $totalBankRecieve  + $recordTotal;
+														}
+														$total_bank = $total_bank  + $recordTotal;
+													}else{
+														$recordTotal = $rs['total_principal_permonthpaid']+$rs['total_interest_permonthpaid']+$rs['penalize_amountpaid']+$rs['extra_payment'];
+														if($foundKey > -1 ){
+															$totalCheckRecieve = $arrayBank[$foundKey]['totalCheckRecieve'];
+															$arrayBank[$foundKey]['totalCheckRecieve'] = $totalCheckRecieve  + $recordTotal;
+														}
+														$total_cheque = $total_cheque + $recordTotal;
+													}
 												}
 							               ?>
 							                <tr class="style style1 <?php if($index%2==1){echo"even";}?>" style="border-right: 1px solid #ccc;border-left: 1px solid #ccc;font-family: 'Khmer OS Content'; white-space:nowrap;">
@@ -225,7 +249,7 @@
 							               		<td data-label="<?php echo $tr->translate("BRANCH_NAME");?>" align="left" ><?php echo $rs["branch_name"];?></td>
 							               		<td data-label="<?php echo $tr->translate("CUSTOMER_NAME");?>" align="left" ><?php echo $rs["name_kh"];?></td>                 		
 							               		<td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>" align="left" ><?php echo $rs["land_address"].",".$rs["street"];?></td>
-							               		<td data-label="<?php echo $tr->translate("បង់ជា");?>"><?php echo $rs["payment_method"];?></td>
+							               		<td data-label="<?php echo $tr->translate("បង់ជា");?>"><?php echo $rs["payment_method"];?> <?php if(!empty($rs["bank"])){ echo "(". $rs["bank" ].")";}else{echo  "";} ?></td>
 							               		<td data-label="<?php echo $tr->translate("បង់លើក");?>"><?php echo $rs["payment_times"];?></td>
 							               		<td data-label="<?php echo $tr->translate("PRINCIPAL");?>" align="center" ><?php echo number_format($rs['total_principal_permonthpaid'],2);?></td>               		
 							               		<td data-label="<?php echo $tr->translate("INTEREST");?>" align="center" ><?php echo number_format($rs['total_interest_permonthpaid'],2);?></td>
@@ -243,33 +267,58 @@
 							               		<td data-label="<?php echo $tr->translate("STATUS");?>" class=""><?php echo($rs['is_closed']==0)?"Unclose":"Closed";?></td>
 							                </tr>
 							                <?php }?>
+											<tr class="style style" style="font-weight: 600; background: #c1d0f3;">
+													<td colspan="6"></td>
+													<td align="right"><?php echo number_format($amt_d1,2);?></td>
+													<td align="right"><?php echo number_format($amt_d2,2);?></td>
+													<td align="right"><?php echo number_format($amt_d3,2);?></td>
+													<td align="right"><?php echo number_format($amt_d5,2);?></td>
+													<td align="right"><?php echo number_format($total_d,2);?></td>
+													<td colspan="9"></td>
+												</tr>
 							          </table>
-						             <br />
-						             <table border="1"​ style="border-collapse:collapse;border:1px solid #000; font-size:9px;" width="100%" cellspacing="0">
-						                <thead>
-							                 <tr bgcolor="#c1d0f3" class="style" style=" line-height: 24px; text-align: center; font-size:9px;font-family: 'Khmer OS Content';">
-							                    <td scope="col"><?php echo $tr->translate("PRINCIPAL");?></td>                    
-							                    <td scope="col"><?php echo $tr->translate("TOTAL_INTEREST");?></td>
-							                    <td scope="col"><?php echo $tr->translate("TOTAL_PENILIZE_AMOUNT");?></td>
-							                    <td scope="col"><?php echo $tr->translate("EXTRA_PAYMENT");?></td>
-							                    <td scope="col"><?php echo $tr->translate("TOTAL");?></td>
-							                    <td scope="col" rowspan="2">ចំណូលតាមប្រភេទ</td>
-							                    <td scope="col"><?php echo $tr->translate("សាច់ប្រាក់សរុប");?></td>
-							                    <td scope="col"><?php echo $tr->translate("តាមធនាគារ");?></td>
-							                    <td scope="col"><?php echo $tr->translate("សែកសរុប");?></td>
-							                </tr>
-							                 <tr class="style" style=" line-height: 24px; font-size:9px; font-family: 'Khmer OS Content';">
-							                    <td data-label="<?php echo $tr->translate("PRINCIPAL");?>"><?php echo number_format($amt_d1,2);?></td>
-							                    <td data-label="<?php echo $tr->translate("TOTAL_INTEREST");?>"><?php echo number_format($amt_d2,2);?></td>
-							                    <td data-label="<?php echo $tr->translate("TOTAL_PENILIZE_AMOUNT");?>"><?php echo number_format($amt_d3,2);?></td>
-							                    <td data-label="<?php echo $tr->translate("EXTRA_PAYMENT");?>"><?php echo number_format($amt_d5,2);?></td>
-							                    <td data-label="<?php echo $tr->translate("TOTAL");?>"><?php echo number_format($total_d,2);?></td>
-							                    <td data-label="<?php echo $tr->translate("សាច់ប្រាក់សរុប");?>"><?php echo number_format($total_cash,2);?></td>
-							                    <td data-label="<?php echo $tr->translate("តាមធនាគារ");?>"><?php echo number_format($total_bank,2);?></td>
-							                    <td data-label="<?php echo $tr->translate("សែកសរុប");?>"><?php echo number_format($total_cheque,2);?></td>
-							                </tr>
-						                </thead>
-						              </table>
+									  <br />
+							 <table style="margin: 0 auto;" class="summaryTotal" border="0" width="50%" cellspacing="0">
+				                <tr align="center" bgcolor="#c1d0f3" class="syle" style="border-bottom: 1px solid #637fc0;">
+				                	<td></td>
+									<td><?php echo $tr->translate("PAYWITH_BANK");?></td>
+									<td><?php echo $tr->translate("CHEQUE");?></td>
+									<td><?php echo $tr->translate("CASH");?></td>
+				                </tr>
+				                
+								<?php 
+								$totalBankRecieve=0;
+								$totalCheckRecieve=0;
+								if(!empty($arrayBank)) foreach($arrayBank as $key=> $bank){
+									$totalBankRecieve = $totalBankRecieve+$bank["totalBankRecieve"];
+									$totalCheckRecieve = $totalCheckRecieve+$bank["totalCheckRecieve"];
+								?>
+									<tr class="style1 <?php if(($key%2) ==1 ){ echo "odd"; } ?>">
+										<td><?php echo $bank["bankName"];?></td>
+										<td class="moneyAlign"><?php echo number_format($bank["totalBankRecieve"],2);?></td>
+										<td class="moneyAlign"><?php echo number_format($bank["totalCheckRecieve"],2);?></td>
+										<td></td>
+									</tr>
+								<?php } ?>
+								<?php 
+								$otherBankRecieve = $total_bank - $totalBankRecieve;
+								$otherCheckRecieve = $total_cheque - $totalCheckRecieve;
+								if($otherBankRecieve>0 || $otherCheckRecieve>0){
+								?>
+								<tr class="style1 <?php if((count($arrayBank)%2) ==1 ){ echo "odd"; } ?>">
+									<td><?php echo $tr->translate("OTHER");?></td>
+									<td class="moneyAlign"><?php echo number_format($otherBankRecieve,2);?></td>
+									<td class="moneyAlign"><?php echo number_format($otherCheckRecieve,2);?></td>
+									<td></td>
+								</tr>
+								<?php } ?>
+								<tr class="style style hover" style="font-weight: 600; background: #c1d0f3; border-top: 1px solid #637fc0;">
+				                	<td></td>
+									<td class="moneyAlign"><?php echo number_format($total_bank,2);?></td>
+									<td class="moneyAlign"><?php echo number_format($total_cheque,2);?></td>
+									<td class="moneyAlign"><?php echo number_format($total_cash,2);?></td>
+				                </tr>
+				              </table>
 						    	</td>
 						    </tr>
 						</table>

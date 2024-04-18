@@ -121,6 +121,9 @@ class Incexp_ComissionpaymentController extends Zend_Controller_Action {
 	    if(empty($row)){
 	    	Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/incexp/comissionpayment",2);
 	    	exit();
+		}else if ($row['is_closed']==1){
+			Application_Form_FrmMessage::Sucessfull("Unable edit closed record","/incexp/comissionpayment",2);
+			exit();
 	    }
 	    $tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	    $result = $_dbmodel->getAllChequeIssue();
