@@ -5,12 +5,28 @@ class RsvAcl_UserTypeController extends Zend_Controller_Action
 	
 	const REDIRECT_URL = '/rsvacl/usertype';
 	protected $tr;
+	private $user_typelist = array();
     public function init()
     {
         /* Initialize action controller here */
     	header('content-type: text/html; charset=utf8');
     	defined('BASE_URL')	|| define('BASE_URL', Zend_Controller_Front::getInstance()->getBaseUrl());
     	$this->tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		
+		
+		$db=new Application_Model_DbTable_DbGlobal();
+		$userInfo = $db->getUserInfo();
+		$level = empty($userInfo['level']) ? 0 : $userInfo['level'];
+    	$sql = "
+				SELECT 
+					u.user_type_id as id
+					,u.user_type as name 
+				FROM `rms_acl_user_type` u 
+				WHERE u.`status`=1";
+		if($level!=1){ // Not Admin
+			$sql.= " AND u.`user_type_id` IN (SELECT COALESCE(ut.`user_type_id`,0) FROM `rms_acl_user_type` AS ut WHERE 1 AND (ut.`parent_id` = $level OR ut.`user_type_id`=$level) ) ";
+		}
+    	$this->user_typelist = $db->getGlobalDb($sql);	
     }
 
     public function indexAction()
@@ -63,10 +79,10 @@ class RsvAcl_UserTypeController extends Zend_Controller_Action
 					Application_Form_FrmMessage::message('User type had existed already');
 				}
 			}
-			$db=new Application_Model_DbTable_DbGlobal();
-			$rs=$db->getGlobalDb('SELECT user_type_id,user_type FROM rms_acl_user_type WHERE status=1');
+		
+			$rs= $this->user_typelist;
 			$options=array(''=>$this->tr->translate("PLEASE_SELECT"));
-			foreach($rs as $read) $options[$read['user_type_id']]=$read['user_type'];
+			foreach($rs as $read) $options[$read['id']]=$read['name'];
 			$this->view->usertype_list= $options;
 				
 			
@@ -80,9 +96,23 @@ class RsvAcl_UserTypeController extends Zend_Controller_Action
     		$rs=$db->getUserType($user_type_id);
     		$this->view->usertype=$rs;
     		$db1=new Application_Model_DbTable_DbGlobal();
-    		$allusertype=$db1->getGlobalDb('SELECT user_type_id,user_type FROM rms_acl_user_type WHERE status=1 AND user_type_id <> '.$user_type_id);
-    		$options=array(''=>$this->tr->translate("PLEASE_SELECT"));
-    		foreach($allusertype as $read) $options[$read['user_type_id']]=$read['user_type'];
+			
+	
+			$sql='SELECT 
+				u.user_type_id As id
+				,u.user_type AS name
+			FROM 
+				rms_acl_user_type AS u
+			WHERE u.status=1 AND u.user_type_id <> '.$user_type_id;
+    		
+    		$userInfo = $db1->getUserInfo();
+			$level = empty($userInfo['level']) ? 0 : $userInfo['level'];
+			if($level!=1){ // Not Admin
+				$sql.= " AND u.`user_type_id` IN (SELECT COALESCE(ut.`user_type_id`,0) FROM `rms_acl_user_type` AS ut WHERE 1 AND (ut.`parent_id` = $level OR ut.`user_type_id`=$level) ) ";
+			}
+			$allusertype=$db1->getGlobalDb($sql);
+			$options=array(''=>$this->tr->translate("PLEASE_SELECT"));
+    		foreach($allusertype as $read) $options[$read['id']]=$read['name'];
     		$this->view->usertype_list= $options;
     	
     	}

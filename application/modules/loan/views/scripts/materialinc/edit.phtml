@@ -46,14 +46,20 @@ $userType = $user_info['user_type'];
 						dijit.byId('branch_id').focus();
 						return false;
 					}
-				
-					var identity = $('#identity').val();
-					if(identity==''){
-						infoMessageAlert("<?php echo $tr->translate("PLEASE_SET_MATERAIL");?>");
-						dijit.byId("loan_number").focus();
+					saleClient = dijit.byId('sale_client').get('value');
+					if(saleClient=='' || saleClient==-1){
+						infoMessageAlert('<?php echo $tr->translate("PLEASE_SELECT_SALE")?>!');
+						dijit.byId('sale_client').focus();
 						return false;
 					}
 
+					var identity = $('#identity').val();
+					if(identity==''){
+						infoMessageAlert("<?php echo $tr->translate("PLEASE_SET_MATERAIL");?>");
+						dijit.byId("sale_client").focus();
+						return false;
+					}
+					
 					loadingBlock();
 					dijit.byId('saveclose').set('disabled',true);	
 					dijit.byId('savenew').set('disabled',true);
@@ -99,7 +105,7 @@ $userType = $user_info['user_type'];
 									   <div class="col-md-7 col-sm-7 col-xs-12">
 											<input id="sale_client" />
 										<input type="hidden" id="land_address" name="land_address" dojoType="dijit.form.TextBox"/>
-										<input type="hidden" id=street name="street" dojoType="dijit.form.TextBox"/>
+										<input type="hidden" id="street" name="street" dojoType="dijit.form.TextBox"/>
 									   </div>
 									</div>
 									<div class="form-group">

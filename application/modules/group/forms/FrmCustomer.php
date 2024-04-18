@@ -31,6 +31,14 @@ Class Group_Form_FrmCustomer extends Zend_Dojo_Form {
 		
 		$_phone = new Zend_Dojo_Form_Element_TextBox('phone');
 		$_phone->setAttribs(array(
+				'dojoType'=>'dijit.form.ValidationTextBox',
+				'class'=>'fullside',
+				'maxLength'=>'10',
+				'data-dojo-props'=>"regExp: '[a-zA-Z0-9$%!_]{9,10}',invalidMessage:'".$this->tr->translate("PHONE_NUMBER_INVALID_FORMAT")."'",
+				
+		));
+		$_telegram = new Zend_Dojo_Form_Element_TextBox('telegram');
+		$_telegram->setAttribs(array(
 				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
 		));
@@ -99,14 +107,30 @@ Class Group_Form_FrmCustomer extends Zend_Dojo_Form {
 		
 		));
 		$rows = $dbcusre->getAllstatusreqForOpt();
-		$options = array(''=>$this->tr->translate("CHOOSE_STATUS_REQ"),'-1'=>$this->tr->translate("ADD_NEW"));
+		$options = array(
+			''=>$this->tr->translate("CHOOSE_STATUS_REQ")
+			,'-1'=>$this->tr->translate("ADD_NEW")
+			,'បន្តទំនាក់ទំនង'=>"បន្តទំនាក់ទំនង"
+			,'រង់ចាំការណាត់ជួប'=>"រង់ចាំការណាត់ជួប"
+			,'បោះបង់ការទំនាក់ទំនង'=>"បោះបង់ការទំនាក់ទំនង"
+			,'ជាន់ភ្ញៀវ'=>"ជាន់ភ្ញៀវ"
+			,'ស្នើរសុំជំនួយ'=>"ស្នើរសុំជំនួយ"
+			);
 		if(!empty($rows))foreach($rows AS $row){
 			$options[$row['name']]=$row['name'];//($row['displayby']==1)?$row['name_kh']:$row['name_en'];
 		}
 		$statusreq->setMultiOptions($options);
 		
+		$id = new Zend_Form_Element_Hidden("id");
+		$id->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+				'required'=>true
+				));
+		
 		if($data!=null){
 			
+			$id->setValue($data['id']);
 			$_name->setValue($data['name']);
 			$_phone->setValue($data['phone']);
 			$_date->setValue($data['date']);
@@ -118,10 +142,12 @@ Class Group_Form_FrmCustomer extends Zend_Dojo_Form {
 			$statusreq->setValue($data['statusreq']);
 			$know_by->setValue($data['know_by']);
 			$_branchId->setValue($data['branchId']);
+			$_telegram->setValue($data['telegram']);
 		}
 		$this->addElements(
 			array(
-				$know_by
+				$id
+				,$know_by
 				,$_name
 				,$_phone
 				,$_date
@@ -132,6 +158,7 @@ Class Group_Form_FrmCustomer extends Zend_Dojo_Form {
 				,$_description
 				,$statusreq
 				,$_branchId
+				,$_telegram
 			)
 		);
 		return $this;

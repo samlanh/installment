@@ -1,0 +1,250 @@
+<?php 
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	echo $this->headTitle($tr->translate("PAYMENT_COMBINE"));
+	$frm = $this->frm_search;
+	
+	$urlReciept = $this->baseUrl()."/report/loan/rpt-combine-payment-receipt/id/";
+	$urlEdit = $this->baseUrl()."/loan/paymentcombine/edit/id/";
+	
+	
+	
+	$request=Zend_Controller_Front::getInstance()->getRequest();
+	$action=$request->getActionName();
+	$controller=$request->getControllerName();
+	$module=$request->getModuleName();
+?>
+<script>
+	dojo.require("dijit.form.DateTextBox");
+</script>
+<div class="card pb-10 pt-10 pl-10 pr-10">
+	<div class="card-content collapse show">
+		<div class="card-box">
+               	<div class="col-sm-12 border-botom">
+		    		<div class="col-sm-8 pd-0">
+		    			<h4 class="m-b-0"><i class="fa fa-money" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('PAYMENT_COMBINE');?></h4>
+    			</div>
+    			<div class="col-sm-4 text-right">
+    			</div>
+    		</div>
+    	</div>
+		<div class="card-box">
+			<form id="list" name="list" action="" dojoType="dijit.form.Form" method="post">
+			   <div class="form-group">
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement("advance_search");?>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement('branch_id');?>
+					</div>
+					
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement('client_name');?>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement('payment_method');?>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement('status');?>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement('start_date');?>
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<?php echo $frm->getElement('end_date');?>
+					</div>
+					
+					<div class="col-md-2 col-sm-2 col-xs-12">
+						<button class="button-class button-primary" iconClass="glyphicon glyphicon-search" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+				   			<input type="hidden" name="recordcopy" id="recordcopy" dojoType="dijit.form.TextBox" />
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+					</div>
+					<div class="col-md-2 col-sm-2 col-xs-12">
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="card-box">
+			<?php echo $this->list;?>
+		</div>
+	</div>
+</div>
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" data-dojo-props="title:'<?php echo $tr->translate('VOID_REASON');?>'"  id="updateForm" style="width:350px;" >
+		<div class="card pb-10 pt-10 pl-10 pr-10">
+			<form id="updateFormInfo"  name="data" action="" dojoType="dijit.form.Form" method="post">
+				<div class="card-box">
+					<div class="form-group">
+					   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate('REASON');?> :
+					   </label>
+					   <div class="col-md-7 col-sm-7 col-xs-12">
+							<input style="min-height:70px;" class="fullside" type="text" dojoType="dijit.form.Textarea" name="reason" id="reason" placeholder="<?php echo $tr->translate("REASON");?>" />
+							<input type="hidden" dojoType="dijit.form.TextBox" name="id" id="id"  />
+					   </div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
+							<button onclick="upDateCustomerInfo();" iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="button"><?php echo $tr->translate("VOID_NOW");?></button>
+						</div>
+					</div>
+				</div>
+				
+			</form>
+		</div>
+	</div>
+</div>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
+<script>
+dojo.require("dijit.form.Textarea");
+	dojo.require("dojo.data.ItemFileWriteStore"); 
+	function copyRecord(url){
+		 id = dijit.byId('recordcopy').get('value');
+		 window.location.href = url+'/id/'+id;
+	}
+	
+	function setValue(index){
+		var recordcopy = $('input[name=copy]:checked').val();
+		dijit.byId('recordcopy').attr('value',recordcopy);
+	}
+	
+	var property_store  = getDataStorefromJSON('id','name',[{"id":-1,"name":"<?php echo $tr->translate("SELECT_PROPERTY");?>"}]);
+	require(["dojo/ready"], function(ready){
+		ready(function(){
+			 
+		});
+		
+		new dijit.form.FilteringSelect({
+			name: "branch_id",
+			id: "branch_id",
+			class: 'fullside',
+			autoComplete: false,
+			onChange: function() {
+				
+			}
+			}, "branch_id");
+		 
+	});
+	
+	
+var urlUpdateInfo = '<?php echo $this->url(array('module'=>'loan','controller'=>'paymentcombine','action'=>'voidreceipt')); ?>';
+function upDateCustomerInfo(){
+	
+	if(dijit.byId('updateFormInfo').validate()){
+			if (confirm("<?php echo $tr->translate("Do you want to void this reciept");?>")) {
+		    } else {
+				dijit.byId('updateFormInfo').reset();
+				dijit.byId('updateForm').hide();
+		    	 return false;
+		    }
+		loadingBlock();
+		dojo.xhrPost({
+			url: urlUpdateInfo,
+			form: dojo.byId("updateFormInfo"),
+			handleAs:"json",
+			load: function(data) {
+				
+				dijit.byId('updateFormInfo').reset();
+				dijit.byId('updateForm').hide();
+				if(data==1){
+					alert("<?php echo $tr->translate("VOID_SUCCESS");?>");
+					location.reload();
+				}else if(data==2){
+					alert("<?php echo $tr->translate("RECORD_NOTFUND");?>");
+				}else if(data==3){
+					alert("<?php echo $tr->translate("This Receipt alreay Closed");?>");
+				}else if(data==4){
+					alert("<?php echo $tr->translate("Only Last Payment Receipt Can Delete");?>");
+				}else if(data==5){
+					alert("<?php echo $tr->translate("This Receipt alreay void");?>");
+				}else{
+					alert("<?php echo $tr->translate("VOID_FAIL");?>");
+				}
+				dijit.byId('reason').set('value','');
+				HideloadingBlock();
+			},
+			error: function(err) {
+				alert(err);
+			}
+		});
+	}
+}
+var row=0;
+var url="";
+disabled = true;
+$(function(){
+	$.contextMenu({
+		selector: '.context-menu-one', 
+		callback: function(key, options) {
+			var m = "clicked: " + key;
+			if(key=="stepup"){
+				dijit.byId('id').set('value',row);
+				dijit.byId('updateForm').show();
+			}else if(key=="edit"){
+				url='<?php echo $urlEdit;?>';
+					gotoAction();
+			}else if(key=="reciept"){
+					url='<?php echo $urlReciept;?>';
+					gotoAction();
+					
+			}
+		},
+		items: {
+			"reciept": {name: "<?php echo $tr->translate("RECEIPT");?>", icon: "fa-print", accesskey: "c o p y"},
+			"edit": {
+					name: "<?php echo $tr->translate("EDIT");?>"
+					, icon: "fa-edit", accesskey: "c o p y"
+					,disabled: function() {
+							return disabled;
+						}
+				},
+			
+			<?php 
+			$dbacc = new Application_Model_DbTable_DbUsers();
+	 		$rs = $dbacc->getAccessUrl($module,$controller,'delete');
+	 		if(!empty($rs)){
+			?>
+			"stepup": {
+				name: "<?php echo $tr->translate("VOID");?>"
+				, icon: "fa-file-text"
+				,disabled: function() {
+							return disabled;
+						}
+				},
+			<?php } ?>
+			
+		}
+	});
+});
+function setrowdata(index){
+	row = index;
+	checkPaymentProperty(index);
+}
+var recordid ='';
+function gotoAction(){
+	 window.open(url+row);
+}
+
+function checkPaymentProperty(index){
+	urlChecking = '<?php echo $this->url(array('module'=>'loan','controller'=>'paymentcombine','action'=>'get-payment-property'));?>';
+	dojo.xhrPost({
+		url: urlChecking,
+		content:{
+			'id':index,
+		},
+		handleAs:"json",
+		load: function(dataEE) {
+			if(dataEE==false){
+				disabled = true;
+			}else{
+				disabled = false;
+			}
+			$.contextMenu('update');
+			
+		},
+		error: function(err) {
+		}
+	});
+}
+</script>

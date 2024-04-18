@@ -219,7 +219,15 @@ class Application_Form_FrmAdvanceSearch extends Zend_Dojo_Form
 			)
 		);
 		$rows = $dbcusre->getAllstatusreqForOpt();
-		$options = array('' => $this->tr->translate("CHOOSE_STATUS_REQ"));
+		$options = array(
+			''=>$this->tr->translate("CHOOSE_STATUS_REQ")
+			,'បន្តទំនាក់ទំនង'=>"បន្តទំនាក់ទំនង"
+			,'រង់ចាំការណាត់ជួប'=>"រង់ចាំការណាត់ជួប"
+			,'បោះបង់ការទំនាក់ទំនង'=>"បោះបង់ការទំនាក់ទំនង"
+			,'ជាន់ភ្ញៀវ'=>"ជាន់ភ្ញៀវ"
+			,'ស្នើរសុំជំនួយ'=>"ស្នើរសុំជំនួយ"
+			);
+			
 		if (!empty($rows)) foreach ($rows as $row) {
 				$options[$row['name']] = $row['name']; //($row['displayby']==1)?$row['name_kh']:$row['name_en'];
 			}
@@ -241,7 +249,17 @@ class Application_Form_FrmAdvanceSearch extends Zend_Dojo_Form
 		$know_by->setMultiOptions($opt_know);
 		$know_by->setValue($request->getParam('know_by'));
 
-		$_arr = array(-1 => $this->tr->translate("PLEASE_SELECT"), 0 => $this->tr->translate("DROPPED"), 1 => $this->tr->translate("PROCCESSING"), 2 => $this->tr->translate("WAITING_RESPONSE"), 3 => $this->tr->translate("COMPLETED_CONTACT"));
+		$_arr = array(
+				-1 => $this->tr->translate("PLEASE_SELECT")
+				,0=>"បោះបង់ការទំនាក់ទំនង"
+				,1=>"កំពុងដំណើរការណ៍ "
+				,2=>"បន្តការទំនាក់ទំនង"
+				,3=>"រង់ចាំណាត់ជួប"
+				,4=>"បានណាត់ជួប"
+				,5=>"បិទការលក់ "
+				,6=>"ការកក់ប្រាក់"
+				,7=>"ចុះកុងត្រា"
+		);
 		$_proccessSearch = new Zend_Dojo_Form_Element_FilteringSelect("proccessSearch");
 		$_proccessSearch->setMultiOptions($_arr);
 		$_proccessSearch->setAttribs(

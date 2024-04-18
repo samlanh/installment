@@ -141,6 +141,13 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 			FROM `rms_users` AS u
 			WHERE $systemType IN (systemAccess)
 		";
+		
+		$level = $session_user->level;
+		$level = empty($level) ? 0 : $level;
+		if($level!=1){ // Not Admin
+			$sql.= " AND u.`user_type` IN (SELECT COALESCE(ut.`user_type_id`,0) FROM `rms_acl_user_type` AS ut WHERE 1 AND (ut.`parent_id` = $level OR ut.`user_type_id`=$level) ) ";
+		}
+		
 		$orderby = " ORDER BY u.user_type DESC";
 		if(empty($search)){
 			return $sql.$orderby;
@@ -466,5 +473,6 @@ class Application_Model_DbTable_DbUsers extends Zend_Db_Table_Abstract
 		$sql = "SELECT id FROM `rms_users` WHERE user_name = '".$data['user_name']."' limit 1 ";
 		return $db->fetchRow($sql);
 	}
+	
 }
 

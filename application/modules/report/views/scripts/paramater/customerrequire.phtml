@@ -2,6 +2,15 @@
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$frm = $this->frm;
 	
+	$dbGb = new Setting_Model_DbTable_DbGeneral();
+	$settingRow = $dbGb->geLabelByKeyName('crmConnectWithSale');
+	$crmConnectWithSale = empty($settingRow["keyValue"]) ? 0 : $settingRow["keyValue"];
+	
+	$featureClass="disabledClass";
+	if($crmConnectWithSale==1){
+		$featureClass="";
+	}
+	
 	$branch_title = $tr->translate("BRAND_TITLE");
 	$headerReportType = REPORT_LETER_HEAD;
 	$classHideHeight="110px";
@@ -100,6 +109,9 @@
 						table.tb-footer tr{
 						 line-height: 14px;  padding:2px 0px; height: 25px;
 						}
+						.disabledClass{
+							display:none !important;
+						}
 					</style>
 					<div class="divFooter">
 			        	<?php echo $this->headerReport;?>
@@ -113,7 +125,7 @@
 							<td scope="col" rowspan="2"><?php echo $tr->translate("NUM");?></td>
 							<td scope="col" colspan="2"><?php echo $tr->translate("CUSTOMER_INFO");?></td>
 							<td scope="col" colspan="8"><?php echo $tr->translate("CUSTOMER_REQUIREMENT");?></td>
-							<td scope="col" colspan="2"><?php echo $tr->translate("SALE_INFO");?></td>
+							<td scope="col" colspan="2" class="<?php  echo $featureClass;?>"><?php echo $tr->translate("SALE_INFO");?></td>
 							<td scope="col" rowspan="2"><?php echo $tr->translate("USER_NAME");?></td>
 						 </tr>
 				    	<tr class="style" align="center" >
@@ -130,8 +142,8 @@
 					            <td scope="col"><?php echo $tr->translate("DATE");?></td>
 					            <td scope="col"><?php echo $tr->translate("STATUS_REQ");?></td>
 								
-					            <td scope="col"><?php echo $tr->translate("PROPERTY_CODE");?></td>
-					            <td scope="col"><?php echo $tr->translate("BUY_DATE");?></td>
+					            <td scope="col" class="<?php  echo $featureClass;?>"><?php echo $tr->translate("PROPERTY_CODE");?></td>
+					            <td scope="col" class="<?php  echo $featureClass;?>"><?php echo $tr->translate("BUY_DATE");?></td>
 				         </tr>
 				         </thead>
 				       <?php  
@@ -149,8 +161,8 @@
 							 <td data-label="<?php echo $tr->translate("DESCRIPTION");?>" style="white-space: pre-line;">&nbsp;<?php echo $row['description'];?>&nbsp;</td>
 							 <td data-label="<?php echo $tr->translate("DATE");?>" style="white-space: nowrap;">&nbsp;<?php echo date("d M Y",strtotime($row['date']));?>&nbsp;</td>
 							 <td data-label="<?php echo $tr->translate("STATUS_REQ");?>" style="white-space: nowrap;">&nbsp;<?php echo $row['statusreq'];?>&nbsp;</td>
-							 <td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>" style="white-space: nowrap;">&nbsp;<?php echo $row['landAddress']." ".$row['landStreet'];?>&nbsp;</td>
-							 <td data-label="<?php echo $tr->translate("BUY_DATE");?>" align="center">&nbsp;<?php echo empty($row['buyDate']) ? "-" : date("d-M-Y",strtotime($row['buyDate']));?>&nbsp;</td>
+							 <td class="<?php  echo $featureClass;?>" data-label="<?php echo $tr->translate("PROPERTY_CODE");?>" style="white-space: nowrap;">&nbsp;<?php echo $row['landAddress']." ".$row['landStreet'];?>&nbsp;</td>
+							 <td class="<?php  echo $featureClass;?>" data-label="<?php echo $tr->translate("BUY_DATE");?>" align="center">&nbsp;<?php echo empty($row['buyDate']) ? "-" : date("d-M-Y",strtotime($row['buyDate']));?>&nbsp;</td>
 							 
 							 <td data-label="<?php echo $tr->translate("USER_NAME");?>" style="white-space: nowrap;">&nbsp;<?php echo $row['user_name'];?>&nbsp;</td>
 							</tr>

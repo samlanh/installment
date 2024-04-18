@@ -74,6 +74,8 @@ public function init()
 		
 		$row['autocalcualte_period'] = $db_gs->geLabelByKeyName('autocalcualte_period');
 		$row['logo'] = $db_gs->geLabelByKeyName('logo');
+		
+		$row['crmConnectWithSale'] = $db_gs->geLabelByKeyName('crmConnectWithSale');
 		$this->view->row = $row;
 		
 		$fm = new Setting_Form_FrmGeneral();

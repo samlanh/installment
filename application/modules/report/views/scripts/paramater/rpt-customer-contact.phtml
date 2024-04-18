@@ -1,6 +1,15 @@
 <?php 
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	$frm = $this->frm;
+	
+	$dbGb = new Setting_Model_DbTable_DbGeneral();
+	$settingRow = $dbGb->geLabelByKeyName('crmConnectWithSale');
+	$crmConnectWithSale = empty($settingRow["keyValue"]) ? 0 : $settingRow["keyValue"];
+	
+	$featureClass="disabledClass";
+	if($crmConnectWithSale==1){
+		$featureClass="";
+	}
 ?>
 <script>
 	dojo.require("dijit.form.DateTextBox");
@@ -66,6 +75,9 @@
 							padding: 0;
 							margin: 0;
 						}
+						.disabledClass{
+							display:none !important;
+						}
 					</style>
 					<div class="divFooter">
 			        	<table width="100%" style="margin:0; padding:0;border:none;" >
@@ -101,7 +113,7 @@
 						 <tr class="style" align="center" >
 							<td scope="col" rowspan="2"><?php echo $tr->translate("NUM");?></td>
 							<td scope="col" colspan="4"><?php echo $tr->translate("CONTACT_INFO");?></td>
-							<td scope="col" colspan="2"><?php echo $tr->translate("SALE_INFO");?></td>
+							<td scope="col" colspan="2" class="<?php  echo $featureClass;?>"><?php echo $tr->translate("SALE_INFO");?></td>
 						 </tr>
 				    	<tr class="style" align="center" >
 				        		
@@ -110,8 +122,8 @@
 					            <td ><?php echo $tr->translate("NEXT_DATE_CONTACT");?></td>
 					            <td ><?php echo $tr->translate("CONTACT_BY");?></td>
 								
-								<td scope="col"><?php echo $tr->translate("PROPERTY_CODE");?></td>
-					            <td scope="col"><?php echo $tr->translate("BUY_DATE");?></td>
+								<td scope="col" class="<?php  echo $featureClass;?>"><?php echo $tr->translate("PROPERTY_CODE");?></td>
+					            <td scope="col" class="<?php  echo $featureClass;?>"><?php echo $tr->translate("BUY_DATE");?></td>
 				         </tr>
 				         </thead>
 				       <?php foreach ($this->allContact as $key => $record){?>
@@ -121,8 +133,8 @@
 								<td align="left"><?php echo $record['feedback'];?></td>
 								<td align="center"><?php echo date("d/m/Y",strtotime($record['next_contact']))?></td>
 								<td align="center"><?php echo $record['user_contact_name'];?></td>
-								<td align="center"><?php echo empty($record['landAddress']) ? "-" : $record['landAddress']." ".$record['landStreet'];?></td>
-								<td align="center"><?php echo empty($record['buyDate']) ? "-" : date("d-M-Y",strtotime($record['buyDate']));?></td>
+								<td class="<?php  echo $featureClass;?>" align="center"><?php echo empty($record['landAddress']) ? "-" : $record['landAddress']." ".$record['landStreet'];?></td>
+								<td class="<?php  echo $featureClass;?>" align="center"><?php echo empty($record['buyDate']) ? "-" : date("d-M-Y",strtotime($record['buyDate']));?></td>
 							</tr>
 						<?php }?>
 				    </table>

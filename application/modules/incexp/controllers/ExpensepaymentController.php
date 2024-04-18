@@ -102,6 +102,13 @@ class Incexp_ExpensepaymentController extends Zend_Controller_Action {
 			Application_Form_FrmMessage::Sucessfull("This Record already void",self::REDIRECT_URL."/index",2);
 			exit();
 		}
+		$rowRR = $db->getexpenseByExpensePaymentId($id);
+		if (!empty($rowRR)){
+			if ($rowRR['is_closed']==1){
+				Application_Form_FrmMessage::Sucessfull("Unable edit closed record",self::REDIRECT_URL."/index",2);
+				exit();
+			}
+		}
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try{

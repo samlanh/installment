@@ -264,6 +264,8 @@ function upDateCustomerInfo(){
 }
 var row=0;
 var url="";
+disabled = false;
+disabledEdit = false;
 $(function(){
 	$.contextMenu({
 		selector: '.context-menu-one', 
@@ -283,13 +285,25 @@ $(function(){
 		},
 		items: {
 			"reciept": {name: "<?php echo $tr->translate("RECEIPT");?>", icon: "fa-print", accesskey: "c o p y"},
-			"update": {name: "<?php echo $tr->translate("EDIT");?>", icon: "edit"},
+			"update": {	
+					name: "<?php echo $tr->translate("EDIT");?>"
+					, icon: "edit"
+					,disabled: function() {
+							return disabledEdit;
+						}
+					},
 			<?php 
 			$dbacc = new Application_Model_DbTable_DbUsers();
 	 		$rs = $dbacc->getAccessUrl($module,$controller,'delete');
 	 		if(!empty($rs)){
 			?>
-			"stepup": {name: "<?php echo $tr->translate("VOID");?>", icon: "fa-file-text"},
+			"stepup": {	
+						name: "<?php echo $tr->translate("VOID");?>"
+						, icon: "fa-file-text"
+						,disabled: function() {
+							return disabled;
+						}
+					},
 			<?php } ?>
 			
 		}
@@ -297,9 +311,38 @@ $(function(){
 });
 function setrowdata(index){
 	row = index;
+	checkPaymentProperty(index);
 }
 var recordid ='';
 function gotoAction(){
 	 window.open(url+row);
+}
+
+function checkPaymentProperty(index){
+	urlChecking = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'get-payment-property'));?>';
+	dojo.xhrPost({
+		url: urlChecking,
+		content:{
+			'id':index,
+		},
+		handleAs:"json",
+		load: function(dataEE) {
+			if(dataEE.edit==false){
+				disabledEdit = true;
+			}else{
+				disabledEdit = false;
+			}
+			
+			if(dataEE.void==false){
+				disabled = true;
+			}else{
+				disabled = false;
+			}
+			$.contextMenu('update');
+			
+		},
+		error: function(err) {
+		}
+	});
 }
 </script>

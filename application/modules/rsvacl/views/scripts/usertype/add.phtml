@@ -5,6 +5,10 @@
 			'action'=>'index',
 		));
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	
+	$db=new Application_Model_DbTable_DbGlobal();
+	$userInfo = $db->getUserInfo();
+	$level = empty($userInfo['level']) ? 0 : $userInfo['level'];
 ?>
 <title><?php echo $tr->translate('USER_TYPE');?></title>
 <div class="card">
@@ -12,10 +16,18 @@
 		<form action="" dojoType="dijit.form.Form" method="post" enctype="application/x-www-form-urlencoded">
 			<script type="dojo/method" event="onSubmit">										
 				if(this.validate()) {
-				loadingBlock();								
-				return true;
+					<?php if($level!=1){?>
+					parent_id = dijit.byId('parent_id').get('value');
+					if (parent_id == "" || parent_id == "-1" ) {
+						alert("<?php echo $tr->translate('PLEASE_SELECT_PARENT');?>");
+						dijit.byId('parent_id').focus();
+						return false;
+					}
+					<?php } ?>
+					loadingBlock();								
+					return true;
 				}
-			return false;
+				return false;
 			</script>
 			 <div class="card-box">
                	<div class="col-sm-12 border-botom">

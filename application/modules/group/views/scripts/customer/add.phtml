@@ -1,6 +1,15 @@
 <?php
 	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
 	echo $this->headTitle($tr->translate('CUSTOMER_REQUIREMENT'));
+	
+	$dbGb = new Setting_Model_DbTable_DbGeneral();
+	$settingRow = $dbGb->geLabelByKeyName('crmConnectWithSale');
+	$crmConnectWithSale = empty($settingRow["keyValue"]) ? 0 : $settingRow["keyValue"];
+	
+	$featureClass="disabledClass";
+	if($crmConnectWithSale==1){
+		$featureClass="";
+	}
 ?>	
 <?php  $frm = $this->frm_customer;?>
 <script src="<?php echo $this->baseUrl();?>/js/help.js"  type="text/javascript"></script>
@@ -25,6 +34,11 @@ dojo.require("dijit.form.TextArea");
     		<form id='add_customer' action="<?php echo $this->url(array('module'=>'group','controller'=>'customer','action'=>'add')); ?>" enctype="multipart/form-data" dojoType="dijit.form.Form" method="post">
 				<script type="dojo/method" event="onSubmit">			
 					if(this.validate()){
+						if(isDuplicatePhone==1){
+							alert("<?php echo $tr->translate('PHONE_NUMBER_IS_DUPLICATED')?>");
+							dijit.byId('phone').focus();
+							return false;
+						}
 						loadingBlock();
 						dijit.byId('save_new').set('disabled',true);
 						return true;
@@ -55,9 +69,17 @@ dojo.require("dijit.form.TextArea");
 									</div>
 									<div class="form-group">
 									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PHONE");?> :
+											<span id="message" style="color: red; display: block;"></span>
 									   </label>
 									   <div class="col-md-7 col-sm-7 col-xs-12">
 											<?php  echo $frm->getElement('phone');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("TELEGRAM");?> :
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<?php  echo $frm->getElement('telegram');?>
 									   </div>
 									</div>
 									<div class="form-group">
@@ -67,7 +89,7 @@ dojo.require("dijit.form.TextArea");
 											<?php  echo $frm->getElement('know_by');?>
 									   </div>
 									</div>
-									<div class="d-flex"> 
+									<div class="d-flex <?php  echo $featureClass;?>"> 
 										<div class="settings-main-icon ">
 											<i class="glyphicon glyphicon-tasks" aria-hidden="true"></i>
 										</div> 
@@ -76,14 +98,14 @@ dojo.require("dijit.form.TextArea");
 											
 										</div> 
 									</div>
-									<div class="form-group">
+									<div class="form-group <?php  echo $featureClass;?>">
 									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PROJECT_NAME");?> :
 									   </label>
 									   <div class="col-md-7 col-sm-7 col-xs-12">
 											<?php  echo $frm->getElement('branchId');?>
 									   </div>
 									</div>
-									<div class="form-group">
+									<div class="form-group <?php  echo $featureClass;?>">
 									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("PROPERTY_CODE");?> :
 									   </label>
 									   <div class="col-md-7 col-sm-7 col-xs-12">
@@ -193,10 +215,15 @@ dojo.require("dijit.form.TextArea");
 		</form>
 	</div>
 </div>
+<style>
+.disabledClass{
+	display:none !important;
+}
+</style>
 <?php 
 	echo $this->frm_popupOther;
 ?>
-
+<script src="<?php echo $this->baseUrl();?>/js/help.js"  type="text/javascript"></script>
 <script type="text/javascript">
 var other_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json::encode($this->knowby));?> );
 require(["dojo/ready"], function(ready){
@@ -230,7 +257,53 @@ require(["dojo/ready"], function(ready){
 		}
 	}, "saleId");
 	
+	
+	
+	
 });
+
+dojo.ready(function(){
+
+	var phoneControl = dijit.byId('phone');
+	 phoneControl.on('keyup', function(evt) {
+		 checkPhoneNumber();
+    });
+});
+					
+var isDuplicatePhone=0;
+var urlCheckDuplicateNumber = '<?php echo $this->url(array('module'=>'group','controller'=>'customer','action'=>'checkphone')); ?>';
+function checkPhoneNumber(){
+	var phone =  dijit.byId('phone').get('value');
+	if(phone==""){
+		return false;
+	}
+	if(phone.length<8){
+		return false
+	}
+	if(phone.length>10){
+		alert("<?php echo $tr->translate("PHONE_NUMBER_INVALID_FORMAT")?>");
+		return false;
+	}
+	dojo.xhrPost({
+		url: urlCheckDuplicateNumber,	
+		content:{ 
+		    'phone':phone,
+		},		    
+		handleAs:"json",
+		load: function(data) {
+			if(data !== false ){
+				isDuplicatePhone=1;
+		   		document.getElementById('message').innerHTML ='<?php echo $tr->translate('PHONE_NUMBER_IS_DUPLICATED')?>';
+		   		dijit.byId('phone').focus();
+			}else{
+				isDuplicatePhone=0;
+				document.getElementById('message').innerHTML ='';
+			}
+		},
+		error: function(err) {
+		}
+	});
+}
 function popUpKnowBy(){
 	var know_by =  dijit.byId('know_by').get('value');
 	if(know_by==-1){
