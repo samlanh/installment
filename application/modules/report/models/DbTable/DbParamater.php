@@ -108,6 +108,7 @@ class Report_Model_DbTable_DbParamater extends Zend_Db_Table_Abstract
 					s.price_sold,
 					clie.`client_number`,
 					(clie.`name_kh`) AS client_name,
+					clie.`phone` AS clientPhone,
 					pro.`land_code`,
 					(SELECT pt.`type_nameen` FROM `ln_properties_type` AS pt WHERE pt.`id` = pro.`property_type` LIMIT 1) AS type_name,
 					pro.`property_type`,pro.`land_address`,pro.`street`,

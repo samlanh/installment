@@ -588,8 +588,7 @@ public function getAllOutstadingLoan($search=null){
 			$s_search = addslashes(trim($search['adv_search']));
       	 	$s_where[] = " s.sale_number LIKE '%{$s_search}%'";
       	 	$s_where[] = " l.land_code LIKE '%{$s_search}%'";
-      	 	$s_where[] = " l.land_address LIKE '%{$s_search}
-			%'";
+      	 	$s_where[] = " l.land_address LIKE '%{$s_search}%'";
       	 	$s_where[] = " l.street LIKE '%{$s_search}%'";
       	 	$s_where[] = " c.client_number LIKE '%{$s_search}%'";
       	 	$s_where[] = " c.phone LIKE '%{$s_search}%'";
