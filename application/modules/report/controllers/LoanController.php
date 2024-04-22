@@ -986,6 +986,7 @@ class Report_LoanController extends Zend_Controller_Action {
 		
 		$frmpopup = new Application_Form_FrmPopupGlobal();
 		$this->view->footerReport = $frmpopup->getFooterReport();
+		$this->view->headerReport = $frmpopup->getLetterHeadReport();
   }
   public function rptMaterialinludeDetailAction(){
 		$id=$this->getRequest()->getParam("id");

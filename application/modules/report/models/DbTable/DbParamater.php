@@ -968,7 +968,7 @@ class Report_Model_DbTable_DbParamater extends Zend_Db_Table_Abstract
     		
     		$dbgb = new Application_Model_DbTable_DbGlobal();
     		$userinfo = $dbgb->getUserInfo();
-    		if($userinfo['level']!=1 AND $userinfo['level']!=2){
+    		if($userinfo['level']!=1 AND $userinfo['level']!=2 AND $userinfo['level']!=11){
     			$where.= " AND ct.user_id = ".$userinfo['user_id'];
     		}
     		$where.=" ORDER BY ct.id DESC ";
@@ -1181,7 +1181,7 @@ class Report_Model_DbTable_DbParamater extends Zend_Db_Table_Abstract
 		if(!empty($userInfo)){
 			$level = empty($userInfo["level"]) ? 0 : $userInfo["level"];
 			$userId = empty($userInfo["user_id"]) ? 0 : $userInfo["user_id"];
-			if($level!=1){
+			if($level!=1 AND $level!=11){
     			$where.= " AND c.user_contact = ".$userId;
     		}
 		}
