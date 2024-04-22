@@ -1099,9 +1099,10 @@ class Report_LoanController extends Zend_Controller_Action {
 		$this->view->frm_search = $frm;
 		$this->view->search = $search;
 		
-		$search["recordDate"] = $search["end_date"];
-		$yesterdayCash = $db->getYesterdayCash($search);
-		$this->view->yesterdayCash = $yesterdayCash;
+		//for KPT
+		//$search["recordDate"] = $search["end_date"];
+		//$yesterdayCash = $db->getYesterdayCash($search);
+		//$this->view->yesterdayCash = $yesterdayCash;
 		
 		$dbGBStock = new Application_Model_DbTable_DbGlobalStock();
 		$rsBank = $dbGBStock->getAllBank();

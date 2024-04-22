@@ -38,21 +38,6 @@
 	$datePmt = new DateTime($this->search["end_date"]);
 	$firstDay = $datePmt->format("Y-m-01");
 	$amountDayOfMonth=cal_days_in_month(CAL_GREGORIAN,$datePmt->format("m"),$datePmt->format("Y"));
-	if(!empty($this->search["start_date"])){
-		
-		
-		$date1=date_create($this->search["start_date"]);
-		$date2=date_create($this->search["end_date"]);
-		$diff=date_diff($date1,$date2);
-		$diffeDay = $diff->format("%R%a");
-		if($diffeDay>0){
-			$amountDayOfMonth=$diffeDay+1;
-			
-			$datePmt = new DateTime($this->search["start_date"]);
-			$firstDay = $datePmt->format("Y-m-d");
-		}
-	}
-	
 
 	
 ?>
@@ -76,9 +61,6 @@
 				<div class="form-group"> 
 					<div class="col-md-2 col-sm-2 col-xs-12">
 						<?php echo $frm->getElement('branch_id');?>
-					</div>
-					<div class="col-md-2 col-sm-2 col-xs-12">
-						<?php echo $frm->getElement('start_date');?>
 					</div>
 					<div class="col-md-2 col-sm-2 col-xs-12">
 						<?php echo $frm->getElement('end_date');?>
@@ -369,12 +351,55 @@
 				</tr>
 			</table>
 		</div>
+		<button class="btn button-class btn-primary" data-toggle="popover" title="<?php echo $tr->translate("COPIED");?>" data-content="<?php echo $tr->translate("DATA_SUCCESSFUL_COPIED");?>" class="button-class button-primary"   onclick="myFunction()"><i class="fa fa-clipboard" aria-hidden="true"></i> <?php echo $tr->translate("COPY");?></button>
 		
+		<?php 
+		$yesterdayCash = $this->yesterdayCash;
+		
+		$content="";
+		$expenseInfo="";
+		$incomeInfo="";
+		
+		$arrFilter = array(
+			"branchId" => $this->search["branch_id"],
+			"recordDate" => $this->search["end_date"],
+			"paymentMethod" => 1
+		);
+		$totalCashIncomeToday = $dbReport->getSummaryIncomeDailyByPaymentMethod($arrFilter);
+		$totalCashExpenseToday = $dbReport->getSummaryExpenseDailyByPaymentMethod($arrFilter);
+		
+		$cashInHand = ($yesterdayCash+$totalCashIncomeToday)-$totalCashExpenseToday;
+		
+		$totalIncomeToday = $totalCashIncomeToday;
+		if(!empty($bankList)) foreach($bankList as $key => $row){
+			
+			$arrFilter["paymentMethod"] = 2;
+			$arrFilter["bankId"] = $row["id"];
+			$totalBank = $dbReport->getSummaryIncomeDailyByPaymentMethod($arrFilter);
+			$totalBankExpense = $dbReport->getSummaryExpenseDailyByPaymentMethod($arrFilter);
+			
+			$totalIncomeToday=$totalIncomeToday+$totalBank;
+				
+			$expenseInfo.="⛔️".$row["name"]." ".$tr->translate("Expense")." : $ ".number_format($totalBankExpense,2)."\n";
+			$incomeInfo.="💰".$row["name"]." : $ ".number_format($totalBank,2)."\n";
+		} 
+		
+		$content.="📢Daily Received Report\n<span id='footerDate'></span>\n";
+		$content.=$incomeInfo;
+		$content.="💰".$tr->translate("CASH")." : $ ".number_format($totalCashIncomeToday,2)."\n";
+		$content.="✅".$tr->translate("TOTAL")." : $ ".number_format($totalIncomeToday,2)."\n";
+		$content.="💰".$tr->translate("yesterdayCash")." : $ ".number_format($yesterdayCash,2)."\n";
+		$content.=$expenseInfo;
+		$content.="⛔️".$tr->translate("CASH")." ".$tr->translate("Expense")." : $ ".number_format($totalCashExpenseToday,2)."\n";
+		$content.="💰".$tr->translate("cashInHand")." : $ ".number_format($cashInHand,2)."\n";
+		?>
+		<div id="contentInfo" style="white-space: pre-line;"><?php echo $content;?></div>
 	</div>
 </div>
 <script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
 <script>
 dojo.require("dojo.data.ItemFileWriteStore"); 
+
 require(["dojo/ready"], function(ready){
 	ready(function(){
 		
@@ -386,7 +411,17 @@ require(["dojo/ready"], function(ready){
 		$('[data-toggle="popover"]').popover();
 	});
 });
-
+function myFunction() {
+	var textToCopy = $('#contentInfo').text();
+        var tempTextarea = $('<textarea>');
+        $('body').append(tempTextarea);
+        tempTextarea.val(textToCopy).select();
+        document.execCommand('copy');
+        tempTextarea.remove();
+		setTimeout(function() {
+			$('[data-toggle="popover"]').popover('hide');
+		}, 1000);
+}
 function getBranchInfo(){
 	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
 	branch_id = '<?php echo empty($this->search['branch_id'])?0:$this->search['branch_id'];?>';
