@@ -19,14 +19,15 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
 		$statement = $dbp->soldreportSqlStatement();
 		$sql= $statement['sql'];
 		$sql.="
-			,(SELECT SUM(total_principal_permonthpaid+extra_payment) FROM `ln_client_receipt_money` WHERE sale_id=s.id AND s.status=1 AND $from_date_receipt AND $to_date_receipt LIMIT 1) AS paid_amount,
-			(SELECT SUM(total_interest_permonthpaid) FROM `ln_client_receipt_money` WHERE status=1 AND $from_date_receipt AND $to_date_receipt  AND sale_id = s.id LIMIT 1) AS total_interest_permonthpaid,
-			(SELECT SUM(penalize_amountpaid) FROM `ln_client_receipt_money` WHERE status=1 AND $from_date_receipt AND $to_date_receipt  AND sale_id = s.id LIMIT 1) AS penalize_amountpaid,
-			(SELECT SUM(total_amount) FROM `ln_credit` WHERE status=1 AND $from_dateCredit AND $to_dateCredit  AND sale_id = s.id LIMIT 1) AS totalAmountCreadit,
-			(SELECT COUNT(id) FROM `ln_saleschedule` WHERE sale_id=s.id AND status=1 ) AS times,
-			(SELECT first_name FROM `rms_users` WHERE id=s.user_id LIMIT 1) AS user_name,
-			(SELECT $str FROM `ln_view` WHERE key_code =s.payment_id AND type = 25 limit 1) AS paymenttype,
-			(SELECT p.old_land_id FROM `ln_properties` AS p WHERE p.id = s.house_id LIMIT 1) AS old_land_id
+			,(SELECT SUM(total_principal_permonthpaid+extra_payment) FROM `ln_client_receipt_money` WHERE sale_id=s.id AND s.status=1 AND $from_date_receipt AND $to_date_receipt LIMIT 1) AS paid_amount
+			,(SELECT SUM(total_interest_permonthpaid) FROM `ln_client_receipt_money` WHERE status=1 AND $from_date_receipt AND $to_date_receipt  AND sale_id = s.id LIMIT 1) AS total_interest_permonthpaid
+			,(SELECT SUM(penalize_amountpaid) FROM `ln_client_receipt_money` WHERE status=1 AND $from_date_receipt AND $to_date_receipt  AND sale_id = s.id LIMIT 1) AS penalize_amountpaid
+			,(SELECT SUM(total_amount) FROM `ln_credit` WHERE status=1 AND $from_dateCredit AND $to_dateCredit  AND sale_id = s.id LIMIT 1) AS totalAmountCreadit
+			,(SELECT COUNT(id) FROM `ln_saleschedule` WHERE sale_id=s.id AND status=1 ) AS times
+			,(SELECT first_name FROM `rms_users` WHERE id=s.user_id LIMIT 1) AS user_name
+			,(SELECT $str FROM `ln_view` WHERE key_code =s.payment_id AND type = 25 limit 1) AS paymenttype
+			,(SELECT p.old_land_id FROM `ln_properties` AS p WHERE p.id = s.house_id LIMIT 1) AS old_land_id
+			,(SELECT crm.date_pay FROM `ln_client_receipt_money` AS crm WHERE crm.sale_id=s.id AND crm.recieve_amount >0 ORDER BY crm.id DESC LIMIT 1) AS lastPaidDate
 		";
 		$where = $statement['where'];
 // 		$where.=" AND s.is_cancel=0 ";
