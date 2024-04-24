@@ -9,11 +9,19 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
 		if($lang==1){
 			$str = 'name_kh';
 		}
+		$search['sale_status'] = empty($search['sale_status'])?0:$search['sale_status'];
+		$search['buy_type'] = empty($search['buy_type'])?0:$search['buy_type'];
+		
 		$from_date_receipt =(empty($search['start_date']))? '1': " date_pay >= '".$search['start_date']." 00:00:00'";
 		$to_date_receipt = (empty($search['end_date']))? '1': " date_pay <= '".$search['end_date']." 23:59:59'";
 		
 		$from_dateCredit =(empty($search['start_date']))? '1': " date >= '".$search['start_date']." 00:00:00'";
 		$to_dateCredit = (empty($search['end_date']))? '1': " date <= '".$search['end_date']." 23:59:59'";
+		if($search['buy_type']==3){
+			$from_date_receipt="1";
+			$from_dateCredit="1";
+			$search['sale_status'] = 1;
+		}
 		
 		$dbp = new Application_Model_DbTable_DbGlobal();
 		$statement = $dbp->soldreportSqlStatement();
@@ -33,17 +41,23 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
 // 		$where.=" AND s.is_cancel=0 ";
 		$where.=$dbp->getAccessPermission("s.`branch_id`");
 		$str = '`s`.`buy_date`';
-		if($search['buy_type']>0 AND $search['buy_type']!=2){
+		 
+		if($search['buy_type']==3){
+			$str = ' (SELECT crm.date_pay FROM `ln_client_receipt_money` AS crm WHERE crm.sale_id=s.id AND crm.recieve_amount >0 ORDER BY crm.id DESC LIMIT 1) ';
+		}else if($search['buy_type']>0 AND $search['buy_type']!=2){
 			$str = ' `s`.`agreement_date` ';
-		}
-		if($search['buy_type']==2){
+		}else if($search['buy_type']==2){
 			$where.=" AND s.payment_id = 1";
 		}
-			if($search['buy_type']==1){
+		if($search['buy_type']==1){
 			$where.=" AND s.payment_id != 1";
 		}
+		
+		
 		$from_date =(empty($search['start_date']))? '1': " $str >= '".$search['start_date']." 00:00:00'";
 		$to_date = (empty($search['end_date']))? '1': " $str <= '".$search['end_date']." 23:59:59'";
+		
+	
 		$where.= " AND ".$from_date." AND ".$to_date;
 		if(!empty($search['adv_search'])){
 			$s_where = array();
@@ -95,7 +109,7 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
 				$where.=" AND s.payment_id = ".$search['schedule_opt'];
 			}
 		}
-		$search['sale_status'] = empty($search['sale_status'])?0:$search['sale_status'];
+		
 		if($search['sale_status']>0){
  			if($search['sale_status']==1){//full paid
 				$where.=" AND s.price_sold <= ((SELECT COALESCE(SUM(total_principal_permonthpaid+extra_payment),0) FROM `ln_client_receipt_money` WHERE sale_id=s.id AND s.status=1 AND $from_date_receipt AND $to_date_receipt LIMIT 1) + (SELECT COALESCE(SUM(total_amount),0) FROM `ln_credit` WHERE status=1 AND $from_dateCredit AND $to_dateCredit  AND sale_id = s.id LIMIT 1) ) ";
@@ -2043,12 +2057,19 @@ function updatePaymentStatus($data){
    	if($lang==1){
    		$str = 'name_kh';
    	}
+	$search['sale_status'] = empty($search['sale_status'])?0:$search['sale_status'];
+	$search['buy_type'] = empty($search['buy_type'])?0:$search['buy_type'];
+	
    	$from_datePayment =(empty($search['start_date']))? '1': " date_pay >= '".$search['start_date']." 00:00:00'";
    	$to_datePayment = (empty($search['end_date']))? '1': " date_pay <= '".$search['end_date']." 23:59:59'";
    	
    	$from_dateCredit =(empty($search['start_date']))? '1': " date >= '".$search['start_date']." 00:00:00'";
    	$to_dateCredit = (empty($search['end_date']))? '1': " date <= '".$search['end_date']." 23:59:59'";
-   	
+   	if($search['buy_type']==3){
+		$from_datePayment="1";
+		$from_dateCredit="1";
+		$search['sale_status'] = 1;
+	}
    	$dbp = new Application_Model_DbTable_DbGlobal();
    	$statement = $dbp->soldreportSqlStatement();//this script make slow because have sum 
 //    	,(SELECT SUM(rm.total_principal_permonthpaid+rm.extra_payment) FROM `ln_client_receipt_money` as rm WHERE rm.status=1 AND sale_id=s.id  AND $from_datePayment AND $to_datePayment LIMIT 1) AS paid_amount,
@@ -2094,12 +2115,14 @@ function updatePaymentStatus($data){
 	$where.=" AND s.is_cancel=0 ";
    	$where.=$dbp->getAccessPermission("s.`branch_id`");
    	$str = '`s`.`buy_date`';
-   	if($search['buy_type']>0 AND $search['buy_type']!=2){
+   	if($search['buy_type']==3){
+   		$str = ' (SELECT crm.date_pay FROM `ln_client_receipt_money` AS crm WHERE crm.sale_id=s.id AND crm.recieve_amount >0 ORDER BY crm.id DESC LIMIT 1) ';
+   	}else if($search['buy_type']>0 AND $search['buy_type']!=2){
    		$str = ' `s`.`agreement_date` ';
+	}else if($search['buy_type']==2){
+		$where.=" AND s.payment_id = 1";
    	}
-   	if($search['buy_type']==2){
-   		$where.=" AND s.payment_id = 1";
-   	}
+	
    	if($search['buy_type']==1){
    		$where.=" AND s.payment_id != 1";
    	}
@@ -2157,7 +2180,7 @@ function updatePaymentStatus($data){
    			$where.=" AND s.payment_id = ".$search['schedule_opt'];
    		}
    	}
-	$search['sale_status'] = empty($search['sale_status'])?0:$search['sale_status'];
+	
    	if($search['sale_status']>0){
    		if($search['sale_status']==1){//full paid
    			$where.=" AND s.price_sold <= ((SELECT COALESCE(SUM(rm.total_principal_permonthpaid+rm.extra_payment),0) FROM `ln_client_receipt_money` as rm WHERE rm.status=1 AND sale_id=s.id  AND $from_datePayment AND $to_datePayment LIMIT 1) + (SELECT COALESCE(SUM(total_amount),0) FROM `ln_credit` WHERE status=1 AND $from_dateCredit AND $to_dateCredit  AND sale_id = s.id LIMIT 1)) ";

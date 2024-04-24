@@ -229,7 +229,7 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form{
 			'autoComplete'=>'false',
 			'queryExpr'=>'*${0}*',
 		));
-		$options= array(-1=>$this->tr->translate("CHOOSE_SALE_TYPE"),1=>"ធ្វើកិច្ចសន្យា",2=>$this->tr->translate("DEPOSIT"));
+		$options= array(-1=>$this->tr->translate("CHOOSE_SALE_TYPE"),1=>"ធ្វើកិច្ចសន្យា",2=>$this->tr->translate("DEPOSIT"),3=>$this->tr->translate("ការលក់បានបញ្ចប់"));
 		$buy_type->setMultiOptions($options);
 		$buy_type->setValue($request->getParam("buy_type"));
 		
