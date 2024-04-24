@@ -2057,38 +2057,37 @@ function updatePaymentStatus($data){
 //    	(SELECT SUM(total_amount) FROM `ln_credit` WHERE status=1 AND $from_dateCredit AND $to_dateCredit  AND sale_id = s.id LIMIT 1) AS totalAmountCreadit
    	$sql= "
    	SELECT
-		  `s`.`id`               AS `id`,
-		  (SELECT
-		     `ln_project`.`project_name`
-		   FROM `ln_project`
-		   WHERE (`ln_project`.`br_id` = `s`.`branch_id`)
-		   LIMIT 1) AS `branch_name`,
-		  `s`.`branch_id`        AS `branch_id`,
-		  `s`.`house_id`         AS `house_id`,
-		  `s`.`price_before`     AS `price_before`,
-		  `s`.`price_sold`       AS `price_sold`,
-		  `s`.`discount_amount`  AS `discount_amount`,
-		  `s`.`discount_percent` AS `discount_percent`,
-		  `s`.`other_discount` AS `other_discount`,
-		  s.verify_by,
-		  `s`.`buy_date`         AS `buy_date`,
-		  `s`.`end_line`         AS `end_line`,
-		  `s`.`interest_rate`    AS `interest_rate`,
-		  `s`.`total_duration`   AS `total_duration`,
-		  `s`.`payment_id`       AS `payment_id`,
-		  `s`.`is_cancel`        AS `is_cancel`,
-		  `s`.`user_id`          AS `user_id`,
-		  `p`.`land_code`        AS `land_code`,
-		  `p`.`land_address`     AS `land_address`,
-		  `p`.`land_size`        AS `land_size`,
-		  `p`.`street`           AS `street`,
-		  `c`.`name_kh`          AS `name_kh`,
-		  `c`.`name_en`          AS `name_en`,
-		  `c`.`phone`            AS `phone`, 
-		   	'0' AS totalAmountCreadit,
-		   	(SELECT $str FROM `ln_view` WHERE key_code =s.payment_id AND type = 25 limit 1) AS paymenttype,
-		   	(SELECT p.old_land_id FROM `ln_properties` AS p WHERE p.id = s.house_id LIMIT 1) AS old_land_id,
-		   	(SELECT sta.co_khname FROM ln_staff AS sta WHERE sta.co_id=`s`.`staff_id` LIMIT 1 ) AS agency_name
+		`s`.`id`               AS `id`
+		,(SELECT 
+			`ln_project`.`project_name` FROM `ln_project` WHERE (`ln_project`.`br_id` = `s`.`branch_id`)
+			LIMIT 1) AS `branch_name`
+		,`s`.`branch_id`        AS `branch_id`
+		,`s`.`house_id`         AS `house_id`
+		,`s`.`price_before`     AS `price_before`
+		,`s`.`price_sold`       AS `price_sold`
+		,`s`.`discount_amount`  AS `discount_amount`
+		,`s`.`discount_percent` AS `discount_percent`
+		,`s`.`other_discount` AS `other_discount`
+		,s.verify_by
+		,`s`.`buy_date`         AS `buy_date`
+		,`s`.`end_line`         AS `end_line`
+		,`s`.`interest_rate`    AS `interest_rate`
+		,`s`.`total_duration`   AS `total_duration`
+		,`s`.`payment_id`       AS `payment_id`
+		,`s`.`is_cancel`        AS `is_cancel`
+		,`s`.`user_id`          AS `user_id`
+		,`p`.`land_code`        AS `land_code`
+		,`p`.`land_address`     AS `land_address`
+		,`p`.`land_size`        AS `land_size`
+		,`p`.`street`           AS `street`
+		,`c`.`name_kh`          AS `name_kh`
+		,`c`.`name_en`          AS `name_en`
+		,`c`.`phone`            AS `phone`
+		,'0' AS totalAmountCreadit
+		,(SELECT $str FROM `ln_view` WHERE key_code =s.payment_id AND type = 25 limit 1) AS paymenttype
+		,(SELECT p.old_land_id FROM `ln_properties` AS p WHERE p.id = s.house_id LIMIT 1) AS old_land_id
+		,(SELECT sta.co_khname FROM ln_staff AS sta WHERE sta.co_id=`s`.`staff_id` LIMIT 1 ) AS agency_name
+		,(SELECT crm.date_pay FROM `ln_client_receipt_money` AS crm WHERE crm.sale_id=s.id AND crm.recieve_amount >0 ORDER BY crm.id DESC LIMIT 1) AS lastPaidDate
 		   	
    	";
    	$where = $statement['where'];

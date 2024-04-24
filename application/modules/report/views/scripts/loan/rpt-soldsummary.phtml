@@ -185,6 +185,9 @@ table.tb-footer tr.style-head {
 		tr.style-rowdata.hover.context-menu-one.completedCss {
 			background: #00e01c0d;
 		}
+		.textBold{
+			font-weight:bold;
+		}
 		
 	</style>
 	<table style="font-family: 'Times New Roman','Khmer OS Battambang'; width:100%;">
@@ -200,7 +203,7 @@ table.tb-footer tr.style-head {
 	            <table class="content-data" border="1" cellspacing="0" style="border:1px solid #000; ">
 	               <thead>
 	                 <tr class="hide" style="border:1px solid #000;">
-		                <td colspan="17" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
+		                <td colspan="18" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
 		             </tr>
 	                 <tr class="style" align="center">
 					  <?php 
@@ -211,7 +214,7 @@ table.tb-footer tr.style-head {
 						<td scope="col" rowspan="2"><?php echo $tr->translate("NUM");?></td>
 						<td scope="col" rowspan="2"><?php echo $tr->translate("CUSTOMER_INFO");?></td>
 						<td scope="col" colspan="<?php echo $colspan;?>"><?php echo $tr->translate("SALE_INFO");?></td>
-						<td scope="col" colspan="4"><?php echo $tr->translate("PAYMENT_INFO");?></td>
+						<td scope="col" colspan="5"><?php echo $tr->translate("PAYMENT_INFO");?></td>
 						<td scope="col" rowspan="2"><?php echo $tr->translate("AGENTCY");?></td>
 						<td scope="col" rowspan="2"><?php echo $tr->translate("STATUS");?></td>
 					 </tr>
@@ -235,7 +238,7 @@ table.tb-footer tr.style-head {
 	                    <td scope="col"><?php echo $tr->translate("REMAIN");?></td>
 	                    <td scope="col"><?php echo $tr->translate("TOTAL_INTEREST");?></td>
 	                    <td scope="col"><?php echo $tr->translate("TOTAL_PENELIZE");?></td>
-	                   
+						<td scope="col"><?php echo $tr->translate("COMPLETED_PAID_DATE");?></td>
 	                   
 	               	 </tr>
 	              </thead>
@@ -311,7 +314,8 @@ table.tb-footer tr.style-head {
 		               $penalizePaid = !empty($resultCollect['penalizePaid'])?$resultCollect['penalizePaid']:0;
 
 		               $paid_price=$paid_price+$principalPaid+$row['totalAmountCreadit'];
-		               $balace_price=$balace_price+($row['price_sold']-($principalPaid+$row['totalAmountCreadit']) );
+					   $balanceRow = ($row['price_sold']-($principalPaid+$row['totalAmountCreadit']));
+		               $balace_price=$balace_price+$balanceRow;
 		               
 		               $total_interest = $total_interest+$totalInterestPaid;
 		               $total_panelty = $total_panelty+$penalizePaid;
@@ -380,6 +384,7 @@ table.tb-footer tr.style-head {
 						<td data-label="<?php echo $tr->translate("REMAIN");?>" align="right" style="white-space:nowrap;"><?php echo number_format($row['price_sold']-$paidAmount,2);  ?></td>
 						<td data-label="<?php echo $tr->translate("TOTAL_INTEREST");?>" align="right"><?php echo number_format($totalInterestPaid,2);?></td>
 						<td data-label="<?php echo $tr->translate("TOTAL_PENELIZE");?>" align="right"><?php echo number_format($penalizePaid,2);?></td>
+						<td data-label="<?php echo $tr->translate("COMPLETED_PAID_DATE");?>" class="textBold" align="center"><?php if($balanceRow<=0){ $date= new DateTime($row['lastPaidDate']);	echo $date->format($montFomat); }else{ echo "-";}?></td>
 						
 						<td data-label="<?php echo $tr->translate("AGENTCY");?>" style="white-space:nowrap; font-size:80%;"><?php echo $row['agency_name']; ?></td>
 						<td data-label="<?php echo $tr->translate("STATUS");?>"><?php  if($row['is_cancel']==1){ echo "បោះបង់";} ?></td>
@@ -405,7 +410,7 @@ table.tb-footer tr.style-head {
 						<td colspan="3" ></td>
 					</tr>
             		<tr>
-            			<td colspan="17" style="border: #fff solid 1px;border-top: solid 1px #000;"><br />
+            			<td colspan="18" style="border: #fff solid 1px;border-top: solid 1px #000;"><br />
 			             <table class="content-data" style=" font-size:11px;width:70%;margin:0 auto;" cellspacing="0">
 			                 <thead>
 							 <tr bgcolor="#a0baf5" class="style" >
