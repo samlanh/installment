@@ -469,8 +469,8 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    		$sql=" SELECT COUNT(id) FROM $this->_name WHERE 1 LIMIT 1";
    	}
    	$acc_no = $db->fetchOne($sql);
-	if($receiptTypeCount==5){ // For Borey Phnom Meas
-		$countSplit = 100; // re-count as count split value
+	if($receiptTypeCount==5){ // សម្រាប់ Phnom Meas
+		$countSplit = 100; // រាប់ឡើងវិញពេល ចំនួនស្មើ តម្លៃនៃ $countSplit
 		$timeSplit=1;
 		if($acc_no>0){
 			$timeSplit = floor($acc_no/$countSplit);
