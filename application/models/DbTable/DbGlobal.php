@@ -412,12 +412,12 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    public function getReceiptByBranch($data=array('branch_id'=>1,'is_group'=>0)){
    	$this->_name='ln_client_receipt_money';
    	$db = $this->getAdapter();
-   	$receipt_type_count=RECEIPT_TYPE_COUNT;
+   	$receiptTypeCount=RECEIPT_TYPE_COUNT;
    	
    	$lenghtReceipt=6;
    	$oldNumber=0;
    	
-   	if($receipt_type_count==0){
+   	if($receiptTypeCount==0){
 	   	//phnom penh thmey
 	   	$pre='N1:'; //phnom penh thmey
 	   	if ($data['branch_id']>=5){
@@ -427,12 +427,12 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 	   	}else{
 	   		$sql=" SELECT COUNT(id) FROM $this->_name WHERE branch_id <=2 LIMIT 1 ";
 	   	}
-   	}elseif($receipt_type_count==1){
+   	}elseif($receiptTypeCount==1){
    		//For General
 //    	$sql=" SELECT COUNT(id) FROM $this->_name WHERE 1 ";
    		$pre='№ ';
    		$sql=" SELECT COUNT(id) FROM $this->_name WHERE branch_id =".$data['branch_id'];
-   	}elseif($receipt_type_count==2){
+   	}elseif($receiptTypeCount==2){
    		$pre='№ ';
    		$currentDate = date("Y-m-d");
    		$dateSetting = "2021-01-01";
@@ -450,7 +450,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    		}
    		$sql.=" AND branch_id = ".$data['branch_id'];
    		$sql.=" LIMIT 1 ";
-   	}elseif($receipt_type_count==3){//svr
+   	}elseif($receiptTypeCount==3){//svr
    		$pre='№ ';
    		$sql=" SELECT COUNT(id) FROM $this->_name WHERE 1 ";
    		$currentDate = date("Y-m-d");
@@ -464,23 +464,22 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    			}
    		}
    		$sql.=" LIMIT 1 ";
-   	}elseif($receipt_type_count==4){//count all branch
+   	}elseif($receiptTypeCount==4 || $receiptTypeCount==5){//count all branch
    		$pre='№ ';
    		$sql=" SELECT COUNT(id) FROM $this->_name WHERE 1 LIMIT 1";
    	}
-   	
-   	
-   
-	$receiptForCompany = 1; //1=general,2=fiveStar,3=for Svayrieng
-// 	if($receiptForCompany==2){
-		
-		
-// 	}else if ($receiptForCompany==3){
-		
-// 	}
-	
-   	
    	$acc_no = $db->fetchOne($sql);
+	if($receiptTypeCount==5){ // For Borey Phnom Meas
+		$countSplit = 100; // re-count as count split value
+		$timeSplit=1;
+		if($acc_no>0){
+			$timeSplit = floor($acc_no/$countSplit);
+			$newCountSplit = ($countSplit*$timeSplit);
+			$acc_no = (int)$acc_no - $newCountSplit;
+		}
+	}
+	
+
    	$new_acc_no= (int)$acc_no+$oldNumber+1;
    	$acc_no= strlen((int)$acc_no+$oldNumber+1);
   	for($i = $acc_no;$i<$lenghtReceipt;$i++){//phnom penh thmey
