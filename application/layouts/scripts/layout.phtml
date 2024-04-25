@@ -63,7 +63,9 @@
 	
 	$userConcreteCheck = $db_user->getAccessUrl("po","directpo",'check');
 	
-
+	$inFrame = $request->getParam("inFrame");
+	$classShow = empty($inFrame) ? "" : "hidden";
+	$padLeftContent = empty($inFrame) ? "" : "mrg-left-none";
 	
 	
 ?>
@@ -166,6 +168,12 @@
 			text-align: center;
 			font-weight: 600;
 		}
+		.left_col.hidden {
+			width: 0 !important;
+		}
+		.nav-md .container.body .right_col.mrg-left-none{
+			margin-left: 0 !important;
+		}
     </style>
    <?php if($module=='home' AND $controller=="index" AND $action=="index"){?>	
    <?php }else if($module=='home' AND $controller=="index" AND $action=="rpt-income-graphic"){?>	
@@ -193,8 +201,8 @@
 			</div>
 		</div>
     	<div class="main_container">
-        	<div class="col-md-3 left_col ">
-          		<div class="left_col scroll-view">
+        	<div class="col-md-3 left_col <?php echo $classShow;?>">
+          		<div class="left_col scroll-view ">
 		            <div class="navbar nav_title">
 		              <a href="<?php echo $this->baseUrl()."/home";?>" class="site_title"><span><img src="<?php echo $this->baseUrl()?>/images/cam-app-logo.png" alt="CAM APP TECHNOLOGY"></span></a>
 		            </div>
@@ -202,7 +210,7 @@
             		<?php echo $this->render('menuleft.phtml')?>
             	</div>
             </div>
-		        <div class="top_nav">
+		        <div class="top_nav <?php echo $classShow." ".$classShow;?>">
 		          	<div class="nav_menu">
 		            	<nav>
 				              <div class="nav toggle">
@@ -256,11 +264,12 @@
        			</div>
        		 <!-- /top navigation -->
             <!-- page content -->
-       		<div class="right_col" role="main" >
-       		 	<div class="right-conten" style="min-height: 570px;">
-       		 	<div style="clear:both;"></div>
-             	<?php if($module!='report' AND $module!='home' ){?>
-             		<div class="ptss-frame  js-ptss-frame "><!-- is-opened -->
+       		<div class="right_col <?php echo $padLeftContent;?>" role="main" >
+				<div id="tt" class="easyui-tabs right-conten" style="width:100%; height:1200px; min-height: 1200px; ">
+					<div id="firstTabs" title="Home" >
+						<div style="clear:both;"></div>
+						<?php if($module!='report' AND $module!='home' ){?>
+						<div class="ptss-frame  js-ptss-frame <?php echo $classShow;?>"><!-- is-opened -->
 							<div class="ptss__toggle-btnaddd  js-ptss-toggle-btn add-edit-action">
 								<?php if($action=='index' AND $controller!='updateprice' AND $controller!='testsale'){?>
 									<a title="<?php echo $tr->translate('ADD_NEW');?>" class='add-edit' href="<?php echo $this->url(array('module'=>$module,'controller'=>$controller,'action'=>'add'),null,true); ?>">
@@ -332,7 +341,8 @@
 				               	if($module=='report' AND $action!='rpt-paymentschedules'){
 				            ?>
 			                <?php }?>
-       		 	</div>
+					</div>
+				</div>
        		</div>
          </div>
      </div>
@@ -411,7 +421,14 @@ $(document).ready(function(){
 		});
 	  });
 	<?php }?>
-	messageAlert()
+	messageAlert();
+	var currentTitle = $(document).attr('title');
+	$('#firstTabs').attr('title', currentTitle);
+	var currentTab = $('#tt').tabs();
+	$(".tabs-header ul.tabs" ).addClass( "hidden" );
+	$( ".tabs-close" ).on( "click", function() {
+	  alert( "Handler for `click` called." );
+	} );
 });
 
 var urlReload = '<?php echo $this->url(array('module'=>'default','controller'=>'index','action'=>'reloadr'));?> ';
@@ -632,6 +649,40 @@ function infoMessageAlert(messsageTitle){
 		  }
 	})
 }
+function addTab(title, url){
+	if ($('#tt').tabs('exists', title)){
+		$('#tt').tabs('select', title);
+	} else {
+		var content = '<iframe scrolling="auto" frameborder="0"  src="'+url+'" style="width:100%;height:100%;"></iframe>';
+		$('#tt').tabs('add',{
+			title:title,
+			content:content,
+			tools:[{
+				iconCls:'fa fa-times',
+				handler:function(){
+					$('#tt').tabs('select', title);
+					var tab = $('#tt').tabs('getSelected');
+					var index = $('#tt').tabs('getTabIndex',tab);
+					$('#tt').tabs('close',index);
+					
+					var currentAmtTab = $(".tabs-header ul.tabs" ).children().length;
+					if(currentAmtTab<=1){
+						$(".tabs-header ul.tabs" ).addClass( "hidden" );
+					}
+				}
+			}]
+		});
+		
+		var currentAmtTab = $(".tabs-header ul.tabs" ).children().length;
+		if(currentAmtTab>1){
+			$(".tabs-header ul.tabs" ).removeClass( "hidden" );
+		}else{
+			$(".tabs-header ul.tabs" ).addClass( "hidden" );
+		}
+	}
+	
+	
+}
 </script>
 <?php if($action!='index'){?>
 <?php if($module!="report"){?>
@@ -644,5 +695,7 @@ function infoMessageAlert(messsageTitle){
 <?php if(INSTALL_TYPE !='1' ){?>
 <script src="<?php echo $this->baseUrl()?>/admin/js/connectivity_status.js"></script>
 <?php } ?>
+<link rel="stylesheet" type="text/css" href="<?php echo $this->baseUrl()?>/admin/easyui/easyui.css">
+<script type="text/javascript" src="<?php echo $this->baseUrl()?>/admin/easyui/jquery.easyui.min.js"></script>
 <iframe name=print_frame width=0 height=0 frameborder=0 src=about:blank></iframe>
 </body>
