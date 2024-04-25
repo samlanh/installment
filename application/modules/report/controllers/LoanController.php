@@ -561,8 +561,10 @@ class Report_LoanController extends Zend_Controller_Action {
 	
 	$this->view->creaditHistory=$db->getCreditBySaleid($id);
 	
+	$inFrame = $this->getRequest()->getParam('inFrame');
+	$inFrame = empty($inFrame)?"":$inFrame;
   	if(empty($rs)){
-  		Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index",2);
+  		Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index?inFrame=".$inFrame,2);
   		exit();
   	}
   }

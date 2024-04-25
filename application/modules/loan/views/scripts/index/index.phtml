@@ -148,6 +148,11 @@ function getAllPropertyBranch(branch_id){
 
 var row=0;
 var url="";
+disabledPayment = true;
+disabledIssueSchedule = true;
+disabledNewSchedule = true;
+disabledSchedule = true;
+
 $(function(){
 	$.contextMenu({
 		selector: '.context-menu-one', 
@@ -158,9 +163,11 @@ $(function(){
 			if(key=="edit"){
 				url='<?php echo $urlEdit;?>';
 				newPageTitle="<?php echo $edit_sale;?>";
+				actionType=2;
 			}else if(key=="payment"){
 				url='<?php echo $urlPayment;?>';
 				newPageTitle="<?php echo $payment;?>";
+				actionType=2;
 			}else if(key=="reschedule"){
 				url='<?php echo $urlRepaymentschedule;?>';
 				newPageTitle="<?php echo $reschedule;?>";
@@ -170,53 +177,59 @@ $(function(){
 			}else if(key=="editschedule"){
 				url='<?php echo $urleditschedule;?>';
 				newPageTitle="<?php echo $tr->translate("EDIT_SCHEDULE");?>";
+				actionType=2;
 			}else if(key=="schedulePay"){
 				url='<?php echo $urlpaymentschedules;?>';
 				newPageTitle="<?php echo $scheduleReport;?>";
-				actionType=2;
 			}else if(key=="agreement"){
 				url='<?php echo $urlAgreement;?>';
 				newPageTitle="<?php echo $aggreeement;?>";
-				actionType=2;
 			}else if(key=="payhistory"){
 				url='<?php echo $urlpaymenthistory;?>';
 				newPageTitle="<?php echo $payment_history;?>";
-				actionType=2;
 			}else if(key=="credithistory"){
 				url='<?php echo $urlCreditHistory;?>';
 				newPageTitle="<?php echo $tr->translate("CREDIT_HISTORY");?>";
-				actionType=2;
 			}else if(key=="issueCredit"){
 				url='<?php echo $urlIssueCredit;?>';
 				newPageTitle="<?php echo $tr->translate("ISSUE_CREDIT");?>";
+				actionType=2;
 			}else if(key=="addmeterial"){
 				url='<?php echo $urlAddMaterialInclude;?>';
 				newPageTitle="<?php echo $tr->translate("SET_MATERIAL_INCLUDE");?>";
+				actionType=2;
 			}else if(key=="saleprofile"){
 				url='<?php echo $urlSaleprofile;?>';
 				newPageTitle="<?php echo $tr->translate("Selling Profile Information");?>";
-				actionType=2;
 			}
-			if(actionType==2){
+			if(actionType==1){
 				addTab(newPageTitle,url+row+'?inFrame=true');
 			}else{
 				gotoAction();
 			}
 		},
 		items: {
-			"payment": {name: "<?php echo $payment;?>", icon: "fa-money", accesskey: "c o p y"},
-			"reschedule": {name: "<?php echo $reschedule;?>", icon: "fa-calendar"},
-			"edit": {name: "<?php echo $edit_sale;?>", icon: "edit", accesskey: "e"},
+			"payment": { name: "<?php echo $payment;?>", icon: "fa-money",disabled: function() {
+			  return disabledPayment;
+			 }},
+			"reschedule": { name: "<?php echo $reschedule;?>", icon: "fa-calendar-check-o",disabled: function() {
+			  return disabledIssueSchedule;
+			 }},
+			"newschedule": { name: "<?php echo $tr->translate("NEW_SCHEDULE");?>", icon: "fa-calendar",disabled: function() {
+			  return disabledNewSchedule;
+			 }},
+			 "schedulePay": { name: "<?php echo $scheduleReport;?>", icon: "paste",disabled: function() {
+			  return disabledSchedule;
+			 }},
+			 "edit": {name: "<?php echo $edit_sale;?>", icon: "edit", accesskey: "e"},
 			<?php if($showEditSchedule==1){?>
 			"editschedule": {name: "<?php echo $tr->translate("EDIT_SCHEDULE");?>", icon: "edit", accesskey: "e"},
 			<?php }?>
-			"newschedule": {name: "<?php echo $tr->translate("NEW_SCHEDULE");?>", icon: "fa-calendar"},
-			"schedulePay": {name: "<?php echo $scheduleReport;?>", icon: "paste", accesskey: "cool paste"},
 			"agreement": {name: "<?php echo $aggreeement;?>", icon: "fa-file-text", accesskey: "c"},
-			"payhistory": {name: "<?php echo $payment_history;?>", icon: "fa-dollar", accesskey: "h"},
+			"payhistory": {name: "<?php echo $payment_history;?>", icon: "fa-book", accesskey: "h"},
+			"credithistory": {name: "<?php echo $tr->translate("CREDIT_HISTORY");?>", icon: "fa-book", accesskey: "h"},
 			"saleprofile": {name: "<?php echo $tr->translate("Selling Profile Information");?>", icon: "fa-dollar", accesskey: "h"},
-			"credithistory": {name: "<?php echo $tr->translate("CREDIT_HISTORY");?>", icon: "fa-dollar", accesskey: "h"},
-			"addmeterial": {name: "<?php echo $tr->translate("SET_MATERIAL_INCLUDE");?>", icon: "fa-book", accesskey: "h"},
+			"addmeterial": {name: "<?php echo $tr->translate("SET_MATERIAL_INCLUDE");?>", icon: "fa-tags", accesskey: "h"},
 			<?php if($creditSetting==1){?>
 			"issueCredit": {name: "<?php echo $tr->translate("ISSUE_CREDIT");?>", icon: "fa-dollar", accesskey: "h"},
 			<?php }?>
@@ -225,10 +238,50 @@ $(function(){
 });
 function setrowdata(index){
 	row = index;
+	getSaleInfo(index);
 }
 var recordid ='';
 function gotoAction(){
-	
 	 window.open(url+row, '_self');
+}
+
+var url_submiinfo = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getloan-bymemberid')); ?>';
+function getSaleInfo(index){
+	dojo.xhrPost({
+	    url: url_submiinfo,	
+	    content : { 
+		    'sale_id':index ,
+		},	
+		handleAs:"json",
+		load: function(dataEE) {
+			if(dataEE.is_cancel=="1"){
+				disabledIssueSchedule = true;
+				disabledNewSchedule = true;
+				disabledPayment = true;
+				disabledSchedule = true;
+				if(dataEE.payment_id!="1"){
+					disabledSchedule = false;
+				}
+			}else{
+				if(dataEE.payment_id=="1"){
+				disabledIssueSchedule = false;
+				disabledNewSchedule = true;
+				disabledPayment = true;
+				disabledSchedule = true;
+			
+				}else{
+					disabledIssueSchedule = true;
+					disabledNewSchedule = false;
+					disabledPayment = false;
+					disabledSchedule = false;
+				}
+			}
+			
+			$.contextMenu('update');
+		},
+		error: function(err) {
+			
+		}
+	});
 }
 </script>

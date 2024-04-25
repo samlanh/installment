@@ -430,14 +430,25 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 			try {
 				$_dbmodel = new Report_Model_DbTable_DbLandreport();
 				$_dbmodel->updateReceipt($_data);
-				Application_Form_FrmMessage::Sucessfull("UPDATE_SUCESS","/report/loan/receipt/id/".$_data['id']);
+				
+				if(!empty($_data["inFrame"])){
+					Application_Form_FrmMessage::Sucessfull("UPDATE_SUCESS", "/report/loan/receipt/id/".$_data['id']."?inFrame=true");
+				}else{
+					Application_Form_FrmMessage::Sucessfull("UPDATE_SUCESS","/report/loan/receipt/id/".$_data['id']);
+				}
+				
+				
 			}catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
-		 
+		
+		$inFrame = $this->getRequest()->getParam('inFrame');
+		$inFrame = empty($inFrame)?"":$inFrame;
+		
 		$id = $this->getRequest()->getParam('id');
+		$id = empty($id) ? 0 :$id;
 		if(!empty($id)){
 			$receipt = $db->getReceiptByID($id);
 			$this->view->rs = $receipt;
@@ -453,6 +464,7 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 		}
 		$db = new Application_Model_DbTable_DbGlobal();
 		$this->view->customer =  $db->getAllClient();
+		$this->view->inFrame =  $inFrame;
 	}
 	function saveprintAction(){
 		if($this->getRequest()->isPost()){

@@ -65,6 +65,7 @@
 	
 	$inFrame = $request->getParam("inFrame");
 	$classShow = empty($inFrame) ? "" : "hidden";
+	$classContentInframe = empty($inFrame) ? "" : "content-inframe";
 	$padLeftContent = empty($inFrame) ? "" : "mrg-left-none";
 	
 	
@@ -171,8 +172,9 @@
 		.left_col.hidden {
 			width: 0 !important;
 		}
-		.nav-md .container.body .right_col.mrg-left-none{
+		.nav-md .container.body .right_col.mrg-left-none {
 			margin-left: 0 !important;
+			padding: 0;
 		}
     </style>
    <?php if($module=='home' AND $controller=="index" AND $action=="index"){?>	
@@ -265,7 +267,8 @@
        		 <!-- /top navigation -->
             <!-- page content -->
        		<div class="right_col <?php echo $padLeftContent;?>" role="main" >
-				<div id="tt" class="easyui-tabs right-conten" style="width:100%; height:1200px; min-height: 1200px; ">
+       		<div class="right-conten" style="min-height: 570px;">
+				<div id="tt" class="easyui-tabs  <?php echo $classContentInframe;?>" style="width:100%; ">
 					<div id="firstTabs" title="Home" >
 						<div style="clear:both;"></div>
 						<?php if($module!='report' AND $module!='home' ){?>
@@ -342,6 +345,7 @@
 				            ?>
 			                <?php }?>
 					</div>
+				</div>
 				</div>
        		</div>
          </div>
@@ -580,7 +584,6 @@ function doPrint() {
 	window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML;
     window.frames["print_frame"].window.focus();
     window.frames["print_frame"].window.print();
-    //hideDialog();
 }
 function hideleft(){
 	(dojo.style("leftmenu","display") == "none") ? 'show':'hide'();

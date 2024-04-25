@@ -47,9 +47,13 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
 	  	$rightclick = empty($rightclick)?"":$rightclick;
 	  	$this->view->rightclick = $rightclick;
 	  	$id = $this->getRequest()->getParam('id');
+		$inFrame = $this->getRequest()->getParam('inFrame');
+		$inFrame = empty($inFrame)?"":$inFrame;
+		
 	  	if(empty($id)){
 	  		$this->_redirect('/loan/index');
 	  	}
+		
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try{
@@ -62,11 +66,17 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
 				$_dbmodel = new Loan_Model_DbTable_DbRepaymentSchedule();
 				$reschedule = $_dbmodel->addRepayMentSchedule($_data);
 				$_dbmodel->recordhistory($_data);
-				if($rightclick=="true"){
+				
+				if(!empty($_data["inFrame"])){
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS", "/report/loan/rpt-paymentschedules/id/".$id."?inFrame=true");
+				}else{
+					if($rightclick=="true"){
+						Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS", "/loan/index");
+						echo "<script>window.close();</script>";exit();
+					}
 					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS", "/loan/index");
-					echo "<script>window.close();</script>";exit();
 				}
-				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS", "/loan/index");
+				
 			}catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				$err =$e->getMessage();
@@ -111,19 +121,20 @@ class Loan_RepaymentScheduleController extends Zend_Controller_Action {
 			$rs = $db->getTranLoanByIdWithBranch($id,null);
 			$this->view->rsresult =  $rs;
 			if(empty($rs)){
-				Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index",2);
+				Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index?inFrame=".$inFrame,2);
 				exit();
 			}
 			if($rs['is_cancel']==1){
-				Application_Form_FrmMessage::Sucessfull("This Sale already cancel","/loan",2);
+				Application_Form_FrmMessage::Sucessfull("This Sale already cancel","/loan/index?inFrame=".$inFrame,2);
 				//Application_Form_FrmMessage::message('This Sale already cancel');
 				//echo "<script>window.close();</script>";
 			}
 			if($rs['payment_id']!=1){
-				Application_Form_FrmMessage::Sucessfull("RESCHEDULE_EXIST","/loan",2);
+				Application_Form_FrmMessage::Sucessfull("RESCHEDULE_EXIST","/loan/index?inFrame=".$inFrame,2);
 			}
 		}
 		$this->view->id = $id;//use
+	  	$this->view->inFrame = $inFrame;
 	}	
 	public function editAction(){
 		if($this->getRequest()->isPost()){
