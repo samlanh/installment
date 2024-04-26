@@ -211,40 +211,43 @@ class Report_Model_DbTable_DbLandreport extends Zend_Db_Table_Abstract
  }     
 public function getAllOutstadingLoan($search=null){
       	$db = $this->getAdapter();
-      	$where="";
-      	$to_date = (empty($search['end_date']))? '1': " date_release <= '".$search['end_date']." 23:59:59'";
+		
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$statement = $dbp->getSqlStOutStadingLoan();
+		$sql= $statement['sql'];
+		$sql.= "
+			,(SELECT (totalPrincipalPaid+totalCredit) FROM `v_getsaleprincipalpaid` vpaid WHERE vpaid.saleId=s.id LIMIT 1) totalPricipalPaid
+			,(SELECT vs.totalInterestBalance FROM  `v_getsuminterestbalance` vs WHERE vs.saleId =s.id LIMIT 1) AS balance_interest
+		";
+		$where = $statement['where'];
+		
+		$to_date = (empty($search['end_date']))? '1': " `s`.`buy_date` <= '".$search['end_date']." 23:59:59'";
       	$where.= "  AND ".$to_date;
-      	$sql="SELECT *,
-      		(SELECT (totalPrincipalPaid+totalCredit) FROM `v_getsaleprincipalpaid` vpaid WHERE vpaid.saleId=vs.id LIMIT 1) totalPricipalPaid,
-			(SELECT vs.totalInterestBalance FROM  `v_getsuminterestbalance` vs WHERE vs.saleId =vs.id LIMIT 1) AS balance_interest,
-			(SELECT p.old_land_id FROM `ln_properties` AS p WHERE p.id = vs.house_id LIMIT 1) AS old_land_id
-      	FROM v_loanoutstanding vs WHERE 1 ";
-      	
-      	$dbp = new Application_Model_DbTable_DbGlobal();
-      	$sql.=$dbp->getAccessPermission("branch_id");
-      	
-      	if($search['client_name']>0){
-           		$where.=" AND client_id = ".$search['client_name'];
+		$where.=$dbp->getAccessPermission("s.branch_id");
+		
+		
+		if($search['client_name']>0){
+           		$where.=" AND `s`.`client_id` = ".$search['client_name'];
       	}
       	if($search['land_id']>0){
-      		$where.=" AND house_id = ".$search['land_id'];
+      		$where.=" AND `s`.`house_id` = ".$search['land_id'];
       	}
       	if($search['schedule_opt']>0){
-      		$where.=" AND payment_id = ".$search['schedule_opt'];
+      		$where.=" AND `s`.`payment_id` = ".$search['schedule_opt'];
       	}
       	if($search['branch_id']>0){
-      		$where.=" AND branch_id = ".$search['branch_id'];
+      		$where.=" AND s.branch_id = ".$search['branch_id'];
       	}
       	
       	if(!empty($search['adv_search'])){
       		$s_where = array();
       		$s_search = addslashes(trim($search['adv_search']));
-      		$s_where[] = " land_address LIKE '%{$s_search}%'";
-      		$s_where[] = " client_number LIKE '%{$s_search}%'";
-      		$s_where[] = " client_kh LIKE '%{$s_search}%'";
+      		$s_where[] = " `p`.`land_address` LIKE '%{$s_search}%'";
+      		$s_where[] = " `c`.`client_number`  LIKE '%{$s_search}%'";
+      		$s_where[] = " `c`.`name_kh` LIKE '%{$s_search}%'";
       	   $where .=' AND ('.implode(' OR ',$s_where).')';
       	}
-      	return $db->fetchAll($sql.$where);
+		return $db->fetchAll($sql.$where);
 }
       
       public function getALLLoanlate($search = null){

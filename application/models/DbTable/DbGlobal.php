@@ -2178,6 +2178,64 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		return $new_name;
   }
   
+  function getSqlStOutStadingLoan(){
+		$db = $this->getAdapter();
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$sql="
+		SELECT
+			`s`.`id`               AS `id`,
+			  `s`.`branch_id`        AS `branch_id`,
+			  (SELECT
+				 `ln_project`.`project_name`
+			   FROM `ln_project`
+			   WHERE (`ln_project`.`br_id` = `s`.`branch_id`)
+			   LIMIT 1) AS `branch_name`,
+			  `s`.`buy_date`         AS `date_release`,
+			  `s`.`first_payment`    AS `first_payment`,
+			  `s`.`end_line`         AS `date_line`,
+			  `s`.`staff_id`         AS `co_id`,
+			  `s`.`total_duration`   AS `total_duration`,
+			  `s`.`sale_number`      AS `sale_number`,
+			  `s`.`price_before`     AS `total_capital`,
+			  `s`.`interest_rate`    AS `interest_rate`,
+			  `s`.`client_id`        AS `client_id`,
+			  `s`.`house_id`         AS `house_id`,
+			  `s`.`price_before`     AS `price_before`,
+			  `s`.`discount_amount`  AS `discount_amount`,
+			  `s`.`discount_percent` AS `discount_percent`,
+			  `s`.`other_fee`        AS `other_fee`,
+			  `s`.`price_sold`       AS `price_sold`,
+			  `s`.`payment_id`       AS `payment_id`,
+			  (SELECT v.`name_kh` FROM `ln_view` AS v WHERE v.`key_code` = `s`.`payment_id` AND v.`type` = 25 LIMIT 1) AS `paymenttype`,
+			  `p`.`land_code`        AS `land_code`,
+			  `p`.`land_address`     AS `land_address`,
+			  `p`.`land_size`        AS `land_size`,
+			  `p`.`street`           AS `street`
+			  ,p.old_land_id AS old_land_id
+			  ,`c`.`client_number` AS `client_number`
+			  ,`c`.`name_kh` AS `client_kh`
+			  ,`c`.`name_en` AS `client_en`
+			  ,`c`.`phone` AS `phone`
+				   
+				
+		";
+		$where=" 
+				FROM 
+					`ln_sale` `s`
+					JOIN `ln_properties` `p` ON `s`.`house_id` = `p`.`id`
+					LEFT JOIN ln_client AS c ON c.client_id = `s`.`client_id`
+				WHERE  `s`.`status` = 1
+					   AND `s`.`is_cancel` = 0
+					   AND `s`.`is_completed` = 0
+			";
+		$araa = array(
+				'sql'=>$sql,
+				'where'=>$where,
+				);
+		return $araa;
+			
+	}
+  
   
 }
 ?>

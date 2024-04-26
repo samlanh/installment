@@ -74,21 +74,24 @@ $(function(){
 		selector: '.context-menu-one', 
 		callback: function(key, options) {
 			var m = "clicked: " + key;
+			var newPageTitle="";
+			var actionType=1;
 			if(key=="agreement"){
 				url='<?php echo $urlAgreement;?>';
+				newPageTitle="<?php echo $aggreeement;?>";
 			}
-			gotoAction();
+			addTab(newPageTitle,url+row+'?inFrame=true');
 		},
 		items: {
 			"agreement": {name: "<?php echo $aggreeement;?>", icon: "fa-file-text", accesskey: "c"},
 		}
 	});
 });
-function setrowdata(index){
+function setrowdata(index){_self
 	row = index;
 }
 var recordid ='';
 function gotoAction(){
-	 window.open(url+row+'?rightclick=true', '_blank');
+	 window.open(url+row, '_self');
 }
 </script>

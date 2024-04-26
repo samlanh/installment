@@ -458,6 +458,7 @@
 				<input type="hidden" dojoType="dijit.form.TextBox" name="co_id"  id="co_id">
 				
 				<?php  echo $frm->getElement('reciever');?>
+				<input dojoType="dijit.form.TextBox" type="hidden" value="<?php echo $this->inFrame;?>" name="inFrame" id="inFrame" />
 			</div>
 			 <div class="card-box">
                	<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
@@ -1746,7 +1747,7 @@ function getSavePrint(){
 			window.frames["print_frame"].window.focus();
 			window.frames["print_frame"].window.print();
 			infoMessageAlert('<?php echo $tr->translate('INSERT_SUCCESS');?> !');
-			window.location.href ="<?php echo $this->baseUrl();?>/loan/ilpayment";
+			window.location.href ="<?php echo $this->baseUrl();?>/loan/ilpayment?inFrame=<?php echo $this->inFrame;?>";
 		},
 		error: function(e) {
 		}
