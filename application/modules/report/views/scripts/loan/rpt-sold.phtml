@@ -573,30 +573,38 @@ $(function(){
 	$.contextMenu({
 		selector: '.context-menu-one', 
 		callback: function(key, options) {
+			
+			var newPageTitle="";
 			var m = "clicked: " + key;
 			if(key=="agreement"){
 				url='<?php echo $this->baseUrl()."/report/paramater/rpt-agreement/id/";?>';
+				newPageTitle="<?php echo $tr->translate("AGREEMENT");?>";
 			}else if(key=="reschedule"){
 				url='<?php echo $this->baseUrl()."/report/loan/rpt-paymentschedules/id/";?>';
+				newPageTitle="<?php echo $tr->translate("SCHEDULE_PAYMENT");?>";
 			}else if(key=="edit"){
 				url='<?php echo $this->baseUrl()."/loan/index/rpt-updatepayment/id/";?>';
+				newPageTitle="<?php echo $tr->translate("EDIT_SCHEDULE");?>";
 			}
 			else if(key=="editstatus"){
 				url='<?php echo $this->baseUrl()."/report/loan/rpt-updatestatus/id/";?>';
+				newPageTitle="<?php echo $tr->translate("EDIT_SCHEDULE_STATUS");?>";
 			}
 			else if(key=="payment"){
 				url='<?php echo $this->baseUrl()."/report/loan/paymenthistory/id/";?>';
+				newPageTitle="<?php echo $tr->translate("REPORT_LOAN_PAYMENT");?>";
 			}
-			gotoAction();
+			addTab(newPageTitle,url+row+'?inFrame=true');
+			//gotoAction();
 		},
 		items: {
 			"agreement": {name: "<?php echo $tr->translate("AGREEMENT");?>", icon: "fa-file-text", accesskey: "c"},
 			"reschedule": {name: "<?php echo $tr->translate("SCHEDULE_PAYMENT");?>", icon: "fa-calendar"},
 			<?php if($showEditSchedule==1){?>
-			"edit": {name: "<?php echo $tr->translate("EDIT_SCHEDULE");?>", icon: "fa-money", accesskey: "c o p y"},
+			"edit": {name: "<?php echo $tr->translate("EDIT_SCHEDULE");?>", icon: "edit", accesskey: "c o p y"},
 			<?php }?>
 			//"editstatus": {name: "<?php echo $tr->translate("EDIT_SCHEDULE_STATUS");?>", icon: "fa-money", accesskey: "c o p y"},
-			"payment": {name: "<?php echo $tr->translate("REPORT_LOAN_PAYMENT");?>", icon: "fa-money", accesskey: "c o p y"},
+			"payment": {name: "<?php echo $tr->translate("REPORT_LOAN_PAYMENT");?>", icon: "fa-book", accesskey: "c o p y"},
 		}
 	});
 });

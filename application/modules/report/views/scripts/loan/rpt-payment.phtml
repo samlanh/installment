@@ -398,14 +398,14 @@
 				               		<td data-label="<?php echo $tr->translate("INPUT_DATE");?>" align="center" ><?php echo $receiveDate;?></td>
 				               		<td data-label="<?php echo $tr->translate("RECIEPT_NO");?>" class="redText" align="center">
 										<?php echo $rs["receipt_no"];?>
-										<a class="attachFile" title="<?php echo $tr->translate("RECEIPT");?>" target="_blank"  href="<?php echo $url_receipt.'/id/'.$rs["id"];?>">
+										<a class="attachFile" onclick="addTab('<?php echo $tr->translate("RECEIPT");?>','<?php echo $url_receipt.'/id/'.$rs["id"].'?inFrame=true';?>');" title="<?php echo $tr->translate("RECEIPT");?>" href="#">
 											<i class="fa fa-print" aria-hidden="true"></i>
 										</a>
 										<?php 
 											if (!empty($rs['documentFile'])){
 												if (file_exists(PUBLIC_PATH."/images/document/expense/".$rs['documentFile'])){
 										?>
-										<a class="attachFile" title="<?php echo $tr->translate("VIEW_ATTACHMENT_FILE");?>" target="_blank"  href="<?php echo $url_receipt.'/id/'.$rs["id"]."?viewing=file";?>">
+										<a class="attachFile" onclick="addTab('<?php echo $tr->translate("VIEW_ATTACHMENT_FILE");?>','<?php echo $url_receipt.'/id/'.$rs["id"].'?inFrame=true&viewing=file';?>');" title="<?php echo $tr->translate("VIEW_ATTACHMENT_FILE");?>"  href="#">
 											<i class="fa fa-paperclip" aria-hidden="true"></i>
 										</a>
 										<?php }}else{?>
