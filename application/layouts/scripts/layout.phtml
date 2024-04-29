@@ -172,10 +172,6 @@
 		.left_col.hidden {
 			width: 0 !important;
 		}
-		.nav-md .container.body .right_col.mrg-left-none {
-			margin-left: 0 !important;
-			padding: 0;
-		}
     </style>
    <?php if($module=='home' AND $controller=="index" AND $action=="index"){?>	
    <?php }else if($module=='home' AND $controller=="index" AND $action=="rpt-income-graphic"){?>	
@@ -267,85 +263,85 @@
        		 <!-- /top navigation -->
             <!-- page content -->
        		<div class="right_col <?php echo $padLeftContent;?>" role="main" >
-       		<div class="right-conten" style="min-height: 570px;">
-				<div id="tt" class="easyui-tabs  <?php echo $classContentInframe;?>" style="width:100%; ">
-					<div id="firstTabs" title="Home" >
-						<div style="clear:both;"></div>
-						<?php if($module!='report' AND $module!='home' ){?>
-						<div class="ptss-frame  js-ptss-frame <?php echo $classShow;?>"><!-- is-opened -->
-							<div class="ptss__toggle-btnaddd  js-ptss-toggle-btn add-edit-action">
+				<div class="right-conten" style="min-height: 570px;">
+					<div id="tt" class="easyui-tabs  <?php echo $classContentInframe;?>" style="width:100%; ">
+						<div id="firstTabs" title="Home" >
+							<div style="clear:both;"></div>
+							<?php if($module!='report' AND $module!='home' ){?>
+							<div class="ptss-frame  js-ptss-frame <?php echo $classShow;?>"><!-- is-opened -->
+								<div class="ptss__toggle-btnaddd  js-ptss-toggle-btn add-edit-action">
+									<?php if($action=='index' AND $controller!='updateprice' AND $controller!='testsale'){?>
+										<a title="<?php echo $tr->translate('ADD_NEW');?>" class='add-edit' href="<?php echo $this->url(array('module'=>$module,'controller'=>$controller,'action'=>'add'),null,true); ?>">
+											<i class="fa fa-plus-circle" aria-hidden="true"></i>
+										</a>
+									<?php }elseif($action=='add' OR $action=='edit' OR $action=='copy' OR $action=='addauto' OR $module=='report'){
+	?>
+										<a title="<?php echo $tr->translate('GO_BACK');?>" class='add-edit' href="<?php echo $this->url(array('module'=>$module,'controller'=>$controller,'action'=>'index'),null,true); ?>">
+											<i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i>
+										</a>
+									<?php }?>
+								</div>
+								<div class="ptss__header add-edit-action">
 								<?php if($action=='index' AND $controller!='updateprice' AND $controller!='testsale'){?>
-									<a title="<?php echo $tr->translate('ADD_NEW');?>" class='add-edit' href="<?php echo $this->url(array('module'=>$module,'controller'=>$controller,'action'=>'add'),null,true); ?>">
+									<a  class='add-edit' href="<?php echo $this->url(array('module'=>$module,'controller'=>$controller,'action'=>'add'),null,true); ?>"><?php echo $tr->translate('ADD');?> 
 										<i class="fa fa-plus-circle" aria-hidden="true"></i>
 									</a>
-								<?php }elseif($action=='add' OR $action=='edit' OR $action=='copy' OR $action=='addauto' OR $module=='report'){
-?>
-									<a title="<?php echo $tr->translate('GO_BACK');?>" class='add-edit' href="<?php echo $this->url(array('module'=>$module,'controller'=>$controller,'action'=>'index'),null,true); ?>">
-										<i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i>
+								<?php }elseif($action=='add' OR $action=='edit' OR $action=='copy' OR $module=='report'){
+	}?>
+									<a class='add-edit' href="<?php echo $this->url(array('module'=>$module,'controller'=>$controller,'action'=>'index'),null,true); ?>">
+									<i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i> <?php echo $tr->translate('GO_BACK');?>
 									</a>
-								<?php }?>
-							</div>
-							<div class="ptss__header add-edit-action">
-							<?php if($action=='index' AND $controller!='updateprice' AND $controller!='testsale'){?>
-								<a  class='add-edit' href="<?php echo $this->url(array('module'=>$module,'controller'=>$controller,'action'=>'add'),null,true); ?>"><?php echo $tr->translate('ADD');?> 
-									<i class="fa fa-plus-circle" aria-hidden="true"></i>
-								</a>
-							<?php }elseif($action=='add' OR $action=='edit' OR $action=='copy' OR $module=='report'){
-}?>
-								<a class='add-edit' href="<?php echo $this->url(array('module'=>$module,'controller'=>$controller,'action'=>'index'),null,true); ?>">
-								<i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i> <?php echo $tr->translate('GO_BACK');?>
-								</a>
-							</div>
-						</div>
-				<?php }?>
-       		 	
-	           		<?php 
-            			if($module=='report' AND $action!='index'){?>
-							<div class="ptss-frame  js-ptss-frame "><!-- is-opened -->
-								<div class="ptss__toggle-btn  js-ptss-toggle-btn ">
-									<i class="fa fa-print"></i>
 								</div>
-								<div class="ptss__header"><?php echo $tr->translate("PRINT");?></div>
-								<div class="ptss__settings">
-									<div class="ptss__single-setting" id="ptss__layout">
-										<div class="ptss__setting-control">
-											<div class="ptss__layout-wrapper">
-												<a class="qButton" title="<?php echo $tr->translate("Preview");?>" href="#" onclick="preview();"><i class="fa fa-search" aria-hidden="true"></i></a>
-												<a class="qButton print" href="#" title="<?php echo $tr->translate("PRINT");?>" onclick="doPrint();" ><i class="fa fa-print" aria-hidden="true"></i></a>
-												<a class="qButton excel" href="#"  title="<?php echo $tr->translate("Export");?>"  onclick="exportExcel();"><i class="fa fa-file-excel-o" aria-hidden="true"></i></a>
+							</div>
+					<?php }?>
+					
+						<?php 
+							if($module=='report' AND $action!='index'){?>
+								<div class="ptss-frame  js-ptss-frame "><!-- is-opened -->
+									<div class="ptss__toggle-btn  js-ptss-toggle-btn ">
+										<i class="fa fa-print"></i>
+									</div>
+									<div class="ptss__header"><?php echo $tr->translate("PRINT");?></div>
+									<div class="ptss__settings">
+										<div class="ptss__single-setting" id="ptss__layout">
+											<div class="ptss__setting-control">
+												<div class="ptss__layout-wrapper">
+													<a class="qButton" title="<?php echo $tr->translate("Preview");?>" href="#" onclick="preview();"><i class="fa fa-search" aria-hidden="true"></i></a>
+													<a class="qButton print" href="#" title="<?php echo $tr->translate("PRINT");?>" onclick="doPrint();" ><i class="fa fa-print" aria-hidden="true"></i></a>
+													<a class="qButton excel" href="#"  title="<?php echo $tr->translate("Export");?>"  onclick="exportExcel();"><i class="fa fa-file-excel-o" aria-hidden="true"></i></a>
+												</div>
+												
 											</div>
-											
 										</div>
 									</div>
 								</div>
-							</div>
-							<div style="clear:both;"></div>
-							<?php }?>
-							<?php if($module!='home') {?>
-							<section class="inputmask">
-								<div class="row">
-							    	<div class="col-sm-12">
-							    	<?php }?>
-							<?php 
-	            				$rs = $db_user->getAccessUrl($module,$controller,$action);
-// 	            				echo $this->layout()->content;
-		            			if(!empty($rs) OR $action=='changepassword' OR $controller=='testsale'){
-		            				echo $this->layout()->content;
-		            			}else{
-		            				echo $this->render('pagenotfund.phtml');
-		            			}
-            				 ?>
-            				 <?php if($module!='home') {?>
-			            			 </div>
-			            		</div>
-			            	</section>
-            			 <?php }?>
-	            			<?php
-				               	if($module=='report' AND $action!='rpt-paymentschedules'){
-				            ?>
-			                <?php }?>
+								<div style="clear:both;"></div>
+								<?php }?>
+								<?php if($module!='home') {?>
+								<section class="inputmask">
+									<div class="row">
+										<div class="col-sm-12">
+										<?php }?>
+								<?php 
+									$rs = $db_user->getAccessUrl($module,$controller,$action);
+	// 	            				echo $this->layout()->content;
+									if(!empty($rs) OR $action=='changepassword' OR $controller=='testsale'){
+										echo $this->layout()->content;
+									}else{
+										echo $this->render('pagenotfund.phtml');
+									}
+								 ?>
+								 <?php if($module!='home') {?>
+										 </div>
+									</div>
+								</section>
+							 <?php }?>
+								<?php
+									if($module=='report' AND $action!='rpt-paymentschedules'){
+								?>
+								<?php }?>
+						</div>
 					</div>
-				</div>
 				</div>
        		</div>
          </div>
@@ -430,9 +426,7 @@ $(document).ready(function(){
 	$('#firstTabs').attr('title', currentTitle);
 	var currentTab = $('#tt').tabs();
 	$(".tabs-header ul.tabs" ).addClass( "hidden" );
-	$( ".tabs-close" ).on( "click", function() {
-	  alert( "Handler for `click` called." );
-	} );
+	
 });
 
 var urlReload = '<?php echo $this->url(array('module'=>'default','controller'=>'index','action'=>'reloadr'));?> ';

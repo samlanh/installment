@@ -405,10 +405,13 @@ class Report_Model_DbTable_DbParamater extends Zend_Db_Table_Abstract
 				(SELECT `village`.`village_namekh` FROM `ln_village` `village` WHERE (`village`.`vill_id` = `c`.`qvillage`) LIMIT 1) AS `joint_village`,
 				(SELECT `village`.`village_name` FROM `ln_village` `village` WHERE (`village`.`vill_id` = `c`.`qvillage`) LIMIT 1) AS `w_client_village_en`,
     			(SELECT `comm`.`commune_namekh` FROM `ln_commune` `comm` WHERE (`comm`.`com_id` = `c`.`dcommune`) LIMIT 1) AS `join_commune`,
+    			(SELECT `comm`.`commune_namekh` FROM `ln_commune` `comm` WHERE (`comm`.`com_id` = `c`.`dcommune`) LIMIT 1) AS `w_client_commune_kh`,
     			(SELECT `comm`.`commune_name` FROM `ln_commune` `comm` WHERE (`comm`.`com_id` = `c`.`dcommune`) LIMIT 1) AS `w_client_commune_en`,
     			(SELECT `dist`.`district_namekh` FROM `ln_district` `dist` WHERE (`dist`.`dis_id` = `c`.`adistrict`) LIMIT 1) AS `join_district`,
+    			(SELECT `dist`.`district_namekh` FROM `ln_district` `dist` WHERE (`dist`.`dis_id` = `c`.`adistrict`) LIMIT 1) AS `w_client_districtkh`,
     			(SELECT `dist`.`district_name` FROM `ln_district` `dist` WHERE (`dist`.`dis_id` = `c`.`adistrict`) LIMIT 1) AS `w_client_district_en`,
     			(SELECT `provi`.`province_kh_name` FROM `ln_province` `provi` WHERE (`provi`.`province_id` = `c`.`cprovince`) LIMIT 1) AS `join_province`,	
+    			(SELECT `provi`.`province_kh_name` FROM `ln_province` `provi` WHERE (`provi`.`province_id` = `c`.`cprovince`) LIMIT 1) AS `w_client_province_kh`,	
     			(SELECT `provi`.`province_en_name` FROM `ln_province` `provi` WHERE (`provi`.`province_id` = `c`.`cprovince`) LIMIT 1) AS `w_client_province_en`,	
     				
 				(SELECT `village`.`village_namekh` FROM `ln_village` `village` WHERE (`village`.`vill_id` = `c`.`village_id`) LIMIT 1) AS `client_village_kh`,
