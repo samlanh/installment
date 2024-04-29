@@ -294,11 +294,17 @@
  		selector: '.context-menu-one', 
  		callback: function(key, options) {
  			var m = "clicked: " + key;
+			var newPageTitle="";
  			if(key=="print"){
  				url='<?php echo $urlprint;?>';
- 			
+				newPageTitle="<?php echo $tr->translate("PRINT");?>";
  			}
- 			gotoAction();
+			var moreInof="";
+			if(typeprint==1){
+				 
+				 moreInof="&repair=1"
+			 }
+ 			addTab(newPageTitle,url+row+'?inFrame=true'+moreInof);
  		},
  		items: {
  			"print": {name: "<?php echo $tr->translate("PRINT");?>", icon: "fa-print", accesskey: "c o p y"},

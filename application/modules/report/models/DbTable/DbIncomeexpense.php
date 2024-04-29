@@ -1151,7 +1151,9 @@ class Report_Model_DbTable_DbIncomeexpense extends Zend_Db_Table_Abstract
 	
 	function getOtherIncomePaymentById($id){
 		$db = $this->getAdapter();
-		$sql="SELECT op.id,
+		$sql="SELECT 
+		op.id,
+		op.branch_id,
 		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =op.branch_id LIMIT 1) AS branch_name,
 		(SELECT logo FROM `ln_project` WHERE ln_project.br_id =op.branch_id LIMIT 1) AS photo,
 		(SELECT name_kh FROM `ln_client` WHERE ln_client.client_id =oi.client_id LIMIT 1) AS client_name,

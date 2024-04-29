@@ -152,16 +152,27 @@ dojo.require("dijit.form.DateTextBox");
 			selector: '.context-menu-one', 
 			callback: function(key, options) {
 				var m = "clicked: " + key;
+				var newPageTitle="";
+				var actionType=1;
 				if(key=="edit"){
 					url='<?php echo $urlEdit;?>';
+					actionType=2;
 				}else if(key=="copy"){
 					url='<?php echo $urlCopy;?>';
+					actionType=2;
 				}else if(key=="info"){
 					url='<?php echo $urlView;?>';
+					newPageTitle="<?php echo $tr->translate("PROJECT_INFO");?>";
 				}else if(key=="mappingplan"){
 					url='<?php echo $urlMappingplan;?>';
+					newPageTitle="<?php echo $tr->translate("MAPPING_PROPERTY");?>";
 				}
-				gotoAction();
+				
+				if(actionType==1){
+					addTab(newPageTitle,url+row+'?inFrame=true');
+				}else{
+					gotoAction();
+				}
 			},
 			items: {
 				"edit": {name: "<?php echo $tr->translate("EDIT");?>", icon: "edit", accesskey: "e"},
@@ -176,6 +187,6 @@ dojo.require("dijit.form.DateTextBox");
 	}
 	var recordid ='';
 	function gotoAction(){
-		 window.open(url+row+'?rightclick=true', '_parent');
+		 window.open(url+row, '_self');
 	}
 </script> 
