@@ -1936,13 +1936,11 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 				  (SELECT `c`.`client_number` FROM `ln_client` `c` WHERE (`c`.`client_id` = `s`.`client_id`) LIMIT 1) AS `client_number`,
 				  (SELECT `c`.`name_kh` FROM `ln_client` `c` WHERE (`c`.`client_id` = `s`.`client_id`) LIMIT 1) AS `client_name`,
 				  (SELECT `co`.`co_khname` FROM `ln_staff` `co` WHERE (`co`.`co_id` = `s`.`staff_id`) LIMIT 1) AS `co_name`,
-				  
+				  (SELECT cr.date_input FROM `ln_client_receipt_money` AS cr WHERE cr.sale_id=pd.sale_id AND cr.recieve_amount>0 ORDER BY cr.date_input DESC LIMIT 1) As last_pay_date,
 				  (SELECT ln_view.name_kh FROM ln_view WHERE ln_view.type =29 AND key_code = pd.ispay_bank LIMIT 1) AS payment_type
 				   
 				
 		";
-		//Query ដែលធ្វើអោយយឺត
-		//(SELECT cr.date_input FROM `ln_client_receipt_money` AS cr WHERE cr.sale_id=pd.sale_id AND cr.recieve_amount>0 ORDER BY cr.date_input DESC LIMIT 1) As last_pay_date,
 		$where=" 
 				FROM 
 					`ln_saleschedule` `pd` JOIN `ln_sale` `s` ON `pd`.`sale_id` = `s`.`id` 
@@ -2011,7 +2009,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 			  `sd`.`ispay_bank`          AS `ispay_bank`,
 			  `sd`.`last_optiontype`          AS `last_optiontype`,
 			  (SELECT ln_view.name_kh FROM ln_view WHERE ln_view.type =29 AND key_code = sd.ispay_bank LIMIT 1) AS payment_type,
-			(SELECT `ln_client_receipt_money`.`date_input`  FROM `ln_client_receipt_money` WHERE (`ln_client_receipt_money`.`land_id` = 1) ORDER BY `ln_client_receipt_money`.`date_input` DESC  LIMIT 1) AS `last_pay_date`
+				(SELECT `crm`.`date_input`  FROM `ln_client_receipt_money` WHERE `crm`.`sale_id` = s.id AND crm.recieve_amount>0 ORDER BY `crm`.`date_input` DESC  LIMIT 1) AS `last_pay_date`
 			
 		";
 		$where=" 
