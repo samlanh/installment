@@ -8,7 +8,7 @@ class Application_Model_DbTable_DbLunaCalendar extends Zend_Db_Table_Abstract
 	const MOON_STATUS_SHORT = "ក_រ";
 	const MOON_DAY = "᧡_᧢_᧣_᧤_᧥_᧦_᧧_᧨_᧩_᧪_᧫_᧬_᧭_᧮_᧯_᧱_᧲_᧳_᧴_᧵_᧶_᧷_᧸_᧹_᧺_᧻_᧼_᧽_᧾_᧿";
 	
-	const WEEKDAYS = "អាទិត្យ_ច័ន្ទ_អង្គារ_ពុធ_ព្រហស្បតិ៍_សុក្រ_សៅរ៍";
+	const WEEKDAYS = "អាទិត្យ_ចន្ទ_អង្គារ_ពុធ_ព្រហស្បតិ៍_សុក្រ_សៅរ៍";
 	const WEEKDAYS_SHORT = "អា_ច_អ_ព_ព្រ_សុ_ស";
  	const ANIMAL_YEAR = "ជូត_ឆ្លូវ_ខាល_ថោះ_រោង_ម្សាញ់_មមីរ_មមែ_វក_រកា_ច_កុរ";
  	
@@ -345,6 +345,25 @@ class Application_Model_DbTable_DbLunaCalendar extends Zend_Db_Table_Abstract
   	}
   }
   
+    /**
+   * រកថ្ងៃវិសាខបូជា
+   * ថ្ងៃដាច់ឆ្នាំពុទ្ធសករាជ
+   */
+  function getVisakhaBochea($gregorianYear) {
+	$date = $gregorianYear."-04-1";
+	$LunarMonths = $this->LunarMonths();
+    for ($i = 0; $i < 80; $i++) {
+      $lunarDate = $this->findLunarDate($date);
+      if ($lunarDate["month"] == $LunarMonths['ពិសាខ'] && $lunarDate["day"] == 14) {
+        return $date;
+      }
+		$dateNew = new DateTime($date);
+		$dateNew->modify('+1 day');
+		$date= $dateNew->format('Y-m-d');
+    }
+  }
+  
+  
   /**
    * Buddhist Era
    * ថ្ងៃឆ្លងឆ្នាំ គឺ ១ រោច ខែពិសាខ
@@ -354,7 +373,12 @@ class Application_Model_DbTable_DbLunaCalendar extends Zend_Db_Table_Abstract
    * @returns {*}
    */
   function getBEYear($moment) {
-  	if ($this->khMonth($moment) > 5 || $this->khMonth($moment) == 5 && $this->khDay($moment) >= 15) {
+	  $gregorianYear = date_create($moment)->format('Y');
+  	$newYearMoment = $this->getVisakhaBochea($gregorianYear);
+  	
+  	if ( date_create($newYearMoment)->diff(date_create($moment))->format('%R%a') > 0) {
+		
+  	//if ($this->khMonth($moment) > 5 || $this->khMonth($moment) == 5 && $this->khDay($moment) >= 15) {
 //   		if ($this->khMonth($moment) > 5 || $this->khMonth($moment) == 5 || $this->khDay($moment) >= 15) {//wrong check from momentkh
   		return date_create($moment)->format('Y') + 544;
   	} else {
@@ -576,21 +600,21 @@ class Application_Model_DbTable_DbLunaCalendar extends Zend_Db_Table_Abstract
   			$formatRule = array(
   					'W'=>	$config['weekdays'][$dayOfWeek],
   					'w'=>	$config['weekdaysShort'][$dayOfWeek],
-  					'd'=>	$dbgb->getNumberInkhmer($moonDay['count']),
-  					'D'=>	$dbgb->getNumberInkhmer($count),
+  					'd'=>	$moonDay['count'],
+  					'D'=>	$count,
   					'n'=>	$config['moonStatusShort'][$moonDay['moonStatus']],
   					'N'=>	$config['moonStatus'][$moonDay['moonStatus']],
   					
   					'o'=>	$config['moonDays'][$day],
   					'm'=>	$config['lunarMonths'][$month],
   					'a'=>	$config['animalYear'][$animalYear],
-  					'e'=>	$dbgb->getNumberInkhmer($config['eraYear'][$eraYear]),
-  					'b'=>	$dbgb->getNumberInkhmer($this->getBEYear($moment)),
-  					'c'=>	$dbgb->getNumberInkhmer(date_create($moment)->format('Y')),
-  					'j'=>	$dbgb->getNumberInkhmer($this->getJolakSakarajYear($moment)),
+  					'e'=>	$config['eraYear'][$eraYear],
+  					'b'=>	$this->getBEYear($moment),
+  					'c'=>	date_create($moment)->format('Y'),
+  					'j'=>	$this->getJolakSakarajYear($moment),
   					
-  					's'=>	$dbgb->getNumberInkhmer($config['months'][sprintf("%01d",date_create($moment)->format('m')-1)]),
-  					'g'=>	$dbgb->getNumberInkhmer(date_create($moment)->format('d')),
+  					's'=>	$config['months'][sprintf("%01d",date_create($moment)->format('m')-1)],
+  					'g'=>	date_create($moment)->format('d'),
   					);
   		$spp = str_split($format);
     	$return="";
@@ -601,7 +625,7 @@ class Application_Model_DbTable_DbLunaCalendar extends Zend_Db_Table_Abstract
     			$return.=$ss;
     		}
     	}
-    	return $return;
+    	return $dbgb->getNumberInkhmer($return);
   		}
   }
   
@@ -614,6 +638,51 @@ class Application_Model_DbTable_DbLunaCalendar extends Zend_Db_Table_Abstract
 //   function readLunarDate(...params) {
 //   	console.log('Now working yet')
 //   }
+
+/**
+   * Next month of the month
+   */
+  function nextMonthOf($khmerMonth, $BEYear) {
+	$LunarMonths = $this->LunarMonths();
+    switch ($khmerMonth) {
+    case $LunarMonths['មិគសិរ']:
+      return $LunarMonths['បុស្ស'];
+    case $LunarMonths['បុស្ស']:
+      return $LunarMonths['មាឃ'];
+    case $LunarMonths['មាឃ']:
+      return $LunarMonths['ផល្គុន'];
+    case $LunarMonths['ផល្គុន']:
+      return $LunarMonths['ចេត្រ'];
+    case $LunarMonths['ចេត្រ']:
+      return $LunarMonths['ពិសាខ'];
+    case $LunarMonths['ពិសាខ']:
+      return $LunarMonths['ជេស្ឋ'];
+    case $LunarMonths['ជេស្ឋ']: {
+      if ( $this->isKhmerLeapMonth($BEYear) ) {
+        return $LunarMonths['បឋមាសាឍ'];
+      } else {
+        return $LunarMonths['អាសាឍ'];
+      }
+    }
+    case $LunarMonths['អាសាឍ']:
+      return $LunarMonths['ស្រាពណ៍'];
+    case $LunarMonths['ស្រាពណ៍']:
+      return $LunarMonths['ភទ្របទ'];
+    case $LunarMonths['ភទ្របទ']:
+      return $LunarMonths['អស្សុជ'];
+    case $LunarMonths['អស្សុជ']:
+      return $LunarMonths['កក្ដិក'];
+    case $LunarMonths['កក្ដិក']:
+      return $LunarMonths['មិគសិរ'];
+    case $LunarMonths['បឋមាសាឍ']:
+      return $LunarMonths['ទុតិយាសាឍ'];
+    case $LunarMonths['ទុតិយាសាឍ']:
+      return $LunarMonths['ស្រាពណ៍'];
+    default:
+      return null;
+    }
+  }
+  
 
   /**
    * Calculate date from momoentjs to Khmer date
@@ -630,6 +699,7 @@ class Application_Model_DbTable_DbLunaCalendar extends Zend_Db_Table_Abstract
   	$khmerMonth = $LunarMonths['បុស្ស'];
   	$khmerDay = 0; // 0 - 29 ១កើត ... ១៥កើត ១រោច ...១៤រោច (១៥រោច)
   
+  	$targetString = $target;
   	$target = date_create($target);
   	
   	$differentFromEpoch = date_create($epochMoment)->diff($target);
@@ -654,69 +724,16 @@ class Application_Model_DbTable_DbLunaCalendar extends Zend_Db_Table_Abstract
   		
   		$amountDay = $this->getNumberOfDayInKhmerMonth($khmerMonth, $this->getMaybeBEYear($epochMoment));
   		$epochMoment = date_add(date_create($epochMoment),date_interval_create_from_date_string("+$amountDay days"))->format('Y-m-d');
-  		switch ($khmerMonth) {
-  			case $LunarMonths['មិគសិរ']:
-  				$khmerMonth = $LunarMonths['បុស្ស'];
-  				break;
-  			case $LunarMonths['បុស្ស']:
-  				$khmerMonth = $LunarMonths['មាឃ'];
-  				break;
-  			case $LunarMonths['មាឃ']:
-  				$khmerMonth = $LunarMonths['ផល្គុន'];
-  				break;
-  			case $LunarMonths['ផល្គុន']:
-  				$khmerMonth = $LunarMonths['ចេត្រ'];
-  				break;
-  			case $LunarMonths['ចេត្រ']:
-  				$khmerMonth = $LunarMonths['ពិសាខ'];
-  				break;
-  			case $LunarMonths['ពិសាខ']:
-  				$khmerMonth = $LunarMonths['ជេស្ឋ'];
-  				break;
-  			case $LunarMonths['ជេស្ឋ']: {
-  				if ($this->isKhmerLeapMonth($this->getMaybeBEYear($epochMoment))) {
-  					$khmerMonth = $LunarMonths['បឋមាសាឍ'];
-  				} else {
-  					$khmerMonth = $LunarMonths['អាសាឍ'];
-  				}
-  				break;
-  			}
-  			case $LunarMonths['អាសាឍ']:
-  				$khmerMonth = $LunarMonths['ស្រាពណ៍'];
-  				break;
-  			case $LunarMonths['ស្រាពណ៍']:
-  				$khmerMonth = $LunarMonths['ភទ្របទ'];
-  				break;
-  			case $LunarMonths['ភទ្របទ']:
-  				$khmerMonth = $LunarMonths['អស្សុជ'];
-  				break;
-  			case $LunarMonths['អស្សុជ']:
-  				$khmerMonth = $LunarMonths['កក្ដិក'];
-  				break;
-  			case $LunarMonths['កក្ដិក']:
-  				$khmerMonth = $LunarMonths['មិគសិរ'];
-  				break;
-  			case $LunarMonths['បឋមាសាឍ']:
-  				$khmerMonth = $LunarMonths['ទុតិយាសាឍ'];
-  				break;
-  			case $LunarMonths['ទុតិយាសាឍ']:
-  				$khmerMonth = $LunarMonths['ស្រាពណ៍'];
-  				break;
-  			default:
-  				null;
-  		}
+  		$khmerMonth = $this->nextMonthOf($khmerMonth, $this->getMaybeBEYear($epochMoment));
   	}
-  		//$epochMoment +1 day cuse
-//   			echo $epochMoment." ".$target->format('Y-m-d')."<br />";
-  	$amountKHDay = $this->getNumberOfDayInKhmerMonth($khmerMonth, $this->getMaybeBEYear($epochMoment));
-  	$khmerDay = floor(date_create($epochMoment)->diff($target)->format('%R%a'));
-  	if($amountKHDay==$khmerDay){
-  		$khmerMonth=$khmerMonth+1;
-  		if ($khmerMonth>$LunarMonths['ទុតិយាសាឍ']){
-  			$khmerMonth=$LunarMonths['ស្រាពណ៍'];
-  		}
-  		$khmerDay=0;
-  	}
+	
+	$khmerDay = floor(date_create($epochMoment)->diff($target)->format('%R%a'));
+	$totalDaysOfTheMonth = $this->getNumberOfDayInKhmerMonth($khmerMonth, $this->getMaybeBEYear($targetString));
+    if ($totalDaysOfTheMonth <= $khmerDay) {
+      $khmerDay = $khmerDay % $totalDaysOfTheMonth;
+      $khmerMonth = $this->nextMonthOf($khmerMonth, $this->getMaybeBEYear($epochMoment));
+    }
+
   	  		
   	  		$amountDay = date_create($epochMoment)->diff($target)->format('%R%a');
   	  		$epochMoment = date_add(date_create($epochMoment),date_interval_create_from_date_string("$amountDay days"))->format('Y-m-d');
@@ -816,26 +833,50 @@ class Application_Model_DbTable_DbLunaCalendar extends Zend_Db_Table_Abstract
   function khYear($moment) {
   	return $this->getBEYear($moment);//this.clone()
   }
+  
+  /*
+   * ថ្ងៃសីល
+   * ៨កើត, ១៥កើត , ៨រោច, ១៤រោច/១៥រោច
+   * 
+   */
+  function silDay($moment){
+  	$day = $this->khDay($moment);
+  	if ($day==7 || $day==14 || $day==22 || $day == 29){
+  		return true;
+  	}elseif ($day==28){
+  		$newMoment = date_add(date_create($moment),date_interval_create_from_date_string("1 days"))->format('Y-m-d');
+  		$newDay = $this->khDay($newMoment);
+  		if ($newDay==29){
+  			return false;
+  		}else{
+  			return true;
+  		}
+  	}
+  	return false;
+  }
+  
+  
+  /*
+   *
+   * Religious Events
+   */
+  
+  /*
+   * ពិធីបុណ្យមាឃបូជា
+   * ១៥កើត ខែមាឃ។
+   * បុណ្យមាឃបូជាប្រារព្ធឡើង ដើម្បីរំលឹកដល់ថៃ្ងដែល ព្រះសម្មាសម្ពុទ្ធទ្រង់ប្រកាសបង្កើត ព្រះពុទ្ធសាសនាឡើងក្នុងលោកនាប្រទេសឥណ្ឌាកាលពី ៥៨៨ ឆ្នាំ
+   */
+  function MeakBochea($khMonth,$khDay){
+  	$LunarMonths = $this->LunarMonths();
+  	if($LunarMonths['មាឃ']==$khMonth AND $khDay=15){
+  		return true;
+  	}
+  	return false;
+  }
 }
 
-/*
- * 
- * Religious Events
- */
 
 
-/*
- * ពិធីបុណ្យមាឃបូជា
- * ១៥កើត ខែមាឃ។
- * បុណ្យមាឃបូជាប្រារព្ធឡើង ដើម្បីរំលឹកដល់ថៃ្ងដែល ព្រះសម្មាសម្ពុទ្ធទ្រង់ប្រកាសបង្កើត ព្រះពុទ្ធសាសនាឡើងក្នុងលោកនាប្រទេសឥណ្ឌាកាលពី ៥៨៨ ឆ្នាំ
- */
-function MeakBochea($khMonth,$khDay){
-	$LunarMonths = $this->LunarMonths();
-	if($LunarMonths['មាឃ']==$khMonth AND $khDay=15){
-		return true;
-	}
-	return false;
-}
 
 
 /* Example
