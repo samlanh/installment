@@ -48,11 +48,23 @@ class Report_Model_DbTable_DbParamater extends Zend_Db_Table_Abstract
 				(SELECT t.type_nameen FROM `ln_properties_type` AS t WHERE t.id = p.`property_type` LIMIT 1) AS pro_type,
 				p.south,p.north,p.west,p.east,
 				p.`width`,p.`height`,p.`land_size`,p.`price`,p.`land_price`,p.`house_price`, ";
-    			$sql.="CASE
+    			
+				$sql.="CASE
+					WHEN  is_lock =1 THEN (SELECT 1 FROM `ln_sale` AS s WHERE 1 AND CASE 
+										WHEN s.`typesale` =2 
+										THEN FIND_IN_SET(p.`id`, (SELECT pp.`old_land_id` FROM `ln_properties` AS pp WHERE pp.id = s.house_id LIMIT 1 ))
+									ELSE s.house_id =  p.`id`
+					END   AND s.status=1 AND s.is_cancel = 0 AND $to_enddate LIMIT 1)
+				ELSE  0
+				END AS is_lock,";
+				
+				/*
+				$sql.="CASE
 				WHEN  is_lock =1 THEN (SELECT 1 FROM `ln_sale` AS s WHERE s.house_id =  p.`id`  AND s.status=1 AND s.is_cancel = 0 AND $to_enddate LIMIT 1)
 				ELSE  0
-				END AS is_lock,
-				p.`width`,p.`height`,p.`land_size`,p.`price`,p.`land_price`,p.`house_price`,p.`is_lock`, ";		
+				END AS is_lock,";
+				*/
+				$sql.="p.`width`,p.`height`,p.`land_size`,p.`price`,p.`land_price`,p.`house_price`, ";		//p.`is_lock`,
 
     		$sql.="(SELECT first_name FROM `rms_users` WHERE id=p.user_id LIMIT 1) AS user_name,
 					(SELECT s.price_sold FROM `ln_sale` AS s WHERE s.house_id =  p.id  AND s.is_cancel = 0  LIMIT 1) AS price_sold
