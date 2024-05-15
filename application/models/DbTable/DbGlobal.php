@@ -2009,7 +2009,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 			  `sd`.`ispay_bank`          AS `ispay_bank`,
 			  `sd`.`last_optiontype`          AS `last_optiontype`,
 			  (SELECT ln_view.name_kh FROM ln_view WHERE ln_view.type =29 AND key_code = sd.ispay_bank LIMIT 1) AS payment_type,
-				(SELECT `crm`.`date_input`  FROM `ln_client_receipt_money` WHERE `crm`.`sale_id` = s.id AND crm.recieve_amount>0 ORDER BY `crm`.`date_input` DESC  LIMIT 1) AS `last_pay_date`
+				(SELECT `crm`.`date_input`  FROM `ln_client_receipt_money` AS crm WHERE `crm`.`sale_id` = s.id AND crm.recieve_amount>0 ORDER BY `crm`.`date_input` DESC  LIMIT 1) AS `last_pay_date`
 			
 		";
 		$where=" 

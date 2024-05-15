@@ -18,6 +18,7 @@
 	if($headerReportType==2){
 		$classHideHeight="125px";
 	}
+	$dayOfMonth=30;
 ?>
 <script>
 	dojo.require("dijit.form.DateTextBox");
@@ -140,12 +141,17 @@
 								    <td scope="col" ><?php echo $tr->translate("BRANCH_NAME");?></td>
 								    <td scope="col" ><?php echo $tr->translate("CLIENT_NAME");?></td>
 								    <td scope="col" ><?php echo $tr->translate("PROPERTY_CODE");?></td>
-								    <td scope="col" ><?php echo $tr->translate("TOTAL_INCOME");?></td>
+								    <td scope="col" ><?php echo $tr->translate("UNIT_FEE_BOREY");?></td>
+									<td scope="col" ><?php echo $tr->translate("totalBalanceLate");?></td>
 								    <td scope="col" ><?php echo $tr->translate("DATE");?></td>
 								    <td scope="col" ><?php echo $tr->translate("AMOUNT_LATE");?></td>
 								</tr>
 								</thead>
-						       <?php $branch_id=''; $n=0; $i=0; $total=0; if(!empty($this->row)) foreach($this->row as $key =>$row){ 
+						       <?php $branch_id=''; $n=0; $i=0; 
+							   $total=0;
+							   $gTtotalBalance=0; 
+							   
+							   if(!empty($this->row)) foreach($this->row as $key =>$row){ 
 							   $i++;
 								$end_dat=date("Y-m-d");
 								$total_day=strtotime($end_dat)-strtotime($row['nextDate']);
@@ -154,25 +160,37 @@
 								if($totalLateDay<0){
 									$totalLateDay= 0;
 								}
+								
+								$totalBalance=$row['unitPrice'];
+								if($totalLateDay>$dayOfMonth){
+									$timeLate =	ceil(($totalLateDay/$dayOfMonth));
+									$totalBalance = $row['unitPrice'] * $timeLate;
+								}
+							
 							   ?>
 								<tr  align="left">
-								   <td data-label="<?php echo $tr->translate("NUM");?>"  align="center"><?php echo $i; ?></td>
-								   <td data-label="<?php echo $tr->translate("BRANCH_NAME");?>"  align="left" style="white-space: nowrap;"><?php echo $row['branchName'];?></td>
-								  
-								   <td data-label="<?php echo $tr->translate("CLIENT_NAME");?>"  align="left" style="white-space: nowrap;"><?php echo $row['clientName'];?></td>
-								   <td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>"  align="left" style="white-space: nowrap;"><?php echo $row['landAddress']." ".$row['street'];?></td>
-								    <td data-label="<?php echo $tr->translate("TOTAL_INCOME");?>"  align="center" style="white-space: nowrap;">$ <?php echo number_format($row['unitPrice'],2);?></td>
-								   <td data-label="<?php echo $tr->translate("DATE");?>"  align="center" style="white-space: nowrap;"><?php echo date("d-m-Y",strtotime($row['nextDate']));?></td>
-								   <td data-label="<?php echo $tr->translate("AMOUNT_LATE");?>"  align="center" ><?php echo $totalLateDay." ថ្ងៃ";?></td>
+									<td data-label="<?php echo $tr->translate("NUM");?>"  align="center"><?php echo $i; ?></td>
+									<td data-label="<?php echo $tr->translate("BRANCH_NAME");?>"  align="left" style="white-space: nowrap;"><?php echo $row['branchName'];?></td>
+									<td data-label="<?php echo $tr->translate("CLIENT_NAME");?>"  align="left" style="white-space: nowrap;"><?php echo $row['clientName'];?></td>
+									<td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>"  align="left" style="white-space: nowrap;"><?php echo $row['landAddress']." ".$row['street'];?></td>
+								    <td data-label="<?php echo $tr->translate("UNIT_FEE_BOREY");?>"  align="center" style="white-space: nowrap;">$ <?php echo number_format($row['unitPrice'],2);?></td>
+									<td data-label="<?php echo $tr->translate("totalBalanceLate");?>"  align="center" style="white-space: nowrap;">$ <?php echo number_format($totalBalance,2);?></td>
+									<td data-label="<?php echo $tr->translate("DATE");?>"  align="center" style="white-space: nowrap;"><?php echo date("d-m-Y",strtotime($row['nextDate']));?></td>
+									<td data-label="<?php echo $tr->translate("AMOUNT_LATE");?>"  align="center" ><?php echo $totalLateDay." ថ្ងៃ";?></td>
 								</tr>
-									<?php $total = $total +$row['unitPrice'];?>
+									<?php 
+									$total = $total +$row['unitPrice'];
+									$gTtotalBalance = $gTtotalBalance +$totalBalance;
+									?>
 								<?php }?>
 								
 					            
 					            <tr class="style style1" style="font-weight: 600; background: #c1d0f3;">
-				                	<td colspan="5" align="right"><?php echo $tr->translate('TOTAL_INCOME');?></td>
-				                	<td colspan="2"  align="right">$ <?php echo number_format($total,2);?></td>
-				                </tr>
+									<td colspan="4" align="right"><?php echo $tr->translate('TOTAL');?></td>
+									<td   align="right">$ <?php echo number_format($total,2);?></td>
+									<td align="right">$ <?php echo number_format($gTtotalBalance,2);?></td>
+									<td colspan="2"  align="right"></td>
+								</tr>
 						    </table>
 		            	</td>
 		            </tr>
