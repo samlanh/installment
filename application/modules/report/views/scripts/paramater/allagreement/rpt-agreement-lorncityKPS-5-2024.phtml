@@ -786,7 +786,7 @@ dojo.require("dijit.form.DateTextBox");
 
 
 <!-- Start Land and House -->
-	<div  id="exportword" style="min-height:22cm; margin:0 auto;padding:0px 0.5cm">
+	<div  id="exportword1" style="min-height:22cm; margin:0 auto;padding:0px 0.5cm">
 		<table style="font-family: 'Khmer OS Content'; width:100%;"  >
 			<tr>
 				<td align="center"><button iconclass="dijitIconPrint" dojoType="dijit.form.Button" showLabel="true" type="button" onclick="doPrint1();">បោះពុម្ភ/Print</button></td>
@@ -810,7 +810,7 @@ dojo.require("dijit.form.DateTextBox");
 								#divPrint pre,#divPrint td, 
 								#divPrint span{
 									font-size: 10px; 
-									line-height:16px;
+									line-height:18px;
 								}
 								#divPrint #padding-left{
 									padding-left: 85px;
@@ -902,8 +902,15 @@ dojo.require("dijit.form.DateTextBox");
 						$ministryOfficeAddress ="Building No. 15, Street 253, Toeuk Loak 3 quarter, Tuol Kork district, Phnom Penh"; 
 						$ministryPermissionLetter ="Sub-Decree No. 166"; 
 						$ministryIssueDate ="November 13, 2019";
+						
+						$inputDate = $this->agreement['agreement_date'];
 						$lunaDate = date('Y-m-d', strtotime($inputDate));
 						$beYear = $lunar->getBEYear($lunaDate);
+						
+						$time  = strtotime($inputDate);
+						$day   = date('d', $time);
+						$monthDD = date('F', $time);
+						$year  = date('Y', $time);
 						?>
 						<div id="mainbody" style="position: absolute;z-index: 5;top: 0;height: 100%;">
 								<div id="watermark" style="top:-50;opacity:0.150;position:fixed;z-index:-1;display: block;background:url('<?php echo $this->baseUrl()?>/images/watermark/scheduleWatermark.jpg') no-repeat center;background-size: 80%;z-index: -1; width:100%;height:100%;left:15;" ></div>
@@ -927,7 +934,7 @@ dojo.require("dijit.form.DateTextBox");
 												}
 												?>
 												<img src="<?php echo $imagelogo;?>" style="max-width:100%;height: 90px;position: absolute;top: -60px;left: 20%;">
-												<span style="text-align:center;line-height:28px;font-size:16px;font-family:'Times New Roman','Khmer OS Muol Light';color: #cca10b;vertical-align: bottom;text-decoration: underline;font-weight: 600;">Borey Lorn City Lotussarina</span>
+												<span style="text-align:center;line-height:28px;font-size:16px;font-family:'Times New Roman','Khmer OS Muol Light';color: #cca10b;vertical-align: bottom;text-decoration: underline;font-weight: 600;"><?php echo $companyName;?></span>
 											</div>
 										</td>
 									 </tr> 
@@ -956,7 +963,7 @@ dojo.require("dijit.form.DateTextBox");
 											<br />
 											Made on ........................................................., the …… era of …………, <?php echo $beYear;?> B.E
 											<br />
-											Corresponding to ....................,...........<br />
+											Corresponding to <?php echo $monthDD." ".$day;?>,<?php echo $year;?><br />
 											<br />
 										</td>
 									 </tr> 
@@ -1429,7 +1436,7 @@ dojo.require("dijit.form.DateTextBox");
 								<td  colspan="5" style="text-align:center; font-weight:200;white-space:nowrap;">
 									Made on ........................................................., the …… era of …………, <?php echo $beYear;?> B.E
 									<br />
-									Corresponding to ....................,...........
+									Corresponding to <?php echo $monthDD." ".$day;?>,<?php echo $year;?>
 								</td>
 						   </tr>
 						   <tr>
@@ -1441,11 +1448,11 @@ dojo.require("dijit.form.DateTextBox");
 								<td>&nbsp;</td>
 						   </tr>
 						   <tr style="font-size: 16px;">
-								<td class="reff" style="width:24%;text-align:center; font-family:'Times New Roman','Khmer OS Muol Light';font-weight:200;white-space: nowrap;">Party “A”</td>
-								<td class="reff" style="width:24%;white-space:nowrap;width:20%;text-align:center;  font-family:'Times New Roman','Khmer OS Muol Light';font-weight:200;">Witness of Party “A”</td>
+								<td class="reff" style="width:24%;text-align:center; font-family:'Times New Roman','Khmer OS Muol Light';font-weight:bold;white-space: nowrap;">Party “A”</td>
+								<td class="reff" style="width:24%;white-space:nowrap;width:20%;text-align:center;  font-family:'Times New Roman','Khmer OS Muol Light';font-weight:bold;">Witness of Party “A”</td>
 								<td >&nbsp;</td>
-								<td class="reff" style="width:24%;white-space:nowrap;width:20%;text-align:center;  font-family:'Times New Roman','Khmer OS Muol Light';font-weight:200;">Party “B” </td>
-								<td  class="reff" style="width:24%; text-align:center; font-family:'Times New Roman','Khmer OS Muol Light';font-weight:200;white-space: nowrap;">Witness of Party “B”</td>
+								<td class="reff" style="width:24%;white-space:nowrap;width:20%;text-align:center;  font-family:'Times New Roman','Khmer OS Muol Light';font-weight:bold;">Party “B” </td>
+								<td  class="reff" style="width:24%; text-align:center; font-family:'Times New Roman','Khmer OS Muol Light';font-weight:bold;white-space: nowrap;">Witness of Party “B”</td>
 							</tr>
 							<tr height="90px">
 								<td>&nbsp;</td>
@@ -1475,9 +1482,699 @@ dojo.require("dijit.form.DateTextBox");
 			</tr>
 		</table>
 	</div>
+	
+	<div  id="exportword2" style="min-height:22cm; margin:0 auto;padding:0px 0.5cm">
+		<table style="font-family: 'Khmer OS Content'; width:100%;"  >
+			<tr>
+				<td align="center"><button iconclass="dijitIconPrint" dojoType="dijit.form.Button" showLabel="true" type="button" onclick="doPrint2();">បោះពុម្ភ/Print</button></td>
+			</tr>
+			<tr>
+				<td align="center">
+					<div id="divPrint2" style="    position: relative;" >
+						<style>		
+								body {
+								    position: relative;
+								}
+							    #divPrint #padding-left-p-2{
+								 padding-left: 105px !important;	
+								}
+								#divPrint .padding-buttom{
+									margin-top: -5px !important;
+								}
+								#divPrint tr td h2,
+								#divPrint p, 
+								#divPrint table, 
+								#divPrint pre,#divPrint td, 
+								#divPrint span{
+									font-size: 10px; 
+									line-height:18px;
+								}
+								#divPrint #padding-left{
+									padding-left: 85px;
+								}
+								#divPrint #bold-padding-right{
+									margin-right: 15px;
+									font-family: khmer os battambang;
+								}
+								
+								#divPrint #padding-left-2{
+									padding-left:15px;
+								}
+								#divPrint .padding-buttom{
+									margin-top: -5px;
+								}
+								#divPrint #padding-left-p-2{
+								 margin-top:-1px; 
+								 padding-left: 85px;	
+								}
+								#divPrint #padding-left-p{
+							    padding-left: 105px;
+								}
+								
+								body {
+								    position: relative;
+								}
+								#divPrint #printfooter {
+								    position: absolute;
+								    bottom: 0;
+								    position: fixed;
+								    display: block ;
+								}
+								span.margin-left{
+									margin-left:85px; display: inline-block;
+								}
+								span.value{
+									display: inline-block;
+									text-align: center;
+								}
+								
+								td.leftContent {
+									width: 115px;
+									text-align: right;
+									padding-right: 10px;
+									white-space: nowrap;
+								}
+								td.leftContent span {
+									font-family: 'Times New Roman','Khmer OS Muol Light';
+									font-weight:bold;
+								}
+								td.rightContent {
+									padding-right:10px;
+								}
+								td.leftContent,
+								td.rightContent {
+									vertical-align: top;
+								}
+							  @page  
+								{ 
+									margin:0.5cm 0.5cm 0.5cm 0.5cm;
+									
+								} 
+								span.sub-sub,.sub-sub-content {
+									display: inline-block;
+								}
+								.sub-sub-content {
+									padding-left: 5px;
+									width: 90%;
+								}
+								
+								ul.sub-sublist {
+									margin: 0;
+									padding-left: 45px;
+									white-space:normal !important;
+								}
+								ul.sub-sublist li span,
+								ul.sub-sublist li{
+									margin: 0;
+									white-space:normal !important;
+								}
+		   				</style>
+						<?php 
+						$companyName ="Borey Lorn City Lotussarina";   
+						$companyAddress ="西哈努克省配努县巴德朗乡钟瑙林村（音译地名）";
+						$projectName =$this->agreement['projectNameEng']; 
+						$projectAddress =$this->agreement['projectLocationEng']; 
+						
+						$ministryPartyName ="notary NACH TRY"; 
+						$ministryOfficeAddress ="Building No. 15, Street 253, Toeuk Loak 3 quarter, Tuol Kork district, Phnom Penh"; 
+						$ministryPermissionLetter ="Sub-Decree No. 166"; 
+						$ministryIssueDate ="November 13, 2019";
+						
+						$inputDate = $this->agreement['agreement_date'];
+						$lunaDate = date('Y-m-d', strtotime($inputDate));
+						$beYear = $lunar->getBEYear($lunaDate);
+						
+						$time  = strtotime($inputDate);
+						$day   = date('d', $time);
+						$monthDD = date('m', $time);
+						$year  = date('Y', $time);
+						?>
+						<div id="mainbody" style="position: absolute;z-index: 5;top: 0;height: 100%;">
+								<div id="watermark" style="top:-50;opacity:0.150;position:fixed;z-index:-1;display: block;background:url('<?php echo $this->baseUrl()?>/images/watermark/scheduleWatermark.jpg') no-repeat center;background-size: 80%;z-index: -1; width:100%;height:100%;left:15;" ></div>
+								<table width="100%" style="font-family:'Times New Roman','Khmer OS Battambang'; padding:0;margin:0;border:0px;" >
+									<tr>
+										<td width="10%" valign="top">&nbsp;</td>
+										<td width="80%" align="center">
+											<span style="text-align:center; font-size:20px; line-height:26px; font-family:'Times New Roman','Khmer OS'; font-weight: 600;">柬埔寨王国</span>
+											<span style="text-align:center; line-height:28px; width: 100%; display: block; font-size:15px; font-family:'Times New Roman','Khmer OS Muol Light';white-space: nowrap;font-weight: 600;">国家 宗教 国王</span>
+											<span style="text-align:center; line-height:28px; width: 100%; display: block; font-size:15px; font-family: 'Tacteing';"><img src="<?php echo $this->baseUrl();?>/images/agreementsign.jpg" height="25px"></span>
+										</td>
+										<td width="10%" align="center">
+									   </td>
+									 </tr>
+									 <tr >
+										<td colspan="3" align="center">
+											<div style=" margin-top: 18px;position: relative;">
+												<?php $imagelogo = $this->baseUrl()."/images/logo.jpg";
+												if (!empty($this->agreement['project_logo'])){
+													$imagelogo = $this->baseUrl()."/images/projects/".$this->agreement['project_logo'];
+												}
+												?>
+												<img src="<?php echo $imagelogo;?>" style="max-width:100%;height: 90px;position: absolute;top: -60px;left: 20%;">
+												<span style="text-align:center;line-height:28px;font-size:16px;font-family:'Times New Roman','Khmer OS Muol Light';color: #cca10b;vertical-align: bottom;text-decoration: underline;font-weight: 600;"><?php echo $companyName;?></span>
+											</div>
+										</td>
+									 </tr> 
+									 <tr >
+										<td  align="center">
+											</td>
+										<td  align="center">
+											<span style="display: block;color: #cca10b;margin-bottom: 5px;padding-bottom: 5px;border-style: double;border-top: none;border-left: none;border-right: none;">
+												<strong>电话: <?php echo $this->agreement['branch_tel'];?></strong><br/>
+												<?php echo $this->agreement_en['project_location_en'];?>
+												</span>
+										</td>
+										<td  align="center">
+											</td>
+									 </tr>
+									  
+									 <tr>
+										<td colspan="3" align="center">
+											
+										</td>
+									 </tr> 
+									 <tr>
+										<td colspan="3" align="center">
+											<br />
+											<span style="text-align:center;font-size: 14px;font-family:'Times New Roman','Khmer OS Muol Light';white-space: nowrap;text-decoration: underline;"><span style="text-align:center;font-size: 14px;font-family:'Times New Roman','Khmer OS Muol Light';white-space: nowrap;text-decoration: underline;font-weight: 600;">地址：西哈努克省配努县巴德朗乡钟瑙林村（音译地名）</span></span>
+											<br />
+											<br />
+											<span style="text-align:center;font-size: 14px;font-family:'Times New Roman','Khmer OS Muol Light';white-space: nowrap;text-decoration: underline;"><span style="text-align:center;font-size: 14px;font-family:'Times New Roman','Khmer OS Muol Light';white-space: nowrap;text-decoration: underline;font-weight: 600;">房屋买卖合同</span></span>
+											<br />
+											订立日期：佛历 <?php echo $beYear;?> 年， 龙年，………….月 …………. 日  ，星期五
+											<br />
+											公历： <?php echo $year;?> 年 <?php echo $monthDD;?> 月 <?php echo $day;?> 日
+											<br />
+											<br />
+										</td>
+									 </tr> 
+								</table>
+									<?php 
+										$cussex="Male";
+										if($this->agreement['sex']==2){
+											$cussex="Female";
+										}
+										$with_sex="Male";
+										if($this->agreement['ksex']==2){
+											$with_sex="Female";
+										}
+									?>
+					<table width="100%" style="font-family:'Times New Roman','Khmer OS Battambang'; text-align: justify; padding:0;margin:0;border:0px; margin-top: -5px;" >
+						
+						<tr>
+								<td  colspan="5" style="text-align:center; font-weight:200;white-space:nowrap;">
+									
+								</td>
+						   </tr>
+						<tr>
+							<td colspan="2">
+								<span class="margin-left"></span>本合同在人民和国际公证处主席兼公证员 NACH TRY 的公证下订立 。公证处地址：金边市堆谷区德乐呵三分区253号路15号楼，人民和国际公证处于2019年11月13日由第166ANKR.BK号次王令签发成立。
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2" align="center">
+							<strong>出席合同双方：</strong>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2" align="left">
+								<strong>有：</strong>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2" align="left">
+								<span class="margin-left"></span>
+								<strong><?php echo $companyName;?></strong>公司， 地址：<?php echo $companyAddress; ?>
+								，签署合同代表 <strong>CHEA SOPHENG</strong>，性别：男， 出生年：1989年， 持柬埔寨身份证号码： 021055916 ，签发日期：2014年3月22日， 
+								和姓名： <strong>KONG SOMALY</strong> ，性别： 女， 出生日期：2001年， 持柬埔寨身份证号码： 130219092，签发日期： 2017年8月17日， 
+								是房屋销售方，以下简称“甲方”
+								
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2" align="left">
+								<strong>和：</strong>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2" align="left" >
+								<?php 
+									$cussex="男性";
+									if($this->agreement['sex']==2){
+										$cussex="女性";
+									}
+									$with_sex="女性";
+									if($this->agreement['ksex']==2){
+										$with_sex="女性";
+									}
+									?>
+									
+												
+									<span class="margin-left"></span>姓名 <span class="value" style="font-family:'Khmer OS Muol Light';"><?php echo $this->agreement['client_namekh'];?></span>
+									性别 <span><?php echo $cussex;?></span>,
+									出生日期 <span><?php if (!empty($this->agreement['dob'])){ echo date("Y",strtotime($this->agreement['dob']));}?></span> 
+									护照持有人 国籍 <strong><?php echo $this->agreement['client_nationality'];?></strong>
+									号码 <span class="value" style="min-width:30px;"> <?php echo $this->agreement['client_nation_id'];?></span> 
+									签发日期 <?php echo date("Y",strtotime($this->agreement['client_issuedateid']));?> 年 <?php echo date("m",strtotime($this->agreement['client_issuedateid']));?> 月 <?php echo date("d",strtotime($this->agreement['client_issuedateid']));?> 日 
+									目前住址 
+									<span > <?php echo $this->agreement['province_en'];?></span> 首都 /省 
+									<span > <?php echo str_replace("District", "",$this->agreement['district_en']);?> 县/区/市 </span> 
+									<span > <?php echo str_replace("Commune", "",$this->agreement['commune_en']);?> 乡/分区 </span> 
+									<span ><?php echo str_replace("village", "", $this->agreement['village_en']);?></span>村 
+									
+									<?php if(!empty($this->agreement['hname_kh'])){?> 和名称 <span class="value" style="font-family:'Khmer OS Muol Light';"><?php echo $this->agreement['hname_kh'];?></span> 
+									性别 <?php echo $with_sex;?> 
+									出生日期 <?php if (!empty($this->agreement['dob_buywith'])){ echo date("Y",strtotime($this->agreement['dob_buywith']));}?>  
+									护照持有人 国籍 <?php echo $this->agreement['w_client_nationality'];?> 
+									号码 <span class="value" style="min-width:30px;"><?php echo $this->agreement['rid_no'];?></span>
+									签发日期 <?php echo date("Y",strtotime($this->agreement['join_issuedateid']));?> 年 <?php echo date("m",strtotime($this->agreement['join_issuedateid']));?> 月 <?php echo date("d",strtotime($this->agreement['join_issuedateid']));?> 日
+									目前住址 
+									<span><?php echo $this->agreement['w_client_province_en'];?> 首都 /省</span> 
+									<span><?php echo $this->agreement['w_client_district'];?> 县/区/市 </span> 
+									<span><?php echo $this->agreement['w_client_commune_en'];?> 乡/分区 </span> 
+									<span><?php echo $this->agreement['village_en'];?> 村 </span> 
+									
+									<?php }?> 
+									是房屋购买方， 以下简称“乙方”，联系电
+									<?php if(!empty($this->agreement['client_phone'])){?> 话： <?php echo $this->agreement['client_phone']; echo empty($this->agreement['with_phone'])?"":" / ".$this->agreement['with_phone']; }?>.
+								</td>
+						</tr>
+						<tr>
+							<td colspan="2" align="center">
+								<span class="value" style="font-weight:bold; font-family:'Times New Roman','Khmer OS Muol Light';font-style: italic;text-decoration: underline;display: block;width: 100%;">双方经协商后达成一致条款内容如下：</span>
+								<span class="value" style="font-weight:bold; font-family:'Times New Roman','Khmer OS Muol Light';font-style: italic;text-decoration: underline;">合同标的物</span>
+							</td>
+						</tr>
+						<tr>
+							<td class="leftContent">
+								<span>第一条：</span>
+							</td>
+							<td class="rightContent">
+								<?php 
+								$projectName = str_replace("", "",str_replace("គម្រោង", "", $projectName));
+								?>
+								<span style="font-weight:bold; font-family:'Times New Roman','Khmer OS Muol Light';">关于面积、位置和价格</span><br />
+								乙方同意购买甲方房屋信息如下： <br /> 
+								位于<?php echo $companyAddress;?> <strong><?php echo $companyName;?></strong>
+								房屋面积 宽度<?php echo $this->agreement['land_width'];?>米, 高度<?php echo $this->agreement['land_height'];?>米 
+								房屋类型: <strong><?php echo $this->agreement['property_type_en'];?></strong> 
+								门牌号: <strong><?php echo $this->agreement['property_title'];?></strong> 
+								房屋价格： <?php echo number_format($this->agreement['price_sold'],2);?> 美元。
+								
+							</td>
+						</tr>
+						<tr>
+							<td class="leftContent">
+								<span>第二条：</span>
+							</td>
+							<td class="rightContent">
+								乙方同意购买甲方上述第一条所述位置、面积、价格的不动产。
+							</td>
+						</tr>
+						<tr>
+							<td class="leftContent">
+								<span>第三条：</span>
+							</td>
+							<td class="rightContent">
+								<span style="font-weight:bold; font-family:'Times New Roman','Khmer OS Muol Light';">结算方式</span><br />
+								乙方将按照本合同附件一双方已按手印的付款时间表按时付款。
+							</td>
+						</tr>
+						<tr>
+							<td class="leftContent">
+								<span>第四条：</span>
+							</td>
+							<td class="rightContent">
+								<span style="font-weight:bold; font-family:'Times New Roman','Khmer OS Muol Light';">各方的义务和保证</span><br />
+							</td>
+						</tr>
+						<tr>
+							<td class="leftContent">
+								4.1
+							</td>
+							<td class="rightContent">
+								乙方结清所有不动产买卖价款后，甲方同意将不动产权证书（土地分割证书）连同按手印的房屋产权转让文件给乙方。对于办理产权证书过户手续所产生的费用、过户印花税及其它不动产（土地-房屋）产权证书出证的费用全部由乙方承担。 
+							</td>
+						</tr>
+						<tr>
+							<td class="leftContent">
+								4.2
+							</td>
+							<td class="rightContent">
+								若甲方反悔不出售上述房屋，甲方须按照已收款项金额的两倍偿还乙方。 
+							</td>
+						</tr>
+						<tr>
+							<td class="leftContent">
+								4.3
+							</td>
+							<td class="rightContent">
+								若乙方反悔不购买上述房屋，乙方已付不动产购买款项将不予退还乙方，并且甲方有权立即将不动产转售给其他方。 
+							</td>
+						</tr>
+						<tr>
+							<td class="leftContent">
+								4.4
+							</td>
+							<td class="rightContent">
+								乙方完成支付30%以上购房款时，有权将房屋转售给其他方，甲方协助办理小区合同转让手续，但乙方应支付 <strong>USD1,000 （壹仟美元整）</strong> 的资料变更服务费。
+							</td>
+						</tr>
+						<tr>
+							<td class="leftContent">
+								4.5
+							</td>
+							<td class="rightContent">
+								房屋必须自合同签署之日起<strong>18</strong>个月内完工，可延迟 <strong>06</strong> （六）个月，不计延迟罚金。如房屋完工时间延后超过 <strong>06</strong> （六）个月以上，甲方必须按照已付房款的<strong>0.1%</strong>/月计算赔偿逾期交房罚金，该罚金将从逾期第<strong>6</strong>个月<strong>开</strong>始计起，但是发生不可抗力事件，如洪水、地震、政治危机、社会动荡或其它传染疾病疫情而导致工程受阻的逾期情形除外， 甲方无须承担上述逾期赔偿金。
+							</td>
+						</tr>
+						<tr>
+							<td class="leftContent">
+								<span>说明：</span>
+							</td>
+							<td class="rightContent">
+								若甲方提前完工，甲方有权提前30日向乙方发出通知办理乙方所购买房屋交房手续和准备交房款。 如果乙方延迟交房，乙方自愿同意小区建筑的保修时间从甲方发出交房通知之日起<strong>30</strong>日<strong>开始</strong>。<strong>若乙方延</strong>迟交房时间超出保修期限，则该不动产发生任何问题，乙方须自行承担责任，与甲方无关。 
+							</td>
+						</tr>
+						<tr>
+							<td class="leftContent">
+								<span>第五条：</span>
+							</td>
+							<td class="rightContent">
+								<span style="font-weight:bold; font-family:'Times New Roman','Khmer OS Muol Light';">保证声明</span><br />
+							</td>
+						</tr>
+						<tr>
+							<td class="leftContent">
+								<span>5.1</span>
+							</td>
+							<td class="rightContent">
+								<span style="font-weight:bold; font-family:'Times New Roman','Khmer OS Muol Light';">双方保证声明</span><br />
+							</td>
+						</tr>
+						<tr>
+							<td class="leftContent">
+							</td>
+							<td class="rightContent">
+								<span class="sub-sub sub-sub-aritcle">5.1.1</span> 
+								<div class="sub-sub-content">
+									上述合同双方身<strong>份和信息正确、属</strong>实合法。 
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td class="leftContent">
+							</td>
+							<td class="rightContent">
+								<span class="sub-sub sub-sub-aritcle">5.1.2</span> 
+								<div class="sub-sub-content">
+								签署合同双方具有完全能力和意志签署合同。
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td class="leftContent">
+							</td>
+							<td class="rightContent">
+								<span class="sub-sub sub-sub-aritcle">5.1.3</span> 
+								<div class="sub-sub-content">
+								双方不存在被司法或法律禁止或限制签署合同的任何情形。
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td class="leftContent">
+							</td>
+							<td class="rightContent">
+								<span class="sub-sub sub-sub-aritcle">5.1.4 </span> 
+								<div class="sub-sub-content">
+								双方一致同意遵守本合同条款。 
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td class="leftContent">
+								<span>5.2</span>
+							</td>
+							<td class="rightContent">
+								<span style="font-weight:bold; font-family:'Times New Roman','Khmer OS Muol Light';">甲方保证声明</span><br />
+							</td>
+						</tr>
+						<tr>
+							<td class="leftContent">
+							</td>
+							<td class="rightContent">
+								甲方保证声明第一条所述出售给乙方的不动产属于甲方合法产权，甲方作为合法产权所有人有权将不动产出售给乙方。 甲方同时向乙方保证声明，若甲方出售给乙方的不动产涉及法院权利负担、与第三方有任何纠纷、不动产不属于甲方合法所有、在任何单位存在权利负担或任何第三方提出权利主张的情形，甲方同意承担全部法律责任并赔偿乙方的利益损失，甲方对此不得提出任何抗议。
+							</td>
+						</tr>
+						<tr>
+							<td class="leftContent">
+								<span>5.3</span>
+							</td>
+							<td class="rightContent">
+								<span style="font-weight:bold; font-family:'Times New Roman','Khmer OS Muol Light';">乙方保证声明</span><br />
+							</td>
+						</tr>
+						<tr>
+							<td class="leftContent">
+							</td>
+							<td class="rightContent">
+								<span class="sub-sub sub-sub-aritcle">5.3.1</span> 
+								<div class="sub-sub-content">
+								乙方有义务遵照第三条规定时间节点按时付款。
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td class="leftContent">
+							</td>
+							<td class="rightContent">
+								<span class="sub-sub sub-sub-aritcle">5.3.2</span> 
+								<div class="sub-sub-content">
+								乙方不得使用购买的不动产从事任何违法活动或政治活动， 如乙方从事违法活动，乙方必须承担全部法律责任，与甲方无关。 
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td class="leftContent">
+							</td>
+							<td class="rightContent">
+								<span class="sub-sub sub-sub-aritcle">5.3.3</span> 
+								<div class="sub-sub-content">
+								如乙方反悔不购买上述第一条所述房屋或未遵照上述规定时间按时付款或乙方违反本合同约定，乙方同意乙方已付甲方的所有款项将归甲方所有，乙方对此不得有任何抗议，且自愿终止合同，其它合同条款内容将执行，乙方不得有任何抗议。 
+								</div>
+							</td>
+						</tr>
+						
+						<tr>
+							<td class="leftContent">
+								<span>第六条：</span>
+							</td>
+							<td class="rightContent">
+								<span style="font-weight:bold; font-family:'Times New Roman','Khmer OS Muol Light';">违反付款义务</span><br />
+								若乙方不遵守上述第三条不动产付款时间表按时付款，乙方须按拖欠款额0.2%/日（百分之零点二每日）计算逾期罚金，按照实际逾期天数计算罚金，逾期时间不得超过30日。如乙方逾期付款时间超过30（三十）日，则视乙方严重违约，乙方自愿同意让甲方单方解除合同。在本条款下，乙方同意让甲方没收乙方已付全部款项和有权将房屋出售给第三方，乙方认可自己无权主张任何权利或索赔。             若乙方按照0.2%（百分之零点二）/日计算结清全部拖欠款逾期罚金或双方另外协商达成一致时，甲方决定继续执行合同，则本合同可继续执行。 
+								<br />
+								-如乙方已入住所购不动产，但乙方严重违反义务时，乙方自愿同意甲方有权采取以下措施：
+								<br />
+								<ul class="sub-sublist">
+									<li>
+									无须向任何单位或法院起诉，断水、断电、撬锁、搬走乙方居住期间使用的家具收回房屋，乙方对此造成的所有损失不得提出任何抗议。
+									</li>
+								</ul>
+							</td>
+						</tr>
+						<tr>
+							<td class="leftContent">
+								<span>第七条：</span>
+							</td>
+							<td class="rightContent">
+								<span style="font-weight:bold; font-family:'Times New Roman','Khmer OS Muol Light';">修改</span><br />
+							</td>
+						</tr>
+						<tr>
+							<td class="leftContent">
+								<span>7.1</span>
+							</td>
+							<td class="rightContent">
+								<strong><?php echo $projectName; ?></strong> 小区的所有类型房屋均无建设围墙，乙方或业主不得加建雨棚或各种类型围棚，不得实施任何影响小区美观的加建工程，该条款对于转售的买家或买方的权利受让人同样有效。
+							</td>
+						</tr>
+						<tr>
+							<td class="leftContent" >
+								<span>说明：</span>
+							</td>
+							<td class="rightContent">
+								对于房屋门前或侧面的地砖，甲方有权按照实际需要使用，如: 修排污管道、水电网路等，但必须将地砖恢复原状。
+							</td>
+						</tr>
+						<tr>
+							<td class="leftContent">
+								<span>7.2</span>
+							</td>
+							<td class="rightContent">
+								乙方不得更改房屋外部样式，除非事先获得 <strong><?php echo $projectName; ?></strong> 小区物业管理的书面批准，以确保小区的美观和建筑质量标准。 
+							</td>
+						</tr>
+						<tr>
+							<td class="leftContent">
+								<span>7.3</span>
+							</td>
+							<td class="rightContent">
+								乙方须支付小区每月物业管理费，乙方交房（拿钥匙）时须预付06（六）个月的物业管理费， 乙方入不入住都必须支付每月物业管理费， 同时必须遵守小区物业管理的规章制度。 小区物业管理费在本合同附件（二）中有详细规定， 该物业费可以根据实际情况实施调整，小区物业管理届时将发送书面通知。
+								<br />
+								-对于买方所支付的物业管理费，不作为乙方（房屋业主）不丢失资产的保证，若乙方未付清甲方小区物业管理费，乙方不得向甲方申请任何批文、转让买卖合同、办理产权过户手续或交接乙方不动产权证书（土地分割证书）。
+							</td>
+						</tr>
+						<tr>
+							<td class="leftContent">
+								<span>第八条：</span>
+							</td>
+							<td class="rightContent">
+								<span style="font-weight:bold; font-family:'Times New Roman','Khmer OS Muol Light';">保修</span><br />
+							   对于不动产建筑发生由于技术问题导致而非乙方人为行为或活动导致的漏水、开裂问题，甲方保修期限为6（六）个月，从不动产交房之日计起。
+							</td>
+						</tr>
+						<tr>
+							<td class="leftContent">
+								<span>第九条：</span>
+							</td>
+							<td class="rightContent">
+								<span style="font-weight:bold; font-family:'Times New Roman','Khmer OS Muol Light';">管辖法律和解决纠纷</span><br />
+								本合同由柬埔寨王国法律管辖。 双方同意在柬埔寨采取协商的和平方式解决本合同发生的争议，如协商无果，双方可将本合同争议提交柬埔寨王国法院诉讼解决。
+							</td>
+						</tr>
+						<tr>
+							<td class="leftContent">
+								<span>第十条：</span>
+							</td>
+							<td class="rightContent">
+								<span style="font-weight:bold; font-family:'Times New Roman','Khmer OS Muol Light';">不可抗力和特殊情形</span><br />
+							</td>
+						</tr>
+						<tr>
+							<td class="leftContent">
+								<span>10.1</span>
+							</td>
+							<td class="rightContent">
+								本合同所述不可抗力指的是无法预测或避免的特殊情况，包括但不限于：洪水、地震、台风、火灾、爆炸、传染病、战争、恐怖行为、封锁、叛乱、内乱、骚乱等。
+							</td>
+						</tr>
+						<tr>
+							<td class="leftContent">
+								<span>10.2</span>
+							</td>
+							<td class="rightContent">
+								本条所述特殊情形指的是卖方无法预测或采取合理措施控制的事件，包括但不限于：王国政府延迟批复、恶劣天气状况，如：水灾、旱灾、罢工、关闭停止、供应商、承包商或其它合作伙伴的延时或其它相似情形。 
+							</td>
+						</tr>
+						<tr>
+							<td class="leftContent">
+								<span>第十一条：</span>
+							</td>
+							<td class="rightContent">
+								<span style="font-weight:bold; font-family:'Times New Roman','Khmer OS Muol Light';">通知</span><br />
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2" style="padding-left:30px;">
+								双方同意的按照以下通知地址和方式接收通知：
+								<br />
+								<ul class="sub-sublist" style="margin-left: 60px;">
+									<li>
+										甲方地址：<br />
+										上述地址或<br />
+										通过电话（辅助通知）：<br />
+										Telegram:<br />
+										邮箱：
+									</li>
+									<li>
+										乙方地址：<br />
+										上述地址或<br />
+										通过电话（辅助通知）：<br />
+										Telegram:<br />
+										邮箱：
+									</li>
+								</ul>
+								<span class="margin-left"></span>当双方已通过上述方式发出通知，但应收通知方却逃避不收通知，双方一致同意的通知送达证据包括：邮局快递、发送邮件或通知方已将通知张贴到房屋门口或围墙并拍照作证。 
+								<br />
+								<span class="margin-left"></span>对于上述通知方式，双方一致同意认可，任何一方变更地址后未书面通知另一方，双方则认可原地址是收发通知地址，不管是否收到，任何一方都不能否认没有收到通知。 
+							</td>
+						</tr>	
+						<tr>
+							<td class="leftContent">
+								<span>第十二条：</span>
+							</td>
+							<td class="rightContent">
+								<span style="font-weight:bold; font-family:'Times New Roman','Khmer OS Muol Light';">合同效力</span><br />
+								<ul class="sub-sublist">
+									<li>本合同自订立之日起正式生效。</li>
+									<li>双方自愿订立本合同，无任何任何其他方的干涉或强迫。 </li>
+									<li>双方已阅读和理解本合同全部条款内容。 </li>
+									<li>本合同一式三份，甲方执一份，乙方执一份，律师事务所备案一份。 </li>
+								</ul>
+							</td>
+						</tr>
+					</table>	
+					<br />
+						<table  align="center" width="100%" style="font-family: 'Times New Roman','Khmer OS Battambang'; ">
+							<tr>
+								<td  colspan="5" style="text-align:center; font-weight:200;white-space:nowrap;">
+									订立于  佛历 <?php echo $beYear;?> 年………………月………………日
+									<br />
+									公历： <?php echo $year;?> 年 <?php echo $monthDD;?> 月 <?php echo $day;?> 日
+								</td>
+						   </tr>
+						   <tr>
+								<td  colspan="5" style="text-align:center; font-family:'Times New Roman','Khmer OS Muol Light'; text-align:center; font-weight:600;white-space:nowrap;">
+									拇指手印
+								</td>
+						   </tr>
+						   <tr height="10px">
+								<td>&nbsp;</td>
+						   </tr>
+						   <tr style="font-size: 16px;">
+								<td class="reff" style="width:24%;text-align:center; font-family:'Times New Roman','Khmer OS Muol Light';font-weight:bold;white-space: nowrap;">甲方</td>
+								<td class="reff" style="width:24%;white-space:nowrap;width:20%;text-align:center;  font-family:'Times New Roman','Khmer OS Muol Light';font-weight:bold;">甲方证人</td>
+								<td >&nbsp;</td>
+								<td class="reff" style="width:24%;white-space:nowrap;width:20%;text-align:center;  font-family:'Times New Roman','Khmer OS Muol Light';font-weight:bold;">乙方</td>
+								<td  class="reff" style="width:24%; text-align:center; font-family:'Times New Roman','Khmer OS Muol Light';font-weight:bold;white-space: nowrap;">乙方证人</td>
+							</tr>
+							<tr height="90px">
+								<td>&nbsp;</td>
+							</tr>
+							<tr style="font-size: 16px;">
+								<td  style="text-align:center;font-family:'Times New Roman','Khmer OS Muol Light'; white-space:nowrap;">&nbsp;<span>CHEA Sopheng/KONG Somaly</span></td>
+								<td align="center"><span style="width: 90%; display: block; border-bottom: dashed 1px #000;" >&nbsp;</span></td>
+								<td >&nbsp;</td>
+								<td class="reff" align="center" style="white-space:nowrap;font-family:'Times New Roman','Khmer OS Muol Light'; white-space:nowrap;">&nbsp;<span><?php echo $this->agreement['client_namekh'];echo (!empty($this->agreement['hname_kh']))?"/".$this->agreement['hname_kh']:"";?></span></td>
+								<td align="center"><span style="width: 90%; display: block; border-bottom: dashed 1px #000;" >&nbsp;</span></td>
+							 </tr>
+							 <tr height="70px">
+									<td>&nbsp;</td>
+							 </tr>
+							 <tr>
+								<td colspan="5" align="center">
+									<span style="font-weight:bold;display:table;text-align:center;font-size: 14px;font-family:'Times New Roman','Khmer OS Muol Light';white-space: nowrap;">人民和国际公证处</span>
+									<span style="display:table;">编号：<span style="width: 120px; display: inline-block; border-bottom: dashed 1px #000;" ></span></span>
+									<span style="display:table;">日期：：  ……………………年………………月………………日</span>
+									<span style="font-weight:bold; display:table; font-size: 14px;font-family:'Times New Roman','Khmer OS Muol Light';white-space: nowrap;">签名和盖章</span>
+								</td>
+							 </tr>
+						</table>
+			        	</div> 
+			        </div>
+			    </td>	
+			</tr>
+		</table>
+	</div>
 	<script>
 function doPrint1() {
 	window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint1').innerHTML;
+    window.frames["print_frame"].window.focus();
+    window.frames["print_frame"].window.print();
+}
+function doPrint2() {
+	window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint2').innerHTML;
     window.frames["print_frame"].window.focus();
     window.frames["print_frame"].window.print();
 }
