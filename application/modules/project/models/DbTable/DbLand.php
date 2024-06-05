@@ -316,6 +316,9 @@ class Project_Model_DbTable_DbLand extends Zend_Db_Table_Abstract
 	    		'east'	  => $_data['east'],
 		    		
 		    	'street_code'	  => $street_code,
+
+				'buildPercentage'	  => $_data['buildPercentage'],
+	    		'buildPercentageNote' => $_data['buildPercentageNote'],
 			);
 	    $key = new Application_Model_DbTable_DbKeycode();
 	    $setting=$key->getKeyCodeMiniInv(TRUE);
