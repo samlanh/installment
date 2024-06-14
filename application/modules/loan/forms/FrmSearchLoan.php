@@ -438,6 +438,18 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form{
 			);
 		$_is_closed->setMultiOptions($_optStatusClosed);
 		$_is_closed->setValue($request->getParam("is_closed"));
+
+		$biuld_status = new Zend_Dojo_Form_Element_FilteringSelect('biuld_status');
+		$biuld_status->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+		));
+		$option_status_build = array(
+				0=>$this->tr->translate("SELECT_BUILD_STATUS"),
+				1=>$this->tr->translate("FINISHED_BUILD"),
+				2=>$this->tr->translate("NOT_FINISHED_BUILD"));
+		$biuld_status->setMultiOptions($option_status_build);
+		$biuld_status->setValue($request->getParam("biuld_status"));
 		
 		if($data!=null){
 			$_coid->setValue($data['co_id']);
@@ -452,7 +464,8 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form{
 			$_queryOrdering,
 			$_receiptStatus,
 			$credit_category,
-			$_is_closed
+			$_is_closed,
+			$biuld_status
 			
 		));
 		return $this;
