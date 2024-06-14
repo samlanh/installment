@@ -332,6 +332,7 @@ Class Project_Form_FrmLand extends Zend_Dojo_Form {
 				'queryExpr'=>'*${0}*',
 				'onchange'=>'popupIssuer();',
 		));
+
 		if($indexPage=='1'){
 			$type_tob->setAttribs(array(
 				'required' =>'false',
@@ -355,6 +356,17 @@ Class Project_Form_FrmLand extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
 		));
+
+		$buildPercentage = new Zend_Dojo_Form_Element_TextBox('buildPercentage');
+		$buildPercentage->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside'
+		));
+
+		$buildPercentageNote = new Zend_Dojo_Form_Element_Textarea('buildPercentageNote');
+		$buildPercentageNote->setAttribs(array('dojoType'=>'dijit.form.Textarea','class'=>'fullside',
+				'style'=>'width:96%;min-height:50px; font-size: 11px;'));
+		
 		
 		if($data!=null){
 			
@@ -392,6 +404,9 @@ Class Project_Form_FrmLand extends Zend_Dojo_Form {
 			$propertiestype->setValue($data['property_type']);
 			$floor->setValue($data['floor']);
 			$status_using->setValue($data['is_lock']);
+
+			$buildPercentage->setValue($data['buildPercentage']);
+			$buildPercentageNote->setValue($data['buildPercentageNote']);
 			
 			if ($data['is_lock']==1){
 				$branch_id->setAttribs(array("readonly"=>true)); 
@@ -418,7 +433,7 @@ Class Project_Form_FrmLand extends Zend_Dojo_Form {
 				$option_north,$option_south,$option_west,$option_east,
 				$type_tob,
 				
-				$_streetCode
+				$_streetCode,$buildPercentage,$buildPercentageNote
 				));
 		return $this;
 	}

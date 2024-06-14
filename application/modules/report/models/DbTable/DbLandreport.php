@@ -3588,5 +3588,202 @@ function updatePaymentStatus($data){
 		$sql.=$dbp->getAccessPermission("crm.`branch_id`");
 		return $db->fetchRow($sql);
 	}
+
+	function soldProtertyStatus($search){
+		$db = $this->getAdapter();
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$session_lang=new Zend_Session_Namespace('lang');
+		$lang = $session_lang->lang_id;
+		$str = 'name_en';
+		if($lang==1){
+			$str = 'name_kh';
+		}
+			  $sql="
+				  SELECT
+				  `s`.`id`               AS `id`,
+				  (SELECT
+					 `ln_project`.`project_name`
+				   FROM `ln_project`
+				   WHERE (`ln_project`.`br_id` = `s`.`branch_id`)
+				   LIMIT 1) AS `branch_name`,
+				  `s`.`sale_number`      AS `sale_number`,
+				  `s`.`branch_id`        AS `branch_id`,
+				  `s`.`client_id`        AS `client_id`,
+				  `s`.`house_id`         AS `house_id`,
+				  `s`.`price_before`     AS `price_before`,
+				  `s`.`price_sold`       AS `price_sold`,
+				  `s`.`discount_amount`  AS `discount_amount`,
+				  `s`.`discount_percent` AS `discount_percent`,
+				  `s`.`other_discount` AS `other_discount`,
+				  s.verify_by,
+				  (SELECT
+					 SUM((`cr`.`total_principal_permonthpaid` + `cr`.`extra_payment`))
+				   FROM `ln_client_receipt_money` `cr`
+				   WHERE (`cr`.`sale_id` = `s`.`id`)
+				   LIMIT 1) AS `paid_amount`,
+				  (SELECT $str FROM `ln_view` WHERE key_code =s.payment_id AND type = 25 limit 1) AS paymenttype,
+				  `s`.`create_date`      AS `create_date`,
+				  `s`.`buy_date`         AS `buy_date`,
+				  `s`.`startcal_date`    AS `startcal_date`,
+				  `s`.`first_payment`    AS `first_payment`,
+				  `s`.`validate_date`    AS `validate_date`,
+				  `s`.`end_line`         AS `end_line`,
+				  `s`.`interest_rate`    AS `interest_rate`,
+				  `s`.`total_duration`   AS `total_duration`,
+				  `s`.`payment_id`       AS `payment_id`,
+				  `s`.`staff_id`         AS `staff_id`,
+				 
+				  `s`.`receipt_no`       AS `receipt_no`,
+				  `s`.`agreement_date`   AS `agreement_date`,
+				  `s`.`is_cancel`        AS `is_cancel`,
+				  `s`.`user_id`          AS `user_id`,
+				  `s`.`build_start`      AS `build_start`,
+				  `s`.`amount_build`     AS `amount_build`, 
+				   s.note,
+				  `p`.`land_code`        AS `land_code`,
+				  `p`.`land_address`     AS `land_address`,
+				  `p`.`land_size`        AS `land_size`,
+				  `p`.`street`           AS `street`,
+				  `p`.`buildPercentage`  AS `buildPercentage`,
+				  (SELECT
+					 `ln_properties_type`.`type_nameen`
+				   FROM `ln_properties_type`
+				   WHERE (`ln_properties_type`.`id` = `p`.`property_type`)
+				   LIMIT 1) AS `propertype`,
+				  `p`.`property_type`    AS `property_type`,
+				  `c`.`client_number`    AS `client_number`,
+				  `c`.`name_kh`          AS `name_kh`,
+				  `c`.`name_en`          AS `name_en`,
+				  `c`.`phone`            AS `phone`,
+				  (SELECT
+					 `ln_staff`.`co_khname`
+				   FROM `ln_staff`
+				   WHERE (`ln_staff`.`co_id` = `s`.`staff_id`)
+				   LIMIT 1) AS `staff_name` ";
+			  $sql.=" 
+			  FROM ((`ln_sale` `s`
+					JOIN `ln_client` `c`)
+				   JOIN `ln_properties` `p`)
+				  WHERE ((`c`.`client_id` = `s`.`client_id`)
+						   AND (`p`.`id` = `s`.`house_id`)
+						   AND (`s`.`status` = 1)) ";
+			
+				$where=" AND s.is_cancel=0 ";
+
+				$where.=$dbp->getAccessPermission("s.`branch_id`");
+				$str = '`s`.`buy_date`';
+				if($search['buy_type']==3){
+					$str = ' (SELECT crm.date_pay FROM `ln_client_receipt_money` AS crm WHERE crm.sale_id=s.id AND crm.recieve_amount >0 ORDER BY crm.id DESC LIMIT 1) ';
+				}else if($search['buy_type']>0 AND $search['buy_type']!=2){
+					$str = ' `s`.`agreement_date` ';
+			    }else if($search['buy_type']==2){
+					$where.=" AND s.payment_id = 1";
+				}
+						   
+				if($search['buy_type']==1){
+					 $where.=" AND s.payment_id != 1";
+				}
+				$from_date =(empty($search['start_date']))? '1': " $str >= '".$search['start_date']." 00:00:00'";
+				$to_date = (empty($search['end_date']))? '1': " $str <= '".$search['end_date']." 23:59:59'";
+				$where.= " AND ".$from_date." AND ".$to_date;
+							  
+				$s_search = addslashes(trim($search['adv_search']));
+							  
+				$find = strpos($s_search,">");
+				if ($find === false){//
+					if(!empty($search['adv_search'])){
+						$s_where = array();
+						$s_where[] = " s.receipt_no LIKE '%{$s_search}%'";
+						$s_where[] = " `p`.`land_code`  LIKE '%{$s_search}%'";
+						$s_where[] = " `p`.`land_address` LIKE '%{$s_search}%'";
+						$s_where[] = " `c`.`client_number`  LIKE '%{$s_search}%'";
+						$s_where[] = " `c`.`name_en`  LIKE '%{$s_search}%'";
+						$s_where[] = " `c`.`name_kh`  LIKE '%{$s_search}%'";
+						$s_where[] = " (SELECT
+										`ln_staff`.`co_khname`
+									  FROM `ln_staff`
+									  WHERE (`ln_staff`.`co_id` = `s`.`staff_id`)
+									  LIMIT 1) LIKE '%{$s_search}%'";
+						$s_where[] = " `s`.`price_sold` LIKE '%{$s_search}%'";
+						$s_where[] = " `s`.`comission` LIKE '%{$s_search}%'";
+						$s_where[] = " `s`.`total_duration` LIKE '%{$s_search}%'";
+						$s_where[] = " `p`.`street` LIKE '%{$s_search}%'";
+						$where .=' AND ( '.implode(' OR ',$s_where).')';
+						}
+								  
+					}else{
+						$where.=" AND (SELECT  COUNT(s.id) FROM `ln_sale` AS s WHERE s.status=1  AND s.is_cancel=0 LIMIT 1)  $s_search";
+					}
+							  
+					if($search['branch_id']>0){
+						 $where.=" AND s.branch_id = ".$search['branch_id'];
+					}
+					if(!empty($search['streetlist']) AND $search['streetlist']>-1){
+						$where.=" AND `p`.`street` = '".$search['streetlist']."'";
+					}
+					if($search['land_id']>0){
+						$where.=" AND ( s.house_id = ".$search['land_id']." OR (SELECT p.old_land_id FROM `ln_properties` AS p WHERE p.id = s.house_id LIMIT 1) LIKE '%".$search['land_id']."%' )";
+					}
+					if($search['property_type']>0 AND $search['property_type']>0){
+						$where.=" AND p.property_type = ".$search['property_type'];
+					}
+					if($search['client_name']!='' AND $search['client_name']>0){
+						$where.=" AND `s`.`client_id` = ".$search['client_name'];
+					}
+					if($search['schedule_opt']>0){
+						if ($search['schedule_opt']==2 OR $search['schedule_opt']==6){
+									  $where.=" AND s.payment_id IN (2,6) ";
+						}else{
+									  $where.=" AND s.payment_id = ".$search['schedule_opt'];
+						}
+					}
+						   
+					if($search['sale_status']>0){
+						if($search['sale_status']==1){//full paid
+							$where.=" AND s.price_sold <= ((SELECT COALESCE(SUM(rm.total_principal_permonthpaid+rm.extra_payment),0) FROM `ln_client_receipt_money` as rm WHERE rm.status=1 AND sale_id=s.id  AND $from_datePayment AND $to_datePayment LIMIT 1) + (SELECT COALESCE(SUM(total_amount),0) FROM `ln_credit` WHERE status=1 AND $from_dateCredit AND $to_dateCredit  AND sale_id = s.id LIMIT 1)) ";
+						}else if($search['sale_status']==2){
+							$where.=" AND s.price_sold > ((SELECT COALESCE(SUM(rm.total_principal_permonthpaid+rm.extra_payment),0) FROM `ln_client_receipt_money` as rm WHERE rm.status=1 AND sale_id=s.id  AND $from_datePayment AND $to_datePayment LIMIT 1) + (SELECT COALESCE(SUM(total_amount),0) FROM `ln_credit` WHERE status=1 AND $from_dateCredit AND $to_dateCredit  AND sale_id = s.id LIMIT 1) ) ";
+						}else if($search['sale_status']==3){
+							$where.=" AND s.is_cancel = 0 ";
+						}else if($search['sale_status']==4){
+							$where.=" AND s.is_cancel = 1 ";
+						}else{
+						  }
+					}
+
+							   
+					if($search['biuld_status']>0){
+						if($search['biuld_status']==1){
+							$where.=" AND p.buildPercentage LIKE '%100%' ";
+						}else if($search['biuld_status']==2){
+							$where.=" AND p.buildPercentage NOT LIKE '%100%' ";
+						}
+					}
+							  
+					if (!empty($search['agency_id'])){
+					   //    		$where.=" AND `s`.`staff_id` = '".$search['agency_id']."'";
+						 $condiction = $dbp->getChildAgency($search['agency_id']);
+						if (!empty($condiction)){
+							$where.=" AND s.staff_id IN ($condiction)";
+						}else{
+							$where.=" AND s.staff_id=".$search['agency_id'];
+						}
+					}
+					$order = " ORDER BY s.buy_date DESC ";
+					if(!empty($search['queryOrdering'])){
+					if($search['queryOrdering']==1){
+						$order =" ORDER BY `s`.buy_date ASC ";
+					}else if($search['queryOrdering']==2){
+						$order =" ORDER BY `s`.buy_date DESC ";
+					}else if($search['queryOrdering']==3){
+						$order =" ORDER BY `s`.id ASC ";
+					}else if($search['queryOrdering']==4){
+						$order =" ORDER BY `s`.id DESC ";
+					} else if($search['queryOrdering']==5){
+						$order =" ORDER BY `s`.client_id DESC ";
+					}
+			 }
+			 return $db->fetchAll($sql.$where.$order);
+		  }
 		
  }
