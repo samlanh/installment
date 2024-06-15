@@ -3751,24 +3751,16 @@ function updatePaymentStatus($data){
 						  }
 					}
 
-							   
-					if($search['biuld_status']>0){
-						if($search['biuld_status']==1){
-							$where.=" AND p.buildPercentage LIKE '%100%' ";
-						}else if($search['biuld_status']==2){
-							$where.=" AND p.buildPercentage NOT LIKE '%100%' ";
+					if (!empty($search['biuld_status'])){
+						if($search['biuld_status']>0){
+							if($search['biuld_status']==1){
+								$where.=" AND p.buildPercentage LIKE '%100%' ";
+							}else if($search['biuld_status']==2){
+								$where.=" AND p.buildPercentage NOT LIKE '%100%' ";
+							}
 						}
 					}
 							  
-					if (!empty($search['agency_id'])){
-					   //    		$where.=" AND `s`.`staff_id` = '".$search['agency_id']."'";
-						 $condiction = $dbp->getChildAgency($search['agency_id']);
-						if (!empty($condiction)){
-							$where.=" AND s.staff_id IN ($condiction)";
-						}else{
-							$where.=" AND s.staff_id=".$search['agency_id'];
-						}
-					}
 					$order = " ORDER BY s.buy_date DESC ";
 					if(!empty($search['queryOrdering'])){
 					if($search['queryOrdering']==1){
