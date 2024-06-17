@@ -1131,7 +1131,7 @@ class Report_LoanController extends Zend_Controller_Action {
 	$this->view->officailreceipt = $frmpopup->getCombinePaymentOfficialReciept();
   }
 
-  function rptPropertysoldAction(){//release all loan
+  function rptPropertybuildstatusAction(){//release all loan
 	$db  = new Report_Model_DbTable_DbLandreport();
 	if($this->getRequest()->isPost()){
 		$search = $this->getRequest()->getPost();

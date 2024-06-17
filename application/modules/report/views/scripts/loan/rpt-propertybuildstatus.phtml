@@ -47,12 +47,12 @@ table.tb-footer tr.style-head {
    font-weight: bold !important;
 }
 </style>
-<title><?php echo $tr->translate("RPT_SOLD_PROTERTY");?></title>
+<title><?php echo $tr->translate("RPT_PROTERTY_BUILD_STATUS");?></title>
 <div class="reportblog">
 	<div class="card-box">
        	<div class="col-sm-12 border-botom">
 	   		<div class="col-sm-8 pd-0">
-	    		<h4 class="m-b-0"><i class="fa fa-file-text" aria-hidden="true"></i> <?php echo $tr->translate('RPT_SOLD_PROTERTY');?></h4>
+	    		<h4 class="m-b-0"><i class="fa fa-file-text" aria-hidden="true"></i> <?php echo $tr->translate('RPT_PROTERTY_BUILD_STATUS');?></h4>
     		</div>
     		<div class="col-sm-4 text-right">
     		</div>
@@ -200,20 +200,20 @@ table.tb-footer tr.style-head {
 						<td scope="col" rowspan="2"><?php echo $tr->translate("NUM");?></td>
 						<td scope="col" rowspan="2"><?php echo $tr->translate("BRANCH_NAME");?></td>
 						<td scope="col" rowspan="2"><?php echo $tr->translate("Customers");?></td>
-						<td scope="col" colspan="5"><?php echo $tr->translate("PROPERTY_INFO");?></td>
-						<td scope="col" colspan="4"><?php echo $tr->translate("BUILD_INFO");?></td>
+						<td scope="col" colspan="4"><?php echo $tr->translate("PROPERTY_INFO");?></td>
+						<td scope="col" colspan="5"><?php echo $tr->translate("BUILD_INFO");?></td>
 						<td scope="col" rowspan="2"><?php echo $tr->translate("STATUS");?></td>
 					 </tr>
 	                 <tr class="style" align="center">
 						<td scope="col"><?php echo $tr->translate("PROPERTY_CODE");?></td>
 						<td scope="col"><?php echo $tr->translate("PROPERTY_TYPE");?></td>
-						<td scope="col"><?php echo $tr->translate("STREET_NO");?></td>
 	                    <td scope="col"><?php echo $tr->translate("BUY_DATE");?></td>
 	                    <td scope="col"><?php echo $tr->translate("AGREEMENT_DATE");?></td>
 
 						<td scope="col"><?php echo $tr->translate("BUILD_START");?></td>
-						<td scope="col"><?php echo $tr->translate("BUILD_END");?></td>
 						<td scope="col"><?php echo $tr->translate("BUIDING_YEAR");?></td>
+						<td scope="col"><?php echo $tr->translate("BUILD_END");?></td>
+						<td scope="col"><?php echo $tr->translate("DURATION_REMAIN");?></td>
 						<td scope="col"><?php echo $tr->translate("BUILD_PERCENTAGE");?></td>
 						
 	               	 </tr>
@@ -222,7 +222,8 @@ table.tb-footer tr.style-head {
 	               $all_propertype=0;
 				   $finished_build=0;
 				   $not_finished=0;
-
+				   $late=0;
+				   $diffMonth=0;
 	               $db  = new Report_Model_DbTable_DbLandreport();
 	               $key=0;
 	              
@@ -231,24 +232,39 @@ table.tb-footer tr.style-head {
 				   		$all_propertype = $key+1;
 						// end date build
 						$build_start = $row['build_start'];
+					
+						
 						$month=number_format($row['amount_build'],0);
-						$buildend = strtotime(date("Y-m-d", strtotime($build_start)) . " +".$month." month");
+						$buildend = strtotime($row['buil_end']);
 						$now=strtotime(date("Y-m-d"));
+
+						$year1 = date('Y', $now);
+						$year2 = date('Y', $buildend);
+
+						$month1 = date('m', $now);
+						$month2 = date('m', $buildend);
+
+						$diffMonth = (($year2 - $year1) * 12) + ($month2 - $month1);
+
 
 						$buildPercentage= str_replace('%', '', $row['buildPercentage']);
 						$redBold="";
+						$warningProperty="";
+
 						if($buildPercentage==100){
 							$finished_build=$finished_build+1;
 						}else{
-							$not_finished=$not_finished+1;
-							$redBold="redBold";
+							if($now > $buildend ){
+								$warningProperty="background-color: #fbbfbf;";
+								$redBold="redBold";
+								$late=$late+1;
+								
+							}else{
+								$redBold="redBold";
+								$not_finished=$not_finished+1;
+							}
 						}
 					
-						$warningProperty="";
-						if($now > $buildend AND $buildPercentage!=100){
-							$warningProperty="background-color: #fbbfbf;";
-						}
-
 						$classRow = "";
 						if(($key%2)==1){
 							$classRow = "odd";
@@ -259,22 +275,46 @@ table.tb-footer tr.style-head {
 						<td data-label="<?php echo $tr->translate("BRANCH_NAME");?>" style="white-space:nowrap;"><?php echo $row['branch_name']; ?></td>
 						<td data-label="<?php echo $tr->translate("Customers");?>"><span style="line-height: 14px;white-space: pre-wrap !important;max-width: 150px;width: 150px;display: block;font-size: 11px;overflow-wrap: break-word;text-align: left;vertical-align: top; padding:2px 0;" ><?php echo $row['name_kh']; if(!empty($row['phone'])){ echo "<span style='display: block; line-height: 12px; font-size:80%;' />".$row['phone'];}?></span></span></td>
 
-						<td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>"><span style="line-height: 14px;white-space: pre-wrap display: block;font-size: 11px;overflow-wrap: break-word;text-align: left;vertical-align: top; font-weight: 600; padding:2px 0;" ><?php echo $row['land_address']; ?></span></td>
+						<td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>"><span style="line-height: 14px;white-space: pre-wrap !important;max-width: 100px;width: 100px;display: block;font-size: 11px;overflow-wrap: break-word;text-align: left;vertical-align: top; font-weight: 600; padding:2px 0;" ><?php echo $row['land_address']." ".$row['street']; ?></span></td>
 						<td data-label="<?php echo $tr->translate("PROPERTY_TYPE");?>" style="white-space:nowrap;"><?php echo $row['propertype']; ?></td>
-						<td data-label="<?php echo $tr->translate("STREET_NO");?>" style="white-space:nowrap;"><?php echo $row['street']; ?></td>
 						<td data-label="<?php echo $tr->translate("BUY_DATE");?>" style="white-space:nowrap;"><?php echo date($montFomat,strtotime($row['buy_date'])); ?></td>
 						<td data-label="<?php echo $tr->translate("AGREEMENT_DATE");?>" style="white-space:nowrap;" ><?php $date= new DateTime($row['agreement_date']); echo $date->format($montFomat); ?></td>
 						
 						<td data-label="<?php echo $tr->translate("BUILD_START");?>" style="white-space:nowrap;"><?php echo date($montFomat,strtotime($row['build_start'])); ?></td>
+						<td data-label="<?php echo $tr->translate("BUIDING_YEAR");?>"  style="white-space:nowrap;"><?php echo number_format($row['amount_build'],0)." ".$tr->translate("MONTH"); ?> </td>
 						<td data-label="<?php echo $tr->translate("BUILD_END");?>" style="white-space:nowrap;">
 							<?php
 								echo date($montFomat,$buildend);
 							 ?>
 						</td>
-						<td data-label="<?php echo $tr->translate("BUIDING_YEAR");?>"  style="white-space:nowrap;"><?php echo number_format($row['amount_build'],0)." ".$tr->translate("MONTH"); ?> </td>
+						<td data-label="<?php echo $tr->translate("DURATION_REMAIN");?>"  style="white-space:nowrap;">
+							<?php 
+								if($buildPercentage==100){
+									echo "0 ".$tr->translate("MONTH"); 
+								}else{
+									if($diffMonth>0){
+										echo abs($diffMonth)." ".$tr->translate("MONTH"); 
+									}else{
+										echo $tr->translate("LATE")." ".abs($diffMonth)." ".$tr->translate("MONTH"); 
+									}
+								} 
+							?> 
+						</td>
 						<td data-label="<?php echo $tr->translate("BUILD_PERCENTAGE");?>" style="white-space:nowrap;"><?php echo $buildPercentage."%"; ?></td>
 
-						<td data-label="<?php echo $tr->translate("BUILD_STATUS");?>" style="white-space:nowrap;" class="<?php echo $redBold; ?>"><?php  if($buildPercentage==100){ echo $tr->translate("FINISHED_BUILD");}else{ echo $tr->translate("NOT_FINISHED_BUILD"); } ?></td>
+						<td data-label="<?php echo $tr->translate("BUILD_STATUS");?>" style="white-space:nowrap;" class="<?php echo $redBold; ?>">
+							<?php 
+								if($buildPercentage==100){
+									echo $tr->translate("FINISHED_BUILD");
+								}else{
+									if($now > $buildend){
+										echo $tr->translate("LATE");
+									}else{
+										echo $tr->translate("NOT_FINISHED_BUILD");
+									}
+								} 
+							?> 
+						</td>
 					</tr>
 					<?php }?>
 				
@@ -293,6 +333,10 @@ table.tb-footer tr.style-head {
 								<tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
 									<td align="center"><?php echo $tr->translate("PROPERTY").$tr->translate("NOT_FINISHED_BUILD");?></td>
 									<td align="center"><?php echo $not_finished;?></td>
+								</tr>  
+								<tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
+									<td align="center"><?php echo $tr->translate("PROPERTY").$tr->translate("LATE");?></td>
+									<td align="center"><?php echo $late;?></td>
 								</tr>  
 								<tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
 									<td align="center"><?php echo $tr->translate("TOTAL_PROPERTY");?></td>
@@ -319,7 +363,7 @@ require(["dojo/ready"], function(ready){
 		  getBranchInfo();
 		  
 		 document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
-		 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("RPT_SOLD_PROTERTY");?>';
+		 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("RPT_PROTERTY_BUILD_STATUS");?>';
 		 document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date("d-M-Y"); }else{ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date("d-M-Y",strtotime($this->search['end_date'])); }?>';
 	
 	});

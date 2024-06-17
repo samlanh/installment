@@ -447,7 +447,13 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form{
 		$option_status_build = array(
 				0=>$this->tr->translate("SELECT_BUILD_STATUS"),
 				1=>$this->tr->translate("FINISHED_BUILD"),
-				2=>$this->tr->translate("NOT_FINISHED_BUILD"));
+				2=>$this->tr->translate("NOT_FINISHED_BUILD"),
+				3=>$this->tr->translate("1MONTH_TO_3MONTH"),
+				4=>$this->tr->translate("3MONTH_TO_6MONTH"),
+				5=>$this->tr->translate("6MONTH_TO_1YEAR"),
+				6=>$this->tr->translate("LATE"),
+			);
+				
 		$biuld_status->setMultiOptions($option_status_build);
 		$biuld_status->setValue($request->getParam("biuld_status"));
 		

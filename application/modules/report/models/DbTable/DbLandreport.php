@@ -3639,6 +3639,7 @@ function updatePaymentStatus($data){
 				  `s`.`user_id`          AS `user_id`,
 				  `s`.`build_start`      AS `build_start`,
 				  `s`.`amount_build`     AS `amount_build`, 
+				   ADDDATE(s.`build_start`, INTERVAL FORMAT(s.`amount_build`,0) MONTH) AS buil_end,
 				   s.note,
 				  `p`.`land_code`        AS `land_code`,
 				  `p`.`land_address`     AS `land_address`,
@@ -3668,7 +3669,7 @@ function updatePaymentStatus($data){
 						   AND (`p`.`id` = `s`.`house_id`)
 						   AND (`s`.`status` = 1)) ";
 			
-				$where=" AND s.is_cancel=0 AND   `s`.`amount_build` >0 ";
+				$where=" AND s.is_cancel=0 AND   `s`.`amount_build` >0 AND s.build_start > '0000-00-0'  ";
 
 				$where.=$dbp->getAccessPermission("s.`branch_id`");
 				$str = '`s`.`buy_date`';
@@ -3682,20 +3683,12 @@ function updatePaymentStatus($data){
 				if ($find === false){//
 					if(!empty($search['adv_search'])){
 						$s_where = array();
-						$s_where[] = " s.receipt_no LIKE '%{$s_search}%'";
+						
 						$s_where[] = " `p`.`land_code`  LIKE '%{$s_search}%'";
 						$s_where[] = " `p`.`land_address` LIKE '%{$s_search}%'";
 						$s_where[] = " `c`.`client_number`  LIKE '%{$s_search}%'";
 						$s_where[] = " `c`.`name_en`  LIKE '%{$s_search}%'";
 						$s_where[] = " `c`.`name_kh`  LIKE '%{$s_search}%'";
-						$s_where[] = " (SELECT
-										`ln_staff`.`co_khname`
-									  FROM `ln_staff`
-									  WHERE (`ln_staff`.`co_id` = `s`.`staff_id`)
-									  LIMIT 1) LIKE '%{$s_search}%'";
-						$s_where[] = " `s`.`price_sold` LIKE '%{$s_search}%'";
-						$s_where[] = " `s`.`comission` LIKE '%{$s_search}%'";
-						$s_where[] = " `s`.`total_duration` LIKE '%{$s_search}%'";
 						$s_where[] = " `p`.`street` LIKE '%{$s_search}%'";
 						$where .=' AND ( '.implode(' OR ',$s_where).')';
 						}
@@ -3717,17 +3710,36 @@ function updatePaymentStatus($data){
 						$where.=" AND p.property_type = ".$search['property_type'];
 					}
 
+					$strEndDate = ' ADDDATE(s.`build_start`, INTERVAL FORMAT(s.`amount_build`,0) MONTH) '; // sql add month to date
+					$str3moths = ' ADDDATE(s.`build_start`, INTERVAL 3 MONTH) ';
+					$str6moths = ' ADDDATE(s.`build_start`, INTERVAL 6 MONTH) ';
+					$str1year = ' ADDDATE(s.`build_start`, INTERVAL 12 MONTH) ';
+					$curentdate= date("Y-m-d");
+
 					if (!empty($search['biuld_status'])){
 						if($search['biuld_status']>0){
 							if($search['biuld_status']==1){
 								$where.=" AND p.buildPercentage LIKE '%100%' ";
 							}else if($search['biuld_status']==2){
-								$where.=" AND p.buildPercentage NOT LIKE '%100%' ";
+								$where.=" AND p.buildPercentage NOT LIKE '%100%' AND '".$curentdate."' <= ".$strEndDate;
+							}else if($search['biuld_status']== 3){
+								$where.=" AND p.buildPercentage NOT LIKE '%100%' AND '".$curentdate."' <= ".$strEndDate;
+								$where.="  AND ".$strEndDate." <= ".$str3moths;
+							}else if($search['biuld_status']== 4){
+								$where.=" AND p.buildPercentage NOT LIKE '%100%' AND '".$curentdate."' <= ".$strEndDate;
+								$where.="  AND ".$strEndDate." > ".$str3moths;
+								$where.="  AND ".$strEndDate." <= ".$str6moths;
+							}else if($search['biuld_status']== 5){
+								$where.=" AND p.buildPercentage NOT LIKE '%100%' AND '".$curentdate."' <= ".$strEndDate;
+								$where.="  AND ".$strEndDate." > ".$str6moths;
+								$where.="  AND ".$strEndDate." <= ".$str1year;
+							}else if($search['biuld_status']== 6){
+								$where.=" AND p.buildPercentage NOT LIKE '%100%' AND '".$curentdate."' > ".$strEndDate;
 							}
 						}
 					}
-							  
 				$order = " ORDER BY s.buy_date DESC ";
+				//echo $sql.$where.$order;
 			 return $db->fetchAll($sql.$where.$order);
 		  }
 		
