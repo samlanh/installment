@@ -3710,6 +3710,10 @@ function updatePaymentStatus($data){
 						$where.=" AND p.property_type = ".$search['property_type'];
 					}
 
+					if(!empty($search['biuld_percentage']) ){
+						$where.=" AND `p`.`buildPercentage` = '".$search['biuld_percentage']."'";
+					}
+
 					$strEndDate = ' ADDDATE(s.`build_start`, INTERVAL FORMAT(s.`amount_build`,0) MONTH) '; // sql add month to date
 					$str3moths = ' ADDDATE(s.`build_start`, INTERVAL 3 MONTH) ';
 					$str6moths = ' ADDDATE(s.`build_start`, INTERVAL 6 MONTH) ';
@@ -3734,6 +3738,9 @@ function updatePaymentStatus($data){
 								$where.="  AND ".$strEndDate." > ".$str6moths;
 								$where.="  AND ".$strEndDate." <= ".$str1year;
 							}else if($search['biuld_status']== 6){
+								$where.=" AND p.buildPercentage NOT LIKE '%100%' AND '".$curentdate."' <= ".$strEndDate;
+								$where.="  AND ".$strEndDate." > ".$str1year;
+							}else if($search['biuld_status']== 7){
 								$where.=" AND p.buildPercentage NOT LIKE '%100%' AND '".$curentdate."' > ".$strEndDate;
 							}
 						}

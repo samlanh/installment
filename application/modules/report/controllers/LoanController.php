@@ -1144,6 +1144,7 @@ class Report_LoanController extends Zend_Controller_Action {
 			'client_name'=>'',
 			'land_id'=>-1,
 			'streetlist'=>'',
+			'biuld_percentage'=>'',
 			'biuld_status '=>0,
 			'start_date'=> date('Y-m-d'),
 			'end_date'=>date('Y-m-d')

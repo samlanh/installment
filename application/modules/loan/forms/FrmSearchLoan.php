@@ -451,11 +451,34 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form{
 				3=>$this->tr->translate("1MONTH_TO_3MONTH"),
 				4=>$this->tr->translate("3MONTH_TO_6MONTH"),
 				5=>$this->tr->translate("6MONTH_TO_1YEAR"),
-				6=>$this->tr->translate("LATE"),
+				6=>$this->tr->translate("FROM_1YEAR"),
+				7=>$this->tr->translate("LATE"),
 			);
 				
 		$biuld_status->setMultiOptions($option_status_build);
 		$biuld_status->setValue($request->getParam("biuld_status"));
+
+		$biuld_percentage = new Zend_Dojo_Form_Element_FilteringSelect('biuld_percentage');
+		$biuld_percentage->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+		));
+		$option_biuld_percentage = array(
+				''=>$this->tr->translate("SELECT_BUILD_PERCENTAGE"),
+				10=>$this->tr->translate("10_PERCENT"),
+				20=>$this->tr->translate("20_PERCENT"),
+				30=>$this->tr->translate("30_PERCENT"),
+				40=>$this->tr->translate("40_PERCENT"),
+				50=>$this->tr->translate("50_PERCENT"),
+				60=>$this->tr->translate("60_PERCENT"),
+				70=>$this->tr->translate("70_PERCENT"),
+				80=>$this->tr->translate("80_PERCENT"),
+				90=>$this->tr->translate("90_PERCENT"),
+				100=>$this->tr->translate("100_PERCENT"),
+			);
+				
+		$biuld_percentage->setMultiOptions($option_biuld_percentage);
+		$biuld_percentage->setValue($request->getParam("biuld_percentage"));
 		
 		if($data!=null){
 			$_coid->setValue($data['co_id']);
@@ -471,8 +494,8 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form{
 			$_receiptStatus,
 			$credit_category,
 			$_is_closed,
-			$biuld_status
-			
+			$biuld_status,
+			$biuld_percentage
 		));
 		return $this;
 		
