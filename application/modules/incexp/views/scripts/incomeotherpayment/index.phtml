@@ -15,7 +15,7 @@
 		<div class="card-box">
 	       	<div class="col-sm-12 border-botom">
 		   		<div class="col-sm-8 pd-0">
-		    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('REPAIRE_HOUSE_PAYMENT');?></h4>
+		    		<h4 class="m-b-0"><i class="fa fa-money" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('REPAIRE_HOUSE_PAYMENT');?></h4>
 	    		</div>
 	    		<div class="col-sm-4 text-right">
 	    		</div>
@@ -174,13 +174,22 @@ $(function(){
 		selector: '.context-menu-one', 
 		callback: function(key, options) {
 			var m = "clicked: " + key;
+			var newPageTitle="";
+			var actionType=1;
+			
 			if(key=="print"){
 				url='<?php echo $urlprint;?>';
+				newPageTitle="<?php echo $tr->translate("PRINT");?>";
 			}
 			else if(key=="edit"){
 				url='<?php echo $urledit;?>';
+				actionType=2;
 			}
-			gotoAction();
+			if(actionType==1){
+				addTab(newPageTitle,url+row+'?inFrame=true');
+			}else{
+				gotoAction();
+			}
 		},
 		items: {
 			"print": {name: "<?php echo $tr->translate("PRINT");?>", icon: "fa-print", accesskey: "c o p y"},
@@ -193,6 +202,6 @@ function setrowdata(index){
 }
 var recordid ='';
 function gotoAction(){
-	 window.open(url+row+'?repair=1', '_blank');
+	 window.open(url+row, '_self');
 }
 </script>

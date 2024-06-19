@@ -386,10 +386,15 @@ class Loan_IndexController extends Zend_Controller_Action {
 		}
 	}
 	function rptUpdatepaymentAction(){
+		
+		$inFrame = $this->getRequest()->getParam('inFrame');
+	  	$inFrame = empty($inFrame)?"":$inFrame;
+		$this->view->inFrame = $inFrame;
+		
 		$showEditSchedule = SHOW_EDIT_SCHEDULE;
 		if($showEditSchedule!=1){
 			//Application_Form_FrmMessage::Sucessfull("NO_ENOUGH_PERMISSION","/loan/index/",2);
-			$this->_redirect("/loan/index");
+			$this->_redirect("/loan/index?inFrame=".$inFrame);
 			exit();
 		}
 		if($this->getRequest()->isPost()){
@@ -397,7 +402,12 @@ class Loan_IndexController extends Zend_Controller_Action {
 	  		try {
 	  			$_dbmodel = new Report_Model_DbTable_DbLandreport();
 	  			$_dbmodel->updatePaymentStatus($_data);
-	  			Application_Form_FrmMessage::Sucessfull("UPDATE_SUCESS","/loan/index/");
+				if(!empty($_data["inFrame"])){
+					$saleId = empty($_data["id"]) ? 0 : $_data["id"];
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS", "/report/loan/rpt-paymentschedules/id/".$saleId."?inFrame=true");
+				}else{
+					Application_Form_FrmMessage::Sucessfull("UPDATE_SUCESS","/loan/index/");
+				}
 	  		}catch (Exception $e) {
 	  			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 	  		}
@@ -407,13 +417,18 @@ class Loan_IndexController extends Zend_Controller_Action {
 	  		$db = new Loan_Model_DbTable_DbLandpayment();
 	  		$rs = $db->getTranLoanByIdWithBranch($id,null);
 	  		if(empty($rs)){
-	  			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index",2);
+	  			Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index?inFrame=".$inFrame,2);
 	  			exit();
 	  		}
 	  		
 	  		if($rs['is_cancel']==1){
-	  			Application_Form_FrmMessage::message('This Sale already cancel');
-				echo "<script>window.close();</script>";
+				if(!empty($inFrame)){
+					Application_Form_FrmMessage::Sucessfull("This Sale already cancel","/loan/index?inFrame=".$inFrame,2);
+					exit();
+				}else{
+					Application_Form_FrmMessage::message('This Sale already cancel');
+					echo "<script>window.close();</script>";
+				}
 	  		}
 	  	}
 	  	

@@ -95,6 +95,7 @@ class Incexp_Model_DbTable_DbCredit extends Zend_Db_Table_Abstract
 			$s_where = array();
 			$s_search = trim(addslashes($search['adv_search']));
 			$s_where[] = " description LIKE '%{$s_search}%'";
+			$s_where[] = " (SELECT land_address FROM `ln_properties` WHERE id=house_id LIMIT 1) LIKE '%{$s_search}%'";
 			$s_where[] = " title LIKE '%{$s_search}%'";
 			$s_where[] = " total_amount LIKE '%{$s_search}%'";
 			$s_where[] = " invoice LIKE '%{$s_search}%'";

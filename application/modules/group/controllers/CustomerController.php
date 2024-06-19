@@ -134,6 +134,11 @@ class Group_CustomerController extends Zend_Controller_Action {
 	
 		$db = new Group_Model_DbTable_DbCustomer();
 		$id = $this->getRequest()->getParam("id");
+		$id = empty($id) ? 0 : $id;
+		$inFrame = $this->getRequest()->getParam('inFrame');
+		$inFrame = empty($inFrame)?"":$inFrame;
+		$this->view->inFrame = $inFrame;
+		
 		if($this->getRequest()->isPost()){
 			$_data = $this->getRequest()->getPost();
 			try{
@@ -145,8 +150,14 @@ class Group_CustomerController extends Zend_Controller_Action {
 					exit();
 				}
 				$row = $db->addContactHistory($_data);
-				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/group/customer/index",2);
-				exit();
+				if(!empty($_data["inFrame"])){
+					$customerId = empty($_data["id"]) ? 0 : $_data["id"];
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS", "/report/paramater/rpt-customer-contact/id/".$customerId."?inFrame=true");
+				}else{
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/group/customer/index",2);
+					exit();
+				}
+				
 			}catch(Exception $e){
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());

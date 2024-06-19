@@ -1,0 +1,441 @@
+<?php 
+	$filter = $this->frm_search;
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$url = $this->url(array('module'=>'report','controller'=>'loan','action'=>'rpt-groupmember'));
+	
+	$dbGB = new Application_Model_DbTable_DbGlobal();
+	$logo = $this->baseUrl()."/images/logo.jpg";
+	$branch_title = $tr->translate("BRAND_TITLE");
+	if ($this->search['branch_id'] >0 ){
+		$branch = $dbGB->getAllBranchInfoByID($this->search['branch_id']);
+		if (file_exists(PUBLIC_PATH."/images/projects/".$branch["logo"])){
+			$logo = $this->baseUrl()."/images/projects/".$branch["logo"];
+		}
+		//$branch_title = $branch['project_name'];
+	}
+	$is_showhouse = $this->data['showhouseinfo'];
+	$showOtherDis = OTHER_DIS_OPTION;
+	$showEditSchedule = SHOW_EDIT_SCHEDULE;
+	
+	$montFomat="d-m-Y";
+	if(MONTH_FORMATE_DATE_RECEIPT==1){
+		$montFomat="d-M-Y";
+	}
+	
+	$headerReportType = REPORT_LETER_HEAD;
+	$classHideHeight="110px";
+	if($headerReportType==2){
+		$classHideHeight="125px";
+	}
+
+	$startDate = (empty($this->search['start_date']))? "1":" date_pay<=".$this->search["start_date"];
+	$endDate = (empty($this->search['end_date']))? "1":" date_pay<=".$this->search['end_date'];
+	$condition="'".$startDate." AND ".$endDate."'";
+
+	// print_r($this->loanrelease_list);
+	// exit();
+	
+?>
+<meta charset="utf-8">
+<script>
+dojo.require("dijit.form.DateTextBox");
+</script>
+<style>
+.hover:hover{ background:#ccc;}
+table.content-data  tr.style-head,
+table.tb-footer tr.style-head {
+   font-weight: bold !important;
+}
+</style>
+<title><?php echo $tr->translate("RPT_PROTERTY_BUILD_STATUS");?></title>
+<div class="reportblog">
+	<div class="card-box">
+       	<div class="col-sm-12 border-botom">
+	   		<div class="col-sm-8 pd-0">
+	    		<h4 class="m-b-0"><i class="fa fa-file-text" aria-hidden="true"></i> <?php echo $tr->translate('RPT_PROTERTY_BUILD_STATUS');?></h4>
+    		</div>
+    		<div class="col-sm-4 text-right">
+    		</div>
+    	</div>
+    </div>
+    <form method="post">
+	    <div class="card-box">
+	    	<div class="form-group"> 
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $filter->getElement('adv_search');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $filter->getElement('branch_id');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<input id="land_id" />
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $filter->getElement('property_type');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $filter->getElement('streetlist');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $filter->getElement('client_name');?>
+				</div>
+			</div>
+			<div class="form-group"> 
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $filter->getElement('start_date');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $filter->getElement('end_date');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $filter->getElement('biuld_percentage');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $filter->getElement('biuld_status');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<button class="button-class button-primary" iconClass="glyphicon glyphicon-search" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+				</div>
+			</div>
+	    </div>
+    </form>
+	<div id="divPrint" style="margin: 0 auto;">
+	<style>
+
+		.hover:hover{ background: #ccc;}
+		table {font-family:'Times New Roman','Khmer OS Battambang'; }
+		table.content-data { page-break-inside:auto }
+		table.content-data tr{ page-break-inside:avoid; page-break-after:auto; }
+		#header {
+		  display: table-header-group;
+		  page-break-inside:avoid; page-break-after:auto;
+		}
+		table tr td ul li{text-align: center;list-style: none;line-height: 25px; }
+		th{padding: 5px;}
+		.hover td{padding: 1px;}
+		.hide{visibility: hidden;}
+		@media print {
+		  div.divFooter {
+		    position: fixed;
+		    top: 0;
+		  	width: 100%;
+		  	height: 100px;
+		  	bottom:0px;
+			margin:0;
+		  }
+			.hide{visibility: visible; height: <?php echo $classHideHeight;?>;}
+		}
+		.divFooter table{
+			font-family: 'Times New Roman','Khmer OS Battambang';
+			margin:0; 
+			padding:0; 
+			border:none;
+		}
+		table.content-data{
+			border-collapse:collapse;
+			font-size:12px;
+			width:100%;
+		}
+		table.content-data thead tr.style {
+		   
+		   padding:1px 0px; 
+		   height: 22px; 
+		   background: #ccd9ff;
+		}
+		table.content-data thead tr.style td{
+			line-height: 25px; 
+		   font-size:12px !important; 
+		   font-weight:bold;
+		   text-align: center;
+		   white-space: nowrap;
+		}
+
+		table.content-data  tr.style {
+		    white-space: nowrap;
+			line-height: 20px;
+		}
+		
+		table.tb-footer{
+			border-collapse:collapse;
+			border:1px solid #000; 
+			font-size:12px;
+		}
+		table.tb-footer tr{
+			line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;
+		}
+		.border_bottom {
+			border-bottom: 2px solid #000;
+		}
+		table tr td{
+			padding:0 1px;
+		}
+		tr.style-rowdata.hover.context-menu-one.odd {
+			background: #ededed;
+		}
+		tr.style-rowdata.hover.context-menu-one.completedCss {
+			background: #00e01c0d;
+		}
+		.textBold{
+			font-weight:bold;
+		}
+		.redBold{
+			font-weight:bold;
+			color: red;
+		}
+		
+	</style>
+	<table style="font-family: 'Times New Roman','Khmer OS Battambang'; width:100%;">
+		<tr>
+	    	<td align="center">
+	        	<div class="divFooter">
+		        	<?php echo $this->headerReport;?>
+	            </div>
+	        </td>
+	    </tr>
+	    <tr>
+	    	<td id="exportExcel">
+	            <table class="content-data" border="1" cellspacing="0" style="border:1px solid #000; ">
+	               <thead>
+	                 <tr class="hide" style="border:1px solid #000;">
+		                <td colspan="18" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
+		             </tr>
+	                 <tr class="style" align="center">
+						<td scope="col" rowspan="2"><?php echo $tr->translate("NUM");?></td>
+						<td scope="col" rowspan="2"><?php echo $tr->translate("BRANCH_NAME");?></td>
+						<td scope="col" rowspan="2"><?php echo $tr->translate("Customers");?></td>
+						<td scope="col" colspan="4"><?php echo $tr->translate("PROPERTY_INFO");?></td>
+						<td scope="col" colspan="5"><?php echo $tr->translate("BUILD_INFO");?></td>
+						<td scope="col" rowspan="2"><?php echo $tr->translate("STATUS");?></td>
+					 </tr>
+	                 <tr class="style" align="center">
+						<td scope="col"><?php echo $tr->translate("PROPERTY_CODE");?></td>
+						<td scope="col"><?php echo $tr->translate("PROPERTY_TYPE");?></td>
+	                    <td scope="col"><?php echo $tr->translate("BUY_DATE");?></td>
+	                    <td scope="col"><?php echo $tr->translate("AGREEMENT_DATE");?></td>
+
+						<td scope="col"><?php echo $tr->translate("BUILD_START");?></td>
+						<td scope="col"><?php echo $tr->translate("BUIDING_YEAR");?></td>
+						<td scope="col"><?php echo $tr->translate("BUILD_END");?></td>
+						<td scope="col"><?php echo $tr->translate("DURATION_REMAIN");?></td>
+						<td scope="col"><?php echo $tr->translate("BUILD_PERCENTAGE");?></td>
+						
+	               	 </tr>
+	              </thead>
+	               <?php 
+	               $all_propertype=0;
+				   $finished_build=0;
+				   $not_finished=0;
+				   $late=0;
+				   $diffMonth=0;
+	               $db  = new Report_Model_DbTable_DbLandreport();
+	               $key=0;
+	              
+	               if(!empty($this->loanrelease_list))foreach($this->loanrelease_list as $key =>$row){?>
+	               <?php 
+				   		$all_propertype = $key+1;
+						// end date build
+						$build_start = $row['build_start'];
+					
+						
+						$month=number_format($row['amount_build'],0);
+						$buildend = strtotime($row['buil_end']);
+						$now=strtotime(date("Y-m-d"));
+
+						$year1 = date('Y', $now);
+						$year2 = date('Y', $buildend);
+
+						$month1 = date('m', $now);
+						$month2 = date('m', $buildend);
+
+						$diffMonth = (($year2 - $year1) * 12) + ($month2 - $month1);
+
+
+						$buildPercentage= str_replace('%', '', $row['buildPercentage']);
+						$redBold="";
+						$warningProperty="";
+
+						if($buildPercentage==100){
+							$finished_build=$finished_build+1;
+						}else{
+							if($now > $buildend ){
+								$warningProperty="background-color: #fbbfbf;";
+								$redBold="redBold";
+								$late=$late+1;
+								
+							}else{
+								$redBold="redBold";
+								$not_finished=$not_finished+1;
+							}
+						}
+					
+						$classRow = "";
+						if(($key%2)==1){
+							$classRow = "odd";
+						}
+		             ?>
+	              	<tr class="style-rowdata hover context-menu-one  <?php echo $classRow; ?>" style="<?php echo $warningProperty;  ?> " >
+						<td data-label="<?php echo $tr->translate("NUM");?>" align="center"><?php echo $key+1; ?></td>
+						<td data-label="<?php echo $tr->translate("BRANCH_NAME");?>" style="white-space:nowrap;"><?php echo $row['branch_name']; ?></td>
+						<td data-label="<?php echo $tr->translate("Customers");?>"><span style="line-height: 14px;white-space: pre-wrap !important;max-width: 150px;width: 150px;display: block;font-size: 11px;overflow-wrap: break-word;text-align: left;vertical-align: top; padding:2px 0;" ><?php echo $row['name_kh']; if(!empty($row['phone'])){ echo "<span style='display: block; line-height: 12px; font-size:80%;' />".$row['phone'];}?></span></span></td>
+
+						<td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>"><span style="line-height: 14px;white-space: pre-wrap !important;max-width: 100px;width: 100px;display: block;font-size: 11px;overflow-wrap: break-word;text-align: left;vertical-align: top; font-weight: 600; padding:2px 0;" ><?php echo $row['land_address']." ".$row['street']; ?></span></td>
+						<td data-label="<?php echo $tr->translate("PROPERTY_TYPE");?>" style="white-space:nowrap;"><?php echo $row['propertype']; ?></td>
+						<td data-label="<?php echo $tr->translate("BUY_DATE");?>" style="white-space:nowrap;"><?php echo date($montFomat,strtotime($row['buy_date'])); ?></td>
+						<td data-label="<?php echo $tr->translate("AGREEMENT_DATE");?>" style="white-space:nowrap;" ><?php $date= new DateTime($row['agreement_date']); echo $date->format($montFomat); ?></td>
+						
+						<td data-label="<?php echo $tr->translate("BUILD_START");?>" style="white-space:nowrap;"><?php echo date($montFomat,strtotime($row['build_start'])); ?></td>
+						<td data-label="<?php echo $tr->translate("BUIDING_YEAR");?>"  style="white-space:nowrap;"><?php echo number_format($row['amount_build'],0)." ".$tr->translate("MONTH"); ?> </td>
+						<td data-label="<?php echo $tr->translate("BUILD_END");?>" style="white-space:nowrap;">
+							<?php
+								echo date($montFomat,$buildend);
+							 ?>
+						</td>
+						<td data-label="<?php echo $tr->translate("DURATION_REMAIN");?>"  style="white-space:nowrap;">
+							<?php 
+								if($buildPercentage==100){
+									echo "0 ".$tr->translate("MONTH"); 
+								}else{
+									if($diffMonth>0){
+										echo abs($diffMonth)." ".$tr->translate("MONTH"); 
+									}else{
+										echo $tr->translate("LATE")." ".abs($diffMonth)." ".$tr->translate("MONTH"); 
+									}
+								} 
+							?> 
+						</td>
+						<td data-label="<?php echo $tr->translate("BUILD_PERCENTAGE");?>" style="white-space:nowrap;"><?php echo $buildPercentage."%"; ?></td>
+
+						<td data-label="<?php echo $tr->translate("BUILD_STATUS");?>" style="white-space:nowrap;" class="<?php echo $redBold; ?>">
+							<?php 
+								if($buildPercentage==100){
+									echo $tr->translate("FINISHED_BUILD");
+								}else{
+									if($now > $buildend){
+										echo $tr->translate("LATE");
+									}else{
+										echo $tr->translate("NOT_FINISHED_BUILD");
+									}
+								} 
+							?> 
+						</td>
+					</tr>
+					<?php }?>
+				
+            		<tr>
+            			<td colspan="18" style="border: #fff solid 1px;border-top: solid 1px #000;"><br />
+							
+							<table class="content-data" style=" font-size:11px;width:70%;margin:0 auto;" cellspacing="0">
+								<tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
+									<td></td>
+									<td align="center"><span class="border_bottom"><?php echo $tr->translate("AMOUNTS");?></span></td>
+								</tr>
+								<tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
+									<td align="center"><?php echo $tr->translate("PROPERTY").$tr->translate("FINISHED_BUILD");?></td>
+									<td align="center"><?php echo $finished_build;?></td>
+								</tr>
+								<tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
+									<td align="center"><?php echo $tr->translate("PROPERTY").$tr->translate("NOT_FINISHED_BUILD");?></td>
+									<td align="center"><?php echo $not_finished;?></td>
+								</tr>  
+								<tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
+									<td align="center"><?php echo $tr->translate("PROPERTY").$tr->translate("LATE");?></td>
+									<td align="center"><?php echo $late;?></td>
+								</tr>  
+								<tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:14px; padding:2px 0px; height: 25px;">
+									<td align="center"><?php echo $tr->translate("TOTAL_PROPERTY");?></td>
+									<td align="center"><?php echo $all_propertype;?></td>
+								</tr>
+							</table>
+			              </td>
+			            </tr> 
+	              </table>
+	              <br />
+	              <?php echo $this->footerReport;?>
+	    	</td>
+	    </tr>
+	</table>
+	</div>
+</div>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
+<script>
+dojo.require("dojo.data.ItemFileWriteStore"); 
+var property_store  = getDataStorefromJSON('id','name',[{"id":-1,"name":"<?php echo $tr->translate("SELECT_PROPERTY");?>"}]);
+require(["dojo/ready"], function(ready){
+	ready(function(){
+		 getAllPropertyBranch();
+		  getBranchInfo();
+		  
+		 document.getElementById('companyTitle').innerHTML = '<?php echo $branch_title; ?>';
+		 document.getElementById('reportTitle').innerHTML = '<?php echo $tr->translate("RPT_PROTERTY_BUILD_STATUS");?>';
+		 document.getElementById('dateReport').innerHTML = '<?php if(!empty($this->search['start_date'])){ if( date("Y-m-d",strtotime($this->search['start_date']))==date("Y-m-d") ){ echo date("d-M-Y"); }else{ echo date("d-M-Y",strtotime($this->search['start_date'])).' '.$tr->translate('TO').' ';echo date("D-d-M-Y",strtotime($this->search['end_date']));} }else{ echo date("d-M-Y",strtotime($this->search['end_date'])); }?>';
+	
+	});
+	new dijit.form.FilteringSelect({
+		store: property_store,
+		required: false,
+		autoComplete: false,
+		queryExpr: "*${0}*",
+		name: "land_id",
+		id: "land_id",
+		value:-1,
+		searchAttr: "name",
+		class: 'fullside fullside50',
+		onChange: function() {
+			land_id=-1;
+	}
+	}, "land_id");		 
+});
+land_id = '<?php echo $this->search['land_id']?>';
+var url_getland = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getallland')); ?>';
+function getAllPropertyBranch(branch_id){
+	branch_id = dijit.byId('branch_id').get('value');
+	if(branch_id<0){
+		return false;
+	}
+	dojo.xhrPost({
+		url:url_getland,	
+		content:{ 
+		    'branch_id':branch_id,
+		    'action':1
+		},		    
+		handleAs:"json",
+		load: function(data) {
+			property_store  = getDataStorefromJSON('id','name', data);		
+		    dijit.byId('land_id').set('store', property_store);
+		    
+		    if(land_id>0){
+		    	dijit.byId('land_id').attr('value',land_id);
+			 }
+		},
+		error: function(err) {
+		}
+	});
+} 
+
+function getBranchInfo(){
+	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'getbranch')); ?>';
+	branch_id = '<?php echo empty($this->search['branch_id'])?0:$this->search['branch_id'];?>';
+	if(branch_id=="" || branch_id<=0){
+		return false;
+	}
+	dojo.xhrPost({
+	    url: url_submit,	
+	    content:{ 
+		    'branch_id':branch_id
+		},	
+		load: function(data) {
+			var arr = JSON.parse(data);
+			var imagesUrl = '<img  style="height:85px; max-width: 100%;" src="'+arr.url_logo+'" />';
+			document.getElementById('projectlogo').innerHTML = imagesUrl;	
+			
+			<?php if($headerReportType==2){?>
+			document.getElementById('projectName').innerHTML = '('+arr.project_name+')';
+			<?php }else{?>
+			document.getElementById('projectName').innerHTML = arr.project_name;
+			<?php }?>
+		},
+		error: function(e) {
+		}
+	});
+}
+</script>

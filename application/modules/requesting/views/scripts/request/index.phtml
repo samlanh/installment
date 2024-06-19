@@ -81,14 +81,23 @@
 			selector: '.context-menu-one', 
 			callback: function(key, options) {
 				var m = "clicked: " + key;
+				var newPageTitle="";
+				var actionType=1;
 				if(key=="edit"){
 					url='<?php echo $urlEdit;?>';
+					actionType=2;
 				}else if(key=="reprint"){
 					url='<?php echo $urlReprint;?>';
+					newPageTitle="<?php echo $tr->translate("REQUEST_LETTER");?>";
 				}else if(key=="reprintInfo"){
 					url='<?php echo $urlReprintInfo;?>';
+					newPageTitle="<?php echo $tr->translate("REQUEST_INFO_DETAIL");?>";
 				}
-				gotoAction();
+				if(actionType==1){
+					addTab(newPageTitle,url+row+'?inFrame=true');
+				}else{
+					gotoAction();
+				}
 			},
 			items: {
 				

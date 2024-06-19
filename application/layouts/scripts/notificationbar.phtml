@@ -107,19 +107,24 @@
 							$url = $this->url(array('module'=>'loan','controller'=>'repaymentschedule','action'=>'add'), null, true)."/id/".$result['id'];
 							$end_dat=date("Y-m-d");
 							$total_day=strtotime($end_dat)-strtotime($result['end_line']);
-							$total_late_day=$total_day/(60*60*24);
+							$totalLateArgday=$total_day/(60*60*24);
+							if($totalLateArgday<0){
+								$totalLateArgday = 0;
+							}
 						?>
 					  <li class=" event">
 						 <a href="<?php echo $url;?>">
-							<div class="pull-left profile-list ">
-							  <img src="<?php echo $this->baseUrl()."/images/no-profile.png";?>" />
+							<div class="pull-left profile-list char-profile">
+								<span class="profileChar">
+									<?php echo mb_substr($result['name_kh'], 0, 1,'UTF8');?>
+								</span>
 							</div>
 							<div class="media-body">
 							  <small><?php echo $result['branch_name'];?></small><br />
 							  <span class="title" ><?php echo $result['name_kh'];?> (<?php echo $result['land_address'].' '.$result['street'];?>)</span>
 							  <p style="white-space: nowrap;"><strong><i class="fa fa-phone"></i> <?php echo $result['phone'];?></strong>  </p>
 							  <p><strong>$ <?php echo number_format($result['second_depostit'],2);?></strong> <i class="fa fa-calendar"></i> <?php echo date("d/m/Y",strtotime($result['end_line']));?></p>
-							  <p><small><?php echo $tr->translate("AMOUNT_LATE")." : ".$total_late_day."ថ្ងៃ";//@abs($interval->format('%R%a'))."ថ្ងៃ"; ?></small>
+							  <p><small><?php echo $tr->translate("AMOUNT_LATE")." : ".$totalLateArgday."ថ្ងៃ";//@abs($interval->format('%R%a'))."ថ្ងៃ"; ?></small>
 							  </p>
 							</div>
 						</a>
@@ -184,20 +189,25 @@
 						$url = $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'add'), null, true)."/id/".$result['sale_id'];
 						$end_dat=date("Y-m-d");
 						$total_day=strtotime($end_dat)-strtotime($result['date_payment']);
-						$total_late_day=$total_day/(60*60*24);
+						$amtLatePmtDay=$total_day/(60*60*24);
+						if($amtLatePmtDay<0){
+							$amtLatePmtDay = 0;
+						}
 						$total_payment = $result['principal_permonthafter']+$result['total_interest_after']+$result['service_charge'];
 						?>
 					  <li class=" event">
 						 <a href="<?php echo $url;?>">
-							<div class="pull-left profile-list ">
-							  <img src="<?php echo $this->baseUrl()."/images/no-profile.png";?>" />
+							<div class="pull-left profile-list char-profile">
+								<span class="profileChar">
+									<?php echo mb_substr($result['client_name'], 0, 1,'UTF8');?>
+								</span>
 							</div>
 							<div class="media-body">
 								<small><?php echo $result['branch_name'];?></small><br />
 							  <span class="title" ><?php echo $result['client_name'].' '.$result['land_address'].','.$result['street'];?></span>
 							  <p style="white-space: nowrap;"><i class="fa fa-phone"></i> <?php echo $result['phone'];?></p>
 							  <p><strong>$<?php echo number_format($total_payment,2);?>. </strong> <?php echo $tr->translate("AMOUNT_COLLECT")." : ".$result['no_installment'];?> </p>
-							  <p> <small><?php echo $tr->translate("AMOUNT_LATE")." : ".$total_late_day."ថ្ងៃ";//@abs($interval->format('%R%a'))."ថ្ងៃ"; ?> <?php echo " / ".$result['amount_late']." លើក ";?></small>
+							  <p> <small><?php echo $tr->translate("AMOUNT_LATE")." : ".$amtLatePmtDay."ថ្ងៃ";//@abs($interval->format('%R%a'))."ថ្ងៃ"; ?> <?php echo " / ".$result['amount_late']." លើក ";?></small>
 							  </p>
 							</div>
 						</a>
@@ -220,18 +230,23 @@
 						$url = $this->url(array('module'=>'issue','controller'=>'receivplong','action'=>'add'), null, true)."/id/".$result['id'];
 						$end_dat=date("Y-m-d");
 						$total_day=strtotime($end_dat)-strtotime($result['issue_date']);
-						$total_late_day=$total_day/(60*60*24);
+						$amtLateDay=$total_day/(60*60*24);
+						if($amtLateDay<0){
+							$amtLateDay = 0;
+						}
 						?>
 					  <li class=" event">
 						 <a href="<?php echo $url;?>">
-							<div class="pull-left profile-list ">
-							  <img src="<?php echo $this->baseUrl()."/images/no-profile.png";?>" />
+							<div class="pull-left profile-list char-profile">
+								<span class="profileChar">
+									<?php echo mb_substr($result['name_kh'], 0, 1,'UTF8');?>
+								</span>
 							</div>
 							<div class="media-body">
 								<small><?php echo $result['branch_name'];?></small><br />
 							  <span class="title" ><?php echo $result['name_kh'];?> (<?php echo $result['land_address'].' '.$result['street'];?>)</span>
 							  <p><strong><i class="fa fa-phone"></i> <?php echo $result['phone'];?> </strong>  </p>
-							  <p><strong></strong> <i class="fa fa-calendar"></i> <?php echo date("d/m/Y",strtotime($result['issue_date'])); echo '('.$total_late_day."ថ្ងៃ )";?></p>
+							  <p><i class="fa fa-calendar"></i> <?php echo date("d/m/Y",strtotime($result['issue_date'])); echo ' <small>('.$amtLateDay."ថ្ងៃ )</small>";?></p>
 							  </p>
 							</div>
 						</a>
@@ -254,9 +269,9 @@
 					<?php foreach($rsCusRequire as $key=> $result){
 						$end_dat=date("Y-m-d");
 						$total_day=strtotime($end_dat)-strtotime($result['next_contact']);
-						$total_late_day=$total_day/(60*60*24);
-						if($total_late_day<0){
-							$total_late_day=0;
+						$amtLateContactDay=$total_day/(60*60*24);
+						if($amtLateContactDay<0){
+							$amtLateContactDay=0;
 						}
 						?>
 						
@@ -279,7 +294,7 @@
 							  
 							  <p><strong>$<?php echo $result['from_price'];?>. </strong> <?php echo $tr->translate("TO");?> <strong>$<?php echo $result['to_price'];?></strong>  </p>
 							  <?php } ?>
-							  <p><strong></strong> <i class="fa fa-calendar"></i> <?php echo date("d/m/Y",strtotime($result['next_contact'])); echo '('.$total_late_day."ថ្ងៃ )";?></p>
+							  <p><i class="fa fa-calendar"></i> <?php echo date("d/m/Y",strtotime($result['next_contact'])); echo ' <small>('.$amtLateContactDay."ថ្ងៃ )</small>";?></p>
 							</div>
 						</a>
 					  </li>
@@ -290,11 +305,6 @@
 			  
 			  
 			  <?php }?>
-			  <li class="">
-					<a onclick="dijit.byId('popupCalculator').show();" href="javascript:;" title="<?php echo $tr->translate("CALCULATOR");?>"  class="user-profile " >
-						<i class="fa fa-calculator"></i>
-					 </a>
-				</li>
 				<li class="<?php echo $styleNotif;?>">
 					<a  href="<?php echo $this->baseUrl()."/other/testsale/index"?>" title="<?php echo $tr->translate("PREVIEW_INSTALLMENT_CALCUATE");?>"  class="user-profile " >
 						<i class="fa fa-keyboard-o"></i>

@@ -421,7 +421,7 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
     		$set_penalty=0;//សម្រាប់បង់ថ្លៃផាគពិន័យតែម្តង
     		
     		$service_charge= $data["service_charge"];//សេវាផ្សេងៗ
-    		$penalize = $data["penalize_amount"];//ផាកពិន័យ
+    		$penalize = empty($data["penalize_amount"]) ? 0 : $data["penalize_amount"];//ផាកពិន័យ
     		$total_interest = $data["total_interest"];//ត្រូវបង់សរុប
     		
     			$rows = $this->getSaleScheduleById($loan_number, 1);

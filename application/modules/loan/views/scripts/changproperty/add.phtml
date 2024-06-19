@@ -566,7 +566,6 @@ function getAllPropertyBranch(branch_id){//used
 		url:url_getland,	
 		content:{ 
 		    'branch_id':branch_id,
-		    //'action':1,
 		    'action':'changehouse'
 		},		    
 		handleAs:"json",
@@ -578,15 +577,16 @@ function getAllPropertyBranch(branch_id){//used
 		}
 	});
 } 
-
 var url_getland_transfer = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getallland')); ?>';
+//var url_getland_transfer = '<?php //echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getallland')); ?>';
 function getAllPropertyBranchTransfer(){//used
 	to_branch_id = dijit.byId('to_branch_id').get('value');
 	dojo.xhrPost({
 		url:url_getland_transfer,	
 		content:{ 
 		    'branch_id':to_branch_id,
-		    'action':'changehouse'//check condition again
+			'action':""
+		   // 'action':'changehouse'//check condition again
 		},		    
 		handleAs:"json",
 		load: function(data) {

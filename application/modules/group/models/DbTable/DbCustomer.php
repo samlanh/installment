@@ -100,6 +100,7 @@ class Group_Model_DbTable_DbCustomer extends Zend_Db_Table_Abstract
 
 	public function getById($id){
 		$db = $this->getAdapter();
+		$this->_name = "in_customer";
 		$sql = "SELECT 
 			crt.*
 			,(SELECT kn.title FROM rms_know_by as kn WHERE kn.id = crt.know_by LIMIT 1) AS know_bytitle 

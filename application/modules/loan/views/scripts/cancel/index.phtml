@@ -115,6 +115,7 @@ function getAllPropertyBranch(branch_id){
 $urlEdit = $this->baseUrl()."/loan/cancel/edit/id/";
 $urlAgreement = $this->baseUrl()."/report/paramater/rpt-refund-letter/id/";
 ?>
+disabledRefund = true;
 var row=0;
 var url="";
 $(function(){
@@ -122,28 +123,60 @@ $(function(){
 		selector: '.context-menu-one', 
 		callback: function(key, options) {
 			var m = "clicked: " + key;
+			var newPageTitle="";
+			var actionType=1;
 			if(key=="edit"){
 				url='<?php echo $urlEdit;?>';
+				actionType=2;
 			}else if(key=="agreement"){
 				url='<?php echo $urlAgreement;?>';
-			
+				newPageTitle="<?php echo $tr->translate("REFUND_LETTER");?>";
 			}
-			gotoAction();
+			if(actionType==1){
+				addTab(newPageTitle,url+row+'?inFrame=true');
+			}else{
+				gotoAction();
+			}
 		},
 		items: {
 			
 			"edit": {name: "<?php echo $tr->translate("EDIT");?>", icon: "edit", accesskey: "e"},
-			"agreement": {name: "<?php echo $tr->translate("REFUND_LETTER");?>", icon: "fa-file-text", accesskey: "c"},
+			"agreement": { name: "<?php echo $tr->translate("REFUND_LETTER");?>", icon: "fa-file-text",disabled: function() {
+			  return disabledRefund;
+			 }},
 			
 		}
 	});
 });
 function setrowdata(index){
 	row = index;
+	getRefundInfo(index);
 }
 var recordid ='';
 function gotoAction(){
-	 window.open(url+row+'?rightclick=true', '_blank');
+	 window.open(url+row, '_self');
+}
+var urlGetRefundInfo = '<?php echo $this->url(array('module'=>'loan','controller'=>'cancel','action'=>'get-cancelinfo')); ?>';
+function getRefundInfo(index){
+	dojo.xhrPost({
+	    url: urlGetRefundInfo,	
+	    content : { 
+		    'id':index ,
+		},	
+		handleAs:"json",
+		load: function(dataEE) {
+			if(dataEE.cancel_type=="2"){
+				disabledRefund = false;
+			}else{
+				disabledRefund = true;
+			}
+			
+			$.contextMenu('update');
+		},
+		error: function(err) {
+			
+		}
+	});
 }
 
 </script>

@@ -27,7 +27,7 @@ class Group_TransferController extends Zend_Controller_Action {
 			$rs_rows= $dbc->getAllInfo($search);
 			$list = new Application_Form_Frmtable();
 			$collumns = array("CUSTOMER_NAME","PHONE","KNOW_BY","TO_USER","DATE","BY_USER","STATUS");
-			$this->view->list=$list->getCheckList(10, $collumns, $rs_rows,array());
+			$this->view->list=$list->getCheckList(0, $collumns, $rs_rows,array());
 		}catch (Exception $e){
 			Application_Form_FrmMessage::message("Application Error");
 			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());

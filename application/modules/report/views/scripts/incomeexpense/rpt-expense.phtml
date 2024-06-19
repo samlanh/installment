@@ -377,14 +377,18 @@ $(function(){
 		selector: '.context-menu-one', 
 		callback: function(key, options) {
 			var m = "clicked: " + key;
+			var newPageTitle="";
 			if(key=="print"){
 				url='<?php echo $urlprint;?>';
+				newPageTitle="<?php echo $tr->translate("PRINT");?>";
 			}else if(key=="detail"){
 				url='<?php echo $urlDetail;?>';
+				newPageTitle="<?php echo $tr->translate("PAYMENT_VOUCHER​_DOCUMENT");?>";
 			}else if(key=="detailList"){
 				url='<?php echo $urlExpensDetailItems;?>';
+				newPageTitle="<?php echo $tr->translate("PAYMENT_VOUCHER​_LIST");?>";
 			}
-			gotoAction();
+			addTab(newPageTitle,url+row+'?inFrame=true');
 		},
 		items: {
 			"print": {name: "<?php echo $tr->translate("PRINT");?>", icon: "fa-print", accesskey: "c o p y"},
@@ -392,9 +396,7 @@ $(function(){
 			if($settingDoc==1){
 			?>
 			"detail": {name: "<?php echo $tr->translate("PAYMENT_VOUCHER​_DOCUMENT");?>", icon: "fa-print", accesskey: "c o p y"},
-			<?php 
-			}
-			?>
+			<?php } ?>
 			<?php 
 			if($expenseFeatureList==1){
 			?>

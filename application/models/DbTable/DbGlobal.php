@@ -412,12 +412,12 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    public function getReceiptByBranch($data=array('branch_id'=>1,'is_group'=>0)){
    	$this->_name='ln_client_receipt_money';
    	$db = $this->getAdapter();
-   	$receipt_type_count=RECEIPT_TYPE_COUNT;
+   	$receiptTypeCount=RECEIPT_TYPE_COUNT;
    	
    	$lenghtReceipt=6;
    	$oldNumber=0;
    	
-   	if($receipt_type_count==0){
+   	if($receiptTypeCount==0){
 	   	//phnom penh thmey
 	   	$pre='N1:'; //phnom penh thmey
 	   	if ($data['branch_id']>=5){
@@ -427,12 +427,12 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 	   	}else{
 	   		$sql=" SELECT COUNT(id) FROM $this->_name WHERE branch_id <=2 LIMIT 1 ";
 	   	}
-   	}elseif($receipt_type_count==1){
+   	}elseif($receiptTypeCount==1){
    		//For General
 //    	$sql=" SELECT COUNT(id) FROM $this->_name WHERE 1 ";
    		$pre='№ ';
    		$sql=" SELECT COUNT(id) FROM $this->_name WHERE branch_id =".$data['branch_id'];
-   	}elseif($receipt_type_count==2){
+   	}elseif($receiptTypeCount==2){
    		$pre='№ ';
    		$currentDate = date("Y-m-d");
    		$dateSetting = "2021-01-01";
@@ -450,7 +450,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    		}
    		$sql.=" AND branch_id = ".$data['branch_id'];
    		$sql.=" LIMIT 1 ";
-   	}elseif($receipt_type_count==3){//svr
+   	}elseif($receiptTypeCount==3){//svr
    		$pre='№ ';
    		$sql=" SELECT COUNT(id) FROM $this->_name WHERE 1 ";
    		$currentDate = date("Y-m-d");
@@ -464,23 +464,22 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
    			}
    		}
    		$sql.=" LIMIT 1 ";
-   	}elseif($receipt_type_count==4){//count all branch
+   	}elseif($receiptTypeCount==4 || $receiptTypeCount==5){//count all branch
    		$pre='№ ';
    		$sql=" SELECT COUNT(id) FROM $this->_name WHERE 1 LIMIT 1";
    	}
-   	
-   	
-   
-	$receiptForCompany = 1; //1=general,2=fiveStar,3=for Svayrieng
-// 	if($receiptForCompany==2){
-		
-		
-// 	}else if ($receiptForCompany==3){
-		
-// 	}
-	
-   	
    	$acc_no = $db->fetchOne($sql);
+	if($receiptTypeCount==5){ // សម្រាប់ Phnom Meas
+		$countSplit = 100; // រាប់ឡើងវិញពេល ចំនួនស្មើ តម្លៃនៃ $countSplit
+		$timeSplit=1;
+		if($acc_no>0){
+			$timeSplit = floor($acc_no/$countSplit);
+			$newCountSplit = ($countSplit*$timeSplit);
+			$acc_no = (int)$acc_no - $newCountSplit;
+		}
+	}
+	
+
    	$new_acc_no= (int)$acc_no+$oldNumber+1;
    	$acc_no= strlen((int)$acc_no+$oldNumber+1);
   	for($i = $acc_no;$i<$lenghtReceipt;$i++){//phnom penh thmey
@@ -1943,11 +1942,11 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 				
 		";
 		$where=" 
-				FROM ((`ln_saleschedule` `pd` JOIN `ln_sale` `s`) JOIN `ln_properties` `l`) 
-				WHERE `s`.`house_id` = `l`.`id`
-					   AND `s`.`status` = 1
+				FROM 
+					`ln_saleschedule` `pd` JOIN `ln_sale` `s` ON `pd`.`sale_id` = `s`.`id` 
+					LEFT JOIN `ln_properties` `l` ON `s`.`house_id` = `l`.`id`
+				WHERE  `s`.`status` = 1
 					   AND `s`.`is_cancel` = 0
-					   AND `pd`.`sale_id` = `s`.`id`
 					   AND `pd`.`status` = 1
 			";
 		$araa = array(
@@ -2010,7 +2009,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 			  `sd`.`ispay_bank`          AS `ispay_bank`,
 			  `sd`.`last_optiontype`          AS `last_optiontype`,
 			  (SELECT ln_view.name_kh FROM ln_view WHERE ln_view.type =29 AND key_code = sd.ispay_bank LIMIT 1) AS payment_type,
-			(SELECT `ln_client_receipt_money`.`date_input`  FROM `ln_client_receipt_money` WHERE (`ln_client_receipt_money`.`land_id` = 1) ORDER BY `ln_client_receipt_money`.`date_input` DESC  LIMIT 1) AS `last_pay_date`
+				(SELECT `crm`.`date_input`  FROM `ln_client_receipt_money` AS crm WHERE `crm`.`sale_id` = s.id AND crm.recieve_amount>0 ORDER BY `crm`.`date_input` DESC  LIMIT 1) AS `last_pay_date`
 			
 		";
 		$where=" 
@@ -2176,6 +2175,64 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 	  //  imagedestroy($uploadimage);
 		return $new_name;
   }
+  
+  function getSqlStOutStadingLoan(){
+		$db = $this->getAdapter();
+		$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+		$sql="
+		SELECT
+			`s`.`id`               AS `id`,
+			  `s`.`branch_id`        AS `branch_id`,
+			  (SELECT
+				 `ln_project`.`project_name`
+			   FROM `ln_project`
+			   WHERE (`ln_project`.`br_id` = `s`.`branch_id`)
+			   LIMIT 1) AS `branch_name`,
+			  `s`.`buy_date`         AS `date_release`,
+			  `s`.`first_payment`    AS `first_payment`,
+			  `s`.`end_line`         AS `date_line`,
+			  `s`.`staff_id`         AS `co_id`,
+			  `s`.`total_duration`   AS `total_duration`,
+			  `s`.`sale_number`      AS `sale_number`,
+			  `s`.`price_before`     AS `total_capital`,
+			  `s`.`interest_rate`    AS `interest_rate`,
+			  `s`.`client_id`        AS `client_id`,
+			  `s`.`house_id`         AS `house_id`,
+			  `s`.`price_before`     AS `price_before`,
+			  `s`.`discount_amount`  AS `discount_amount`,
+			  `s`.`discount_percent` AS `discount_percent`,
+			  `s`.`other_fee`        AS `other_fee`,
+			  `s`.`price_sold`       AS `price_sold`,
+			  `s`.`payment_id`       AS `payment_id`,
+			  (SELECT v.`name_kh` FROM `ln_view` AS v WHERE v.`key_code` = `s`.`payment_id` AND v.`type` = 25 LIMIT 1) AS `paymenttype`,
+			  `p`.`land_code`        AS `land_code`,
+			  `p`.`land_address`     AS `land_address`,
+			  `p`.`land_size`        AS `land_size`,
+			  `p`.`street`           AS `street`
+			  ,p.old_land_id AS old_land_id
+			  ,`c`.`client_number` AS `client_number`
+			  ,`c`.`name_kh` AS `client_kh`
+			  ,`c`.`name_en` AS `client_en`
+			  ,`c`.`phone` AS `phone`
+				   
+				
+		";
+		$where=" 
+				FROM 
+					`ln_sale` `s`
+					JOIN `ln_properties` `p` ON `s`.`house_id` = `p`.`id`
+					LEFT JOIN ln_client AS c ON c.client_id = `s`.`client_id`
+				WHERE  `s`.`status` = 1
+					   AND `s`.`is_cancel` = 0
+					   AND `s`.`is_completed` = 0
+			";
+		$araa = array(
+				'sql'=>$sql,
+				'where'=>$where,
+				);
+		return $araa;
+			
+	}
   
   
 }

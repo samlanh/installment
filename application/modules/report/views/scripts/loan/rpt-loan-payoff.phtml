@@ -26,7 +26,7 @@
 	<div class="card-box">
        	<div class="col-sm-12 border-botom">
 	   		<div class="col-sm-8 pd-0">
-	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i> <?php echo $tr->translate('REPORT_LOAN_PAYOFF');?></h4>
+	    		<h4 class="m-b-0"><i class="fa fa-file-text" aria-hidden="true"></i> <?php echo $tr->translate('REPORT_LOAN_PAYOFF');?></h4>
     		</div>
     		<div class="col-sm-4 text-right">
     		</div>
@@ -56,7 +56,7 @@
 					<?php echo $frm->getElement('end_date');?>
 				</div>
 				<div class="col-md-3 col-sm-3 col-xs-12">
-					<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+					<button class="button-class button-primary" iconClass="glyphicon glyphicon-search" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
 				</div>
 				<div class="col-md-3 col-sm-3 col-xs-12">
 				</div>
@@ -115,6 +115,14 @@
 				table tr td{
 					padding:0 2px;
 				}
+				tr.odd {
+						background: #ededed;
+					}
+				span.smallClass{
+						display: block; 
+						line-height: 12px; 
+						font-size:80%;
+					}
 			</style>
 			<table width="100%">
 				<tr>
@@ -129,28 +137,35 @@
 			            <table id="exportExcel" class="content-data" width="100%" border="1" cellspacing="0">
 			                 <thead>
 			                 	<tr class="hide" style="border:1px solid #000;">
-						             <td colspan="12" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
+						             <td colspan="16" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
 						        </tr>
 				                <tr class="style" align="center" >
 				                    <td rowspan="2"><?php echo $tr->translate("NUM");?></td>
 				                    <td rowspan="2"><?php echo $tr->translate("BRANCH_NAME");?></td>
-				                    <td rowspan="2"><?php echo $tr->translate("PROPERTY_CODE");?></td> 
-				                    <td rowspan="2"><?php echo $tr->translate("STREET");?></td> 
-				                    <td rowspan="2" ><?php echo $tr->translate("SOLD_PRICE");?></td>
-				                    <td rowspan="2" ><?php echo $tr->translate("CUSTOMER_NAME");?></td>
-				                    <td rowspan="2"><?php echo $tr->translate("RELEASED_DATE");?></td>
-				                    <td rowspan="2"><?php echo $tr->translate("LIFE_LOAN");?></td>
-				                    <td rowspan="2" ><?php echo $tr->translate("RECEIPT_NO");?></td>
-				                    <td colspan="4" ><?php echo $tr->translate("TOTAL_PAYMENTED");?></td>
-				                    <td rowspan="2"><?php echo $tr->translate("PAID");?></td>
-				                    <td rowspan="2"><?php echo $tr->translate("DAY_PAYMENT");?></td>
+									
+									<td colspan="6" ><?php echo $tr->translate("SALE_INFO");?></td>
+									
+				                    
+				                    <td colspan="7" ><?php echo $tr->translate("TOTAL_PAYMENTED");?></td>
+				                    
 				                    <td rowspan="2"><?php echo $tr->translate("BY_USER");?></td>
 				                </tr>
 				                <tr class="style"  >
+									<td><?php echo $tr->translate("Customers");?></td>
+									<td><?php echo $tr->translate("PROPERTY_CODE");?></td> 
+				                    <td><?php echo $tr->translate("STREET");?></td> 
+				                    <td><?php echo $tr->translate("SOLD_PRICE");?></td>
+				                    
+				                    <td ><?php echo $tr->translate("RELEASED_DATE");?></td>
+				                    <td ><?php echo $tr->translate("LIFE_LOAN");?></td>
+									
+				                    <td ><?php echo $tr->translate("RECEIPT_NO");?></td>
 				                	<td><?php echo $tr->translate("PRINCIPAL");?></td>                    
 				                    <td><?php echo $tr->translate("INTEREST");?></td>
 				                    <td><?php echo $tr->translate("PENALIZE AMOUNT");?></td>  
-				                    <td><?php echo $tr->translate("EXTRA_PAYMENT");?></td>                    
+				                    <td><?php echo $tr->translate("EXTRA_PAYMENT");?></td>    
+									<td ><?php echo $tr->translate("PAID");?></td>
+				                    <td ><?php echo $tr->translate("DAY_PAYMENT");?></td>									
 				                </tr>
 			                </thead>
 			                <?php $amt_r1 = 0;$amt_r2 = 0;$amt_r3 = 0;$amt_r4 = 0;$amt_r5 = 0;$amt_r6 = 0;$amt_r7 = 0;
@@ -164,14 +179,18 @@
 								$amt_d3 = $amt_d3+$rs['penalize_amountpaid'];
 								$amt_d5 = $amt_d5+$rs['extra_payment'];
 								$amt_d4 = $amt_d4+$rs['total_payment'];
+								$classRow = "";
+								if((($key+1)%2)==0){
+									$classRow = "odd";
+								}
 			               ?>
-			                <tr class="style style1" >
+			                <tr class="style style1 <?php echo $classRow;?>" >
 			               		<td align="center"><?php echo $key+1; ?></td>
-			               		<td ><?php echo $rs["branch_name"];?></td>
+			               		<td align="left"><?php echo $rs["branch_name"];?></td>
+			               		<td align="left"><?php echo $rs["customer_name"];?></td>
 			               		<td ><?php echo $rs["land_address"];?></td>
 			               		<td ><?php echo $rs["street"];?></td>
 			               		<td ><?php echo $rs["price_sold"];?></td>
-			               		<td ><?php echo $rs["customer_name"];?></td>
 			               		<td align="center"><?php echo date("d-m-Y",strtotime($rs["buy_date"]));?></td>
 			               		<td align="center"><?php echo date("d-m-Y",strtotime($rs["end_line"]));?></td>
 			               		<td align="center"><?php echo $rs["receipt_no"];?></td>

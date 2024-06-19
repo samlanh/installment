@@ -138,11 +138,16 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 				$receipt = $db->addILPayment($_data);
 				$db->recordHistoryReceipt($_data, $receipt);
 				$db->checkSaleCompletedPaymentPrincipleAmount($receipt);
-				if($rightclick=="true"){
-					Application_Form_FrmMessage::message('INSERT_SUCCESS');
-					echo "<script>window.close();</script>";exit();
+				if(!empty($_data["inFrame"])){
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS", "/report/loan/receipt/id/".$receipt."?inFrame=true");
+				}else{
+					if($rightclick=="true"){
+						Application_Form_FrmMessage::message('INSERT_SUCCESS');
+						echo "<script>window.close();</script>";exit();
+					}
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/ilpayment/");
 				}
-				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/ilpayment/");
+				
 			}catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				$err =$e->getMessage();
@@ -150,6 +155,10 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 			}
 		}
 		$id = $this->getRequest()->getParam('id');
+		$inFrame = $this->getRequest()->getParam('inFrame');
+		$inFrame = empty($inFrame)?"":$inFrame;
+		$this->view->inFrame = $inFrame;
+		
 		if(!empty($id)){
 			$dbp = new Loan_Model_DbTable_DbLandpayment();
 			$rs = $dbp->getTranLoanByIdWithBranch($id,null);
@@ -163,6 +172,7 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 		$frm_loan=$frm->FrmAddIlPayment();
 		Application_Model_Decorator::removeAllDecorator($frm_loan);
 		$this->view->frm_ilpayment = $frm_loan;
+		
 		
 		$session_user=new Zend_Session_Namespace(SYSTEM_SES);
 		$this->view->user_name = $session_user->first_name .' '.$session_user->last_name;
@@ -430,14 +440,25 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 			try {
 				$_dbmodel = new Report_Model_DbTable_DbLandreport();
 				$_dbmodel->updateReceipt($_data);
-				Application_Form_FrmMessage::Sucessfull("UPDATE_SUCESS","/report/loan/receipt/id/".$_data['id']);
+				
+				if(!empty($_data["inFrame"])){
+					Application_Form_FrmMessage::Sucessfull("UPDATE_SUCESS", "/report/loan/receipt/id/".$_data['id']."?inFrame=true");
+				}else{
+					Application_Form_FrmMessage::Sucessfull("UPDATE_SUCESS","/report/loan/receipt/id/".$_data['id']);
+				}
+				
+				
 			}catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");
 				Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
 			}
 		}
-		 
+		
+		$inFrame = $this->getRequest()->getParam('inFrame');
+		$inFrame = empty($inFrame)?"":$inFrame;
+		
 		$id = $this->getRequest()->getParam('id');
+		$id = empty($id) ? 0 :$id;
 		if(!empty($id)){
 			$receipt = $db->getReceiptByID($id);
 			$this->view->rs = $receipt;
@@ -453,6 +474,7 @@ class Loan_IlpaymentController extends Zend_Controller_Action {
 		}
 		$db = new Application_Model_DbTable_DbGlobal();
 		$this->view->customer =  $db->getAllClient();
+		$this->view->inFrame =  $inFrame;
 	}
 	function saveprintAction(){
 		if($this->getRequest()->isPost()){

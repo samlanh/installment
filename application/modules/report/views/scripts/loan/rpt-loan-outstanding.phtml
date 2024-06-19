@@ -32,7 +32,7 @@ dojo.require("dijit.form.DateTextBox");
 	<div class="card-box">
        	<div class="col-sm-12 border-botom">
 	   		<div class="col-sm-8 pd-0">
-	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i> <?php echo $tr->translate('LOAN_OUTSTADING');?></h4>
+	    		<h4 class="m-b-0"><i class="fa fa-file-text" aria-hidden="true"></i> <?php echo $tr->translate('LOAN_OUTSTADING');?></h4>
     		</div>
     		<div class="col-sm-4 text-right">
     		</div>
@@ -63,7 +63,7 @@ dojo.require("dijit.form.DateTextBox");
 					<?php echo $frm->getElement('schedule_opt');?>
 				</div>
 				<div class="col-md-3 col-sm-3 col-xs-12">
-					<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+					<button class="button-class button-primary" iconClass="glyphicon glyphicon-search" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
 				</div>
 				<div class="col-md-3 col-sm-3 col-xs-12">
 				</div>
@@ -73,7 +73,7 @@ dojo.require("dijit.form.DateTextBox");
 	<div id="divPrint" style="width: 100%;">
 		<style>
 		.style{
-			line-height: 25px;font-size: 12px !important;
+			line-height: 18px;font-size: 12px !important;
 			font-family: 'Times New Roman','Khmer OS Battambang';
 		}
 		table.content-data { page-break-inside:auto }
@@ -96,16 +96,19 @@ dojo.require("dijit.form.DateTextBox");
 		  }
 		.hide{visibility: visible; height: <?php echo $classHideHeight;?>;}
 		}
+		table tr td{
+			padding:0 1px;
+		}
 		thead tr td{
 			text-align: center;
 		}
 		table.content-data{
 			border-collapse:collapse;
 			border:1px solid #000; 
-			font-size:13px;
+			font-size:12px;
 			font-family: 'Times New Roman','Khmer OS Battambang';
 			white-space: nowrap;
-			line-height: 22px;
+			line-height: 18px;
 			width: 100%;
 		}
 		table.content-data thead tr.style {
@@ -122,8 +125,28 @@ dojo.require("dijit.form.DateTextBox");
 		 line-height: 14px;  padding:2px 0px; height: 25px;
 		}
 		table tr td{
-			padding:0 2px;
+			padding:1px 2px;
 		}
+			tr.odd {
+				background: #ededed;
+			}
+			span.noteValue{
+				line-height: 12px;
+				white-space: pre-wrap !important;
+				max-width: 150px;
+				width: 150px;
+				padding: 1px;
+				display: block;
+				font-size: 90%;
+				overflow-wrap: break-word;
+				text-align: left;
+				vertical-align: top;
+			}
+			span.smallClass{
+				display: block; 
+				line-height: 12px; 
+				font-size:80%;
+			}
 		</style>
 		<table style="font-family: 'Times New Roman','Khmer OS Battambang'; width:100%;">
 			<tr>
@@ -135,21 +158,28 @@ dojo.require("dijit.form.DateTextBox");
 		    </tr>
 		    <tr>
 		    	<td id="exportExcel">
-		            <table border="1"​ class="content-data" width="100%" cellspacing="0">
+		            <table border="1" class="content-data" width="100%" cellspacing="0">
 		                 <thead>
 			                 <tr class="hide" style="border:1px solid #000;">
 				                <td colspan="16" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
 				             </tr>
+							 <tr class="style" align="center" >
+								<td scope="col" rowspan="2"><?php echo $tr->translate("NUM");?></td>
+								<td scope="col" rowspan="2"><?php echo $tr->translate("BRANCH_NAME");?></td>
+								  
+								<td scope="col" colspan="7"><?php echo $tr->translate("SALE_INFO");?></td>   
+								<td scope="col" colspan="4"><?php echo $tr->translate("PAYMENT_INFO");?></td>   
+								
+							</tr>
 			                 <tr height="35px;" class="style" align="center" >
-			                    <td scope="col" style="padding:2px 0px;"><?php echo $tr->translate("NUM");?></td>
-			                    <td scope="col"><?php echo $tr->translate("CUSTOMER_NAME");?></td>
-			                    <td scope="col"><?php echo $tr->translate("TEL");?></td>
-			                    <td scope="col"><?php echo $tr->translate("AMOUNT_PROPERTY");?></td>
+			                    <td scope="col"><?php echo $tr->translate("Customers");?></td>
+			                    <td scope="col"><?php echo $tr->translate("AMOUNTS");?></td>
 			                    <td scope="col"><?php echo $tr->translate("PROPERTY_CODE");?></td>  
 			                    <td scope="col"><?php echo $tr->translate("DATE_BUY");?></td>
 			                    <td scope="col"><?php echo $tr->translate("PAMENT_METHOD");?></td>
 			                    <td scope="col"><?php echo $tr->translate("LOAN_PERIOD");?></td>
-			                    <td scope="col"><?php echo $tr->translate("SOLD_PRICE");?></td>			                   
+			                    <td scope="col"><?php echo $tr->translate("SOLD_PRICE");?></td>		
+								
 			                    <td scope="col"><?php echo $tr->translate("PRINCIPAL").$tr->translate("PAID");?></td>
 			                    <td scope="col"><?php echo $tr->translate("PERCENTAGE");?></td>
 			                    <td scope="col"><?php echo $tr->translate("NOT_TO_REPAY");?></td>
@@ -193,12 +223,22 @@ dojo.require("dijit.form.DateTextBox");
 		               		$amn_d = $amn_d+$total_receive;
 		               		$result_d=number_format(($amn_d/$amt_d)*100,2).' %';
 							$i++;
+							
+							$classRow = "";
+							if(($i%2)==0){
+								$classRow = "odd";
+							}
 		               ?>
-							<tr align="center" class="hover">
+							<tr align="center" class="hover <?php echo $classRow;?>">
 								<td data-label="<?php echo $tr->translate("NUM");?>"><?php echo $i; ?></td>
-								<td data-label="<?php echo $tr->translate("CUSTOMER_NAME");?>" align="left" style="font-size:11px; line-height: 13px; white-space: nowrap;"><a target="_blank" style="color:#000; text-decoration: none;" href="<?php echo $link;?>"><?php echo $row['client_kh']; ?></a></td>
-								<td data-label="<?php echo $tr->translate("TEL");?>" align="left" ><?php echo $row['phone']; ?></td>
-								<td data-label="<?php echo $tr->translate("AMOUNT_PROPERTY");?>" align="center"><?php echo $countland; ?></td>
+								<td data-label="<?php echo $tr->translate("PROJECT_NAME");?>"><?php echo $row['branch_name']; ?></td>
+								<td data-label="<?php echo $tr->translate("Customers");?>" align="left" style="font-size:11px; line-height: 13px; white-space: nowrap;">
+								<a target="_blank" style="color:#000; text-decoration: none;" href="<?php echo $link;?>"><?php echo $row['client_kh']; ?></a>
+								<?php 
+								if(!empty($row['phone'])){ echo "<span class='smallClass' >".$row['phone']."</span>";}
+								?>
+								</td>
+								<td data-label="<?php echo $tr->translate("AMOUNTS");?>" align="center"><?php echo sprintf('%02d',$countland); ?></td>
 								<td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>" align="left"><a target="_blank" style="color:#000; text-decoration: none;" href="<?php echo $link;?>"><?php echo $row['land_address'].",".$row['street'];?></a></td>
 								<td data-label="<?php echo $tr->translate("DATE_BUY");?>"><?php echo date("d-m-Y",strtotime($row['first_payment']));?></td>
 								<td data-label="<?php echo $tr->translate("PAMENT_METHOD");?>"><?php echo $row['paymenttype'];?></td>
