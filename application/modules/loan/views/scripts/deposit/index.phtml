@@ -126,14 +126,23 @@ $(function(){
 		callback: function(key, options) {
 		
 			var m = "clicked: " + key;
+			var newPageTitle="";
+			var actionType=1;
 			if(key=="edit"){
 				url='<?php echo $urlEdit;?>';
+				actionType=2;
 			}else if(key=="reschedule"){
 				url='<?php echo $urlRepaymentschedule;?>';
+				newPageTitle="<?php echo $tr->translate("ISSUE_SCHEDULE");?>";
 			}else if(key=="agreement"){
 				url='<?php echo $urlAgreement;?>';
+				newPageTitle="<?php echo $aggreeement;?>";
 			}
-			gotoAction();
+			if(actionType==1){
+				addTab(newPageTitle,url+row+'?inFrame=true');
+			}else{
+				gotoAction();
+			}
 		},
 		items: {
 			"edit": {name: "<?php echo $tr->translate("EDIT");?>", icon: "edit", accesskey: "e"},
@@ -148,6 +157,6 @@ function setrowdata(index){
 }
 var recordid ='';
 function gotoAction(){
-	 window.open(url+row, '_blank');
+	 window.open(url+row, '_self');
 }
 </script>

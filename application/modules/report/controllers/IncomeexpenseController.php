@@ -561,10 +561,14 @@ class Report_IncomeexpenseController extends Zend_Controller_Action {
   	$db  = new Report_Model_DbTable_DbLandreport();
   	$id = $this->getRequest()->getParam('id');
   	$id = empty($id)?0:$id;
+	
+	$inFrame = $this->getRequest()->getParam('inFrame');
+	$inFrame = empty($inFrame)?"":$inFrame;
+	
   	$rs=$db->getCreditBySaleid($id);
   	$this->view->loantotalcollect_list =$rs;
   	if(empty($rs)){
-  		Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index",2);
+  		Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index?inFrame=".$inFrame,2);
   		exit();
   	}
   }

@@ -63,7 +63,10 @@
 	
 	$userConcreteCheck = $db_user->getAccessUrl("po","directpo",'check');
 	
-
+	$inFrame = $request->getParam("inFrame");
+	$classShow = empty($inFrame) ? "" : "hidden";
+	$classContentInframe = empty($inFrame) ? "" : "content-inframe";
+	$padLeftContent = empty($inFrame) ? "" : "mrg-left-none";
 	
 	
 ?>
@@ -166,6 +169,9 @@
 			text-align: center;
 			font-weight: 600;
 		}
+		.left_col.hidden {
+			width: 0 !important;
+		}
     </style>
    <?php if($module=='home' AND $controller=="index" AND $action=="index"){?>	
    <?php }else if($module=='home' AND $controller=="index" AND $action=="rpt-income-graphic"){?>	
@@ -193,8 +199,8 @@
 			</div>
 		</div>
     	<div class="main_container">
-        	<div class="col-md-3 left_col ">
-          		<div class="left_col scroll-view">
+        	<div class="col-md-3 left_col <?php echo $classShow;?>">
+          		<div class="left_col scroll-view ">
 		            <div class="navbar nav_title">
 		              <a href="<?php echo $this->baseUrl()."/home";?>" class="site_title"><span><img src="<?php echo $this->baseUrl()?>/images/cam-app-logo.png" alt="CAM APP TECHNOLOGY"></span></a>
 		            </div>
@@ -202,7 +208,7 @@
             		<?php echo $this->render('menuleft.phtml')?>
             	</div>
             </div>
-		        <div class="top_nav">
+		        <div class="top_nav <?php echo $classShow." ".$classShow;?>">
 		          	<div class="nav_menu">
 		            	<nav>
 				              <div class="nav toggle">
@@ -256,88 +262,92 @@
        			</div>
        		 <!-- /top navigation -->
             <!-- page content -->
-       		<div class="right_col" role="main" >
-       		 	<div class="right-conten" style="min-height: 570px;">
-       		 	<div style="clear:both;"></div>
-             	<?php if($module!='report' AND $module!='home' ){?>
-             		<div class="ptss-frame  js-ptss-frame "><!-- is-opened -->
-							<div class="ptss__toggle-btnaddd  js-ptss-toggle-btn add-edit-action">
+       		<div class="right_col <?php echo $padLeftContent;?>" role="main" >
+				<div class="right-conten" style="min-height: 570px;">
+					<div id="tt" class="easyui-tabs  <?php echo $classContentInframe;?>" style="width:100%; ">
+						<div id="firstTabs" title="Home" >
+							<div style="clear:both;"></div>
+							<?php if($module!='report' AND $module!='home' ){?>
+							<div class="ptss-frame  js-ptss-frame <?php echo $classShow;?>"><!-- is-opened -->
+								<div class="ptss__toggle-btnaddd  js-ptss-toggle-btn add-edit-action">
+									<?php if($action=='index' AND $controller!='updateprice' AND $controller!='testsale'){?>
+										<a title="<?php echo $tr->translate('ADD_NEW');?>" class='add-edit' href="<?php echo $this->url(array('module'=>$module,'controller'=>$controller,'action'=>'add'),null,true); ?>">
+											<i class="fa fa-plus-circle" aria-hidden="true"></i>
+										</a>
+									<?php }elseif($action=='add' OR $action=='edit' OR $action=='copy' OR $action=='addauto' OR $module=='report'){
+	?>
+										<a title="<?php echo $tr->translate('GO_BACK');?>" class='add-edit' href="<?php echo $this->url(array('module'=>$module,'controller'=>$controller,'action'=>'index'),null,true); ?>">
+											<i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i>
+										</a>
+									<?php }?>
+								</div>
+								<div class="ptss__header add-edit-action">
 								<?php if($action=='index' AND $controller!='updateprice' AND $controller!='testsale'){?>
-									<a title="<?php echo $tr->translate('ADD_NEW');?>" class='add-edit' href="<?php echo $this->url(array('module'=>$module,'controller'=>$controller,'action'=>'add'),null,true); ?>">
+									<a  class='add-edit' href="<?php echo $this->url(array('module'=>$module,'controller'=>$controller,'action'=>'add'),null,true); ?>"><?php echo $tr->translate('ADD');?> 
 										<i class="fa fa-plus-circle" aria-hidden="true"></i>
 									</a>
-								<?php }elseif($action=='add' OR $action=='edit' OR $action=='copy' OR $action=='addauto' OR $module=='report'){
-?>
-									<a title="<?php echo $tr->translate('GO_BACK');?>" class='add-edit' href="<?php echo $this->url(array('module'=>$module,'controller'=>$controller,'action'=>'index'),null,true); ?>">
-										<i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i>
+								<?php }elseif($action=='add' OR $action=='edit' OR $action=='copy' OR $module=='report'){
+	}?>
+									<a class='add-edit' href="<?php echo $this->url(array('module'=>$module,'controller'=>$controller,'action'=>'index'),null,true); ?>">
+									<i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i> <?php echo $tr->translate('GO_BACK');?>
 									</a>
-								<?php }?>
-							</div>
-							<div class="ptss__header add-edit-action">
-							<?php if($action=='index' AND $controller!='updateprice' AND $controller!='testsale'){?>
-								<a  class='add-edit' href="<?php echo $this->url(array('module'=>$module,'controller'=>$controller,'action'=>'add'),null,true); ?>"><?php echo $tr->translate('ADD');?> 
-									<i class="fa fa-plus-circle" aria-hidden="true"></i>
-								</a>
-							<?php }elseif($action=='add' OR $action=='edit' OR $action=='copy' OR $module=='report'){
-}?>
-								<a class='add-edit' href="<?php echo $this->url(array('module'=>$module,'controller'=>$controller,'action'=>'index'),null,true); ?>">
-								<i class="fa fa-arrow-circle-o-left" aria-hidden="true"></i> <?php echo $tr->translate('GO_BACK');?>
-								</a>
-							</div>
-						</div>
-				<?php }?>
-       		 	
-	           		<?php 
-            			if($module=='report' AND $action!='index'){?>
-							<div class="ptss-frame  js-ptss-frame "><!-- is-opened -->
-								<div class="ptss__toggle-btn  js-ptss-toggle-btn ">
-									<i class="fa fa-print"></i>
 								</div>
-								<div class="ptss__header"><?php echo $tr->translate("PRINT");?></div>
-								<div class="ptss__settings">
-									<div class="ptss__single-setting" id="ptss__layout">
-										<div class="ptss__setting-control">
-											<div class="ptss__layout-wrapper">
-												<a class="qButton" title="<?php echo $tr->translate("Preview");?>" href="#" onclick="preview();"><i class="fa fa-search" aria-hidden="true"></i></a>
-												<a class="qButton print" href="#" title="<?php echo $tr->translate("PRINT");?>" onclick="doPrint();" ><i class="fa fa-print" aria-hidden="true"></i></a>
-												<a class="qButton excel" href="#"  title="<?php echo $tr->translate("Export");?>"  onclick="exportExcel();"><i class="fa fa-file-excel-o" aria-hidden="true"></i></a>
+							</div>
+					<?php }?>
+					
+						<?php 
+							if($module=='report' AND $action!='index'){?>
+								<div class="ptss-frame  js-ptss-frame "><!-- is-opened -->
+									<div class="ptss__toggle-btn  js-ptss-toggle-btn ">
+										<i class="fa fa-print"></i>
+									</div>
+									<div class="ptss__header"><?php echo $tr->translate("PRINT");?></div>
+									<div class="ptss__settings">
+										<div class="ptss__single-setting" id="ptss__layout">
+											<div class="ptss__setting-control">
+												<div class="ptss__layout-wrapper">
+													<a class="qButton" title="<?php echo $tr->translate("Preview");?>" href="#" onclick="preview();"><i class="fa fa-search" aria-hidden="true"></i></a>
+													<a class="qButton print" href="#" title="<?php echo $tr->translate("PRINT");?>" onclick="doPrint();" ><i class="fa fa-print" aria-hidden="true"></i></a>
+													<a class="qButton excel" href="#"  title="<?php echo $tr->translate("Export");?>"  onclick="exportExcel();"><i class="fa fa-file-excel-o" aria-hidden="true"></i></a>
+												</div>
+												
 											</div>
-											
 										</div>
 									</div>
 								</div>
-							</div>
-							<div style="clear:both;"></div>
-							<?php }?>
-							<?php if($module!='home') {?>
-							<section class="inputmask">
-								<div class="row">
-							    	<div class="col-sm-12">
-							    	<?php }?>
-							<?php 
-	            				$rs = $db_user->getAccessUrl($module,$controller,$action);
-// 	            				echo $this->layout()->content;
-		            			if(!empty($rs) OR $action=='changepassword' OR $controller=='testsale'){
-		            				echo $this->layout()->content;
-		            			}else{
-		            				echo $this->render('pagenotfund.phtml');
-		            			}
-            				 ?>
-            				 <?php if($module!='home') {?>
-			            			 </div>
-			            		</div>
-			            	</section>
-            			 <?php }?>
-	            			<?php
-				               	if($module=='report' AND $action!='rpt-paymentschedules'){
-				            ?>
-			                <?php }?>
-       		 	</div>
+								<div style="clear:both;"></div>
+								<?php }?>
+								<?php if($module!='home') {?>
+								<section class="inputmask">
+									<div class="row">
+										<div class="col-sm-12">
+										<?php }?>
+								<?php 
+									$rs = $db_user->getAccessUrl($module,$controller,$action);
+	// 	            				echo $this->layout()->content;
+									if(!empty($rs) OR $action=='changepassword' OR $controller=='testsale'){
+										echo $this->layout()->content;
+									}else{
+										echo $this->render('pagenotfund.phtml');
+									}
+								 ?>
+								 <?php if($module!='home') {?>
+										 </div>
+									</div>
+								</section>
+							 <?php }?>
+								<?php
+									if($module=='report' AND $action!='rpt-paymentschedules'){
+								?>
+								<?php }?>
+						</div>
+					</div>
+				</div>
        		</div>
          </div>
      </div>
      <footer>
-          <div class="pull-right">
+          <div class="pull-right <?php echo $classShow;?>">
            All rights reserved
            & Developed By <a target="_blank" href="http://cam-app.com/">Cam App Technology</a>
           </div>
@@ -411,7 +421,12 @@ $(document).ready(function(){
 		});
 	  });
 	<?php }?>
-	messageAlert()
+	messageAlert();
+	var currentTitle = $(document).attr('title');
+	$('#firstTabs').attr('title', currentTitle);
+	var currentTab = $('#tt').tabs();
+	$(".tabs-header ul.tabs" ).addClass( "hidden" );
+	
 });
 
 var urlReload = '<?php echo $this->url(array('module'=>'default','controller'=>'index','action'=>'reloadr'));?> ';
@@ -563,7 +578,6 @@ function doPrint() {
 	window.frames["print_frame"].document.body.innerHTML=dojo.byId('divPrint').innerHTML;
     window.frames["print_frame"].window.focus();
     window.frames["print_frame"].window.print();
-    //hideDialog();
 }
 function hideleft(){
 	(dojo.style("leftmenu","display") == "none") ? 'show':'hide'();
@@ -632,6 +646,50 @@ function infoMessageAlert(messsageTitle){
 		  }
 	})
 }
+function addTab(title, url){
+	if ($('#tt').tabs('exists', title)){
+		$('#tt').tabs('select', title);
+		var tab = $('#tt').tabs('getSelected'); 
+		var content = '<iframe scrolling="auto" frameborder="0"  src="'+url+'" style="width:100%;height:100%;"></iframe>';
+		$('#tt').tabs('update', {
+			tab: tab,
+			options: {
+				title: title,
+				content: content
+			}
+		});
+		
+	} else {
+		var content = '<iframe scrolling="auto" frameborder="0"  src="'+url+'" style="width:100%;height:100%;"></iframe>';
+		$('#tt').tabs('add',{
+			title:title,
+			content:content,
+			tools:[{
+				iconCls:'fa fa-times',
+				handler:function(){
+					$('#tt').tabs('select', title);
+					var tab = $('#tt').tabs('getSelected');
+					var index = $('#tt').tabs('getTabIndex',tab);
+					$('#tt').tabs('close',index);
+					
+					var currentAmtTab = $(".tabs-header ul.tabs" ).children().length;
+					if(currentAmtTab<=1){
+						$(".tabs-header ul.tabs" ).addClass( "hidden" );
+					}
+				}
+			}]
+		});
+		
+		var currentAmtTab = $(".tabs-header ul.tabs" ).children().length;
+		if(currentAmtTab>1){
+			$(".tabs-header ul.tabs" ).removeClass( "hidden" );
+		}else{
+			$(".tabs-header ul.tabs" ).addClass( "hidden" );
+		}
+	}
+	
+	
+}
 </script>
 <?php if($action!='index'){?>
 <?php if($module!="report"){?>
@@ -644,5 +702,7 @@ function infoMessageAlert(messsageTitle){
 <?php if(INSTALL_TYPE !='1' ){?>
 <script src="<?php echo $this->baseUrl()?>/admin/js/connectivity_status.js"></script>
 <?php } ?>
+<link rel="stylesheet" type="text/css" href="<?php echo $this->baseUrl()?>/admin/easyui/easyui.css">
+<script type="text/javascript" src="<?php echo $this->baseUrl()?>/admin/easyui/jquery.easyui.min.js"></script>
 <iframe name=print_frame width=0 height=0 frameborder=0 src=about:blank></iframe>
 </body>

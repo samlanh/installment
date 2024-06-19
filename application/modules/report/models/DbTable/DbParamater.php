@@ -48,11 +48,23 @@ class Report_Model_DbTable_DbParamater extends Zend_Db_Table_Abstract
 				(SELECT t.type_nameen FROM `ln_properties_type` AS t WHERE t.id = p.`property_type` LIMIT 1) AS pro_type,
 				p.south,p.north,p.west,p.east,
 				p.`width`,p.`height`,p.`land_size`,p.`price`,p.`land_price`,p.`house_price`, ";
-    			$sql.="CASE
+    			
+				$sql.="CASE
+					WHEN  is_lock =1 THEN (SELECT 1 FROM `ln_sale` AS s WHERE 1 AND CASE 
+										WHEN s.`typesale` =2 
+										THEN FIND_IN_SET(p.`id`, (SELECT pp.`old_land_id` FROM `ln_properties` AS pp WHERE pp.id = s.house_id LIMIT 1 ))
+									ELSE s.house_id =  p.`id`
+					END   AND s.status=1 AND s.is_cancel = 0 AND $to_enddate LIMIT 1)
+				ELSE  0
+				END AS is_lock,";
+				
+				/*
+				$sql.="CASE
 				WHEN  is_lock =1 THEN (SELECT 1 FROM `ln_sale` AS s WHERE s.house_id =  p.`id`  AND s.status=1 AND s.is_cancel = 0 AND $to_enddate LIMIT 1)
 				ELSE  0
-				END AS is_lock,
-				p.`width`,p.`height`,p.`land_size`,p.`price`,p.`land_price`,p.`house_price`,p.`is_lock`, ";		
+				END AS is_lock,";
+				*/
+				$sql.="p.`width`,p.`height`,p.`land_size`,p.`price`,p.`land_price`,p.`house_price`, ";		//p.`is_lock`,
 
     		$sql.="(SELECT first_name FROM `rms_users` WHERE id=p.user_id LIMIT 1) AS user_name,
 					(SELECT s.price_sold FROM `ln_sale` AS s WHERE s.house_id =  p.id  AND s.is_cancel = 0  LIMIT 1) AS price_sold
@@ -108,6 +120,7 @@ class Report_Model_DbTable_DbParamater extends Zend_Db_Table_Abstract
 					s.price_sold,
 					clie.`client_number`,
 					(clie.`name_kh`) AS client_name,
+					clie.`phone` AS clientPhone,
 					pro.`land_code`,
 					(SELECT pt.`type_nameen` FROM `ln_properties_type` AS pt WHERE pt.`id` = pro.`property_type` LIMIT 1) AS type_name,
 					pro.`property_type`,pro.`land_address`,pro.`street`,
@@ -328,6 +341,8 @@ class Report_Model_DbTable_DbParamater extends Zend_Db_Table_Abstract
 				   s.agreement_for,
 				   (SELECT name_kh FROM `ln_view` WHERE type=31 and key_code=s.agreement_for limit 1) AS titlePlong,
 				  `p`.`project_name`,
+				  `p`.`map_url` AS projectNameEng,
+				  `p`.`contact_contruction` AS projectLocationEng,
 				  `p`.`logo` AS project_logo,
 				  `p`.`branch_tel`,
 				  `p`.`other` as p_other,
@@ -377,8 +392,13 @@ class Report_Model_DbTable_DbParamater extends Zend_Db_Table_Abstract
      			   c.rid_no AS with_client_nation_id,
      			   (SELECT name_kh FROM `ln_view` WHERE TYPE=11 AND key_code=c.`sex` LIMIT 1) AS client_sex,
      			   (SELECT name_kh FROM `ln_view` WHERE type=11 and key_code=c.sex limit 1) AS sexKh,
+				   
      			   (SELECT name_kh FROM `ln_view` WHERE type=23 and key_code=c.joint_doc_type limit 1) AS joint_doc_type,
+     			   (SELECT name_en FROM `ln_view` WHERE type=23 and key_code=c.joint_doc_type limit 1) AS jointDocTypeEng,
+     			   (SELECT name_en FROM `ln_view` WHERE type=23 and key_code=c.joint_doc_type limit 1) AS joint_doc_type_en,
+     			   (SELECT name_en FROM `ln_view` WHERE type=23 and key_code=c.joint_doc_type limit 1) AS client_d_type_en,
      			   (SELECT name_kh FROM `ln_view` WHERE type=23 and key_code=c.client_d_type limit 1) AS client_d_type,
+     			   (SELECT name_en FROM `ln_view` WHERE type=23 and key_code=c.client_d_type limit 1) AS clientDocTypeEng,
      			   
      			   c.p_nationality,
      			   c.p_nationality AS with_client_nationlity ,
@@ -395,161 +415,90 @@ class Report_Model_DbTable_DbParamater extends Zend_Db_Table_Abstract
                   c.dstreet AS w_street,
                    c.arid_no AS witnesses,
                    c.remark AS clientNote,
-				  (SELECT
-				     `village`.`village_namekh`
-				   FROM `ln_village` `village`
-				   WHERE (`village`.`vill_id` = `c`.`qvillage`)
-				   LIMIT 1) AS `joint_village`,
-    			  (SELECT
-				     `comm`.`commune_namekh` FROM `ln_commune` `comm`
-				   WHERE (`comm`.`com_id` = `c`.`dcommune`)
-				   LIMIT 1) AS `join_commune`,
-    			 (SELECT
-				     `dist`.`district_namekh`
-				   FROM `ln_district` `dist`
-				   WHERE (`dist`.`dis_id` = `c`.`adistrict`) LIMIT 1) AS `join_district`,
-    			(SELECT
-				     `provi`.`province_kh_name`
-				   FROM `ln_province` `provi`
-				   WHERE (`provi`.`province_id` = `c`.`cprovince`) LIMIT 1) AS `join_province`,	
-    				
-				  (SELECT
-					     `village`.`village_namekh`
-					   FROM `ln_village` `village`
-					   WHERE (`village`.`vill_id` = `c`.`village_id`
-					                                 )
-					   LIMIT 1) AS `client_village_kh`,
-				   (SELECT
-				     `comm`.`commune_namekh` FROM `ln_commune` `comm`
-				   WHERE (`comm`.`com_id` = `c`.`com_id`)
-				   LIMIT 1) AS `client_commune_kh`,
-				  (SELECT
-				     `dist`.`district_namekh`
-				   FROM `ln_district` `dist`
-				   WHERE (`dist`.`dis_id` = `c`.`dis_id`)
-				   LIMIT 1) AS `client_districtkh`,
-				  (SELECT
-				     `provi`.`province_kh_name`
-				   FROM `ln_province` `provi`
-				   WHERE (`provi`.`province_id` = `c`.`pro_id`)
-				   LIMIT 1) AS `client_province_kh`,
-				   (SELECT name_kh FROM `ln_view` WHERE TYPE=11 AND key_code=c.`ksex` LIMIT 1) AS client_buywith_sex,
-				    (SELECT name_kh FROM `ln_view` WHERE TYPE=11 AND key_code=c.`ksex` LIMIT 1) AS with_client_sex ,
-				   c.hname_kh AS w_client_namekh,
-				   c.dob_buywith AS w_client_dob_buywith,
-				   c.p_nationality AS w_client_nationality,
-				   c.`ghouse` AS w_client_house,
-					c.lphone AS w_client_phone,
-				  (SELECT
-				     `village`.`village_name`
-				   FROM `ln_village` `village`
-				   WHERE (`village`.`vill_id` = `c`.`qvillage`)
-				   LIMIT 1) AS `w_client_village_en`,
-					  (SELECT
-					     `village`.`village_namekh`
-					   FROM `ln_village` `village`
-					   WHERE (`village`.`vill_id` = `c`.`qvillage`
-					                                 )
-					   LIMIT 1) AS `w_client_village_kh`,
-				  (SELECT
-				     `comm`.`commune_name` FROM `ln_commune` `comm`
-				   WHERE (`comm`.`com_id` = `c`.`dcommune`)
-				   LIMIT 1) AS `w_client_commune_en`,
 				   
-				   (SELECT
-				     `comm`.`commune_namekh` FROM `ln_commune` `comm`
-				   WHERE (`comm`.`com_id` = `c`.`dcommune`)
-				   LIMIT 1) AS `w_client_commune_kh`,
-				  (SELECT
-				     `dist`.`district_name`
-				   FROM `ln_district` `dist`
-				   WHERE (`dist`.`dis_id` = `c`.`adistrict`) LIMIT 1) AS `w_client_district`,
-				  (SELECT
-				     `dist`.`district_namekh`
-				   FROM `ln_district` `dist`
-				   WHERE (`dist`.`dis_id` = `c`.`adistrict`)
-				   LIMIT 1) AS `w_client_districtkh`,
-				  (SELECT
-				     `provi`.`province_en_name`
-				   FROM `ln_province` `provi`
-				   WHERE (`provi`.`province_id` = `c`.`cprovince`) LIMIT 1) AS `w_client_province_en`,
-				  (SELECT
-				     `provi`.`province_kh_name`
-				   FROM `ln_province` `provi`
-				   WHERE (`provi`.`province_id` = `c`.`cprovince`)
-				   LIMIT 1) AS `w_client_province_kh`,
+				(SELECT `village`.`village_namekh` FROM `ln_village` `village` WHERE (`village`.`vill_id` = `c`.`qvillage`) LIMIT 1) AS `joint_village`,
+				(SELECT `village`.`village_namekh` FROM `ln_village` `village` WHERE (`village`.`vill_id` = `c`.`qvillage`) LIMIT 1) AS `w_client_village_kh`,
+				(SELECT `village`.`village_name` FROM `ln_village` `village` WHERE (`village`.`vill_id` = `c`.`qvillage`) LIMIT 1) AS `w_client_village_en`,
+    			(SELECT `comm`.`commune_namekh` FROM `ln_commune` `comm` WHERE (`comm`.`com_id` = `c`.`dcommune`) LIMIT 1) AS `join_commune`,
+    			(SELECT `comm`.`commune_namekh` FROM `ln_commune` `comm` WHERE (`comm`.`com_id` = `c`.`dcommune`) LIMIT 1) AS `w_client_commune_kh`,
+    			(SELECT `comm`.`commune_name` FROM `ln_commune` `comm` WHERE (`comm`.`com_id` = `c`.`dcommune`) LIMIT 1) AS `w_client_commune_en`,
+    			(SELECT `dist`.`district_namekh` FROM `ln_district` `dist` WHERE (`dist`.`dis_id` = `c`.`adistrict`) LIMIT 1) AS `join_district`,
+    			(SELECT `dist`.`district_namekh` FROM `ln_district` `dist` WHERE (`dist`.`dis_id` = `c`.`adistrict`) LIMIT 1) AS `w_client_districtkh`,
+    			(SELECT `dist`.`district_name` FROM `ln_district` `dist` WHERE (`dist`.`dis_id` = `c`.`adistrict`) LIMIT 1) AS `w_client_district`,
+    			(SELECT `dist`.`district_name` FROM `ln_district` `dist` WHERE (`dist`.`dis_id` = `c`.`adistrict`) LIMIT 1) AS `w_client_district_en`,
+    			(SELECT `provi`.`province_kh_name` FROM `ln_province` `provi` WHERE (`provi`.`province_id` = `c`.`cprovince`) LIMIT 1) AS `join_province`,	
+    			(SELECT `provi`.`province_kh_name` FROM `ln_province` `provi` WHERE (`provi`.`province_id` = `c`.`cprovince`) LIMIT 1) AS `w_client_province_kh`,	
+    			(SELECT `provi`.`province_en_name` FROM `ln_province` `provi` WHERE (`provi`.`province_id` = `c`.`cprovince`) LIMIT 1) AS `w_client_province_en`,	
+    				
+				(SELECT `village`.`village_namekh` FROM `ln_village` `village` WHERE (`village`.`vill_id` = `c`.`village_id`) LIMIT 1) AS `client_village_kh`,
+				(SELECT `village`.`village_name` FROM `ln_village` `village` WHERE (`village`.`vill_id` = `c`.`village_id`) LIMIT 1) AS `village_en`,
+				(SELECT `village`.`village_name` FROM `ln_village` `village` WHERE (`village`.`vill_id` = `c`.`village_id`) LIMIT 1) AS `clientVillageEng`,
+				(SELECT `comm`.`commune_namekh` FROM `ln_commune` `comm` WHERE (`comm`.`com_id` = `c`.`com_id`) LIMIT 1) AS `client_commune_kh`,
+				(SELECT `comm`.`commune_name` FROM `ln_commune` `comm` WHERE (`comm`.`com_id` = `c`.`com_id`) LIMIT 1) AS `commune_en`,
+				(SELECT `comm`.`commune_name` FROM `ln_commune` `comm` WHERE (`comm`.`com_id` = `c`.`com_id`) LIMIT 1) AS `clientCommuneEng`,
+				(SELECT `dist`.`district_namekh` FROM `ln_district` `dist` WHERE (`dist`.`dis_id` = `c`.`dis_id`) LIMIT 1) AS `client_districtkh`,
+				(SELECT `dist`.`district_name` FROM `ln_district` `dist` WHERE (`dist`.`dis_id` = `c`.`dis_id`) LIMIT 1) AS `district_en`,
+				(SELECT `dist`.`district_name` FROM `ln_district` `dist` WHERE (`dist`.`dis_id` = `c`.`dis_id`) LIMIT 1) AS `clientDistrictEng`,
+				(SELECT `provi`.`province_kh_name` FROM `ln_province` `provi` WHERE (`provi`.`province_id` = `c`.`pro_id`) LIMIT 1) AS `client_province_kh`,
+				(SELECT `provi`.`province_en_name` FROM `ln_province` `provi` WHERE (`provi`.`province_id` = `c`.`pro_id`) LIMIT 1) AS `clientProvinceEng`,
+				(SELECT `provi`.`province_en_name` FROM `ln_province` `provi` WHERE (`provi`.`province_id` = `c`.`pro_id`) LIMIT 1) AS `province_en`,
+				
+				(SELECT name_kh FROM `ln_view` WHERE TYPE=11 AND key_code=c.`ksex` LIMIT 1) AS client_buywith_sex,
+				(SELECT name_kh FROM `ln_view` WHERE TYPE=11 AND key_code=c.`ksex` LIMIT 1) AS with_client_sex ,
+				c.hname_kh 		AS w_client_namekh,
+				c.dob_buywith 	AS w_client_dob_buywith,
+				c.p_nationality AS w_client_nationality,
+				c.`ghouse` 		AS w_client_house,
+				c.lphone 		AS w_client_phone,
 				  
-			(SELECT
-				     `prope_type`.`type_nameen`
-				   FROM `ln_properties_type` `prope_type`
-				   WHERE (`prope_type`.`id` =`pp`.`property_type`)
-				   LIMIT 1) AS `property_type_en`,
-			(SELECT
-				     `prope_type`.`type_namekh`
-				   FROM `ln_properties_type` `prope_type`
-				   WHERE `prope_type`.`id` = `pp`.`property_type` LIMIT 1) AS `property_type_kh`,
-		   (SELECT
-			 `prope_type`.`note`
-		   FROM `ln_properties_type` `prope_type`
-		   WHERE `prope_type`.`id` = `pp`.`property_type` LIMIT 1) AS `propertyTypeNote`,
-		   (SELECT
-			 `prope_type`.`serviceFee`
-		   FROM `ln_properties_type` `prope_type`
-		   WHERE `prope_type`.`id` = `pp`.`property_type` LIMIT 1) AS `propertyTypeFee`,
-		   (SELECT
-			 `prope_type`.`serviceFeeYear`
-		   FROM `ln_properties_type` `prope_type`
-		   WHERE `prope_type`.`id` = `pp`.`property_type` LIMIT 1) AS `propertyTypeFeeYearly`,
-		   
-			`pp`.`land_size` AS `property_land_size`,
-			
-			 pp.`hardtitle`,
-			`pp`.`hardtitle` AS `layoutNumber`,
-			
-			`pp`.`width` AS `property_width`,
-		    `pp`.`height` AS `property_height`,
-		     pp.`land_size`,
-		    
-		     
-		    `pp`.`property_type`,
-		    `pp`.`type_tob`,
-		    `pp`.`land_code` AS `property_code`,
-		    `pp`.`land_address` AS `property_title`,
- 			 pp.`street` AS `property_street`,
- 			 
- 			 pp.land_width,
- 			 pp.land_height,
- 			 pp.`full_size`,
-			 
-			 pp.land_width AS houseWidth,
- 			 pp.land_height AS houseHeight,
- 			 pp.`full_size` AS houseFullSize,
- 			 
- 			 pp.floor,
- 			 pp.living,
- 			 pp.`bedroom`,
- 			 pp.dinnerroom,
- 			 pp.buidingyear,
- 			 pp.buidingyear AS periodBuildDescription,
- 			 pp.`parkingspace`,
- 			 pp.`note` as `property_note`,
-	(SELECT
-    	`property`.`land_size`
-    	FROM `ln_properties` `property`
-    	WHERE (`property`.`id` = `s`.`house_id`)
-    	LIMIT 1) AS `property_size`,
- 			 pp.`north` AS border_north,
- 			 pp.`south` AS border_south,
- 			 pp.`east` AS border_east,
- 			 pp.`west` AS border_west,
- 			 pp.`old_land_id`,
- 	(SELECT
-	    	`a`.`description`
-	    	FROM `ln_sale_conditionagreement` `a`
-	    		WHERE (`a`.`saleId` = `s`.`id`)
-	    	LIMIT 1) AS `additinalContract`,
-	    	gendertitle,
-	    	gendertitle1 
+				(SELECT prt.`type_nameen` FROM `ln_properties_type` AS prt WHERE prt.`id` =`pp`.`property_type` LIMIT 1) AS `property_type_en`,
+				(SELECT prt.`type_namekh` FROM `ln_properties_type` AS prt WHERE prt.`id` =`pp`.`property_type` LIMIT 1) AS `property_type_kh`,
+				(SELECT prt.`note` 			FROM `ln_properties_type` AS prt WHERE prt.`id` =`pp`.`property_type` LIMIT 1) AS `propertyTypeNote`,
+				(SELECT prt.`serviceFee` 	FROM `ln_properties_type` AS prt WHERE prt.`id` =`pp`.`property_type` LIMIT 1) AS `propertyTypeFee`,
+				(SELECT prt.`serviceFeeYear` FROM `ln_properties_type` AS prt WHERE prt.`id` =`pp`.`property_type` LIMIT 1) AS `propertyTypeFeeYearly`,
+				
+			   
+				`pp`.`land_size` AS `property_land_size`,
+				
+				 pp.`hardtitle`,
+				`pp`.`hardtitle` AS `layoutNumber`,
+				
+				`pp`.`width` AS `property_width`,
+				`pp`.`height` AS `property_height`,
+				 pp.`land_size`,
+				 pp.`land_size` AS `property_size`,
+				
+				 
+				`pp`.`property_type`,
+				`pp`.`type_tob`,
+				`pp`.`land_code` AS `property_code`,
+				`pp`.`land_address` AS `property_title`,
+				 pp.`street` AS `property_street`,
+				 
+				 pp.land_width,
+				 pp.land_height,
+				 pp.`full_size`,
+				 
+				 pp.land_width AS houseWidth,
+				 pp.land_height AS houseHeight,
+				 pp.`full_size` AS houseFullSize,
+				 
+				 pp.floor,
+				 pp.living,
+				 pp.`bedroom`,
+				 pp.dinnerroom,
+				 pp.buidingyear,
+				 pp.buidingyear AS periodBuildDescription,
+				 pp.`parkingspace`,
+				 pp.`note` as `property_note`,
+				 pp.`north` AS border_north,
+				 pp.`south` AS border_south,
+				 pp.`east` AS border_east,
+				 pp.`west` AS border_west,
+				 pp.`old_land_id`,
+				(SELECT `a`.`description` FROM `ln_sale_conditionagreement` `a` WHERE (`a`.`saleId` = `s`.`id`) LIMIT 1) AS `additinalContract`,
+				gendertitle,
+				gendertitle1 
 		FROM 
 			`ln_sale` AS `s`,
 			ln_project AS p ,
@@ -564,7 +513,6 @@ class Report_Model_DbTable_DbParamater extends Zend_Db_Table_Abstract
     		
     		$dbp = new Application_Model_DbTable_DbGlobal();
     		$sql.=$dbp->getAccessPermission("`s`.`branch_id`");
-    		
     		return $db->fetchRow($sql);
     }
 //     function addOversoldPrice($data){
@@ -967,7 +915,7 @@ class Report_Model_DbTable_DbParamater extends Zend_Db_Table_Abstract
     		
     		$dbgb = new Application_Model_DbTable_DbGlobal();
     		$userinfo = $dbgb->getUserInfo();
-    		if($userinfo['level']!=1 AND $userinfo['level']!=2){
+    		if($userinfo['level']!=1 AND $userinfo['level']!=2 AND $userinfo['level']!=11){
     			$where.= " AND ct.user_id = ".$userinfo['user_id'];
     		}
     		$where.=" ORDER BY ct.id DESC ";
@@ -1180,7 +1128,7 @@ class Report_Model_DbTable_DbParamater extends Zend_Db_Table_Abstract
 		if(!empty($userInfo)){
 			$level = empty($userInfo["level"]) ? 0 : $userInfo["level"];
 			$userId = empty($userInfo["user_id"]) ? 0 : $userInfo["user_id"];
-			if($level!=1){
+			if($level!=1 AND $level!=11){
     			$where.= " AND c.user_contact = ".$userId;
     		}
 		}

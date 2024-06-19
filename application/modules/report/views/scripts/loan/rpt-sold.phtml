@@ -146,6 +146,9 @@ dojo.require("dijit.form.DateTextBox");
 		table tr td{
 			padding:0 2px;
 		}
+		.textBold{
+			font-weight:bold;
+		}
 		
 		
 		
@@ -166,14 +169,14 @@ dojo.require("dijit.form.DateTextBox");
 	            <table class="content-data" border="1" width="100%" cellspacing="0">
 	               <thead>
 	                 <tr class="hide" style="border:1px solid #000;">
-		                <td colspan="18" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
+		                <td colspan="19" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
 		             </tr>
 	                 <tr bgcolor="#c1d0f3" class="style" align="center" >
 	                    <td scope="col" rowspan="2"><span><?php echo $tr->translate("NUM");?></span></td>
-	                    <td scope="col" rowspan="2"><span><?php echo $tr->translate("CUSTOMER_NAME");?></span></td>
+	                    <td scope="col" rowspan="2"><span><?php echo $tr->translate("Customers");?></span></td>
 	                    <td scope="col" colspan="4"><span><?php echo $tr->translate("PROPERTY_INFO");?></span></td>
-	                    <td scope="col" colspan="<?php echo $colspanDIS;?>"><span><?php echo $tr->translate("INFO_INDILOAN");?></span></td>
-	                    <td scope="col" colspan="8"><span><?php echo $tr->translate("PAYMENT_INFO");?></span></td>
+	                    <td scope="col" colspan="<?php echo $colspanDIS+4;?>"><span><?php echo $tr->translate("INFO_INDILOAN");?></span></td>
+	                    <td scope="col" colspan="5"><span><?php echo $tr->translate("PAYMENT_INFO");?></span></td>
 	                    <td scope="col" rowspan="2"><span><?php echo $tr->translate("BY_USER");?></span></td>
 	                </tr>
 	                <tr bgcolor="#c1d0f3" class="style" align="center" >
@@ -181,17 +184,22 @@ dojo.require("dijit.form.DateTextBox");
 	                    <td scope="col"><?php echo $tr->translate("PROPERTY_CODE");?></td>
 	                    <td scope="col"><?php echo $tr->translate("STREET");?></td>
 	                    <td scope="col"><?php echo $tr->translate("AMOUNTS");?></td>
+						
+						<td scope="col"><?php echo $tr->translate("BUY_DATE");?></td>
+	                    <td scope="col"><?php echo $tr->translate("FIRST_PAYMENT");?></td>
+	                    <td scope="col"><?php echo $tr->translate("END_DATE");?></td>
 	                    <td scope="col"><?php echo $tr->translate("PRICE_BEFORE");?></td>
 	                    <td scope="col"><?php echo $tr->translate("DISCOUNT");?>%</td>
 	                    <td scope="col"><?php echo $tr->translate("DISCOUNT");?></td>
+						<td scope="col"><?php echo $tr->translate("INTEREST");?>(%<?php echo $tr->translate("YEAR");?>)</td>
+	                    
+						
 	                    <td scope="col"><?php echo $tr->translate("SOLD_PRICE");?></td>
 	                    <td scope="col"><?php echo $tr->translate("PAID");?></td>
 	                    <td scope="col"><?php echo $tr->translate("BALANCE");?></td>
 	                    <td scope="col"><?php echo $tr->translate("PERIIOD");?></td>
-	                    <td scope="col"><?php echo $tr->translate("INTEREST");?>(%<?php echo $tr->translate("YEAR");?>)</td>
-	                    <td scope="col"><?php echo $tr->translate("BUY_DATE");?></td>
-	                    <td scope="col"><?php echo $tr->translate("FIRST_PAYMENT");?></td>
-	                    <td scope="col"><?php echo $tr->translate("END_DATE");?></td>
+	                    <td scope="col"><?php echo $tr->translate("COMPLETED_PAID_DATE");?></td>
+	                    
 	                </tr>
 	              </thead>
 	               <?php 
@@ -348,18 +356,26 @@ dojo.require("dijit.form.DateTextBox");
 						<td data-label="<?php echo $tr->translate("NUM");?>" align="center"><?php echo $key+1; ?></td>
 						<!-- <td ><a target="_blank" style="color:#000; text-decoration: none;" href="<?php //echo $link;?>"><?php //echo $row['branch_name']; ?></a></td> -->
 						<!--<td ><a target="_blank" style="color:#000; text-decoration: none;" href="<?php //echo $link;?>"><?php //echo $row['client_number']; ?></a></td> -->
-						<td data-label="<?php echo $tr->translate("CUSTOMER_NAME");?>" ><?php echo $row['name_kh'];?></td>
+						<td data-label="<?php echo $tr->translate("Customers");?>" ><span style="font-size:90%; line-height: 14px;white-space: pre-wrap !important;max-width: 150px;width: 150px;display: block; overflow-wrap: break-word;text-align: left;vertical-align: top; padding:2px 0;" ><?php echo $row['name_kh']; if(!empty($row['phone'])){ echo "<span style='display: block; line-height: 12px; font-size:80%;' />".$row['phone'];}?></span></span></td>
 						<td data-label="<?php echo $tr->translate("TYPE");?>"><?php echo $row['propertype']; ?></td>
 						<!--<td><a target="_blank" style="color:#000; text-decoration: none;" href="<?php echo $link;?>"><?php echo $row['land_code']; ?></a></td> -->	
-						<td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>" align="left"><span style="max-width: 330px; display: block; white-space: pre-line; line-height: 16px; overflow-wrap: break-word;padding: 0 1px;" ><?php echo $row['land_address']; ?></span></td>
+						<td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>" align="left"><span style="white-space: pre-wrap !important;max-width: 100px;width: 100px;display: block;font-size: 11px; overflow-wrap: break-word; display: block; white-space: pre-line; line-height: 16px; overflow-wrap: break-word;padding: 0 1px;" ><?php echo $row['land_address']; ?></span></td>
 						<td data-label="<?php echo $tr->translate("STREET");?>"><?php echo $row['street'];?></td>
 						<td data-label="<?php echo $tr->translate("AMOUNTS");?>" align="center"><?php echo sprintf('%02d', $countland); ?></td>
+						
+						<td data-label="<?php echo $tr->translate("BUY_DATE");?>" align="center" style="white-space:nowrap;"><?php echo date("d-m-Y",strtotime($row['buy_date'])); ?></td>
+						<!--<td><?php //if($row['payment_id']==3 OR $row['payment_id']==4){echo date("d-m-Y",strtotime($row['startcal_date']));}?></td> -->
+						<td data-label="<?php echo $tr->translate("FIRST_PAYMENT");?>" align="center"  style="max-width:120px;white-space: normal;"><?php if($row['payment_id']==1 ){echo "<span style='white-space: pre-wrap !important;max-width: 100px;width: 100px;display: block;font-size: 11px;overflow-wrap: break-word; font-size:10px;line-height:15px;'>".$row['note']."</span>"; }else if($row['payment_id']==3 OR $row['payment_id']==4 OR $row['payment_id']==7){echo date("d-m-Y",strtotime($row['first_payment'])); }else{ echo "-";}?></td>
+						<td data-label="<?php echo $tr->translate("END_DATE");?>" align="center" style="white-space:nowrap;" ><?php 	$date= new DateTime($row['end_line']);	echo $date->format("d-m-Y");?></td>
 						
 						<td data-label="<?php echo $tr->translate("PRICE_BEFORE");?>" align="right"><span style="line-height:15px;"><?php echo number_format($row['price_before'],2); ?></span></td>
 						<td data-label="<?php echo $tr->translate("DISCOUNT");?>" align="center"><?php echo number_format($row['discount_percent'],2); ?></td>	
 						<td data-label="<?php echo $tr->translate("DISCOUNT");?>" align="right" style="white-space:nowrap;"><?php 
 						$other_discount = empty($row['other_discount'])?0:$row['other_discount'];
 						echo number_format($row['discount_amount']+$other_discount,2); ?></td>
+						
+						<td data-label="<?php echo $tr->translate("INTEREST");?>" align="center"><?php if($row['payment_id']==3 OR $row['payment_id']==4 OR $row['payment_id']==7){ echo $row['interest_rate']; }else{ echo "-";}?></td>
+						
 						<td data-label="<?php echo $tr->translate("SOLD_PRICE");?>"  align="right" style="white-space:nowrap;"><?php echo number_format($row['price_sold'],2); ?></td>	
 						<!-- <td align="left"><span style="line-height:15px;"><?php //echo $row['other_fee']; ?></span></td>-->
 						<?php 
@@ -382,19 +398,16 @@ dojo.require("dijit.form.DateTextBox");
 								echo number_format($paidAmoutn,2);
 							}
 						?></td>
-						<td data-label="<?php echo $tr->translate("BALANCE");?>" align="right" style="white-space:nowrap;"><?php echo number_format($row['price_sold']-$paidAmoutn,2);//echo number_format($row['price_sold']-$row['paid_amount'],2); ?></td>
+						<td data-label="<?php echo $tr->translate("BALANCE");?>" align="right" style="white-space:nowrap;"><?php echo number_format($balance,2);//number_format($row['price_sold']-$paidAmoutn,2);//echo number_format($row['price_sold']-$row['paid_amount'],2); ?></td>
 						<!-- <td style="white-space:nowrap; font-size:10px;text-align: left;"><?php //echo $row['paymenttype']; ?></td> -->
 						<td data-label="<?php echo $tr->translate("PERIIOD");?>" align="center"><?php if($row['payment_id']== 3 OR $row['payment_id']==4 OR $row['payment_id']==7){ echo sprintf('%02d', $row['total_duration']); }else if($row['payment_id']==6){ echo sprintf('%02d', $row['times'])." ដង";}else{ echo "-";}?></td>
-						<td data-label="<?php echo $tr->translate("INTEREST");?>" align="center"><?php if($row['payment_id']==3 OR $row['payment_id']==4 OR $row['payment_id']==7){ echo $row['interest_rate']; }else{ echo "-";}?></td>
-						<td data-label="<?php echo $tr->translate("BUY_DATE");?>" align="center" style="white-space:nowrap;"><?php echo date("d-m-Y",strtotime($row['buy_date'])); ?></td>
-						<!--<td><?php //if($row['payment_id']==3 OR $row['payment_id']==4){echo date("d-m-Y",strtotime($row['startcal_date']));}?></td> -->
-						<td data-label="<?php echo $tr->translate("FIRST_PAYMENT");?>" align="center"  style="max-width:120px;white-space: normal;"><?php if($row['payment_id']==1 ){echo "<span style='font-size:10px;line-height:15px;'>".$row['note']."</span>"; }else if($row['payment_id']==3 OR $row['payment_id']==4 OR $row['payment_id']==7){echo date("d-m-Y",strtotime($row['first_payment'])); }else{ echo "-";}?></td>
-						<td data-label="<?php echo $tr->translate("END_DATE");?>" align="center" style="white-space:nowrap;" ><?php 	$date= new DateTime($row['end_line']);	echo $date->format("d-m-Y");?></td>
+						<td data-label="<?php echo $tr->translate("COMPLETED_PAID_DATE");?>" class="textBold" align="center"><?php if($balance<=0){ $date= new DateTime($row['lastPaidDate']);	echo $date->format("d-m-Y"); }else{ echo "-";}?></td>
+						
 						<td data-label="<?php echo $tr->translate("BY_USER");?>" align="center" style="white-space:nowrap;" ><?php echo $row['user_name'];?></td>
 						</tr>
 					<?php }?>
 	            		<tr>
-	            			<td colspan="18" style=" border: #fff solid 1px;    border-top: solid 1px #000;">
+	            			<td colspan="19" style=" border: #fff solid 1px;    border-top: solid 1px #000;">
 				             <br />
 				             <table style=" font-size:10px; width:70%; margin:0 auto; font-family:'Khmer OS Muol Light'" cellspacing="0">
 			                 <thead>
@@ -425,7 +438,7 @@ dojo.require("dijit.form.DateTextBox");
 			                    <td data-label="<?php echo $tr->translate("SALE_AMOUNT");?>" align="center"><?php echo $payment_1;?></td>
 			                    <td data-label="<?php echo $tr->translate("TOTAL_INCASH");?>" align="right">$<?php echo number_format($sold_price1,2);?></td>
 			                    <td data-label="<?php echo $tr->translate("TOTAL_PAYMENTED");?>" align="right">$<?php echo number_format($paid_price1,2);?></td>
-			                    <td data-label="<?php echo $tr->translate("LOANOUTSTADING");?>" valign="right">$<?php echo number_format($balace_price1,2);?></td>
+			                    <td data-label="<?php echo $tr->translate("LOANOUTSTADING");?>" align="right">$<?php echo number_format($balace_price1,2);?></td>
 			                    <td data-label="<?php echo $tr->translate("ចំនួនអចលនទ្រព្យ");?>" align="right"><?php echo number_format($amt_pro_payment_1,0);?></td>
 			                    <td></td>
 			                 </tr>
@@ -560,30 +573,38 @@ $(function(){
 	$.contextMenu({
 		selector: '.context-menu-one', 
 		callback: function(key, options) {
+			
+			var newPageTitle="";
 			var m = "clicked: " + key;
 			if(key=="agreement"){
 				url='<?php echo $this->baseUrl()."/report/paramater/rpt-agreement/id/";?>';
+				newPageTitle="<?php echo $tr->translate("AGREEMENT");?>";
 			}else if(key=="reschedule"){
 				url='<?php echo $this->baseUrl()."/report/loan/rpt-paymentschedules/id/";?>';
+				newPageTitle="<?php echo $tr->translate("SCHEDULE_PAYMENT");?>";
 			}else if(key=="edit"){
 				url='<?php echo $this->baseUrl()."/loan/index/rpt-updatepayment/id/";?>';
+				newPageTitle="<?php echo $tr->translate("EDIT_SCHEDULE");?>";
 			}
 			else if(key=="editstatus"){
 				url='<?php echo $this->baseUrl()."/report/loan/rpt-updatestatus/id/";?>';
+				newPageTitle="<?php echo $tr->translate("EDIT_SCHEDULE_STATUS");?>";
 			}
 			else if(key=="payment"){
 				url='<?php echo $this->baseUrl()."/report/loan/paymenthistory/id/";?>';
+				newPageTitle="<?php echo $tr->translate("REPORT_LOAN_PAYMENT");?>";
 			}
-			gotoAction();
+			addTab(newPageTitle,url+row+'?inFrame=true');
+			//gotoAction();
 		},
 		items: {
 			"agreement": {name: "<?php echo $tr->translate("AGREEMENT");?>", icon: "fa-file-text", accesskey: "c"},
 			"reschedule": {name: "<?php echo $tr->translate("SCHEDULE_PAYMENT");?>", icon: "fa-calendar"},
 			<?php if($showEditSchedule==1){?>
-			"edit": {name: "<?php echo $tr->translate("EDIT_SCHEDULE");?>", icon: "fa-money", accesskey: "c o p y"},
+			"edit": {name: "<?php echo $tr->translate("EDIT_SCHEDULE");?>", icon: "edit", accesskey: "c o p y"},
 			<?php }?>
 			//"editstatus": {name: "<?php echo $tr->translate("EDIT_SCHEDULE_STATUS");?>", icon: "fa-money", accesskey: "c o p y"},
-			"payment": {name: "<?php echo $tr->translate("REPORT_LOAN_PAYMENT");?>", icon: "fa-money", accesskey: "c o p y"},
+			"payment": {name: "<?php echo $tr->translate("REPORT_LOAN_PAYMENT");?>", icon: "fa-book", accesskey: "c o p y"},
 		}
 	});
 });

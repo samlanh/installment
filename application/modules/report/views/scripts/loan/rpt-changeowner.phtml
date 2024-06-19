@@ -30,7 +30,7 @@
 		<div class="card-box">
 	       	<div class="col-sm-12 border-botom">
 		   		<div class="col-sm-8 pd-0">
-		    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('RPT_CHANGE_OWNER');?></h4>
+		    		<h4 class="m-b-0"><i class="fa fa-file-text" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;<?php echo $tr->translate('RPT_CHANGE_OWNER');?></h4>
 	    		</div>
 	    		<div class="col-sm-4 text-right">
 	    		</div>
@@ -62,7 +62,7 @@
 						<?php echo $frm->getElement("end_date");?>
 					</label>
 					<label class="col-md-3 col-sm-3 col-xs-12" >
-						<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+						<button class="button-class button-primary" iconClass="glyphicon glyphicon-search" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
 					</label>
 					<label class="col-md-3 col-sm-3 col-xs-12"></label>
 			
@@ -143,6 +143,21 @@
 					  }
 					  .hide{visibility: visible; height: <?php echo $classHideHeight;?>;}
 					}
+					tr.odd {
+						background: #ededed;
+					}
+					span.noteValue{
+						line-height: 12px;
+						white-space: pre-wrap !important;
+						max-width: 150px;
+						width: 150px;
+						padding: 1px;
+						display: block;
+						font-size: 90%;
+						overflow-wrap: break-word;
+						text-align: left;
+						vertical-align: top;
+					}
 				</style>
 				<table width="100%">
 					<tr>
@@ -162,18 +177,24 @@
 					                <tr class="style" align="center" >
 					                    <td scope="col" rowspan="2"><?php echo $tr->translate("NUM");?></td>
 					                    <td scope="col" rowspan="2"><?php echo $tr->translate("BRANCH_NAME");?></td>
-					                    <td scope="col" rowspan="2"><?php echo $tr->translate("CUSTOMER_NAME");?></td>
-					                    <td scope="col" rowspan="2"><?php echo $tr->translate("PROPERTY_CODE");?></td>
-					                    <td scope="col" rowspan="2"><?php echo $tr->translate("PRICE");?></td>  
+					                      
+					                    <td scope="col" colspan="3"><?php echo $tr->translate("SALE_INFO");?></td>   
 					                    <td scope="col" colspan="2"><?php echo $tr->translate("PAYMENT_INFO");?></td>   
-					                    <td scope="col" rowspan="2"><?php echo $tr->translate("TO_CUSTOMER");?></td> 
-					                    <td scope="col" rowspan="2"><?php echo $tr->translate("NOTE");?></td>
-					                    <td scope="col" rowspan="2"><?php echo $tr->translate("CHANGE_DATE");?></td>
+					                    <td scope="col" colspan="3"><?php echo $tr->translate("changeOwnerInfo");?></td>   
+					                    
 					                    <td scope="col" rowspan="2" class=""><?php echo $tr->translate("BY_USER");?></td>
 					                </tr>
 					                <tr class="style" align="center" >
+										<td scope="col" rowspan="2"><?php echo $tr->translate("CUSTOMER_NAME");?></td>
+					                    <td scope="col" rowspan="2"><?php echo $tr->translate("PROPERTY_CODE");?></td>
+					                    <td scope="col" rowspan="2"><?php echo $tr->translate("PRICE");?></td>
+										
 					                	<td scope="col" style="padding:1px;"><?php echo $tr->translate("PAID_BEFORE");?></td>                   
 					                    <td scope="col" style="padding:1px;"><?php echo $tr->translate("BALANCE");?></td>
+										
+										<td scope="col" rowspan="2"><?php echo $tr->translate("TO_CUSTOMER");?></td> 
+					                    <td scope="col" rowspan="2"><?php echo $tr->translate("CHANGE_DATE");?></td>
+					                    <td scope="col" rowspan="2"><?php echo $tr->translate("NOTE");?></td>
 					                </tr>
 					            </thead>
 				                <?php 
@@ -182,8 +203,12 @@
 				                <?php 
 				                $is_set =0; if(!empty($this->row)) foreach ($this->row as $index => $rs){ ?>
 				               <?php 
+							   $classRow = "";
+								if(($i%2)==0){
+									$classRow = "odd";
+								}
 				               ?>
-				                <tr class="style style1" style=" white-space:nowrap; ">
+				                <tr class="style style1 <?php echo $classRow;?>" style=" white-space:nowrap; ">
 				               		<td  data-label="<?php echo $tr->translate("NUM");?>"  style="text-align: center;">&nbsp;<?php echo $i++; ?>&nbsp;</td>
 				               		<td data-label="<?php echo $tr->translate("BRANCH_NAME");?>">&nbsp;<?php echo $rs["from_branch"];?>&nbsp;</td>
 				               		<td data-label="<?php echo $tr->translate("CUSTOMER_NAME");?>">&nbsp;<?php echo $rs["name_kh"];?>&nbsp;</td>                 		
@@ -192,8 +217,8 @@
 				               		<td data-label="<?php echo $tr->translate("PAID_BEFORE");?>" align="right" >&nbsp;<?php echo number_format($rs['paid_before'],2);?>&nbsp;</td>               		
 				               		<td data-label="<?php echo $tr->translate("NUM");?>" align="right" >&nbsp;<?php echo number_format($rs['balance'],2);?>&nbsp;</td>
 				               		<td data-label="<?php echo $tr->translate("TO_CUSTOMER");?>">&nbsp;<?php echo $rs['to_branch'];?>&nbsp;</td>
-				               		<td data-label="<?php echo $tr->translate("NOTE");?>" style="white-space:nowrap; ">&nbsp;<?php echo $rs["note"];?>&nbsp;</td>
 				               		<td data-label="<?php echo $tr->translate("CHANGE_DATE");?>" align="center" style="white-space:nowrap; ">&nbsp;<?php echo date("d-m-Y",strtotime($rs["change_date"]));?>&nbsp;</td>
+				               		<td data-label="<?php echo $tr->translate("NOTE");?>" align="left"><span class="noteValue" ><?php echo $rs["note"];?></span></td>
 				               		<td data-label="<?php echo $tr->translate("BY_USER");?>" align="center"><?php echo $rs['user_name']?></td>
 				                </tr>
 				                <?php }?>

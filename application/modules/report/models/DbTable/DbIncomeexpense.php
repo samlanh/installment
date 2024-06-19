@@ -1152,7 +1152,9 @@ class Report_Model_DbTable_DbIncomeexpense extends Zend_Db_Table_Abstract
 	
 	function getOtherIncomePaymentById($id){
 		$db = $this->getAdapter();
-		$sql="SELECT op.id,
+		$sql="SELECT 
+		op.id,
+		op.branch_id,
 		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id =op.branch_id LIMIT 1) AS branch_name,
 		(SELECT logo FROM `ln_project` WHERE ln_project.br_id =op.branch_id LIMIT 1) AS photo,
 		(SELECT name_kh FROM `ln_client` WHERE ln_client.client_id =oi.client_id LIMIT 1) AS client_name,
@@ -1440,6 +1442,38 @@ class Report_Model_DbTable_DbIncomeexpense extends Zend_Db_Table_Abstract
 		}
 		
     	return $db->fetchAll($sql.$order);
+    }
+	
+	public function getComissionById($id){
+		$db = $this->getAdapter();
+		$sql= "SELECT c.*,s.`full_commission`,
+		(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = c.`branch_id` LIMIT 1) AS brach_name,
+		(SELECT v.name_kh FROM `ln_view` AS v WHERE v.type=13 AND v.key_code = c.`category_id` LIMIT 1) AS cate_title,
+		(SELECT cu.name_kh FROM `ln_client` AS cu WHERE cu.client_id = s.`client_id` LIMIT 1) AS cutomer_name,
+		(SELECT p.land_code FROM `ln_properties` AS p WHERE p.id = s.`house_id` LIMIT 1) AS land_code,
+		(SELECT p.street FROM `ln_properties` AS p WHERE p.id = s.`house_id` LIMIT 1) AS street,
+		(SELECT p.land_address FROM `ln_properties` AS p WHERE p.id = s.`house_id` LIMIT 1) AS land_address,
+		(SELECT st.co_khname FROM `ln_staff` AS st WHERE st.co_id = c.`staff_id` LIMIT 1) AS co_khname,
+		
+			(SELECT name_kh FROM `ln_view` WHERE type=2 and key_code=c.payment_id limit 1) AS payment_type,
+			
+		(SELECT CONCAT(COALESCE(last_name,''),' ',COALESCE(first_name,'')) FROM rms_users WHERE id = c.user_id LIMIT 1 ) AS user_name
+		 FROM 
+		`ln_comission` AS c,
+		`ln_sale` AS s
+		WHERE s.`id` = c.`sale_id` AND c.`id` = ".$id;
+		$dbp = new Application_Model_DbTable_DbGlobal();
+		$sql.=$dbp->getAccessPermission("c.`branch_id`");
+		
+		return $db->fetchRow($sql);
+	}
+	function getPurchasePaymentDetail($payment_id){
+    	$db = $this->getAdapter();
+    	$sql="SELECT pd.*,
+    	(SELECT p.invoice FROM `ln_expense` AS p WHERE p.id = pd.purchase_id LIMIT 1) AS supplier_no,
+    	(SELECT p.other_invoice FROM `ln_expense` AS p WHERE p.id = pd.purchase_id LIMIT 1) AS other_invoice
+    	FROM `rms_expense_payment_detail` AS pd WHERE pd.payment_id =$payment_id ";
+    	return $db->fetchAll($sql);
     }
 	
  }

@@ -76,22 +76,29 @@
 		$.contextMenu({
 			selector: '.context-menu-one', 
 			callback: function(key, options) {
-			
+				var newPageTitle="";
+				var actionType=1;
 				var m = "clicked: " + key;
 				if(key=="contact"){
 					url='<?php echo $urlContact;?>';
-				
+					newPageTitle="<?php echo $tr->translate("CREATE_CONTACT_HISTORY");?>";
 				}else if(key=="edit"){
 					url='<?php echo $urlEdit;?>';
+					actionType=2;
 				}else if(key=="contacthistory"){
 					url='<?php echo $urlContachHistory;?>';
+					newPageTitle="<?php echo $tr->translate("CONTACT_HISTORY_DETAIL");?>";
 				}
-				gotoAction();
+				if(actionType==1){
+					addTab(newPageTitle,url+row+'?inFrame=true');
+				}else{
+					gotoAction();
+				}
 			},
 			items: {
 				"contact": {name: "<?php echo $tr->translate("CREATE_CONTACT_HISTORY");?>", icon: "fa-phone"},
 				"contacthistory": {name: "<?php echo $tr->translate("CONTACT_HISTORY_DETAIL");?>", icon: "fa-list-alt"},
-				"edit": {name: "<?php echo $tr->translate("EDIT");?>", icon: "fa-magic"},
+				"edit": {name: "<?php echo $tr->translate("EDIT");?>", icon: "fa-edit"},
 			}
 		});
 	});
@@ -101,6 +108,6 @@
 
 	var recordid ='';
 	function gotoAction(){
-		 window.open(url+row);
+		 window.open(url+row, '_self');
 	}
 </script> 

@@ -561,8 +561,10 @@ class Report_LoanController extends Zend_Controller_Action {
 	
 	$this->view->creaditHistory=$db->getCreditBySaleid($id);
 	
+	$inFrame = $this->getRequest()->getParam('inFrame');
+	$inFrame = empty($inFrame)?"":$inFrame;
   	if(empty($rs)){
-  		Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index",2);
+  		Application_Form_FrmMessage::Sucessfull("RECORD_NOTFUND","/loan/index?inFrame=".$inFrame,2);
   		exit();
   	}
   }
@@ -687,107 +689,9 @@ class Report_LoanController extends Zend_Controller_Action {
   	$frmpopup = new Application_Form_FrmPopupGlobal();
   	$this->view->footer = $frmpopup->getFooterReceipt();
   }
-  public function rptCrmAction(){
-		try{
-			if($this->getRequest()->isPost()){
-				$search=$this->getRequest()->getPost();
-			}
-			else{
-				$search = array(
-						'advance_search' => "",
-						'branch_search' => "",
-						'ask_for_search' => "",
-						'know_by_search' => "",
-						'prev_concern' => "",
-						'status_search' => -1,
-						'start_date'=> date('Y-m-d'),
-						'end_date'=>date('Y-m-d'),
-				);
-			}
-			
-			$db = new Report_Model_DbTable_Dbcrm();
-			$rs_rows = $db->getAllCRM($search);
-			$this->view->row = $rs_rows;
-			$this->view->search  = $search;
-		
-		}catch (Exception $e){
-			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-		}
-		$_dbgb = new Application_Model_DbTable_DbGlobal();
-		$pevconcer = $_dbgb->getViewById(22);
-		$this->view->prev_concern = $pevconcer;
-		
-// 		$frm = new Home_Form_FrmCrm();
-// 		$frm->FrmAddCRM(null);
-// 		Application_Model_Decorator::removeAllDecorator($frm);
-// 		$this->view->frm_crm = $frm;
-	}
-	public function rptCrmDetailAction(){
-		$id=$this->getRequest()->getParam("id");
-		if(empty($id)){
-			$this->_redirect("/allreport/allstudent/rpt-crm");
-		}
-		$db = new Report_Model_DbTable_Dbcrm();
-		$row = $db->getCRMById($id);
-		$this->view->rs = $row;
-		
-		$rowdetail = $db->getCRMDetailById($id);
-		$this->view->rowdetail = $rowdetail;
-		$allContact = $db->AllHistoryContact($id);
-		$this->view->history = $allContact;
-		
-		$pre = explode(",", $row['prev_concern']);
-		$prevCon="";
-		if (!empty($pre)) foreach ($pre as $a){
-			$title = $db->getPrevTilteByKeyCode($a);
-			if (empty($prevCon)){
-				$prevCon = $title;
-			}else {
-				if (!empty($title)){
-					$prevCon = $prevCon." , ".$title;
-				}
-			}
-		}
-		$this->view->prevconcern = $prevCon;
-	}
+  
 	
-	function rptCrmDailyContactAction(){
-		try{
-			if($this->getRequest()->isPost()){
-				$search=$this->getRequest()->getPost();
-			}
-			else{
-				$search = array(
-						'advance_search' => "",
-						'branch_search' => "",
-						'ask_for_search' => "",
-						'crm_list'  => "",
-						'status_search' => -1,
-						'start_date'=> date('Y-m-d'),
-						'end_date'=>date('Y-m-d'),
-				);
-			}
-				
-			$db = new Report_Model_DbTable_Dbcrm();
-			$rs_rows = $db->getAllCRMDailyContact($search);
-			$this->view->row = $rs_rows;
-			$this->view->search  = $search;
-		
-		}catch (Exception $e){
-			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
-		}
-		
-		$frm = new Application_Form_FrmAdvanceSearch();
-		$frm = $frm->AdvanceSearch();
-		Application_Model_Decorator::removeAllDecorator($frm);
-		$this->view->frm_search = $frm;
-		$this->view->result=$search;
-		
-// 		$frm = new Home_Form_FrmCrm();
-// 		$frm->FrmAddCRM(null);
-// 		Application_Model_Decorator::removeAllDecorator($frm);
-// 		$this->view->frm_crm = $frm;
-	}
+	
 	
 	function rptSoldsummaryAction(){//release all loan
 		$db  = new Report_Model_DbTable_DbLandreport();
@@ -827,8 +731,7 @@ class Report_LoanController extends Zend_Controller_Action {
 		$this->view->footerReport = $frmpopup->getFooterReport();
 		$this->view->headerReport = $frmpopup->getLetterHeadReport();
 	}
-	
-	
+
 	function rptMonthremainAction(){//release all loan
 		$db  = new Report_Model_DbTable_DbLandreport();
 		if($this->getRequest()->isPost()){
@@ -986,6 +889,7 @@ class Report_LoanController extends Zend_Controller_Action {
 		
 		$frmpopup = new Application_Form_FrmPopupGlobal();
 		$this->view->footerReport = $frmpopup->getFooterReport();
+		$this->view->headerReport = $frmpopup->getLetterHeadReport();
   }
   public function rptMaterialinludeDetailAction(){
 		$id=$this->getRequest()->getParam("id");
@@ -1098,9 +1002,10 @@ class Report_LoanController extends Zend_Controller_Action {
 		$this->view->frm_search = $frm;
 		$this->view->search = $search;
 		
-		$search["recordDate"] = $search["end_date"];
-		$yesterdayCash = $db->getYesterdayCash($search);
-		$this->view->yesterdayCash = $yesterdayCash;
+		//for KPT
+		//$search["recordDate"] = $search["end_date"];
+		//$yesterdayCash = $db->getYesterdayCash($search);
+		//$this->view->yesterdayCash = $yesterdayCash;
 		
 		$dbGBStock = new Application_Model_DbTable_DbGlobalStock();
 		$rsBank = $dbGBStock->getAllBank();
@@ -1225,5 +1130,44 @@ class Report_LoanController extends Zend_Controller_Action {
 	$this->view->footer = $frmpopup->getFooterReceipt();
 	$this->view->officailreceipt = $frmpopup->getCombinePaymentOfficialReciept();
   }
+
+  function rptPropertybuildstatusAction(){//release all loan
+	$db  = new Report_Model_DbTable_DbLandreport();
+	if($this->getRequest()->isPost()){
+		$search = $this->getRequest()->getPost();
+	}
+	else{
+		$search = array(
+			'adv_search'=>'',
+			'branch_id'=>-1,
+			'property_type'=>0,
+			'client_name'=>'',
+			'land_id'=>-1,
+			'streetlist'=>'',
+			'biuld_percentage'=>'',
+			'biuld_status '=>0,
+			'start_date'=> date('Y-m-d'),
+			'end_date'=>date('Y-m-d')
+		);
+	}
+	$this->view->loanrelease_list = $db->soldProtertyStatus($search);
+	$this->view->list_end_date=$search;
+	$this->view->search = $search;
+	$this->view->branch_id = $search['branch_id'];
+		
+	$frm = new Loan_Form_FrmSearchLoan();
+	$frm = $frm->AdvanceSearch();
+	Application_Model_Decorator::removeAllDecorator($frm);
+	$this->view->frm_search = $frm;
+		
+	$key = new Application_Model_DbTable_DbKeycode();
+	$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+	
+	$frmpopup = new Application_Form_FrmPopupGlobal();
+	$this->view->footerReport = $frmpopup->getFooterReport();
+	$this->view->headerReport = $frmpopup->getLetterHeadReport();
+}
+
+
 
 }

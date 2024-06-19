@@ -18,10 +18,11 @@ class Loan_Model_DbTable_Dbchangehouse extends Zend_Db_Table_Abstract
    	$imgnone='<img src="'.$base_url.'/images/icon/cross.png"/>';
    	$imgtick='<img src="'.$base_url.'/images/icon/apply2.png"/>';
    	
-   	$sql="SELECT cp.id,
+   	$sql="SELECT 
+		cp.id,
    		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id=cp.from_branchid LIMIT 1) AS from_branch,
 		c.name_kh,
-		(SELECT CONCAT(land_address,',',street) FROM `ln_properties` WHERE ln_properties.id=cp.from_houseid LIMIT 1) from_property,
+		(SELECT CONCAT(p.land_address,',',p.street) FROM `ln_properties` AS p WHERE p.id=cp.from_houseid LIMIT 1) from_property,
 		cp.soldprice_before,cp.paid_before,cp.balance_before,
 		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id=cp.to_branchid LIMIT 1) AS to_branch,
 		(SELECT CONCAT(land_address,',',street) FROM `ln_properties` WHERE ln_properties.id=cp.to_houseid LIMIT 1) to_propertype,
@@ -42,17 +43,17 @@ class Loan_Model_DbTable_Dbchangehouse extends Zend_Db_Table_Abstract
    	$where = " AND ".$from_date." AND ".$to_date;
    	if(!empty($search['adv_search'])){
    		$s_where = array();
-//    		$s_search = addslashes(trim($search['adv_search']));
+    		$s_search = addslashes(trim($search['adv_search']));
 //    		$s_where[] = " cp.receipt_no LIKE '%{$s_search}%'";
-//    		$s_where[] = " p.land_code LIKE '%{$s_search}%'";
-//    		$s_where[] = " p.land_address LIKE '%{$s_search}%'";
+    		$s_where[] = " (SELECT p.land_address FROM `ln_properties` AS p WHERE p.id=cp.from_houseid LIMIT 1) LIKE '%{$s_search}%'";
+    		$s_where[] = " (SELECT p.street FROM `ln_properties` AS p WHERE p.id=cp.from_houseid LIMIT 1) LIKE '%{$s_search}%'";
 //    		$s_where[] = " c.client_number LIKE '%{$s_search}%'";
 //    		$s_where[] = " c.name_en LIKE '%{$s_search}%'";
-//    		$s_where[] = " c.name_kh LIKE '%{$s_search}%'";
+			$s_where[] = " c.name_kh LIKE '%{$s_search}%'";
 //    		$s_where[] = " s.price_sold LIKE '%{$s_search}%'";
 //    		$s_where[] = " s.comission LIKE '%{$s_search}%'";
 //    		$s_where[] = " s.total_duration LIKE '%{$s_search}%'";
-//    		$where .=' AND ( '.implode(' OR ',$s_where).')';
+    		$where .=' AND ( '.implode(' OR ',$s_where).')';
    	}
    	if($search['status']>-1){
    		$where.= " AND cp.status = ".$search['status'];

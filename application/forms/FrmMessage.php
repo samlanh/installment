@@ -22,8 +22,12 @@ class Application_Form_FrmMessage extends Zend_Form
 		$stringScript ="<script language='javascript'>";
 		
 		if($typeMessage!=1){
+			$signConnect = "?";
+			if(strpos($url, "?")){
+				$signConnect = "&";
+			}
 			$stringScript.="
-				window.location.href = '".Zend_Controller_Front::getInstance()->getBaseUrl().$url."?alertmg=true&messsageTitle=$msg&classMessage=$classMessage';
+				window.location.href = '".Zend_Controller_Front::getInstance()->getBaseUrl().$url.$signConnect."alertmg=true&messsageTitle=$msg&classMessage=$classMessage';
 			"; 
 		}else{
 			$stringScript.="

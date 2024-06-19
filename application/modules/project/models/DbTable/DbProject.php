@@ -170,6 +170,7 @@ class Project_Model_DbTable_DbProject extends Zend_Db_Table_Abstract
     			'fax'=>$_data['fax'],
     			'other'=>$_data['branch_note'],
     			'status'=>$status,
+				'map_url'=>$_data['map_url'],
     			'p_manager_namekh'=>$_data['project_manager_namekh'],
     			'p_manager_nationality'=>$_data['project_manager_nationality'],
     			'p_manager_nation_id'=>$_data['project_manager_nation_id'],

@@ -84,7 +84,7 @@ dojo.ready(function(){
 		searchAttr: "name",
 		class: 'fullside',
 		placeholder:'<?php echo $tr->translate("DISTRICT");?>',
-		missingMessage:"អ្នក​ភ្លេច​បំពេញ​ ឈ្មោះ ស្រុក/ខ័ណ្ឌ!",	
+		missingMessage:"អ្នកភ្លេចបំពេញ ឈ្មោះ ស្រុក/ខ័ណ្ឌ!",	
 			onChange: function() {
 				district = dijit.byId('district').get('value');
 				if(district==-1){
@@ -104,7 +104,7 @@ dojo.ready(function(){
 		searchAttr: "name",
 		placeholder:'<?php echo $tr->translate("COMMUNE");?>',
 		class: 'fullside',
-		missingMessage:"អ្នក​ភ្លេច​បំពេញ​ ឃុំ/សង្កាត់",	
+		missingMessage:"អ្នកភ្លេចបំពេញ ឃុំ/សង្កាត់",	
 			onChange: function() {
 				commune = dijit.byId('commune').get('value');
 				if(commune==-1){
@@ -126,7 +126,7 @@ dojo.ready(function(){
 		placeholder:'<?php echo $tr->translate("VILLAGE");?>',
 		searchAttr: "name",
 		class: 'fullside',
-		missingMessage:"អ្នក​ភ្លេច​បំពេញ​ ឈ្មោះភូមិ!",	
+		missingMessage:"អ្នកភ្លេចបំពេញ ឈ្មោះភូមិ!",	
 			onChange: function() {
 				vill = dijit.byId('village').get('value');
 				if(vill==-1){
@@ -210,12 +210,20 @@ $(function(){
 		callback: function(key, options) {
 		
 			var m = "clicked: " + key;
+			var newPageTitle="";
+			var actionType=1;
 			if(key=="edit"){
 				url='<?php echo $urlEdit;?>';
+				actionType=2;
 			}else if(key=="profile"){
 				url='<?php echo $urlProfile;?>';
+				newPageTitle="<?php echo $tr->translate("CUSTOMER_PROFILE");?>";
 			}
-			gotoAction();
+			if(actionType==1){
+				addTab(newPageTitle,url+row+'?inFrame=true');
+			}else{
+				gotoAction();
+			}
 		},
 		items: {
 			"edit": {name: "<?php echo $tr->translate("EDIT");?>", icon: "edit", accesskey: "e"},
@@ -228,6 +236,6 @@ function setrowdata(index){
 }
 var recordid ='';
 function gotoAction(){
-	 window.open(url+row, '_blank');
+	 window.open(url+row, '_self');
 }
 </script>

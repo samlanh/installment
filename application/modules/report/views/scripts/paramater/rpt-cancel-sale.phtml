@@ -26,7 +26,7 @@
 	<div class="card-box">
        	<div class="col-sm-12 border-botom">
 	   		<div class="col-sm-8 pd-0">
-	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i> <?php echo $tr->translate('CANCEL_SALE_REPORT');?></h4>
+	    		<h4 class="m-b-0"><i class="fa fa-file-text" aria-hidden="true"></i> <?php echo $tr->translate('CANCEL_SALE_REPORT');?></h4>
     		</div>
     		<div class="col-sm-4 text-right">
     		</div>
@@ -59,7 +59,7 @@
 					<?php echo $frm->getElement('to_date_search');?>
 				</div>
 				<div class="col-md-3 col-sm-3 col-xs-12">
-					<button iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
+					<button class="button-class button-primary" iconClass="glyphicon glyphicon-search" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
 				</div>
 			</div>
 		</div>
@@ -94,10 +94,10 @@
 						table.content-data{
 							border-collapse:collapse;
 							border:1px solid #000; 
-							font-size:13px;
+							font-size:12px;
 							font-family: 'Times New Roman','Khmer OS Battambang';
 							white-space: nowrap;
-							line-height: 22px;
+							line-height: 18px;
 							width: 100%;
 						}
 						table.content-data thead tr.style {
@@ -115,6 +115,29 @@
 						}
 						table tr td{
 							padding:0 2px;
+						}
+						tr.row-data.odd {
+							background: #ededed;
+						}
+						td.noneRefund {
+							background: #838383;
+						}
+						span.noteValue{
+							line-height: 12px;
+							white-space: pre-wrap !important;
+							max-width: 150px;
+							width: 150px;
+							padding: 1px;
+							display: block;
+							font-size: 90%;
+							overflow-wrap: break-word;
+							text-align: left;
+							vertical-align: top;
+						}
+						span.smallClass{
+							display: block; 
+							line-height: 12px; 
+							font-size:80%;
 						}
 					</style>
 	        		<div class="divFooter">
@@ -134,7 +157,7 @@
 							</tr>
 							<tr bgcolor="#a0baf5" class="style" align="center"  >
 								<td scope="col"><?php echo $tr->translate("PROJECT_NAME");?></td>
-								<td scope="col"><?php echo $tr->translate("CUSTOMER_NAME");?></td>
+								<td scope="col"><?php echo $tr->translate("Customers");?></td>
 								<td scope="col"><?php echo $tr->translate("PROPERTY_TYPE");?></td>
 								<td scope="col"><?php echo $tr->translate("PROPERTY_CODE");?></td>
 								<td scope="col"><?php echo $tr->translate("SOLD_PRICE");?></td>
@@ -153,22 +176,35 @@
 					   if(!empty($this->row))foreach($this->row as $key =>$row){ $i++;?>
 						<?php 
 							$property_type= $row['property_type'];
+							$classReturnInfo="";
+							if($row['cancel_type']==1){ 
+								$classReturnInfo="noneRefund"; 
+							}
+							$classRow = "";
+							if(($i%2)==0){
+								$classRow = "odd";
+							}
 						?>
-						   <tr style="font-size: 12px;white-space: nowrap;" align="left">
+						   <tr class="row-data <?php echo $classRow;?>" align="left">
 							 <td data-label="<?php echo $tr->translate("NUM");?>" align="center"><?php echo $i; ?></td>
 							 <td data-label="<?php echo $tr->translate("PROJECT_NAME");?>"><?php echo $row['project_name'];?></td>
-							 <td data-label="<?php echo $tr->translate("CUSTOMER_NAME");?>" align="left"><?php echo $row['client_name'];?></td>
+							 <td data-label="<?php echo $tr->translate("Customers");?>" align="left">
+							 <?php echo $row['client_name'];?>
+							 <?php 
+							if(!empty($row['clientPhone'])){ echo "<span class='smallClass' >".$row['clientPhone']."</span>";}
+							?>
+							 </td>
 							 <td data-label="<?php echo $tr->translate("PROPERTY_TYPE");?>" align="left"><?php echo $row['type_name'];?></td>
 							 <td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>" align="left"><?php echo $row['land_address'].','.$row['street'];?></td>
 							 <td data-label="<?php echo $tr->translate("SOLD_PRICE");?>" align="right" style="white-space: nowrap;"><?php echo number_format($row['price_sold'],2); ?></td>
 							 <td data-label="<?php echo $tr->translate("PAID");?>" align="right" style="white-space: nowrap;"><?php echo number_format($row['paid_amount'],2);?></td>
 							 <td data-label="<?php echo $tr->translate("BALANCE");?>" align="right" style="white-space: nowrap;"><?php echo number_format($row['price_sold']-$row['paid_amount'],2);?></td>
-							 <td data-label="<?php echo $tr->translate("INSTALLMENT_PAID");?>" align="center" style="white-space: nowrap;"><?php echo (empty($row['installment_paid'])?"កក់ដំបូង":$row['installment_paid']);?></td>
+							 <td data-label="<?php echo $tr->translate("INSTALLMENT_PAID");?>" align="center" style="white-space: nowrap;"><?php echo (empty($row['installment_paid'])?"កក់ដំបូង":sprintf('%02d',$row['installment_paid']));?></td>
 							 <td data-label="<?php echo $tr->translate("DATE");?>" align="center" style="white-space: nowrap;"><?php echo date("d-m-Y",strtotime($row['create_date']));?></td>
 							 <td data-label="<?php echo $tr->translate("CANCEL_TYPE");?>"  align="left" ><?php echo $row['cancelTypeTitle'];?></td>
-							 <td data-label="<?php echo $tr->translate("RETURN_MONEY_BACK");?>" align="right" ><?php if($row['cancel_type']==1){ echo "-";}else{ echo number_format($row['return_back'],2);}?></td>
-							 <td data-label="<?php echo $tr->translate("PAID");?>" align="right" ><?php if($row['cancel_type']==1){ echo "-";}else{echo number_format($row['totalReturnPaid'],2);}?></td>
-							 <td data-label="<?php echo $tr->translate("REASON");?>" align="left" ><?php echo $row['reason'];?></td>
+							 <td data-label="<?php echo $tr->translate("RETURN_MONEY_BACK");?>" class="<?php echo $classReturnInfo;?>" align="right" ><?php if($row['cancel_type']==1){ echo "";}else{ echo number_format($row['return_back'],2);}?></td>
+							 <td data-label="<?php echo $tr->translate("PAID");?>" class="<?php echo $classReturnInfo;?>" align="right"><?php if($row['cancel_type']==1){ echo "";}else{echo number_format($row['totalReturnPaid'],2);}?></td>
+							 <td data-label="<?php echo $tr->translate("REASON");?>" align="left" ><span class="noteValue" ><?php echo $row['reason'];?></span></td>
 							 <td data-label="<?php echo $tr->translate("BY_USER");?>" align="center" ><?php echo $row['user_name'];?></td>
 						  </tr>
 						<?php 
@@ -178,7 +214,7 @@
 					   <tr style="height: 30px; font-weight:bold; text-align: center;background:#87acff;">
 							<td colspan="11" align="right"><?php echo $tr->translate("TOTAL");?></td>
 							<td><?php echo number_format($total_return,2);?></td>
-							<td colspan="2">
+							<td colspan="3">
 							</td>
 						</tr>
 					</table>

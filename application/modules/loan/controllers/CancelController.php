@@ -184,7 +184,7 @@ class Loan_CancelController extends Zend_Controller_Action {
 	}
 	
 	
-	function getSalecancleAction(){// by vandy get property code
+	function getSalecancleAction(){
 		if($this->getRequest()->isPost()){
 			$data = $this->getRequest()->getPost();
 			$db = new Loan_Model_DbTable_DbCancel();

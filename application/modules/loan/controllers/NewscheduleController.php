@@ -47,10 +47,12 @@ class Loan_NewscheduleController extends Zend_Controller_Action {
 			try {
 				$_dbmodel = new Loan_Model_DbTable_DbNewSchedule();
 				$_dbmodel->addNewSchedule($_data);
-				//Application_Form_FrmMessage::message('INSERT_SUCCESS');
-				//echo "<script>window.close();</script>";exit();
-				
-				Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/index");
+				if(!empty($_data["inFrame"])){
+					$saleId = empty($_data["loan_number"]) ? 0 : $_data["loan_number"];
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS", "/report/loan/rpt-paymentschedules/id/".$saleId."?inFrame=true");
+				}else{
+					Application_Form_FrmMessage::Sucessfull("INSERT_SUCCESS","/loan/index");
+				}
 			
 			}catch (Exception $e) {
 				Application_Form_FrmMessage::message("INSERT_FAIL");
@@ -82,7 +84,10 @@ class Loan_NewscheduleController extends Zend_Controller_Action {
 		
 		$key = new Application_Model_DbTable_DbKeycode();
 		$this->view->data=$key->getKeyCodeMiniInv(TRUE);
+		
 		$id = $this->getRequest()->getParam('id');
+		$id = empty($id) ? 0 : $id;
+		
 		if(!empty($id)){
 			$db = new Loan_Model_DbTable_DbLandpayment();
 			$rs = $db->getTranLoanByIdWithBranch($id,null);
@@ -94,6 +99,9 @@ class Loan_NewscheduleController extends Zend_Controller_Action {
 			}
 		}
 		$this->view->id = $id;
+		
+		$inFrame = $this->getRequest()->getParam('inFrame');
+	  	$this->view->inFrame = empty($inFrame)?"":$inFrame;
 	}	
 	
 	public function editAction(){
