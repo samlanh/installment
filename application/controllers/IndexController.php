@@ -34,15 +34,15 @@ class IndexController extends Zend_Controller_Action
 		//echo $sys;
 		if ($this->getRequest()->isPost()) {
 
-			$sys = $dbgb->getPh();
-			if (!$sys) {
-				$session_user = new Zend_Session_Namespace(SYSTEM_SES);
-				$session_user->unsetAll();
-				Application_Form_FrmMessage::redirectUrl("/");
-				exit();
-			}
+			// $sys = $dbgb->getPh();
+			// if (!$sys) {
+			// 	$session_user = new Zend_Session_Namespace(SYSTEM_SES);
+			// 	$session_user->unsetAll();
+			// 	Application_Form_FrmMessage::redirectUrl("/");
+			// 	exit();
+			// }
 			
-			if(date('Y-m-d')>='2024-03-30'){
+			if(date('Y-m-d')>='2025-03-30'){
  				$this->view->msg = 'System Expired';
  				return false;
 			}

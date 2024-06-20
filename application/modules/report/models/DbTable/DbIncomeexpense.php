@@ -992,6 +992,7 @@ class Report_Model_DbTable_DbIncomeexpense extends Zend_Db_Table_Abstract
 		s.`full_commission`,
 		s.`branch_id`,
 		s.buy_date,
+		s.is_cancel,
 		(SELECT p.project_name FROM `ln_project` AS p WHERE p.br_id = s.`branch_id` LIMIT 1) AS branch_name,
 		(SELECT cu.name_kh FROM `ln_client` AS cu WHERE cu.client_id = s.`client_id` LIMIT 1) AS cutomer_name,
 		(SELECT p.land_code FROM `ln_properties` AS p WHERE p.id = s.`house_id` LIMIT 1) AS land_code,
@@ -1004,7 +1005,7 @@ class Report_Model_DbTable_DbIncomeexpense extends Zend_Db_Table_Abstract
 		(SELECT SUM(crm.total_principal_permonthpaid) FROM `ln_client_receipt_money` AS crm WHERE crm.sale_id = s.id  GROUP BY crm.sale_id LIMIT 1) AS total_sale_paid
 		FROM
 		`ln_sale` AS s
-		WHERE full_commission>0 AND s.is_cancel = 0 ";
+		WHERE full_commission>0 ";
 		$where ="";
 	
 		$dbp = new Application_Model_DbTable_DbGlobal();

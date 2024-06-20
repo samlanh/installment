@@ -161,18 +161,27 @@
 			       		$balance = 0;
 			       		$key=0; 
 			       	   if(!empty($this->row))foreach($this->row as $key =>$row){
-					   	   $total = $total +$row['full_commission'];	
-						   $paidcommision = $row['totoal_comminssion']+$row['total_sale_commission'];
-						   $remain = $row['full_commission'] - $paidcommision;
-						   $balance = $balance+$remain;
-						   $totalpaid_com = $totalpaid_com+$paidcommision;
-						   if($row['price_sold']>0){
-						   		$percentpaid = @($row['total_sale_paid']*100)/$row['price_sold'];
-				       	   }else{
-				       	   		$percentpaid=100;
-				       	   }
+							if($row['is_cancel']!=1){
+								$total = $total +$row['full_commission'];	
+								$paidcommision = $row['totoal_comminssion']+$row['total_sale_commission'];
+								$remain = $row['full_commission'] - $paidcommision;
+								$balance = $balance+$remain;
+								$totalpaid_com = $totalpaid_com+$paidcommision;
+								if($row['price_sold']>0){
+										$percentpaid = @($row['total_sale_paid']*100)/$row['price_sold'];
+								   }else{
+										   $percentpaid=100;
+								   }
+						   } else {
+							    $paidcommision = $row['totoal_comminssion']+$row['total_sale_commission'];
+								$row['full_commission'] = $paidcommision;
+								$totalpaid_com = $totalpaid_com+$paidcommision;
+							    $remain = 0;
+						   }
+					   	  
 					  ?>
-					   <tr oncontextmenu="setrowdata(<?php echo $row['sale_id'];?>);return false;" style="font-size: 12px; white-space: nowrap; font-family: 'Times New Roman','Khmer OS Battambang'" align="left" class="hover context-menu-one">
+					   <tr oncontextmenu="setrowdata(<?php echo $row['sale_id']; ?>);return false;" style="font-size: 12px; white-space: nowrap; font-family: 'Times New Roman','Khmer OS Battambang';<?php if ($row['is_cancel'] == 1) {
+							 echo "background:#eca6a6;";} ?>" align="left" class="hover context-menu-one">
 					     <td data-label="<?php echo $tr->translate("NUM");?>" align="center">&nbsp;<?php echo $key+1; ?>&nbsp;</td>
 					     <td data-label="<?php echo $tr->translate("BRANCH_NAME");?>" align="left" >&nbsp;<?php echo $row['branch_name']?>&nbsp;</td>
 						 <td data-label="<?php echo $tr->translate("STAFF");?>" >&nbsp;<?php echo $row['co_khname'];?>&nbsp;</td>
