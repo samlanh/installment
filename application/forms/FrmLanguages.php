@@ -9,7 +9,6 @@ class Application_Form_FrmLanguages
 		// set up translation adapter
 		$session_lang=new Zend_Session_Namespace('lang');
 		$lang_id=$session_lang->lang_id;
-// 		echo $lang_id;exit();
 		if($lang_id==1 OR empty($lang_id)){
 			$str="km";
 		}elseif($lang_id==3){

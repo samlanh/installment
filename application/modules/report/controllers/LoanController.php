@@ -1131,7 +1131,7 @@ class Report_LoanController extends Zend_Controller_Action {
 	$this->view->officailreceipt = $frmpopup->getCombinePaymentOfficialReciept();
   }
 
-  function rptPropertysoldAction(){//release all loan
+  function rptPropertybuildstatusAction(){//release all loan
 	$db  = new Report_Model_DbTable_DbLandreport();
 	if($this->getRequest()->isPost()){
 		$search = $this->getRequest()->getPost();
@@ -1140,14 +1140,11 @@ class Report_LoanController extends Zend_Controller_Action {
 		$search = array(
 			'adv_search'=>'',
 			'branch_id'=>-1,
-			'schedule_opt'=>-1,
 			'property_type'=>0,
-			'queryOrdering'=>0,
 			'client_name'=>'',
-			'buy_type'=>-1,
 			'land_id'=>-1,
 			'streetlist'=>'',
-			'sale_status'=>'',
+			'biuld_percentage'=>'',
 			'biuld_status '=>0,
 			'start_date'=> date('Y-m-d'),
 			'end_date'=>date('Y-m-d')
