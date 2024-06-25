@@ -325,6 +325,9 @@ var	url_getSaleNo = '<?php echo $this->url(array('module'=>'loan','controller'=>
 			load: function(data) {	
 				sale_client_store  = getDataStorefromJSON('id','name', data);		
 			    dijit.byId('sale_client').set('store', sale_client_store);
+				<?php if(!empty($this->row['sale_id'])){?>
+					dijit.byId('sale_client').set('value', <?php echo $this->row['sale_id'];?>);
+				<?php } ?>
 			},
 			error: function(err) {
 			}

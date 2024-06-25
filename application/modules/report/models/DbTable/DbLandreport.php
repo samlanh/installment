@@ -2785,6 +2785,7 @@ function updatePaymentStatus($data){
 			ln_material_include_detail AS icd
 		";
 		
+		$where.=" AND ic.status=1 ";
 		$where.=" AND icd.materailinc_id=ic.id ";
 		
 		if (!empty($search['adv_search'])){

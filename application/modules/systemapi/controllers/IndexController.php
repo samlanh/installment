@@ -1,4 +1,5 @@
 <?php
+//API For Stock Warehouse Mangement In Installment System
 class Systemapi_IndexController extends Zend_Controller_Action
 {
 	const REDIRECT_URL = '/api/index';
