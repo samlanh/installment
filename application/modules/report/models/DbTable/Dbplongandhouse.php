@@ -18,6 +18,7 @@ class Report_Model_DbTable_Dbplongandhouse extends Zend_Db_Table_Abstract
 			(SELECT cl.name_kh FROM ln_client AS cl WHERE cl.`client_id` = rp.`customer_id` LIMIT 1) AS client_name,
 			(SELECT cl.phone FROM ln_client AS cl WHERE cl.`client_id` = rp.`customer_id` LIMIT 1) AS tel,
 			s.price_sold,
+			s.id as saleId,
 		(SELECT SUM(crm.total_principal_permonthpaid+crm.extra_payment) FROM `ln_client_receipt_money` AS crm WHERE crm.sale_id=s.id LIMIT 1) AS totalPaid,
 		";
 		$sql.=" (SELECT first_name FROM `rms_users` WHERE id=p.user_id LIMIT 1) AS user_name

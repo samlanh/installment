@@ -176,6 +176,17 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 				'dojoType'=>'dijit.form.TextBox',
 				'class'=>'fullside',
 		));
+		$telegram = new Zend_Dojo_Form_Element_TextBox('telegram');
+		$telegram->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+		));
+		$telegram1 = new Zend_Dojo_Form_Element_TextBox('telegram1');
+		$telegram1->setAttribs(array(
+				'dojoType'=>'dijit.form.TextBox',
+				'class'=>'fullside',
+		));
+
 		$_email = new Zend_Dojo_Form_Element_TextBox('email');
 		$_email->setAttribs(array(
 				'dojoType'=>'dijit.form.TextBox',
@@ -382,11 +393,14 @@ Class Group_Form_FrmClient extends Zend_Dojo_Form {
 			
 			$_genderTitle->setValue($data['gendertitle']);
 			$_genderTitle1->setValue($data['gendertitle1']);
+			$telegram->setValue($data['telegram']);
+			$telegram1->setValue($data['telegram1']);
 		}
 		$this->addElements(array($_genderTitle1,$_genderTitle,$join_issuedateid,$client_issuedateid,$dob_buywith,$_join_type,$referecce_national_id,$p_nationality,$_nationality,$_arid_no,$_rid_no,$_bmember,$_vid_no,$_edesc,$_istatus,$_lphone,$_ghouse,$_dstreet,$_cprovince,$_pnameen,$_bnamekh,$_ksex,$_hnamekh,$client_d_type,$_join_nation_id,
 				$_join_with,$_id,$photo,$job,$national_id,$_member,$_namekh,$_nameen,$_sex,
 				$_province,$_house,$_street,$_id_no,$branch_id,$_email,
-				$_phone,$_desc,$_status,$_clientno,$_dob,$clienttype_namekh,$clienttype_nameen));
+				$_phone,$_desc,$_status,$_clientno,$_dob,$clienttype_namekh,$clienttype_nameen,
+			$telegram,$telegram1));
 		return $this;
 		
 	}	

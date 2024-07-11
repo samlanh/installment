@@ -40,6 +40,8 @@ class Group_Model_DbTable_DbClient extends Zend_Db_Table_Abstract
 		    	'client_issuedateid' => $_data['client_issuedateid'],
 		    	'join_issuedateid' => $_data['join_issuedateid'],
 				'phone'	      	=> $_data['phone'],
+				'telegram'	      	=> $_data['telegram'],
+				'telegram1'	      	=> $_data['telegram1'],
 		    	'email'	      	=> $_data['email'],
 				'create_date' 	=> date("Y-m-d"), 
 				'remark'	  	=> $_data['desc'],

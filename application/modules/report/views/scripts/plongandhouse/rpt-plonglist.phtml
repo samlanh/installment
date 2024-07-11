@@ -180,7 +180,7 @@
 				}
 				$remain = $soldPrice-$totalPaid;
 			?>
-					<tr oncontextmenu="setrowdata(<?php echo $row['id'];?>);return false;"class="context-menu-one hover" style="font-size: 12px;border:1px solid #000; white-space: nowrap;line-height: 25px;" align="left">
+					<tr oncontextmenu="setrowdata(<?php echo $row['id'].','.$row['saleId'];?>);return false;"class="context-menu-one hover" style="font-size: 12px;border:1px solid #000; white-space: nowrap;line-height: 25px;" align="left">
 					     <td data-label="<?php echo $tr->translate("NUM");?>" align="center"><?php echo $key+1; ?></td>
 					     <td data-label="<?php echo $tr->translate("BRANCH_NAME");?>" align="center"><?php echo $row['branch_name'];?></td>
 						 
@@ -294,6 +294,7 @@ function upDateCustomerInfo(){
 	}
 }
 var row=0;
+var saleId=0;
 var url="";
 $(function(){
 	$.contextMenu({
@@ -306,19 +307,32 @@ $(function(){
 				
 				dijit.byId('id').set('value',row);
 				dijit.byId('updateForm').show();
+			}else if(key=="agreement"){
+				url='<?php echo $this->baseUrl()."/report/paramater/rpt-agreement/id/";?>';
 			}
+			else if(key=="schedule"){
+				url='<?php echo $this->baseUrl()."/report/loan/rpt-paymentschedules/id/";?>';
+			}
+			else if(key=="payment"){
+				url='<?php echo $this->baseUrl()."/report/loan/paymenthistory/id/";?>';
+			}
+			gotoAction();
 		},
 		items: {
 			"stepup": {name: "<?php echo $tr->translate("PROPERTY_LAYOUT_NOTE");?>", icon: "fa-file-text"},
+			"agreement": {name: "<?php echo $tr->translate("AGREEMENT");?>", icon: "fa-file-text", accesskey: "c"},
+			"schedule": {name: "<?php echo $tr->translate("SCHEDULE_PAYMENT");?>", icon: "fa-calendar"},
+			"payment": {name: "<?php echo $tr->translate("REPORT_LOAN_PAYMENT");?>", icon: "fa-book", accesskey: "c o p y"},
 		}
 	});
 });
-function setrowdata(index){
+function setrowdata(index,saleIndex){
 	row = index;
+	saleId = saleIndex;
 }
 var recordid ='';
 function gotoAction(){
-	 window.open(url+row);
+	 window.open(url+saleId);
 }
 
 </script>

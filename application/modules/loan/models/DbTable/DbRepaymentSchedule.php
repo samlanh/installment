@@ -173,7 +173,6 @@ class Loan_Model_DbTable_DbRepaymentSchedule extends Zend_Db_Table_Abstract
     						'user_id'=>$this->getUserId(),
     						'other_fee'=>0,
     						'agreement_date'=>$data['agreement_date'],
-    						'lastpayment_amount'=>$data['last_payment'],
     						'build_start'=>$data['start_building'],
     						'amount_build'=>$data['amount_build'],
     						'is_reschedule'=>$is_schedule,

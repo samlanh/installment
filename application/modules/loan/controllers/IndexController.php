@@ -473,4 +473,18 @@ class Loan_IndexController extends Zend_Controller_Action {
 	 		echo $e->getMessage();
 	 	}
 	}
+	function updatecollectionAction(){
+		$db = new Loan_Model_DbTable_DbLandpayment();
+	 	try {
+	 		if($this->getRequest()->isPost()){
+				$data = $this->getRequest()->getPost();
+				$db->updatecollection($data);
+				print_r(Zend_Json::encode(1));
+				exit();
+			}
+	 	}catch (Exception $e) {
+	 		Application_Form_FrmMessage::message("INSERT_FAIL");
+	 		echo $e->getMessage();
+	 	}
+	}
 }

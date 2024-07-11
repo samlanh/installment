@@ -2183,6 +2183,25 @@ class Loan_Model_DbTable_DbLandpayment extends Zend_Db_Table_Abstract
 				$db->rollBack();
 			}
 	}
+	public function updatecollection($data){
+			$db = $this->getAdapter();
+			$db->beginTransaction();
+			try{
+				$arr = array(
+						'option_payment_collection'	=>$data['collectid'],
+						'agreement_date'=>$data['agreement_date'],
+				);
+				$where=" id = ".$data['saleid'];
+				$this->_name="ln_sale";
+				$this->update($arr, $where);
+				$db->commit();
+				return 1;
+			}catch (Exception $e){
+				$err =$e->getMessage();
+				Application_Model_DbTable_DbUserLog::writeMessageError($err);
+				$db->rollBack();
+			}
+	}
 }
 
 
