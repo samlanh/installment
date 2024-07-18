@@ -115,7 +115,7 @@
         	<table width="100%" style="font-family:'Times New Roman','Khmer OS Battambang';" style="padding:0;margin:0;border:0px;" >
         	<tr>
                 <td width="30%" valign="top">
-                <img src="<?php echo $imagelogo;?>" style="max-width:100%; height:100px;">
+               
                 </td>
                 <td width="40%" align="center">
                 <span style="text-align:center; line-height:28px; font-size:17px;font-family:'Khmer OS Muol Light';">ព្រះរាជាណាចក្រកម្ពុជា</span>
@@ -229,14 +229,8 @@
 											
 											?>
 											ភាគី (ក) យល់ព្រមលក់ហើយ ភាគី (ខ) យល់ព្រមទិញនូវដីចំនួន <?php echo $dbparmeter->getNumberInkhmer(number_format($propertyAmt,0));?> ឡូតិ៍ លេខ <span class="value" style="min-width:50px;"><?php echo $this->agreement['property_title'];?></span> 
-											ដែលមានក្បាល <?php echo $dbparmeter->getNumberInkhmer($this->agreement['property_width']);?> ម៉ែត្រ ជម្រៅ<?php echo $dbparmeter->getNumberInkhmer($this->agreement['property_height']);?> ម៉ែត្រ និងទំហំ<?php echo $dbparmeter->getNumberInkhmer($this->agreement['land_size']);?>ម៉ែត្រការ៉េ ក្នុងគម្រោង  <span style="font-family:'Khmer OS Muol Light'; font-weight:200;"><?php echo str_replace("គម្រោង", "",$projectName);?></span> <br />
-											
-											<span style=" margin-left: 50px;"></span>- ខាងជើងទល់នឹង <span class="value" style="min-width:150px;"><?php echo $this->agreement['border_north'];?></span> - ខាងត្បូងទល់នឹង 	<span class="value" style="min-width:150px;"><?php echo $this->agreement['border_south'];?></span>
-             			<br />
-             			<span style=" margin-left: 50px;"></span>- ខាងលិចទល់នឹង<span class="value" style="min-width:150px;"><?php echo $this->agreement['border_west'];?></span> - ខាងកើតទល់នឹង <span class="value" style="min-width:150px;"><?php echo $this->agreement['border_east'];?></span> 
-             			<br />
-											
-											ក្នុងតំលៃ <span style="font-weight: bold;"> <?php echo number_format($this->agreement['price_sold'],2);?></span> <span>(<span id="lable_pricekhmer" style="font-family:'Khmer os battambang';"></span>ដុល្លារអាមេរិក)</span> ដែលមានទីតាំងស្ថិតនៅ <?php echo $this->agreement['project_location'];?> ។
+											ទំហំសរុប<?php echo $dbparmeter->getNumberInkhmer($this->agreement['land_size']);?>ម៉ែត្រការ៉េ<?php if($this->agreement['branch_id']!=7){?> ក្នុងគម្រោង  <span style="font-family:'Khmer OS Muol Light'; font-weight:200;"><?php echo str_replace("គម្រោង", "",$projectName);?></span><?php }?>
+											ដែលមានទីតាំងស្ថិតនៅ <?php echo $this->agreement['project_location'];?> ក្នុងតម្លៃដូចបានចែងក្នុង<strong>ឧបសម្ព័ន្ធ១</strong>។
 											<td>
 										</tr>
 									 
@@ -251,7 +245,7 @@
 											
 											if(last_number_sold<=0){last_number_sold='';}
 											money_khmersold = money_khmersold+" "+string_sold+" "+read_in_khmer_from_10_to_99(decimalmoney_khmersold)+''+read_in_khmer_from_0_to_9(last_number_sold)+''+str_cent_sold;
-											dojo.byId('lable_pricekhmer').innerHTML=money_khmersold+" ";
+											//dojo.byId('lable_pricekhmer').innerHTML=money_khmersold+" ";
 											dojo.byId('lable_pricekhmer1').innerHTML=money_khmersold+" ";
 									</script>
 								</table>
@@ -264,27 +258,38 @@
 									  <tr>
 									    <td align="justify" style="vertical-align:top; text-align:right;width:9%;"><span style="">២.១</span></td>
 									    <td align="justify" style="padding-left:5px">
-											ភាគី (ខ) យល់ព្រមបង់ប្រាក់មុនជូន ភាគី (ក) តាមគោលការណ៍បង់ប្រាក់របស់គម្រោង ដូចបានចែងលំអិតនៅក្នុងតារាងបង់ប្រាក់នៃ<!--ឯការ --><span style="font-family:'Khmer OS Muol Light'; font-weight:200;"><?php echo $tr->translate('ARTICLE_1');?></span> ។
+											ភាគី (ខ) យល់ព្រមបង់ប្រាក់ជូន ភាគី (ក) តាមតារាងបង់ប្រាក់<!--ឯការ --><span style="font-family:'Khmer OS Muol Light'; font-weight:200;"><?php echo $tr->translate('ARTICLE_1');?></span> ។
 									    </td>
 									  </tr>	
 									  <tr>
 									    <td align="justify" style="vertical-align:top; text-align:right;width:9%;"><span style="">២.២</span></td>
-									  	<td align="justify" style="padding-left:5px">
-											ភាគី (ក) ជាអ្នកទទួលបន្ទុកលើការងារផ្តល់ប័ណ្ណបំបែកក្បាលដីជូន ភាគី (ខ) បន្ទាប់ពី ភាគី (ខ) បានទូរទាត់ប្រាក់ថ្លៃទិញដីគ្រប់ចំនួន 90% ជូន ភាគី (ក) ទៅតាម <span style="font-family:'Khmer OS Muol Light'; font-weight:200;"><?php echo $tr->translate('ARTICLE_1');?></span> ដោយសន្តិវិធី និងពុំមានការរំខានពីតតិយជនណាមួយ។
+									  	<td align="justify" style="padding-left:5px">ភាគី (ក) ជាអ្នកទទួលខុសត្រូវលើការងារផ្តល់ប័ណ្ណបំបែកក្បាលដីជូនភាគី (ខ) បន្ទាប់ពីភាគី (ខ) បានទូទាត់ប្រាក់ថ្លៃទិញដីជូនភាគី (ក) ទៅតាម<span style="font-family:'Khmer OS Muol Light'; font-weight:200;"><?php echo $tr->translate('ARTICLE_1');?></span> ដោយសន្តិវិធី និងពុំមានការរំខានពីតតីយជនណាមួយ។
 									  	</td> 	
 									  </tr>		
 									  <tr>
 									    <td align="justify" style="vertical-align:top; text-align:right;width:9%;"><span style="">២.៣</span></td>
 									  	<td align="justify" style="padding-left:5px">
+												
+												
+												
 												<?php 
-													$bankName="";
-													$bankName = empty($this->keyValue['bank_account1'])?$bankName:$this->keyValue['bank_account1'];
-													$bankAccName="";
-													$bankAccName = empty($this->keyValue['bank_account_name1'])?$bankAccName:$this->keyValue['bank_account_name1'];
-													$bankAccNo="";
-													$bankAccNo = empty($this->keyValue['bank_account1number'])?$bankAccNo:$this->keyValue['bank_account1number'];
-												?>
-												នៅពេលដែល ភាគី (ក) បានកំណត់យកធនាគា <?php echo $bankName;?> គណនីឈ្មោះ <span style="font-weight:600;"><?php echo $bankAccName;?></span> ដែលមានលេខគណនី <span style="font-weight:600;"><?php echo $bankAccNo;?></span> ជាមធ្យោបាយទទួលប្រាក់ពីអតិថិជនក្នុងការបង់ថ្លៃដីប្រចាំខែ។
+							$bankInfo = $this->branchinfo;
+							$bankName="";
+							$bankName = empty($bankInfo['bank_account1'])?$bankName:$bankInfo['bank_account1'];
+							$bankAccName="";
+							$bankAccName = empty($bankInfo['bank_account_name1'])?$bankAccName:$bankInfo['bank_account_name1'];
+							$bankAccNo="";
+							$bankAccNo = empty($bankInfo['bank_account1number'])?$bankAccNo:$bankInfo['bank_account1number'];
+							
+							$bankNameI="";
+							$bankNameI = empty($bankInfo['bank_account2'])?$bankNameI:$bankInfo['bank_account2'];
+							$bankAccNameI="";
+							$bankAccNameI = empty($bankInfo['bank_account_name2'])?$bankAccNameI:$bankInfo['bank_account_name2'];
+							$bankAccNoI="";
+							$bankAccNoI = empty($bankInfo['bank_account2number'])?$bankAccNoI:$bankInfo['bank_account2number'];
+							?>
+							
+												នៅពេលដែល ភាគី (ក) បានកំណត់យក<?php echo $bankName;?> គណនីឈ្មោះ <span style="font-weight:600;"><?php echo $bankAccName;?></span> ដែលមានលេខគណនី <span style="font-weight:600;"><?php echo $bankAccNo;?></span> ជាមធ្យោបាយទទួលប្រាក់ពីអតិថិជនក្នុងការបង់ថ្លៃដីប្រចាំខែ។
 									  	</td> 	
 									  </tr>
 																	  
@@ -316,7 +321,7 @@
 									  <tr>
 										    <td align="justify" style="vertical-align:top; text-align:right; width:9%;"><span style="">៣.៤ </span></td>
 										    <td align="justify" style="padding-left:5px">
-												ក្រោយថ្ងៃចុះកិច្ចសន្យានេះរួចបែរជា ភាគី (ក) កែប្រែចិត្តមិនលក់ដីខាងលើទៅអោយ ភាគី (ខ) ឬអនុវត្តផ្ទុយពីកិច្ចសន្យាតម្រូវអោយ ភាគី (ក) ទទួលខុសត្រូវសំណងអោយ ភាគី (ខ) ស្មើនឹងចំនួន ២(ពីរ) ដង នៃប្រាក់កក់ដែលទទួលបានទាំងអស់។
+											ក្រោយថ្ងៃចុះកិច្ចសន្យានេះរួច បែរជាភាគី (ក) កែប្រែចិត្តមិនលក់ដីឡូត៍ខាងលើទៅអោយភាគី (ខ) ឬអនុវត្តផ្ទុយពីកិច្ចសន្យាតម្រូវអោយភាគី (ក) ទទួលខុសត្រូវសំណងអោយភាគី (ខ) ស្មើនឹងចំនួន ២ (ពីរ)ដង នៃប្រាក់ដែលទទួលបានទាំងអស់។
 											</td>  
 									  </tr>
 									  
@@ -334,26 +339,21 @@
 											ភាគី (ក) ត្រូវទទួលខុសត្រូវទាំងស្រុងថាដីដែលលក់ខាងលើនេះខ្លួនមានសិទ្ធផ្តាច់ 100% ដើម្បីចាត់ចែង លក់ដូរ ផ្ទេរសិទ្ធិ គ្មានបន្ទុកបញ្ចាំ និងគ្មានទំនាស់ជាមួយតតិយជន ឬបណ្តឹងទប់ស្កាត់ហាមឃាត់អ្វីទាំងអស់។
 									    </td>
 									  </tr>	
+									  		
 									  <tr>
 									    <td align="justify" style="vertical-align:top; text-align:right;width:9%;"><span style="">៤.២</span></td>
-									  	<td align="justify" style="padding-left:5px">
-											ភាគី (ខ) ត្រូវផ្តល់ស្នាមមេដៃ ឬឯកសារពាក់ព័ន្ធ ដើម្បីដំណើរការលើការកាត់ឈ្មោះផ្ទេរសិទ្ធិអោយបានទាន់ពេល។
-									  	</td> 	
-									  </tr>		
-									  <tr>
-									    <td align="justify" style="vertical-align:top; text-align:right;width:9%;"><span style="">៤.៣</span></td>
 									  	<td align="justify" style="padding-left:5px">
 											ក្រោយថ្ងៃចុះកិច្ចសន្យានេះរួចតទៅ ភាគី (ខ) មិនមានសិទិ្ធវាយទំលុះ ឬកំទេចរបងជញ្ជាំងដែលមានស្រាប់នោះឡើយ ទោះក្នុងរូបភាពណាក៏ដោយ លើកលែងតែមានការអនុញ្ញាតពី ភាគី (ក) បើមិនដូច្នោះ ភាគី (ខ) នឹងទទួលខុសត្រូវនៅចំពោះមុខច្បាប់ជាធរមាន។
 									  	</td> 	
 									  </tr>
 									  <tr>
-									    <td align="justify" style="vertical-align:top; text-align:right;width:9%;"><span style="">៤.៤</span></td>
+									    <td align="justify" style="vertical-align:top; text-align:right;width:9%;"><span style="">៤.៣</span></td>
 									  	<td align="justify" style="padding-left:5px">
 											ក្នុងករណីគូភាគីនៃកិច្ចសន្យាណាមួយត្រូវទទួលមរណៈភាព បាត់ខ្លួន ឬទទួលពិការភាពទាំងស្រុង មិនមានលទ្ធភាពអនុវត្តកិច្ចសន្យានេះបន្ត នោះទាយាទស្របច្បាប់ដែលបានកំណត់នៅក្នុងបទបញ្ញត្តិនៃព្រះរាជាណាចក្រកម្ពុជា គឺជាអ្នកទទួល អនុវត្តបន្តរហូតបញ្ចប់ជាស្ថាពរ។
 									  	</td> 	
 									  </tr>
 									 <tr>
-									    <td align="justify" style="vertical-align:top; text-align:right;width:9%;"><span style="">៤.៥</span></td>
+									    <td align="justify" style="vertical-align:top; text-align:right;width:9%;"><span style="">៤.៤</span></td>
 									  	<td align="justify" style="padding-left:5px">
 											ក្នុងករណីមានវិវាទកើតឡើង គូភាគីត្រូវពិភាក្សារកដំណោះស្រាយដោយសន្តិវិធី បើនៅតែមិនអាចដោះស្រាយបាន ទើបឈានដល់ការដាក់ពាក្យបណ្តឹងចូលតុលាការជាសមត្ថកិច្ច និងយកច្បាប់នៃព្រះរាជាណាចក្រកម្ពុជា មកធ្វើជាមូលដ្ឋានក្នុងការវិភាគ និងវិនិច្ឆ័យសម្រេច ហើយភាគីចាញ់ក្តីជាអ្នកទទួលបន្ទុកចំណាយទាំងអស់។
 									  	</td> 	
@@ -372,7 +372,7 @@
 									   <tr>
 									    <td align="justify" style="vertical-align:top; text-align:right;"><span style="">៥.២</span></td>
 									    <td align="justify" style="padding-left:5px">
-										គូភាគីបានអានរួចរាល់និងពិនិត្យយ៉ាងត្រឹមត្រូវ ហើយមានស្មារតីគ្រប់គ្រាន់ និងមានឆន្ទៈជាក់លាក់ក្នុងការយល់ព្រមផ្តិតស្នាមមេដៃទុកជាភស្តុតាងនៅចំពោះមុខច្បាប់តទៅ ដោយកិច្ចសន្យានេះត្រូវបានធ្វើឡើងជាភាសាខ្មែរមានចំនួន ៣ (បី)ច្បាប់ ប្រគល់ជូនគូភាគី ០១ច្បាប់ម្នាក់ និងរក្សាទុកនៅសាក្សី ០១ច្បាប់ ដោយមានតំលៃស្មើគ្នាទាំងអស់នៅចំពោះមុខច្បាប់។
+										គូភាគីបានអានរួចរាល់និងពិនិត្យយ៉ាងត្រឹមត្រូវ ហើយមានស្មារតីគ្រប់គ្រាន់ និងមានឆន្ទៈជាក់លាក់ក្នុងការយល់ព្រមផ្តិតស្នាមមេដៃទុកជាភស្តុតាងនៅចំពោះមុខច្បាប់តទៅ ដោយកិច្ចសន្យានេះត្រូវបានធ្វើឡើងជាភាសាខ្មែរមានចំនួន ២(ពីរ)ច្បាប់  ០១ច្បាប់ប្រគល់ជូនភាគី ខ និង ០១ច្បាប់ទៀត រក្សាទុកនៅភាគី ក ដោយមានតំលៃស្មើគ្នាទាំងអស់នៅចំពោះមុខច្បាប់។
 									    </td>  
 									  </tr>
 									  
@@ -400,7 +400,7 @@
 				           <tr style="font-size: 14px; white-space:nowrap;">
 				           	   <td class="reff"  align="center" style="white-space:nowrap;"><span style="font-family:'Khmer OS Muol Light';font-weight:200; "><?php echo str_replace('លោក','',$this->agreement['project_manager_namekh']); //echo $dataterm['signatur_agree'];?></span></td>
 						       <td>&nbsp;</td>
-						       <td class="reff"  align="center" style="white-space:nowrap;"><span style="font-family:'Khmer OS Muol Light';font-weight:200; "></span></td>
+						       <td class="reff"  align="center" style="white-space:nowrap;"><span style="font-family:'Khmer OS Muol Light';font-weight:200; "><?php echo $this->agreement['witness_i']; echo (!empty($this->agreement['witness_ii']))?" និង ".$this->agreement['witness_ii']:""; ?></span></td>
 						       <td>&nbsp;</td>
 						       <td  style="text-align:center;"><span style="font-family:'Khmer OS Muol Light';font-weight:200; "><?php echo $this->agreement['client_namekh']; echo (!empty($this->agreement['hname_kh']))?" និង ".$this->agreement['hname_kh']:""; ?> </span></td>
 						       
