@@ -2527,7 +2527,7 @@ class Systemapi_Model_DbTable_DbApi extends Zend_Db_Table_Abstract
 				'status' 		=> 1,
 				'budgetId' 		=> $_data['budgetId'],
 			);
-			Application_Model_DbTable_DbUserLog::writeMessageError("C");
+			
 			$part = PUBLIC_PATH . '/images/proimage/';
 			if (!file_exists($part)) {
 				mkdir($part, 0777, true);
