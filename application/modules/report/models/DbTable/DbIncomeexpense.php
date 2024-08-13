@@ -1385,7 +1385,7 @@ class Report_Model_DbTable_DbIncomeexpense extends Zend_Db_Table_Abstract
 			,`l`.`street`                   AS `street`
 		FROM 
 			`ln_income` AS inc 
-			JOIN ln_sale AS s ON s.id = inc.sale_id 
+			JOIN ln_sale AS s ON s.id = inc.sale_id AND s.is_cancel = 0
 			LEFT JOIN ln_properties AS l ON `s`.`house_id` = `l`.`id`
 			
 		WHERE inc.`status` =1
