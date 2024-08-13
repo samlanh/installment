@@ -635,11 +635,9 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		  `p`.`land_address`    AS `land_address`,
 		  `p`.`land_size`       AS `land_size`,
 		  `p`.`street`           AS `stree`,
-	  (SELECT
-	     `ln_properties_type`.`type_nameen`
-	   FROM `ln_properties_type`
-	   WHERE (`ln_properties_type`.`id` = `p`.`property_type`)
-	   LIMIT 1) AS `propertype`
+			(SELECT `ln_properties_type`.`type_nameen` FROM `ln_properties_type` WHERE (`ln_properties_type`.`id` = `p`.`property_type`) LIMIT 1) AS `propertype`
+			,(SELECT COUNT(re.`reschedule_date`) FROM `ln_reschedule` AS re WHERE re.`sale_id` = s.id ORDER BY re.id DESC LIMIT 1) AS countingReschedule
+			,(SELECT re.`reschedule_date` FROM `ln_reschedule` AS re WHERE re.`sale_id` = s.id ORDER BY re.id DESC LIMIT 1) AS rescheduleDate
   		FROM 
   	   `ln_sale` AS s,
   	   `ln_properties` AS p
