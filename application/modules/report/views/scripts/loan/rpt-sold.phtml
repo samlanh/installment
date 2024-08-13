@@ -169,14 +169,14 @@ dojo.require("dijit.form.DateTextBox");
 	            <table class="content-data" border="1" width="100%" cellspacing="0">
 	               <thead>
 	                 <tr class="hide" style="border:1px solid #000;">
-		                <td colspan="20" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
+		                <td colspan="21" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
 		             </tr>
 	                 <tr bgcolor="#c1d0f3" class="style" align="center" >
 	                    <td scope="col" rowspan="2"><span><?php echo $tr->translate("NUM");?></span></td>
 	                    <td scope="col" rowspan="2"><span><?php echo $tr->translate("Customers");?></span></td>
 	                    <td scope="col" colspan="5"><span><?php echo $tr->translate("PROPERTY_INFO");?></span></td>
 	                    <td scope="col" colspan="<?php echo $colspanDIS+4;?>"><span><?php echo $tr->translate("INFO_INDILOAN");?></span></td>
-	                    <td scope="col" colspan="5"><span><?php echo $tr->translate("PAYMENT_INFO");?></span></td>
+	                    <td scope="col" colspan="6"><span><?php echo $tr->translate("PAYMENT_INFO");?></span></td>
 	                    <td scope="col" rowspan="2"><span><?php echo $tr->translate("BY_USER");?></span></td>
 	                </tr>
 	                <tr bgcolor="#c1d0f3" class="style" align="center" >
@@ -199,6 +199,7 @@ dojo.require("dijit.form.DateTextBox");
 	                    <td scope="col"><?php echo $tr->translate("PAID");?></td>
 	                    <td scope="col"><?php echo $tr->translate("BALANCE");?></td>
 	                    <td scope="col"><?php echo $tr->translate("PERIIOD");?></td>
+	                    <td scope="col"><?php echo $tr->translate("PERCENTAGE_PAID");?></td>
 	                    <td scope="col"><?php echo $tr->translate("COMPLETED_PAID_DATE");?></td>
 	                    
 	                </tr>
@@ -344,7 +345,7 @@ dojo.require("dijit.form.DateTextBox");
 	              
 	              if($row['payment_id']!=$payment_id){?>
 	              	<tr>
-	              		<td colspan="20" style="text-align:center; font-size:14px; font-family:'Khmer OS Muol Light'"><?php echo $row['paymenttype']; ?></td>
+	              		<td colspan="21" style="text-align:center; font-size:14px; font-family:'Khmer OS Muol Light'"><?php echo $row['paymenttype']; ?></td>
 	              	</tr>
 	              <?php } 
 	             }else{
@@ -354,7 +355,7 @@ dojo.require("dijit.form.DateTextBox");
 	             	if($set_cancel==0){$set_cancel=1;
 	             	?>
 	             	<tr>
-	              		<td colspan="20" style="text-align:center; font-size:14px; font-family:'Khmer OS Muol Light'">បោះបង់<?php //echo $row['paymenttype']; ?></td>
+	              		<td colspan="21" style="text-align:center; font-size:14px; font-family:'Khmer OS Muol Light'">បោះបង់<?php //echo $row['paymenttype']; ?></td>
 	              	</tr>
 	             <?php }}
 	              	$payment_id = $row['payment_id']?>
@@ -404,17 +405,31 @@ dojo.require("dijit.form.DateTextBox");
 								$paidAmoutn = $row['paid_amount']+$row['totalAmountCreadit'];
 								echo number_format($paidAmoutn,2);
 							}
-						?></td>
+							
+							$percentagePaid = 0;
+							if($paidAmoutn>0){
+								if($paidAmoutn>$row['price_sold']){
+									$percentagePaid = 100;
+								}else{
+									$percentagePaid = str_replace(".00","",number_format($paidAmoutn/$row['price_sold']*100,2));
+								}
+								
+							}
+						?>
+						
+						</td>
+						
 						<td data-label="<?php echo $tr->translate("BALANCE");?>" align="right" style="white-space:nowrap;"><?php echo number_format($balance,2);//number_format($row['price_sold']-$paidAmoutn,2);//echo number_format($row['price_sold']-$row['paid_amount'],2); ?></td>
 						<!-- <td style="white-space:nowrap; font-size:10px;text-align: left;"><?php //echo $row['paymenttype']; ?></td> -->
 						<td data-label="<?php echo $tr->translate("PERIIOD");?>" align="center"><?php if($row['payment_id']== 3 OR $row['payment_id']==4 OR $row['payment_id']==7){ echo sprintf('%02d', $row['total_duration']); }else if($row['payment_id']==6){ echo sprintf('%02d', $row['times'])." ដង";}else{ echo "-";}?></td>
+						<td data-label="<?php echo $tr->translate("PERCENTAGE_PAID");?>" class="textBold" align="center"><?php echo $percentagePaid."%"; ?></td>
 						<td data-label="<?php echo $tr->translate("COMPLETED_PAID_DATE");?>" class="textBold" align="center"><?php if($balance<=0){ $date= new DateTime($row['lastPaidDate']);	echo $date->format("d-m-Y"); }else{ echo "-";}?></td>
 						
 						<td data-label="<?php echo $tr->translate("BY_USER");?>" align="center" style="white-space:nowrap;" ><?php echo $row['user_name'];?></td>
 						</tr>
 					<?php }?>
 	            		<tr>
-	            			<td colspan="20" style=" border: #fff solid 1px;    border-top: solid 1px #000;">
+	            			<td colspan="21" style=" border: #fff solid 1px;    border-top: solid 1px #000;">
 				             <br />
 				             <table style=" font-size:10px; width:70%; margin:0 auto; font-family:'Khmer OS Muol Light'" cellspacing="0">
 			                 <thead>
@@ -512,7 +527,7 @@ dojo.require("dijit.form.DateTextBox");
 							 <tr bgcolor="#a0baf5" style="line-height: 20px; white-space: nowrap;">
 			                    <td data-label="<?php echo $tr->translate("totalLandSize");?>" align="right"><?php echo $tr->translate("totalLandSize");?></td>
 			                    <td></td>
-								<td colspan="6"><?php echo $totalLandSize." ".$tr->translate("squareMeters");?></td>
+								<td colspan="7"><?php echo $totalLandSize." ".$tr->translate("squareMeters");?></td>
 			                    
 			                 </tr>
 			              </table>

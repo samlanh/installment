@@ -1504,7 +1504,7 @@ class Systemapi_Model_DbTable_DbGeneralApi extends Zend_Db_Table_Abstract
 	}
 	
 	
-	public function getCustomerPayment($search){
+	public function getCustomerPaymentList($search){
 		$db = $this->getAdapter();
 		try{
 			$currentLang = empty($search['currentLang'])?1:$search['currentLang'];
@@ -1520,11 +1520,13 @@ class Systemapi_Model_DbTable_DbGeneralApi extends Zend_Db_Table_Abstract
 						crm.id AS recordId
 						,'payment' AS recordType
 						,crm.`receipt_no` AS recordNum
+						,crm.`date_input` AS dateInput
+						
 						,(SELECT pr.$projectName FROM `ln_project` AS pr WHERE pr.br_id = crm.`branch_id` LIMIT 1) AS projectName
 						,(SELECT pr.logo FROM `ln_project` AS pr WHERE pr.br_id = crm.`branch_id` LIMIT 1) AS projectLogo
 						,s.`price_sold` AS priceSold
 						,crm.`date_payment` AS datePayment
-						,crm.`date_input` AS dateInput
+						
 						,crm.`total_interest_permonthpaid` AS interestPaid
 						,crm.`total_principal_permonthpaid` AS principalPaid
 						,crm.`penalize_amount` AS penalizeAmount
@@ -1546,6 +1548,8 @@ class Systemapi_Model_DbTable_DbGeneralApi extends Zend_Db_Table_Abstract
 						,(SELECT b.bank_name FROM `st_bank` AS b WHERE b.id=`crm`.`bank_id` LIMIT 1) AS bankName
 						
 						,crm.`cheque` AS paymentMethodNumber
+						,crm.is_closed AS `isClosed`
+						
 						,p.`land_address` AS propertyCode
 						,p.`street`
 						,p.`hardtitle` AS hardTitle
@@ -1577,7 +1581,7 @@ class Systemapi_Model_DbTable_DbGeneralApi extends Zend_Db_Table_Abstract
 	    		$s_where[]= " REPLACE(p.`street`,' ','') LIKE '%{$s_search}%'";
 	    		$s_where[]= " REPLACE(p.hardtitle,' ','') LIKE '%{$s_search}%'";
 	    		$s_where[]= " REPLACE(cl.`name_kh`,' ','') LIKE '%{$s_search}%'";
-	    		$s_where[]= " REPLACE(cl.`name_kh`,' ','') LIKE '%{$s_search}%'";
+	    		$s_where[]= " REPLACE(cl.`phone`,' ','') LIKE '%{$s_search}%'";
 	    		$s_where[]= " REPLACE(crm.`receipt_no`,' ','') LIKE '%{$s_search}%'";
 	    		
 	    		$sql.=' AND ('.implode(' OR ', $s_where).')';
@@ -1591,6 +1595,97 @@ class Systemapi_Model_DbTable_DbGeneralApi extends Zend_Db_Table_Abstract
 	    	if(!empty($search['propertyType'])){
 	    		$sql.=" AND p.`property_type`=".$search['propertyType'];
 	    	}
+			$sql.=" ORDER BY crm.`date_input` DESC, crm.id DESC ";
+    		$row = $db->fetchAll($sql);
+			return $row;
+		}catch(Exception $e){
+			Application_Model_DbTable_DbUserLog::writeMessageError($e->getMessage());
+			$result = array();
+			return $result;
+		}
+	}
+	
+	public function getOtherIncomeList($search){
+		$db = $this->getAdapter();
+		try{
+			$currentLang = empty($search['currentLang'])?1:$search['currentLang'];
+			$projectName = "project_name";
+			$propertyType = "type_nameen";
+			$title = "name_en";
+			if($currentLang==1){
+				$projectName = "project_name";
+				$propertyType = "type_namekh";
+				$title = "name_kh";
+			}
+			$sql=" SELECT 
+						inc.id AS recordId
+						,CASE 
+							WHEN inc.incomeType =2 THEN 'boreyFee' 
+							ELSE 'otherIncome'  
+						END AS recordType
+						,inc.`invoice` AS recordNum
+						,inc.`date` AS dateInput
+						,(SELECT pr.$projectName FROM `ln_project` AS pr WHERE pr.br_id = inc.`branch_id` LIMIT 1) AS projectName
+						,(SELECT pr.logo FROM `ln_project` AS pr WHERE pr.br_id = inc.`branch_id` LIMIT 1) AS projectLogo
+						,inc.`title` AS title
+						,inc.`description` AS description
+						
+						,`inc`.`payment_id` AS paymentMethod
+						,(SELECT `v`.$title FROM `ln_view` AS v  WHERE `v`.`key_code` = `inc`.`payment_id` AND `v`.`type` = 2 LIMIT 1) AS paymentMethodTitle
+						,(SELECT b.bank_name FROM `st_bank` AS b WHERE b.id=`inc`.`bank_id` LIMIT 1) AS bankName
+						,inc.cheque AS paymentMethodNumber
+						,inc.total_amount AS totalAmount
+						,inc.from_date AS boreyFeeStartDate
+						,inc.next_date AS boreyFeeExpireDate
+						,inc.is_closed AS `isClosed`
+						
+						,p.`land_address` AS propertyCode
+						,p.`street`
+						,p.`hardtitle` AS hardTitle
+						,(SELECT pt.$propertyType FROM `ln_properties_type` AS pt WHERE pt.id = p.`property_type` LIMIT 1) AS propertyTypeTitle
+						,cl.`name_kh` AS clientName
+						,(SELECT v.$title FROM `ln_view` AS v WHERE v.key_code = cl.`sex` AND v.type =11 LIMIT 1) AS clientGender
+						,cl.`phone` AS clientTel
+						,cl.`hname_kh` AS withClientName
+						,(SELECT v.$title FROM `ln_view` AS v WHERE v.key_code = cl.`ksex` AND v.type =11 LIMIT 1) AS withClientGender
+						,cl.`lphone` AS withClientTel
+						,(SELECT CONCAT(u.last_name,' ',u.first_name) FROM rms_users AS u WHERE u.id = inc.user_id LIMIT 1) AS userName
+				";
+			$sql.="
+				FROM 
+					`ln_income` AS inc
+						LEFT JOIN `ln_sale` AS s ON inc.`sale_id` = s.`id`
+						LEFT JOIN `ln_properties` AS p ON p.id = s.`house_id` 
+						LEFT JOIN `ln_client` AS cl ON cl.`client_id` = s.`client_id`
+			";
+			$sql.=" WHERE inc.`status` = 1 ";
+			
+			$from_date =(empty($search['startDate']))? '1': " inc.`date` >= '".date("Y-m-d",strtotime($search['startDate']))." 00:00:00'";
+	    	$to_date = (empty($search['endDate']))? '1': " inc.`date` <= '".date("Y-m-d",strtotime($search['endDate']))." 23:59:59'";
+	    	$sql.= " AND ".$from_date." AND ".$to_date;
+			if(!empty($search['searchBox'])){
+	    		$s_where=array();
+	    		$s_search=addslashes(trim($search['searchBox']));
+	    		$s_search = str_replace(' ', '', addslashes(trim($search['searchBox'])));
+	    		$s_where[]= " REPLACE(p.`land_address`,' ','') LIKE '%{$s_search}%'";
+	    		$s_where[]= " REPLACE(p.`street`,' ','') LIKE '%{$s_search}%'";
+	    		$s_where[]= " REPLACE(p.hardtitle,' ','') LIKE '%{$s_search}%'";
+	    		$s_where[]= " REPLACE(cl.`name_kh`,' ','') LIKE '%{$s_search}%'";
+	    		$s_where[]= " REPLACE(cl.`phone`,' ','') LIKE '%{$s_search}%'";
+	    		$s_where[]= " REPLACE(inc.`invoice`,' ','') LIKE '%{$s_search}%'";
+	    		
+	    		$sql.=' AND ('.implode(' OR ', $s_where).')';
+	    	}
+			if(!empty($search['projectId'])){
+	    		$sql.=" AND inc.`branch_id`=".$search['projectId'];
+	    	}
+			if(!empty($search['paymentMethod'])){
+	    		$sql.=" AND `inc`.`payment_id`=".$search['paymentMethod'];
+	    	}
+	    	if(!empty($search['propertyType'])){
+	    		$sql.=" AND p.`property_type`=".$search['propertyType'];
+	    	}
+			$sql.=" ORDER BY inc.`date` DESC, inc.id DESC ";
     		$row = $db->fetchAll($sql);
 			return $row;
 		}catch(Exception $e){
