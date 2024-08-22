@@ -19,6 +19,11 @@
 	if($headerReportType==2){
 		$classHideHeight="125px";
 	}
+	
+	$montFomat="d-m-Y";
+	if(MONTH_FORMATE_DATE_RECEIPT==1){
+		$montFomat="d-M-Y";
+	}
 ?>
 <meta charset="utf-8">
 <script>
@@ -147,6 +152,9 @@ dojo.require("dijit.form.DateTextBox");
 				line-height: 12px; 
 				font-size:80%;
 			}
+			span.preLine {
+				max-width: 330px; display: block; white-space: pre-line; line-height: 16px; overflow-wrap: break-word;padding: 0 1px;
+			}
 		</style>
 		<table style="font-family: 'Times New Roman','Khmer OS Battambang'; width:100%;">
 			<tr>
@@ -161,14 +169,14 @@ dojo.require("dijit.form.DateTextBox");
 		            <table border="1" class="content-data" width="100%" cellspacing="0">
 		                 <thead>
 			                 <tr class="hide" style="border:1px solid #000;">
-				                <td colspan="16" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
+				                <td colspan="18" style="border:1px solid #fff;border-bottom:1px solid #000;"></td>
 				             </tr>
 							 <tr class="style" align="center" >
 								<td scope="col" rowspan="2"><?php echo $tr->translate("NUM");?></td>
 								<td scope="col" rowspan="2"><?php echo $tr->translate("BRANCH_NAME");?></td>
 								  
 								<td scope="col" colspan="7"><?php echo $tr->translate("SALE_INFO");?></td>   
-								<td scope="col" colspan="4"><?php echo $tr->translate("PAYMENT_INFO");?></td>   
+								<td scope="col" colspan="6"><?php echo $tr->translate("PAYMENT_INFO");?></td>   
 								
 							</tr>
 			                 <tr height="35px;" class="style" align="center" >
@@ -184,6 +192,8 @@ dojo.require("dijit.form.DateTextBox");
 			                    <td scope="col"><?php echo $tr->translate("PERCENTAGE");?></td>
 			                    <td scope="col"><?php echo $tr->translate("NOT_TO_REPAY");?></td>
 			                    <td scope="col"><?php echo $tr->translate("TOTAL_INTEREST");?></td>
+			                    <td scope="col"><?php echo $tr->translate("LAST_DATE_FOR_PAID");?></td>
+			                    <td scope="col"><?php echo $tr->translate("LAST_AMOUT_FOR_PAID");?></td>
 			                </tr>
 		                </thead>
 		               <?php 
@@ -213,8 +223,8 @@ dojo.require("dijit.form.DateTextBox");
 		               
 		               		
 		               		
-		               		$link="#";
-		               		if($row['payment_id']==2 OR $row['payment_id']==3 OR $row['payment_id']==4 OR $row['payment_id']==6){
+		               		$link="";
+		               		if($row['payment_id']==2 OR $row['payment_id']==3 OR $row['payment_id']==4 OR $row['payment_id']==5 OR $row['payment_id']==6){
 		               			$link = $url_client."/id/".$row['id'];
 		               		}
 		               		
@@ -228,6 +238,23 @@ dojo.require("dijit.form.DateTextBox");
 							if(($i%2)==0){
 								$classRow = "odd";
 							}
+							
+							$lastDateForPayment = "";
+							if(!empty($row['no_installment'])){
+								if($row['last_optiontype']==1){//by date
+									if($row['ispay_bank']==0){
+										if(!empty($row['date_payment'])){
+											$date= new DateTime($row['date_payment']);
+											$lastDateForPayment = $date->format($montFomat);
+										}
+									}else{
+										$lastDateForPayment = $row['payment_type'];//." ".$row['ispay_bank'];
+									}
+								}else{//by last payment
+									$lastDateForPayment = $tr->translate("RECEIVED_PROPERTY");
+								}
+							}
+						
 		               ?>
 							<tr align="center" class="hover <?php echo $classRow;?>">
 								<td data-label="<?php echo $tr->translate("NUM");?>"><?php echo $i; ?></td>
@@ -239,13 +266,21 @@ dojo.require("dijit.form.DateTextBox");
 								?>
 								</td>
 								<td data-label="<?php echo $tr->translate("AMOUNTS");?>" align="center"><?php echo sprintf('%02d',$countland); ?></td>
-								<td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>" align="left"><a target="_blank" style="color:#000; text-decoration: none;" href="<?php echo $link;?>"><?php echo $row['land_address'].",".$row['street'];?></a></td>
+								<td data-label="<?php echo $tr->translate("PROPERTY_CODE");?>" align="left">
+									<?php if($link!=""){?>
+									<a target="_blank" style="color:#000; text-decoration: none;" href="<?php echo $link;?>">
+										<span class="preLine"><?php echo $row['land_address'].",".$row['street'];?></span>
+									</a>
+									<?php }else {?>
+									<span class="preLine"><?php echo $row['land_address'].",".$row['street'];?></span>
+									<?php }?>
+								</td>
 								<td data-label="<?php echo $tr->translate("DATE_BUY");?>"><?php echo date("d-m-Y",strtotime($row['first_payment']));?></td>
 								<td data-label="<?php echo $tr->translate("PAMENT_METHOD");?>"><?php echo $row['paymenttype'];?></td>
 								<td data-label="<?php echo $tr->translate("LOAN_PERIOD");?>"> 
 									
 									<?php 
-										echo $row['total_duration']; 
+										echo sprintf('%02d',str_replace(".00","",$row['total_duration']))." "; 
 										if($row['payment_id']!=4){
 											echo $tr->translate("MONTH");
 										}else{
@@ -257,12 +292,15 @@ dojo.require("dijit.form.DateTextBox");
 								<td data-label="<?php echo $tr->translate("SOLD_PRICE");?>"><?php echo number_format($row['price_sold'],2);?></td>
 								<td data-label="<?php echo $tr->translate("PRINCIPAL");?>" style="white-space:nowrap; text-align: right;"><?php echo number_format($total_receive,2);?></td>
 								<td data-label="<?php echo $tr->translate("PERCENTAGE");?>"><?php 
-									echo number_format($total_receive/$row['price_sold']*100,2).' %';
+									echo str_replace(".00","",number_format($total_receive/$row['price_sold']*100,2)).' %';
 								?></td>
 								<td data-label="<?php echo $tr->translate("NOT_TO_REPAY");?>"><?php echo number_format(($row['price_sold']-$total_receive),2);?></td>
 								<td data-label="<?php echo $tr->translate("TOTAL_INTEREST");?>"><?php echo number_format($row['balance_interest'],2);
 										$total_interest = $total_interest + $row['balance_interest'];
 								?></td>
+								<td data-label="<?php echo $tr->translate("PRINCIPAL");?>" style="text-align: center;"><?php echo $lastDateForPayment;?></td>
+								<td data-label="<?php echo $tr->translate("PRINCIPAL");?>" style="white-space:nowrap; text-align: right;"><?php echo number_format($row['total_payment'],2);?></td>
+								
 							</tr>
 						<?php }?>
 							<tr style="height: 30px; font-weight:bold; text-align: center;font-size: 14px; background:#87acff;">
@@ -279,6 +317,7 @@ dojo.require("dijit.form.DateTextBox");
 									  //echo $tr->translate("PROPERTY")." :"; //echo $amount_property;
 								?>
 								</td>
+								<td colspan="2"></td>
 							</tr>
 		            </table>
 		            <br />

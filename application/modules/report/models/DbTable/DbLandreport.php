@@ -218,6 +218,12 @@ public function getAllOutstadingLoan($search=null){
 		$sql.= "
 			,(SELECT (totalPrincipalPaid+totalCredit) FROM `v_getsaleprincipalpaid` vpaid WHERE vpaid.saleId=s.id LIMIT 1) totalPricipalPaid
 			,(SELECT vs.totalInterestBalance FROM  `v_getsuminterestbalance` vs WHERE vs.saleId =s.id LIMIT 1) AS balance_interest
+			,COALESCE((SELECT sch.no_installment FROM `v_getLastSaleScheduleInfo` AS sch WHERE sch.saleId = s.`id` LIMIT 1),0) AS no_installment
+			,COALESCE((SELECT sch.last_optiontype FROM `v_getLastSaleScheduleInfo` AS sch WHERE sch.saleId = s.`id` LIMIT 1),0) AS last_optiontype
+			,COALESCE((SELECT sch.ispay_bank FROM `v_getLastSaleScheduleInfo` AS sch WHERE sch.saleId = s.`id` LIMIT 1),0) AS ispay_bank
+			,COALESCE((SELECT sch.date_payment FROM `v_getLastSaleScheduleInfo` AS sch WHERE sch.saleId = s.`id` LIMIT 1),'') AS date_payment
+			,COALESCE((SELECT sch.`total_payment` FROM `v_getLastSaleScheduleInfo` AS sch WHERE sch.saleId = s.`id` LIMIT 1),0) AS total_payment
+			,(SELECT v.name_kh FROM ln_view AS v WHERE v.type =29 AND v.key_code = COALESCE((SELECT sch.ispay_bank FROM `v_getLastSaleScheduleInfo` AS sch WHERE sch.saleId = s.`id` LIMIT 1),0) LIMIT 1) AS payment_type
 		";
 		$where = $statement['where'];
 		
