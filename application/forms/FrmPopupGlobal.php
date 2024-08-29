@@ -1329,7 +1329,9 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 						font:12px '."Khmer OS Battambang".';
 						border: 1px solid #000;
 						line-height:20px;font-weight: normal !important;
+						
 					}
+					
 					table.receipt-titile tr td {
 						font-size:16px;
 					}
@@ -2214,8 +2216,65 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					font:11px '."Khmer OS Battambang".';
 					border: 1px solid #000;
 					line-height:14px;font-weight: normal !important;
-					padding: 4px 2px !important;				 
+					padding: 4px 2px !important;	
 				}
+				.lb_noted{
+					position:relative;
+				}
+
+				.paidstamp{
+					position:absolute;
+					width:250px;
+					height:100px;
+					margin-top:30px;
+					margin-left:10px;
+					background:url('.$baseurl."/images/paid-stamp.jpg".') no-repeat;
+					background-size: contain;
+					mix-blend-mode:multiply;
+					z-index: index 99;
+				}
+				.paidstamp:after{
+					position:absolute;
+					content: "";
+					width:160px;
+					height:100px;
+					background-size: contain;
+					background: url('.$baseurl."/images/bg.jpeg".') no-repeat;
+					mix-blend-mode: lighten;
+				}
+				.issueDate{
+					position:absolute;
+					font:14px "Arial";
+					color:red;
+					font-weight:bolder;
+					margin: 55px 0px 0px 45px;
+					letter-spacing:1px; 
+				}
+				.issueDate:after{
+				 	content: "";
+					position: absolute;
+					left: 0;
+					top: 0;
+					width: 100%;
+					height: 100%;
+					background-image: url('.$baseurl."/images/bg.jpeg".');
+					mix-blend-mode: lighten;
+				}
+				.receiver-signature{
+					width:134px;
+					height: 80px;
+					background: url('.$baseurl."/images/signature.jpg".') no-repeat;		
+					margin:0 auto;
+				}
+				.displayStamp{
+					display:none;
+				}
+
+				.receiver{
+					text-align:center;
+				}
+
+				
 				table.receipt-titile tr td {
 					font-size:16px;
 				}
@@ -2279,7 +2338,9 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					display:block;
 					line-height:14px;
 				}
+				.showstamp{margin-bottom:20px;display:none;}
 			</style>
+			<div class="showstamp">Show Paid Stamp <input onclick="checkStampDisplay();" type="checkbox" id="showstamp" name="showstamp" /></div>
 			<table width="100%" style="backgroud:red;white-space: nowrap;font-size:16px; padding:0px;margin-top: -15px;" class="print" cellspacing="0"  cellpadding="0" >
 				<tr>
 					<td colspan="6">
@@ -2291,7 +2352,7 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 								<td width="30%" valign="top" align="center"><u><span>បង្កាន់ដៃទទួលប្រាក់</span></u>
 									<div ><span >OFFICIAL RECEIPT</span></div>
 								</td>
-								<td width="35%"></td>
+								<td width="35%" align="right" style="vertical-align: top;font-size:10px;">COPY ONLY</td>
 							</tr>
 						</table>
 					</td>
@@ -2350,7 +2411,10 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 				</tr>
 				<tr >
 					<td rowspan="2">សម្គាល់</td>
-					<td rowspan="2" class="noted" valign="top"><label id="lb_noted"></label></td>
+					<td rowspan="2" class="noted" valign="top"><label id="lb_noted"></label>
+					<div class="paidstamp displayStamp"></div>
+					<div class="issueDate displayStamp"></div>
+					</td>
 					<td>&nbsp;&nbsp;ថ្ងៃត្រូវបង់</td>
 					<td><strong><label id="lb_buydate1" class="value"></label></strong></td>
 					<td>&nbsp;ថ្ងៃទទួល</td>
@@ -2377,8 +2441,11 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 								</td>
 							</tr>
 							<tr height="85px">
-								<td colspan="3">&nbsp;
+								<td>
 								</td>
+								<td>
+								</td>
+								<td class="receiver"><div class="receiver-signature displayStamp"></div></td>
 							</tr>
 							<tr>
 								<td width="30%">&nbsp;</td>

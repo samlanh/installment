@@ -12,7 +12,9 @@
 	$pennalizeOpt = PENALIZE_OPT;
 	$settingDoc = SETTING_EXPENSE_DOC;
 ?>
-
+<style>
+		.showstamp{display: block !important;}
+</style>
 <div class="card">
 	<div class="card-content collapse show">
 		<form id='frm_add_group_pay' action="<?php echo $this->url($urlsubmit); ?>" dojoType="dijit.form.Form" method="post" enctype="multipart/form-data">
@@ -915,6 +917,22 @@ function showReciept(receipt_number){
 		dijit.byId('frm_client').show();
 	}
  }
+}
+function checkStampDisplay(){
+	
+	paidDate = dijit.byId('collect_date').get('value');
+	var today = new Date(paidDate); 
+	var stampDate1 = today.toLocaleString('default', { day: '2-digit'});
+	var stampDate2 = today.toLocaleString('default', {month: 'short'});
+	var stampDate3 = today.toLocaleString('default', {year:'numeric' });
+	var stampDate =stampDate1+'-'+stampDate2+'-'+stampDate3
+	
+	$('.issueDate').text(stampDate);
+
+	$('.displayStamp').css('display','none');
+	if ($('#showstamp').is(':checked')) {
+		$('.displayStamp').css('display','block');
+	}
 }
 function returnMOnth(monthnum){
 	var month = new Array();
@@ -1895,4 +1913,5 @@ input.fullside.control-rec::placeholder {
     background: #00c5bc;
     color: #fff;
 }
+
 </style>

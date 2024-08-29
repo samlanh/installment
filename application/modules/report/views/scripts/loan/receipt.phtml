@@ -5,6 +5,7 @@
 <style>
 	.hover:hover{background: #ccc;}
 	img.view{height: 70px !important;}
+	.showstamp{display: block !important;}
 </style>
 <?php 
 	$request = Zend_Controller_Front::getInstance()->getRequest();
@@ -413,5 +414,19 @@ function printSave(){
 	dojo.byId('lable_chartotalreceipt_in_kh').innerHTML=money_khmer_recieve_amount+" ដុល្លារអាមេរិក";
 
 	
+}
+function checkStampDisplay(){
+	var today = new Date("<?php  echo $datePay->format('d-M-Y'); ?>"); 
+	var stampDate1 = today.toLocaleString('default', { day: '2-digit'});
+	var stampDate2 = today.toLocaleString('default', {month: 'short'});
+	var stampDate3 = today.toLocaleString('default', {year:'numeric' });
+	var stampDate =stampDate1+'-'+stampDate2+'-'+stampDate3
+	
+	$('.issueDate').text(stampDate);
+
+	$('.displayStamp').css('display','none');
+	if ($('#showstamp').is(':checked')) {
+		$('.displayStamp').css('display','block');
+	}
 }
 </script>

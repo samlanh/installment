@@ -682,6 +682,7 @@
 		background: #085d94;
 		color: #fff;
 	}
+	.showstamp{display: block !important;}
 </style>
 <script src="<?php echo $baseurl;?>/js/help.js"></script>
 <script src="<?php echo $this->baseUrl();?>/js/pdbs_js.js"  type="text/javascript"></script>
@@ -1778,8 +1779,24 @@ function printSave(new_receipt_no){
 	if(last_number_sold<=0){last_number_sold='';}
 	money_khmer_recieve_amount = money_khmer_recieve_amount+" "+string_sold+" "+read_in_khmer_from_10_to_99(decimalmoney_khmer_recieve_amount)+''+read_in_khmer_from_0_to_9(last_number_sold)+''+str_cent_sold;
 	dojo.byId('lable_chartotalreceipt_in_kh').innerHTML=money_khmer_recieve_amount+" ដុល្លារអាមេរិក";
-	
+
 	dijit.byId("terms").show();	
+}
+function checkStampDisplay(){
+	
+	paidDate = dijit.byId('paid_date').get('value');
+	var today = new Date(paidDate); 
+	var stampDate1 = today.toLocaleString('default', { day: '2-digit'});
+	var stampDate2 = today.toLocaleString('default', {month: 'short'});
+	var stampDate3 = today.toLocaleString('default', {year:'numeric' });
+	var stampDate =stampDate1+'-'+stampDate2+'-'+stampDate3
+	
+	$('.issueDate').text(stampDate);
+
+	$('.displayStamp').css('display','none');
+	if ($('#showstamp').is(':checked')) {
+		$('.displayStamp').css('display','block');
+	}
 }
 var url_getreceipt = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'get-receipt-number')); ?>';
 function getReceiptByBranch(condition){

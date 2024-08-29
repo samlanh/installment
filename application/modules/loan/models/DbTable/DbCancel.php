@@ -477,7 +477,7 @@ class Loan_Model_DbTable_DbCancel extends Zend_Db_Table_Abstract
 		}
 		$sql="SELECT *, s.`id`,
 		CONCAT((SELECT c.name_kh FROM `ln_client` AS c WHERE c.client_id = s.`client_id` LIMIT 1),' (',
-		(SELECT CONCAT(land_address,',',street) FROM `ln_properties` WHERE id=s.`house_id` LIMIT 1),')' ) AS `name`
+		(SELECT COALESCE(land_address,',',street) FROM `ln_properties` WHERE id=s.`house_id` LIMIT 1),')' ) AS `name`
 		FROM `ln_sale` AS s
 		WHERE (s.`is_cancel` =0 ".$sale." ) AND s.`branch_id` =".$branch_id;
 		if($is_completed==0){//get all sale completed 
