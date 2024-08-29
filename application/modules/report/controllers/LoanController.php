@@ -212,7 +212,9 @@ class Report_LoanController extends Zend_Controller_Action {
 	  				'land_id' => "",
 	  				'branch_id'		=>"",
 	  				'schedule_opt'=>-1,
-	  				'client_name'=>-1
+	  				'client_name'=>-1,
+					'last_optiontype'=>-1,
+					'stepoption'=>-1,
 	  		);
 	  	}
 	  	$this->view->fordate = $search['end_date'];
@@ -225,6 +227,9 @@ class Report_LoanController extends Zend_Controller_Action {
 	  	
 	  	$rs= $db->getAllOutstadingLoan($search);
 	  	$this->view->outstandloan = $rs;
+		
+		$db = new Application_Model_DbTable_DbGlobal();
+		$this->view->stepoption = $db->getVewOptoinTypeByType(29);
 	  	
 	  	$frmpopup = new Application_Form_FrmPopupGlobal();
 	  	$this->view->footerReport = $frmpopup->getFooterReport();
