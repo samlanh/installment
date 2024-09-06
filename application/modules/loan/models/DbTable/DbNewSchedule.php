@@ -207,8 +207,9 @@ class Loan_Model_DbTable_DbNewSchedule extends Zend_Db_Table_Abstract
     		$id = $this->update($arr, $where);//add group loan
     		unset($datagroup);
     		
-    		$where = " (principal_permonth=0 OR is_completed=0) AND sale_id=".$data['loan_number'];
-    		$this->_name="ln_saleschedule";
+    		//$where = " (principal_permonth=0 OR is_completed=0) AND sale_id=".$data['loan_number'];
+    		$where = " (total_payment=0 OR is_completed=0) AND sale_id=".$data['loan_number'];
+			$this->_name="ln_saleschedule";
     		$this->delete($where);
     		
     		$id = $data['loan_number'];

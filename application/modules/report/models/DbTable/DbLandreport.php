@@ -244,7 +244,19 @@ public function getAllOutstadingLoan($search=null){
       	if($search['branch_id']>0){
       		$where.=" AND s.branch_id = ".$search['branch_id'];
       	}
-      	
+      	if($search['stepoption']>0){
+    		$where.=" AND COALESCE((SELECT sch.ispay_bank FROM `v_getLastSaleScheduleInfo` AS sch WHERE sch.saleId = s.`id` LIMIT 1),0) = ".$search['stepoption'];
+		}else{
+    		$where.= " AND ".$to_date;
+    		if ($search['stepoption']==0){
+    			$where.= " AND COALESCE((SELECT sch.ispay_bank FROM `v_getLastSaleScheduleInfo` AS sch WHERE sch.saleId = s.`id` LIMIT 1),0)=0";
+			}
+    	}
+		
+		if($search['last_optiontype']>-1){
+    		$where.=" AND COALESCE((SELECT sch.last_optiontype FROM `v_getLastSaleScheduleInfo` AS sch WHERE sch.saleId = s.`id` LIMIT 1),0) = ".$search['last_optiontype'];
+    	}
+		
       	if(!empty($search['adv_search'])){
       		$s_where = array();
       		$s_search = addslashes(trim($search['adv_search']));
