@@ -47,7 +47,9 @@ class Issue_Model_DbTable_Dbissueplong extends Zend_Db_Table_Abstract
 		WHERE (
 		s.id=sp.sale_id
 		AND (`c`.`client_id` = `s`.`client_id`)
-       AND (`p`.`id` = `s`.`house_id`)) ";
+        AND (`p`.`id` = `s`.`house_id`)) 
+		";
+		$sql .= " AND (sp.sale_id NOT IN (SELECT sale_id FROM `ln_processing_plong` WHERE STATUS=1 AND process_status=5)) ";
    	
    	if(!empty($search['adv_search'])){
    		$s_where = array();

@@ -39,6 +39,39 @@ class Report_PlongandhouseController extends Zend_Controller_Action {
   	Application_Model_Decorator::removeAllDecorator($frm);
   	$this->view->frm_search = $frm;
   }
+  function rptPlonglistnewAction(){
+	if($this->getRequest()->isPost()){
+		$search = $this->getRequest()->getPost();
+	}else{
+		$search = array(
+				'adv_search'=>'',
+				'land_id'=>0,
+				'property_type'=>'',
+				"branch_id"=> -1,
+				'type_property_sale'=>-1,
+				'date_type'=>1,
+				'plong_step_option'=>-1,
+				'plong_titletype'=>0,
+				'plong_processtype'=>0,
+				'process_status'=>0,
+				'status_receive'=>-1,
+				'times_filter'=>-1
+		);
+	}
+	$this->view->datasearch = $search;
+	$db  = new Report_Model_DbTable_Dbplongandhouse();
+	$this->view->row = $db->plongListReportData($search);
+
+	$frm=new Other_Form_FrmProperty();
+	$row=$frm->FrmFrmProperty();
+	Application_Model_Decorator::removeAllDecorator($row);
+	$this->view->frm_property=$row;
+
+	$frm = new Loan_Form_FrmSearchLoan();
+	$frm = $frm->AdvanceSearch();
+	Application_Model_Decorator::removeAllDecorator($frm);
+	$this->view->frm_search = $frm;
+}
   function rptPlongstepAction(){
   	if($this->getRequest()->isPost()){
   		$search=$this->getRequest()->getPost();
@@ -140,4 +173,13 @@ class Report_PlongandhouseController extends Zend_Controller_Action {
   	$this->view->footerReport = $frmpopup->getFooterReport();
   	$this->view->headerReport = $frmpopup->getLetterHeadReport();
   }
+  function updatenoteLayoutpropertyAction(){
+	if($this->getRequest()->isPost()){
+		$data = $this->getRequest()->getPost();
+		$db = new Report_Model_DbTable_DbParamater();
+		$row = $db->updateNotePropertyLayoutNote($data);
+		print_r(Zend_Json::encode($row));
+		exit();
+	}
+}
 }

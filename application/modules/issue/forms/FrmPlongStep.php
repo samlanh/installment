@@ -42,7 +42,7 @@ public function init()
 				'required' =>'true'
 		));
 		$allStep = $_dbStepOpt->getAllStepOptions();
-		$options_pro= array(0=>$this->tr->translate("PLEASE_SELECT"));
+		$options_pro= array(0=>$this->tr->translate("SELECT_PROCESSING"));
 		if (!empty($allStep)) foreach ($allStep as $ss){
 			$options_pro[$ss['id']]=$ss['name'];
 		}
@@ -62,6 +62,22 @@ public function init()
 // 				);
 		$_process_status->setMultiOptions($options_pro);
 		$_process_status->setValue($request->getParam("process_status"));
+
+
+
+		$plong_type = new Zend_Dojo_Form_Element_FilteringSelect('plong_type');
+		$plong_type->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'required' =>'true'
+		));
+		$plong_opt= array(
+				0=>$this->tr->translate("SELECT_PLONG_TYPE"),
+				1=>$this->tr->translate("SOFT_TITLE"),
+				2=>$this->tr->translate("HARD_TITLE"),
+				);
+		$plong_type->setMultiOptions($plong_opt);
+		$plong_type->setValue($request->getParam("plong_type"));
 		
 		$give_by = new Zend_Dojo_Form_Element_TextBox("give_by");
 		$give_by->setAttribs(array(
@@ -127,7 +143,7 @@ public function init()
 			$_id->setValue($data['id']);
 		}
 		$this->addElements(
-				array($_branch_id,$_date,$_process_status,$give_by,$receive_by,$note,$_status,$_customer_id,$_property_id,$_id,$_detail_id)
+				array($plong_type,$_branch_id,$_date,$_process_status,$give_by,$receive_by,$note,$_status,$_customer_id,$_property_id,$_id,$_detail_id)
 				);
 		return $this;
 		

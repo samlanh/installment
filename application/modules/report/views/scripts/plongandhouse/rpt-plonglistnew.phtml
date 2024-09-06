@@ -1,0 +1,419 @@
+<?php 
+	$tr = Application_Form_FrmLanguages::getCurrentlanguage();
+	$frm = $this->frm_property;
+	$frmSearch = $this->frm_search;
+	$dbGB = new Application_Model_DbTable_DbGlobal();
+	$logo = $this->baseUrl()."/images/logo.jpg";
+	$branch_title = $tr->translate("BRAND_TITLE");
+	if ($this->datasearch['branch_id'] >0 ){
+		$branch = $dbGB->getAllBranchInfoByID($this->datasearch['branch_id']);
+		if(file_exists(PUBLIC_PATH."/images/projects/".$branch["logo"])){
+			$logo = $this->baseUrl()."/images/projects/".$branch["logo"];
+		}
+		$branch_title = $branch['project_name'];
+	}
+?>
+<script>
+	dojo.require("dijit.form.DateTextBox");
+</script>
+<meta charset="utf-8">
+<title><?php echo $tr->translate("RPT_PLONG_LIST");?></title>
+<div class="reportblog">
+	<div class="card-box">
+       	<div class="col-sm-12 border-botom">
+	   		<div class="col-sm-8 pd-0">
+	    		<h4 class="m-b-0"><i class="fa fa-file" aria-hidden="true"></i> <?php echo $tr->translate('RPT_PLONG_LIST');?></h4>
+    		</div>
+    		<div class="col-sm-4 text-right">
+    		</div>
+    	</div>
+    </div>
+<form name="frm_rptstaff" action="" dojoType="dijit.form.Form" method="post">
+	<div class="card-box">
+	    	<div class="form-group"> 
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frm->getElement("adv_search");?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frm->getElement("branch_id");?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<input id="land_id" >
+				</div>
+				
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frm->getElement('times_filter');?>
+					<?php //echo $frmSearch->getElement('sale_status');?>
+				</div>
+			</div>
+			<div class="form-group"> 
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frmSearch->getElement("plong_step_option");?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frm->getElement('process_status');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frm->getElement("status_receive");?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<?php echo $frm->getElement('plong_titletype');?>
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+				</div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+					<button iconclass="dijitIconSearch" dojoType="dijit.form.Button"  type="submit" name="btn_search" ><?php echo $tr->translate("SEARCH");?></button>
+				</div>
+			</div>
+		</div>
+ </form> 
+<table style="font-family: 'Times New Roman','Khmer OS Battambang'; width:100%;"  >
+	<tr>
+    	<td align="center">
+			 <div id="divPrint">
+				<style>
+					.style{
+						line-height: 20px;font-size: 11px !important;
+						font-family: 'Times New Roman','Khmer OS Battambang';
+						font-weight: bold;
+					}
+					th{padding: 5px;}
+					.hover:hover{background: #ccc;}
+					table tr td ul li{text-align: center;list-style: none;line-height: 25px; }
+					table.content-data { page-break-inside:auto }
+					table.content-data tr{ page-break-inside:avoid; page-break-after:auto; }
+					#header {
+					  display: table-header-group;
+					  page-break-inside:avoid; page-break-after:auto;
+					}
+				table.content-data{
+					border-collapse:collapse;
+					border:1px solid #000; 
+					font-size:12px;
+					font-family: 'Times New Roman','Khmer OS Battambang';
+					white-space: nowrap;
+					line-height: 22px;
+					width: 100%;
+				}
+				table.content-data tr td{
+					padding:0 1px;
+				}
+				table.content-data thead tr.style {
+				   line-height: 25px; font-size:11px !important; padding:1px 0px; white-space: nowrap;height: 22px; 
+					background: #c1d0f3;
+				}
+				table.tb-footer{
+					border-collapse:collapse;
+					border:1px solid #000; 
+					font-family: 'Times New Roman','Khmer OS Battambang';
+					font-size:11px;
+				}
+				table.tb-footer tr{
+				 line-height: 14px;  padding:2px 0px; height: 25px;
+				}			
+				.border_bottom {
+					border-bottom: 1px solid #000;
+				}
+				@media print{
+					@page{
+						margin:0.5cm;
+						page:4;
+					}
+				}
+			</style>
+		<div class="divFooter">
+			<table  style="font-family: 'Times New Roman','Khmer OS Battambang';margin:0; padding:0;border:none;" >
+				<tr>
+					<td width="30%"><img src="<?php echo $logo;?>" style="height:80px;max-width: 100%;"></td>
+					  <td width="40%" valign="top">
+							<ul>
+								<li style="white-space:nowrap;text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Khmer OS Muol Light'"><?php echo $branch_title;?></li>
+								<li style="white-space:nowrap;text-align:center; font-size:<?php echo FONTSIZE_REPORT;?>; font-family:'Khmer OS Muol Light'"><?php echo $tr->translate("RPT_PLONG_LIST");?>(New)</li>
+								<li style="text-align:center; font-size:12px;"><?php echo date("d-M-Y") ?></li>
+							</ul>
+					   </td>
+					   <td width="30%"></td>
+				 </tr> 
+		   </table>
+		</div>
+		<table id="exportExcel" class="content-data" border="1" cellspacing="0" >
+		     <thead>
+		     	<tr bgcolor="#c1d0f3" class="style hover" align="center">
+					<td scope="col" rowspan="2"><?php echo $tr->translate("NUM");?></td>
+					<td scope="col" rowspan="2"><?php echo $tr->translate("BRANCH_NAME");?></td>
+					<td scope="col" colspan="7"><span><?php echo $tr->translate("INFO_INDILOAN");?></span></td>
+					<td scope="col" colspan="5"><span><?php echo $tr->translate("HEAD_TITL_INFO");?></span></td>
+					<td scope="col" rowspan="2"><?php echo $tr->translate("NOTE");?>1</td>
+					<td scope="col" rowspan="2"><?php echo $tr->translate("NOTE");?>2</td>
+				</tr>
+				<tr bgcolor="#c1d0f3" class="style hover" align="center">
+					<td scope="col"><?php echo $tr->translate("CUSTOMER_NAME");?></td>
+					<td scope="col"><?php echo $tr->translate("TEL");?></td>
+					<td scope="col"><?php echo $tr->translate("SOLD_PRICE");?></td>
+					<td scope="col"><?php echo $tr->translate("PAID");?></td>
+					<td scope="col"><?php echo $tr->translate("BALANCE");?></td>
+					<td scope="col"><?php echo $tr->translate("PAYMENT_TYPE");?></td>
+					<td scope="col"><?php echo $tr->translate("TIMES");?></td>
+					<td scope="col"><?php echo $tr->translate("HOUSE_NO");?></td>
+					<td scope="col"><?php echo $tr->translate("SOFT_TITLE");?></td>
+					<td scope="col"><?php echo $tr->translate("HARD_TITLE");?></td>
+					<td scope="col"><?php echo $tr->translate("PLONG_STEP");?></td>
+					<td scope="col"><?php echo $tr->translate("PROCCESS");?></td>
+				</tr>
+			</thead>
+			<?php
+				$noTitle = 0;
+				$softTitle = 0;
+				$hardTitle = 0;
+				$step1_3 = 0;
+				$step4_5 = 0;
+				$org_plong = 0;
+				
+				$give_plong=0;
+				$notgive_plong=0;
+				if(!empty($this->row))foreach($this->row as $key =>$row){
+				$soldPrice = 0;
+				$totalPaid = 0;
+				$remain = 0;
+				if(!empty($row['price_sold'])){
+					$soldPrice = $row['price_sold'];
+				}
+				if(!empty($row['totalPrincipalPaid'])){
+					$totalPaid = $row['totalPrincipalPaid'];
+				}
+				$remain = $soldPrice-$totalPaid;
+			?>
+					<tr oncontextmenu="setrowdata(<?php echo $row['id'].','.$row['SaleId'];?>);return false;"class="context-menu-one hover" style="font-size: 10px;border:1px solid #000; white-space: nowrap;line-height: 25px;" align="left">
+					    <td data-label="<?php echo $tr->translate("NUM");?>" align="center"><?php echo $key+1; ?></td>
+					    <td data-label="<?php echo $tr->translate("BRANCH_NAME");?>" align="center"><?php echo $row['branchName'];?></td>
+						<td data-label="<?php echo $tr->translate("CUSTOMER_NAME");?>"><?php echo $row['clientName'];?></td>
+						<td width="200px" data-label="<?php echo $tr->translate("TEL");?>"><?php echo $row['phone_number']; ?></td>
+						<td data-label="<?php echo $tr->translate("SOLD_PRICE");?>" align="center"><?php if(!empty($soldPrice)){ echo number_format($soldPrice,2);}?></td>
+						<td data-label="<?php echo $tr->translate("PAID");?>" align="center"><?php if(!empty($totalPaid)){ echo number_format($totalPaid,2);}?></td>
+						<td data-label="<?php echo $tr->translate("BALANCE");?>" align="center"><?php if(!empty($totalPaid)){ if($remain<0){ echo "(".abs(number_format($remain,2)).")";}else{ echo number_format($remain,2);} }?></td>
+						<td data-label="<?php echo $tr->translate("PAYMENT_TYPE");?>"><?php echo $row['paymenttype'];?></td>
+						<td align="center" data-label="<?php echo $tr->translate("TIMES");?>"><?php echo $row['timesRemain'];?></td>
+					    <td data-label="<?php echo $tr->translate("HOUSE_NO");?>" align="center"><?php echo $row['landAddress'];?></td>
+						<td data-label="<?php echo $tr->translate("SOFT_TITLE");?>"><?php echo $row['softTitle'];?></td>
+						<td data-label="<?php echo $tr->translate("HARD_TITLE");?>" align="center"><?php echo $row['hardTitle'];?></td>
+						<td data-label="<?php echo $tr->translate("PLONG_STEP");?>"><?php echo $row['processing']; ?></td>
+						<td data-label="<?php echo $tr->translate("PROCCESS");?>" align="center" ><?php echo $row['statusReceive']; ?></td>
+						<td data-label="<?php echo $tr->translate("NOTE");?>1" align="center"><span style="line-height: 12px;white-space: pre-wrap !important;max-width: 200px;padding: 5px;display: block;font-size: 10px;overflow-wrap: break-word;text-align: left;vertical-align: top;" class="note_<?php echo $row['id'];?>"><?php echo $row["noteForLayout"];?></span></td>
+						<td data-label="<?php echo $tr->translate("NOTE");?>2" align="center"><span style="line-height: 12px;white-space: pre-wrap !important;max-width: 200px;padding: 5px;display: block;font-size: 10px;overflow-wrap: break-word;text-align: left;vertical-align: top;" class="note2_<?php echo $row['id'];?>"><?php echo $row["note2"];?></span></td>
+					 </tr>
+				<?php 
+					if(!empty($row['softTitle'])){
+						$softTitle+=1;
+					}elseif(!empty($row['hardTitle'])){
+						$hardTitle+=1;
+					}else{
+						$noTitle+=1;
+					}
+					if (!empty($row['process_status']) AND $row['process_status']<=3) {
+						$step1_3 += 1;
+					}
+					if ($row['process_status']==4 OR $row['process_status']==5) {
+						$step4_5 += 1;
+					}
+					if(!empty($row['hardtitle']) AND empty($row['processing']) AND empty($row['layout_type'])){
+						$org_plong +=1;
+					}
+					if(!empty($row['isReceived'])){
+						$give_plong +=1;
+					}
+					if(!empty($row['statusReceive']) AND empty($row['isReceived'])){
+						$notgive_plong+=1;
+					}
+				?>
+			<?php }?>
+			<?php if(!empty($this->row)){?>
+				<tr>
+					<td colspan="16" style="border: solid 1px #fff;border-top: solid 1px #000;">
+						<br />
+						<table style=" font-size:12px;width:70%;margin:0 auto;" cellspacing="0">
+							<tr bgcolor="#a0baf5" class="style" style=" line-height: 14px; font-size:12px; padding:2px 0px; height: 25px;">
+								<td>&nbsp;</td>
+								<td align="center"><span class="border_bottom"><?php echo $tr->translate("ផ្ទះមិនទាន់មានប្លង់");?></span>&nbsp;&nbsp;</td>
+								<td align="center"><span class="border_bottom"><?php echo $tr->translate("ប្លង់ទន់");?></span></td>
+								<td align="center"><span class="border_bottom"><?php echo $tr->translate("ប្លង់រឹង");?></span></td>
+								<td align="center"><span class="border_bottom"><?php echo $tr->translate("ប្លង់មិនទាន់រត់(1+3)");?></span></td>
+								<td align="center"><span class="border_bottom"><?php echo $tr->translate("ប្លង់រត់ការរួច");?></span></td>
+								<td align="center"><span class="border_bottom"><?php echo $tr->translate("ប្លង់បានប្រគល់");?></span></td>
+								<td align="center"><span class="border_bottom"><?php echo $tr->translate("ប្លង់មិនទាន់ប្រគល់");?></span></td>
+							</tr>
+							<tr bgcolor="#a0baf5" class="style" style="line-height: 14px; font-size:12px; padding:2px 0px; height: 25px;">
+								<td>&nbsp;</td>
+								<td align="center"><?php echo $noTitle;?></td>
+								<td align="center"><?php echo $softTitle;?></td>
+								<td align="center"><?php echo $hardTitle;?></td>
+								<td align="center"><?php echo $step1_3;?></td>
+								<td align="center"><?php echo $step4_5;?></td>
+								<td align="center"><?php echo $give_plong;?></td>
+								<td align="center"><?php echo $notgive_plong;?></td>
+							</tr>
+						</table>
+						<br />
+					</td>
+				</tr>
+			<?php }?>
+	    </table>
+	 </div>
+	</td>
+  </tr>
+</table>
+</div>
+<div class="dijitHidden">
+	<div data-dojo-type="dijit.Dialog" data-dojo-props="title:'<?php echo $tr->translate('PROPERTY_LAYOUT_NOTE');?>'"  id="updateForm" style="width:350px;" >
+		<div class="card pb-10 pt-10 pl-10 pr-10">
+			<form id="updateFormInfo"  name="data" action="" dojoType="dijit.form.Form" method="post">
+				<div class="card-box">
+					<div class="form-group">
+					   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate('NOTE');?>1
+					   </label>
+					   <div class="col-md-7 col-sm-7 col-xs-12">
+							<input class="fullside" type="text" dojoType="dijit.form.Textarea" name="noted" id="noted" placeholder="<?php echo $tr->translate("NOTE");?>" />
+							<input type="hidden" dojoType="dijit.form.TextBox" name="id" id="id"  />
+					   </div>
+					</div>
+					<div class="form-group">
+					   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate('NOTE');?>2
+					   </label>
+					   <div class="col-md-7 col-sm-7 col-xs-12">
+							<input class="fullside" type="text" dojoType="dijit.form.Textarea" name="noted2" id="noted2" placeholder="<?php echo $tr->translate("NOTE");?>" />
+					   </div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-12 border-top mt-20 ptb-10 text-center">
+							<button onclick="upDateCustomerInfo();" iconclass="dijitIconSearch" dojoType="dijit.form.Button" showLabel="true" type="button"><?php echo $tr->translate("SAVE");?></button>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<script src="<?php echo $this->baseUrl();?>/js/help.js"></script>
+<script>
+dojo.require("dojo.data.ItemFileWriteStore"); 
+dojo.require("dijit.form.Textarea");
+var property_store  = getDataStorefromJSON('id','name',[{"id":-1,"name":"<?php echo $tr->translate("SELECT_PROPERTY");?>"}]);
+require(["dojo/ready"], function(ready){
+	ready(function(){
+		var branch_id = dijit.byId('branch_id');
+		 branch_id.on('change', function(evt) {
+			getAllPropertyBranch();
+		});
+		 getAllPropertyBranch();
+	});
+	new dijit.form.FilteringSelect({
+		store: property_store,
+		required: false,
+		autoComplete: false,
+		queryExpr: "*${0}*",
+		name: "land_id",
+		id: "land_id",
+		value:-1,
+		searchAttr: "name",
+		class: 'fullside fullside50',
+		onChange: function() {
+			land_id=-1;
+	}
+	}, "land_id");		 
+});
+land_id = '<?php echo $this->datasearch['land_id']?>';
+var url_getland = '<?php echo $this->url(array('module'=>'loan','controller'=>'index','action'=>'getallland')); ?>';
+function getAllPropertyBranch(branch_id){
+	branch_id = dijit.byId('branch_id').get('value');
+	if(branch_id<0){
+		return false;
+	}
+	dojo.xhrPost({
+		url:url_getland,	
+		content:{ 
+		    'branch_id':branch_id,
+		    'action':1
+		},		    
+		handleAs:"json",
+		load: function(data) {
+			property_store  = getDataStorefromJSON('id','name', data);		
+		    dijit.byId('land_id').set('store', property_store);
+		    
+		    if(land_id>0){
+		    	dijit.byId('land_id').attr('value',land_id);
+			 }
+		},
+		error: function(err) {
+		}
+	});
+} 
+
+var urlUpdateInfo = '<?php echo $this->url(array('module'=>'report','controller'=>'plongandhouse','action'=>'updatenote-layoutproperty')); ?>';
+function upDateCustomerInfo(){
+	if(dijit.byId('updateFormInfo').validate()){
+		loadingBlock();
+		dojo.xhrPost({
+			url: urlUpdateInfo,
+			form: dojo.byId("updateFormInfo"),
+			handleAs:"json",
+			load: function(data){
+				$(".note_"+row).html(dijit.byId('noted').get('value'));
+				$(".note2_"+row).html(dijit.byId('noted2').get('value'));
+				dijit.byId('updateFormInfo').reset();
+				dijit.byId('updateForm').hide();
+				HideloadingBlock();
+			},
+			error: function(err) {
+			}
+		});
+	}
+}
+var row=0;
+var saleId=0;
+var url="";
+$(function(){
+	$.contextMenu({
+		selector: '.context-menu-one', 
+		callback: function(key, options) {
+			var m = "clicked: " + key;
+			if(key=="stepup"){
+				var oldNote = $(".note_"+row).html();
+				dijit.byId('noted').set('value',oldNote);
+
+				var oldNote1 = $(".note2_"+row).html();
+				dijit.byId('noted2').set('value',oldNote1);
+				
+				dijit.byId('id').set('value',row);
+				dijit.byId('updateForm').show();
+				return false;
+			}else if(key=="agreement"){
+				url='<?php echo $this->baseUrl()."/report/paramater/rpt-agreement/id/";?>';
+			}
+			else if(key=="schedule"){
+				url='<?php echo $this->baseUrl()."/report/loan/rpt-paymentschedules/id/";?>';
+			}
+			else if(key=="payment"){
+				url='<?php echo $this->baseUrl()."/report/loan/paymenthistory/id/";?>';
+			}
+			gotoAction();
+		},
+		items: {
+			"stepup": {name: "<?php echo $tr->translate("PROPERTY_LAYOUT_NOTE");?>", icon: "fa-file-text"},
+			"agreement": {name: "<?php echo $tr->translate("AGREEMENT");?>", icon: "fa-file-text", accesskey: "c"},
+			"schedule": {name: "<?php echo $tr->translate("SCHEDULE_PAYMENT");?>", icon: "fa-calendar"},
+			"payment": {name: "<?php echo $tr->translate("REPORT_LOAN_PAYMENT");?>", icon: "fa-book", accesskey: "c o p y"},
+		}
+	});
+});
+function setrowdata(index,saleIndex){
+	row = index;
+	saleId = saleIndex;
+}
+var recordid ='';
+function gotoAction(){
+	 window.open(url+saleId);
+}
+
+</script>

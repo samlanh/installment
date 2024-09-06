@@ -15,13 +15,14 @@ class Report_ParamaterController extends Zend_Controller_Action {
   		$search = $this->getRequest()->getPost();
   	}else{
   		$search = array(
-  				'start_date'  => date('Y-m-d'),
-	 			'end_date'    => date('Y-m-d'),
+  				'start_date'=> date('Y-m-d'),
+	 			'end_date'  => date('Y-m-d'),
   				'txtsearch' => '',
-  				'branch_id'=>-1,
-  				'co_khname'=>-1,
-				'co_sex'=>-1,
-  				'search_status'=>-1);
+  				'branch_id' =>-1,
+  				'co_khname' =>-1,
+				'co_sex'    =>-1,
+  				'search_status'=>-1
+			);
   	}
   	$this->view->staff_list = $db->getAllstaff($search);
   	$this->view->search = $search;

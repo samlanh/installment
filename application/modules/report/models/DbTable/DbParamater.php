@@ -1820,6 +1820,7 @@ class Report_Model_DbTable_DbParamater extends Zend_Db_Table_Abstract
 	
 			$arr = array(
 					'noteForLayout'=>$data['noted'],
+					'note2'=>$data['noted2'],
 			);
 			$where=" id = ".$data['id'];
 			$this->_name="ln_properties";

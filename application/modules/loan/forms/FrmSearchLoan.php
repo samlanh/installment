@@ -485,6 +485,35 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form{
 			$_releasedate->setValue($data['date_release']);
 			$client_name->setValue($data['client_name']);
 		}
+
+		$status_plong =  new Zend_Dojo_Form_Element_FilteringSelect('status_plong');
+		$status_plong->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect',
+			'autoComplete'=>'false',
+			'queryExpr'=>'*${0}*',
+			'class'=>'fullside'));
+		
+		$status_opt = array(
+			-1=>$this->tr->translate("SELECT_STATUS"),
+			1=>$this->tr->translate("បានប្រគល់"),
+			2=>$this->tr->translate("មិនទាន់ប្រគល់"));
+		$status_plong->setMultiOptions($status_opt);
+		$status_plong->setValue($request->getParam("status_plong"));
+
+		$plong_step_option = new Zend_Dojo_Form_Element_FilteringSelect('plong_step_option');
+		$plong_step_option->setAttribs(array(
+			'dojoType'=>'dijit.form.FilteringSelect',
+			'class'=>'fullside',
+			'autoComplete'=>'false',
+			'queryExpr'=>'*${0}*',
+		));
+		$options= array(-1=>$this->tr->translate("PLONG_STEP"),
+				'0'=>$this->tr->translate("ផ្ទះមិនទាន់មានប្លង់"),
+				'1,2,3'=>$this->tr->translate("ប្លង់មិនទាន់រត់(1+3)"),
+				'4,5'=>$this->tr->translate("ប្លង់កំពង់រត់ការ(4+5)"),
+			);
+		$plong_step_option->setMultiOptions($options);
+		$plong_step_option->setValue($request->getParam("plong_step_option"));
+		
 		$this->addElements(array($receipt_type,$option_pay,$payment_id,$sale_status,$status_plong,$payment_process,$user,$payment_method,$_ordering,$buy_type,$payment_type,
 			$propertiestype,$schedule_opt,$_branch_id,$client_name,$_title,$_coid,$_releasedate,
 			$_category,$category_id_expense,$_dateline,$_status,$_btn_search,$_supplier_id,$streetlist,$cheque_issuer_search,
@@ -495,7 +524,8 @@ Class Loan_Form_FrmSearchLoan extends Zend_Dojo_Form{
 			$credit_category,
 			$_is_closed,
 			$biuld_status,
-			$biuld_percentage
+			$biuld_percentage,
+			$plong_step_option
 		));
 		return $this;
 		

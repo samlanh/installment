@@ -46,28 +46,43 @@ dojo.require("dijit.form.DateTextBox");
 	<form method="post">
 		<div class="card-box">
 	    	<div class="form-group"> 
-				<div class="col-md-3 col-sm-3 col-xs-12">
+				<div class="col-md-2 col-sm-2 col-xs-12">
 					<?php echo $frm->getElement("adv_search");?>
 				</div>
-				<div class="col-md-3 col-sm-3 col-xs-12">
+				<div class="col-md-2 col-sm-2 col-xs-12">
 					<?php echo $frm->getElement('branch_id');?>
 				</div>
-				<div class="col-md-3 col-sm-3 col-xs-12">
+				<div class="col-md-2 col-sm-2 col-xs-12">
 					<input id="land_id" />
 				</div>
-				<div class="col-md-3 col-sm-3 col-xs-12">
+				<div class="col-md-2 col-sm-2 col-xs-12">
 					<?php echo $frm->getElement('client_name');?>
 				</div>
-				
-			</div>
-			<div class="form-group"> 
-				<div class="col-md-3 col-sm-3 col-xs-12">
+				<div class="col-md-2 col-sm-2 col-xs-12">
 					<?php echo $frm->getElement('end_date');?>
 				</div>
-				<div class="col-md-3 col-sm-3 col-xs-12">
+				<div class="col-md-2 col-sm-2 col-xs-12">
 					<?php echo $frm->getElement('schedule_opt');?>
 				</div>
-				<div class="col-md-3 col-sm-3 col-xs-12">
+			</div>
+			<div class="form-group"> 
+				<div class="col-md-2 col-sm-2 col-xs-12">
+	             	<select class="fullside" id="last_optiontype" name="last_optiontype" dojoType="dijit.form.FilteringSelect">
+							<option value="-1" <?php if ($this->search['last_optiontype']==-1){echo "selected";} ?>>ទាំងអស់</option>
+							<option value="1" <?php if ($this->search['last_optiontype']==1){echo "selected";} ?>>យកតាមកាលបរិច្ឆេទបង់</option>
+							<option value="0" <?php if ($this->search['last_optiontype']==0){echo "selected";} ?>><?php echo $tr->translate("RECEIVED_PROPERTY"); ?></option>
+						</select>
+	            </div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
+	             	<select class="fullside" id="stepoption" name="stepoption" dojoType="dijit.form.FilteringSelect">
+						<option value="-1" <?php if ($this->search['stepoption']==-1){ echo 'selected=selected';}?>><?php  echo $tr->translate("ALL");?></option>
+						<option value="0" <?php if ($this->search['stepoption']==0){ echo 'selected=selected';}?>><?php  echo $tr->translate("DATE_PAYMENT");?></option>
+						<?php if (!empty($this->stepoption)) foreach ($this->stepoption as $rs){?>
+						<option value="<?php echo $rs['key_code']?>" <?php if ($this->search['stepoption']==$rs['key_code']){ echo 'selected=selected';}?>><?php echo $rs['name_en']?></option>
+						<?php }?>
+					</select>
+	            </div>
+				<div class="col-md-2 col-sm-2 col-xs-12">
 					<button class="button-class button-primary" iconClass="glyphicon glyphicon-search" dojoType="dijit.form.Button" showLabel="true" type="submit"><?php echo $tr->translate("SEARCH");?></button>
 				</div>
 				<div class="col-md-3 col-sm-3 col-xs-12">

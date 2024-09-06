@@ -493,6 +493,17 @@ public function init()
 		));
 		$options= array(0=>$this->tr->translate('PLEASE_SELECT'),1=>$this->tr->translate('CANCEL_WITHOUT_RETURN'),2=>$this->tr->translate('CANCEL_WITH_RETURN_AMOUNT'));
 		$cancelTypeSearch->setMultiOptions($options);
+
+		$plong_processtype =  new Zend_Dojo_Form_Element_FilteringSelect('plong_processtype');
+		$plong_processtype->setAttribs(array('dojoType'=>'dijit.form.FilteringSelect',	'class'=>'fullside',));
+		$_type_of = array(
+			-1=>$this->tr->translate("SELECT_PLONGPROCESS"),
+			2=>$this->tr->translate("ប្លង់រឹងមិនផ្ទេរកម្មសិទ្ធិ និង ប្លង់ទន់"),
+			3=>$this->tr->translate("ប្លង់រត់ការផ្ទេររួចរាល់")
+		);
+		$plong_processtype->setMultiOptions($_type_of);
+		$plong_processtype->setValue($request->getParam("plong_processtype"));
+
 		
 		if($data!=null){
 			$branch_id->setValue($data['branch_id']);
@@ -512,7 +523,7 @@ public function init()
 			$condition_return->setValue($data['condition_return']);
 			$expense_date->setValue($data['date_for_return']);
 		}
-		$this->addElements(array($plong_type,$cancel_date,$expense_date,$client_name,$land_id,$client_name,$installment_paid,$branch_id,$_cancel_code,$_sale_no,$_property,$end_date,$buy_date,$_price_sold,
+		$this->addElements(array($plong_processtype,$plong_type,$cancel_date,$expense_date,$client_name,$land_id,$client_name,$installment_paid,$branch_id,$_cancel_code,$_sale_no,$_property,$end_date,$buy_date,$_price_sold,
 				$paid_amount,$_balance,$_discount,$_other_fee,$schedule_opt,$_property_id,$_title,$start_date_search,$to_date_search,
 				$branch_id_search,$sold_date,$_commision,$_old_sale_id,$_old_property_id,$property,
 				$_old_payterm,$_interest_rate,$_release_date,$_instalment_date,$_interest,$penalize,$_service_charge,

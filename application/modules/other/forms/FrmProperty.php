@@ -135,7 +135,7 @@ Class Other_Form_FrmProperty extends Zend_Dojo_Form {
 				'required' =>'true'
 		));
 		$allStep = $_dbStepOpt->getAllStepOptions();
-		$options_pro= array(0=>$this->tr->translate("PLEASE_SELECT"));
+		$options_pro= array(0=>$this->tr->translate("PROCESSING_STATUS"));
 		if (!empty($allStep)) foreach ($allStep as $ss){
 			$options_pro[$ss['id']]=$ss['name'];
 		}
@@ -144,7 +144,7 @@ Class Other_Form_FrmProperty extends Zend_Dojo_Form {
 		$_process_status->setValue($request->getParam("process_status"));
 		
 		$plong_type = new Zend_Dojo_Form_Element_FilteringSelect("plong_type");
-		$opt_plong = array(''=>$this->tr->translate('PLEASE_SELECT'));
+		$opt_plong = array(''=>$this->tr->translate('LAYOUT_TYPE'));
 		$rows = $db->getAllPlong();
 		if(!empty($rows))foreach($rows AS $row){
 			$opt_plong[$row['id']]=$row['name'];
@@ -163,15 +163,57 @@ Class Other_Form_FrmProperty extends Zend_Dojo_Form {
 		$_type_of = array(
 			-1=>$this->tr->translate("SELECT_PLONGPROCESS"),
 			1=>$this->tr->translate("ប្លង់មិនទាន់រត់"),
-			2=>$this->tr->translate("ប្លង់ប្រគល់អោយអតិថិជន(មិនរត់ការ)"),
-			3=>$this->tr->translate("ប្លង់ប្រគល់អោយអតិថិជន(បានរត់ការ)")
+			2=>$this->tr->translate("ប្លង់រឹងមិនផ្ទេរកម្មសិទ្ធិ និង ប្លង់ទន់"),
+			3=>$this->tr->translate("ប្លង់រត់ការផ្ទេររួចរាល់")
 		);
 		$plong_processtype->setMultiOptions($_type_of);
 		$plong_processtype->setValue($request->getParam("plong_processtype"));
+
+		$statusReceive =  new Zend_Dojo_Form_Element_FilteringSelect('status_receive');
+		$statusReceive->setAttribs(array('dojoType'=>$this->filter,	'class'=>'fullside',));
+		$_type_of = array(
+			-1=>$this->tr->translate("SELECT_PLONGPROCESS"),
+			1=>$this->tr->translate("GIVED_TO_CUSTOMER"),
+			2=>$this->tr->translate("NOT_YET_GIVE"),
+		);
+		$statusReceive->setMultiOptions($_type_of);
+		$statusReceive->setValue($request->getParam("status_receive"));
+
+		$times_filter =  new Zend_Dojo_Form_Element_FilteringSelect('times_filter');
+		$times_filter->setAttribs(array('dojoType'=>$this->filter,	'class'=>'fullside',));
+		$timesoption = array(
+			-1=>$this->tr->translate("MONTH"),
+			1=>$this->tr->translate("1").$this->tr->translate("MONTH"),
+			2=>$this->tr->translate("2").$this->tr->translate("MONTH"),
+			3=>$this->tr->translate("3").$this->tr->translate("MONTH"),
+			4=>$this->tr->translate("4").$this->tr->translate("MONTH"),
+			5=>$this->tr->translate("5").$this->tr->translate("MONTH"),
+			6=>$this->tr->translate("6").$this->tr->translate("MONTH"),
+			'>=7'=>$this->tr->translate("6ខែចុះក្រោម"),
+			'<7'=>$this->tr->translate("7ខែឡើង")
+		);
+		$times_filter->setMultiOptions($timesoption);
+		$times_filter->setValue($request->getParam("times_filter"));
+
+		$plong_titletype = new Zend_Dojo_Form_Element_FilteringSelect('plong_titletype');
+		$plong_titletype->setAttribs(array(
+				'dojoType'=>'dijit.form.FilteringSelect',
+				'class'=>'fullside',
+				'required' =>'true'
+		));
+		$plong_opt= array(
+				0=>$this->tr->translate("SELECT_PLONG_TYPE"),
+				1=>$this->tr->translate("SOFT_TITLE"),
+				2=>$this->tr->translate("HARD_TITLE"),
+				);
+		$plong_titletype->setMultiOptions($plong_opt);
+		$plong_titletype->setValue($request->getParam("plong_titletype"));
 		
 		
 		$_id = new Zend_Form_Element_Hidden('id');
-		$this->addElements(array($plong_processtype,$plong_type,$_process_status,$date_type,$streetlist,$_branch_id,$_btn_search,$_status_search,$_title,$_id,$property,$_type_of_property,$from_date,$to_date));
+		$this->addElements(array($statusReceive,$plong_processtype,$plong_type,$_process_status,$date_type,$streetlist,$_branch_id,
+		$_btn_search,$_status_search,$_title,$_id,$property,$_type_of_property,$from_date,$to_date,
+		$times_filter,$plong_titletype));
 		return $this;
 	}
 	

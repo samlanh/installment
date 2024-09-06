@@ -66,6 +66,15 @@ class Issue_Model_DbTable_DbReceived extends Zend_Db_Table_Abstract
 			$s_where[] = " c.`note` LIKE '%{$s_search}%'";
 			$where .=' AND ('.implode(' OR ',$s_where).')';
 		}
+
+		if($search['plong_processtype']>0){
+			if($search['plong_processtype']==2){
+				$where.=" AND c.sale_id NOT IN (SELECT pr.sale_id FROM ln_processing_plong AS pr WHERE `c`.`house_id` = `pr`.`property_id` AND c.sale_id=pr.sale_id) ";
+			}else{
+				$where.=" AND c.sale_id IN (SELECT pr.sale_id FROM ln_processing_plong AS pr WHERE `c`.`house_id` = `pr`.`property_id` AND c.sale_id=pr.sale_id) ";
+			}
+		}
+
 		$dbp = new Application_Model_DbTable_DbGlobal();
 		$where.=$dbp->getAccessPermission("c.`branch_id`");
 		
@@ -98,6 +107,8 @@ class Issue_Model_DbTable_DbReceived extends Zend_Db_Table_Abstract
 			$this->insert($arr1);
 			
 			$arr = array(
+					'is_issueplong'=>1,
+					'issueplong_date'=>date("Y-m-d"),
 					'is_receivedplong'=>1,
 			);
 			$where="id = ".$data['sale_client'];

@@ -19,6 +19,7 @@ class Issue_ReceivplongController extends Zend_Controller_Action {
 						'land_id'=> -1,
 						'client_name'=> -1,
 						'plong_type'=>'',
+						'plong_processtype'=>-1,
 						'from_date_search'=> date('Y-m-d'),
 						'to_date_search'=>date('Y-m-d'));
 			}
