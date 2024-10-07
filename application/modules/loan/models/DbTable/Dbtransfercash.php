@@ -15,7 +15,7 @@ class Loan_Model_DbTable_Dbtransfercash extends Zend_Db_Table_Abstract
    	$sql="SELECT cp.id,
    		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id=cp.branch_id LIMIT 1) AS from_branch,
 		c.name_kh,
-		(SELECT CONCAT(land_address,',',street) FROM `ln_properties` WHERE ln_properties.id=cp.from_property LIMIT 1) from_property,
+		(SELECT CONCAT(COALESCE(p.land_address,''),',',COALESCE(p.street,'')) FROM `ln_properties` AS p WHERE p.id=cp.from_property LIMIT 1) from_property,
 		from_paid,
 		(SELECT project_name FROM `ln_project` WHERE ln_project.br_id=cp.to_branch LIMIT 1) AS to_branch,
 		(SELECT CONCAT(land_address,',',street) FROM `ln_properties` WHERE ln_properties.id=cp.to_property LIMIT 1) to_propertype,
