@@ -365,6 +365,9 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 			$propertyId = empty($data['property_id'])?$rs_sale['house_id']:$data['property_id'];
 			$clientId 	= empty($data['client_id'])?$rs_sale['client_id']:$data['client_id'];
 			
+			$soldPrice = empty($rs_sale['price_sold']) ? 0 : $rs_sale['price_sold'];
+			$soldPrice 	= empty($data['sold_price']) ? $soldPrice : $data['sold_price'];
+			
 			$datePaymentForReceipt = $data['date_payment']; // set defualt
 			
     		$arr_client_pay = array(
@@ -380,9 +383,10 @@ class Loan_Model_DbTable_DbLoanILPayment extends Zend_Db_Table_Abstract
 				
 				'client_id'                     =>	$clientId,
     			'land_id'						=>	$propertyId,
+    			'selling_price'					=>	$soldPrice,
 				
     			'outstanding'                   =>	$data['outstanding_balance'],//ប្រាក់ដើមមុនបង់
-    			'selling_price'    				=>  $data['sold_price'],
+    			//'selling_price'    				=>  $data['sold_price'],
     			'total_principal_permonth'		=>	$data["os_amount"]+$data["extrapayment"],//ប្រាក់ដើមត្រូវបង់
     			'total_interest_permonth'		=>	$data["total_interest"],
     			'penalize_amount'				=>	$data["penalize_amount"],
