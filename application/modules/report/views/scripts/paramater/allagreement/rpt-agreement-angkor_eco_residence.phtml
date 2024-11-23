@@ -196,6 +196,7 @@ dojo.require("dijit.form.DateTextBox");
 							 </tr>
 							 <tr>
 								<td colspan="3" align="center">
+									<span style="text-align:center; line-height:28px; width: 100%; display: block; ">កិច្ចសន្យានេះធ្វើនៅ សៀមរាប ថ្ងៃទី <?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['agreement_date'])));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['agreement_date']))];?> ឆ្នាំ <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['agreement_date'])));?> <br />
 									<span style="font-family:'Khmer OS Muol Light';">រវាង</span></span>
 								</td>
 							 </tr>
@@ -262,7 +263,7 @@ dojo.require("dijit.form.DateTextBox");
 											កាន់អត្តសញ្ញាណប័ណ្ណលេខ  <span class="value" style="min-width:30px; font-weight:600;"><?php echo $this->agreement['w_manager_nation_id'];?></span> 
 											<?php }?>
 											មានទីលំនៅ<?php echo $this->agreement['project_manager_p_current_address'];?> 
-											ត្រូវបានហៅថាជា(ម្ចាស់គម្រោង) ឬ <strong>ភាគី”ក”</strong> ។
+											ត្រូវបានហៅថាជា(ម្ចាស់គម្រោង) ឬ <strong>ភាគី(ក)</strong> ។
 										</span>
 										<span style="font-family:'Khmer OS Muol Light'; text-align:center; min-width: 100%; display: inline-block;">និង</span>
 										<span style="text-align: justify;  min-width: 100%; display: inline-block;">
@@ -322,7 +323,7 @@ dojo.require("dijit.form.DateTextBox");
 											ខេត្ត/រាជធានី  <span class="value" style="min-width:30px;"><?php echo $this->agreement['w_client_province_kh'];?></span> 
 											 ដែលមានលេខទូរស័ព្ទ <span class="value" style="min-width:30px;"><?php echo $this->agreement['with_phone'];?></span>។ <br />
 											<?php }?> 
-											ត្រូវបានហៅថា(<strong>អ្នកទិញផ្ទះ</strong>) ឬ <strong>ភាគី”ខ”</strong>។
+											ត្រូវបានហៅថា(<strong>អ្នកទិញផ្ទះ</strong>) ឬ <strong>ភាគី(ខ) </strong>។
 
 										</span>
 										<span style="padding:10px 0; text-align:center; width: 100%; display: block; font-weight:200;font-family:'Khmer OS Muol Light';">គោលបំណងនៃកិច្ចសន្យា</span>
@@ -336,9 +337,22 @@ dojo.require("dijit.form.DateTextBox");
 													}
 													
 													$deposite=$this->agreement['paid_amount'];
+													$disAmount = $this->agreement['price_before']-$this->agreement['price_sold'];
 												?>
 											<span class="margin-left">&nbsp;</span>
-											<strong>ភាគី”ខ”</strong> បានព្រមព្រៀងកក់ប្រាក់ចំនួន <strong>USD <?php echo number_format($deposite,2);?></strong> (<strong><span id="lablePaidKhmer" style="font-family:'Khmer OS Siemreap';"></span>ដុល្លារអាមេរិក</strong>) នៃតម្លៃសរុប <strong>USD <?php echo number_format($this->agreement['price_sold'],2);?></strong> (<strong><span id="lablePriceKhmer" style="font-family:'Khmer OS Siemreap';"></span>ដុល្លារអាមេរិក</strong>) លើការទិញផ្ទះលេខ <strong><?php echo $this->agreement['property_title'];?></strong> ដែលស្ថិតនៅក្នុងគម្រោង <strong><?php echo $projectName; ?></strong> ដែលមានទីតាំងស្ថិតនៅ <?php echo $this->agreement['project_location'];?> ។
+											ដោយហេតុថា<strong>ភាគី(ក)</strong> និង<strong>ភាគី(ខ)</strong> បានព្រមព្រៀងលក់ និងទិញ<?php echo $this->agreement['property_type_kh'];?>ចំនួន ០១  
+											ដែលមានលេខសំគាល់  <strong><?php echo $this->agreement['property_title'];?></strong>
+											លើផ្លូវ <strong><?php echo str_replace("ផ្លូវ","",$this->agreement['property_street']); ?></strong>
+											នៅក្នុង ប្លុក (Blog) <strong><?php echo $this->agreement['type_tob'];?></strong>។
+											ផ្ទះវីឡានេះ ស្ថិតនៅក្នុងគម្រោង <strong><?php echo $projectName; ?></strong> ដែលមានទីតាំងស្ថិតនៅ <?php echo $this->agreement['project_location'];?> ។
+											<br /><span class="margin-left">&nbsp;</span>
+											<strong>ភាគី(ខ)</strong> បានព្រមព្រៀងកក់ប្រាក់ចំនួន<strong>
+											USD <?php echo number_format($deposite,2);?></strong> (<strong><span id="lablePaidKhmer" style="font-family:'Khmer OS Siemreap';"></span>ដុល្លារអាមេរិកគត់</strong>) នៃតម្លៃពេញ <strong>USD <?php echo number_format($this->agreement['price_before'],2);?></strong> (<strong><span id="lablePriceKhmer" style="font-family:'Khmer OS Siemreap';"></span>ដុល្លារអាមេរិកគត់</strong>)  
+											<?php if($disAmount>0){?>
+											ហើយត្រូវបានបញ្ចុះតម្លៃចំនួន <strong>USD <?php echo number_format($disAmount,2);?></strong> 
+											នៅសល់តម្លៃត្រឹមតែ <strong>USD <?php echo number_format($this->agreement['price_sold'],2);?></strong>
+											<?php }?>
+											។
 											<script>
 												a_deposite ='<?php echo ($deposite); ?>';
 												moneyKhmerPaid=read_money_in_khmer(a_deposite);
@@ -354,13 +368,13 @@ dojo.require("dijit.form.DateTextBox");
 												
 												
 												
-												a_sold ='<?php echo ($this->agreement['price_sold']); ?>';
+												a_sold ='<?php echo ($this->agreement['price_before']); ?>';
 												money_khmersold=read_money_in_khmer(a_sold);
 												
-												decimalmoney_khmersold='<?php echo substr(number_format($this->agreement['price_sold'],2),-2);?>';
+												decimalmoney_khmersold='<?php echo substr(number_format($this->agreement['price_before'],2),-2);?>';
 												str_cent_sold = 'សេន';
 												if(decimalmoney_khmersold>0){string_sold='និង';}else{string_sold="";str_cent_sold='';}
-												last_number_sold='<?php echo substr(number_format($this->agreement['price_sold'],2),-1);?>';
+												last_number_sold='<?php echo substr(number_format($this->agreement['price_before'],2),-1);?>';
 												
 												if(last_number_sold<=0){last_number_sold='';}
 												money_khmersold = money_khmersold+" "+string_sold+" "+read_in_khmer_from_10_to_99(decimalmoney_khmersold)+''+read_in_khmer_from_0_to_9(last_number_sold)+''+str_cent_sold;
@@ -374,16 +388,19 @@ dojo.require("dijit.form.DateTextBox");
 												$years = floor($diff / (365*60*60*24));
 												$months = floor(($diff - $years * 365*60*60*24) / (30*60*60*24));
 												$days = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
+												$days = ($days==0) ? 1 : $days;
 											?>			
 											<br />
 											<span class="margin-left">&nbsp;</span>
-											ប្រាក់កក់នេះមានសុពលភាពរយៈពេល <strong><?php echo $dbparmeter->getNumberInkhmer($days);?> ថ្ងៃ</strong> ដោយគិតចាប់ពីថ្ងៃទី<?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['buy_date'])));?> ខែ<?php echo $month[date("m",strtotime($this->agreement['buy_date']))];?> ឆ្នាំ<?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['buy_date'])));?> នេះតទៅ។ ហើយកិច្ចសន្យាលក់-ទិញនិងត្រូវធ្វើតាមការព្រមព្រៀងមិនលើសពីរយៈពេល <strong><?php echo $dbparmeter->getNumberInkhmer($days);?> ថ្ងៃ</strong> ប្រាក់កក់នេះនឹងត្រូវទុកជាអសារបង់ បើ <strong>ភាគី “ខ”</strong> កែប្រែឈប់ទិញ ឬហួសរយៈពេលកំណត់។
-											<br />
+											ប្រាក់កក់នេះមានសុពលភាពរយៈពេល <strong><?php echo $dbparmeter->getNumberInkhmer($days);?> ថ្ងៃ</strong> ដោយគិតចាប់ពីថ្ងៃទី<?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['buy_date'])));?> ខែ<?php echo $month[date("m",strtotime($this->agreement['buy_date']))];?> ឆ្នាំ<?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['buy_date'])));?> នេះតទៅ។  
+											<br/>
+											ប្រសិនបើផុតកំណត់រយៈពេល <strong><?php echo $dbparmeter->getNumberInkhmer($days);?></strong> ថ្ងៃ <strong>ភាគី(ខ)</strong> មិនអញ្ជើញមកធ្វើកិច្ចសន្យាទិញ-លក់ទេ នោះលេខផ្ទះដែល <strong>ភាគី(ខ)</strong> បានកក់និងត្រូវបានបើកលក់ថ្មីវិញ។ សម្រាប់ទឹកប្រាក់ដែលបានបង់កក់<strong>ភាគី(ក)</strong> រក្សាទុកជូនដដែល។<br />
 											<span class="margin-left">&nbsp;</span>
-											បើ <strong>ភាគី”ក”</strong> កែប្រែឈប់លក់ឬធ្វើខុសលក្ខខណ្ឌខាងលើប្រាក់កក់ត្រូវផ្ដល់ជូនទៅ <strong>ភាគី ”ខ”</strong> វិញចំនួន ០២ដង នៃប្រាក់កក់ខាងលើ ។
-											<br />
+											ដូចនេះភាគីទាំងសងខាងបានអាន និងយល់អំពីខ្លឹមសារនៃលិខិតខាងលើនេះ ហើយបានព្រមព្រៀងផ្ដិតមេដៃដោយគ្មានការបង្ខិតបង្ខំឡើយ។<br />
 											<span class="margin-left">&nbsp;</span>
-											ភាគីទាំងសងខាងបានព្រមព្រៀងអនុវត្តតាមកិច្ចសន្យាខាងលើចាប់ពីថ្ងៃផ្ដិតមេដៃនេះតទៅ។
+											<strong>
+												លិខិតនេះធ្វើឡើងជាភាសារខ្មែរ និងមានចំនួន0២ច្បាប់ ត្រូវបានរក្សាទុកនៅភាគី ទាំងសងខាង ចំនួនមួយច្បាប់ម្នាក់។
+											</strong>
 										
 										</span>
 										
@@ -396,7 +413,7 @@ dojo.require("dijit.form.DateTextBox");
 										</div>
 										<div>
 											<div style="font-family:'Khmer OS Muol Light'; width:28%; text-align: center; display: inline-block;">
-												<span class="value">ស្នាមមេដៃភាគី (ក)</span>
+												<span class="value">ស្នាមមេដៃភាគី(ក)</span>
 											</div>
 											<div style="font-family:'Khmer OS Muol Light'; width:20%; text-align: center; display: inline-block;">
 												<span class="value">សាក្សីទី១</span>
@@ -405,7 +422,7 @@ dojo.require("dijit.form.DateTextBox");
 												<span class="value">សាក្សីទី២</span>
 											</div>
 											<div style="font-family:'Khmer OS Muol Light'; white-space:nowrap; width:28%; text-align: center; display: inline-block;">
-												<span class="value">ស្នាមមេដៃភាគី (ខ)</span>
+												<span class="value">ស្នាមមេដៃភាគី(ខ)</span>
 											</div>
 											<div style="height: 110px;">
 											</div>
@@ -413,10 +430,10 @@ dojo.require("dijit.form.DateTextBox");
 												<span class="border_bt  value" style="width:80%;" >&nbsp;<strong><?php echo $this->agreement['project_manager_namekh']; echo empty($this->agreement['w_manager_namekh'])?"":"-".$this->agreement['w_manager_namekh'];?></strong></span>
 											</div>
 											<div style="width:20%; text-align: center; display: inline-block;">
-												<span class="border_bt  value" style="width:80%;" ><strong><?php //echo $this->agreement['witness_i'];?></strong></span>
+												<span class="border_bt  value" style="width:80%;" ><strong><?php echo $this->agreement['witness_i'];?></strong></span>
 											</div>
 											<div style="width:20%; text-align: center; display: inline-block;">
-												<span class="border_bt  value" style="width:80%;" ><strong><?php //echo $this->agreement['witness_ii'];?></strong></span>
+												<span class="border_bt  value" style="width:80%;" ><strong><?php echo $this->agreement['witness_ii'];?></strong></span>
 											</div>
 											<div style="width:28%; text-align: center; display: inline-block;">
 												<span class="border_bt  value" style="width:80%; white-space: nowrap;text-align: center;" >&nbsp;&nbsp;<strong><?php echo $this->agreement['client_namekh'];echo (!empty($this->agreement['hname_kh']))?"-".$this->agreement['hname_kh']:"";?></strong>&nbsp;</span>
@@ -691,7 +708,7 @@ dojo.require("dijit.form.DateTextBox");
 															$amountProperty = count($idse);
 														}
 													?>
-													ដោយហេតុថាភាគី (ក) បានព្រមព្រៀងលក់ ផ្ទះចំនួន <strong><?php echo $dbparmeter->getNumberInkhmer($amountProperty);?></strong> ល្វែង ដែលមានលេខផ្ទះ <span class="value" style="min-width:70px; font-weight:600;"><?php echo $this->agreement['property_title'];?></span> 
+													ដោយហេតុថា<strong>ភាគី(ក)</strong> បានព្រមព្រៀងលក់ ផ្ទះចំនួន <strong><?php echo $dbparmeter->getNumberInkhmer($amountProperty);?></strong> ល្វែង ដែលមានលេខផ្ទះ <span class="value" style="min-width:70px; font-weight:600;"><?php echo $this->agreement['property_title'];?></span> 
 													ដែលផ្ទះមាន
 													<br />
 													ទំហំៈ <strong><?php echo number_format($this->agreement['full_size'],2);?> m<sup>2</sup> (<span class="houseSizeKhmer"></span>ម៉ែត្រការ៉េ) </strong>  
@@ -716,7 +733,7 @@ dojo.require("dijit.form.DateTextBox");
 														</li>
 													</ul>
 													<span class="margin-left">&nbsp;</span>
-													អោយទៅភាគី (ខ)  ក្នុងការលក់-ទិញ នេះភាគីទាំងពីរបានព្រមព្រៀងគ្នានៅក្នុងតម្លៃជាក់លាក់ទៅលើទំហំទាំងមូល គឺចំនួន <strong>$<?php echo number_format($this->agreement['price_sold'],2);?></strong> ជាអក្សរ (<strong><span id="lable_pricekhmer" style="font-family:'Khmer OS Siemreap';"></span>ដុល្លារអាមេរិក</strong> )
+													អោយទៅ<strong>ភាគី(ខ)</strong>  ក្នុងការលក់-ទិញ នេះភាគីទាំងពីរបានព្រមព្រៀងគ្នានៅក្នុងតម្លៃជាក់លាក់ទៅលើទំហំទាំងមូល គឺចំនួន <strong>$<?php echo number_format($this->agreement['price_sold'],2);?></strong> ជាអក្សរ (<strong><span id="lable_pricekhmer" style="font-family:'Khmer OS Siemreap';"></span>ដុល្លារអាមេរិកគត់</strong> )
 													
 													<script>
 															
@@ -778,9 +795,9 @@ dojo.require("dijit.form.DateTextBox");
 												<span class="margin-left">&nbsp;</span>
 												- <strong>ភាគី(ក) </strong>ជាអ្នករ៉ាប់រងរត់ការផ្លូវច្បាប់ដើម្បី កាត់ឈ្មោះ ផ្ទេរសិទ្ធិកាន់កាប់អចលនទ្រព្យ <strong>(ប្លង់រឹង) </strong>ជូនទៅ <strong>ភាគី(ខ)</strong> ។
 												<br />
-												<span class="margin-left">&nbsp;</span>- រាល់ការចំណាយក្នុងការផ្ទេរសិទ្ធិ ជាបន្ទុករបស់ <strong>ភាគី (ក)</strong>។
+												<span class="margin-left">&nbsp;</span>- រាល់ការចំណាយក្នុងការផ្ទេរសិទ្ធិ ជាបន្ទុករបស់ <strong>ភាគី(ក)</strong>។
 												<br />
-												<span class="margin-left">&nbsp;</span>- <strong>ភាគី (ក)</strong> ជាអ្នកទទួលខុសត្រូវរាល់បញ្ហាផ្លូវច្បាប់ ក្នុងករណីមានផលប៉ះពាល់ដែលកើតឡើងពីការប្តឹងជំទាស់ ឬតវ៉ាក្នុងកំឡុងពេល និងក្រោយពេល លក់-ទិញផ្ទះ ប្រសិនបើមានការតវ៉ាពីអ្នកពាក់ព័ន្ធផលប្រយោជន៍ជាមួយ <strong>ភាគី(ក)</strong> ឬ សមាជិកគ្រួសារ ទាយាទ និងម្ចាស់បំណុលផ្សេងៗ ។
+												<span class="margin-left">&nbsp;</span>- <strong>ភាគី(ក)</strong> ជាអ្នកទទួលខុសត្រូវរាល់បញ្ហាផ្លូវច្បាប់ ក្នុងករណីមានផលប៉ះពាល់ដែលកើតឡើងពីការប្តឹងជំទាស់ ឬតវ៉ាក្នុងកំឡុងពេល និងក្រោយពេល លក់-ទិញផ្ទះ ប្រសិនបើមានការតវ៉ាពីអ្នកពាក់ព័ន្ធផលប្រយោជន៍ជាមួយ <strong>ភាគី(ក)</strong> ឬ សមាជិកគ្រួសារ ទាយាទ និងម្ចាស់បំណុលផ្សេងៗ ។
 												<br />
 												<span class="margin-left">&nbsp;</span>- បើមានការកែប្រែតម្លៃ ឬសម្រេចចិត្តឈប់លក់ពី <strong>ភាគី(ក)</strong> ត្រូវសងប្រាក់ទៅ <strong>ភាគី(ខ)</strong> ចំនួនពីរដង នៃប្រាក់ដែល <strong>ភាគី(ខ)</strong> បានទូទាត់រួច។
 												<br />
@@ -814,7 +831,7 @@ dojo.require("dijit.form.DateTextBox");
 												</div>
 												<div>
 													<div style="font-family:'Khmer OS Muol Light'; width:28%; text-align: center; display: inline-block;">
-														<span class="value">ស្នាមមេដៃភាគី (ក)</span>
+														<span class="value">ស្នាមមេដៃភាគី(ក)</span>
 													</div>
 													<div style="font-family:'Khmer OS Muol Light'; width:20%; text-align: center; display: inline-block;">
 														<span class="value">សាក្សីទី១</span>
@@ -823,7 +840,7 @@ dojo.require("dijit.form.DateTextBox");
 														<span class="value">សាក្សីទី២</span>
 													</div>
 													<div style="font-family:'Khmer OS Muol Light'; white-space:nowrap; width:28%; text-align: center; display: inline-block;">
-														<span class="value">ស្នាមមេដៃភាគី (ខ)</span>
+														<span class="value">ស្នាមមេដៃភាគី(ខ)</span>
 													</div>
 													<div style="height: 110px;">
 													</div>
@@ -831,10 +848,10 @@ dojo.require("dijit.form.DateTextBox");
 														<span class="border_bt  value" style="width:80%;" >&nbsp;<strong><?php echo $this->agreement['project_manager_namekh']; echo empty($this->agreement['w_manager_namekh'])?"":"-".$this->agreement['w_manager_namekh'];?></strong></span>
 													</div>
 													<div style="width:20%; text-align: center; display: inline-block;">
-														<span class="border_bt  value" style="width:80%;" ><strong><?php //echo $this->agreement['witness_i'];?></strong></span>
+														<span class="border_bt  value" style="width:80%;" ><strong><?php echo $this->agreement['witness_i'];?></strong></span>
 													</div>
 													<div style="width:20%; text-align: center; display: inline-block;">
-														<span class="border_bt  value" style="width:80%;" ><strong><?php //echo $this->agreement['witness_ii'];?></strong></span>
+														<span class="border_bt  value" style="width:80%;" ><strong><?php echo $this->agreement['witness_ii'];?></strong></span>
 													</div>
 													<div style="width:28%; text-align: center; display: inline-block;">
 														<span class="border_bt  value" style="width:80%; white-space: nowrap;text-align: center;" >&nbsp;&nbsp;<strong><?php echo $this->agreement['client_namekh'];echo (!empty($this->agreement['hname_kh']))?"-".$this->agreement['hname_kh']:"";?></strong>&nbsp;</span>
@@ -973,6 +990,7 @@ dojo.require("dijit.form.DateTextBox");
 							 </tr>
 							 <tr>
 								<td colspan="3" align="center">
+									<span style="text-align:center; line-height:28px; width: 100%; display: block; ">កិច្ចសន្យានេះធ្វើនៅ សៀមរាប ថ្ងៃទី <?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['agreement_date'])));?> ខែ <?php echo $month[date("m",strtotime($this->agreement['agreement_date']))];?> ឆ្នាំ <?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['agreement_date'])));?> <br />
 									<span style="font-family:'Khmer OS Muol Light';">រវាង</span></span>
 								</td>
 							 </tr>
@@ -1039,7 +1057,7 @@ dojo.require("dijit.form.DateTextBox");
 											កាន់អត្តសញ្ញាណប័ណ្ណលេខ  <span class="value" style="min-width:30px; font-weight:600;"><?php echo $this->agreement['w_manager_nation_id'];?></span> 
 											<?php }?>
 											មានទីលំនៅ<?php echo $this->agreement['project_manager_p_current_address'];?> 
-											ត្រូវបានហៅថាជា(ម្ចាស់គម្រោង) ឬ <strong>ភាគី”ក”</strong> ។
+											ត្រូវបានហៅថាជា(ម្ចាស់គម្រោង) ឬ <strong>ភាគី(ក)</strong> ។
 										</span>
 										<span style="font-family:'Khmer OS Muol Light'; text-align:center; min-width: 100%; display: inline-block;">និង</span>
 										<span style="text-align: justify;  min-width: 100%; display: inline-block;">
@@ -1099,7 +1117,7 @@ dojo.require("dijit.form.DateTextBox");
 											ខេត្ត/រាជធានី  <span class="value" style="min-width:30px;"><?php echo $this->agreement['w_client_province_kh'];?></span> 
 											 ដែលមានលេខទូរស័ព្ទ <span class="value" style="min-width:30px;"><?php echo $this->agreement['with_phone'];?></span>។ <br />
 											<?php }?> 
-											ត្រូវបានហៅថា(<strong>អ្នកទិញផ្ទះ</strong>) ឬ <strong>ភាគី”ខ”</strong>។
+											ត្រូវបានហៅថា(<strong>អ្នកទិញផ្ទះ</strong>) ឬ <strong>ភាគី(ខ) </strong>។
 
 										</span>
 										<span style="padding:10px 0; text-align:center; width: 100%; display: block; font-weight:200;font-family:'Khmer OS Muol Light';">គោលបំណងនៃកិច្ចសន្យា</span>
@@ -1117,15 +1135,19 @@ dojo.require("dijit.form.DateTextBox");
 													$disAmount = $this->agreement['price_before']-$this->agreement['price_sold'];
 												?>
 											<span class="margin-left">&nbsp;</span>
-											<strong>ភាគី”ខ”</strong> បានព្រមព្រៀងកក់ប្រាក់ចំនួន <strong>USD <?php echo number_format($deposite,2);?></strong> (<strong><span id="lablePaidKhmer" style="font-family:'Khmer OS Siemreap';"></span>ដុល្លារអាមេរិក</strong>) នៃតម្លៃពេញ <strong>USD <?php echo number_format($this->agreement['price_before'],2);?></strong> (<strong><span id="lablePriceKhmer" style="font-family:'Khmer OS Siemreap';"></span>ដុល្លារអាមេរិក</strong>)  
+											ដោយហេតុថា<strong>ភាគី(ក)</strong>និង<strong>ភាគី(ខ)</strong> បានព្រមព្រៀងលក់ និងទិញ<?php echo $this->agreement['property_type_kh'];?>ចំនួន ០១  
+											ដែលមានលេខសំគាល់  <strong><?php echo $this->agreement['property_title'];?></strong>
+											លើផ្លូវ <strong><?php echo str_replace("ផ្លូវ","",$this->agreement['property_street']); ?></strong>
+											នៅក្នុង ប្លុក (Blog) <strong><?php echo $this->agreement['type_tob'];?></strong>។
+											ផ្ទះវីឡានេះ ស្ថិតនៅក្នុងគម្រោង <strong><?php echo $projectName; ?></strong> ដែលមានទីតាំងស្ថិតនៅ <?php echo $this->agreement['project_location'];?> ។
+											<br /><span class="margin-left">&nbsp;</span>
+											ភាគី(ខ) បានព្រមព្រៀងកក់ប្រាក់ចំនួន<strong>
+											USD <?php echo number_format($deposite,2);?></strong> (<strong><span id="lablePaidKhmer" style="font-family:'Khmer OS Siemreap';"></span>ដុល្លារអាមេរិកគត់</strong>) នៃតម្លៃពេញ <strong>USD <?php echo number_format($this->agreement['price_before'],2);?></strong> (<strong><span id="lablePriceKhmer" style="font-family:'Khmer OS Siemreap';"></span>ដុល្លារអាមេរិកគត់</strong>)  
 											<?php if($disAmount>0){?>
 											ហើយត្រូវបានបញ្ចុះតម្លៃចំនួន <strong>USD <?php echo number_format($disAmount,2);?></strong> 
 											នៅសល់តម្លៃត្រឹមតែ <strong>USD <?php echo number_format($this->agreement['price_sold'],2);?></strong>
 											<?php }?>
 											។
-											លើការទិញផ្ទះលេខ <strong><?php echo $this->agreement['property_title'];?></strong> 
-											លើផ្លូវ <strong><?php echo str_replace("ផ្លូវ","",$this->agreement['property_street']); ?></strong> 
-											ដែលស្ថិតនៅក្នុង <strong>គម្រោង <?php echo $projectName; ?></strong> ដែលមានទីតាំងស្ថិតនៅ <?php echo $this->agreement['project_location'];?> ។
 											<script>
 												a_deposite ='<?php echo ($deposite); ?>';
 												moneyKhmerPaid=read_money_in_khmer(a_deposite);
@@ -1161,13 +1183,19 @@ dojo.require("dijit.form.DateTextBox");
 												$years = floor($diff / (365*60*60*24));
 												$months = floor(($diff - $years * 365*60*60*24) / (30*60*60*24));
 												$days = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
+												$days = ($days==0) ? 1 : $days;
 											?>			
 											<br />
 											<span class="margin-left">&nbsp;</span>
-											ប្រាក់កក់នេះមានសុពលភាពរយៈពេល <strong><?php echo $dbparmeter->getNumberInkhmer($days);?> ថ្ងៃ</strong> ដោយគិតចាប់ពីថ្ងៃទី<?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['buy_date'])));?> ខែ<?php echo $month[date("m",strtotime($this->agreement['buy_date']))];?> ឆ្នាំ<?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['buy_date'])));?> នេះតទៅ។ 
-											ដោយ <strong>ភាគី "ខ"</strong> ត្រូវអញ្ជើញមកគម្រោងផ្ទាល់ ដើម្បីពិនិត្យទីតាំងនៃផ្ទះដែលបានកក់ហើយ បើក្នុងករណី <strong>ភាគី "ខ"</strong> មិនពេញចិត្ត នោះ <strong>ភាគី "ក"</strong> នឹងប្រគល់ប្រាក់កក់ជូនទៅ <strong>ភាគី "ខ"</strong> វិញ។ <br />
+											ប្រាក់កក់នេះមានសុពលភាពរយៈពេល <strong><?php echo $dbparmeter->getNumberInkhmer($days);?> ថ្ងៃ</strong> ដោយគិតចាប់ពីថ្ងៃទី<?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['buy_date'])));?> ខែ<?php echo $month[date("m",strtotime($this->agreement['buy_date']))];?> ឆ្នាំ<?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['buy_date'])));?> នេះតទៅ។  
+											<br/>
+											ប្រសិនបើផុតកំណត់រយៈពេល <strong><?php echo $dbparmeter->getNumberInkhmer($days);?></strong> ថ្ងៃ <strong>ភាគី(ខ)</strong> មិនអញ្ជើញមកធ្វើកិច្ចសន្យាទិញ-លក់ទេ នោះលេខផ្ទះដែល <strong>ភាគី(ខ)</strong> បានកក់និងត្រូវបានបើកលក់ថ្មីវិញ។ សម្រាប់ទឹកប្រាក់ដែលបានបង់កក់<strong>ភាគី(ក)</strong> រក្សាទុកជូនដដែល។<br />
 											<span class="margin-left">&nbsp;</span>
-											ប្រសិនបើរយៈពេល <strong><?php echo $dbparmeter->getNumberInkhmer($days);?> ថ្ងៃ</strong> <strong>ភាគី "ខ"</strong> មិនអញ្ជើញមកគម្រោងផ្ទាល់ទេ ហើយសម្រចចិត្តមិនទិញតែម្តង នោះប្រាក់កក់នឹងទុកជាអសាបង់។ ប៉ុន្តែបើ <strong>ភាគី "ខ"</strong> មិនបានអញ្ជើញមកគម្រោងផ្ទាល់ ហើយនៅតែសម្រេចចិត្តទិញដដែល នោះ <strong>ភាគី "ខ"</strong> នឹងបន្តយល់ព្រមបង់ប្រាក់តាមលក្ខខណ្ឌដែលបានព្រមព្រៀងគ្នារវាងភាគីទាំងពីរ។
+											ដូចនេះភាគីទាំងសងខាងបានអាន និងយល់អំពីខ្លឹមសារនៃលិខិតខាងលើនេះ ហើយបានព្រមព្រៀងផ្ដិតមេដៃដោយគ្មានការបង្ខិតបង្ខំឡើយ។<br />
+											<span class="margin-left">&nbsp;</span>
+											<strong>
+												លិខិតនេះធ្វើឡើងជាភាសារខ្មែរ និងមានចំនួន0២ច្បាប់ ត្រូវបានរក្សាទុកនៅភាគី ទាំងសងខាង ចំនួនមួយច្បាប់ម្នាក់។
+											</strong>
 										</span>
 										
 									</td>
@@ -1179,7 +1207,7 @@ dojo.require("dijit.form.DateTextBox");
 										</div>
 										<div>
 											<div style="font-family:'Khmer OS Muol Light'; width:28%; text-align: center; display: inline-block;">
-												<span class="value">ជ.ស្នាមមេដៃភាគី(ក)</span>
+												<span class="value">ស្នាមមេដៃភាគី(ក)</span>
 											</div>
 											<div style="font-family:'Khmer OS Muol Light'; width:20%; text-align: center; display: inline-block;">
 												<span class="value">សាក្សីទី១</span>
@@ -1196,10 +1224,10 @@ dojo.require("dijit.form.DateTextBox");
 												<span class="border_bt  value" style="width:80%;" >&nbsp;<strong><?php echo $this->agreement['project_manager_namekh']; echo empty($this->agreement['w_manager_namekh'])?"":"-".$this->agreement['w_manager_namekh'];?></strong></span>
 											</div>
 											<div style="width:20%; text-align: center; display: inline-block;">
-												<span class="border_bt  value" style="width:80%;" ><strong><?php //echo $this->agreement['witness_i'];?></strong></span>
+												<span class="border_bt  value" style="width:80%;" ><strong><?php echo $this->agreement['witness_i'];?></strong></span>
 											</div>
 											<div style="width:20%; text-align: center; display: inline-block;">
-												<span class="border_bt  value" style="width:80%;" ><strong><?php //echo $this->agreement['witness_ii'];?></strong></span>
+												<span class="border_bt  value" style="width:80%;" ><strong><?php echo $this->agreement['witness_ii'];?></strong></span>
 											</div>
 											<div style="width:28%; text-align: center; display: inline-block;">
 												<span class="border_bt  value" style="width:80%; white-space: nowrap;text-align: center;" >&nbsp;&nbsp;<strong><?php echo $this->agreement['client_namekh'];echo (!empty($this->agreement['hname_kh']))?"-".$this->agreement['hname_kh']:"";?></strong>&nbsp;</span>
@@ -1473,14 +1501,14 @@ dojo.require("dijit.form.DateTextBox");
 															$amountProperty = count($idse);
 														}
 													?>
-													<span class="margin-left">&nbsp;</span>ដោយហេតុថា <strong>ភាគី (ក)</strong> និង<strong>ភាគី(ខ)</strong> បានព្រមព្រៀងលក់ និងទិញ <strong><?php echo $this->agreement['property_type_kh'];?></strong>  ផ្ទះចំនួន <strong><?php echo $dbparmeter->getNumberInkhmer($amountProperty);?></strong> ដែលមានលេខសំគាល់ : <span class="value" style="min-width:70px; font-weight:600;"><?php echo $this->agreement['property_title'];?></span> 
-													លើផ្លូវ <strong><?php echo str_replace("ផ្លូវ","",$this->agreement['property_street']); ?></strong> នៅក្នុង ប្លុក (Blog) <strong><?php echo $this->agreement['type_tob'];?></strong>
+													<span class="margin-left">&nbsp;</span>ដោយហេតុថា <strong>ភាគី(ក)</strong> និង <strong>ភាគី(ខ)</strong> បានព្រមព្រៀងលក់ និងទិញ <strong style="display:inline-block;min-width: 110px;text-align: center;"><?php echo $this->agreement['property_type_kh'];?></strong>  ផ្ទះចំនួន <strong><?php echo $dbparmeter->getNumberInkhmer($amountProperty);?></strong> ដែលមានលេខសំគាល់ : <span class="value" style="min-width:70px; font-weight:600;"><?php echo $this->agreement['property_title'];?></span> 
+													លើផ្លូវ <strong><?php echo str_replace("ផ្លូវ","",$this->agreement['property_street']); ?></strong> នៅក្នុង ប្លុក (Blog) <strong><?php echo $this->agreement['type_tob'];?></strong>។
 													
 													<br />
 													
 													
 													<span class="margin-left">&nbsp;</span>ផ្ទះនេះ  ស្ថិតនៅក្នុងគម្រោង <strong><?php echo $projectName; ?></strong>  ដែលមានទីតាំងនៅ<?php echo $this->agreement['project_location'];?>  
-													សាងសង់នៅលើដីមានដែលមានទទឹង <strong><?php echo $dbparmeter->getNumberInkhmer(number_format($this->agreement['property_width'],2));?></strong> ម៉ែត្រ បណ្តោយ  <strong><?php echo $dbparmeter->getNumberInkhmer(number_format($this->agreement['property_height'],2));?></strong> ម៉ែត្រ និងមានព្រំប្រទល់ៈ  
+													សាងសង់នៅលើដីមានដែលមាន<?php if(!empty($this->agreement['property_width'])){?>ទទឹង <strong><?php echo $dbparmeter->getNumberInkhmer(number_format($this->agreement['property_width'],2));?></strong> ម៉ែត្រ បណ្តោយ  <strong><?php echo $dbparmeter->getNumberInkhmer(number_format($this->agreement['property_height'],2));?></strong> ម៉ែត្រ និង<?php } ?>មានព្រំប្រទល់ៈ  
 													<ul class="border-land">
 														<li>
 															- ខាងជើងទល់នឹងៈ <?php echo $this->agreement['border_north'];?>
@@ -1496,7 +1524,7 @@ dojo.require("dijit.form.DateTextBox");
 														</li>
 													</ul>
 													<span class="margin-left">&nbsp;</span>
-													ការលក់-ទិញនេះ ភាគីទាំងពីរបានព្រមព្រៀងគ្នានៅក្នុងតម្លៃជាក់លាក់ ចំនួន <strong>$<?php echo number_format($this->agreement['price_sold'],2);?></strong> ជាអក្សរ (<strong><span id="lable_pricekhmer" style="font-family:'Khmer OS Siemreap';"></span>ដុល្លារអាមេរិក</strong> )
+													ការលក់-ទិញនេះ ភាគីទាំងពីរបានព្រមព្រៀងគ្នានៅក្នុងតម្លៃជាក់លាក់ ចំនួន <strong>$<?php echo number_format($this->agreement['price_sold'],2);?></strong> ជាអក្សរ (<strong><span id="lable_pricekhmer" style="font-family:'Khmer OS Siemreap';"></span>ដុល្លារអាមេរិកគត់</strong> )
 													
 													<script>
 															
@@ -1549,9 +1577,9 @@ dojo.require("dijit.form.DateTextBox");
 												<span class="margin-left">&nbsp;</span>
 												- <strong>ភាគី(ក) </strong>ជាអ្នករ៉ាប់រងរត់ការផ្លូវច្បាប់ដើម្បី កាត់ឈ្មោះ ផ្ទេរសិទ្ធិកាន់កាប់អចលនទ្រព្យ <strong>(ប្លង់រឹង) </strong>ជូនទៅ <strong>ភាគី(ខ)</strong> ។
 												<br />
-												<span class="margin-left">&nbsp;</span>- រាល់ការចំណាយក្នុងការផ្ទេរសិទ្ធិ ជាបន្ទុករបស់ <strong>ភាគី (ក)</strong>។
+												<span class="margin-left">&nbsp;</span>- រាល់ការចំណាយក្នុងការផ្ទេរសិទ្ធិ ជាបន្ទុករបស់ <strong>ភាគី(ក)</strong>។
 												<br />
-												<span class="margin-left">&nbsp;</span>- <strong>ភាគី (ក)</strong> ជាអ្នកទទួលខុសត្រូវរាល់បញ្ហាផ្លូវច្បាប់ ក្នុងករណីមានផលប៉ះពាល់ដែលកើតឡើងពីការប្តឹងជំទាស់ ឬតវ៉ាក្នុងកំឡុងពេល និងក្រោយពេល លក់-ទិញផ្ទះ ប្រសិនបើមានការតវ៉ាពីអ្នកពាក់ព័ន្ធផលប្រយោជន៍ជាមួយ <strong>ភាគី(ក)</strong> ឬ សមាជិកគ្រួសារ ទាយាទ និងម្ចាស់បំណុលផ្សេងៗ ។
+												<span class="margin-left">&nbsp;</span>- <strong>ភាគី(ក)</strong> ជាអ្នកទទួលខុសត្រូវរាល់បញ្ហាផ្លូវច្បាប់ ក្នុងករណីមានផលប៉ះពាល់ដែលកើតឡើងពីការប្តឹងជំទាស់ ឬតវ៉ាក្នុងកំឡុងពេល និងក្រោយពេល លក់-ទិញផ្ទះ ប្រសិនបើមានការតវ៉ាពីអ្នកពាក់ព័ន្ធផលប្រយោជន៍ជាមួយ <strong>ភាគី(ក)</strong> ឬ សមាជិកគ្រួសារ ទាយាទ និងម្ចាស់បំណុលផ្សេងៗ ។
 												<br />
 												<span class="margin-left">&nbsp;</span>- បើមានការកែប្រែតម្លៃ ឬសម្រេចចិត្តឈប់លក់ពី <strong>ភាគី(ក)</strong> ត្រូវសងប្រាក់ទៅ <strong>ភាគី(ខ)</strong> ចំនួនពីរដង នៃប្រាក់ដែល <strong>ភាគី(ខ)</strong> បានទូទាត់រួច។
 												<br />
@@ -1561,13 +1589,13 @@ dojo.require("dijit.form.DateTextBox");
 												<?php }?>
 												<span class="margin-left">&nbsp;</span>- បើ <strong>ភាគី(ខ)</strong> កែប្រែឈប់ទិញ  ឬប្រព្រឹត្តផ្ទុយពីលក្ខខណ្ឌខាងលើនេះ  ប្រាក់ដែលបានបង់ត្រូវចាត់ទុកជាអាសារបង់។
 												<br />
-												<span class="margin-left">&nbsp;</span>- <strong>ភាគី(ក)</strong> ធានាក្នុងការជួសជុល ផ្ទះរយះពេល 1ឆ្នាំ ជូន <strong>ភាគី(ខ)</strong> បន្ទាប់ពី <strong>ភាគី(ក)</strong>ប្រគល់ផ្ទះជូន ។<br /> 
+												<span class="margin-left">&nbsp;</span>- <strong>ភាគី(ក)</strong> ធានាក្នុងការជួសជុល ផ្ទះរយះពេល ១ឆ្នាំ ជូន <strong>ភាគី(ខ)</strong> បន្ទាប់ពី <strong>ភាគី(ក)</strong>ប្រគល់ផ្ទះជូន ។<br /> 
 												ករណីបើមានប្រធានសក្តិ និង គ្រោះធម្មជាតិមិនមែនជាការទទួលខុសត្រូវរបស់ <strong>ភាគី(ក)</strong> ទេ។
 												<br />
 												<span class="margin-left">&nbsp;</span>- <strong>ភាគី(ក)</strong> ធានាសាងសង់ និងប្រគល់ផ្ទះជូន <strong>ភាគី(ខ)</strong> មិនលើសពី <?php echo empty($this->agreement['amount_build'])?" ...........":$dbparmeter->getNumberInkhmer(number_format($this->agreement['amount_build'],0));?> ខែបន្ទាប់ពីចុះកិច្ចសន្យាលក់-ទិញ។ ករណីបើមានប្រធានសក្តិ កើតឡើង <strong>ភាគី(ក)</strong> សូមពន្យារពេលការសាងសង់ និង ប្រគល់ផ្ទះរយៈពេល  ៦ខែ បន្ថែមលើការកំណត់ខាងលើ។
 												<br />
 												<br />
-												<span class="margin-left">&nbsp;</span>ភាគីទាំងពីរមិនអាចកែប្រែអ្វីទាំងអស់ បន្ទាប់ពីភាគីទាំងសងខាងបានផ្តិតមេដៃប្រគល់ និងទទួលប្រាក់ក់  ហើយភាគីទាំងសងខាង ត្រូវទុកពេលវេលាជូនគ្នាទៅវិញទៅមក អោយបានសមស្រប ដើម្បីបំពេញកាតព្វកិច្ចតបស្នង ទៅតាមលក្ខខណ្ឌនៃកិច្ចសន្យាខាងលើ។
+												<span class="margin-left">&nbsp;</span>ភាគីទាំងពីរមិនអាចកែប្រែអ្វីទាំងអស់ បន្ទាប់ពីភាគីទាំងសងខាងបានផ្តិតមេដៃប្រគល់ និងទទួលប្រាក់កក់  ហើយភាគីទាំងសងខាង ត្រូវទុកពេលវេលាជូនគ្នាទៅវិញទៅមក អោយបានសមស្រប ដើម្បីបំពេញកាតព្វកិច្ចតបស្នង ទៅតាមលក្ខខណ្ឌនៃកិច្ចសន្យាខាងលើ។
 												<br />
 												<span class="margin-left">&nbsp;</span>កិច្ចសន្យានេះចូលជាធរមានចាប់ពីថ្ងៃដែលភាគីទាំងពីរ បានផ្តិតមេដៃទុកជាភស្តុតាងខាងក្រោមនេះតទៅ។
 												<br />
@@ -1585,7 +1613,7 @@ dojo.require("dijit.form.DateTextBox");
 												</div>
 												<div>
 													<div style="font-family:'Khmer OS Muol Light'; width:28%; text-align: center; display: inline-block;">
-														<span class="value">ជ.ស្នាមមេដៃភាគី (ក)</span>
+														<span class="value">ស្នាមមេដៃភាគី(ក)</span>
 													</div>
 													<div style="font-family:'Khmer OS Muol Light'; width:20%; text-align: center; display: inline-block;">
 														<span class="value">សាក្សីទី១</span>
@@ -1602,10 +1630,10 @@ dojo.require("dijit.form.DateTextBox");
 														<span class="border_bt  value" style="width:80%;" >&nbsp;<strong><?php echo $this->agreement['project_manager_namekh']; echo empty($this->agreement['w_manager_namekh'])?"":"-".$this->agreement['w_manager_namekh'];?></strong></span>
 													</div>
 													<div style="width:20%; text-align: center; display: inline-block;">
-														<span class="border_bt  value" style="width:80%;" ><strong><?php //echo $this->agreement['witness_i'];?></strong></span>
+														<span class="border_bt  value" style="width:80%;" ><strong><?php echo $this->agreement['witness_i'];?></strong></span>
 													</div>
 													<div style="width:20%; text-align: center; display: inline-block;">
-														<span class="border_bt  value" style="width:80%;" ><strong><?php //echo $this->agreement['witness_ii'];?></strong></span>
+														<span class="border_bt  value" style="width:80%;" ><strong><?php echo $this->agreement['witness_ii'];?></strong></span>
 													</div>
 													<div style="width:28%; text-align: center; display: inline-block;">
 														<span class="border_bt  value" style="width:80%; white-space: nowrap;text-align: center;" >&nbsp;&nbsp;<strong><?php echo $this->agreement['client_namekh'];echo (!empty($this->agreement['hname_kh']))?"-".$this->agreement['hname_kh']:"";?></strong>&nbsp;</span>
