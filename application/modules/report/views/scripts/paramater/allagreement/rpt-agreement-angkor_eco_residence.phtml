@@ -263,7 +263,7 @@ dojo.require("dijit.form.DateTextBox");
 											កាន់អត្តសញ្ញាណប័ណ្ណលេខ  <span class="value" style="min-width:30px; font-weight:600;"><?php echo $this->agreement['w_manager_nation_id'];?></span> 
 											<?php }?>
 											មានទីលំនៅ<?php echo $this->agreement['project_manager_p_current_address'];?> 
-											ត្រូវបានហៅថាជា(ម្ចាស់គម្រោង) ឬ <strong>ភាគី(ក)</strong> ។
+											ត្រូវបានហៅថាជា(<strong>ម្ចាស់គម្រោង</strong>) ឬ <strong>ភាគី(ក)</strong> ។
 										</span>
 										<span style="font-family:'Khmer OS Muol Light'; text-align:center; min-width: 100%; display: inline-block;">និង</span>
 										<span style="text-align: justify;  min-width: 100%; display: inline-block;">
@@ -349,8 +349,8 @@ dojo.require("dijit.form.DateTextBox");
 											<strong>ភាគី(ខ)</strong> បានព្រមព្រៀងកក់ប្រាក់ចំនួន<strong>
 											USD <?php echo number_format($deposite,2);?></strong> (<strong><span id="lablePaidKhmer" style="font-family:'Khmer OS Siemreap';"></span>ដុល្លារអាមេរិកគត់</strong>) នៃតម្លៃពេញ <strong>USD <?php echo number_format($this->agreement['price_before'],2);?></strong> (<strong><span id="lablePriceKhmer" style="font-family:'Khmer OS Siemreap';"></span>ដុល្លារអាមេរិកគត់</strong>)  
 											<?php if($disAmount>0){?>
-											ហើយត្រូវបានបញ្ចុះតម្លៃចំនួន <strong>USD <?php echo number_format($disAmount,2);?></strong> 
-											នៅសល់តម្លៃត្រឹមតែ <strong>USD <?php echo number_format($this->agreement['price_sold'],2);?></strong>
+											ហើយត្រូវបានបញ្ចុះតម្លៃចំនួន <strong>USD <?php echo number_format($disAmount,2);?></strong> (<strong><span id="lableDisKhmer" style="font-family:'Khmer OS Siemreap';"></span>ដុល្លារអាមេរិកគត់</strong>) 
+											នៅសល់តម្លៃត្រឹមតែ <strong>USD <?php echo number_format($this->agreement['price_sold'],2);?></strong> (<strong><span id="lablePriceAfterDis" style="font-family:'Khmer OS Siemreap';"></span>ដុល្លារអាមេរិកគត់</strong>) 
 											<?php }?>
 											។
 											<script>
@@ -379,6 +379,33 @@ dojo.require("dijit.form.DateTextBox");
 												if(last_number_sold<=0){last_number_sold='';}
 												money_khmersold = money_khmersold+" "+string_sold+" "+read_in_khmer_from_10_to_99(decimalmoney_khmersold)+''+read_in_khmer_from_0_to_9(last_number_sold)+''+str_cent_sold;
 												dojo.byId('lablePriceKhmer').innerHTML=money_khmersold+" ";
+												
+												<?php if($disAmount>0){?>
+												amtDis ='<?php echo ($disAmount); ?>';
+												money_khmerAmtDis=read_money_in_khmer(amtDis);
+												
+												decimalmoney_khmerAmtDis='<?php echo substr(number_format($disAmount,2),-2);?>';
+												str_cent_AmtDis = 'សេន';
+												if(decimalmoney_khmerAmtDis>0){stringAmtDis='និង';}else{stringAmtDis="";str_cent_AmtDis='';}
+												last_number_AmtDis='<?php echo substr(number_format($disAmount,2),-1);?>';
+												
+												if(last_number_AmtDis<=0){last_number_AmtDis='';}
+												money_khmerAmtDis = money_khmerAmtDis+" "+stringAmtDis+" "+read_in_khmer_from_10_to_99(decimalmoney_khmerAmtDis)+''+read_in_khmer_from_0_to_9(last_number_AmtDis)+''+str_cent_AmtDis;
+												dojo.byId('lableDisKhmer').innerHTML=money_khmerAmtDis+" ";
+												
+												
+												amtPriceSold ='<?php echo ($this->agreement['price_sold']); ?>';
+												money_khmerPriceSold=read_money_in_khmer(amtPriceSold);
+												
+												decimalmoney_khmerPriceSold='<?php echo substr(number_format($this->agreement['price_sold'],2),-2);?>';
+												str_cent_PriceSold = 'សេន';
+												if(decimalmoney_khmerPriceSold>0){stringPriceSold='និង';}else{stringPriceSold="";str_cent_PriceSold='';}
+												last_number_PriceSold='<?php echo substr(number_format($this->agreement['price_sold'],2),-1);?>';
+												
+												if(last_number_PriceSold<=0){last_number_PriceSold='';}
+												money_khmerPriceSold = money_khmerPriceSold+" "+stringPriceSold+" "+read_in_khmer_from_10_to_99(decimalmoney_khmerPriceSold)+''+read_in_khmer_from_0_to_9(last_number_PriceSold)+''+str_cent_PriceSold;
+												dojo.byId('lablePriceAfterDis').innerHTML=money_khmerPriceSold+" ";
+												<?php }?>
 										</script>
 											<?php 
 												$date1 = $this->agreement['buy_date'];
@@ -1057,7 +1084,7 @@ dojo.require("dijit.form.DateTextBox");
 											កាន់អត្តសញ្ញាណប័ណ្ណលេខ  <span class="value" style="min-width:30px; font-weight:600;"><?php echo $this->agreement['w_manager_nation_id'];?></span> 
 											<?php }?>
 											មានទីលំនៅ<?php echo $this->agreement['project_manager_p_current_address'];?> 
-											ត្រូវបានហៅថាជា(ម្ចាស់គម្រោង) ឬ <strong>ភាគី(ក)</strong> ។
+											ត្រូវបានហៅថាជា(<strong>ម្ចាស់គម្រោង</strong>) ឬ <strong>ភាគី(ក)</strong> ។
 										</span>
 										<span style="font-family:'Khmer OS Muol Light'; text-align:center; min-width: 100%; display: inline-block;">និង</span>
 										<span style="text-align: justify;  min-width: 100%; display: inline-block;">
@@ -1141,11 +1168,11 @@ dojo.require("dijit.form.DateTextBox");
 											នៅក្នុង ប្លុក (Blog) <strong><?php echo $this->agreement['type_tob'];?></strong>។
 											ផ្ទះវីឡានេះ ស្ថិតនៅក្នុងគម្រោង <strong><?php echo $projectName; ?></strong> ដែលមានទីតាំងស្ថិតនៅ <?php echo $this->agreement['project_location'];?> ។
 											<br /><span class="margin-left">&nbsp;</span>
-											ភាគី(ខ) បានព្រមព្រៀងកក់ប្រាក់ចំនួន<strong>
+											<strong>ភាគី(ខ)</strong> បានព្រមព្រៀងកក់ប្រាក់ចំនួន<strong>
 											USD <?php echo number_format($deposite,2);?></strong> (<strong><span id="lablePaidKhmer" style="font-family:'Khmer OS Siemreap';"></span>ដុល្លារអាមេរិកគត់</strong>) នៃតម្លៃពេញ <strong>USD <?php echo number_format($this->agreement['price_before'],2);?></strong> (<strong><span id="lablePriceKhmer" style="font-family:'Khmer OS Siemreap';"></span>ដុល្លារអាមេរិកគត់</strong>)  
 											<?php if($disAmount>0){?>
-											ហើយត្រូវបានបញ្ចុះតម្លៃចំនួន <strong>USD <?php echo number_format($disAmount,2);?></strong> 
-											នៅសល់តម្លៃត្រឹមតែ <strong>USD <?php echo number_format($this->agreement['price_sold'],2);?></strong>
+											ហើយត្រូវបានបញ្ចុះតម្លៃចំនួន <strong>USD <?php echo number_format($disAmount,2);?></strong> (<strong><span id="lableDisKhmer" style="font-family:'Khmer OS Siemreap';"></span>ដុល្លារអាមេរិកគត់</strong>) 
+											នៅសល់តម្លៃត្រឹមតែ <strong>USD <?php echo number_format($this->agreement['price_sold'],2);?></strong> (<strong><span id="lablePriceAfterDis" style="font-family:'Khmer OS Siemreap';"></span>ដុល្លារអាមេរិកគត់</strong>) 
 											<?php }?>
 											។
 											<script>
@@ -1174,6 +1201,33 @@ dojo.require("dijit.form.DateTextBox");
 												if(last_number_sold<=0){last_number_sold='';}
 												money_khmersold = money_khmersold+" "+string_sold+" "+read_in_khmer_from_10_to_99(decimalmoney_khmersold)+''+read_in_khmer_from_0_to_9(last_number_sold)+''+str_cent_sold;
 												dojo.byId('lablePriceKhmer').innerHTML=money_khmersold+" ";
+												
+												<?php if($disAmount>0){?>
+												amtDis ='<?php echo ($disAmount); ?>';
+												money_khmerAmtDis=read_money_in_khmer(amtDis);
+												
+												decimalmoney_khmerAmtDis='<?php echo substr(number_format($disAmount,2),-2);?>';
+												str_cent_AmtDis = 'សេន';
+												if(decimalmoney_khmerAmtDis>0){stringAmtDis='និង';}else{stringAmtDis="";str_cent_AmtDis='';}
+												last_number_AmtDis='<?php echo substr(number_format($disAmount,2),-1);?>';
+												
+												if(last_number_AmtDis<=0){last_number_AmtDis='';}
+												money_khmerAmtDis = money_khmerAmtDis+" "+stringAmtDis+" "+read_in_khmer_from_10_to_99(decimalmoney_khmerAmtDis)+''+read_in_khmer_from_0_to_9(last_number_AmtDis)+''+str_cent_AmtDis;
+												dojo.byId('lableDisKhmer').innerHTML=money_khmerAmtDis+" ";
+												
+												
+												amtPriceSold ='<?php echo ($this->agreement['price_sold']); ?>';
+												money_khmerPriceSold=read_money_in_khmer(amtPriceSold);
+												
+												decimalmoney_khmerPriceSold='<?php echo substr(number_format($this->agreement['price_sold'],2),-2);?>';
+												str_cent_PriceSold = 'សេន';
+												if(decimalmoney_khmerPriceSold>0){stringPriceSold='និង';}else{stringPriceSold="";str_cent_PriceSold='';}
+												last_number_PriceSold='<?php echo substr(number_format($this->agreement['price_sold'],2),-1);?>';
+												
+												if(last_number_PriceSold<=0){last_number_PriceSold='';}
+												money_khmerPriceSold = money_khmerPriceSold+" "+stringPriceSold+" "+read_in_khmer_from_10_to_99(decimalmoney_khmerPriceSold)+''+read_in_khmer_from_0_to_9(last_number_PriceSold)+''+str_cent_PriceSold;
+												dojo.byId('lablePriceAfterDis').innerHTML=money_khmerPriceSold+" ";
+												<?php }?>
 										</script>
 											<?php 
 												$date1 = $this->agreement['buy_date'];
