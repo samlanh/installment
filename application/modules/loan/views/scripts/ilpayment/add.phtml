@@ -11,6 +11,7 @@
 	
 	$pennalizeOpt = PENALIZE_OPT;
 	$settingDoc = SETTING_EXPENSE_DOC;
+	$forBokorLand = 0;
 ?>
 <style>
 		.showstamp{display: block !important;}
@@ -604,6 +605,7 @@ function enablePayment(){
 		dijit.byId("bank_id").set("readOnly",true);
 		dijit.byId("bank_id").attr("value",'');
 	}
+	getBranchInfo();
 }
 function submitDataClose(){
 	var url_submit = '<?php echo $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'add')); ?>';
@@ -691,6 +693,14 @@ function getBranchInfo(){
 			document.getElementById('ft_email_client_lb').innerHTML = arr.office_email;
 			document.getElementById('ft_address_lb').innerHTML = arr.office_address;
 			document.getElementById('ft_phone_lb').innerHTML = arr.office_tel;
+			
+			<?php if($forBokorLand==1){?>
+				var thisPaymentMthod = dijit.byId('payment_method').get('value');
+				if(thisPaymentMthod!=1){
+					dijit.byId('bank_id').attr('value',1);
+					dijit.byId('cheque').attr('value',arr.bank_account1number);
+				}
+			<?php } ?>
 		},
 		error: function(e) {
 		}
@@ -999,7 +1009,10 @@ dojo.ready(function(){
 	<?php if($settingDoc==1){ ?>
 	addRow();
 	<?php }?>	
-	
+	var thisBranch = dijit.byId('branch_id');
+	 thisBranch.on('change', function(evt) {
+		 getBranchInfo();
+	});
 	//setPaymentDate();
 });
 
@@ -1195,6 +1208,19 @@ function getLaonPayment(type){//tab ទី១
 								from_date=respone[indexs].sold_date;
 							}
 							dijit.byId("last_payment_date").attr("value",from_date);
+							
+							<?php if($forBokorLand==1){?>
+								var thisDatePmt = respone[indexs].date_payment;
+								var formatThisDatePmt = new Date(thisDatePmt);
+								var thisDatePmtMM = formatThisDatePmt.getMonth() + 1;
+								var thisDatePmtMonth=thisDatePmtMM;
+								if(thisDatePmtMM<10){
+									thisDatePmtMonth = "0"+thisDatePmtMM;
+								}
+								var thisDatePmtYear = formatThisDatePmt.getFullYear();
+		
+								dijit.byId('note').attr('value',"បង់សម្រាប់ខែ "+thisDatePmtMonth+" ឆ្នាំ "+thisDatePmtYear);
+							<?php } ?>
 						}
 							if(pay_option==1){
 								current_date = '<?php echo date('Y-m-d');?>'
