@@ -1274,7 +1274,7 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   }
  
  
-  function getAllplongissue(){
+  function getAllplongissue($data=array()){
   	$db=$this->getAdapter();
   	$sql ="SELECT `s`.`id` AS `id`,
     	(SELECT
@@ -1301,7 +1301,12 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
   	$sql.=$dbp->getAccessPermission("s.branch_id");
   	
   	$order=" ORDER BY end_line ASC ";
-  	return $db->fetchAll($sql.$order);
+	$limit="";
+	if(!empty($data["limitRecord"])){
+		$limitRecord = empty($data["limitRecord"]) ? 10 : $data["limitRecord"];
+		$limit=" LIMIT ".$limitRecord;
+	}
+  	return $db->fetchAll($sql.$order.$limit);
   }
   function getAllSupplier(){
   	$db = $this->getAdapter();
@@ -1864,6 +1869,13 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 		$sql.=" AND ct.id = c.customer_id ";
 		
 		$order=" ORDER BY c.next_contact DESC,c.id DESC ";
+		
+		$limit="";
+		if(!empty($search["limitRecord"])){
+			$limitRecord = empty($search["limitRecord"]) ? 10 : $search["limitRecord"];
+			$limit=" LIMIT ".$limitRecord;
+		}
+		
 		return $db->fetchAll($sql.$order);
 	}
 	function titleGender(){

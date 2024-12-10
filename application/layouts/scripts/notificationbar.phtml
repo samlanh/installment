@@ -18,6 +18,11 @@
 	$vdgb = new Application_Model_DbTable_DbGlobal();
 	$alllang =  $vdgb->getLaguage();
 	$currentlang = $vdgb->currentlang();
+	
+	$arrFilter = array(
+		"limitRecord" =>10,
+	);
+	
 	if($systemType==1){
 		$systemSwitchTo = $tr->translate("Stock System");
 		$db = new Report_Model_DbTable_DbloanCollect();
@@ -26,14 +31,14 @@
 		$classActionPayment="hiddentNotif";
 		$actionPaymentCheck = $db_user->getAccessUrl("loan","ilpayment",'add');
 		if(!empty($actionPaymentCheck)){
-			$rs = $db->getCustomerNearlyPayment();
+			$rs = $db->getCustomerNearlyPayment($arrFilter);
 			$classActionPayment="";
 		}
 		$rsagree = array();
 		$classActionNearAgreement="hiddentNotif";
 		$actionNearAgreementCheck = $db_user->getAccessUrl("loan","index",'index');
 		if(!empty($actionNearAgreementCheck)){
-			$rsagree = $db->getCustomerNearAgreement();
+			$rsagree = $db->getCustomerNearAgreement($arrFilter);
 			$classActionNearAgreement="";
 		}
 		
@@ -41,7 +46,7 @@
 		$classActionBoreyFeeCheck="hiddentNotif";
 		$actionBoreyFeeCheck = $db_user->getAccessUrl("incexp","incomeboreyfee",'add');
 		if(!empty($actionBoreyFeeCheck)){
-			$altBoreyFee = $db->getCustomerNearlyPaymentBoreyFee();
+			$altBoreyFee = $db->getCustomerNearlyPaymentBoreyFee($arrFilter);
 			$classActionBoreyFeeCheck="";
 		}
 		
@@ -49,7 +54,7 @@
 		$classActionPlongissueCheck="hiddentNotif";
 		$actionPlongissueCheck = $db_user->getAccessUrl("issue","receivplong",'add');
 		if(!empty($actionPlongissueCheck)){
-			$rsplong = $vdgb->getAllplongissue();
+			$rsplong = $vdgb->getAllplongissue($arrFilter);
 			$classActionPlongissueCheck="";
 		}
 		
@@ -57,7 +62,7 @@
 		$classCusRequire="hiddentNotif";
 		$rsCusRequire = array();
 		if(!empty($userCusRequireCheck)){
-			$rsCusRequire = $vdgb->getAllCustomerRequireNextContact();
+			$rsCusRequire = $vdgb->getAllCustomerRequireNextContact($arrFilter);
 			$classCusRequire="";
 		}
 		
@@ -95,42 +100,66 @@
 				<li role="presentation" class="dropdown <?php echo $classActionNearAgreement;?>">
 				  <a title="<?php echo $tr->translate("MAKE_AGREEMENTLIST");?>" href="javascript:;"  class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="true">
 					<i class="fa fa-newspaper-o"></i>
-					<span id="countNews" class="badge bg-green"><?php if (count($rsagree)>0){ echo count($rsagree);}?></span>
-				  </a>
-				  <ul id="menu1" class="dropdown-menu list-unstyled " role="menu">
-					 <li class=" event title">
-						<h4><a style="color: #fff;" href="<?php echo $this->url(array('module'=>'report','controller'=>'loan','action'=>'rpt-validateagreement'), null, true);?>"><?php echo $tr->translate("MAKE_AGREEMENTLIST");?></a></h4>
-					  </li>
-					   <?php if(!empty($rsagree)){?>
-						<?php 
-						foreach($rsagree as $key=> $result){
-							$url = $this->url(array('module'=>'loan','controller'=>'repaymentschedule','action'=>'add'), null, true)."/id/".$result['id'];
-							$end_dat=date("Y-m-d");
-							$total_day=strtotime($end_dat)-strtotime($result['end_line']);
-							$totalLateArgday=$total_day/(60*60*24);
-							if($totalLateArgday<0){
-								$totalLateArgday = 0;
+					<?php 
+						$countingAgree = count($rsagree);
+						if ($countingAgree>0){ 
+							$stSupAgree="";
+							if($countingAgree>9){
+								$countingAgree=9;
+								$stSupAgree='<sup>+</sup>';
 							}
 						?>
-					  <li class=" event">
-						 <a href="<?php echo $url;?>">
-							<div class="pull-left profile-list char-profile">
-								<span class="profileChar">
-									<?php echo mb_substr($result['name_kh'], 0, 1,'UTF8');?>
-								</span>
-							</div>
-							<div class="media-body">
-							  <small><?php echo $result['branch_name'];?></small><br />
-							  <span class="title" ><?php echo $result['name_kh'];?> (<?php echo $result['land_address'].' '.$result['street'];?>)</span>
-							  <p style="white-space: nowrap;"><strong><i class="fa fa-phone"></i> <?php echo $result['phone'];?></strong>  </p>
-							  <p><strong>$ <?php echo number_format($result['second_depostit'],2);?></strong> <i class="fa fa-calendar"></i> <?php echo date("d/m/Y",strtotime($result['end_line']));?></p>
-							  <p><small><?php echo $tr->translate("AMOUNT_LATE")." : ".$totalLateArgday."ថ្ងៃ";//@abs($interval->format('%R%a'))."ថ្ងៃ"; ?></small>
-							  </p>
-							</div>
+						<span id="countNews" class="badge bg-green"><?php  echo $countingAgree.$stSupAgree; ?></span>
+					<?php } ?>
+				  </a>
+				  <ul id="menu1" class="dropdown-menu list-unstyled " role="menu">
+					<li class="dropdown-menu-header border-bottom">
+						<div class="dropdown-header d-flex align-items-center justify-content-center">
+						  <h6 class="text-white m-0 me-auto"><i class="fa fa-newspaper-o"></i> <?php echo $tr->translate("MAKE_AGREEMENTLIST");?></h6>
+						</div>
+					</li>
+				   <?php if(!empty($rsagree)){?>
+					<li class="dropdown-notifications-list scrollable-container">
+						<ul class="list-group list-group-flush">
+							<?php 
+							foreach($rsagree as $key=> $result){
+								$url = $this->url(array('module'=>'loan','controller'=>'repaymentschedule','action'=>'add'), null, true)."/id/".$result['id'];
+								$end_dat=date("Y-m-d");
+								$total_day=strtotime($end_dat)-strtotime($result['end_line']);
+								$totalLateArgday=$total_day/(60*60*24);
+								if($totalLateArgday<0){
+									$totalLateArgday = 0;
+								}
+							?>
+						  <li class=" event">
+							 <a href="<?php echo $url;?>">
+								<div class="pull-left profile-list char-profile">
+									<span class="profileChar">
+										<?php echo mb_substr($result['name_kh'], 0, 1,'UTF8');?>
+									</span>
+								</div>
+								<div class="media-body">
+								  <small><?php echo $result['branch_name'];?></small><br />
+								  <span class="title" ><?php echo $result['name_kh'];?> (<?php echo $result['land_address'].' '.$result['street'];?>)</span>
+								  <p style="white-space: nowrap;"><strong><i class="fa fa-phone"></i> <?php echo $result['phone'];?></strong>  </p>
+								  <p><strong>$ <?php echo number_format($result['second_depostit'],2);?></strong> <i class="fa fa-calendar"></i> <?php echo date("d/m/Y",strtotime($result['end_line']));?></p>
+								  <p><small><?php echo $tr->translate("AMOUNT_LATE")." : ".$totalLateArgday."ថ្ងៃ";//@abs($interval->format('%R%a'))."ថ្ងៃ"; ?></small>
+								  </p>
+								</div>
+							</a>
+						  </li>
+						  <?php }?>
+						</ul>
+					</li>
+					<?php }?>
+					
+					<?php if ($countingAgree>1){?>
+					<li class="dropdown-menu-footer border-top">
+						<a href="<?php echo $this->baseUrl()."/report/loan/rpt-validateagreement"?>" class="dropdown-item d-flex justify-content-center text-primary p-2 h-px-30  align-items-center">
+						  <?php echo $tr->translate("SHOW_ALL");?>
 						</a>
-					  </li>
-					  <?php }?>
-					  <?php }?>
+					</li>
+				   <?php }?>
 				  </ul>
 			  </li>
 			  <?php if(!empty($altBoreyFee)){?>
@@ -138,168 +167,267 @@
 				  <a title="<?php echo $tr->translate("CUSTOMER_BOREY_FEE");?>" href="javascript:;"  class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="true">
 					<i class="fa fa-tasks"></i>
 					<span id="countNews" class="badge bg-green"><?php if (count($altBoreyFee)>0){ echo count($altBoreyFee);}?></span>
-				  </a>
-				  <ul id="menu1" class="dropdown-menu list-unstyled " role="menu">
-					  <li class=" event title">
-						<h4><?php echo $tr->translate("CUSTOMER_BOREY_FEE");?></h4>
-					  </li>
-					   
-					  <?php foreach($altBoreyFee as $key=> $result){
-						$end_dat=date("Y-m-d");
-						$total_day=strtotime($end_dat)-strtotime($result['nextDate']);
-						$totalLateDay=$total_day/(60*60*24);
-						$total_payment = $result['unitPrice'];
-						?>
-					  <li class=" event">
-						 <a href="#">
-							<div class="pull-left profile-list char-profile">
-								<span class="profileChar">
-									<?php echo mb_substr($result['clientName'], 0, 1,'UTF8');?>
-								</span>
-							</div>
-							<div class="media-body">
-								<small><?php echo $result['branchName'];?></small><br />
-							  <span class="title" ><?php echo $result['clientName'].' '.$result['landAddress'].','.$result['street'];?></span>
-							  <p style="white-space: nowrap;"><i class="fa fa-phone"></i> <?php echo $result['clientPhone'];?></p>
-							  <p><strong>$<?php echo number_format($total_payment,2);?>. </strong> </p>
-							  <?php if($totalLateDay>0){?>
-							  <p> 
-							  <small><?php echo $tr->translate("AMOUNT_LATE")." : ".$totalLateDay."ថ្ងៃ"; ?></small>
-							  </p>
-							  <?php }?>
-							</div>
+					<?php 
+					$countingBoreyFee = count($altBoreyFee);
+					if ($countingBoreyFee>0){ 
+						$stSupBoreyFee="";
+						if($countingBoreyFee>9){
+							$countingBoreyFee=9;
+							$stSupBoreyFee='<sup>+</sup>';
+						}
+					?>
+					<span id="countNews" class="badge bg-green"><?php  echo $countingBoreyFee.$stSupBoreyFee; ?></span>
+					<?php } ?>
+				 </a>
+				<ul id="menu1" class="dropdown-menu list-unstyled " role="menu">
+					<li class="dropdown-menu-header border-bottom">
+						<div class="dropdown-header d-flex align-items-center justify-content-center">
+						  <h6 class="text-white m-0 me-auto"><i class="fa fa-tasks"></i> <?php echo $tr->translate("CUSTOMER_BOREY_FEE");?></h6>
+						</div>
+					</li>
+					<li class="dropdown-notifications-list scrollable-container">
+						<ul class="list-group list-group-flush">  
+						  <?php foreach($altBoreyFee as $key=> $result){
+							$end_dat=date("Y-m-d");
+							$total_day=strtotime($end_dat)-strtotime($result['nextDate']);
+							$totalLateDay=$total_day/(60*60*24);
+							$total_payment = $result['unitPrice'];
+							?>
+							
+							<li class="event " title="<?php echo $result['clientName'];?>">
+									<small class="title text-muted" ><i class="fa fa-map-marker" ></i> <strong><?php echo $result['branchName'];?></strong></small>
+									<a class="d-flex align-content-center align-items-center" href="<?php echo $url;?>">
+										<div class="pull-left profile-list char-profile">
+											<span class="profileChar">
+											<?php echo mb_substr($result['clientName'], 0, 1,'UTF8');?>
+										</span>
+										</div>
+										<div class="bg-style"></div>
+										<div class="media-body">
+											  <span class="title" ><?php echo $result['clientName'].' '.$result['landAddress'].','.$result['street'];?></span>
+											  <p style="white-space: nowrap;"><i class="fa fa-phone"></i> <?php echo $result['clientPhone'];?></p>
+											  <p><strong>$<?php echo number_format($total_payment,2);?>. </strong> </p>
+											  <?php if($totalLateDay>0){?>
+											  <p> 
+											  <small><?php echo $tr->translate("AMOUNT_LATE")." : ".$totalLateDay."ថ្ងៃ"; ?></small>
+											  </p>
+											  <?php }?>
+										</div>
+									</a>
+								</li>
+						  <?php }?>
+						</ul>
+					</li>
+					
+					<?php if ($countingBoreyFee>1){?>
+					<li class="dropdown-menu-footer border-top">
+						<a href="<?php echo $this->baseUrl()."/report/incomeexpense/rpt-borey-income-late"?>" class="dropdown-item d-flex justify-content-center text-primary p-2 h-px-30  align-items-center">
+						  <?php echo $tr->translate("SHOW_ALL");?>
 						</a>
-					  </li>
-					  <?php }?>
-					  
-					</ul>
+					</li>
+				   <?php }?>
+										   
+				</ul>
 			 </li>
 			 <?php }?>
 			  <li role="presentation" class="dropdown <?php echo $classActionPayment;?>">
 				  <a title="<?php echo $tr->translate("CUSTOMER_PAYMENTLIST");?>" href="javascript:;"  class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="true">
 					<i class="fa fa-money"></i>
-					<span id="countNews" class="badge bg-green"><?php if (count($rs)>0){ echo count($rs);}?></span>
-				  </a>
-				  <ul id="menu1" class="dropdown-menu list-unstyled " role="menu">
-					  <li class=" event title">
-						<h4><?php echo $tr->translate("CUSTOMER_PAYMENTLIST");?></h4>
-					  </li>
-					   <?php if(!empty($rs)){?>
-					  <?php foreach($rs as $key=> $result){
-						$url = $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'add'), null, true)."/id/".$result['sale_id'];
-						$end_dat=date("Y-m-d");
-						$total_day=strtotime($end_dat)-strtotime($result['date_payment']);
-						$amtLatePmtDay=$total_day/(60*60*24);
-						if($amtLatePmtDay<0){
-							$amtLatePmtDay = 0;
+					<?php 
+					$countingPmt = count($rs);
+					if ($countingPmt>0){ 
+						$stSupPmt="";
+						if($countingPmt>9){
+							$countingPmt=9;
+							$stSupPmt='<sup>+</sup>';
 						}
-						$total_payment = $result['principal_permonthafter']+$result['total_interest_after']+$result['service_charge'];
-						?>
-					  <li class=" event">
-						 <a href="<?php echo $url;?>">
-							<div class="pull-left profile-list char-profile">
-								<span class="profileChar">
-									<?php echo mb_substr($result['client_name'], 0, 1,'UTF8');?>
-								</span>
-							</div>
-							<div class="media-body">
-								<small><?php echo $result['branch_name'];?></small><br />
-							  <span class="title" ><?php echo $result['client_name'].' '.$result['land_address'].','.$result['street'];?></span>
-							  <p style="white-space: nowrap;"><i class="fa fa-phone"></i> <?php echo $result['phone'];?></p>
-							  <p><strong>$<?php echo number_format($total_payment,2);?>. </strong> <?php echo $tr->translate("AMOUNT_COLLECT")." : ".$result['no_installment'];?> </p>
-							  <p> <small><?php echo $tr->translate("AMOUNT_LATE")." : ".$amtLatePmtDay."ថ្ងៃ";//@abs($interval->format('%R%a'))."ថ្ងៃ"; ?> <?php echo " / ".$result['amount_late']." លើក ";?></small>
-							  </p>
-							</div>
+					?>
+					<span id="countNews" class="badge bg-green"><?php  echo $countingPmt.$stSupPmt; ?></span>
+					<?php } ?>			
+				  </a>
+				  
+				  
+				  <ul id="menu1" class="dropdown-menu list-unstyled " role="menu">
+					<li class="dropdown-menu-header border-bottom">
+						<div class="dropdown-header d-flex align-items-center justify-content-center">
+						  <h6 class="text-white m-0 me-auto"><i class="fa fa-money"></i> <?php echo $tr->translate("CUSTOMER_PAYMENTLIST");?></h6>
+						</div>
+					</li>
+					
+				   <?php if(!empty($rs)){?>
+					<li class="dropdown-notifications-list scrollable-container">
+						<ul class="list-group list-group-flush">
+							  <?php foreach($rs as $key=> $result){
+								$url = $this->url(array('module'=>'loan','controller'=>'ilpayment','action'=>'add'), null, true)."/id/".$result['sale_id'];
+								$end_dat=date("Y-m-d");
+								$total_day=strtotime($end_dat)-strtotime($result['date_payment']);
+								$amtLatePmtDay=$total_day/(60*60*24);
+								if($amtLatePmtDay<0){
+									$amtLatePmtDay = 0;
+								}
+								$total_payment = $result['principal_permonthafter']+$result['total_interest_after']+$result['service_charge'];
+								?>
+							  <li class=" event">
+								<small class="title text-muted" ><i class="fa fa-map-marker" ></i> <strong><?php echo $result['branch_name'];?></strong></small>
+								<a class="d-flex align-content-center align-items-center" href="<?php echo $url;?>">
+									<div class="pull-left profile-list char-profile">
+										<span class="profileChar">
+											<?php echo mb_substr($result['client_name'], 0, 1,'UTF8');?>
+										</span>
+									</div>
+									<div class="bg-style"></div>
+									<div class="media-body">
+										<span class="title" ><?php echo $result['client_name'].' '.$result['land_address'].','.$result['street'];?></span>
+										  <p style="white-space: nowrap;"><i class="fa fa-phone"></i> <?php echo $result['phone'];?></p>
+										  <p><strong>$<?php echo number_format($total_payment,2);?>. </strong> <?php echo $tr->translate("AMOUNT_COLLECT")." : ".$result['no_installment'];?> </p>
+										  <p> <small><?php echo $tr->translate("AMOUNT_LATE")." : ".$amtLatePmtDay."ថ្ងៃ";//@abs($interval->format('%R%a'))."ថ្ងៃ"; ?> <?php echo " / ".$result['amount_late']." លើក ";?></small>
+										  </p>
+									</div>
+								</a>
+							  </li>
+							  <?php }?>
+						</ul>
+					</li>
+					<?php }?>
+					<?php if ($countingPmt>1){?>
+					<li class="dropdown-menu-footer border-top">
+						<a href="<?php echo $this->baseUrl()."/report/loan/rpt-loancollect"?>" class="dropdown-item d-flex justify-content-center text-primary p-2 h-px-30  align-items-center">
+						  <?php echo $tr->translate("SHOW_ALL");?>
 						</a>
-					  </li>
-					  <?php }?>
-					  <?php }?>
-					</ul>
+					</li>
+				   <?php }?>
+				</ul>
 			 </li>
 			 <li role="presentation" class="dropdown <?php echo $classActionPlongissueCheck;?>">
 				  <a title="<?php echo $tr->translate("ISSUE_PLONGNOTYET_RECEIPT");?>" href="javascript:;"  class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="true">
 					<i class="fa fa-newspaper-o"></i>
-					<span id="countNews" class="badge bg-green"><?php if (count($rsplong)>0){ echo count($rsplong);}?></span>
-				  </a>
-				  <ul id="menu1" class="dropdown-menu list-unstyled " role="menu">
-					 <li class=" event title">
-						<h4><?php echo $tr->translate("ISSUE_PLONGNOTYET_RECEIPT");?></h4>
-					  </li>
-					   <?php if(!empty($rsplong)){?>
-					<?php foreach($rsplong as $key=> $result){
-						$url = $this->url(array('module'=>'issue','controller'=>'receivplong','action'=>'add'), null, true)."/id/".$result['id'];
-						$end_dat=date("Y-m-d");
-						$total_day=strtotime($end_dat)-strtotime($result['issue_date']);
-						$amtLateDay=$total_day/(60*60*24);
-						if($amtLateDay<0){
-							$amtLateDay = 0;
+					<?php 
+					$countingPlong = count($rsplong);
+					if ($countingPlong>0){ 
+						$stSupPlong="";
+						if($countingPlong>9){
+							$countingPlong=9;
+							$stSupPlong='<sup>+</sup>';
 						}
-						?>
-					  <li class=" event">
-						 <a href="<?php echo $url;?>">
-							<div class="pull-left profile-list char-profile">
-								<span class="profileChar">
-									<?php echo mb_substr($result['name_kh'], 0, 1,'UTF8');?>
-								</span>
-							</div>
-							<div class="media-body">
-								<small><?php echo $result['branch_name'];?></small><br />
-							  <span class="title" ><?php echo $result['name_kh'];?> (<?php echo $result['land_address'].' '.$result['street'];?>)</span>
-							  <p><strong><i class="fa fa-phone"></i> <?php echo $result['phone'];?> </strong>  </p>
-							  <p><i class="fa fa-calendar"></i> <?php echo date("d/m/Y",strtotime($result['issue_date'])); echo ' <small>('.$amtLateDay."ថ្ងៃ )</small>";?></p>
-							  </p>
-							</div>
-						</a>
-					  </li>
-					  <?php }?>
+					?>
+					<span id="countNews" class="badge bg-green"><?php  echo $countingPlong.$stSupPlong; ?></span>
+					<?php } ?>	
+				 </a>
+				  <ul id="menu1" class="dropdown-menu list-unstyled " role="menu">
+					<li class="dropdown-menu-header border-bottom">
+						<div class="dropdown-header d-flex align-items-center justify-content-center">
+						  <h6 class="text-white m-0 me-auto"><i class="fa fa-newspaper-o"></i> <?php echo $tr->translate("ISSUE_PLONGNOTYET_RECEIPT");?></h6>
+						</div>
+					</li>
+				   <?php if(!empty($rsplong)){?>
+				   <li class="dropdown-notifications-list scrollable-container">
+						<ul class="list-group list-group-flush">
+							<?php foreach($rsplong as $key=> $result){
+								$url = $this->url(array('module'=>'issue','controller'=>'receivplong','action'=>'add'), null, true)."/id/".$result['id'];
+								$end_dat=date("Y-m-d");
+								$total_day=strtotime($end_dat)-strtotime($result['issue_date']);
+								$amtLateDay=$total_day/(60*60*24);
+								if($amtLateDay<0){
+									$amtLateDay = 0;
+								}
+								?>
+								<li class="event " title="<?php echo $result['name_kh'];?>">
+									<small class="title text-muted" ><i class="fa fa-map-marker" ></i> <strong><?php echo $result['branch_name'];?></strong></small>
+									<a class="d-flex align-content-center align-items-center" href="<?php echo $url;?>">
+										<div class="pull-left profile-list char-profile">
+											<span class="profileChar">
+												<?php echo mb_substr($result['name_kh'], 0, 1,'UTF8');?>
+											</span>
+										</div>
+										<div class="bg-style"></div>
+										<div class="media-body">
+											  <span class="title" ><?php echo $result['name_kh'];?> (<?php echo $result['land_address'].' '.$result['street'];?>)</span>
+											  <p><strong><i class="fa fa-phone"></i> <?php echo $result['phone'];?> </strong>  </p>
+											  <p><i class="fa fa-calendar"></i> <?php echo date("d/m/Y",strtotime($result['issue_date'])); echo ' <small>('.$amtLateDay."ថ្ងៃ )</small>";?></p>
+										</div>
+									</a>
+								</li>
+							  <?php }?>
+						   </ul>
+						</li>
 					   <?php }?>
+					<?php if ($countingPlong>1){?>
+					<li class="dropdown-menu-footer border-top">
+						<a href="<?php echo $this->baseUrl()."/report/plongandhouse/rpt-receiveplong"?>" class="dropdown-item d-flex justify-content-center text-primary p-2 h-px-30  align-items-center">
+						  <?php echo $tr->translate("SHOW_ALL");?>
+						</a>
+					</li>
+				   <?php }?>
 				  </ul>
 			  </li>
 			  
 			  <li role="presentation" class="dropdown <?php echo $styleNotif;?>">
 				  <a title="<?php echo $tr->translate("CUSTOMER_FOR_FOLLOW_UP");?>" href="javascript:;"  class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="true">
 					<i class="fa fa-tty"></i>
-					<span id="countNews" class="badge bg-green"><?php if (count($rsCusRequire)>0){ echo count($rsCusRequire);}?></span>
+					<?php 
+					$countingCusRequire = count($rsCusRequire);
+					if ($countingCusRequire>0){ 
+						$stSupCrm="";
+						if($countingCusRequire>9){
+							$countingCusRequire=9;
+							$stSupCrm='<sup>+</sup>';
+						}
+					?>
+					<span id="countNews" class="badge bg-green"><?php  echo $countingCusRequire.$stSupCrm; ?></span>
+					<?php } ?>	
 				  </a>
 				  <ul id="menu1" class="dropdown-menu list-unstyled " role="menu">
-					 <li class=" event title">
-						<h4><i class="fa fa-phone"></i> <?php echo $tr->translate("CUTOMER_REQURED_FOR_CONTACT");?></h4>
-					  </li>
-					   <?php if(!empty($rsCusRequire)){?>
-					<?php foreach($rsCusRequire as $key=> $result){
-						$end_dat=date("Y-m-d");
-						$total_day=strtotime($end_dat)-strtotime($result['next_contact']);
-						$amtLateContactDay=$total_day/(60*60*24);
-						if($amtLateContactDay<0){
-							$amtLateContactDay=0;
-						}
-						?>
-						
-						 <li class=" event">
-						 <a href="<?php echo $this->baseUrl()."/group/customer/contact/id/".$result['customer_id'];?>">
-							<div class="pull-left profile-list char-profile">
-								<span class="profileChar">
-									<?php echo mb_substr($result['name'], 0, 1,'UTF8');?>
-								</span>
+						<li class="dropdown-menu-header border-bottom">
+							<div class="dropdown-header d-flex align-items-center justify-content-center">
+							  <h6 class="text-white m-0 me-auto"><i class="fa fa-phone"></i> <?php echo $tr->translate("CUTOMER_REQURED_FOR_CONTACT");?></h6>
 							</div>
-							<div class="media-body">
-								
-							  <span class="title" ><?php echo $result['name'];?></span>
-							  <p style="white-space: nowrap;"><i class="fa fa-phone"></i> <?php echo $result['phone'];?></p>
-							  <?php if($result["isConnectedSale"]==1){?>
-							  <small><i class="fa fa-map-marker" aria-hidden="true"></i> <?php echo $result['projectName'];?></small><br />
-							  <p style="white-space: nowrap;"><i class="fa fa-map-o"></i> <?php echo $result['landAddress'];?></p>
-							  
-							  <?php }else{ ?>
-							  
-							  <p><strong>$<?php echo $result['from_price'];?>. </strong> <?php echo $tr->translate("TO");?> <strong>$<?php echo $result['to_price'];?></strong>  </p>
-							  <?php } ?>
-							  <p><i class="fa fa-calendar"></i> <?php echo date("d/m/Y",strtotime($result['next_contact'])); echo ' <small>('.$amtLateContactDay."ថ្ងៃ )</small>";?></p>
-							</div>
-						</a>
-					  </li>
-					  <?php }?>
+						</li>
+				   <?php if(!empty($rsCusRequire)){?>
+						<li class="dropdown-notifications-list scrollable-container">
+							<ul class="list-group list-group-flush">
+								<?php foreach($rsCusRequire as $key=> $result){
+									$end_dat=date("Y-m-d");
+									$total_day=strtotime($end_dat)-strtotime($result['next_contact']);
+									$amtLateContactDay=$total_day/(60*60*24);
+									if($amtLateContactDay<0){
+										$amtLateContactDay=0;
+									}
+									?>
+									<li class="event " title="<?php echo $result['name'];?>">
+										<a class="d-flex align-content-center align-items-center" href="<?php echo $this->baseUrl()."/group/customer/contact/id/".$result['customer_id'];?>">
+											<div class="pull-left profile-list char-profile">
+												<span class="profileChar">
+													<?php echo mb_substr($result['name'], 0, 1,'UTF8');?>
+												</span>
+											</div>
+											<div class="bg-style"></div>
+											<div class="media-body">
+												<span class="title" ><?php echo $result['name'];?></span>
+												  <p style="white-space: nowrap;"><i class="fa fa-phone"></i> <?php echo $result['phone'];?></p>
+												  <?php if($result["isConnectedSale"]==1){?>
+												  <small><i class="fa fa-map-marker" aria-hidden="true"></i> <?php echo $result['projectName'];?></small><br />
+												  <p style="white-space: nowrap;"><i class="fa fa-map-o"></i> <?php echo $result['landAddress'];?></p>
+												  
+												  <?php }else{ ?>
+												  
+												  <p><strong>$<?php echo $result['from_price'];?>. </strong> <?php echo $tr->translate("TO");?> <strong>$<?php echo $result['to_price'];?></strong>  </p>
+												  <?php } ?>
+												  <p><i class="fa fa-calendar"></i> <?php echo date("d/m/Y",strtotime($result['next_contact'])); echo ' <small>('.$amtLateContactDay."ថ្ងៃ )</small>";?></p>
+											</div>
+										</a>
+									</li>
+								<?php }?>
+								</ul>
+							</li>
 					   <?php }?>
+					   
+					   <?php if ($countingCusRequire>=1){?>
+							<li class="dropdown-menu-footer border-top">
+								<a href="<?php echo $this->baseUrl()."/report/paramater/rpt-contact-list"?>" class="dropdown-item d-flex justify-content-center text-primary p-2 h-px-30  align-items-center">
+								  <?php echo $tr->translate("SHOW_ALL");?>
+								</a>
+							</li>
+						   <?php }?>
 				  </ul>
 			  </li>
 			  
