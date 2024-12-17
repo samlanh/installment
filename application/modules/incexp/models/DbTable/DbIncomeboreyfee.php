@@ -32,9 +32,11 @@ class Incexp_Model_DbTable_DbIncomeboreyfee extends Zend_Db_Table_Abstract
 				'user_id'		=>$this->getUserId(),
 				'create_date'	=>date('Y-m-d'),
 					
-				'qty'=>$data['qty'],
-				'unit_price'=>$data['unit_price'],
-				'amount'=>$data['total_amount'],
+				'qty'			=>$data['qty'],
+				'unit_price'	=>$data['unit_price'],
+				'amount'		=>$data['amount'],
+				'disAmount'		=>$data['disAmount'],
+				'disPercent'		=>$data['disPercent'],
 				'from_date'=>$data['from_date'],
 				'next_date'=>$data['end_date'],
 			);
@@ -68,7 +70,9 @@ class Incexp_Model_DbTable_DbIncomeboreyfee extends Zend_Db_Table_Abstract
 					
 				'qty'			=>$data['qty'],
 				'unit_price'	=>$data['unit_price'],
-				'amount'		=>$data['total_amount'],
+				'amount'		=>$data['amount'],
+				'disAmount'		=>$data['disAmount'],
+				'disPercent'		=>$data['disPercent'],
 				'from_date'		=>$data['from_date'],
 				'next_date'		=>$data['end_date'],
 			);

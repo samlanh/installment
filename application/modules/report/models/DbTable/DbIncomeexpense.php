@@ -1258,6 +1258,9 @@ class Report_Model_DbTable_DbIncomeexpense extends Zend_Db_Table_Abstract
 		status,
 		qty,unit_price,
 		amount,
+		disAmount,
+		disPercent,
+		incomeType,
 		DATE_FORMAT(from_date,'%d/%m/%Y') AS from_date,
 		DATE_FORMAT(next_date,'%d/%m/%Y') next_date
 		FROM ln_income

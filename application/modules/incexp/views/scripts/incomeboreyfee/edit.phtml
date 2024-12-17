@@ -164,6 +164,20 @@ $frm = $this->frm_expense;
 									   </div>
 									</div>
 									<div class="form-group">
+									   <label class="control-label  col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("Discount");?>
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<div class="row" style=" margin: 0; ">
+												<div class="col-md-6 col-sm-6 col-xs-12">
+													<?php echo $frm->getElement('disAmount');?>
+												</div>
+												<div class="col-md-6 col-sm-6 col-xs-12">
+													<?php echo $frm->getElement('disPercent');?>
+												</div>
+											</div>
+									   </div>
+									</div>
+									<div class="form-group">
 									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("TOTAL_INCOME");?> :
 									   </label>
 									   <div class="col-md-7 col-sm-7 col-xs-12">
@@ -266,7 +280,7 @@ var parent_id_store  = getDataStorefromJSON('id','name', <?php print_r(Zend_Json
 
 dojo.ready(function(){
 	dijit.byId('income_category').attr('value',<?php echo $this->row['category_id'];?>); 
-
+	dijit.byId("amount").set("readOnly",true);
 	new dijit.form.FilteringSelect({
 		store: sale_client_store,
 		autoComplete: false,
@@ -390,6 +404,10 @@ function getPaymentcollection(){
 				if(sale_id != oldSale){
 					dijit.byId("unit_price").attr("value",data.serviceFee);
 					dijit.byId("from_date").attr("value",data.nextDate);
+					dijit.byId("qty").attr("value",data.qty);
+					dijit.byId("disAmount").attr("value",data.disAmount);
+					dijit.byId("disPercent").attr("value",data.disPercent);
+				
 					dijit.byId("income_category").attr("value",data.categoryId);
 					CalculateAmount();
 				}
@@ -511,11 +529,40 @@ function printSave(new_invoice_no){
 
 	$('.lblpaymentdetail').css('visibility', 'hidden');
 	if(dijit.byId("total_amount").get('value')!='' || dijit.byId("total_amount").get('value')>0){
+		
+		
 		$('.lblpaymentdetail').css('visibility', 'visible');
 		dojo.byId("lbl_qty").innerHTML = dijit.byId("qty").get('value')+' Month(s)';
 		dojo.byId("lbl_price").innerHTML = '$ '+dojo.number.format(dijit.byId("unit_price").get('value'),{places:2});
 		dojo.byId("lbl_amount").innerHTML = '$ '+dojo.number.format(dijit.byId("total_amount").get('value'),{places:2});
 		dojo.byId("lbl_validate").innerHTML = dijit.byId("from_date").attr('displayedValue')+' ដល់ '+dijit.byId("end_date").attr('displayedValue');
+		var thisAmount = dijit.byId("amount").get('value');
+		var thisTotalAmount = dijit.byId("total_amount").get('value');
+		if(thisTotalAmount<thisAmount){
+			var thisDisAmount = dijit.byId("disAmount").get('value');
+			if(isNaN(thisDisAmount)){
+				thisDisAmount=0;
+			}
+			var thisDisPercent = dijit.byId("disPercent").get('value');
+			if(isNaN(thisDisPercent)){
+				thisDisPercent=0;
+			}
+			var thisDisAmountLable = "";
+			if(thisDisAmount>0){
+				thisDisAmountLable = "$ "+thisDisAmount;
+			}
+			var thisDisPercentLable = "";
+			if(thisDisPercent>0){
+				if(thisDisAmount>0){
+					thisDisPercentLable+=" និង ";
+				}
+				thisDisPercent = dojo.number.format(dijit.byId("disPercent").get('value'),{places:2});
+				thisDisPercent = thisDisPercent.replace(".00", "")
+				thisDisPercentLable+= thisDisPercent+' %';
+			}
+			dojo.byId("lblDisCondiction").innerHTML = 'សរុប $ '+thisAmount+' ដោយមានការបញ្ចុះតម្លៃ  '+thisDisAmountLable+thisDisPercentLable;
+		}
+	
 	}
 	
 	dijit.byId("print_income").show();
@@ -629,6 +676,26 @@ function CalculateAmount(){
 	var y = a.getFullYear();
 	var epx_date = y+'-'+ mm + '-'+dd ;
 	dijit.byId('end_date').attr('value',epx_date);
+	calculateDiscount();
+}
+
+function calculateDiscount(){
+	totalAmt = dijit.byId('amount').get('value');
+	discount = dijit.byId('disAmount').get('value');
+	discountPercent = dijit.byId('disPercent').get('value');
+
+	if(isNaN(discount)){
+		discount=0;
+	}
+	if(isNaN(discountPercent)){
+		discountPercent=0;
+	}
+
+	totalAmt = totalAmt-discount;
+	discountPercent = parseFloat(totalAmt*discountPercent/100);
+	
+	totalAmt = (totalAmt-discountPercent).toFixed(2);
+	dijit.byId('total_amount').attr('value',totalAmt);
 }
 </script>
 

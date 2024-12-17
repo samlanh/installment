@@ -290,6 +290,29 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
 				);
 		$expenseType->setMultiOptions($options);
 		
+		$disAmount = new Zend_Dojo_Form_Element_NumberTextBox('disAmount');
+		$disAmount->setAttribs(array(
+			'dojoType'=>'dijit.form.NumberTextBox',
+			'onKeyup'=>'calculateDiscount();',
+			'class'=>'fullside50 fullside',
+			'placeHolder'=>'ជាតម្លៃ',
+			'invalidMessage'=>'អាចបញ្ជូលពី 1 ដល់ 99'		
+		));
+		$disAmount->setValue(0);
+		
+		$disPercent = new Zend_Dojo_Form_Element_NumberTextBox('disPercent');
+		$disPercent->setAttribs(array(
+			'data-dojo-Type'=>'dijit.form.NumberTextBox',
+			'data-dojo-props'=>"constraints:{min:0,max:100},
+			'name':'disPercent',
+			'id':'disPercent',
+			'onKeyup':'calculateDiscount();',
+			'class':'fullside fullside50',
+			'placeHolder':'ភាគរយ%',
+			'invalidMessage':'អាចបញ្ជូលពី 1 ដល់ 99'"
+		));
+		$disPercent->setValue(0);
+		
 		if($data!=null){
 			
 			$start_Date->setValue($data['category_id']);
@@ -340,6 +363,12 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
 			$data['expenseType'] = empty($data['expenseType']) ? "1" : $data['expenseType'];
 			$expenseType->setValue($data['expenseType']);
 			
+			$data['disAmount'] = empty($data['disAmount']) ? "0" : $data['disAmount'];
+			$disAmount->setValue($data['disAmount']);
+			
+			$data['disPercent'] = empty($data['disPercent']) ? "0" : $data['disPercent'];
+			$disPercent->setValue($data['disPercent']);
+			
 		}
 		$this->addElements(array($amount,$qty,$price,$start_Date,$end_Date,$_status,$payment_type,$_cheque,$invoice,$_currency_type,$title,$_Date ,$_stutas,$_Description,
 				$category_id_expense,
@@ -347,6 +376,8 @@ Class Incexp_Form_Frmexpense extends Zend_Dojo_Form {
 				$_items_id
 				,$_bankId
 				,$expenseType
+				,$disAmount
+				,$disPercent
 				
 				));
 		return $this;

@@ -113,12 +113,18 @@ function printSave(){
 	
 	dojo.byId("lb_total_amount").innerHTML = '<?php echo "$ ".number_format($this->rs['total_amount'],2);?>';
 
-	$('.lblpaymentdetail').css('visibility', 'hidden');
-	<?php if(!empty($rs['unit_price'])){?>
-		$('.lblpaymentdetail').css('visibility', 'visible');
+	$('.lblpaymentdetail').css('display', 'none');
+	<?php if($rs['incomeType']!=1){?>
+		$('.lblpaymentdetail').css('display', 'table-row');
 		dojo.byId("lbl_qty").innerHTML = '<?php echo $rs['qty'];?>'+' Month(s)';
 		dojo.byId("lbl_price").innerHTML = '$ '+'<?php echo $rs['unit_price'];?>';
-		dojo.byId("lbl_amount").innerHTML = '$ '+'<?php echo $rs['amount'];?>';
+		<?php if($rs['total_amount'] < $rs['amount']){?>
+		var thisDisAmountLable = "<?php echo ($rs['disAmount']>0) ? "$ ".$rs['disAmount'] : "";?>";
+		<?php $connection = ($rs['disAmount']>0) ?  " និង " : "";?>
+		var thisDisPercentLable = "<?php echo ($rs['disPercent']>0) ? " ".$connection." ".str_replace('.00','',number_format($rs['disPercent'],2))." %" : "";?>"  ;
+		dojo.byId("lblDisCondiction").innerHTML = 'សរុប $ <?php echo $rs['amount'];?> ដោយមានការបញ្ចុះតម្លៃ  '+thisDisAmountLable+thisDisPercentLable;
+		<?php }?>
+		dojo.byId("lbl_amount").innerHTML = '$ '+'<?php echo $rs['total_amount'];?>';
 		dojo.byId("lbl_validate").innerHTML = '<?php echo $rs['from_date'];?>'+' ដល់ '+'<?php echo $rs['next_date'];?>';
 	<?php 
 		}

@@ -103,6 +103,7 @@
 											<?php echo $frm->getElement('amount');?>
 									   </div>
 									</div>
+									
 									<div class="form-group">
 									   <label class="control-label col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("START_DATE");?> :
 									   </label>
@@ -156,6 +157,20 @@
 									   </label>
 									   <div class="col-md-7 col-sm-7 col-xs-12">
 											<?php echo $frm->getElement('title');?>
+									   </div>
+									</div>
+									<div class="form-group">
+									   <label class="control-label  col-md-5 col-sm-5 col-xs-12" ><?php echo $tr->translate("Discount");?>
+									   </label>
+									   <div class="col-md-7 col-sm-7 col-xs-12">
+											<div class="row" style=" margin: 0; ">
+												<div class="col-md-6 col-sm-6 col-xs-12">
+													<?php echo $frm->getElement('disAmount');?>
+												</div>
+												<div class="col-md-6 col-sm-6 col-xs-12">
+													<?php echo $frm->getElement('disPercent');?>
+												</div>
+											</div>
 									   </div>
 									</div>
 									<div class="form-group">
@@ -265,6 +280,7 @@ dojo.ready(function(){
 	}, "parent_id");
 	getParentbytype();
 	dijit.byId("qty").attr("value","1");
+	dijit.byId("amount").set("readOnly",true);
 });
 function CalculateAmount(){
 	qty = dijit.byId('qty').get('value');
@@ -289,6 +305,7 @@ function CalculateAmount(){
 	var y = a.getFullYear();
 	var epx_date = y+'-'+ mm + '-'+dd ;
 	dijit.byId('end_date').attr('value',epx_date);
+	calculateDiscount();
 }
 function enablePayment(){
 	dijit.byId("total_amount").attr("value",0);
@@ -352,7 +369,7 @@ new dijit.form.FilteringSelect({
 	    if(fa_job==-1){
 	   	 dijit.byId("popup_category").show();
 	    }
-		getPaymentcollection();
+		//getPaymentcollection();
     } 
 }, "income_category");
 
@@ -436,9 +453,13 @@ function getPaymentcollection(){
 			if(data){
 				dijit.byId("unit_price").attr("value",data.serviceFee);
 				dijit.byId("from_date").attr("value",data.nextDate);
+				dijit.byId("qty").attr("value",data.qty);
+				dijit.byId("disAmount").attr("value",data.disAmount);
+				dijit.byId("disPercent").attr("value",data.disPercent);
 				if(data.categoryId!=null){
 					dijit.byId("income_category").attr("value",data.categoryId);
 				}
+				CalculateAmount();
 			}
 		},
 		error: function(err) {
@@ -521,6 +542,33 @@ function printSave(new_invoice_no){
 		dojo.byId("lbl_price").innerHTML = '$ '+dojo.number.format(dijit.byId("unit_price").get('value'),{places:2});
 		dojo.byId("lbl_amount").innerHTML = '$ '+dojo.number.format(dijit.byId("total_amount").get('value'),{places:2});
 		dojo.byId("lbl_validate").innerHTML = dijit.byId("from_date").attr('displayedValue')+' ដល់ '+dijit.byId("end_date").attr('displayedValue');
+		
+		var thisAmount = dijit.byId("amount").get('value');
+		var thisTotalAmount = dijit.byId("total_amount").get('value');
+		if(thisTotalAmount<thisAmount){
+			var thisDisAmount = dijit.byId("disAmount").get('value');
+			if(isNaN(thisDisAmount)){
+				thisDisAmount=0;
+			}
+			var thisDisPercent = dijit.byId("disPercent").get('value');
+			if(isNaN(thisDisPercent)){
+				thisDisPercent=0;
+			}
+			var thisDisAmountLable = "";
+			if(thisDisAmount>0){
+				thisDisAmountLable = "$ "+thisDisAmount;
+			}
+			var thisDisPercentLable = "";
+			if(thisDisPercent>0){
+				if(thisDisAmount>0){
+					thisDisPercentLable+=" និង ";
+				}
+				thisDisPercent = dojo.number.format(dijit.byId("disPercent").get('value'),{places:2});
+				thisDisPercent = thisDisPercent.replace(".00", "")
+				thisDisPercentLable+= thisDisPercent+' %';
+			}
+			dojo.byId("lblDisCondiction").innerHTML = 'សរុប $ '+thisAmount+' ដោយមានការបញ្ចុះតម្លៃ  '+thisDisAmountLable+thisDisPercentLable;
+		}
 	}
 	dijit.byId("print_income").show();
 }
@@ -664,5 +712,24 @@ function returnMOnth(monthnum){
 	month[11] = "Nov";
 	month[12] = "Dec";
 	return month[monthnum];
+}
+
+function calculateDiscount(){
+	totalAmt = dijit.byId('amount').get('value');
+	discount = dijit.byId('disAmount').get('value');
+	discountPercent = dijit.byId('disPercent').get('value');
+
+	if(isNaN(discount)){
+		discount=0;
+	}
+	if(isNaN(discountPercent)){
+		discountPercent=0;
+	}
+
+	totalAmt = totalAmt-discount;
+	discountPercent = parseFloat(totalAmt*discountPercent/100);
+	
+	totalAmt = (totalAmt-discountPercent).toFixed(2);
+	dijit.byId('total_amount').attr('value',totalAmt);
 }
 </script>
