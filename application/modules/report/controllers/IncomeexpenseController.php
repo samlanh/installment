@@ -791,9 +791,6 @@ class Report_IncomeexpenseController extends Zend_Controller_Action {
   	$this->view->search=$search;
   	$db  = new Report_Model_DbTable_DbIncomeexpense();
   	$this->view->row = $db->getCustomerNearlyPaymentBoreyFee($search);
-  
-  	$db  = new Report_Model_DbTable_DbLandreport();
-  	$this->view->houserepair =$db->getAllIncomeOtherPayment($search,12);
   	 
   	$frm = new Loan_Form_FrmSearchLoan();
   	$frm = $frm->AdvanceSearch();

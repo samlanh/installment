@@ -58,7 +58,7 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
     	$order=" GROUP BY pd.sale_id,pd.ispay_bank ORDER BY  pd.date_payment ASC ";
     	return $db->fetchAll($sql.$where.$order);
     }
-    function getCustomerNearlyPayment($data=array()){
+    function getCustomerNearlyPayment($search=array()){
     	$db=$this->getAdapter();
     	$search['start_date'] = "";
     	$search['end_date']= date('Y-m-d');
@@ -87,13 +87,13 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
     	
     	$order=" GROUP BY pd.sale_id ORDER BY pd.date_payment DESC ,pd.sale_id ASC, pd.id ASC";
 		$limit="";
-		if(!empty($data["limitRecord"])){
-			$limitRecord = empty($data["limitRecord"]) ? 10 : $data["limitRecord"];
+		if(!empty($search["limitRecord"])){
+			$limitRecord = empty($search["limitRecord"]) ? 10 : $search["limitRecord"];
 			$limit=" LIMIT ".$limitRecord;
 		}
     	return $db->fetchAll($sql.$where.$order.$limit);
     }
-    function getCustomerNearAgreement($data=array()){
+    function getCustomerNearAgreement($search=array()){
     	$db=$this->getAdapter();
     	$dbgb = new Setting_Model_DbTable_DbGeneral();
     	$alert = $dbgb->geLabelByKeyName('agree_day_alert');
@@ -129,8 +129,8 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
     	
     	$order=" ORDER BY end_line ASC";
 		$limit="";
-		if(!empty($data["limitRecord"])){
-			$limitRecord = empty($data["limitRecord"]) ? 10 : $data["limitRecord"];
+		if(!empty($search["limitRecord"])){
+			$limitRecord = empty($search["limitRecord"]) ? 10 : $search["limitRecord"];
 			$limit=" LIMIT ".$limitRecord;
 		}
     	return $db->fetchAll($sql.$where.$order.$limit);
@@ -254,7 +254,7 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
     	return $db->fetchAll($sql.$where.$order);
     }
 	
-	function getCustomerNearlyPaymentBoreyFee($data=array()){
+	function getCustomerNearlyPaymentBoreyFee($search=array()){
     	$db=$this->getAdapter();
     	$search['start_date'] = "";
     	$search['end_date']= date('Y-m-d');
@@ -299,8 +299,8 @@ class Report_Model_DbTable_DbloanCollect extends Zend_Db_Table_Abstract
     	$order=" ORDER BY inc.next_date DESC ,inc.sale_id ASC, inc.id ASC";
 		
 		$limit="";
-		if(!empty($data["limitRecord"])){
-			$limitRecord = empty($data["limitRecord"]) ? 10 : $data["limitRecord"];
+		if(!empty($search["limitRecord"])){
+			$limitRecord = empty($search["limitRecord"]) ? 10 : $search["limitRecord"];
 			$limit=" LIMIT ".$limitRecord;
 		}
     	return $db->fetchAll($sql.$order.$limit);

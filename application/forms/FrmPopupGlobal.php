@@ -3501,9 +3501,20 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					font-size: 11px;
 					margin-top: -5px;
 				}
-				ul.paymentlist{width:100%; }
-				ul.paymentlist li{ float:left;list-type:none; list-style-type:none;padding-right:10px;
-	 			font: 16px '."'Times New Roman'".','."'Khmer OS Battambang'".';}
+				ul.paymentlist{
+						width:100%;     
+						padding: 0;
+					padding-left: 10px;
+				}
+				ul.paymentlist li{ 
+					display: block; list-style : none; list-style-type:none;padding-right:10px;
+					font: 14px '."'Times New Roman'".','."'Khmer OS Battambang'".';
+				    line-height: 18px;
+				}
+				ul.paymentlist li span{
+					font-size:14px;
+					line-height: 20px;
+				}
 	 			ul.paymentlist li paymentlist{ padding:5px 10px;}
 	 			.conditionpayment{font: 16px '."'Times New Roman'".','."'Khmer OS Battambang'".';}
 			</style>
@@ -3584,7 +3595,12 @@ class Application_Form_FrmPopupGlobal extends Zend_Dojo_Form
 					<td colspan="4" style="border-bottom:1px dotted #000;"></td>
 				</tr>
 				<tr class="lblpaymentdetail">
-					<td colspan="4"><ul class="paymentlist"><li>រយៈពេលបង់ <label id="lbl_qty"></label></li> <li>តម្លៃ <label id="lbl_price"></label></li>​<li ><strong style="font-weight:bold;">ទឹកប្រាក់ត្រូវបង់សរុប <label id="lbl_amount"><label></strong></li> <li>សុពលភាពបង់ <label id="lbl_validate"></label></li></ul></td>
+					<td colspan="4">
+						<ul class="paymentlist">
+							<li>រយៈពេលបង់ <span id="lbl_qty"></span> តម្លៃ <span id="lbl_price"></span> <span id="lblDisCondiction"><span></li> 
+							<li >ទឹកប្រាក់ត្រូវបង់សរុប <strong id="lbl_amount"></strong> សុពលភាពបង់ <span id="lbl_validate"></span> ។</li> 
+						</ul>
+					</td>
 				</tr>
 				<tr style="white-space: nowrap;">
 				    <td colspan="2" class="khmerbold" style="line-height: 14px;"  align="center" >&nbsp;&nbsp;<span style=" font-family: Arial Black;font-family:'."'Times New Roman'".','."'Khmer OS Muol Light'".';">'.$data['customer_sign'].'</span></td>

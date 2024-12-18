@@ -2089,6 +2089,9 @@ class Application_Model_DbTable_DbGlobal extends Zend_Db_Table_Abstract
 					ELSE (SELECT i.next_date FROM `ln_income` i WHERE  i.sale_id=s.id AND incomeType = $incomeType ORDER BY i.next_date DESC LIMIT 1)
 				END AS `nextDate` 
 				,(SELECT i.category_id FROM `ln_income` i WHERE  i.sale_id=s.id AND incomeType = $incomeType LIMIT 1) AS categoryId
+				,COALESCE((SELECT i.qty FROM `ln_income` i WHERE  i.sale_id=s.id AND incomeType = $incomeType LIMIT 1),1) AS qty
+				,(SELECT i.disAmount FROM `ln_income` i WHERE  i.sale_id=s.id AND incomeType = $incomeType LIMIT 1) AS disAmount	
+				,(SELECT i.disPercent FROM `ln_income` i WHERE  i.sale_id=s.id AND incomeType = $incomeType LIMIT 1) AS disPercent
 				
 			FROM `ln_sale` s,
 				`ln_properties` p
