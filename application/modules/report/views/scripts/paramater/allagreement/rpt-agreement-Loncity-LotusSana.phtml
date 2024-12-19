@@ -142,6 +142,9 @@ dojo.require("dijit.form.DateTextBox");
 				$projectAddress = $this->agreement['project_location'];
 
 				$inputDate = $this->agreement['agreement_date'];
+				if ($this->agreement['option_payment_collection'] == 1) {
+					$inputDate = $this->agreement['secondDocDate'];
+				}
 				$time  = strtotime($inputDate);
 				$day   = date('d', $time);
 				$monthDD = date('m', $time);
@@ -319,6 +322,7 @@ dojo.require("dijit.form.DateTextBox");
 									</div>				
 								</td>
 							</tr>
+							<?php if ($this->agreement['option_payment_collection']==1) { //?>
 							<tr>
 								<td colspan="2" align="left">
 									<span style="text-align:left; line-height:28px; width: 100%; display: block; ">
@@ -326,6 +330,7 @@ dojo.require("dijit.form.DateTextBox");
 									</span>
 								</td>
 							 </tr> 
+							<?php } ?>
 							<tr>
 								<td colspan="2" align="center">
 									<div class="font-khmerbold">
@@ -788,7 +793,7 @@ dojo.require("dijit.form.DateTextBox");
 								<td  colspan="2" style="text-align:center; font-weight:200;white-space:nowrap;">
 									<br />
 									ធ្វើនៅ<?php echo $lunarFulltString; ?><br />	
-									ត្រូវនឹងថ្ងៃទី<?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($this->agreement['agreement_date'])));?> ខែ<?php echo $month[date("m",strtotime($this->agreement['agreement_date']))];?> ឆ្នាំ<?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($this->agreement['agreement_date'])));?>
+									ត្រូវនឹងថ្ងៃទី<?php echo $dbparmeter->getNumberInkhmer(date("d",strtotime($inputDate)));?> ខែ<?php echo $month[date("m",strtotime($inputDate))];?> ឆ្នាំ<?php echo $dbparmeter->getNumberInkhmer(date("Y",strtotime($inputDate)));?>
 								</td>
 							</tr>
 							<tr>

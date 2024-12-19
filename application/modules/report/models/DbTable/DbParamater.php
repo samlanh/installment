@@ -319,6 +319,7 @@ class Report_Model_DbTable_DbParamater extends Zend_Db_Table_Abstract
 				   s.`end_line`,
     			   s.validate_date,
 				   s.agreement_date,
+				   s.secondDocDate,
 				   s.note_agreement,
 				   s.is_verify,
 				   s.store_number,
